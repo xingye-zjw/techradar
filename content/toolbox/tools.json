@@ -1,0 +1,342 @@
+{
+  "tools": [
+    {
+      "name": "Ultralytics YOLO",
+      "category": "CV · 目标检测",
+      "purpose": "工业界首选的端到端目标检测框架，YOLOv8/v11/v13 统一维护",
+      "install": "pip install ultralytics",
+      "features": [
+        "一行命令训练自定义数据集",
+        "内置 Detection / Segmentation / Pose / OBB",
+        "ONNX / TensorRT / CoreML 一键导出",
+        "Python / CLI / Docker 多运行方式"
+      ],
+      "tags": ["Python", "PyTorch", "实时检测"],
+      "github": {
+        "stars": "32k",
+        "last_release": "2025-06",
+        "url": "https://github.com/ultralytics/ultralytics"
+      },
+      "difficulty": "beginner",
+      "official_url": "https://docs.ultralytics.com",
+      "use_cases": ["目标检测", "实例分割", "关键点检测"]
+    },
+    {
+      "name": "Hugging Face Transformers",
+      "category": "NLP · LLM",
+      "purpose": "10 万+ 预训练模型的统一加载接口，PyTorch / JAX 双后端",
+      "install": "pip install transformers datasets accelerate",
+      "features": [
+        "AutoModel / AutoTokenizer 即插即用",
+        "Trainer API 封装分布式训练 / 混合精度",
+        "配合 PEFT 支持 LoRA / QLoRA 微调",
+        "Tokenizers Rust 底层加速，tokenize 极快"
+      ],
+      "tags": ["LLM", "微调", "NLP"],
+      "github": {
+        "stars": "135k",
+        "last_release": "2025-06",
+        "url": "https://github.com/huggingface/transformers"
+      },
+      "difficulty": "intermediate",
+      "official_url": "https://huggingface.co/docs/transformers",
+      "use_cases": ["文本生成", "文本分类", "LLM 推理", "模型微调"]
+    },
+    {
+      "name": "PyTorch",
+      "category": "深度学习框架",
+      "purpose": "研究界最流行的动态计算图深度学习框架，debug 友好，与 Python 完全融合",
+      "install": "pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118",
+      "features": [
+        "动态图：代码即模型，可直接 print 中间变量",
+        "torch.compile() 编译优化（PyTorch 2.0 新特性）",
+        "torch.distributed 封装多卡 / 多机分布式训练",
+        "torch.jit 脚本化导出 TorchScript"
+      ],
+      "tags": ["深度学习", "研究", "动态图"],
+      "github": {
+        "stars": "82k",
+        "last_release": "2025-05",
+        "url": "https://github.com/pytorch/pytorch"
+      },
+      "difficulty": "intermediate",
+      "official_url": "https://pytorch.org/docs",
+      "use_cases": ["模型训练", "研究实验", "自定义算子"]
+    },
+    {
+      "name": "LangChain",
+      "category": "LLM 应用框架",
+      "purpose": "大模型应用开发瑞士军刀：RAG / Agent / Chain / Memory 一站式",
+      "install": "pip install langchain langchain-core langchain-community",
+      "features": [
+        "统一的 VectorStore 抽象（FAISS / Chroma / pgvector）",
+        "Agent 工具调用与自定义 Tool",
+        "LangSmith 可观测性与调试面板",
+        "LangServe 一键将 Chain 部署为 REST API"
+      ],
+      "tags": ["RAG", "Agent", "应用层"],
+      "github": {
+        "stars": "95k",
+        "last_release": "2025-06",
+        "url": "https://github.com/langchain-ai/langchain"
+      },
+      "difficulty": "intermediate",
+      "official_url": "https://python.langchain.com",
+      "use_cases": ["RAG 检索增强", "Agent 智能体", "对话系统"]
+    },
+    {
+      "name": "Streamlit",
+      "category": "可视化界面",
+      "purpose": "纯 Python 构建交互式 Web 界面，无需前端知识，快速原型展示",
+      "install": "pip install streamlit",
+      "features": [
+        "数据可视化图表（折线/柱状/散点/地图）",
+        "文件上传 / 滑块 / 下拉框 / 按钮等交互组件",
+        "Session State 保持页面状态",
+        "部署到 Streamlit Cloud 免费公开访问"
+      ],
+      "tags": ["Web", "Demo", "Python"],
+      "github": {
+        "stars": "38k",
+        "last_release": "2025-06",
+        "url": "https://github.com/streamlit/streamlit"
+      },
+      "difficulty": "beginner",
+      "official_url": "https://docs.streamlit.io",
+      "use_cases": ["快速 Demo", "数据看板", "原型展示"]
+    },
+    {
+      "name": "MLflow",
+      "category": "实验追踪",
+      "purpose": "开源 ML 生命周期管理平台，自动记录参数/指标/模型，支持超参搜索",
+      "install": "pip install mlflow",
+      "features": [
+        "自动记录 PyTorch / Keras / XGBoost 等框架的训练指标",
+        "Web UI 对比不同实验的参数与 Loss 曲线",
+        "Model Registry 版本化管理，支持 Stage（Staging/Production）",
+        "可对接 PostgreSQL / S3 等生产级存储后端"
+      ],
+      "tags": ["实验管理", "MLOps"],
+      "github": {
+        "stars": "22k",
+        "last_release": "2025-05",
+        "url": "https://github.com/mlflow/mlflow"
+      },
+      "difficulty": "intermediate",
+      "official_url": "https://mlflow.org/docs/latest",
+      "use_cases": ["实验追踪", "模型版本管理", "团队协作"]
+    },
+    {
+      "name": "Weights & Biases",
+      "category": "实验可视化",
+      "purpose": "实验可视化 + 超参数 Sweep + 模型版本管理，团队协作友好",
+      "install": "pip install wandb",
+      "features": [
+        "一条 wandb.init() 自动记录 Loss / 指标 / 产出",
+        "Sweep 超参数搜索（Bayesian / Grid / Random）",
+        "Artifacts 管理数据集与模型版本",
+        "视频/音频/表格等多种数据类型可视化"
+      ],
+      "tags": ["实验追踪", "团队协作"],
+      "github": {
+        "stars": "9k",
+        "last_release": "2025-06",
+        "url": "https://github.com/wandb/wandb"
+      },
+      "difficulty": "beginner",
+      "official_url": "https://docs.wandb.ai",
+      "use_cases": ["实验可视化", "超参搜索", "团队协作"]
+    },
+    {
+      "name": "DVC (Data Version Control)",
+      "category": "数据版本管理",
+      "purpose": "用 Git 的方式管理数据集和模型文件，支持大规模数据的版本控制与共享",
+      "install": "pip install dvc",
+      "features": [
+        "dvc add data/ 将大文件纳入版本控制（存指针到 Git，内容存远程存储）",
+        "dvc repro 自动检测数据/代码变化后重新运行训练流程",
+        "支持 S3/GCS/Azure/HDFS 等远程存储后端",
+        "与 Git 完全兼容，可同仓库管理代码和数据"
+      ],
+      "tags": ["数据管理", "MLOps", "Git"],
+      "github": {
+        "stars": "15k",
+        "last_release": "2025-05",
+        "url": "https://github.com/iterative/dvc"
+      },
+      "difficulty": "intermediate",
+      "official_url": "https://dvc.org/doc",
+      "use_cases": ["数据版本控制", "流水线复现", "大文件管理"]
+    },
+    {
+      "name": "Docker",
+      "category": "容器化部署",
+      "purpose": "将模型或服务封装为 Docker 镜像，实现跨环境无差异部署",
+      "install": "curl -fsSL https://get.docker.com | sh",
+      "features": [
+        "Dockerfile 定义镜像构建步骤，一次构建多处运行",
+        "nvidia-docker 支持 GPU 容器分配",
+        "Docker Compose 编排多容器（API + Redis + 模型）",
+        "多阶段构建大幅减小镜像体积"
+      ],
+      "tags": ["DevOps", "部署", "容器化"],
+      "github": {
+        "stars": "69k",
+        "last_release": "2025-06",
+        "url": "https://github.com/moby/moby"
+      },
+      "difficulty": "intermediate",
+      "official_url": "https://docs.docker.com",
+      "use_cases": ["模型部署", "环境隔离", "服务编排"]
+    },
+    {
+      "name": "Gradio",
+      "category": "ML 界面框架",
+      "purpose": "专为机器学习设计的快速 Web 界面框架，比 Streamlit 更适合 AI 模型展示",
+      "install": "pip install gradio",
+      "features": [
+        "chatbot / sketch / image / audio 等 AI 专属组件",
+        "内置分享链接生成，可直接分享 Demo 给他人",
+        "支持加载 Hugging Face Space 直接嵌入",
+        "Blocks API 支持自定义复杂布局与交互"
+      ],
+      "tags": ["AI界面", "Demo", "Python"],
+      "github": {
+        "stars": "32k",
+        "last_release": "2025-06",
+        "url": "https://github.com/gradio-app/gradio"
+      },
+      "difficulty": "beginner",
+      "official_url": "https://gradio.app/docs",
+      "use_cases": ["AI Demo", "对话系统 Demo", "多模态交互"]
+    },
+    {
+      "name": "Label Studio",
+      "category": "数据标注",
+      "purpose": "多模态标注平台：图像检测框 / 文本 NER / 音频分段 / 视频",
+      "install": "pip install label-studio && label-studio start",
+      "features": [
+        "导出格式兼容 COCO / YOLO / Pascal VOC / JSON-MIN",
+        "自托管，无用户数限制",
+        "可接入 ML 模型做预标注（主动学习）",
+        "支持多人协作标注，质量控制工作流"
+      ],
+      "tags": ["标注", "自托管", "多模态"],
+      "github": {
+        "stars": "16k",
+        "last_release": "2025-05",
+        "url": "https://github.com/HumanSignal/label-studio"
+      },
+      "difficulty": "intermediate",
+      "official_url": "https://labelstud.io/guide",
+      "use_cases": ["数据标注", "主动学习", "标注质量控制"]
+    },
+    {
+      "name": "pgvector + PostgreSQL",
+      "category": "向量数据库",
+      "purpose": "PostgreSQL 扩展，在 SQL 中直接做 KNN 向量检索，无需引入新组件",
+      "install": "CREATE EXTENSION vector;  pip install pgvector",
+      "features": [
+        "与现有 PostgreSQL 无缝融合，零额外运维",
+        "支持 HNSW / ivfflat 索引，查询速度可达到毫秒级",
+        "Hybrid Search 实现 metadata filter + vector",
+        "支持 1536 / 3072 / 3072 等任意维度向量"
+      ],
+      "tags": ["RAG", "SQL", "HNSW"],
+      "github": {
+        "stars": "9k",
+        "last_release": "2025-04",
+        "url": "https://github.com/pgvector/pgvector"
+      },
+      "difficulty": "intermediate",
+      "official_url": "https://github.com/pgvector/pgvector",
+      "use_cases": ["RAG 检索", "向量检索", "混合搜索"]
+    },
+    {
+      "name": "ONNX Runtime",
+      "category": "推理引擎",
+      "purpose": "跨框架、高性能模型推理引擎，比原生框架快 1.5-3 倍",
+      "install": "pip install onnxruntime-gpu",
+      "features": [
+        "支持 PyTorch / TensorFlow / ONNX 模型输入",
+        "GPU 加速（CUDA / TensorRT / ROCm）",
+        "图优化（常量折叠 / 算子融合 / 内存规划）",
+        "支持 CPU / GPU / Mobile / WebAssembly 多平台部署"
+      ],
+      "tags": ["推理", "部署", "ONNX"],
+      "github": {
+        "stars": "14k",
+        "last_release": "2025-05",
+        "url": "https://github.com/microsoft/onnxruntime"
+      },
+      "difficulty": "advanced",
+      "official_url": "https://onnxruntime.ai/docs",
+      "use_cases": ["模型推理加速", "跨平台部署", "生产环境推理"]
+    },
+    {
+      "name": "Dask",
+      "category": "并行计算",
+      "purpose": "用纯 Python 代码实现 pandas / numpy / scikit-learn 的并行化，处理 TB 级数据",
+      "install": "pip install dask",
+      "features": [
+        "dask.array / dask.dataframe / dask.delayed 透明并行化",
+        "处理比单机内存大几个数量级的数据集",
+        "与现有 pandas / numpy API 几乎完全兼容",
+        "可对接 Kubernetes / HPC / Yarn 集群"
+      ],
+      "tags": ["大数据", "并行计算", "Python"],
+      "github": {
+        "stars": "12k",
+        "last_release": "2025-04",
+        "url": "https://github.com/dask/dask"
+      },
+      "difficulty": "advanced",
+      "official_url": "https://docs.dask.org",
+      "use_cases": ["大数据处理", "分布式计算", "集群调度"]
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "detection",
+      "label": "做目标检测",
+      "description": "从标注到训练到部署的完整目标检测链路",
+      "tool_names": ["Ultralytics YOLO", "Label Studio", "ONNX Runtime"]
+    },
+    {
+      "key": "rag",
+      "label": "做 RAG 应用",
+      "description": "检索增强生成的典型技术组合：模型 + 框架 + 向量库",
+      "tool_names": ["Hugging Face Transformers", "LangChain", "pgvector + PostgreSQL"]
+    },
+    {
+      "key": "mlops",
+      "label": "做 MLOps 实验管理",
+      "description": "参数记录 / 指标对比 / 数据版本的团队协作工具集",
+      "tool_names": ["MLflow", "Weights & Biases", "DVC (Data Version Control)"]
+    },
+    {
+      "key": "demo",
+      "label": "快速 Demo 展示",
+      "description": "纯 Python 构建交互式 Web 界面，快速把模型展示给他人",
+      "tool_names": ["Streamlit", "Gradio"]
+    },
+    {
+      "key": "deploy",
+      "label": "模型部署上线",
+      "description": "推理加速 + 容器化封装，让模型在生产环境稳定运行",
+      "tool_names": ["Docker", "ONNX Runtime"]
+    },
+    {
+      "key": "research",
+      "label": "深度学习研究",
+      "description": "灵活的框架 + 强大的可视化，支持前沿研究探索",
+      "tool_names": ["PyTorch", "Hugging Face Transformers", "Weights & Biases"]
+    },
+    {
+      "key": "bigdata",
+      "label": "大规模数据处理",
+      "description": "TB 级数据集的版本化与并行处理",
+      "tool_names": ["Dask", "DVC (Data Version Control)"]
+    }
+  ]
+}

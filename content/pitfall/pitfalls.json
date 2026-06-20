@@ -1,0 +1,226 @@
+[
+  {
+    "title": "CUDA 版本与 PyTorch 不匹配",
+    "category": "环境配置",
+    "symptoms": [
+      "RuntimeError: CUDA error: no kernel image is available",
+      "torch.cuda.is_available() 返回 False",
+      "import torch 即崩溃或 segfault"
+    ],
+    "solution": [
+      "先运行 nvidia-smi，记录驱动支持的最高 CUDA 版本（如 Driver 535.x → CUDA 12.2）",
+      "前往 pytorch.org/get-started/locally/ 选择匹配版本，不要自己拼版本号",
+      "使用官方给出的 pip install 命令安装对应 CUDA 版本的 PyTorch",
+      "用 conda 虚拟环境隔离不同项目的 CUDA 依赖，避免混用",
+      "确认 cuDNN 版本与 CUDA 兼容（cuDNN 8.x 匹配 CUDA 11.x，cuDNN 9.x 匹配 CUDA 12.x）"
+    ],
+    "quickFix": "nvidia-smi → pytorch.org 官方命令安装 → conda 隔离",
+    "tags": ["CUDA", "PyTorch", "Windows", "环境配置"]
+  },
+  {
+    "title": "显存不足 (CUDA out of memory)",
+    "category": "训练",
+    "symptoms": [
+      "RuntimeError: CUDA out of memory at torch/csrc/generic/StorageSharing.cpp",
+      "训练第一步就 OOM",
+      "Loss 正常波动，跑几步后突然 OOM"
+    ],
+    "solution": [
+      "降低 batch_size（最有效，同时要降低 gradient_accumulation_steps）",
+      "启用 FP16 / BF16 混合精度（AMP），显存直接减半：model = model.half()",
+      "启用梯度检查点（gradient_checkpointing=True），以 30% 速度换 50% 显存",
+      "启用 bitsandbytes 4-bit 量化，7B 模型仅需 6GB 显存",
+      "多卡并行（DataParallel / DistributedDataParallel）分摊显存",
+      "推理时也 OOM：检查是否有张量未从显存释放（del model; torch.cuda.empty_cache()）"
+    ],
+    "quickFix": "batch_size /= 2 → FP16 → gradient_checkpointing → 4-bit",
+    "tags": ["OOM", "显存", "训练", "LLM"]
+  },
+  {
+    "title": "Loss NaN / 梯度爆炸",
+    "category": "训练",
+    "symptoms": [
+      "train_loss 突然跳到 inf / NaN",
+      "eval_loss 稳定但 train_loss 异常",
+      "embedding 参数出现 NaN 或梯度变成 inf"
+    ],
+    "solution": [
+      "首要：降低学习率（默认 5e-5，中文任务常需降为 2e-5 / 1e-5）",
+      "启用 max_grad_norm 梯度裁剪（常见值 1.0）：torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)",
+      "检查数据中是否存在 NaN 输入 / 长度超限 / tokenizer 未处理字符",
+      "AdamW 优化器 + warmup 预热（前 2-3% 的 step 线性预热）",
+      "FP16 下出现 NaN 可先降为 FP32 定位具体模块",
+      "如果发生在第一个 epoch 检查数据本身是否正常（可视化第一批数据）"
+    ],
+    "quickFix": "降学习率 + 梯度裁剪 + warmup，优先排查数据",
+    "tags": ["Loss", "梯度", "数值稳定性"]
+  },
+  {
+    "title": "ONNX 导出失败 / 动态 shape",
+    "category": "部署",
+    "symptoms": [
+      "torch.onnx.export 报 shape mismatch 或 unsupported op",
+      "导出成功但推理输出与 PyTorch 不一致（diff > 1e-3）",
+      "输入 shape 可变时结果错误（batch_size / seq_len 变化）"
+    ],
+    "solution": [
+      "显式指定 dynamic_axes，让输入 batch / seq_len 真的动态",
+      "使用 opset_version >= 14，新版算子支持更全",
+      "导出前 model.eval() 确保 BatchNorm 不使用 running stats",
+      "用 onnx-simplifier 做常量折叠与形状推断：model_simplified, ok = onnxsim.simplify(model)",
+      "用 onnxruntime-gpu 而非 CPU 版推理，速度差 10 倍以上",
+      "导出后对比 PyTorch 输出与 ONNXRuntime 输出的最大误差（应 < 1e-3）"
+    ],
+    "quickFix": "dynamic_axes 声明 + opset 14+ + onnxsim 简化",
+    "tags": ["ONNX", "导出", "部署", "推理加速"]
+  },
+  {
+    "title": "多进程 DataLoader (num_workers > 0) 卡死",
+    "category": "训练",
+    "symptoms": [
+      "Windows 下运行即卡死，Linux 正常",
+      "报错: Broken pipe / DataLoader worker (pid xxx) exited unexpectedly",
+      "Python 进程挂起，无报错日志"
+    ],
+    "solution": [
+      "Windows 下将 num_workers 设为 0，或改用 WSL2 / Linux 服务器训练",
+      "代码入口必须加 if __name__ == \"__main__\": 保护（spawn 多进程必需）",
+      "不要在 Dataset.__getitem__ 中持有未释放的文件句柄/数据库连接",
+      "pin_memory=True 在支持 CUDA 时可加速主机到 GPU 的数据搬运",
+      "检查 CUDA 是否支持 fork（默认不支持，改用 spawn 或 CUDA_VISIBLE_DEVICES 隔离）"
+    ],
+    "quickFix": "Windows → num_workers=0；Linux OK；入口加 __main__ 保护",
+    "tags": ["DataLoader", "多进程", "Windows"]
+  },
+  {
+    "title": "RAG 检索到了但回答不对 / 幻觉严重",
+    "category": "部署",
+    "symptoms": [
+      "向量搜索返回了相关文档，但 LLM 回答与文档不符",
+      "答案引用了训练知识而非检索文档（幻觉）",
+      "中英文混排检索结果差，语义不匹配"
+    ],
+    "solution": [
+      "为中文任务选用 BGE-M3 / text-embedding-3-large 等中文表现强的 embedding",
+      "chunk size 取 200-400 token，务必设置 10-20% overlap，避免关键句被切分",
+      "用 reranker（bge-reranker-large）对 Top-k 结果二次排序，取 Top-3 给 LLM",
+      "Prompt 中明确要求：仅基于给定上下文回答，若无法回答则说不知道",
+      "可将 query 先让 LLM 改写为更适合检索的标准问题（HyDE 模式）",
+      "检查是否向量数据库中真的存入了正确的 chunk（抽查几条 embedding）"
+    ],
+    "quickFix": "换中文 embedding + rerank + 明确引用约束的 Prompt",
+    "tags": ["RAG", "LLM", "检索", "Prompt"]
+  },
+  {
+    "title": "SSH 连接远程服务器频繁掉线",
+    "category": "环境配置",
+    "symptoms": [
+      "SSH 连接服务器后几分钟无操作就自动断开",
+      "scp 传输大文件时中途断开",
+      "tmux 会话也随 SSH 断开而消失（未正确使用）"
+    ],
+    "solution": [
+      "客户端编辑 ~/.ssh/config 添加：ServerAliveInterval 60 + ServerAliveCountMax 3",
+      "服务器端编辑 /etc/ssh/sshd_config：ClientAliveInterval 60",
+      "使用 tmux 或 screen：SSH 断开后会话保持运行",
+      "传输大文件使用 rsync -avz --progress 并加 screen 后台运行",
+      "长期训练任务用 nohup 或 systemd service 替代 SSH 会话"
+    ],
+    "quickFix": "ssh config 加 ServerAliveInterval + tmux 保持会话",
+    "tags": ["SSH", "Linux", "远程服务器"]
+  },
+  {
+    "title": "Docker 容器中无法使用 GPU (nvidia-smi 报错)",
+    "category": "部署",
+    "symptoms": [
+      "容器内 nvidia-smi: No devices were found",
+      "RuntimeError: CUDA error: no kernel image is available (in container)",
+      "训练时 GPU 利用率为 0%"
+    ],
+    "solution": [
+      "安装 NVIDIA Container Toolkit：curl -fsSL https://nvidia.github.io/nvidia-docker/gpgkey | sudo gpg --dearmor 后续步骤",
+      "基础镜像必须使用带 CUDA 的官方镜像（nvidia/cuda:*-runtime-* 或 *-devel-*）",
+      "运行容器时加 --gpus all 参数：docker run --gpus all ...",
+      "确认宿主机 NVIDIA Driver 版本与容器内 CUDA 版本兼容",
+      "验证：docker run --rm --gpus all nvidia/cuda:11.8.0-base-ubuntu22.04 nvidia-smi"
+    ],
+    "quickFix": "安装 NVIDIA Container Toolkit + nvidia/cuda 基础镜像 + --gpus all",
+    "tags": ["Docker", "GPU", "CUDA", "容器"]
+  },
+  {
+    "title": "模型训练收敛慢 / 几乎不收敛",
+    "category": "训练",
+    "symptoms": [
+      "Loss 下降极慢，几十个 epoch 后仍无明显变化",
+      "训练集和验证集 Loss 同时偏高或不下降",
+      "Accuracy 始终在随机猜测水平附近"
+    ],
+    "solution": [
+      "检查数据标注是否正确（随机抽 10 条数据可视化检查标签）",
+      "学习率是否合适：尝试 10 倍范围（1e-2 到 1e-5）网格搜索",
+      "检查是否使用了正确的 loss（如多分类用 CrossEntropyLoss 而非 BCELoss）",
+      "检查数据归一化/标准化是否正确（ImageNet 统计量 vs 自定义统计量）",
+      "模型是否太大导致欠拟合（减少层数/换更小模型验证 pipeline 是否正常）",
+      "如果用了预训练模型，检查是否正确加载了权重（最后一层 FC 通常需要重新初始化）"
+    ],
+    "quickFix": "可视化第一批数据 + 学习率扫描 + 检查 loss 类型",
+    "tags": ["收敛", "训练", "学习率", "数据质量"]
+  },
+  {
+    "title": "Git 合并冲突处理不当导致代码丢失",
+    "category": "开发协作",
+    "symptoms": [
+      "git merge 后某些文件变成了旧版本",
+      "git pull 后本地修改被覆盖",
+      "强制合并后无法找回之前的工作"
+    ],
+    "solution": [
+      "合并前先 git stash 或 git commit 本地修改：git stash push -m 'wip'",
+      "git merge 遇到冲突后，用 git status 查看冲突文件列表",
+      "手动编辑冲突文件，保留需要的部分，删除 <<< === >>> 标记",
+      "冲突解决后 git add <file> + git commit（不要带 -m，让合并提交自动生成）",
+      "永远不要在未提交本地修改的情况下做 git pull 或 git merge",
+      "如果误操作：git reflog 找回操作历史，git reset --hard HEAD@{N} 回退"
+    ],
+    "quickFix": "合并前先 git stash → 解决冲突后 git add + commit → git stash pop",
+    "tags": ["Git", "协作", "版本控制"]
+  },
+  {
+    "title": "Python 环境依赖冲突导致 import 失败",
+    "category": "环境配置",
+    "symptoms": [
+      "ImportError: cannot import name 'xxx' from 'yyy'",
+      "python -c 'import torch' 报错：libtorch_cuda.so is not a symbol",
+      "同一个环境中不同项目需要不兼容的包版本"
+    ],
+    "solution": [
+      "每个项目使用独立的 conda 或 venv 虚拟环境",
+      "conda create -n proj_env python=3.10 创建干净环境",
+      "导出项目依赖：pip freeze > requirements.txt（发布时用 pip-compile 锁定精确版本）",
+      "避免 pip 和 conda 混用同一批包，优先选择 conda install 需要的包",
+      "torch / tensorflow 等大包只用 pip install，不要用 conda install（conda 源版本通常落后）",
+      "遇到 .so 文件报错时通常是 CUDA 版本不一致，检查 LD_LIBRARY_PATH"
+    ],
+    "quickFix": "conda create 独立环境 → pip install 分批安装 → freeze 导出依赖",
+    "tags": ["Python", "环境配置", "依赖管理"]
+  },
+  {
+    "title": "SSH 端口被防火墙拦截 / 服务器无法访问",
+    "category": "环境配置",
+    "symptoms": [
+      "ssh: connect to host x.x.x.x port 22: Connection timed out",
+      "云服务器安全组已开端口但仍无法连接",
+      "本地端口 22 被 ISP 封锁（家用宽带）"
+    ],
+    "solution": [
+      "云服务器检查安全组：确认入方向规则包含 SSH（22 端口或自定义端口）",
+      "修改 SSH 端口为 443（绕过部分防火墙封锁）：Port 443",
+      "家用宽带无法直接访问：使用内网穿透工具（frp / nps）或 cloudflare tunnel",
+      "使用密钥登录替代密码，减少被暴力破解的风险",
+      "安装 fail2ban 自动封禁多次登录失败的 IP：sudo apt install fail2ban",
+      "长期解决方案：使用 Tailscale 或 WireGuard 建立 VPN 隧道"
+    ],
+    "quickFix": "检查安全组规则 → 改端口 443 → 开启密钥登录 + fail2ban",
+    "tags": ["SSH", "服务器", "网络安全"]
+  }
+]

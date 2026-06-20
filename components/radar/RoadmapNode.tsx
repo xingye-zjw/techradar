@@ -1,0 +1,176 @@
+"use client";
+
+import { memo } from "react";
+import { Handle, Position } from "@xyflow/react";
+import type { NodeStatus, TrackId } from "./types";
+
+interface RoadmapNodeData {
+  name: string;
+  duration: string;
+  status: NodeStatus;
+  track: TrackId;
+  description?: string;
+  outcomes?: string[];
+  hasTasks?: boolean;
+}
+
+interface RoadmapNodeProps {
+  data: RoadmapNodeData;
+  selected?: boolean;
+}
+
+const trackColors: Record<TrackId, string> = {
+  cv: "border-orange-400",
+  nlp: "border-violet-400",
+  devops: "border-sky-400",
+  math: "border-emerald-400",
+  project: "border-pink-400",
+};
+
+const trackDots: Record<TrackId, string> = {
+  cv: "bg-orange-400",
+  nlp: "bg-violet-400",
+  devops: "bg-sky-400",
+  math: "bg-emerald-400",
+  project: "bg-pink-400",
+};
+
+const statusStyles: Record<NodeStatus, {
+  border: string;
+  bg: string;
+  text: string;
+  muted: string;
+  icon: string;
+  glow: string;
+  statusBar: string;
+}> = {
+  locked: {
+    border: "border-neutral-700",
+    bg: "bg-neutral-900",
+    text: "text-neutral-500",
+    muted: "text-neutral-600",
+    icon: "bg-neutral-800 text-neutral-600",
+    glow: "",
+    statusBar: "bg-neutral-700",
+  },
+  available: {
+    border: "border-neutral-600",
+    bg: "bg-neutral-900",
+    text: "text-neutral-100",
+    muted: "text-neutral-400",
+    icon: "bg-neutral-800 text-neutral-400",
+    glow: "shadow-[0_0_15px_rgba(255,255,255,0.05)]",
+    statusBar: "bg-neutral-500",
+  },
+  completed: {
+    border: "border-green-500",
+    bg: "bg-green-500/10",
+    text: "text-neutral-100",
+    muted: "text-green-400",
+    icon: "bg-green-500/20 text-green-400",
+    glow: "",
+    statusBar: "bg-green-500",
+  },
+};
+
+function RoadmapNodeComponent({ data, selected }: RoadmapNodeProps) {
+  const style = statusStyles[data.status];
+  const isLocked = data.status === "locked";
+  const trackBorder = trackColors[data.track] || "border-neutral-500";
+  const trackDot = trackDots[data.track] || "bg-neutral-500";
+
+  return (
+    <div
+      className={`
+        relative min-w-[200px] max-w-[240px] rounded-lg border-2 p-4
+        transition-all duration-300
+        ${style.border} ${style.bg} ${style.glow}
+        ${isLocked ? "opacity-55" : "opacity-100"}
+        ${selected ? "ring-2 ring-white/30" : ""}
+        hover:brightness-110 cursor-pointer
+      `}
+    >
+      {/* Top status bar */}
+      <div className={`absolute top-0 left-0 right-0 h-1 rounded-t-lg ${style.statusBar}`} />
+
+      {/* Left track indicator stripe */}
+      <div className={`absolute left-0 top-0 bottom-0 w-1 rounded-l-lg ${trackBorder}`} />
+
+      {/* Click hint icon */}
+      <div className="absolute top-2 right-2">
+        <svg className="w-3 h-3 text-neutral-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+        </svg>
+      </div>
+
+      <Handle
+        type="target"
+        position={Position.Top}
+        className="!w-2 !h-2 !bg-neutral-400 !border-0 !-top-1"
+      />
+
+      {/* Lock icon */}
+      {isLocked && (
+        <div className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-neutral-800 border border-neutral-700 flex items-center justify-center z-10">
+          <svg className="w-2.5 h-2.5 text-neutral-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+        </div>
+      )}
+
+      {/* Completed checkmark */}
+      {data.status === "completed" && (
+        <div className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-green-500 flex items-center justify-center z-10">
+          <svg className="w-3 h-3 text-neutral-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+      )}
+
+      {/* Content */}
+      <div className="space-y-2 pr-4">
+        {/* Track dot + name */}
+        <div className="flex items-center gap-2">
+          <span className={`w-2 h-2 rounded-full flex-shrink-0 ${trackDot}`} />
+          <h4 className={`font-bold text-sm leading-tight ${style.text}`}>
+            {data.name}
+          </h4>
+        </div>
+
+        {/* Duration */}
+        <div className={`font-mono text-[0.6rem] ${style.muted}`}>
+          <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-sm ${style.icon}`}>
+            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            {data.duration}
+          </span>
+        </div>
+
+        {/* Description */}
+        {data.description && !isLocked && (
+          <p className={`text-[0.65rem] leading-relaxed ${style.muted} line-clamp-2`}>
+            {data.description}
+          </p>
+        )}
+
+        {/* Task count badge */}
+        {data.hasTasks && !isLocked && (
+          <div className="flex items-center gap-1 mt-1">
+            <span className="font-mono text-[9px] px-1.5 py-0.5 bg-neutral-800 text-neutral-400 rounded">
+              📋 含每日任务
+            </span>
+          </div>
+        )}
+      </div>
+
+      <Handle
+        type="source"
+        position={Position.Bottom}
+        className="!w-2 !h-2 !bg-neutral-400 !border-0 !-bottom-1"
+      />
+    </div>
+  );
+}
+
+export const RoadmapNode = memo(RoadmapNodeComponent);
