@@ -255,29 +255,6 @@ export function Sidebar() {
               </div>
             )}
           </nav>
-
-          {/* 收起态的图标模式 */}
-          {isCollapsed && (
-            <div className="py-4 px-2 space-y-1">
-              {NAV_ITEMS.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`
-                    flex items-center justify-center w-10 h-10 rounded-lg transition-all
-                    ${pathname.startsWith(item.href)
-                      ? "bg-green-500/10 text-green-400"
-                      : "text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800"
-                    }
-                  `}
-                  title={item.label}
-                  aria-current={pathname.startsWith(item.href) ? "page" : undefined}
-                >
-                  <span className="text-base" aria-hidden="true">{item.icon}</span>
-                </Link>
-              ))}
-            </div>
-          )}
         </div>
       </aside>
 
