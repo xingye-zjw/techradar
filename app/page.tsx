@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { GlobalSearchBar } from "@/components/GlobalSearchBar";
 import { RecentList } from "@/components/RecentList";
 import { getAllTerms } from "@/lib/glossary";
 
@@ -22,9 +21,16 @@ export default function Home() {
             AI 驱动的大学生硬核开源实战导航系统 — 经过验证的通关攻略，而非知识搬运
           </p>
           <div className="max-w-xl mx-auto">
-            <GlobalSearchBar />
+            <Link
+              href="/search"
+              className="flex items-center w-full px-4 py-3 bg-neutral-900 border border-neutral-700 rounded-lg text-neutral-500 hover:border-green-400/60 hover:text-neutral-300 transition-colors cursor-text"
+            >
+              <span className="text-green-400 font-mono text-xs mr-3">&gt;</span>
+              <span className="flex-1 text-left font-mono text-sm">搜索全站内容…</span>
+              <span className="font-mono text-[10px] text-neutral-600">⌘K</span>
+            </Link>
             <p className="mt-3 font-mono text-[10px] text-neutral-500">
-              全站搜索 · 路线图 / 情报 / 工具 / 踩坑指南 · 试试 Transformer / Docker / LoRA / CUDA
+              全站搜索 · 路线图 / 情报 / 工具 / 踩坑 / 术语
             </p>
           </div>
         </div>
