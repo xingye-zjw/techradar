@@ -19,6 +19,8 @@ export interface Tool {
   difficulty: "beginner" | "intermediate" | "advanced";
   official_url: string;
   use_cases: string[];
+  relatedIntel?: string[];
+  relatedNodes?: string[];
 }
 
 export interface ToolScenario {
@@ -189,6 +191,21 @@ export function findRelatedIntel(tool: Tool, maxResults = 3): RelatedIntelRef[] 
  */
 export interface ToolWithRelated extends Tool {
   related_intel: RelatedIntelRef[];
+}
+
+/**
+ * 根据工具名称获取工具详情
+ */
+export function getToolByName(name: string): Tool | undefined {
+  const data = getToolboxData();
+  return data.tools.find((t) => t.name === name);
+}
+
+/**
+ * 获取工具的 ID（用于 URL）
+ */
+export function getToolId(tool: Tool): string {
+  return tool.name.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
 }
 
 export function getToolboxDataWithRelated(): {

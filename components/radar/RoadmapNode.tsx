@@ -12,6 +12,9 @@ interface RoadmapNodeData {
   description?: string;
   outcomes?: string[];
   hasTasks?: boolean;
+  progressPercent?: number;
+  relatedIntelCount?: number;
+  relatedToolsCount?: number;
 }
 
 interface RoadmapNodeProps {
@@ -73,11 +76,49 @@ const statusStyles: Record<NodeStatus, {
   },
 };
 
+/**
+ * 进度圆环组件
+ */
+function ProgressRing({ percent, size = 20 }: { percent: number; size?: number }) {
+  const radius = (size - 3) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference - (percent / 100) * circumference;
+
+  return (
+    <svg width={size} height={size} className="transform -rotate-90">
+      {/* 背景圆环 */}
+      <circle
+        cx={size / 2}
+        cy={size / 2}
+        r={radius}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={2}
+        className="text-neutral-700"
+      />
+      {/* 进度圆环 */}
+      <circle
+        cx={size / 2}
+        cy={size / 2}
+        r={radius}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={2}
+        strokeDasharray={circumference}
+        strokeDashoffset={offset}
+        strokeLinecap="round"
+        className={percent > 0 ? "text-emerald-400" : "text-neutral-700"}
+      />
+    </svg>
+  );
+}
+
 function RoadmapNodeComponent({ data, selected }: RoadmapNodeProps) {
   const style = statusStyles[data.status];
   const isLocked = data.status === "locked";
   const trackBorder = trackColors[data.track] || "border-neutral-500";
   const trackDot = trackDots[data.track] || "bg-neutral-500";
+  const progress = data.progressPercent || 0;
 
   return (
     <div
@@ -137,14 +178,26 @@ function RoadmapNodeComponent({ data, selected }: RoadmapNodeProps) {
           </h4>
         </div>
 
-        {/* Duration */}
-        <div className={`font-mono text-[0.6rem] ${style.muted}`}>
-          <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-sm ${style.icon}`}>
-            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            {data.duration}
-          </span>
+        {/* Duration + Progress */}
+        <div className="flex items-center justify-between">
+          <div className={`font-mono text-[0.6rem] ${style.muted}`}>
+            <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-sm ${style.icon}`}>
+              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              {data.duration}
+            </span>
+          </div>
+
+          {/* Progress indicator */}
+          {data.hasTasks && !isLocked && (
+            <div className="flex items-center gap-1">
+              <ProgressRing percent={progress} size={16} />
+              <span className="font-mono text-[9px] text-neutral-500">
+                {progress}%
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Description */}
@@ -153,6 +206,22 @@ function RoadmapNodeComponent({ data, selected }: RoadmapNodeProps) {
             {data.description}
           </p>
         )}
+
+        {/* Related content badges */}
+        {!isLocked && (data.relatedIntelCount || data.relatedToolsCount) ? (
+          <div className="flex flex-wrap gap-1.5 mt-1">
+            {data.relatedIntelCount ? (
+              <span className="font-mono text-[9px] px-1.5 py-0.5 bg-cyan-500/10 text-cyan-400 rounded border border-cyan-500/20">
+                📰 {data.relatedIntelCount} 篇情报
+              </span>
+            ) : null}
+            {data.relatedToolsCount ? (
+              <span className="font-mono text-[9px] px-1.5 py-0.5 bg-purple-500/10 text-purple-400 rounded border border-purple-500/20">
+                🔧 {data.relatedToolsCount} 个工具
+              </span>
+            ) : null}
+          </div>
+        ) : null}
 
         {/* Task count badge */}
         {data.hasTasks && !isLocked && (

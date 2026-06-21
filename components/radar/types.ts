@@ -18,6 +18,8 @@ export interface TaskContent {
   api_checklist: string[];
   /** 场景实操：一个非常具体的微型任务 */
   practice: string;
+  /** 参考答案：可选，用于折叠显示 */
+  answer?: string;
 }
 
 export interface DailyTask {
@@ -92,6 +94,10 @@ export interface RoadmapNode {
   outcomes?: string[];
   /** 每日学习任务列表（按顺序） */
   dailyTasks?: DailyTask[];
+  /** 关联情报 slug 列表 */
+  relatedIntel?: string[];
+  /** 关联工具 id 列表 */
+  relatedTools?: string[];
 }
 
 export interface RoadmapData {

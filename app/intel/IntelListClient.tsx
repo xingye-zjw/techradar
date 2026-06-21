@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState, useMemo } from "react";
 import type { IntelCard } from "@/lib/intel";
 import { difficultyMeta, categoryMeta } from "@/lib/intel-meta";
+import { TAG_GROUPS, getTagColor, type TagDefinition } from "@/lib/intel-tags";
 
 interface IntelListClientProps {
   cards: IntelCard[];
@@ -12,6 +13,7 @@ interface IntelListClientProps {
 export function IntelListClient({ cards }: IntelListClientProps) {
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [activeDifficulty, setActiveDifficulty] = useState<string>("all");
+  const [activeTags, setActiveTags] = useState<Set<string>>(new Set());
 
   // 计算各分类的数量
   const categoryCounts = useMemo(() => {
@@ -22,14 +24,31 @@ export function IntelListClient({ cards }: IntelListClientProps) {
     return counts;
   }, [cards]);
 
+  // 切换标签筛选
+  const toggleTag = (tagKey: string) => {
+    setActiveTags((prev) => {
+      const next = new Set(prev);
+      if (next.has(tagKey)) {
+        next.delete(tagKey);
+      } else {
+        next.add(tagKey);
+      }
+      return next;
+    });
+  };
+
   // 筛选后的卡片
   const filteredCards = useMemo(() => {
     return cards.filter((c) => {
       if (activeCategory !== "all" && c.category !== activeCategory) return false;
       if (activeDifficulty !== "all" && c.difficulty !== activeDifficulty) return false;
+      if (activeTags.size > 0) {
+        const hasTag = Array.from(activeTags).some((tag) => c.tags.includes(tag));
+        if (!hasTag) return false;
+      }
       return true;
     });
-  }, [cards, activeCategory, activeDifficulty]);
+  }, [cards, activeCategory, activeDifficulty, activeTags]);
 
   // 获取可用的分类列表（按数量排序）
   const categories = useMemo(() => {
@@ -109,6 +128,75 @@ export function IntelListClient({ cards }: IntelListClientProps) {
               </div>
             </button>
           ))}
+        </div>
+
+        {/* 标签筛选栏 */}
+        <div className="mb-6 pb-6 border-b border-neutral-800">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="font-mono text-[10px] text-neutral-500 uppercase">标签筛选</span>
+            {activeTags.size > 0 && (
+              <button
+                onClick={() => setActiveTags(new Set())}
+                className="font-mono text-[10px] text-cyan-400 hover:text-cyan-300 transition-colors"
+              >
+                清除
+              </button>
+            )}
+          </div>
+
+          {/* 领域标签 */}
+          <div className="flex flex-wrap gap-2 mb-2">
+            <span className="font-mono text-[9px] text-neutral-600 w-12">领域</span>
+            {TAG_GROUPS.domain.map((tag) => (
+              <button
+                key={tag.key}
+                onClick={() => toggleTag(tag.key)}
+                className={`font-mono text-[10px] px-2 py-0.5 rounded-sm border transition-colors ${
+                  activeTags.has(tag.key)
+                    ? tag.color
+                    : "bg-neutral-900 text-neutral-500 border-neutral-800 hover:border-neutral-600"
+                }`}
+              >
+                {tag.label}
+              </button>
+            ))}
+          </div>
+
+          {/* 难度标签 */}
+          <div className="flex flex-wrap gap-2 mb-2">
+            <span className="font-mono text-[9px] text-neutral-600 w-12">难度</span>
+            {TAG_GROUPS.level.map((tag) => (
+              <button
+                key={tag.key}
+                onClick={() => toggleTag(tag.key)}
+                className={`font-mono text-[10px] px-2 py-0.5 rounded-sm border transition-colors ${
+                  activeTags.has(tag.key)
+                    ? tag.color
+                    : "bg-neutral-900 text-neutral-500 border-neutral-800 hover:border-neutral-600"
+                }`}
+              >
+                {tag.label}
+              </button>
+            ))}
+          </div>
+
+          {/* 类型标签 */}
+          <div className="flex flex-wrap gap-2">
+            <span className="font-mono text-[9px] text-neutral-600 w-12">类型</span>
+            {TAG_GROUPS.type.map((tag) => (
+              <button
+                key={tag.key}
+                onClick={() => toggleTag(tag.key)}
+                className={`font-mono text-[10px] px-2 py-0.5 rounded-sm border transition-colors ${
+                  activeTags.has(tag.key)
+                    ? tag.color
+                    : "bg-neutral-900 text-neutral-500 border-neutral-800 hover:border-neutral-600"
+                }`}
+              >
+                {tag.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* 筛选器 */}
@@ -192,6 +280,10 @@ export function IntelListClient({ cards }: IntelListClientProps) {
                           {card.duration}
                         </span>
                       )}
+                      {/* 阅读时间 */}
+                      <span className="font-mono text-[9px] px-2 py-0.5 rounded-sm bg-neutral-800 text-neutral-500">
+                        📖 {card.readingTime} 分钟
+                      </span>
                     </div>
 
                     {/* 标题 */}
@@ -203,6 +295,18 @@ export function IntelListClient({ cards }: IntelListClientProps) {
                     <p className="text-sm text-neutral-400 leading-relaxed mb-3">
                       {card.summary}
                     </p>
+
+                    {/* 标签 */}
+                    <div className="flex flex-wrap gap-1.5 mb-2">
+                      {card.tags.slice(0, 4).map((tag) => (
+                        <span
+                          key={tag}
+                          className={`font-mono text-[9px] px-1.5 py-0.5 rounded-sm border ${getTagColor(tag)}`}
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
 
                     {/* 关键词 */}
                     <div className="flex flex-wrap gap-1.5">
@@ -240,6 +344,7 @@ export function IntelListClient({ cards }: IntelListClientProps) {
               onClick={() => {
                 setActiveCategory("all");
                 setActiveDifficulty("all");
+                setActiveTags(new Set());
               }}
               className="text-sm text-cyan-400 hover:underline font-mono"
             >

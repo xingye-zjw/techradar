@@ -18,6 +18,7 @@ import { NodeDetailPanel } from "./NodeDetailPanel";
 import type { RoadmapNode as RoadmapNodeType, NodeStatus, TrackId } from "./types";
 import { ROADMAP_TRACKS } from "./types";
 import { FULL_ROADMAP } from "@/lib/roadmap-data";
+import { getNodeProgressPercent } from "@/lib/progress";
 
 const STORAGE_KEY = "techradar-roadmap-progress";
 
@@ -97,6 +98,9 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
         description: node.description,
         outcomes: node.outcomes,
         hasTasks: (node.dailyTasks?.length ?? 0) > 0,
+        progressPercent: getNodeProgressPercent(node.id, node.dailyTasks?.length || 0),
+        relatedIntelCount: node.relatedIntel?.length || 0,
+        relatedToolsCount: node.relatedTools?.length || 0,
       },
     }));
 

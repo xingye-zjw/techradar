@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { ToastContainer } from "@/components/Toast";
 
 export const metadata: Metadata = {
   title: "TechRadar 极客雷达",
@@ -21,7 +22,10 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased">
-        {children}
+        <div className="animate-in fade-in duration-200">
+          {children}
+        </div>
+        <ToastContainer />
       </body>
     </html>
   );

@@ -17,6 +17,10 @@ export interface IntelCard {
   /** 人工编写的"你将学到什么"，1-4 条完整短句 */
   takeaways?: string[];
   content: string;
+  /** 标签列表 */
+  tags: string[];
+  /** 预计阅读时间（分钟） */
+  readingTime: number;
 }
 
 // 模块级缓存，避免每次请求都读取文件系统
@@ -56,6 +60,13 @@ function parseIntelCard(file: string, contentDir: string): IntelCard {
 
   const slug = file.replace(/\.md$/, "");
 
+  // 计算阅读时间（按中文 300 字/分钟）
+  const charCount = content.replace(/\s/g, "").length;
+  const readingTime = Math.max(1, Math.ceil(charCount / 300));
+
+  // 自动生成标签
+  const tags = generateTags(data, slug);
+
   return {
     slug,
     title: String(data.title ?? slug),
@@ -66,7 +77,69 @@ function parseIntelCard(file: string, contentDir: string): IntelCard {
     summary: String(data.summary ?? ""),
     takeaways: Array.isArray(data.takeaways) ? data.takeaways.map(String) : undefined,
     content,
+    tags,
+    readingTime,
   };
+}
+
+/**
+ * 根据内容自动生成标签
+ */
+function generateTags(data: any, slug: string): string[] {
+  const tags: string[] = [];
+
+  // 根据 category 推断领域标签
+  const category = String(data.category || "").toLowerCase();
+  if (category.includes("cv") || category.includes("vision") || category.includes("检测")) {
+    tags.push("cv");
+  }
+  if (category.includes("nlp") || category.includes("language") || category.includes("llm")) {
+    tags.push("nlp");
+  }
+  if (category.includes("devops") || category.includes("deploy") || category.includes("工程")) {
+    tags.push("devops");
+  }
+  if (category.includes("math") || category.includes("数学")) {
+    tags.push("math");
+  }
+  if (category.includes("mlops") || category.includes("experiment")) {
+    tags.push("mlops");
+  }
+
+  // 根据 keywords 推断
+  const keywords = (data.keywords || []).map((k: string) => String(k).toLowerCase());
+  if (keywords.some((k: string) => ["yolo", "cnn", "resnet", "目标检测", "图像"].includes(k))) {
+    if (!tags.includes("cv")) tags.push("cv");
+  }
+  if (keywords.some((k: string) => ["transformer", "bert", "gpt", "llm", "nlp", "rag"].includes(k))) {
+    if (!tags.includes("nlp")) tags.push("nlp");
+  }
+  if (keywords.some((k: string) => ["docker", "git", "linux", "部署", "ci/cd"].includes(k))) {
+    if (!tags.includes("devops")) tags.push("devops");
+  }
+  if (keywords.some((k: string) => ["lora", "qlora", "微调", "finetune"].includes(k))) {
+    tags.push("llm");
+  }
+
+  // 根据 difficulty 添加难度标签
+  const difficulty = String(data.difficulty || "intermediate");
+  if (difficulty === "beginner") tags.push("beginner");
+  else if (difficulty === "advanced") tags.push("advanced");
+  else tags.push("intermediate");
+
+  // 根据内容推断类型标签
+  const content = String(data.summary || "").toLowerCase();
+  if (content.includes("论文") || content.includes("paper")) {
+    tags.push("paper");
+  }
+  if (content.includes("实战") || content.includes("实践") || content.includes("动手")) {
+    tags.push("practice");
+  }
+  if (content.includes("原理") || content.includes("理论") || content.includes("数学")) {
+    tags.push("theory");
+  }
+
+  return Array.from(new Set(tags)); // 去重
 }
 
 /**
