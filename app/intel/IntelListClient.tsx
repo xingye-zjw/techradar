@@ -2,49 +2,13 @@
 
 import Link from "next/link";
 import { useState, useMemo, useRef, useEffect } from "react";
-import Fuse from "fuse.js";
 import type { IntelCard } from "@/lib/intel";
 import { difficultyMeta, categoryMeta } from "@/lib/intel-meta";
 import { TAG_GROUPS, getTagColor, type TagDefinition } from "@/lib/intel-tags";
+import { createFuse, highlightText } from "@/lib/search-helpers";
 
 interface IntelListClientProps {
   cards: IntelCard[];
-}
-
-/**
- * 在文本中高亮搜索关键词
- */
-function highlightSearch(text: string, query: string): React.ReactNode {
-  if (!query.trim()) return text;
-
-  const terms = query
-    .toLowerCase()
-    .split(/\s+/)
-    .filter((t) => t.length > 0);
-
-  if (terms.length === 0) return text;
-
-  terms.sort((a, b) => b.length - a.length);
-  const escaped = terms.map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
-  const pattern = new RegExp(`(${escaped.join("|")})`, "gi");
-
-  const parts = text.split(pattern);
-  return parts.map((part, idx) => {
-    if (part.length > 0) {
-      const freshPattern = new RegExp(`^(${escaped.join("|")})$`, "i");
-      if (freshPattern.test(part)) {
-        return (
-          <mark
-            key={idx}
-            className="bg-cyan-400/25 text-cyan-300 rounded-sm px-0.5 font-medium"
-          >
-            {part}
-          </mark>
-        );
-      }
-    }
-    return <span key={idx}>{part}</span>;
-  });
 }
 
 export function IntelListClient({ cards }: IntelListClientProps) {
@@ -57,18 +21,12 @@ export function IntelListClient({ cards }: IntelListClientProps) {
   // 构建 Fuse.js 搜索索引
   const fuse = useMemo(
     () =>
-      new Fuse<IntelCard>(cards, {
-        keys: [
-          { name: "title", weight: 0.35 },
-          { name: "summary", weight: 0.25 },
-          { name: "keywords", weight: 0.25 },
-          { name: "tags", weight: 0.15 },
-        ],
-        includeScore: true,
-        threshold: 0.35,
-        ignoreLocation: true,
-        minMatchCharLength: 1,
-      }),
+      createFuse<IntelCard>(cards, [
+        { name: "title", weight: 0.35 },
+        { name: "summary", weight: 0.25 },
+        { name: "keywords", weight: 0.25 },
+        { name: "tags", weight: 0.15 },
+      ]),
     [cards]
   );
 
@@ -412,12 +370,12 @@ export function IntelListClient({ cards }: IntelListClientProps) {
 
                     {/* 标题 */}
                     <h2 className="text-lg font-bold text-neutral-100 group-hover:text-cyan-400 transition-colors mb-2">
-                      {highlightSearch(card.title, searchQuery)}
+                      {highlightText(card.title, searchQuery)}
                     </h2>
 
                     {/* 摘要 */}
                     <p className="text-sm text-neutral-400 leading-relaxed mb-3">
-                      {highlightSearch(card.summary, searchQuery)}
+                      {highlightText(card.summary, searchQuery)}
                     </p>
 
                     {/* 标签 */}

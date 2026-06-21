@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Fuse from "fuse.js";
 import type { Tool, ToolScenario, ToolWithRelated, RelatedIntelRef } from "@/lib/toolbox";
+import { createFuse, highlightText } from "@/lib/search-helpers";
 
 interface ToolboxClientProps {
   tools: ToolWithRelated[];
@@ -47,19 +48,14 @@ export function ToolboxClient({
   // Fuse.js 搜索实例
   const fuse = useMemo(
     () =>
-      new Fuse<ToolWithRelated>(tools, {
-        keys: [
-          { name: "name", weight: 0.4 },
-          { name: "purpose", weight: 0.2 },
-          { name: "tags", weight: 0.2 },
-          { name: "category", weight: 0.1 },
-          { name: "features", weight: 0.05 },
-          { name: "use_cases", weight: 0.05 },
-        ],
-        threshold: 0.3,
-        ignoreLocation: true,
-        minMatchCharLength: 1,
-      }),
+      createFuse<ToolWithRelated>(tools, [
+        { name: "name", weight: 0.4 },
+        { name: "purpose", weight: 0.2 },
+        { name: "tags", weight: 0.2 },
+        { name: "category", weight: 0.1 },
+        { name: "features", weight: 0.05 },
+        { name: "use_cases", weight: 0.05 },
+      ], { threshold: 0.3 }),
     [tools]
   );
 
@@ -338,6 +334,7 @@ export function ToolboxClient({
                 onToggleCompare={toggleCompareSelect}
                 onCopyInstall={copyToClipboard}
                 isCopied={copiedText === tool.install}
+                query={query}
               />
             ))
           )}
@@ -421,6 +418,7 @@ function ToolCard({
   onToggleCompare,
   onCopyInstall,
   isCopied,
+  query,
 }: {
   tool: ToolWithRelated;
   compareMode: boolean;
@@ -428,6 +426,7 @@ function ToolCard({
   onToggleCompare: (name: string) => void;
   onCopyInstall: (text: string) => void;
   isCopied: boolean;
+  query: string;
 }) {
   const diffMeta = DIFFICULTY_META[tool.difficulty];
   const [showRelated, setShowRelated] = useState(false);
@@ -469,7 +468,7 @@ function ToolCard({
 
       {/* 名称 + GitHub 信息 */}
       <div className="flex items-start justify-between gap-4 mb-3">
-        <h2 className="text-lg font-bold text-neutral-100">{tool.name}</h2>
+        <h2 className="text-lg font-bold text-neutral-100">{highlightText(tool.name, query)}</h2>
         <a
           href={tool.github.url}
           target="_blank"
@@ -483,7 +482,7 @@ function ToolCard({
       </div>
 
       <p className="text-sm text-neutral-400 leading-relaxed mb-4">
-        {tool.purpose}
+        {highlightText(tool.purpose, query)}
       </p>
 
       {/* 安装命令 + 复制 */}

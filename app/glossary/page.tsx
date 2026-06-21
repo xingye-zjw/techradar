@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import Link from "next/link";
 import { getAllTerms, getAllCategories, getTermsGroupedByLetter, getAllTags, type GlossaryTerm } from "@/lib/glossary";
 import { CATEGORY_COLORS } from "@/lib/constants";
+import { createFuse, highlightText } from "@/lib/search-helpers";
 
 export default function GlossaryPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -14,19 +15,25 @@ export default function GlossaryPage() {
   const categories = useMemo(() => getAllCategories(), []);
   const allTags = useMemo(() => getAllTags(), []);
 
+  // 构建 Fuse.js 搜索索引
+  const fuse = useMemo(
+    () =>
+      createFuse(terms, [
+        { name: "name", weight: 0.4 },
+        { name: "nameEn", weight: 0.2 },
+        { name: "summary", weight: 0.25 },
+        { name: "tags", weight: 0.15 },
+      ]),
+    [terms]
+  );
+
   // 过滤后的术语
   const filteredTerms = useMemo(() => {
     let result = terms;
 
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
-      result = result.filter(
-        (term) =>
-          term.name.toLowerCase().includes(query) ||
-          (term.nameEn && term.nameEn.toLowerCase().includes(query)) ||
-          term.summary.toLowerCase().includes(query) ||
-          term.tags.some((tag) => tag.toLowerCase().includes(query))
-      );
+    if (searchQuery.trim()) {
+      const searchIds = new Set(fuse.search(searchQuery.trim()).map((r) => r.item.slug));
+      result = result.filter((term) => searchIds.has(term.slug));
     }
 
     if (selectedCategory) {
@@ -38,7 +45,7 @@ export default function GlossaryPage() {
     }
 
     return result;
-  }, [terms, searchQuery, selectedCategory, selectedTag]);
+  }, [terms, searchQuery, selectedCategory, selectedTag, fuse]);
 
   // 按首字母分组过滤后的术语
   const filteredTermsByLetter = useMemo(() => {
@@ -52,10 +59,6 @@ export default function GlossaryPage() {
     }
     return grouped;
   }, [filteredTerms]);
-
-  const handleSearch = (query: string) => {
-    setSearchQuery(query);
-  };
 
   const scrollToLetter = (letter: string) => {
     const element = document.getElementById(`letter-${letter}`);
@@ -199,11 +202,11 @@ export default function GlossaryPage() {
                       <div className="flex items-start justify-between gap-4 mb-2">
                         <div className="flex items-center gap-3">
                           <h3 className="font-bold text-neutral-100 group-hover:text-cyan-400 transition-colors">
-                            {term.name}
+                            {highlightText(term.name, searchQuery)}
                           </h3>
                           {term.nameEn && (
                             <span className="text-xs text-neutral-500 font-mono">
-                              {term.nameEn}
+                              {highlightText(term.nameEn, searchQuery)}
                             </span>
                           )}
                         </div>
@@ -214,7 +217,7 @@ export default function GlossaryPage() {
                         </span>
                       </div>
                       <p className="text-sm text-neutral-400 leading-relaxed mb-3">
-                        {term.summary}
+                        {highlightText(term.summary, searchQuery)}
                       </p>
                       <div className="flex flex-wrap gap-1">
                         {term.tags.map((tag) => (

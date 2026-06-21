@@ -15,40 +15,6 @@ export interface UnifiedSearchItem {
 }
 
 /**
- * 模块类型配置
- */
-export const MODULE_CONFIG = {
-  node: {
-    label: "路线图",
-    icon: "🗺️",
-    color: "text-green-400",
-    bgColor: "bg-green-400/10",
-    borderColor: "border-green-400/30",
-  },
-  intel: {
-    label: "情报",
-    icon: "📰",
-    color: "text-cyan-400",
-    bgColor: "bg-cyan-400/10",
-    borderColor: "border-cyan-400/30",
-  },
-  tool: {
-    label: "工具",
-    icon: "🔧",
-    color: "text-amber-400",
-    bgColor: "bg-amber-400/10",
-    borderColor: "border-amber-400/30",
-  },
-  pitfall: {
-    label: "踩坑",
-    icon: "⚠️",
-    color: "text-red-400",
-    bgColor: "bg-red-400/10",
-    borderColor: "border-red-400/30",
-  },
-} as const;
-
-/**
  * 静态搜索数据 - 从各模块预编译
  * 这些数据会在构建时生成，客户端直接使用
  */
