@@ -1,10 +1,7 @@
 import Link from "next/link";
-import { SearchBar } from "@/components/radar/SearchBar";
-import { getIntelSearchIndex } from "@/lib/intel";
+import { GlobalSearchBar } from "@/components/GlobalSearchBar";
 
 export default function Home() {
-  const searchIndex = getIntelSearchIndex();
-
   return (
     <main className="min-h-screen bg-neutral-950 text-neutral-200">
       <section className="relative w-full min-h-[380px] flex items-center justify-center overflow-hidden">
@@ -20,9 +17,9 @@ export default function Home() {
             AI 驱动的大学生硬核开源实战导航系统 — 经过验证的通关攻略，而非知识搬运
           </p>
           <div className="max-w-xl mx-auto">
-            <SearchBar index={searchIndex} />
+            <GlobalSearchBar />
             <p className="mt-3 font-mono text-[10px] text-neutral-500">
-              已索引 {searchIndex.length} 条技术情报 · 试试 Transformer / YOLO / LoRA / RAG
+              全站搜索 · 路线图 / 情报 / 工具 / 踩坑指南 · 试试 Transformer / Docker / LoRA / CUDA
             </p>
           </div>
         </div>
