@@ -195,13 +195,6 @@ export function IntelListClient({ cards }: IntelListClientProps) {
 
           <div className="flex flex-wrap gap-3">
             <Link
-              href="/search"
-              className="inline-flex items-center gap-2 font-mono text-xs px-4 py-2 bg-cyan-400/10 text-cyan-400 border border-cyan-400/30 rounded-sm hover:bg-cyan-400/20 transition-colors"
-            >
-              <span>⌕</span>
-              <span>全站搜索</span>
-            </Link>
-            <Link
               href="/"
               className="inline-flex items-center gap-2 font-mono text-xs px-4 py-2 bg-neutral-900 text-neutral-400 border border-neutral-800 rounded-sm hover:border-neutral-600 transition-colors"
             >
@@ -488,10 +481,10 @@ export function IntelListClient({ cards }: IntelListClientProps) {
         {/* 页脚 */}
         <div className="mt-16 pt-6 border-t border-neutral-800 text-center">
           <Link
-            href="/search"
+            href="/"
             className="font-mono text-[11px] text-neutral-500 hover:text-cyan-400 transition-colors"
           >
-            更精准查找？试试搜索 →
+            返回首页 →
           </Link>
         </div>
       </div>
