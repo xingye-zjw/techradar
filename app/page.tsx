@@ -48,17 +48,17 @@ export default function Home() {
           </Link>
 
           <Link
-            href="/search"
+            href="/intel"
             className="group block bg-neutral-900 border border-neutral-700 rounded-lg p-6 hover:border-cyan-400/50 transition-colors"
           >
             <div className="flex items-center gap-4 mb-3">
               <span className="font-mono text-sm font-bold text-cyan-400 bg-cyan-400/10 w-10 h-10 rounded-lg flex items-center justify-center">
                 02
               </span>
-              <h2 className="text-xl font-bold">技术情报检索</h2>
+              <h2 className="text-xl font-bold">技术情报</h2>
             </div>
             <p className="text-neutral-400 text-sm">
-              模糊搜索 · 关键词索引 · Fuse.js 驱动的实时匹配，支持键盘导航
+              18 条经过验证的技术情报，从入门到进阶，覆盖 AI 工程全链路
             </p>
           </Link>
 
