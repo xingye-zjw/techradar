@@ -21,7 +21,8 @@
       "official_url": "https://docs.ultralytics.com",
       "use_cases": ["目标检测", "实例分割", "关键点检测"],
       "relatedIntel": ["002-yolo"],
-      "relatedNodes": ["cv-detection"]
+      "relatedNodes": ["cv-detection"],
+      "relatedTerms": ["yolo", "cnn", "object-detection", "bounding-box"]
     },
     {
       "name": "Hugging Face Transformers",
@@ -44,7 +45,8 @@
       "official_url": "https://huggingface.co/docs/transformers",
       "use_cases": ["文本生成", "文本分类", "LLM 推理", "模型微调"],
       "relatedIntel": ["001-transformer", "013-huggingface-datasets"],
-      "relatedNodes": ["nlp-transformer", "llm-finetune"]
+      "relatedNodes": ["nlp-transformer", "llm-finetune"],
+      "relatedTerms": ["transformer", "lora", "fine-tuning", "tokenizer", "embedding"]
     },
     {
       "name": "PyTorch",
@@ -67,7 +69,8 @@
       "official_url": "https://pytorch.org/docs",
       "use_cases": ["模型训练", "研究实验", "自定义算子"],
       "relatedIntel": ["011-pytorch"],
-      "relatedNodes": ["pytorch-core"]
+      "relatedNodes": ["pytorch-core"],
+      "relatedTerms": ["pytorch", "tensor", "cuda", "gradient-descent", "backpropagation"]
     },
     {
       "name": "LangChain",
@@ -90,7 +93,8 @@
       "official_url": "https://python.langchain.com",
       "use_cases": ["RAG 检索增强", "Agent 智能体", "对话系统"],
       "relatedIntel": ["005-rag"],
-      "relatedNodes": ["llm-finetune"]
+      "relatedNodes": ["llm-finetune"],
+      "relatedTerms": ["rag", "transformer", "embedding"]
     },
     {
       "name": "Streamlit",
@@ -113,7 +117,8 @@
       "official_url": "https://docs.streamlit.io",
       "use_cases": ["快速 Demo", "数据看板", "原型展示"],
       "relatedIntel": ["012-streamlit"],
-      "relatedNodes": ["project-capstone"]
+      "relatedNodes": ["project-capstone"],
+      "relatedTerms": []
     },
     {
       "name": "MLflow",
@@ -136,7 +141,8 @@
       "official_url": "https://mlflow.org/docs/latest",
       "use_cases": ["实验追踪", "模型版本管理", "团队协作"],
       "relatedIntel": ["018-mlflow"],
-      "relatedNodes": ["project-capstone"]
+      "relatedNodes": ["project-capstone"],
+      "relatedTerms": []
     },
     {
       "name": "Weights & Biases",
@@ -159,7 +165,8 @@
       "official_url": "https://docs.wandb.ai",
       "use_cases": ["实验可视化", "超参搜索", "团队协作"],
       "relatedIntel": [],
-      "relatedNodes": ["project-capstone"]
+      "relatedNodes": ["project-capstone"],
+      "relatedTerms": []
     },
     {
       "name": "DVC (Data Version Control)",
@@ -182,7 +189,8 @@
       "official_url": "https://dvc.org/doc",
       "use_cases": ["数据版本控制", "流水线复现", "大文件管理"],
       "relatedIntel": [],
-      "relatedNodes": ["project-capstone"]
+      "relatedNodes": ["project-capstone"],
+      "relatedTerms": ["git"]
     },
     {
       "name": "Docker",
@@ -205,7 +213,8 @@
       "official_url": "https://docs.docker.com",
       "use_cases": ["模型部署", "环境隔离", "服务编排"],
       "relatedIntel": ["007-docker"],
-      "relatedNodes": ["docker-basic"]
+      "relatedNodes": ["docker-basic"],
+      "relatedTerms": ["docker", "container", "image"]
     },
     {
       "name": "Gradio",
@@ -228,7 +237,8 @@
       "official_url": "https://gradio.app/docs",
       "use_cases": ["AI Demo", "对话系统 Demo", "多模态交互"],
       "relatedIntel": [],
-      "relatedNodes": ["llm-finetune", "project-capstone"]
+      "relatedNodes": ["llm-finetune", "project-capstone"],
+      "relatedTerms": []
     },
     {
       "name": "Label Studio",
@@ -251,7 +261,8 @@
       "official_url": "https://labelstud.io/guide",
       "use_cases": ["数据标注", "主动学习", "标注质量控制"],
       "relatedIntel": [],
-      "relatedNodes": ["cv-detection"]
+      "relatedNodes": ["cv-detection"],
+      "relatedTerms": ["bounding-box", "object-detection"]
     },
     {
       "name": "pgvector + PostgreSQL",
@@ -274,7 +285,8 @@
       "official_url": "https://github.com/pgvector/pgvector",
       "use_cases": ["RAG 检索", "向量检索", "混合搜索"],
       "relatedIntel": ["005-rag"],
-      "relatedNodes": []
+      "relatedNodes": [],
+      "relatedTerms": ["rag", "embedding"]
     },
     {
       "name": "ONNX Runtime",
@@ -297,7 +309,8 @@
       "official_url": "https://onnxruntime.ai/docs",
       "use_cases": ["模型推理加速", "跨平台部署", "生产环境推理"],
       "relatedIntel": ["014-onnx"],
-      "relatedNodes": ["cv-detection"]
+      "relatedNodes": ["cv-detection"],
+      "relatedTerms": ["cuda", "gpu"]
     },
     {
       "name": "Dask",
@@ -320,7 +333,8 @@
       "official_url": "https://docs.dask.org",
       "use_cases": ["大数据处理", "分布式计算", "集群调度"],
       "relatedIntel": [],
-      "relatedNodes": []
+      "relatedNodes": [],
+      "relatedTerms": ["tensor", "matrix"]
     }
   ],
   "scenarios": [

@@ -1,0 +1,237 @@
+{
+  "terms": [
+    {
+      "slug": "transformer",
+      "name": "Transformer",
+      "nameEn": "Transformer",
+      "category": "ai-ml",
+      "tags": ["深度学习", "架构", "NLP", "CV"],
+      "summary": "一种基于自注意力机制的神经网络架构，解决了 RNN 的并行计算问题，是 BERT、GPT 等模型的基础。",
+      "relatedTerms": ["self-attention", "bert", "gpt", "lora", "rag"],
+      "relatedNodes": ["nlp-transformer"],
+      "relatedIntel": ["001-transformer", "005-rag"],
+      "relatedTools": ["PyTorch", "Hugging Face Transformers"],
+      "resources": [
+        { "title": "Attention Is All You Need", "url": "https://arxiv.org/abs/1706.03762", "type": "paper" },
+        { "title": "Jay Alammar 可视化解释", "url": "https://jalammar.github.io/illustrated-transformer/", "type": "article" }
+      ]
+    },
+    {
+      "slug": "cnn",
+      "name": "CNN",
+      "nameEn": "Convolutional Neural Network",
+      "category": "ai-ml",
+      "tags": ["深度学习", "计算机视觉", "架构"],
+      "summary": "卷积神经网络，专门用于处理网格状数据（如图像），通过卷积层提取特征。",
+      "relatedTerms": ["resnet", "yolo", "pooling", "feature-map"],
+      "relatedNodes": ["cv-cnn"],
+      "relatedIntel": ["006-cnn-basics", "004-resnet", "002-yolo"],
+      "relatedTools": ["PyTorch"],
+      "resources": [
+        { "title": "CS231n Convolutional Networks", "url": "https://cs231n.github.io/convolutional-networks/", "type": "course" }
+      ]
+    },
+    {
+      "slug": "docker",
+      "name": "Docker",
+      "nameEn": "Docker",
+      "category": "engineering",
+      "tags": ["容器化", "DevOps", "部署"],
+      "summary": "容器化平台，将应用及其依赖打包成轻量级容器，实现环境一致性和快速部署。",
+      "relatedTerms": ["container", "image", "kubernetes"],
+      "relatedNodes": ["docker-basic"],
+      "relatedIntel": ["007-docker"],
+      "relatedTools": ["Docker"],
+      "resources": [
+        { "title": "Docker 官方文档", "url": "https://docs.docker.com/get-started/", "type": "documentation" }
+      ]
+    },
+    {
+      "slug": "lora",
+      "name": "LoRA",
+      "nameEn": "Low-Rank Adaptation",
+      "category": "ai-ml",
+      "tags": ["深度学习", "微调", "LLM"],
+      "summary": "低秩适应，一种高效的微调方法，通过添加低秩矩阵减少参数量。",
+      "relatedTerms": ["transformer", "fine-tuning", "qlora", "rlhf"],
+      "relatedNodes": ["llm-finetune"],
+      "relatedIntel": ["003-lora-qlora", "015-rlhf"],
+      "relatedTools": ["Hugging Face Transformers"],
+      "resources": [
+        { "title": "LoRA 论文", "url": "https://arxiv.org/abs/2106.09685", "type": "paper" }
+      ]
+    },
+    {
+      "slug": "self-attention",
+      "name": "自注意力机制",
+      "nameEn": "Self-Attention",
+      "category": "ai-ml",
+      "tags": ["深度学习", "注意力机制", "NLP"],
+      "summary": "让模型能够关注输入序列中最相关的部分，是 Transformer 的核心。",
+      "relatedTerms": ["transformer", "attention-mechanism", "multi-head-attention"],
+      "relatedNodes": ["nlp-transformer"],
+      "relatedIntel": ["001-transformer"],
+      "relatedTools": ["PyTorch", "Hugging Face Transformers"],
+      "resources": []
+    },
+    {
+      "slug": "pytorch",
+      "name": "PyTorch",
+      "nameEn": "PyTorch",
+      "category": "engineering",
+      "tags": ["深度学习框架", "工具"],
+      "summary": "Facebook 开发的深度学习框架，以动态计算图和易用性著称，适合研究和生产。",
+      "relatedTerms": ["tensor", "cuda", "backpropagation"],
+      "relatedNodes": ["pytorch-core"],
+      "relatedIntel": ["011-pytorch"],
+      "relatedTools": ["PyTorch"],
+      "resources": [
+        { "title": "PyTorch 官方教程", "url": "https://pytorch.org/tutorials/", "type": "documentation" }
+      ]
+    },
+    {
+      "slug": "resnet",
+      "name": "ResNet",
+      "nameEn": "Residual Network",
+      "category": "ai-ml",
+      "tags": ["深度学习", "计算机视觉", "架构"],
+      "summary": "残差网络，通过跳跃连接解决深层网络的梯度消失问题。",
+      "relatedTerms": ["cnn", "backpropagation", "overfitting"],
+      "relatedNodes": ["cv-cnn"],
+      "relatedIntel": ["004-resnet"],
+      "relatedTools": ["PyTorch"],
+      "resources": [
+        { "title": "ResNet 论文", "url": "https://arxiv.org/abs/1512.03385", "type": "paper" }
+      ]
+    },
+    {
+      "slug": "yolo",
+      "name": "YOLO",
+      "nameEn": "You Only Look Once",
+      "category": "ai-ml",
+      "tags": ["目标检测", "深度学习", "计算机视觉"],
+      "summary": "实时目标检测算法，将检测任务转化为回归问题，速度极快。",
+      "relatedTerms": ["cnn", "bounding-box", "object-detection", "map"],
+      "relatedNodes": ["cv-detection"],
+      "relatedIntel": ["002-yolo"],
+      "relatedTools": ["Ultralytics YOLO"],
+      "resources": [
+        { "title": "YOLO 论文", "url": "https://arxiv.org/abs/1506.02640", "type": "paper" }
+      ]
+    },
+    {
+      "slug": "rag",
+      "name": "RAG",
+      "nameEn": "Retrieval-Augmented Generation",
+      "category": "ai-ml",
+      "tags": ["LLM", "检索", "NLP"],
+      "summary": "检索增强生成，结合检索和生成，提高 LLM 回答的准确性。",
+      "relatedTerms": ["transformer", "embedding", "fine-tuning"],
+      "relatedNodes": ["nlp-transformer"],
+      "relatedIntel": ["005-rag"],
+      "relatedTools": ["LangChain"],
+      "resources": [
+        { "title": "RAG 论文", "url": "https://arxiv.org/abs/2005.11401", "type": "paper" }
+      ]
+    },
+    {
+      "slug": "git",
+      "name": "Git",
+      "nameEn": "Git",
+      "category": "engineering",
+      "tags": ["版本控制", "DevOps"],
+      "summary": "分布式版本控制系统，用于跟踪代码变更、协作开发。",
+      "relatedTerms": ["github", "commit", "branch", "pull-request"],
+      "relatedNodes": ["git-github"],
+      "relatedIntel": ["008-git"],
+      "relatedTools": [],
+      "resources": [
+        { "title": "Git 官方文档", "url": "https://git-scm.com/book/zh/v2", "type": "documentation" }
+      ]
+    },
+    {
+      "slug": "linux",
+      "name": "Linux",
+      "nameEn": "Linux",
+      "category": "engineering",
+      "tags": ["操作系统", "DevOps", "Shell"],
+      "summary": "开源操作系统，是服务器和开发环境的主流选择。",
+      "relatedTerms": ["shell", "ssh", "cli"],
+      "relatedNodes": ["linux-basic"],
+      "relatedIntel": ["009-linux", "016-server-setup"],
+      "relatedTools": [],
+      "resources": []
+    },
+    {
+      "slug": "tensor",
+      "name": "张量",
+      "nameEn": "Tensor",
+      "category": "math",
+      "tags": ["数据结构", "深度学习", "数学"],
+      "summary": "多维数组，是深度学习中的基本数据结构。",
+      "relatedTerms": ["matrix", "vector", "pytorch"],
+      "relatedNodes": ["pytorch-core", "math-linear-algebra"],
+      "relatedIntel": ["011-pytorch"],
+      "relatedTools": ["PyTorch"],
+      "resources": []
+    },
+    {
+      "slug": "matrix",
+      "name": "矩阵",
+      "nameEn": "Matrix",
+      "category": "math",
+      "tags": ["线性代数", "数学基础"],
+      "summary": "由数字组成的矩形阵列，是线性代数的核心概念。",
+      "relatedTerms": ["vector", "tensor", "eigenvalue", "gradient-descent"],
+      "relatedNodes": ["math-linear-algebra"],
+      "relatedIntel": [],
+      "relatedTools": [],
+      "resources": []
+    },
+    {
+      "slug": "fine-tuning",
+      "name": "微调",
+      "nameEn": "Fine-tuning",
+      "category": "ai-ml",
+      "tags": ["深度学习", "LLM", "训练"],
+      "summary": "在预训练模型基础上，使用特定任务数据继续训练以适应新任务。",
+      "relatedTerms": ["pre-training", "lora", "transfer-learning"],
+      "relatedNodes": ["llm-finetune"],
+      "relatedIntel": ["003-lora-qlora", "015-rlhf"],
+      "relatedTools": ["Hugging Face Transformers"],
+      "resources": []
+    },
+    {
+      "slug": "overfitting",
+      "name": "过拟合",
+      "nameEn": "Overfitting",
+      "category": "ai-ml",
+      "tags": ["深度学习", "训练", "优化"],
+      "summary": "模型在训练集上表现很好但在测试集上表现差，泛化能力不足。",
+      "relatedTerms": ["regularization", "generalization", "loss-function"],
+      "relatedNodes": ["pytorch-core"],
+      "relatedIntel": [],
+      "relatedTools": [],
+      "resources": []
+    },
+    {
+      "slug": "gradient-descent",
+      "name": "梯度下降",
+      "nameEn": "Gradient Descent",
+      "category": "math",
+      "tags": ["优化算法", "数学基础", "训练"],
+      "summary": "通过计算损失函数的梯度来更新模型参数的优化算法。",
+      "relatedTerms": ["backpropagation", "learning-rate", "loss-function"],
+      "relatedNodes": ["pytorch-core", "math-linear-algebra"],
+      "relatedIntel": [],
+      "relatedTools": [],
+      "resources": []
+    }
+  ],
+  "categories": [
+    { "id": "ai-ml", "name": "AI/ML", "description": "人工智能与机器学习" },
+    { "id": "engineering", "name": "工程部署", "description": "工程实践与部署运维" },
+    { "id": "math", "name": "数学基础", "description": "数学基础知识" },
+    { "id": "project", "name": "项目管理", "description": "项目管理与协作" }
+  ]
+}

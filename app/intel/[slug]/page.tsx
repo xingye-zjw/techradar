@@ -5,6 +5,7 @@ import { getAllIntelCards, getIntelCardBySlug } from "@/lib/intel";
 import { MarkdownRenderer, extractToc } from "@/components/radar/MarkdownRenderer";
 import { difficultyMeta, categoryMeta } from "@/lib/intel-meta";
 import { ReadingProgress } from "./ReadingProgress";
+import { getAllTerms, type GlossaryTerm } from "@/lib/glossary";
 
 export function generateStaticParams() {
   const cards = getAllIntelCards();
@@ -74,14 +75,52 @@ function findRelated(currentSlug: string, allCards: ReturnType<typeof getAllInte
   return scored;
 }
 
+/**
+ * 找相关术语：基于关键词和内容匹配
+ */
+function findRelatedTerms(card: ReturnType<typeof getIntelCardBySlug>, allTerms: GlossaryTerm[]): GlossaryTerm[] {
+  if (!card) return [];
+
+  const scored = allTerms.map((term) => {
+    let score = 0;
+    // 关键词匹配
+    const sharedKeywords = card.keywords.filter(
+      (kw) => term.name.toLowerCase().includes(kw.toLowerCase()) ||
+              term.tags.some(tag => tag.toLowerCase().includes(kw.toLowerCase()))
+    ).length;
+    score += sharedKeywords * 3;
+
+    // 标签匹配
+    const sharedTags = term.tags.filter(
+      (tag) => card.keywords.some(kw => kw.toLowerCase().includes(tag.toLowerCase()))
+    ).length;
+    score += sharedTags * 2;
+
+    // 情报 slug 匹配
+    if (term.relatedIntel.includes(card.slug)) {
+      score += 5;
+    }
+
+    return { term, score };
+  });
+
+  return scored
+    .filter((s) => s.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 6)
+    .map((s) => s.term);
+}
+
 export default function IntelPage({ params }: { params: { slug: string } }) {
   const card = getIntelCardBySlug(params.slug);
   if (!card) notFound();
 
   const allCards = getAllIntelCards();
+  const allTerms = getAllTerms();
   const toc = extractToc(card.content);
   const takeaways = getTakeaways(card);
   const related = findRelated(card.slug, allCards);
+  const relatedTerms = findRelatedTerms(card, allTerms);
 
   const diff = difficultyMeta[card.difficulty] || difficultyMeta.intermediate;
   const cat = categoryMeta[card.category] || categoryMeta.uncategorized;
@@ -316,7 +355,41 @@ export default function IntelPage({ params }: { params: { slug: string } }) {
         </div>
 
         {/* ========================================
-            第三屏：相关推荐
+            第三屏：相关术语
+        ======================================== */}
+        {relatedTerms.length > 0 && (
+          <section className="mt-16 pt-8 border-t border-neutral-800">
+            <div className="font-mono text-[10px] text-cyan-400 uppercase tracking-widest mb-5">
+              ▸ 相关术语
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+              {relatedTerms.map((term) => (
+                <Link
+                  key={term.slug}
+                  href={`/glossary/${term.slug}`}
+                  className="block p-3 bg-neutral-900 border border-neutral-800 rounded-lg hover:border-cyan-400/40 transition-colors group"
+                >
+                  <div className="flex items-center gap-2 mb-1">
+                    <h4 className="text-sm font-semibold text-neutral-200 group-hover:text-cyan-400 transition-colors">
+                      {term.name}
+                    </h4>
+                    {term.nameEn && (
+                      <span className="text-[10px] text-neutral-500 font-mono">
+                        {term.nameEn}
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-xs text-neutral-500 leading-relaxed line-clamp-2">
+                    {term.summary}
+                  </p>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* ========================================
+            第四屏：相关推荐
         ======================================== */}
         {related.length > 0 && (
           <section className="mt-16 pt-8 border-t border-neutral-800">

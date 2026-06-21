@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { GlobalSearchBar } from "@/components/GlobalSearchBar";
+import { RecentList } from "@/components/RecentList";
 
 export default function Home() {
   return (
@@ -86,6 +87,20 @@ export default function Home() {
               结构化 FAQ，强制「环境 → 报错 → 排查 → 解决」格式
             </p>
           </Link>
+        </div>
+
+        {/* 最近访问记录 */}
+        <div className="mt-12">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="h-px flex-1 bg-gradient-to-r from-green-400/0 via-green-400/40 to-transparent"></div>
+            <div className="flex items-center gap-2 shrink-0">
+              <span className="font-mono text-[11px] text-green-400 uppercase tracking-widest">
+                最近访问
+              </span>
+            </div>
+            <div className="h-px flex-1 bg-gradient-to-l from-green-400/0 via-green-400/40 to-transparent"></div>
+          </div>
+          <RecentList limit={5} showTimestamp className="max-w-2xl mx-auto" />
         </div>
       </section>
 

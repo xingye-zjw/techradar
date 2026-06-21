@@ -16,6 +16,9 @@
     --accent-dim: rgba(0, 255, 136, 0.12);
     --accent2-dim: rgba(0, 212, 255, 0.12);
 
+    /* Sidebar width - controlled by JS */
+    --sidebar-width: 240px;
+
     /* shadcn/ui compatible CSS variables */
     --background: 0 0% 4%;
     --foreground: 0 0% 95%;

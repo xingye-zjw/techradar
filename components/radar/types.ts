@@ -98,6 +98,8 @@ export interface RoadmapNode {
   relatedIntel?: string[];
   /** 关联工具 id 列表 */
   relatedTools?: string[];
+  /** 关联术语 slug 列表 */
+  relatedTerms?: string[];
 }
 
 export interface RoadmapData {

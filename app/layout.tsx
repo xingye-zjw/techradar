@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ToastContainer } from "@/components/Toast";
+import { Sidebar } from "@/components/Sidebar";
 
 export const metadata: Metadata = {
   title: "TechRadar 极客雷达",
@@ -23,7 +24,13 @@ export default function RootLayout({
       </head>
       <body className="antialiased">
         <div className="animate-in fade-in duration-200">
-          {children}
+          <Sidebar />
+          <main
+            className="min-h-screen transition-[margin] duration-300"
+            style={{ marginLeft: "var(--sidebar-width)" }}
+          >
+            {children}
+          </main>
         </div>
         <ToastContainer />
       </body>
