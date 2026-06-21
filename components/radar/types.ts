@@ -10,10 +10,21 @@ export interface ResourceLink {
   required: boolean;     // true = 必学，false = 可选
 }
 
+/** 结构化任务内容 */
+export interface TaskContent {
+  /** 核心目标：一两句话概括本节重点 */
+  objective: string;
+  /** 核心 API / 知识点：必须掌握的具体函数或操作 */
+  api_checklist: string[];
+  /** 场景实操：一个非常具体的微型任务 */
+  practice: string;
+}
+
 export interface DailyTask {
   day: number;
   title: string;
-  content: string[];     // 具体学习内容（数组，每项一个小任务）
+  /** 内容：支持结构化对象、字符串或数组形式 */
+  content: TaskContent | string | string[];
   duration: string;      // 如 "2小时"
   resources?: ResourceLink[];  // 推荐资源（分必学/可选）
   checkpoint: string;    // 完成标准

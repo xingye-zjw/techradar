@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { RoadmapNode as RoadmapNodeType, DailyTask, ResourceLink, Track } from "./types";
+import type { RoadmapNode as RoadmapNodeType, DailyTask, ResourceLink, Track, TaskContent } from "./types";
 import { ROADMAP_TRACKS } from "./types";
 
 interface NodeDetailPanelProps {
@@ -29,6 +29,22 @@ function loadTaskProgress(): Record<string, Record<number, boolean>> {
 
 function saveTaskProgress(progress: Record<string, Record<number, boolean>>) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+}
+
+/** 渲染 API 项，将函数名用 code 标签高亮 */
+function renderApiItem(item: string) {
+  // 匹配函数名模式：如 view()、reshape()、permute(0,2,3,1) 等
+  const parts = item.split(/(\w+\([^)]*\))/g);
+  return parts.map((part, idx) => {
+    if (/^\w+\([^)]*\)$/.test(part)) {
+      return (
+        <code key={idx} className="bg-zinc-800 text-cyan-300 font-mono px-1.5 py-0.5 rounded text-[11px]">
+          {part}
+        </code>
+      );
+    }
+    return <span key={idx}>{part}</span>;
+  });
 }
 
 export function NodeDetailPanel({ node, onClose }: NodeDetailPanelProps) {
@@ -220,14 +236,60 @@ export function NodeDetailPanel({ node, onClose }: NodeDetailPanelProps) {
                     </div>
 
                     {/* Content items */}
-                    <ul className="space-y-1.5 mb-3 ml-9">
-                      {(task.content || []).map((item, idx) => (
-                        <li key={idx} className="flex items-start gap-2 text-xs text-neutral-400">
-                          <span className="text-neutral-600 font-mono mt-0.5 flex-shrink-0">·</span>
-                          <span className={taskProgress[task.day] ? "line-through opacity-50" : ""}>{item || "学习内容更新中..."}</span>
-                        </li>
-                      ))}
-                    </ul>
+                    <div className="mb-3 ml-9">
+                      {task.content && typeof task.content === 'object' && !Array.isArray(task.content) && 'objective' in task.content ? (
+                        /* 新格式：结构化内容 */
+                        <div className="space-y-3">
+                          {/* 核心目标 */}
+                          <div>
+                            <h4 className="text-xs font-bold text-emerald-400 mb-1 uppercase tracking-wider">核心目标</h4>
+                            <p className={`text-xs text-neutral-400 leading-relaxed ${taskProgress[task.day] ? "line-through opacity-50" : ""}`}>
+                              {task.content.objective}
+                            </p>
+                          </div>
+
+                          {/* 核心 API */}
+                          {task.content.api_checklist && task.content.api_checklist.length > 0 && (
+                            <div>
+                              <h4 className="text-xs font-bold text-emerald-400 mb-1 uppercase tracking-wider">核心 API</h4>
+                              <ul className="space-y-1">
+                                {task.content.api_checklist.map((api, idx) => (
+                                  <li key={idx} className={`flex items-start gap-2 text-xs text-neutral-400 ${taskProgress[task.day] ? "line-through opacity-50" : ""}`}>
+                                    <span className="text-neutral-600 font-mono mt-0.5 flex-shrink-0">·</span>
+                                    <span>{renderApiItem(api)}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+
+                          {/* 场景实操 */}
+                          {task.content.practice && (
+                            <div>
+                              <h4 className="text-xs font-bold text-emerald-400 mb-1 uppercase tracking-wider">场景实操</h4>
+                              <blockquote className={`border-l-2 border-emerald-500 bg-white/5 px-3 py-2 rounded-r ${taskProgress[task.day] ? "opacity-50" : ""}`}>
+                                <p className="text-xs text-neutral-300 leading-relaxed">{task.content.practice}</p>
+                              </blockquote>
+                            </div>
+                          )}
+                        </div>
+                      ) : typeof task.content === 'string' ? (
+                        /* 旧格式：字符串 */
+                        <p className={`text-xs text-neutral-400 leading-relaxed ${taskProgress[task.day] ? "line-through opacity-50" : ""}`}>
+                          {task.content}
+                        </p>
+                      ) : Array.isArray(task.content) ? (
+                        /* 旧格式：数组 */
+                        <ul className="space-y-1.5">
+                          {(task.content || []).map((item, idx) => (
+                            <li key={idx} className="flex items-start gap-2 text-xs text-neutral-400">
+                              <span className="text-neutral-600 font-mono mt-0.5 flex-shrink-0">·</span>
+                              <span className={taskProgress[task.day] ? "line-through opacity-50" : ""}>{item || "学习内容更新中..."}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      ) : null}
+                    </div>
 
                     {/* Resources: Required */}
                     {requiredResources(task).length > 0 && (
