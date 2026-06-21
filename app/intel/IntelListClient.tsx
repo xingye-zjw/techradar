@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
+import Fuse from "fuse.js";
 import type { IntelCard } from "@/lib/intel";
 import { difficultyMeta, categoryMeta } from "@/lib/intel-meta";
 import { TAG_GROUPS, getTagColor, type TagDefinition } from "@/lib/intel-tags";
@@ -10,10 +11,78 @@ interface IntelListClientProps {
   cards: IntelCard[];
 }
 
+/**
+ * 在文本中高亮搜索关键词
+ */
+function highlightSearch(text: string, query: string): React.ReactNode {
+  if (!query.trim()) return text;
+
+  const terms = query
+    .toLowerCase()
+    .split(/\s+/)
+    .filter((t) => t.length > 0);
+
+  if (terms.length === 0) return text;
+
+  terms.sort((a, b) => b.length - a.length);
+  const escaped = terms.map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+  const pattern = new RegExp(`(${escaped.join("|")})`, "gi");
+
+  const parts = text.split(pattern);
+  return parts.map((part, idx) => {
+    if (part.length > 0) {
+      const freshPattern = new RegExp(`^(${escaped.join("|")})$`, "i");
+      if (freshPattern.test(part)) {
+        return (
+          <mark
+            key={idx}
+            className="bg-cyan-400/25 text-cyan-300 rounded-sm px-0.5 font-medium"
+          >
+            {part}
+          </mark>
+        );
+      }
+    }
+    return <span key={idx}>{part}</span>;
+  });
+}
+
 export function IntelListClient({ cards }: IntelListClientProps) {
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [activeDifficulty, setActiveDifficulty] = useState<string>("all");
   const [activeTags, setActiveTags] = useState<Set<string>>(new Set());
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  // 构建 Fuse.js 搜索索引
+  const fuse = useMemo(
+    () =>
+      new Fuse<IntelCard>(cards, {
+        keys: [
+          { name: "title", weight: 0.35 },
+          { name: "summary", weight: 0.25 },
+          { name: "keywords", weight: 0.25 },
+          { name: "tags", weight: 0.15 },
+        ],
+        includeScore: true,
+        threshold: 0.35,
+        ignoreLocation: true,
+        minMatchCharLength: 1,
+      }),
+    [cards]
+  );
+
+  // 快捷键聚焦搜索框
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   // 计算各分类的数量
   const categoryCounts = useMemo(() => {
@@ -37,18 +106,36 @@ export function IntelListClient({ cards }: IntelListClientProps) {
     });
   };
 
-  // 筛选后的卡片
+  // 筛选后的卡片（支持搜索 + 多维筛选）
   const filteredCards = useMemo(() => {
-    return cards.filter((c) => {
-      if (activeCategory !== "all" && c.category !== activeCategory) return false;
-      if (activeDifficulty !== "all" && c.difficulty !== activeDifficulty) return false;
-      if (activeTags.size > 0) {
-        const hasTag = Array.from(activeTags).some((tag) => c.tags.includes(tag));
-        if (!hasTag) return false;
-      }
-      return true;
-    });
-  }, [cards, activeCategory, activeDifficulty, activeTags]);
+    let result = cards;
+
+    // 搜索筛选
+    if (searchQuery.trim()) {
+      const searchResults = fuse.search(searchQuery.trim());
+      const searchIds = new Set(searchResults.map((r) => r.item.slug));
+      result = result.filter((c) => searchIds.has(c.slug));
+    }
+
+    // 分类筛选
+    if (activeCategory !== "all") {
+      result = result.filter((c) => c.category === activeCategory);
+    }
+
+    // 难度筛选
+    if (activeDifficulty !== "all") {
+      result = result.filter((c) => c.difficulty === activeDifficulty);
+    }
+
+    // 标签筛选
+    if (activeTags.size > 0) {
+      result = result.filter((c) =>
+        Array.from(activeTags).some((tag) => c.tags.includes(tag))
+      );
+    }
+
+    return result;
+  }, [cards, searchQuery, activeCategory, activeDifficulty, activeTags, fuse]);
 
   // 获取可用的分类列表（按数量排序）
   const categories = useMemo(() => {
@@ -77,13 +164,42 @@ export function IntelListClient({ cards }: IntelListClientProps) {
             、<span className="text-neutral-100 font-medium">完整跑通方案</span>，
             帮助你快速判断「是否值得学」以及「如何学」。
           </p>
-          <div className="flex flex-wrap gap-3 mt-6">
+          {/* 搜索框 */}
+          <div className="relative mt-6 mb-4">
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-cyan-400 font-mono text-xs">
+              ⌕
+            </span>
+            <input
+              ref={searchInputRef}
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Escape") setSearchQuery("");
+              }}
+              placeholder="搜索情报… 试试 Transformer / YOLO / LoRA / Docker"
+              className="w-full pl-10 pr-20 py-3 bg-neutral-900 border border-neutral-700 rounded-lg text-neutral-200 font-mono text-sm placeholder:text-neutral-500 focus:outline-none focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/15 transition-colors"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-neutral-300 font-mono text-xs"
+              >
+                ESC
+              </button>
+            )}
+            <span className="absolute right-12 top-1/2 -translate-y-1/2 text-neutral-500 font-mono text-[10px]">
+              {searchQuery ? `${filteredCards.length} hits` : "⌘K 聚焦"}
+            </span>
+          </div>
+
+          <div className="flex flex-wrap gap-3">
             <Link
               href="/search"
               className="inline-flex items-center gap-2 font-mono text-xs px-4 py-2 bg-cyan-400/10 text-cyan-400 border border-cyan-400/30 rounded-sm hover:bg-cyan-400/20 transition-colors"
             >
               <span>⌕</span>
-              <span>搜索全部情报</span>
+              <span>全站搜索</span>
             </Link>
             <Link
               href="/"
@@ -222,8 +338,23 @@ export function IntelListClient({ cards }: IntelListClientProps) {
               </button>
             ))}
           </div>
-          <div className="font-mono text-[10px] text-neutral-500">
-            显示 {filteredCards.length} / {cards.length} 条
+          <div className="flex items-center gap-3">
+            {(searchQuery || activeCategory !== "all" || activeDifficulty !== "all" || activeTags.size > 0) && (
+              <button
+                onClick={() => {
+                  setSearchQuery("");
+                  setActiveCategory("all");
+                  setActiveDifficulty("all");
+                  setActiveTags(new Set());
+                }}
+                className="font-mono text-[10px] text-cyan-400 hover:text-cyan-300 transition-colors"
+              >
+                清除全部 ↺
+              </button>
+            )}
+            <div className="font-mono text-[10px] text-neutral-500">
+              显示 {filteredCards.length} / {cards.length} 条
+            </div>
           </div>
         </div>
 
@@ -288,12 +419,12 @@ export function IntelListClient({ cards }: IntelListClientProps) {
 
                     {/* 标题 */}
                     <h2 className="text-lg font-bold text-neutral-100 group-hover:text-cyan-400 transition-colors mb-2">
-                      {card.title}
+                      {highlightSearch(card.title, searchQuery)}
                     </h2>
 
                     {/* 摘要 */}
                     <p className="text-sm text-neutral-400 leading-relaxed mb-3">
-                      {card.summary}
+                      {highlightSearch(card.summary, searchQuery)}
                     </p>
 
                     {/* 标签 */}
@@ -342,13 +473,14 @@ export function IntelListClient({ cards }: IntelListClientProps) {
             <div className="font-mono text-neutral-600 mb-3">// 没有匹配的情报</div>
             <button
               onClick={() => {
+                setSearchQuery("");
                 setActiveCategory("all");
                 setActiveDifficulty("all");
                 setActiveTags(new Set());
               }}
               className="text-sm text-cyan-400 hover:underline font-mono"
             >
-              ↺ 重置筛选条件
+              ↺ 重置所有筛选条件
             </button>
           </div>
         )}
