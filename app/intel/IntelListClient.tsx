@@ -164,7 +164,7 @@ export function IntelListClient({ cards }: IntelListClientProps) {
             、<span className="text-neutral-100 font-medium">完整跑通方案</span>，
             帮助你快速判断「是否值得学」以及「如何学」。
           </p>
-          {/* 搜索框 */}
+          {/* 情报搜索框 */}
           <div className="relative mt-6 mb-4">
             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-cyan-400 font-mono text-xs">
               ⌕
@@ -177,7 +177,7 @@ export function IntelListClient({ cards }: IntelListClientProps) {
               onKeyDown={(e) => {
                 if (e.key === "Escape") setSearchQuery("");
               }}
-              placeholder="搜索情报… 试试 Transformer / YOLO / LoRA / Docker"
+              placeholder="搜索情报标题、摘要、关键词…"
               className="w-full pl-10 pr-20 py-3 bg-neutral-900 border border-neutral-700 rounded-lg text-neutral-200 font-mono text-sm placeholder:text-neutral-500 focus:outline-none focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/15 transition-colors"
             />
             {searchQuery && (
