@@ -307,16 +307,10 @@ export default function IntelPage({ params }: { params: { slug: string } }) {
             </div>
 
             {/* 页脚信息 */}
-            <div className="mt-16 pt-6 border-t border-neutral-800 flex items-center justify-between">
+            <div className="mt-16 pt-6 border-t border-neutral-800 text-center">
               <span className="font-mono text-[10px] text-neutral-500">
                 // 来源：content/intel/{card.slug}.md
               </span>
-              <Link
-                href="/search"
-                className="font-mono text-[10px] text-neutral-500 hover:text-cyan-400 transition-colors"
-              >
-                搜索更多 →
-              </Link>
             </div>
           </article>
         </div>
