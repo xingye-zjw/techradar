@@ -1,0 +1,9 @@
+# Cloudflare Pages 路由修复
+# 当列表页 (如 /intel.html) 和子路由目录 (如 /intel/) 同名时，
+# Cloudflare Pages 会优先查找目录下的 index.html，导致列表页 404。
+# 以下规则将列表页路径重写到对应的 HTML 文件。
+
+/intel /intel.html 200
+/glossary /glossary.html 200
+/roadmap /roadmap.html 200
+/toolbox /toolbox.html 200
