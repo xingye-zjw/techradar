@@ -1218,6 +1218,1367 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         checkpoint: "Forward 成功运行，输出 logits shape 正确，参数量约 700K（< 1M），loss 有下降趋势"
       }
     ]
+  },
+
+  // =====================================================
+  // Node: cv-pose-estimation
+  // =====================================================
+  {
+    id: "cv-pose-estimation",
+    name: "人体姿态估计",
+    track: "cv",
+    duration: "1周",
+    prerequisites: ["cv-instance-segmentation"],
+    status: "locked",
+    position: { x: 750, y: 220 },
+    description: "基于 YOLOv8-pose / HRNet 的关键点检测与行为识别。从 COCO 17 点标注格式到实时摄像头动作告警。",
+    outcomes: ["掌握关键点数据集标注与模型训练", "实现基于骨架序列的简单动作分类"],
+    relatedIntel: ["002-yolo"],
+    relatedTerms: ["keypoint", "pose-estimation", "hrnet", "coco-format", "action-recognition"],
+    dailyTasks: [
+      {
+        day: 1,
+        title: "关键点检测基础与 COCO 17 点格式",
+        content: {
+          objective: "理解关键点检测任务，掌握 COCO 17 关键点格式与主流模型（YOLOv8-pose / HRNet）",
+          api_checklist: [
+            "ultralytics.YOLO('yolov8n-pose.pt') 加载关键点模型",
+            "COCO keypoint 格式：[x1,y1,v1, x2,y2,v2, ...]（v=2 可见, v=1 遮挡, v=0 缺失）",
+            "results[0].keypoints.data 获取 (N, 17, 3) 张量",
+            "keypoints.xy[0] 取第一个人的 17 个关键点坐标"
+          ],
+          practice: "写 pose_demo.py：加载 yolov8n-pose.pt，对单张站立人像做推理，用 cv2.circle 在原图上画出 17 个关键点并用 cv2.line 按骨架顺序（鼻子→双眼→双耳→双肩→双肘→双手→双髋→双膝→双脚）连接。输出到 pred_pose.jpg。",
+          answer: "骨架连接对（COCO 17 点索引：0=nose, 1-4=眼耳, 5-6=shoulder, 7-8=elbow, 9-10=wrist, 11-12=hip, 13-14=knee, 15-16=ankle）：\nconst LIMBS = [[5,6],[5,7],[7,9],[6,8],[8,10],[11,12],[11,13],[13,15],[12,14],[14,16],[0,1],[0,2],[1,3],[2,4],[5,11],[6,12]];"
+        },
+        duration: "2小时",
+        resources: [
+          { title: "Ultralytics YOLO Pose 文档", url: "https://docs.ultralytics.com/tasks/pose/", required: true },
+          { title: "COCO Keypoints 任务说明", url: "https://cocodataset.org/#keypoints-2020", required: false }
+        ],
+        checkpoint: "pred_pose.jpg 上关键点与骨架连线清晰合理"
+      },
+      {
+        day: 2,
+        title: "自定义关键点数据集标注与训练",
+        content: {
+          objective: "学会从零标注关键点数据并微调 YOLOv8-pose 模型",
+          api_checklist: [
+            "Labelme / CVAT 标注关键点标签（每张图标注 17 个点 + 对应 person bbox）",
+            "YOLO pose 标签格式：class_id x_center y_center w h x1 y1 v1 x2 y2 v2 ...（归一化）",
+            "自定义 dataset.yaml：必须包含 kpt_shape（如 [17, 3]）和 flip_idx",
+            "model.train(data='pose.yaml', task='pose', epochs=20, imgsz=640)"
+          ],
+          practice: "在 Labelme 中至少标注 15 张人像（站立/坐姿/举手等），写 convert_labelme_to_yolopose.py 将每张图的 polygon bbox + 17 个 point 标签转成 YOLO pose 格式 .txt。写 pose.yaml（nc=1, names=['person'], kpt_shape=[17,3]），启动 yolov8n-pose 训练 20 epochs。",
+          answer: "flip_idx 指明水平翻转时哪些点需要对调：对于 COCO 17 点：\nflip_idx = [0, 2,1, 4,3, 6,5, 8,7, 10,9, 12,11, 14,13, 16,15]\ndataset.yaml 中加上：\nkpt_shape: [17, 3]\nflip_idx: [0,2,1,4,3,6,5,8,7,10,9,12,11,14,13,16,15]"
+        },
+        duration: "2.5小时",
+        resources: [
+          { title: "YOLOv8 Pose 训练指南", url: "https://docs.ultralytics.com/modes/train/", required: true },
+          { title: "HRNet 论文", url: "https://arxiv.org/abs/1902.09212", required: false }
+        ],
+        checkpoint: "训练结束后 mAP50 > 0.6，对未见过的测试图推理能给出合理的骨架"
+      },
+      {
+        day: 3,
+        title: "姿态估计推理与骨架可视化 Pipeline",
+        content: {
+          objective: "封装推理-可视化 Pipeline，支持视频批量推理",
+          api_checklist: [
+            "results = model.predict(source='video.mp4', stream=True, conf=0.35) 流式推理视频",
+            "keypoints.xyn 取归一化坐标（0~1）便于在任意尺寸图上绘制",
+            "cv2.VideoWriter(*'mp4v', fps, (w,h)) 写出带骨架的视频",
+            "计算每帧各点的置信度过滤低质量预测"
+          ],
+          practice: "写 pose_video.py：对一段 10~30 秒的人物动作视频（挥手/跳跃/行走）逐帧推理，画骨架后输出 output_pose.mp4。另外写一个函数 draw_skeleton(img, keypoints_xy, conf_thr=0.5) 供后续复用。",
+          answer: "draw_skeleton 核心思路：\nfor (p1, p2) in LIMBS:\n  if conf[p1] > thr and conf[p2] > thr:\n    cv2.line(img, p1, p2, (0,255,0), 2)\nfor i, (x, y) in enumerate(kpts):\n  if conf[i] > thr:\n    cv2.circle(img, (int(x), int(y)), 3, (0,0,255), -1)"
+        },
+        duration: "2小时",
+        resources: [
+          { title: "OpenCV VideoWriter 文档", url: "https://docs.opencv.org/4.x/dd/d43/tutorial_py_video_display.html", required: true }
+        ],
+        checkpoint: "output_pose.mp4 播放时，人物动作的骨架连线跟随自然移动"
+      },
+      {
+        day: 4,
+        title: "行为识别：基于关键点序列的动作分类",
+        content: {
+          objective: "用关键点时序特征做简单的动作分类（如 standing / waving / walking）",
+          api_checklist: [
+            "对一段 N 帧视频提取 (N, 17, 2) 骨架序列（只保留 xy，丢弃置信度）",
+            "对坐标做以肩部中点为原点的归一化（或按髋-肩距离缩放），获得姿态无关位置的特征",
+            "简单方法：计算每帧的统计特征（如 双手-肩垂直距离、双手速度、膝关节角度）→ 喂给 LightGBM / 小型 MLP",
+            "进阶方法：对 (N, 17*2) 用 Temporal Conv1d / LSTM 做端到端动作分类"
+          ],
+          practice: "录制 3 类动作各 5 段短片段（共 15 段，每段 30~60 帧），提取骨架序列。写 action_classifier.py：对每段按帧抽取 10 维手工特征（如左右手腕相对肩部的 y 偏移、手腕速度等），训练一个 sklearn LogisticRegression / LightGBM，在留出样本上验证精度。",
+          answer: "骨架归一化以消除人物在画面中的位置/大小：\nmid_shoulder = (kpts[5] + kpts[6]) / 2\nmid_hip = (kpts[11] + kpts[12]) / 2\nscale = norm(mid_shoulder - mid_hip)\nkpts_norm = (kpts - mid_shoulder) / (scale + 1e-6)\n该归一化让特征对人物远近/位置鲁棒"
+        },
+        duration: "2.5小时",
+        resources: [
+          { title: "scikit-learn 分类器文档", url: "https://scikit-learn.org/stable/supervised_learning.html", required: true },
+          { title: "ST-GCN 基于图的动作识别（进阶）", url: "https://arxiv.org/abs/1801.07455", required: false }
+        ],
+        checkpoint: "在 3 类动作的 3 段留出视频上，分类准确率 > 80%"
+      },
+      {
+        day: 5,
+        title: "端到端：实时摄像头姿态估计与动作告警",
+        content: {
+          objective: "整合摄像头实时推理 + 动作分类 + 告警逻辑的完整应用",
+          api_checklist: [
+            "cv2.VideoCapture(0) 打开本机摄像头",
+            "cap.read() 逐帧读取 → model.predict() → 绘制骨架 → 动作分类",
+            "维护一个最近 15 帧的滑动窗口，平均模型预测概率作为当前动作",
+            "当连续 N 帧识别为异常动作（如 fall/wave_sos）时打印/声音告警"
+          ],
+          practice: "写 live_pose_app.py：摄像头实时推理 + 绘制骨架 + 左上角显示当前识别的动作名 + 置信度条。定义一个自定义'告警动作'（比如双手举过头顶停留 3 秒），触发时在终端打印 ALERT + 高亮画面。",
+          answer: "滑动窗口平滑：\ndeque(maxlen=15) 保存最近 15 帧的分类结果；\ncurrent_action = Counter(deque).most_common(1)[0][0]\n这样避免单帧抖动导致的误报。"
+        },
+        duration: "3小时",
+        resources: [
+          { title: "OpenCV VideoCapture 文档", url: "https://docs.opencv.org/4.x/dd/d43/tutorial_py_video_display.html", required: true }
+        ],
+        checkpoint: "python live_pose_app.py 能无延迟地显示带骨架的画面，并能正确识别到 2~3 种自定义动作"
+      }
+    ]
+  },
+
+  // =====================================================
+  // Node: cv-ocr
+  // =====================================================
+  {
+    id: "cv-ocr",
+    name: "OCR 文字识别",
+    track: "cv",
+    duration: "1周",
+    prerequisites: ["cv-instance-segmentation"],
+    status: "locked",
+    position: { x: 750, y: 400 },
+    description: "从 PaddleOCR 开箱使用到自定义 DBNet 检测 + CRNN/TrOCR 识别的全流程，覆盖文档版面分析与票据结构化。",
+    outcomes: ["能在中文票据场景下达到可用的 OCR 精度", "理解 DBNet 检测与 CRNN 序列识别原理"],
+    relatedIntel: ["002-yolo"],
+    relatedTerms: ["ocr", "paddleocr", "dbnet", "crnn", "trocr", "layout-analysis"],
+    dailyTasks: [
+      {
+        day: 1,
+        title: "PaddleOCR 开箱使用",
+        content: {
+          objective: "掌握 PaddleOCR 中文模型的安装与推理：文字检测 + 识别 + 方向分类",
+          api_checklist: [
+            "pip install paddleocr paddlepaddle",
+            "from paddleocr import PaddleOCR; ocr = PaddleOCR(use_angle_cls=True, lang='ch')",
+            "result = ocr.ocr('img.jpg', cls=True) 返回 [[box, (text, score)], ...]",
+            "PaddleOCR 内部三阶段：DBNet 检测 → 角度分类 → CRNN 识别"
+          ],
+          practice: "找 3 张包含中文的实拍图片（名片/菜单/路牌），写 paddleocr_demo.py：对每张图推理，把 bbox 用 cv2.polylines 画到图上，把 text+score 打印出来。观察角度倾斜、光照不均、手写字体等场景的失败案例。",
+          answer: "结果解析：\nresult[0] 是第一张图的结果列表，每项为 [polygon_4_points, (text, confidence)]\nfor line in result[0]:\n  box, (text, score) = line[0], line[1]\n  print(f'{score:.2f} {text}')"
+        },
+        duration: "2小时",
+        resources: [
+          { title: "PaddleOCR GitHub 仓库", url: "https://github.com/PaddlePaddle/PaddleOCR", required: true },
+          { title: "PaddleOCR 快速上手", url: "https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.7/doc/doc_ch/quickstart.md", required: true }
+        ],
+        checkpoint: "至少在一张清晰中文图上获得多数文字的正确识别"
+      },
+      {
+        day: 2,
+        title: "文字检测：Scene Text Detection 与自定义检测模型",
+        content: {
+          objective: "理解 DBNet（Differentiable Binarization）原理，并训练自定义场景文本检测模型",
+          api_checklist: [
+            "DBNet 核心：预测一个 probability map + threshold map，通过可微二值化得到近似文本区域",
+            "ICDAR / TotalText / CTW-1500 等常用公开中文/英文场景文本数据集",
+            "按 PaddleOCR 标注格式准备自定义数据：图像 + txt（每行：img_path [{\"transcription\":..., \"points\":[[x,y]x4]}] JSON）",
+            "python tools/train.py -c configs/det/det_R_50_vd_db.yml"
+          ],
+          practice: "从自己手机拍 20 张含文字的场景图，用 Labelme 用 polygon 逐字标注文本区域，写 convert_labelme_to_paddleocr_det.py 转换为 PaddleOCR 检测训练格式。用 15 张 train / 5 张 val，基于 PP-OCRv3_det 预训练权重 freeze backbone 训练 100 轮，对比 hmean 变化。",
+          answer: "PaddleOCR 检测训练集一行示例：\ndata/img1.jpg  [{\"transcription\": \"你好\", \"points\": [[12,13],[240,15],[240,55],[12,55]]}]\n评估指标 hmean = 2*precision*recall/(precision+recall)，需要 precision 和 recall 同时提升"
+        },
+        duration: "2.5小时",
+        resources: [
+          { title: "DBNet 论文", url: "https://arxiv.org/abs/1911.08947", required: false },
+          { title: "PaddleOCR 检测模型训练", url: "https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.7/doc/doc_ch/detection.md", required: true }
+        ],
+        checkpoint: "自定义检测模型在 val 的 hmean > 0.75"
+      },
+      {
+        day: 3,
+        title: "文字识别：CRNN / TrOCR 与自定义字符集",
+        content: {
+          objective: "掌握序列到序列文字识别的两类主流方案：CRNN（CNN+LSTM+CTC）与 TrOCR（图像 Transformer）",
+          api_checklist: [
+            "CRNN = ResNet backbone → BiLSTM 编码序列 → CTC Loss 对齐文本",
+            "TrOCR = ViT 图像编码 + Transformer 解码器（自回归），适合手写/艺术字体等复杂场景",
+            "自定义 dict.txt：每行一个字符（中英混合 + 数字符号）",
+            "PaddleOCR 识别训练：python tools/train.py -c configs/rec/PP-OCRv3/rec_PP-OCRv3.yml",
+            "huggingface transformers: VisionEncoderDecoderModel.from_pretrained('microsoft/trocr-base-handwritten')"
+          ],
+          practice: "准备 1000 张带文字的裁剪图像 + 对应 txt（每行：img_path  label），字符集大小约 200~500（中文常用字符 + 英文数字）。训练 CRNN 风格的 PP-OCRv3_rec 200 步，观察 val_acc 增长。另外跑一次 TrOCR-small-Chinese（huggingface）对相同图像推理，对比两者在长行 / 艺术字 / 手写三种场景下的表现。",
+          answer: "CTC Loss 的直觉：允许网络在每帧输出'字符'或'空白'，然后在所有可能的对齐方式上取概率和。解码时取每个时间步 argmax 的字符序列，再合并重复并去空白。\nTrOCR 解码策略：beam search（beam_size=5）通常比 greedy 好，但更慢。"
+        },
+        duration: "2.5小时",
+        resources: [
+          { title: "CRNN 论文", url: "https://arxiv.org/abs/1507.05717", required: false },
+          { title: "TrOCR 论文 / HF 模型", url: "https://arxiv.org/abs/2109.10282", required: false },
+          { title: "PaddleOCR 识别训练", url: "https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.7/doc/doc_ch/recognition.md", required: true }
+        ],
+        checkpoint: "CRNN 在 val 的字符/整句准确率分别 > 0.90 / > 0.70；TrOCR 在手写测试上显著优于 CRNN"
+      },
+      {
+        day: 4,
+        title: "文档结构化：表格识别与版面分析（LayoutLM）",
+        content: {
+          objective: "将 OCR 结果进一步结构化：识别表格行列结构 + 用 LayoutLM 对文档按标题/正文/表格等区域分类",
+          api_checklist: [
+            "PaddleStructure / TableMASTER 做表格结构识别（预测 cell 坐标 + 行列关系 → 输出 HTML table）",
+            "LayoutLM / LayoutLMv2：把 OCR 的 bbox + text + image patch 一起输入 BERT，做文档版面分类或 NER",
+            "huggingface 使用：LayoutLMForTokenClassification.from_pretrained('microsoft/layoutlm-base-uncased')",
+            "FUNSD / RVL-CDIP 等文档理解数据集"
+          ],
+          practice: "拍 3 张包含表格的文档照片（如成绩单/发票）。1) 用 PaddleOCR 的表格识别跑 inference，把结果保存为 .html 表格，人工检查列是否正确。2) 使用 microsoft/layoutlm-base-uncased 在 FUNSD 上微调一个表单字段 NER 模型（至少 200 步），对自己的测试图片做推理，看能否识别出'公司名''地址''金额'等标签。",
+          answer: "LayoutLM 的输入：input_ids (token) + bbox（每个 token 在页面上的 x1,y1,x2,y2, 归一化到 0-1000）+ attention_mask。bbox 让模型知道 token 的物理位置，这是它相比纯文本 BERT 的关键优势。\n表格 OCR 的常见失败点：无框线表格、竖线断裂、跨页合并单元格。"
+        },
+        duration: "2小时",
+        resources: [
+          { title: "LayoutLM 论文", url: "https://arxiv.org/abs/1912.13318", required: false },
+          { title: "HF LayoutLM 文档", url: "https://huggingface.co/docs/transformers/model_doc/layoutlm", required: true },
+          { title: "Paddle Structure 表格识别", url: "https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.7/doc/doc_ch/structure.md", required: true }
+        ],
+        checkpoint: "至少有一张表格成功以 HTML 表格形式完整呈现；LayoutLM NER 在 FUNSD test 的 F1 > 0.6"
+      },
+      {
+        day: 5,
+        title: "综合：发票/票据结构化识别 Pipeline",
+        content: {
+          objective: "整合检测→识别→版面分析，把一张票据图片抽成 JSON key-value 结构化数据",
+          api_checklist: [
+            "总流程：img → DBNet 得文本行 bbox → 按行排序 → CRNN/TrOCR 识别每行文字 → LayoutLM NER 标注'开票日期''金额''公司名'等字段 → 输出 JSON",
+            "排序策略：按行 bbox y_center 聚类分组（y 差值 < threshold 的视为同一行），同一行按 x 排序",
+            "字段规则：'金额'字段后通常紧跟数字；'开票日期'字段可以用日期正则再次校验",
+            "最后输出 schema：{\"company\": \"xxx\", \"date\": \"yyyy-mm-dd\", \"amount_total\": \"123.45\", ...}"
+          ],
+          practice: "收集 5 张真实发票（或从公开票据数据集里取），写 invoice_pipeline.py：读入图像 → PaddleOCR 跑检测+识别 → 按行/列聚类重建阅读顺序 → 用关键字 + 正则抽公司名、金额、日期、税号等字段 → 打印 JSON。至少在 3/5 张图上让人工检查：关键字段均被正确抽出。",
+          answer: "后处理关键思路：\n1) 按行聚类：sorted(lines, key=lambda x: x['y_center'])，再用阈值合并同一行；\n2) 行内再按 x_center 排序得到阅读顺序；\n3) 正则匹配金额 (\\d+\\.\\d{2})、日期 (\\d{4}[-年]\\d{1,2}[-月]\\d{1,2})；\n4) 基于'开票单位''价税合计''开票日期'等强关键字，取其同行/下一行作为值。"
+        },
+        duration: "3小时",
+        resources: [
+          { title: "公开票据数据集（中文 OCR 任务常用）", url: "https://aistudio.baidu.com/aistudio/datasetdetail/127958", required: false }
+        ],
+        checkpoint: "pipeline 在 5 张发票上跑通并输出完整 JSON；至少 3 张的所有关键字段正确"
+      }
+    ]
+  },
+
+  // =====================================================
+  // Node: cv-diffusion
+  // =====================================================
+  {
+    id: "cv-diffusion",
+    name: "扩散模型与图像生成",
+    track: "cv",
+    duration: "2周",
+    prerequisites: ["cv-cnn"],
+    status: "locked",
+    position: { x: 470, y: 440 },
+    description: "从 DDPM 数学直觉到 Stable Diffusion / FLUX 实战：LoRA 微调、ControlNet 条件控制、ComfyUI 工作流、产品图自动生成 Pipeline。",
+    outcomes: ["理解扩散模型前向/反向过程", "能独立做 LoRA 微调 + ControlNet 条件生成", "搭建一个可复用的图像生成工作流"],
+    relatedIntel: ["006-cnn-basics"],
+    relatedTerms: ["diffusion", "stable-diffusion", "lora", "controlnet", "comfyui", "flux", "image-generation"],
+    dailyTasks: [
+      {
+        day: 1,
+        title: "扩散模型数学直觉与 DDPM",
+        content: {
+          objective: "理解扩散模型的前向加噪与反向去噪过程，写一个最小 DDPM 在 MNIST 上跑通",
+          api_checklist: [
+            "前向过程：x_t = sqrt(1-β_t) * x_{t-1} + sqrt(β_t) * ε，ε~N(0,I)；等价形式 x_t = sqrt(ᾱ_t) x_0 + sqrt(1-ᾱ_t) ε",
+            "反向过程：学习一个 UNet 模型 ε_θ(x_t, t) 来预测噪声，从 x_T 迭代采样得到 x_0",
+            "训练目标：L = E[ || ε - ε_θ(x_t, t) ||² ]，t 从 1..T 中随机采样",
+            "Positional embedding 对时间步 t 编码（与 Transformer 的正弦位置编码相同）"
+          ],
+          practice: "写最小可运行的 ddpm_mnist.py：训练一个 4 层 UNet（无 attention 版本），β 线性调度（β_start=1e-4, β_end=0.02，T=1000），在 MNIST 上训练 30 epochs。每训练完一个 epoch 采样 16 张图保存为 denoising_progress_epoch_{e}.png。",
+          answer: "采样公式（DDPM 论文 Algorithm 2）：\nz = randn_like(x) if t > 1 else 0\nα_t = 1 - β_t, ᾱ_t = cumprod(α_t)[t]\nx_{t-1} = (1/sqrt(α_t)) * (x_t - (β_t/sqrt(1-ᾱ_t)) * ε_pred) + sqrt(β_t) * z\n直观：先'预测移除的噪声'得到 x_0 估计，再加上一个与噪声水平成比例的随机抖动。"
+        },
+        duration: "2.5小时",
+        resources: [
+          { title: "DDPM 论文（必读）", url: "https://arxiv.org/abs/2006.11239", required: true },
+          { title: "What are Diffusion Models（英文图解讲解）", url: "https://lilianweng.github.io/posts/2021-07-11-diffusion-models/", required: false },
+          { title: "PyTorch 参考实现（用于调试对照）", url: "https://github.com/lucidrains/denoising-diffusion-pytorch", required: false }
+        ],
+        checkpoint: "训练 30 epochs 后，采样图像能看出手写数字轮廓，不再是纯噪声"
+      },
+      {
+        day: 2,
+        title: "Stable Diffusion WebUI 使用与 Prompt 工程",
+        content: {
+          objective: "掌握 Stable Diffusion 的基本组件（UNet / VAE / CLIP Text Encoder）并熟练使用 WebUI",
+          api_checklist: [
+            "核心组件：Text Encoder（CLIP ViT-L/14）把 prompt 编码 → UNet 在 latent 空间上预测噪声 → VAE decoder 把 4×64×64 还原成 3×512×512 图像",
+            "CFG Scale：Classifier-Free Guidance，控制 prompt 对齐程度，常用 7-12",
+            "Sampler 选择：DPM++ 2M Karras / Euler a / DDIM 速度-质量权衡",
+            "正向 prompt 结构：主体 + 风格描述词 + 质量词（masterpiece, best quality, highly detailed）+ 镜头/光线；反向 prompt：排除模糊/低质量/畸形词",
+            "Seed：固定 seed 可以复现结果，是调试 prompt 的关键"
+          ],
+          practice: "使用 SD 1.5 或 SDXL 的官方 WebUI（Automatic1111 / ComfyUI），做三种任务：1) 人像全身像（自定义 5 条不同服饰的 prompt，固定 seed 观察风格变化）；2) logo 设计（simple, flat vector style）；3) 室内场景渲染。每张保存图像 + 对应 prompt 到一个 markdown 文档，做'个人 prompt 模板库'。",
+          answer: "高质量稳定 Prompt 模板：\n正面：'a photo of a young woman wearing a white dress, standing in a garden, soft sunlight from side, depth of field, 85mm lens, f/1.8, masterpiece, best quality, highly detailed'\n负面：'lowres, blurry, jpeg artifacts, ugly, deformed, bad anatomy, bad hands, extra fingers, watermark, text, signature'\n调参建议：steps=25-30, CFG=7, sampler=DPM++ 2M Karras, 分辨率=512x768（SD1.5）或 1024x1024（SDXL）。"
+        },
+        duration: "2小时",
+        resources: [
+          { title: "Stable Diffusion WebUI GitHub", url: "https://github.com/AUTOMATIC1111/stable-diffusion-webui", required: true },
+          { title: "ComfyUI（节点化工作流）", url: "https://github.com/comfyanonymous/ComfyUI", required: false },
+          { title: "SD 官方博客：Stable Diffusion 解读", url: "https://stability.ai/news/stable-diffusion-public-release", required: false }
+        ],
+        checkpoint: "产出 9 张（3 任务 x 3 变体）由自己 prompt 生成的图像，并建立一份可复用的 prompt 模板"
+      },
+      {
+        day: 3,
+        title: "LoRA 微调 Stable Diffusion",
+        content: {
+          objective: "学习 LoRA（Low-Rank Adaptation）并基于 kohya-ss 脚本训练自己的风格/人物 LoRA",
+          api_checklist: [
+            "LoRA 原理：对 Attention 的 Q/K/V/O 矩阵做低秩分解 A×B 训练，仅占原模型参数 < 1%，加载时与主干权重相加",
+            "数据准备：一个概念（人物/产品/风格）~15-20 张图，等比裁剪 512x512（SD1.5）或 1024x1024（SDXL）",
+            "标注：用 BLIP / WD14-tagger 自动生成 caption，再人工修正。trigger word = 你的独特标识符（如 sks）",
+            "训练脚本：kohya-ss/sd-scripts 的 train_network.py（network_module=networks.lora, network_dim=16, network_alpha=16）",
+            "训练轮次：一个概念通常 10-20 epochs × repeat=5 ≈ 500-2000 步；每隔 500 步保存一个快照人工挑选"
+          ],
+          practice: "训练一个自己的人物/风格 LoRA：1) 收集 15-20 张同一人物或同一风格图像；2) 用 BLIP 生成 caption，在每个 caption 开头加入 trigger word（例如 'sks person'）；3) 基于 SD1.5，用 kohya-ss GUI 或 sd-scripts 训练一个 LoRA（rank=16, lr=1e-4, batch=2, epoch=20, save every 5 epoch）；4) 比较 epoch 5/10/20 的结果，挑一个最好的在 WebUI 中用 prompt '<trigger> person, ...' 做推理验证。",
+          answer: "关键参数调优经验：\n- network_dim：4~64，越大越'强'但越容易过拟合；16 是通用起点。\n- network_alpha：一般等于 network_dim 或取一半。\n- learning_rate：text_encoder_lr=5e-5, unet_lr=1e-4 是常用配置；只训 UNet 更快但风格保真度略低。\n- SNR gamma=5.0（min-SNR-gamma）让训练更稳定。\n加载方式：WebUI 把 .safetensors 放 models/Lora，prompt 中用 <lora:文件名:权重> 动态注入。"
+        },
+        duration: "3小时",
+        resources: [
+          { title: "LoRA 论文（必读）", url: "https://arxiv.org/abs/2106.09685", required: true },
+          { title: "kohya-ss sd-scripts", url: "https://github.com/kohya-ss/sd-scripts", required: true },
+          { title: "DreamBooth + LoRA 教程（Colab 可跑）", url: "https://github.com/ShivamShrirao/diffusers/tree/main/examples/dreambooth", required: false }
+        ],
+        checkpoint: "产出可在 WebUI 加载的 .safetensors LoRA 文件，trigger word 能稳定唤起目标概念"
+      },
+      {
+        day: 4,
+        title: "ControlNet 条件控制与 IP-Adapter",
+        content: {
+          objective: "掌握 ControlNet（Canny / Depth / Pose 条件）和 IP-Adapter（图像参考图风格迁移），让生成结果可控",
+          api_checklist: [
+            "ControlNet = 冻结的 SD UNet + 可训练的'条件编码分支'，在每一层 UNet 注入额外条件信号",
+            "常见条件：canny（边缘）、depth（深度图）、openpose（骨架）、lineart（线稿）、seg（语义分割）",
+            "多 ControlNet：同时传入 canny + openpose，权重各 0.8-1.0，让构图与姿态都受控",
+            "IP-Adapter：传入一张参考图像（而非 prompt），让生成结果模仿其人物/服装/风格",
+            "在 diffusers 中使用：ControlNetModel + StableDiffusionControlNetPipeline / IPAdapterMixin"
+          ],
+          practice: "做 4 个实验并保存各自结果：1) Canny ControlNet：给一张线稿/海报边缘 → 生成照片风图像；2) Depth ControlNet：提供一张 3D 房间的深度图 → 生成室内图；3) OpenPose ControlNet：第 1 周生成的骨架图 → 生成相同姿态的人物；4) IP-Adapter：传入一张产品图作为参考 → 保持其主体外形，改变背景。另外写一个 diffusers 小脚本（50 行内）演示 ControlNet canny 的最小用法。",
+          answer: "diffusers 版 ControlNet 核心调用：\nfrom diffusers import StableDiffusionControlNetPipeline, ControlNetModel\ncontrolnet = ControlNetModel.from_pretrained('lllyasviel/sd-controlnet-canny')\npipe = StableDiffusionControlNetPipeline.from_pretrained('runwayml/stable-diffusion-v1-5', controlnet=controlnet)\nimage = pipe('a futuristic city', image=canny_edge, num_inference_steps=20).images[0]\n多 ControlNet 传入一个 controlnet 列表 + 对应 image 列表即可。"
+        },
+        duration: "2.5小时",
+        resources: [
+          { title: "ControlNet 论文 / 官方仓库", url: "https://github.com/lllyasviel/ControlNet", required: true },
+          { title: "IP-Adapter 项目页", url: "https://ip-adapter.github.io/", required: false },
+          { title: "diffusers ControlNet 文档", url: "https://huggingface.co/docs/diffusers/using-diffusers/controlnet", required: true }
+        ],
+        checkpoint: "4 个实验均产出符合输入条件的图像；diffusers 小脚本可独立运行"
+      },
+      {
+        day: 5,
+        title: "ComfyUI 节点化工作流与视频生成（AnimateDiff）",
+        content: {
+          objective: "掌握 ComfyUI 节点编程方式，搭建包含 LoRA + ControlNet + IP-Adapter 的可复现工作流，并尝试视频生成",
+          api_checklist: [
+            "ComfyUI 节点图：Load Checkpoint → CLIP Encode(prompt) → Load LoRA → Load ControlNet → Apply ControlNet → KSampler → VAE Decode → Save Image",
+            "保存 workflow：保存的 .json 同时包含节点图和最终 prompt，完全可复现。可以直接'加载 workflow'到 UI",
+            "AnimateDiff：在 ComfyUI 中加载 motion_module（如 v3_sd15），在采样阶段插入，从单张图像生成 16-24 帧短视频",
+            "AnimateDiff + ControlNet（OpenPose/Depth）可以生成姿态/镜头一致的连贯视频片段"
+          ],
+          practice: "在 ComfyUI 中依次搭建：1) 基础 txt2img 工作流；2) 基础 + 自己 LoRA + Canny ControlNet；3) 再加入 IP-Adapter 参考图。导出这 3 个工作流为 .json。然后在工作流 2 中加入 AnimateDiff 节点，挑一张你生成的产品图作为首帧，生成一段 16 帧、8 fps、约 2 秒的'镜头缓慢拉近'短视频并保存。",
+          answer: "常用 ComfyUI 节点速查：\n- 加载主模型：Load Checkpoint / Load Checkpoint With Config (SDXL)\n- LoRA 注入：Load LoRA + Apply LoRA\n- ControlNet 流程：Load ControlNet Model → Apply ControlNet（传入 conditioning 和条件图）\n- 采样：KSampler（选择 scheduler / steps / cfg / seed）\n- 视频：AnimateDiff Loader + AnimateDiff Sampler（需要 motion_model.safetensors + V2 等运动模块）\n- 批处理生成：SamplerCustom 方便逐步骤调试"
+        },
+        duration: "2.5小时",
+        resources: [
+          { title: "ComfyUI 官方示例工作流合集", url: "https://comfyanonymous.github.io/ComfyUI_examples/", required: true },
+          { title: "AnimateDiff 官方仓库", url: "https://github.com/guoyww/AnimateDiff", required: false }
+        ],
+        checkpoint: "有 3 个可复现的 ComfyUI json 工作流文件 + 1 段生成的短视频"
+      },
+      {
+        day: 6,
+        title: "FLUX / SDXL 等现代模型对比",
+        content: {
+          objective: "了解 SD 家族最新进展：SDXL、SD 3、Flux.1（Black Forest Labs）、Midjourney 的差异；体验 Flux 在高质量生成上的表现",
+          api_checklist: [
+            "SDXL：由 base + refiner 两个模型组成，原生 1024x1024，prompt 支持更抽象概念",
+            "SD3：引入 MMDiT（多模态扩散 Transformer），将 text 和 image patch 一起送入 Transformer block",
+            "FLUX（Black Forest Labs）：基于更大规模 MMDiT + 46M tokens text data，在提示理解、图像结构和真实性上大幅提升",
+            "部署对比：SDXL 在消费级 8G 卡上可跑（fp16）；FLUX.1 [dev] 建议 24G+ VRAM 或用 quantized 版本",
+            "关键观察：在'提示词理解强语义'（如 prompt 中含'猫站在月球上穿西装'）和'图像中文字渲染'两项上 FLUX 明显优于 SDXL"
+          ],
+          practice: "1) 列出一个包含 6 条难 prompt 的测试集（包含抽象概念、文字渲染、复杂构图等）；2) 分别在 SD1.5、SDXL、FLUX.1 [schnell/dev]（可通过 huggingface spaces / replicate 在线体验，或本地跑 fp8 量化版）上各生成一次；3) 人工打分 1-5 分，整理一份 2 页以内的横向对比报告：模型、每图得分、优缺点、速度、显存占用。",
+          answer: "常见对比维度：\n- Prompt 语义理解：FLUX > SD3 > SDXL > SD1.5\n- 中文 prompt：很多开源模型仅英文，中文 prompt 可能需要先翻译或选专门 fine-tune 版本\n- 文字渲染（image with readable text）：FLUX/SD3 明显优于 SDXL/SD1.5\n- 推理速度：FLUX schnell < 4 步；SDXL 通常 20-30 步\n- 硬件门槛：SD1.5（4GB+）、SDXL（8GB+）、FLUX（16GB+ 推荐 24GB+）\n- License：FLUX.1 [dev] 非商用自由、[pro] 商业付费；SD 模型多为 CreativeML Open RAIL-M"
+        },
+        duration: "2小时",
+        resources: [
+          { title: "FLUX.1 官方项目与模型下载", url: "https://blackforestlabs.ai/", required: false },
+          { title: "SDXL 论文 / 模型卡", url: "https://stability.ai/news/stable-diffusion-sdxl-1-announcement", required: false },
+          { title: "HF Diffusers 对 FLUX 支持", url: "https://huggingface.co/docs/diffusers/api/pipelines/flux", required: true }
+        ],
+        checkpoint: "产出一份至少 2 页的横向对比报告（含生成图像与评分表）"
+      },
+      {
+        day: 7,
+        title: "综合项目：产品图自动生成 Pipeline",
+        content: {
+          objective: "搭建一个真实可用的电商产品图生成 Pipeline：输入 1 张产品白底图 → 自动生成 N 张带背景 + 光线 + 风格统一的商品图",
+          api_checklist: [
+            "第 1 步：输入白底图 → 自动抠图（rembg / U^2-Net）得到 alpha mask，或用 SAM 精细分割主体",
+            "第 2 步：用 IP-Adapter + ControlNet（Depth+Canny）做'保留主体外观的换背景'：提供目标背景场景图作为参考 + 主体 mask 控制形状",
+            "第 3 步：LoRA 注入自己的品牌风格（提前训练，如'y2k style'、'cinematic'）统一所有产出图像色调",
+            "第 4 步：后处理：把生成图和原始主体做 alpha blending，避免主体细节失真",
+            "第 5 步：Python batch 脚本批量处理 products/ 目录下所有商品，保存到 results/ 并输出 manifest.json"
+          ],
+          practice: "从自己真实可用的 5 张商品白底图（如衣服/美妆/电子产品）出发，写 product_pipeline.py：1) 对每张图自动抠图保存 alpha；2) 定义 3 种背景风格（studio softbox、outdoor cafe、minimal desk）作为预设；3) 用 diffusers + IP-Adapter + ControlNet canny 生成每个商品 × 每个背景的 3 张变体；4) 保存最终图像到 output/<style>/<product>.jpg，并写入 manifest.json 记录 prompt / seed / model_name。人工检查：所有生成图像中主体应清晰可辨、与背景自然融合、风格在同一 style 内保持统一。",
+          answer: "整体架构示意：\nproducts/\n  item_a.jpg item_b.jpg ...\n↓ rembg → masks/\n↓ diffusers pipeline(pipe.py)\n  ├─ IP-Adapter(参考图=item_a.jpg, scale=0.7)\n  ├─ ControlNet(canny=edge_of_item_a, scale=0.8)\n  ├─ LoRA(brand_style_lora, scale=0.6)\n  └─ KSampler(steps=25, cfg=7) → tmp/*.png\n↓ alpha_blend.py（原图主体 + 生成背景）\noutput/studio/item_a.jpg + manifest.json\nmanifest 中记录 metadata 方便后续排查哪张图是哪个 seed 生成的。"
+        },
+        duration: "3小时",
+        resources: [
+          { title: "rembg 快速抠图", url: "https://github.com/danielgatis/rembg", required: true },
+          { title: "IP-Adapter + diffusers 中文教程", url: "https://huggingface.co/docs/diffusers/using-diffusers/ip_adapter", required: true }
+        ],
+        checkpoint: "产品图 Pipeline 对 5 张白底图成功生成每种风格各 3 张变体，人工验收：10/15 张以上图可直接用于电商场景"
+      }
+    ]
+  },
+
+  // =====================================================
+  // Node: nlp-llm-inference
+  // =====================================================
+  {
+    id: "nlp-llm-inference",
+    name: "LLM 推理加速与部署",
+    track: "nlp",
+    duration: "2周",
+    prerequisites: ["nlp-transformer"],
+    status: "locked",
+    description: "围绕大模型推理加速与生产级部署。重点讲 vLLM / SGLang 等推理引擎的原理，以及量化、批处理、长上下文等核心优化技术。",
+    outcomes: ["掌握 KV Cache / PagedAttention 原理", "部署生产级 vLLM 推理服务", "GPTQ/AWQ 量化压缩模型"],
+    relatedIntel: ["001-transformer", "005-rag"],
+    relatedTerms: ["vllm", "quantization", "pagedattention", "kv-cache", "batch-inference"],
+    dailyTasks: [
+      {
+        day: 1,
+        title: "推理基础：Prefill / Decode / KV Cache",
+        content: {
+          objective: "理解 LLM 推理的两个阶段及其计算瓶颈",
+          api_checklist: [
+            "prefill 阶段：输入 prompt 一次性前向传播",
+            "decode 阶段：自回归逐 token 生成",
+            "KV Cache 避免重复计算已生成 token 的 Key/Value",
+            "显存中 KV Cache 的空间占用估算：2 * n_layers * n_heads * seq_len * head_dim * batch_size * bytes_per_param"
+          ],
+          practice: "用 transformers 的 generate() 函数测试 qwen2.5-0.5B，打印两次调用中 KV Cache 的显存占用（用 torch.cuda.memory_allocated()）。对同一 prompt 两次调用，对比有无 KV Cache 的首次生成速度差异。",
+          answer: "显存估算公式：\n# 每层每 head 的 KV cache 大小（bytes）\n# = 2 (K+V) * seq_len * head_dim * batch_size * 2 (FP16=2bytes)\nkvcache_per_layer = 2 * max_seq_len * head_dim * batch_size * 2\ntotal_kvcache = n_layers * kvcache_per_layer\n# qwen2.5-0.5B, seq_len=2048, batch=1 → ~80MB"
+        },
+        duration: "2小时",
+        resources: [
+          { title: "KV Cache 原理图解", url: "https://kipp.mreg.io/llm-inference/", required: true },
+          { title: "FastAPI + transformers 生成服务", url: "https://huggingface.co/docs/transformers/main/en/generation_strategies", required: true }
+        ],
+        checkpoint: "能估算给定模型的 KV Cache 显存占用，代码验证：batch=4, seq=512 时 qwen2.5-0.5B 的 KV Cache 显存"
+      },
+      {
+        day: 2,
+        title: "vLLM 与 PagedAttention 原理",
+        content: {
+          objective: "理解 PagedAttention 如何解决 KV Cache 显存碎片化问题",
+          api_checklist: [
+            "vLLM 的 PagedAttention：将 KV Cache 分块管理（类似操作系统分页）",
+            "block_size = 16：每个 block 存 16 个 token 的 KV",
+            "logical KV cache 按需分配物理块，避免预分配浪费",
+            "GPU Util 通过 block manager 调度"
+          ],
+          practice: "用 vLLM 部署 qwen2.5-0.5B：\npython -m vllm.entrypoints.openai.api_server --model Qwen/Qwen2.5-0.5B-Instruct --dtype half --port 8000\n然后用 curl 测试：curl http://localhost:8000/v1/chat/completions -H 'Content-Type: application/json' -d '{\"messages\": [{\"role\": \"user\", \"content\": \"1+1=?\"}]}'. 对比 transformers 推理延迟。",
+          answer: "PagedAttention 核心思想：\n# 把 KV Cache 当作虚拟内存页表管理\nlogical_blocks = []  # 按需分配\nphysical_blocks = {}  # 映射到 GPU 显存\nblock_mapping = {logical: physical}\n# 不同请求共享相同 block manager，减少显存碎片"
+        },
+        duration: "2.5小时",
+        resources: [
+          { title: "vLLM 官方文档", url: "https://docs.vllm.ai/en/latest/", required: true },
+          { title: "PagedAttention 论文", url: "https://arxiv.org/abs/2309.06180", required: true }
+        ],
+        checkpoint: "vLLM 服务启动成功，curl 返回正确 JSON 格式推理结果，QPS 比纯 transformers 提升 2x+"
+      },
+      {
+        day: 3,
+        title: "SGLang / LMDeploy 推理引擎对比",
+        content: {
+          objective: "对比主流推理引擎的架构差异与适用场景",
+          api_checklist: [
+            "SGLang：RadixAttention + 前缀缓存 + structured output 约束",
+            "LMDeploy：TurboMind 引擎，W4A16 量化支持",
+            "TensorRT-LLM：Benthos 定制算子优化",
+            "推理延迟 /吞吐/ 首 token 延迟 对比"
+          ],
+          practice: "分别用 vLLM、SGLang（如果可安装）、LMDeploy 部署同一个 7B 模型，用 Python asyncio 并发发送 20 个请求，测量：平均 Throughput（tokens/s）、P50/P99 Latency、GPU 显存峰值。输出 CSV 对比表。",
+          answer: "对比指标：\nimport asyncio\nimport aiohttp\n\nasync def benchmark(url, num_requests=20):\n    tasks = [send_request(url) for _ in range(num_requests)]\n    start = time.time()\n    results = await asyncio.gather(*tasks)\n    elapsed = time.time() - start\n    total_tokens = sum(r['usage']['total_tokens'] for r in results)\n    return {'qps': num_requests/elapsed, 'tokens_per_sec': total_tokens/elapsed}"
+        },
+        duration: "3小时",
+        resources: [
+          { title: "SGLang GitHub", url: "https://github.com/sgl-project/sglang", required: true },
+          { title: "LMDeploy 文档", url: "https://lmdeploy.readthedocs.io/", required: true },
+          { title: "TensorRT-LLM 文档", url: "https://nvidia.github.io/TensorRT-LLM/", required: false }
+        ],
+        checkpoint: "输出包含 3 个引擎对比的 CSV，QPS 最高者应比最慢者快 50%+"
+      },
+      {
+        day: 4,
+        title: "GPTQ / AWQ 量化推理",
+        content: {
+          objective: "掌握模型量化方法与推理加速效果",
+          api_checklist: [
+            "GPTQ：逐层量化，4-bit 权重量化，保存 scale 和 zero-point",
+            "AWQ：activation-aware 权重量化，更适合 LLM",
+            "llama.cpp / GGUF 格式：CPU 推理也可用",
+            "vLLM 支持 AWQ 格式直接加载"
+          ],
+          practice: "用 AutoGPTQ 对 qwen2.5-0.5B 做 INT4 量化：\nfrom auto_gptq import AutoGPTQForCausalLM, BaseQuantizeConfig\nquantize_config = BaseQuantizeConfig(bits=4, group_size=128)\nquantized_model = AutoGPTQForCausalLM.from_pretrained(model, quantize_config)\nquantized_model.quantize_model()\n保存后用 vLLM 加载量化模型，对比 FP16 基线的显存占用和推理速度。",
+          answer: "量化关键步骤：\n# GPTQ 量化流程\n1. 准备校准数据集（100-1000 条代表性的文本）\n2. 对每一层：\n   - 用校准数据获取 activations\n   - 计算 H = X^T X（Hessian 近似）\n   - 最优量化：argmin ||W - Q(W)||，其中 Q 为量化值\n3. 保存 quantized_model.safetensors + quant_config.json"
+        },
+        duration: "2.5小时",
+        resources: [
+          { title: "AutoGPTQ GitHub", url: "https://github.com/AutoGPTQ/AutoGPTQ", required: true },
+          { title: "AWQ 论文与代码", url: "https://arxiv.org/abs/2306.00978", required: true }
+        ],
+        checkpoint: "INT4 量化模型显存 < FP16 的 40%，速度提升 > 2x，精度下降 < 5%（用 hellaswag 评测）"
+      },
+      {
+        day: 5,
+        title: "批量推理与 OpenAI 兼容 API",
+        content: {
+          objective: "构建高吞吐量的批量推理服务",
+          api_checklist: [
+            "vLLM 的 /v1/completions 和 /v1/chat/completions 端点",
+            "streaming vs non-streaming 吞吐量差异",
+            "best_of / n 参数：一次生成多个候选",
+            "request batch 与 continuous batch 对比"
+          ],
+          practice: "写 batch_inference.py：用 vLLM 的 Python client（from vllm import LLM）批量推理 1000 条输入（可从 open-orca 数据集中采样），测量 Throughput（tokens/s）和平均 Latency。配置 max_num_seqs=100 的连续批处理，对比 max_num_seqs=1 的性能差异。",
+          answer: "连续批处理核心：\n# 调度策略\nwhile True:\n    running_requests = get_running_requests()\n    pending_requests = get_pending_requests()\n    # 1. 填充 running 中已完成的 sequence 的空 slot\n    # 2. 从 pending 插入新请求（如果还有空位）\n    # 3. 调度器选择下一个 token\n    step()"
+        },
+        duration: "2小时",
+        resources: [
+          { title: "vLLM 批量推理文档", url: "https://docs.vllm.ai/en/latest/generation/parameters.html", required: true }
+        ],
+        checkpoint: "连续批处理 Throughput 比 non-batch 高 5x+，GPU 利用率 > 70%"
+      },
+      {
+        day: 6,
+        title: "长上下文推理：RoPE 与 YARN",
+        content: {
+          objective: "处理超长上下文（> 32k token）的关键技术",
+          api_checklist: [
+            "RoPE（旋转位置编码）：将绝对位置编码为旋转矩阵",
+            "RoPE 的 long-context finetune（YaRN / LongRoPE）",
+            "NTK-aware scaling：无需 finetune 扩展上下文",
+            "FlashAttention-2 的 CUDA Kernel 优化"
+          ],
+          practice: "测试 qwen2 的长上下文能力：用 vLLM 加载 32k 上下文窗口，输入一篇 2 万字文章，让模型回答「文章第 5000 字是什么」。用不同 RoPE 缩放方式（ntk-scaled、linear）对比回答准确率。",
+          answer: "RoPE 缩放公式：\n# ntk-scaled RoPE\ntheta_orig = 10000 * (base / 10000) ** (i / head_dim)\ntheta_scaled = theta_orig * scale_factor  # scale = context_len / original_ctx\n# 注意：直接 scale 会丢失高频信息，需要 YaRN 等方法补偿"
+        },
+        duration: "2.5小时",
+        resources: [
+          { title: "RoPE 原始论文", url: "https://arxiv.org/abs/2104.09864", required: true },
+          { title: "YaRN 论文", url: "https://arxiv.org/abs/2309.00071", required: true },
+          { title: "FlashAttention-2 论文", url: "https://arxiv.org/abs/2307.08691", required: false }
+        ],
+        checkpoint: "能回答文章中间位置的问题，准确率 > 80%（可通过提取特定句子验证）"
+      },
+      {
+        day: 7,
+        title: "综合：部署 qwen2.5-7B 生产级推理服务",
+        content: {
+          objective: "串联所有技术栈，部署一个生产级推理服务",
+          api_checklist: [
+            "vLLM 部署 + AWQ 量化模型",
+            "Nginx 反向代理 + 限流",
+            "Prometheus 指标暴露（/metrics 端点）",
+            "systemd 服务化 + 自动重启"
+          ],
+          practice: "写 deploy_inference.sh：1) 下载 qwen2.5-7B-Instruct-GPTQ-Int4 模型；2) 用 vLLM 启动服务（指定 max_model_len=8192, gpu_memory_utilization=0.9）；3) 配置 Nginx 反向代理到 8000 端口并设置 rate_limit；4) 添加 systemd service；5) 用 locust 做压测，验证 QPS > 30 @ Int4。",
+          answer: "nginx.conf 片段：\nupstream vllm {\n    server 127.0.0.1:8000;\n}\nserver {\n    location /api/ {\n        limit_req zone=one burst=10;\n        proxy_pass http://vllm;\n        proxy_buffering off;\n        proxy_set_header Host $host;\n    }\n}"
+        },
+        duration: "3小时",
+        resources: [
+          { title: "vLLM 生产部署指南", url: "https://docs.vllm.ai/en/latest/serving/deploy.html", required: true },
+          { title: "Locust 压测工具", url: "https://locust.io/", required: true }
+        ],
+        checkpoint: "压测 QPS > 30，99% 请求 < 2s，systemd 服务 crash 后自动重启"
+      }
+    ]
+  },
+
+  // =====================================================
+  // Node: nlp-prompt-engineering
+  // =====================================================
+  {
+    id: "nlp-prompt-engineering",
+    name: "提示工程与 Agent 设计",
+    track: "nlp",
+    duration: "1周",
+    prerequisites: ["llm-finetune"],
+    status: "locked",
+    description: "围绕大模型提示工程与 Agent 系统设计。重点讲 Prompt 结构化输出、ReAct 模式、Function Calling 与工具调用。",
+    outcomes: ["掌握结构化 Prompt 设计", "实现 ReAct Agent", "Function Calling 集成工具"],
+    relatedIntel: ["001-transformer", "005-rag"],
+    relatedTerms: ["prompt", "chain-of-thought", "function-calling", "react", "agent", "structured-output"],
+    dailyTasks: [
+      {
+        day: 1,
+        title: "结构化 Prompt 设计与迭代",
+        content: {
+          objective: "掌握结构化 Prompt 的核心组件",
+          api_checklist: [
+            "System Prompt：角色设定 + 行为约束 + 输出格式",
+            "Few-shot Examples：选择有代表性的 3-5 个示例",
+            "Input/Output Format：JSON Schema / Markdown 结构",
+            "Prompt 版本管理：用工具记录每次迭代的 prompt 和效果"
+          ],
+          practice: "为「会议纪要摘要」任务写 Prompt：\n要求：角色（专业会议纪要助手）、输入（一段文字）、输出（JSON：summary/members/topics/decisions/action_items）、约束（不超过 200 字摘要）。用同一组 10 条测试数据，对比有/无 few-shot examples 的摘要质量（人工评分或用 GPT-4 评分）。",
+          answer: "Prompt 模板：\n<system>\n你是一个专业的会议纪要助手。你需要从输入文本中提取：\n- summary: 会议摘要（100-200字）\n- members: 参会人员列表\n- topics: 讨论的主题\n- decisions: 做出的决策\n- action_items: 行动项（负责人+截止日期）\n输出格式必须为有效的 JSON。\n</system>\n\n<examples>\n输入: 「今天开会讨论了项目进度，张三负责前端...」\n输出: {\"summary\": \"...\", \"members\": [\"张三\", \"李四\"], ...}\n</examples>"
+        },
+        duration: "2小时",
+        resources: [
+          { title: "OpenAI Prompt Engineering Guide", url: "https://platform.openai.com/docs/guides/prompt-engineering", required: true },
+          { title: "Anthropic Prompt Engineering Guide", url: "https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering", required: true }
+        ],
+        checkpoint: "有 few-shot 的 Prompt 质量评分比无 few-shot 高 20% 以上"
+      },
+      {
+        day: 2,
+        title: "Chain-of-Thought 与自一致性",
+        content: {
+          objective: "掌握 CoT 思维链及其变体",
+          api_checklist: [
+            "Zero-shot CoT：'Let's think step by step' 触发推理",
+            "Few-shot CoT：提供带推理步骤的示例",
+            "Self-Consistency：生成多条推理路径取多数票",
+            "Tree-of-Thought：探索多种解决方案分支"
+          ],
+          practice: "写 cot_benchmark.py：在 math datasets（GSM8K / MATH）上测试：\n1) 直接 prompting（无 CoT）\n2) Zero-shot CoT（加 'Let's think step by step'）\n3) Few-shot CoT（每类题给 1 个完整推理示例）\n4) Self-Consistency（n=5，投票）\n对比 4 种方法的准确率，验证 Self-Consistency 对复杂问题的提升效果。",
+          answer: "Self-Consistency 实现：\ndef self_consistency(prompt, n=5):\n    responses = []\n    for _ in range(n):\n        resp = llm.generate(prompt + \" Let's think step by step.\")\n        answer = extract_final_answer(resp)  # 提取最终答案\n        responses.append(answer)\n    # 多数投票\n    from collections import Counter\n    return Counter(responses).most_common(1)[0][0]"
+        },
+        duration: "2小时",
+        resources: [
+          { title: "Self-Consistency 论文", url: "https://arxiv.org/abs/2203.11171", required: true },
+          { title: "Tree of Thoughts", url: "https://arxiv.org/abs/2305.10601", required: false }
+        ],
+        checkpoint: "Self-Consistency 在 MATH 数据集上比 Zero-shot CoT 准确率提升 10%+"
+      },
+      {
+        day: 3,
+        title: "结构化输出：JSON Schema / Function Calling",
+        content: {
+          objective: "让模型输出结构化数据而非自由文本",
+          api_checklist: [
+            "response_format = {'type': 'json_object'} 强制 JSON 输出",
+            "Function Calling / Tool Use：定义工具接口让模型调用",
+            "Pydantic + Instructor：结构化输出 + 自动验证",
+            "输出约束：避免 JSON 截断 / 格式错误"
+          ],
+          practice: "写 structured_output.py：定义 Pydantic 模型 NewsItem（title/date/summary/tags/list[str]），用 Instructor 库（或 OpenAI 的 response_format）提取网页新闻的结构化信息。测试 10 条不同格式的新闻网页，统计 JSON 解析成功率。",
+          answer: "Instructor / OpenAI 格式：\nfrom pydantic import BaseModel\nclass NewsItem(BaseModel):\n    title: str\n    date: str\n    summary: str\n    tags: list[str]\n\n# OpenAI SDK\ncompletion = client.beta.chat.completions.parse(\n    model=\"gpt-4o\",\n    messages=[{\"role\": \"user\", \"content\": text}],\n    response_format=NewsItem,\n)"
+        },
+        duration: "2小时",
+        resources: [
+          { title: "Instructor 库文档", url: "https://jxnl.github.io/instructor/", required: true },
+          { title: "OpenAI Function Calling 文档", url: "https://platform.openai.com/docs/guides/function-calling", required: true }
+        ],
+        checkpoint: "10 条测试数据中至少 9 条正确解析，JSON 格式错误率 < 5%"
+      },
+      {
+        day: 4,
+        title: "Agent 设计：ReAct / 规划-执行-反思",
+        content: {
+          objective: "构建能够使用工具的自主 Agent",
+          api_checklist: [
+            "ReAct = Reasoning + Acting：思考→行动→观察→循环",
+            "定义 Tool Schema：让模型知道有哪些工具可用",
+            "规划模块：HATP / CoH 等规划策略",
+            "记忆模块：短期记忆（上下文）+ 长期记忆（向量检索）"
+          ],
+          practice: "写 react_agent.py：实现一个 ReAct Agent，整合 3 个工具（web_search、calculator、weather_query）。Agent 接收用户问题，自主决定调用哪个工具（0-3 次），最终给出答案。用 20 个测试问题评估准确率，其中至少 10 个需要调用至少 1 个工具。",
+          answer: "ReAct loop：\ndef react_loop(question):\n    observation = ''\n    thought = ''\n    for step in range(5):\n        # 1. Reason\n        thought = llm.think(question, observation, history)\n        # 2. Act\n        if 'action' in thought:\n            tool = thought['action']\n            args = thought['args']\n            observation = call_tool(tool, args)\n        else:\n            # 3. Respond\n            return thought['response']\n        history.append((thought, observation))"
+        },
+        duration: "2.5小时",
+        resources: [
+          { title: "ReAct 论文", url: "https://arxiv.org/abs/2210.03629", required: true },
+          { title: "LangChain Agents 文档", url: "https://python.langchain.com/docs/concepts/agents/", required: false }
+        ],
+        checkpoint: "Agent 在 20 个问题中至少 15 个给出正确答案，且工具调用序列合理"
+      },
+      {
+        day: 5,
+        title: "Prompt 测试与自动化评估",
+        content: {
+          objective: "构建 Prompt 的自动化测试与质量评估体系",
+          api_checklist: [
+            "Prompt 版本管理：git 管理 prompt 模板",
+            "自动化评测集：准备 50-100 条有标准答案的测试用例",
+            "LLM-as-Judge：用强模型评分弱模型的输出",
+            "A/B 测试：同时跑两版 Prompt，对比指标"
+          ],
+          practice: "写 prompt_evaluator.py：实现一个自动化评测框架。准备 30 条会议纪要摘要测试集（有标准摘要）。评测指标：1) ROUGE-L 与标准摘要的相似度；2) GPT-4 作为 Judge 评分的 1-5 分；3) JSON 字段完整率。实现 A/B 测试：对比 v1 和 v2 两版 Prompt，输出对比报告。",
+          answer: "评估框架：\ndef evaluate_prompt(prompt_version, test_cases):\n    results = []\n    for case in test_cases:\n        output = call_llm(prompt_version, case['input'])\n        rouge = rouge_score(output, case['reference'])\n        judge = judge_by_gpt4(output, case['reference'])\n        json_valid = is_valid_json(output)\n        results.append({'rouge': rouge, 'judge': judge, 'json_valid': json_valid})\n    return aggregate(results)"
+        },
+        duration: "2小时",
+        resources: [
+          { title: "LLM-as-Judge", url: "https://arxiv.org/abs/2306.05685", required: true },
+          { title: "RAGAS 评估框架", url: "https://docs.ragas.io/", required: false }
+        ],
+        checkpoint: "自动化评测报告能清晰展示两版 Prompt 的差异，Rouge/Prompt Score/Judge Score 均有统计"
+      }
+    ]
+  },
+
+  // =====================================================
+  // Node: devops-kubernetes
+  // =====================================================
+  {
+    id: "devops-kubernetes",
+    name: "Kubernetes 容器编排",
+    track: "devops",
+    duration: "2周",
+    prerequisites: ["docker-basic"],
+    status: "locked",
+    description: "围绕 Kubernetes 容器编排核心技术与 GPU 调度。重点讲 Pod/Deployment/Service/Helm 等核心概念，以及在 K8s 上部署 AI 推理服务。",
+    outcomes: ["掌握 K8s 核心概念与 kubectl 操作", "在 K8s 上部署有状态服务", "GPU 调度与 HPA 自动扩缩容"],
+    relatedIntel: ["007-docker", "016-server-setup"],
+    relatedTerms: ["kubernetes", "kubectl", "helm", "pod", "deployment", "service", "gpu-scheduling"],
+    dailyTasks: [
+      {
+        day: 1,
+        title: "K8s 核心概念：Pod / Node / Namespace",
+        content: {
+          objective: "理解 K8s 的核心架构与资源对象",
+          api_checklist: [
+            "Pod：最小调度单位，一个 Pod 可包含多个容器",
+            "Node：工作节点，Kubelet 负责管理",
+            "Namespace：资源隔离命名空间",
+            "kubectl get / describe / logs / exec 基本命令"
+          ],
+          practice: "安装 minikube 或用 kind 创建本地集群（适合无云服务器场景）：\nkind create cluster --name ai-cluster\nkubectl get nodes\nkubectl run nginx --image=nginx --port=80\nkubectl expose pod nginx --port=80 --type=NodePort\n验证 Pod 运行并通过 NodePort 访问。",
+          answer: "核心对象关系：\n# Cluster\n└── Node（worker machine）\n    └── Kubelet（agent）\n        └── Pod（scheduling unit）\n            └── Container（runtime unit）\n# API Server（control plane）\n# 负责接收 yaml → 创建对象 → 调度到 Node"
+        },
+        duration: "2小时",
+        resources: [
+          { title: "K8s 官方教程", url: "https://kubernetes.io/zh-cn/docs/tutorials/", required: true },
+          { title: "kubectl 常用命令", url: "https://kubernetes.io/zh-cn/docs/reference/kubectl/quick-reference/", required: true },
+          { title: "minikube 安装", url: "https://minikube.sigs.k8s.io/docs/start/", required: false }
+        ],
+        checkpoint: "minikube/kind 集群运行正常，Pod/Service/Deployment 生命周期操作无报错"
+      },
+      {
+        day: 2,
+        title: "Deployment / ReplicaSet / Service",
+        content: {
+          objective: "掌握 K8s 的声明式部署与 Service 网络",
+          api_checklist: [
+            "Deployment：管理 Pod 的声明式更新（replicas/strategy）",
+            "ReplicaSet：维持指定数量的 Pod 副本",
+            "Service：ClusterIP / NodePort / LoadBalancer 三种类型",
+            "label-selector：Service 如何选择后端 Pod"
+          ],
+          practice: "写 fastapi-deployment.yaml：部署一个 FastAPI 推理服务。配置 replicas=2，rolling update strategy（25% maxUnavailable），liveness/readiness probe。写 fastapi-service.yaml：ClusterIP 类型，端口映射 8000→8000。用 kubectl apply -f 部署并验证滚动更新。",
+          answer: "deployment.yaml 核心字段：\nspec:\n  replicas: 2\n  strategy:\n    type: RollingUpdate\n    rollingUpdate:\n      maxUnavailable: 25%\n      maxSurge: 25%\n  template:\n    metadata:\n      labels:\n        app: fastapi\n    spec:\n      containers:\n      - name: api\n        image: my-api:latest\n        ports:\n        - containerPort: 8000\n        livenessProbe:\n          httpGet:\n            path: /health\n            port: 8000\n          initialDelaySeconds: 10\n        readinessProbe:\n          httpGet:\n            path: /health\n            port: 8000"
+        },
+        duration: "2小时",
+        resources: [
+          { title: "K8s Deployment 文档", url: "https://kubernetes.io/zh-cn/docs/concepts/workloads/controllers/deployment/", required: true },
+          { title: "K8s Service 文档", url: "https://kubernetes.io/zh-cn/docs/concepts/services-networking/service/", required: true }
+        ],
+        checkpoint: "kubectl rollout status deployment/fastapi 显示滚动更新成功，2 个 Pod 同时在线"
+      },
+      {
+        day: 3,
+        title: "ConfigMap / Secret / Ingress",
+        content: {
+          objective: "管理配置、密钥和外部访问",
+          api_checklist: [
+            "ConfigMap：存储非敏感配置（环境变量/配置文件）",
+            "Secret：存储敏感信息（密码/API key/cert），base64 编码",
+            "Ingress：HTTP/HTTPS 路由规则，替代 NodePort",
+            "envFrom / volumeMounts 注入配置到容器"
+          ],
+          practice: "写 configmap.yaml 存储 model_path=/models/resnet 和 batch_size=16。写 secret.yaml 存储 huggingface token。修改 deployment.yaml 用 envFrom 将 configmap 和 secret 注入容器。验证容器内 echo $MODEL_PATH 输出正确值。",
+          answer: "注入方式：\n# configmap.yaml\napiVersion: v1\nkind: ConfigMap\nmetadata:\n  name: model-config\ndata:\n  MODEL_PATH: \"/models/resnet\"\n  BATCH_SIZE: \"16\"\n---\n# deployment.yaml 中引用\nenvFrom:\n- configMapRef:\n    name: model-config\n- secretRef:\n    name: hf-token"
+        },
+        duration: "1.5小时",
+        resources: [
+          { title: "ConfigMap 使用文档", url: "https://kubernetes.io/zh-cn/docs/tasks/configure-pod-container/configure-pod-configmap/", required: true },
+          { title: "Ingress 文档", url: "https://kubernetes.io/zh-cn/docs/concepts/services-networking/ingress/", required: true }
+        ],
+        checkpoint: "容器内环境变量正确注入，Secret 的 value 在 pod exec 中 base64 解码正确"
+      },
+      {
+        day: 4,
+        title: "PersistentVolume / StorageClass",
+        content: {
+          objective: "为模型文件和数据库提供持久化存储",
+          api_checklist: [
+            "PV（PersistentVolume）：集群层面的存储资源",
+            "PVC（PersistentVolumeClaim）：Pod 请求存储的声明",
+            "StorageClass：动态存储供应（如 hostPath / nfs / cloud-storage）",
+            "ReadWriteOnce / ReadOnlyMany 访问模式"
+          ],
+          practice: "写 pvc.yaml 申请 10Gi 存储（storageClassName: standard）。写 deployment.yaml 挂载该 PVC 到容器 /models 目录。部署后在一个 Pod 内写入测试文件，在另一个 Pod 内验证文件存在（证明 PVC 跨 Pod 共享）。",
+          answer: "PVC 模板：\napiVersion: v1\nkind: PersistentVolumeClaim\nmetadata:\n  name: model-storage\nspec:\n  accessModes:\n    - ReadWriteMany  # 需要存储后端支持（nfs/efs）\n  storageClassName: standard\n  resources:\n    requests:\n      storage: 10Gi\n---\n# deployment 中引用\nvolumes:\n- name: model-volume\n  persistentVolumeClaim:\n    claimName: model-storage\nvolumeMounts:\n- name: model-volume\n  mountPath: /models"
+        },
+        duration: "1.5小时",
+        resources: [
+          { title: "K8s 存储文档", url: "https://kubernetes.io/zh-cn/docs/concepts/storage/persistent-volumes/", required: true }
+        ],
+        checkpoint: "PVC bound 成功，Pod 重启后 /models 目录数据不丢失"
+      },
+      {
+        day: 5,
+        title: "Helm 包管理器",
+        content: {
+          objective: "用 Helm 模板化管理 K8s 应用",
+          api_checklist: [
+            "helm create my-chart：创建标准 Chart 目录结构",
+            "values.yaml：覆盖默认配置",
+            "helm install / upgrade / rollback：版本管理",
+            "templates/ 目录中的 Go 模板语法"
+          ],
+          practice: "用 helm create fastapi-chart 创建 Chart。将昨天的 fastapi deployment/service/configmap/secret 整理为 Chart 模板，用 values.yaml 管理 replicas、image tag、port 等参数。实现 helm install fastapi ./fastapi-chart --set replicaCount=3 一次部署完整应用。",
+          answer: "Chart 结构：\nfastapi-chart/\n  Chart.yaml          # chart 元信息\n  values.yaml         # 默认配置（replicas=2, image=latest）\n  templates/\n    deployment.yaml\n    service.yaml\n    configmap.yaml\n    secret.yaml\n  charts/             # 子 chart 依赖\n---\n# values.yaml 模板变量\nreplicaCount: {{ .Values.replicaCount }}\nimage:\n  repository: {{ .Values.image.repository }}\n  tag: {{ .Values.image.tag }}"
+        },
+        duration: "2小时",
+        resources: [
+          { title: "Helm 官方文档", url: "https://helm.sh/zh/docs/", required: true }
+        ],
+        checkpoint: "helm install 成功，helm list 显示 RELEASE 和 STATUS"
+      },
+      {
+        day: 6,
+        title: "GPU 调度与资源限制",
+        content: {
+          objective: "在 K8s 上调度 GPU 资源",
+          api_checklist: [
+            "nvidia.com/gpu: 1（GPU 插件资源请求）",
+            "nodeSelector 调度到 GPU 节点",
+            "limitRange 设置 GPU 使用上限",
+            "device-plugin 工作机制"
+          ],
+          practice: "在有 NVIDIA GPU 的节点上部署 PyTorch 推理 Pod：\n在 deployment.yaml 中添加：\n  resources:\n    limits:\n      nvidia.com/gpu: 1\n并在 nodeSelector 中指定 gpu node。\n部署后 exec 进入容器，运行 nvidia-smi 验证 GPU 可用。",
+          answer: "GPU deployment 片段：\nspec:\n  nodeSelector:\n    gpu: nvidia  # 需要节点有 label gpu=nvidia\n  containers:\n  - name: inference\n    image: pytorch/pytorch:2.0.1-cuda11.7-cudnn8-runtime\n    resources:\n      limits:\n        nvidia.com/gpu: \"1\"\n    env:\n    - name: CUDA_VISIBLE_DEVICES\n      value: \"0\""
+        },
+        duration: "1.5小时",
+        resources: [
+          { title: "NVIDIA GPU Operator", url: "https://docs.nvidia.com/datacenter/cloud-native/kubernetes/latest/", required: true },
+          { title: "K8s GPU 调度文档", url: "https://kubernetes.io/zh-cn/docs/tasks/manage-gpus/scheduling-gpus/", required: true }
+        ],
+        checkpoint: "Pod 调度到 GPU 节点，容器内 nvidia-smi 显示正确 GPU 型号和驱动版本"
+      },
+      {
+        day: 7,
+        title: "综合：将 FastAPI 推理服务部署到 K8s + HPA",
+        content: {
+          objective: "完整部署一个有 HPA 自动扩缩容的推理服务",
+          api_checklist: [
+            "HPA（HorizontalPodAutoscaler）：基于 CPU/自定义指标扩缩",
+            "metric-server：提供资源指标",
+            "KEDA：基于队列长度等外部指标触发扩缩",
+            "kubectl autoscale 命令行"
+          ],
+          practice: "在已有 FastAPI deployment 基础上：1) 安装 metric-server；2) 写 hpa.yaml 基于 CPU 使用率 > 70% 自动扩容（min=1, max=5）；3) 用 hey 或 kubectl run 压测制造 CPU 负载；4) 观察 kubectl get hpa 触发扩容。配置 Prometheus Adapter 暴露自定义指标（如 in-flight requests），基于该指标扩缩。",
+          answer: "HPA + KEDA 配置：\n# hpa.yaml（基于 CPU）\napiVersion: autoscaling/v2\nkind: HorizontalPodAutoscaler\nmetadata:\n  name: fastapi-hpa\nspec:\n  scaleTargetRef:\n    apiVersion: apps/v1\n    kind: Deployment\n    name: fastapi\n  minReplicas: 1\n  maxReplicas: 5\n  metrics:\n  - type: Resource\n    resource:\n      name: cpu\n      target:\n        type: Utilization\n        averageUtilization: 70"
+        },
+        duration: "3小时",
+        resources: [
+          { title: "K8s HPA 文档", url: "https://kubernetes.io/zh-cn/docs/tasks/run-application/horizontal-pod-autoscale/", required: true },
+          { title: "KEDA 文档", url: "https://keda.sh/docs/", required: false }
+        ],
+        checkpoint: "压测时 HPA 自动扩容到 maxReplicas，空载时缩回 minReplicas，扩容延迟 < 2 分钟"
+      }
+    ]
+  },
+
+  // =====================================================
+  // Node: devops-monitoring
+  // =====================================================
+  {
+    id: "devops-monitoring",
+    name: "监控体系：Prometheus + Grafana",
+    track: "devops",
+    duration: "1周",
+    prerequisites: ["devops-kubernetes"],
+    status: "locked",
+    description: "围绕 AI 服务监控体系搭建。重点讲 Prometheus 指标采集、Grafana 可视化仪表盘构建，以及模型训练与服务监控的最佳实践。",
+    outcomes: ["搭建 Prometheus + Grafana 监控栈", "设计 Grafana 仪表盘", "配置告警规则"],
+    relatedIntel: ["017-metrics", "007-docker"],
+    relatedTerms: ["prometheus", "grafana", "metrics", "alerting", "observability"],
+    dailyTasks: [
+      {
+        day: 1,
+        title: "Prometheus 指标采集与数据模型",
+        content: {
+          objective: "理解 Prometheus 的 Pull 模型与指标类型",
+          api_checklist: [
+            "指标类型：Counter（只增）、Gauge（可增减）、Histogram（分布）、Summary（分位数）",
+            "Prometheus 的拉取模型（Pull over Push）：/metrics 端点",
+            "prometheus.yml scrape_configs 配置",
+            "PromQL 查询：rate() / increase() / histogram_quantile()"
+          ],
+          practice: "在 FastAPI 服务中添加 /metrics 端点（用 prometheus_client 库）：\nfrom prometheus_client import Counter, Histogram, generate_latest\nREQUEST_COUNT = Counter('http_requests_total', 'Total HTTP requests', ['method', 'endpoint', 'status'])\nREQUEST_LATENCY = Histogram('http_request_duration_seconds', 'HTTP latency')\n@app.get('/metrics')\ndef metrics():\n    return Response(generate_latest(), media_type='text/plain')\n配置 prometheus.yml 拉取该端点，在 Prometheus UI 查询 rate(http_requests_total[5m])。",
+          answer: "Histogram 使用：\nREQUEST_LATENCY = Histogram(\n    'http_request_duration_seconds',\n    'HTTP request latency',\n    ['endpoint'],\n    buckets=[0.01, 0.05, 0.1, 0.5, 1.0, 5.0]\n)\n\n@app.middleware('http')\ndef track_request(request: Request, call_next):\n    with REQUEST_LATENCY.labels(endpoint=request.url.path).time():\n        response = call_next(request)\n    return response"
+        },
+        duration: "2小时",
+        resources: [
+          { title: "Prometheus 数据模型", url: "https://prometheus.io/docs/concepts/data_model/", required: true },
+          { title: "PromQL 常用函数", url: "https://prometheus.io/docs/prometheus/latest/querying/functions/", required: true }
+        ],
+        checkpoint: "Prometheus UI 能查到 http_requests_total 和 http_request_duration_seconds 的数据"
+      },
+      {
+        day: 2,
+        title: "Grafana 仪表盘设计与查询",
+        content: {
+          objective: "用 Grafana 构建可操作的监控仪表盘",
+          api_checklist: [
+            "Grafana DataSource 配置（Prometheus）",
+            "Panel 类型：Stat / Time series / Gauge / Table",
+            "变量（Variables）：支持动态下钻",
+            "Dashboard JSON 导出/导入"
+          ],
+          practice: "设计 AI 推理服务仪表盘，包含：1) QPS 折线图（time series，rate(http_requests_total[1m])）；2) P99 延迟仪表盘（gauge，histogram_quantile(0.99, rate(http_request_duration_seconds_bucket[5m]))）；3) GPU 利用率热力图；4) 错误率告警叠加。用 Grafana Provisioning 方式管理仪表盘（YAML 配置）。",
+          answer: "Grafana Provisioning dashboard JSON 关键 panel：\n{\n  \"title\": \"QPS\",\n  \"type\": \"timeseries\",\n  \"datasource\": \"Prometheus\",\n  \"targets\": [{\n    \"expr\": \"rate(http_requests_total[1m])\",\n    \"legendFormat\": \"{{method}} {{endpoint}}\"\n  }],\n  \"fieldConfig\": {\n    \"defaults\": {\n      \"unit\": \"reqps\",\n      \"custom\": {\n        \"drawStyle\": \"line\",\n        \"lineWidth\": 2\n      }\n    }\n  }\n}"
+        },
+        duration: "2小时",
+        resources: [
+          { title: "Grafana 文档", url: "https://grafana.com/docs/grafana/latest/", required: true },
+          { title: "Grafana Provisioning", url: "https://grafana.com/docs/grafana/latest/administration/provisioning/", required: true }
+        ],
+        checkpoint: "仪表盘可正常显示实时 QPS、Latency P99、GPU 利用率，刷新延迟 < 5s"
+      },
+      {
+        day: 3,
+        title: "Prometheus 告警规则配置",
+        content: {
+          objective: "配置有意义的告警规则",
+          api_checklist: [
+            "prometheusrule CRD 定义告警规则",
+            "alerting 规则：ALERT <name> / IF <promql> / FOR <duration>",
+            "Alertmanager 路由配置（email / slack / webhook）",
+            "告警抑制和静默（inhibition / silencing）"
+          ],
+          practice: "写 alert_rules.yaml 配置以下告警：1) GPU 利用率 > 95% 持续 5 分钟；2) HTTP 错误率 > 5% 持续 2 分钟；3) P99 延迟 > 2s 持续 5 分钟；4) Pod 重启次数 > 3 次/10分钟。在 Prometheus Alerting 页面触发测试告警（用 absent() 或调整 FOR=0），验证 Alertmanager 收到通知。",
+          answer: "告警规则 YAML：\ngroups:\n- name: ai-service-alerts\n  rules:\n  - alert: HighGPPUtilization\n    expr: avg(gpu_utilization) > 95\n    for: 5m\n    labels:\n      severity: warning\n    annotations:\n      summary: \"GPU 利用率超过 95%\"\n      description: \"当前 GPU 利用率 {{ $value }}%\"\n  - alert: HighErrorRate\n    expr: rate(http_requests_total{status=~\"5..\"}[2m]) / rate(http_requests_total[2m]) > 0.05\n    for: 2m\n    labels:\n      severity: critical"
+        },
+        duration: "1.5小时",
+        resources: [
+          { title: "Prometheus Alerting 文档", url: "https://prometheus.io/docs/alerting/latest/", required: true },
+          { title: "Alertmanager 配置", url: "https://prometheus.io/docs/alerting/latest/configuration/", required: true }
+        ],
+        checkpoint: "触发测试告警后 Alertmanager 成功发送通知（email/slack/webhook 任一）"
+      },
+      {
+        day: 4,
+        title: "模型训练指标监控：MLflow / WandB",
+        content: {
+          objective: "在模型训练过程中系统化采集和可视化指标",
+          api_checklist: [
+            "MLflow Tracking Server：记录 experiment / run / metric / param",
+            "mlflow.start_run() / mlflow.log_metric() API",
+            "MLflow Model Registry：版本管理与 stage 流转",
+            "WandB 作为替代方案对比"
+          ],
+          practice: "写 train_monitor.py：用 PyTorch 训练 ResNet18，同时用 mlflow 记录：1) 每次 epoch 的 train_loss / val_loss / accuracy；2) GPU 显存占用曲线；3) 学习率调度器当前值。启动 mlflow server（mlflow ui --backend-store-uri sqlite:///mlruns.db），查看训练曲线的并排对比（不同 run 的 loss 曲线）。",
+          answer: "MLflow 记录 API：\nimport mlflow\nmlflow.set_experiment('resnet18-training')\n\nwith mlflow.start_run(run_name='lr=1e-3_batch=32'):\n    mlflow.log_param('learning_rate', 1e-3)\n    mlflow.log_param('batch_size', 32)\n    \n    for epoch in range(epochs):\n        train_loss = train_epoch(model, loader)\n        val_loss, val_acc = evaluate(model, val_loader)\n        \n        mlflow.log_metrics({\n            'train_loss': train_loss,\n            'val_loss': val_loss,\n            'val_accuracy': val_acc,\n            'gpu_memory_mb': torch.cuda.memory_allocated() / 1e6\n        }, step=epoch)\n        \n        mlflow.pytorch.log_model(model, 'model')"
+        },
+        duration: "2小时",
+        resources: [
+          { title: "MLflow 文档", url: "https://mlflow.org/docs/latest/index.html", required: true },
+          { title: "WandB 文档", url: "https://docs.wandb.ai/", required: false }
+        ],
+        checkpoint: "MLflow UI 中能查看多个 run 的 loss 曲线并排对比，所有 metric 有时间戳记录"
+      },
+      {
+        day: 5,
+        title: "综合：监控完整 AI 服务",
+        content: {
+          objective: "串联监控体系，监控一个真实 AI 推理服务",
+          api_checklist: [
+            "Docker Compose 编排：FastAPI + Prometheus + Grafana",
+            "cAdvisor 采集容器级别资源指标",
+            "自定义业务指标（inference_count / model_version）",
+            "Dashboard 大盘一键可重复部署"
+          ],
+          practice: "写 docker-compose.monitoring.yml：用 docker-compose 编排 FastAPI 推理服务 + Prometheus（cAdvisor 插件）+ Grafana（带 Provisioning）。在 FastAPI 中添加业务指标（inference_latency_seconds / model_version / requests_total）。配置 Grafana provisioning 加载预设仪表盘 JSON。压测后在大盘中验证所有指标正常显示。",
+          answer: "docker-compose 核心配置：\nservices:\n  prometheus:\n    image: prom/prometheus:latest\n    volumes:\n      - ./prometheus.yml:/etc/prometheus/prometheus.yml\n      - ./alert_rules.yml:/etc/prometheus/alert_rules.yml\n    ports:\n      - \"9090:9090\"\n\n  grafana:\n    image: grafana/grafana\n    volumes:\n      - ./grafana/provisioning:/etc/grafana/provisioning\n      - ./grafana/dashboards:/var/lib/grafana/dashboards\n    ports:\n      - \"3000:3000\"\n\n  cadvisor:\n    image: gcr.io/cadvisor/cadvisor:latest\n    volumes:\n      - /:/rootfs:ro\n      - /var/run:/var/run:ro\n    privileged: true"
+        },
+        duration: "3小时",
+        resources: [
+          { title: "cAdvisor 文档", url: "https://github.com/google/cadvisor", required: true }
+        ],
+        checkpoint: "docker compose up 成功后，Grafana 大盘显示 QPS/Latency/GPU/容器资源全部正常"
+      }
+    ]
+  },
+
+  // =====================================================
+  // Node: math-information-theory
+  // =====================================================
+  {
+    id: "math-information-theory",
+    name: "信息论基础",
+    track: "math",
+    duration: "1周",
+    prerequisites: ["math-linear-algebra"],
+    status: "locked",
+    description: "围绕信息论核心概念及其在机器学习中的应用。重点讲熵、交叉熵、KL 散度与损失函数的内在联系，以及 MLE/MAP 估计的理论基础。",
+    outcomes: ["理解熵与互信息的定义", "掌握交叉熵作为损失函数的数学推导", "理解 MLE / MAP 估计的等价性"],
+    relatedIntel: ["010-numpy-pandas", "011-pytorch"],
+    relatedTerms: ["entropy", "cross-entropy", "kl-divergence", "mutual-information", "mle", "map"],
+    dailyTasks: [
+      {
+        day: 1,
+        title: "熵、联合熵、条件熵",
+        content: {
+          objective: "掌握信息熵的数学定义与直观理解",
+          api_checklist: [
+            "自信息 I(x) = -log P(x)，熵 H(X) = E[I(x)] = -Σ P(x) log P(x)",
+            "联合熵 H(X,Y) = -ΣΣ P(x,y) log P(x,y)",
+            "条件熵 H(Y|X) = Σ P(x) H(Y|X=x) = H(X,Y) - H(X)",
+            "信息熵的单位：bit（log base 2）vs nat（log base e）"
+          ],
+          practice: "写 entropy.py：用 NumPy 实现熵计算函数 entropy(p)，验证：1) 均匀分布 entropy=log(n)；2) 极端分布 entropy→0；3) 计算投硬币（正反各 0.5）和骰子（各 1/6）的熵并对比。用 matplotlib 画 p∈[0,1] 时 Bernoulli(p) 熵的变化曲线。",
+          answer: "NumPy 实现：\nimport numpy as np\n\ndef entropy(p):\n    \"\"\"p: 概率分布 array，必须归一化\"\"\"\n    p = np.asarray(p)\n    # 过滤掉 0 概率（0*log(0) = 0）\n    mask = (p > 0) & (p < 1)\n    return -np.sum(p[mask] * np.log2(p[mask]))\n\n# Bernoulli 熵曲线\nps = np.linspace(0.001, 0.999, 100)\nhs = [entropy([p, 1-p]) for p in ps]\n# 峰值在 p=0.5：H=1 bit（最不确定）\n# p=0 或 1：H=0（完全确定）"
+        },
+        duration: "1.5小时",
+        resources: [
+          { title: "信息论教程（Stanford CS229 补充材料）", url: "https://cs.stanford.edu/~rvarun/github.github.com/clients/doc/statistics/supplemental_linalg.pdf", required: true },
+          { title: "Information Theory 书籍（Cover & Thomas）", url: "https://www.goodreads.com/book/show/1796510.Elements_of_Information_Theory", required: false }
+        ],
+        checkpoint: "Bernoulli(p=0.5) 熵=1 bit，Bernoulli(p=0.1) 熵≈0.47 bit，验证正确"
+      },
+      {
+        day: 2,
+        title: "交叉熵与 KL 散度",
+        content: {
+          objective: "理解交叉熵作为损失函数的数学根源",
+          api_checklist: [
+            "交叉熵 H(P,Q) = -Σ P(x) log Q(x) = H(P) + D_KL(P||Q)",
+            "KL 散度 D_KL(P||Q) = Σ P(x) log (P(x)/Q(x))，非对称 ≠ 距离",
+            "最小化交叉熵 = 最大化似然估计（当 P 是真实分布时）",
+            "Binary Cross-Entropy（BCE）= 交叉熵在二分类的特殊形式"
+          ],
+          practice: "写 bce_derivation.py：从 KL 散度出发推导 BCE loss。手动实现：1) 给定真实分布 P（one-hot）和预测分布 Q（softmax 输出），计算 H(P,Q) 和 D_KL(P||Q)；2) 对比手动实现与 torch.nn.functional.binary_cross_entropy 的数值是否一致；3) 验证：当预测越接近真实分布，KL(P||Q) 越小。",
+          answer: "推导：\nH(P, Q) = -Σ P(x) log Q(x)\n       = -Σ P(x) log P(x) - Σ P(x) log (Q(x)/P(x))\n       = H(P) + D_KL(P||Q)\n\n由于 H(P) 对 Q 是常数，最小化 H(P,Q) 等价于最小化 D_KL(P||Q)。\n\n二分类 BCE = -[y·log(ŷ) + (1-y)·log(1-ŷ)]，是 H(P,Q) 的具体形式。"
+        },
+        duration: "1.5小时",
+        resources: [
+          { title: "Cross-Entropy Loss 数学推导", url: "https://pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html", required: true }
+        ],
+        checkpoint: "手动实现的 BCE 与 torch.nn.functional.binary_cross_entropy_with_logits 差值 < 1e-5"
+      },
+      {
+        day: 3,
+        title: "最大似然估计 MLE 与最大后验估计 MAP",
+        content: {
+          objective: "理解 MLE 和 MAP 的数学框架",
+          api_checklist: [
+            "MLE：θ_MLE = argmax_θ Π_i P(x_i | θ) = argmin_θ -Σ log P(x_i | θ)",
+            "MAP：θ_MAP = argmax_θ P(θ | x) = argmax_θ P(x | θ) P(θ)",
+            "对数似然 log-likelihood，L(θ) = Σ log P(x_i | θ)",
+            "MAP = MLE + 先验贡献，L2 正则 ⟺ MAP with Gaussian Prior"
+          ],
+          practice: "写 mle_map.py：\n1. 生成服从 N(μ=2.0, σ²=0.5) 的 1000 个样本点\n2. 用 MLE 估计 μ：μ̂ = (1/n) Σ x_i，手动计算结果\n3. 用 MAP 估计 μ，假设先验 μ ~ N(0, 1)（即加 L2 正则化）\n4. 对比不同样本量 n=10/100/1000 下 MLE 和 MAP 的估计值差异，验证：样本越多，两者越接近；样本越少，MAP 更稳定。",
+          answer: "MAP 推导：\nlog P(θ|x) ∝ log P(x|θ) + log P(θ)\n            = Σ [-0.5 * (x_i - θ)² / σ²] - 0.5 * θ² / σ_prior² + const\n\n取导数 = 0：\nΣ (x_i - θ̂) / σ² - θ̂ / σ_prior² = 0\n→ θ̂_MAP = (Σ x_i / σ²) / (n/σ² + 1/σ_prior²)\n         = (n / (n + σ²/σ_prior²)) * (Σ x_i / n)\n         = (n / (n + λ)) * MLE  ← 有正则化效果的来源"
+        },
+        duration: "2小时",
+        resources: [
+          { title: "MLE vs MAP 对比", url: "https://sgfin.github.io/learning/must-reads/", required: true }
+        ],
+        checkpoint: "n=10 时 MAP 和 MLE 差异显著；n=1000 时差异 < 1%，验证理论预测"
+      },
+      {
+        day: 4,
+        title: "AIC / BIC / MDL 模型选择",
+        content: {
+          objective: "理解模型选择准则的统计学基础",
+          api_checklist: [
+            "AIC = -2 log L(θ̂) + 2k（L=似然函数，k=参数数量）",
+            "BIC = -2 log L(θ̂) + k log n（n=样本量，n大时 BIC > AIC）",
+            "MDL（最小描述长度）：数据+模型的编码长度最短者最优",
+            "奥卡姆剃刀：参数越多（模型越复杂），过拟合风险越大"
+          ],
+          practice: "写 model_selection.py：用 sklearn 的 diabetes 数据集，训练 5 个不同阶数的多项式回归模型（degree=1~5）。计算每个模型的：1) 训练集 MSE；2) 验证集 MSE；3) AIC；4) BIC。验证：训练 MSE 随 degree 增加而下降，但验证 MSE 在某个 degree 之后开始上升（AIC/BIC 能找到最优复杂度）。",
+          answer: "AIC/BIC 实现：\nfrom sklearn.preprocessing import PolynomialFeatures\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import mean_squared_error\nimport numpy as np\n\ndef calc_aic(y_true, y_pred, k):\n    n = len(y_true)\n    rss = np.sum((y_true - y_pred) ** 2)\n    # AIC = n * log(rss/n) + 2k（常数项可忽略）\n    aic = n * np.log(rss/n) + 2 * k\n    return aic\n\ndef calc_bic(y_true, y_pred, k):\n    n = len(y_true)\n    rss = np.sum((y_true - y_pred) ** 2)\n    bic = n * np.log(rss/n) + k * np.log(n)\n    return bic"
+        },
+        duration: "1.5小时",
+        resources: [
+          { title: "AIC/BIC 论文", url: "https://www.cs.ubc.ca/~murphyk/Papers/aic-bic.pdf", required: false }
+        ],
+        checkpoint: "degree=3 时 BIC 最低，对应验证 MSE 最低，验证奥卡姆剃刀原则"
+      },
+      {
+        day: 5,
+        title: "信息论视角看 Transformer",
+        content: {
+          objective: "用信息论分析注意力机制",
+          api_checklist: [
+            "互信息 I(X;Y) = H(X) - H(X|Y) = H(Y) - H(Y|X)",
+            "注意力分数即 query 和 key 的互信息估计",
+            "信息瓶颈（Information Bottleneck）：压缩有用信息、丢弃噪声",
+            "Entropy 衡量 attention weight 分布的尖锐程度"
+          ],
+          practice: "写 attention_entropy.py：\n1. 加载一个训练好的 Transformer 模型\n2. 计算 attention weight 分布的熵（每个 head，每个 token 位置）\n3. 可视化：横轴=layer index，纵轴=平均 attention 熵（越高=越 uniform，越低=越 peaked）\n4. 对比不同输入（短句 vs 长文本）的 attention 熵分布差异。",
+          answer: "Attention 熵计算：\ndef attention_entropy(attn_weights):\n    # attn_weights: (num_heads, seq_len, seq_len)\n    # 每个 query 的 attention 分布熵\n    eps = 1e-9\n    ent = -np.sum(attn_weights * np.log2(attn_weights + eps), axis=-1)  # (num_heads, seq_len)\n    return np.mean(ent, axis=-1)  # 每个 head 的平均熵\n\n# 信息论解释：\n# 熵高 → attention 分散到多个 token（exploring）\n# 熵低 → attention 集中到少数 token（exploiting）"
+        },
+        duration: "2小时",
+        resources: [
+          { title: "Attention is all you need 论文", url: "https://arxiv.org/abs/1706.03762", required: true },
+          { title: "Information Bottleneck in Transformers", url: "https://arxiv.org/abs/2002.09770", required: false }
+        ],
+        checkpoint: "浅层 attention 熵 > 深层 attention 熵（信息逐层压缩），与 IB 理论一致"
+      }
+    ]
+  },
+
+  // =====================================================
+  // Node: math-optimization
+  // =====================================================
+  {
+    id: "math-optimization",
+    name: "凸优化理论基础",
+    track: "math",
+    duration: "1周",
+    prerequisites: ["math-linear-algebra"],
+    status: "locked",
+    description: "围绕凸优化理论与深度学习优化器的数学原理。重点讲凸集/凸函数/梯度下降收敛性，以及 Adam/SGD 等优化器的数学推导。",
+    outcomes: ["理解凸优化问题与局部最优的关系", "推导 Adam / SGD+Momentum 的更新公式", "理解正则化与优化问题的联系"],
+    relatedIntel: ["010-numpy-pandas", "011-pytorch"],
+    relatedTerms: ["convex-optimization", "gradient-descent", "adam", "sgd", "lagrangian", "kkt", "regularization"],
+    dailyTasks: [
+      {
+        day: 1,
+        title: "凸集、凸函数、KKT 条件",
+        content: {
+          objective: "建立凸优化的数学框架",
+          api_checklist: [
+            "凸集：连接任意两点的线段仍在集合内",
+            "凸函数：一阶条件 f(θx+(1-θ)y) ≤ θf(x)+(1-θ)f(y)",
+            "全局最优 = 局部最优（凸问题）",
+            "拉格朗日函数 L(θ, λ) = f(θ) + Σ λ_i g_i(θ)"
+          ],
+          practice: "写 convex_check.py：用 CVXPY 验证以下问题：\n1. f(x)=x² 是凸函数（验证二阶导 ≥ 0）\n2. f(x,y)=max(x,y) 是凸函数\n3. 约束优化：min x²+y² s.t. x+y=1，用拉格朗日求解，与 KKT 条件对比\n4. 用 CVXPY.solve 验证解析解。",
+          answer: "KKT 条件核心：\n对 min f(θ) s.t. g(θ) ≤ 0, h(θ) = 0\nKKT 条件（必要性）：\n1. ∇f + λᵀ∇g + μᵀ∇h = 0（平稳性）\n2. λᵢ ≥ 0（对偶可行性）\n3. λᵢgᵢ(θ*) = 0（互补松弛）\n4. gᵢ(θ*) ≤ 0（原始可行性）\n5. hᵢ(θ*) = 0（等式约束可行性）"
+        },
+        duration: "2小时",
+        resources: [
+          { title: "CVXPY 文档", url: "https://www.cvxpylayers.readthedocs.io/", required: true },
+          { title: "Convex Optimization (Boyd) 免费PDF", url: "https://web.stanford.edu/~boyd/cvxbook/", required: true }
+        ],
+        checkpoint: "CVXPY 求解结果与拉格朗日解析解一致（误差 < 1e-6）"
+      },
+      {
+        day: 2,
+        title: "梯度下降与收敛性分析",
+        content: {
+          objective: "理解梯度下降的收敛速度与步长选择",
+          api_checklist: [
+            "GD 更新：θ_{t+1} = θ_t - α ∇f(θ_t)",
+            "L-smooth：||∇f(x) - ∇f(y)|| ≤ L ||x-y||",
+            "收敛速率：凸函数 O(1/T)，强凸函数 O(1/T²)（步长 α = 1/L）",
+            "随机梯度下降（SGD）：∇f(θ_t, ξ_t) 是真实梯度的无偏估计"
+          ],
+          practice: "写 gd_convergence.py：\n1. 目标函数 f(x,y) = (x-2)² + (y+1)²（L=2，Lipschitz 平滑），起始点 (0,0)\n2. 实现 GD（α=1/L），画 loss 曲线\n3. 实现 SGD（加噪声的梯度），α=0.1，画 GD vs SGD 收敛曲线对比\n4. 理论预测：GD 在 T 步后误差 O(1/T)，验证数值结果是否符合。",
+          answer: "GD 收敛证明（简化版）：\n假设 f 是凸的且 L-smooth：\nf(θ_{t+1}) ≤ f(θ_t) + ∇f(θ_t)ᵀ(θ_{t+1}-θ_t) + (L/2)||θ_{t+1}-θ_t||²\n            = f(θ_t) - α||∇f||² + (Lα²/2)||∇f||²\n            = f(θ_t) - (α - Lα²/2)||∇f||²\n\n取 α = 1/L：f(θ_t) - f(θ*) ≤ (L/2T)||θ_0-θ*||² → O(1/T)"
+        },
+        duration: "2小时",
+        resources: [
+          { title: "SGD 收敛性分析", url: "https://arxiv.org/abs/1909.08520", required: true }
+        ],
+        checkpoint: "GD loss 曲线符合 O(1/T)，T=1000 时 loss < 1e-6（达到最优解附近）"
+      },
+      {
+        day: 3,
+        title: "Adam / AdamW 数学推导",
+        content: {
+          objective: "从原理理解 Adam 的动量与自适应学习率",
+          api_checklist: [
+            "一阶矩估计 m_t = β₁m_{t-1} + (1-β₁)g_t（梯度指数移动平均）",
+            "二阶矩估计 v_t = β₂v_{t-1} + (1-β₂)g_t²（RMSProp 同样思路）",
+            "偏差校正：m̂_t = m_t / (1-β₁ᵗ)，v̂_t = v_t / (1-β₂ᵗ)",
+            "AdamW：weight decay = L2 正则 ≠ Adam + L2（数学上等价在特定条件下）"
+          ],
+          practice: "写 adam_from_scratch.py：\n不调用 torch.optim.Adam，手写实现：\n```python\ndef adam_update(params, grads, m, v, t, lr=1e-3, beta1=0.9, beta2=0.999, eps=1e-8):\n    # 手动实现上述公式\n    return params_new, m_new, v_new\n```\n用该实现训练一个 MLP（MNIST 分类），对比 torch.optim.Adam 的训练曲线和最终准确率（差值 < 1% 即通过）。",
+          answer: "Adam 更新公式：\nm_t = β₁ * m_{t-1} + (1-β₁) * g_t\nv_t = β₂ * v_{t-1} + (1-β₂) * g_t²\nm̂ = m_t / (1 - β₁ᵗ)\nv̂ = v_t / (1 - β₂ᵗ)\nθ_{t+1} = θ_t - lr * m̂ / (√v̂ + eps)\n\n# 物理直觉：\n# m_t：梯度方向的指数移动平均（类似动量）\n# v_t：梯度平方的指数移动平均（自动调整每参数学习率）\n# 效果：大梯度参数 → 大 v → 自适应降低学习率\n#        小梯度参数 → 小 v → 保持较大学习率"
+        },
+        duration: "2.5小时",
+        resources: [
+          { title: "Adam 原始论文", url: "https://arxiv.org/abs/1412.6980", required: true },
+          { title: "AdamW 论文", url: "https://arxiv.org/abs/1711.05101", required: true }
+        ],
+        checkpoint: "手写 Adam 训练 MLP，10 epochs 后准确率与 torch.optim.Adam 差值 < 0.5%"
+      },
+      {
+        day: 4,
+        title: "L1 / L2 正则化与优化问题",
+        content: {
+          objective: "理解正则化作为约束优化问题的几何解释",
+          api_checklist: [
+            "L2 正则：min L(θ) + λ||θ||² ⟺ θ 在球内（约束）",
+            "L1 正则：min L(θ) + λ||θ||₁ ⟺ θ 在 diamond 内（稀疏解）",
+            "Proximal Gradient Descent：L1 的近端算子 = 软阈值 shrinkage",
+            "Elastic Net：L1 + L2 组合，兼顾稀疏性和稳定性"
+          ],
+          practice: "写 lasso_vs_ridge.py：\n1. 生成高维稀疏数据（n=100, d=1000，真实稀疏度 90%）\n2. 分别用 Ridge（α=1.0）和 Lasso（α=1.0）拟合\n3. 记录 Ridge 和 Lasso 的非零系数数量，Lasso 应稀疏（稀疏度 ≈ 90%）\n4. 用 sklearn LassoCV 找最优 α，验证 CV 选择的 α 对应最好的测试集性能。",
+          answer: "软阈值算子（Proximal of L1）：\ndef soft_threshold(x, threshold):\n    \"\"\"Proximal operator of L1 norm\"\"\"\n    return np.sign(x) * np.maximum(np.abs(x) - threshold, 0)\n\n# 几何直觉：\n# L2（球约束）→ 与等 Loss 线切于所有方向 → 无稀疏性\n# L1（diamond 约束）→ 等 Loss 线优先与 diamond 顶点相交 → 稀疏（轴对齐）"
+        },
+        duration: "1.5小时",
+        resources: [
+          { title: "Proximal Gradient Descent", url: "https://www.stat.cmu.edu/~ryantibs/convexopt/", required: false }
+        ],
+        checkpoint: "Lasso 非零系数数量 < Ridge 的 20%，验证 L1 稀疏性"
+      },
+      {
+        day: 5,
+        title: "综合：优化器选择与学习率调度",
+        content: {
+          objective: "在真实训练任务中选择合适的优化器与学习率调度",
+          api_checklist: [
+            "StepLR / CosineAnnealing / Warmup + Cosine 调度策略",
+            "SGD + Momentum (0.9) 在大模型中仍是首选（ViT / MAE 等论文验证）",
+            "Adam 收敛快但泛化差：通常用于快速原型，后期切换 SGD 微调",
+            "Learning Rate Finder：Leslie Smith 的 LR range test"
+          ],
+          practice: "写 optimizer_comparison.py：\n在 CIFAR-10 上训练 ResNet-18（可减少 epochs），对比以下配置：\n1) Adam (lr=1e-3)\n2) SGD + Momentum (lr=0.1, momentum=0.9)\n3) AdamW (lr=1e-3, weight_decay=1e-4)\n4) SGD + CosineAnnealing (lr=0.1)\n记录每个的 best test accuracy 和达到 best accuracy 的 epoch 数。最终报告：哪个优化器泛化最好，哪个收敛最快。",
+          answer: "Cosine Annealing 实现：\ndef cosine_annealing(epoch, T_max, eta_max, eta_min=0):\n    return eta_min + (eta_max - eta_min) * 0.5 * (\n        1 + np.cos(np.pi * epoch / T_max)\n    )\n\n# Warmup + Cosine（PyTorch 内置）：\nscheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(\n    optimizer, T_0=10, T_mult=2, eta_min=1e-6\n)"
+        },
+        duration: "3小时",
+        resources: [
+          { title: "PyTorch 优化器文档", url: "https://pytorch.org/docs/stable/optim.html", required: true },
+          { title: "SGDR 论文", url: "https://arxiv.org/abs/1608.03983", required: true }
+        ],
+        checkpoint: "SGD + Cosine 在 CIFAR-10 上 test accuracy > Adam（LSTM 泛化差距的经验验证）"
+      }
+    ]
+  },
+
+  // =====================================================
+  // Node: project-data-pipeline
+  // =====================================================
+  {
+    id: "project-data-pipeline",
+    name: "数据管道与 ETL",
+    track: "project",
+    duration: "1周",
+    prerequisites: ["linux-basic"],
+    status: "locked",
+    description: "围绕数据采集、清洗、标注、版本管理与定时调度。重点讲构建一条从原始数据到训练-ready 数据的完整端到端 Pipeline。",
+    outcomes: ["掌握爬虫/API 数据采集", "数据清洗与质量验证", "DVC 数据版本管理", "Airflow 定时任务编排"],
+    relatedIntel: ["009-linux", "010-numpy-pandas"],
+    relatedTerms: ["etl", "web-scraping", "dvc", "airflow", "data-quality", "pandas"],
+    dailyTasks: [
+      {
+        day: 1,
+        title: "多源数据采集：爬虫 / API / 数据库",
+        content: {
+          objective: "掌握多种数据采集方式",
+          api_checklist: [
+            "requests + BeautifulSoup：网页结构化解析",
+            "Scrapy 框架：大规模爬虫，支持增量爬取",
+            "公共 API 调用：OpenAlex / PubMed / Wikipedia API",
+            "数据库导出：pandas read_sql / sqlalchemy 连接"
+          ],
+          practice: "写 data_collector.py：从 Wikipedia API（https://en.wikipedia.org/w/api.php）采集 100 篇 AI 相关词条，提取 title / summary / categories / links。输出为 JSONL 格式，每行一条记录。验证：100 条记录中至少有 90 条包含 title 和 summary 字段。",
+          answer: "Wikipedia API 调用：\nimport requests\nimport json\n\ndef fetch_wikipedia_articles(query, limit=100):\n    results = []\n    url = \"https://en.wikipedia.org/w/api.php\"\n    params = {\n        \"action\": \"query\",\n        \"format\": \"json\",\n        \"list\": \"search\",\n        \"srsearch\": query,\n        \"srlimit\": limit\n    }\n    resp = requests.get(url, params=params).json()\n    page_ids = [r['pageid'] for r in resp['query']['search']]\n    \n    # 获取详情\n    detail_params = {\n        \"action\": \"query\",\n        \"format\": \"json\",\n        \"pageids\": \"|\".join(map(str, page_ids)),\n        \"prop\": \"extracts|categories\",\n        \"exintro\": True,\n        \"explaintext\": True,\n        \"cllimit\": 10\n    }\n    return requests.get(url, params=detail_params).json()"
+        },
+        duration: "2小时",
+        resources: [
+          { title: "Wikipedia API 文档", url: "https://www.mediawiki.org/wiki/API:Main_page", required: true },
+          { title: "Scrapy 官方文档", url: "https://docs.scrapy.org/", required: false }
+        ],
+        checkpoint: "100 条 Wikipedia 文章 JSONL 文件，大小 > 100KB，字段完整率 > 90%"
+      },
+      {
+        day: 2,
+        title: "数据清洗与 Great Expectations 验证",
+        content: {
+          objective: "系统化数据质量检查与清洗",
+          api_checklist: [
+            "Pandas 数据清洗：dropna / fillna /duplicates",
+            "正则清洗：去除 HTML 标签、特殊字符处理",
+            "Great Expectations：声明式数据契约（expectations）",
+            "数据质量报告：完整性/一致性/分布"
+          ],
+          practice: "写 data_cleaner.py：读取昨天的 JSONL 数据，用 Great Expectations 定义以下契约：\n1. title 非空且长度 5-200\n2. summary 非空且类型为 str\n3. categories 列表长度 ≥ 1\n4. 所有 URL 格式合法\n输出质量报告，标记不符合契约的记录并统计清洗后的数据保留率。",
+          answer: "Great Expectations 契约示例：\nimport great_expectations as ge\n\ndf = ge.from_pandas(pandas_df)\n\ndf.expect_column_values_to_not_be_null('title')\ndf.expect_column_value_lengths_to_be_between('title', 5, 200)\ndf.expect_column_values_to_match_regex('summary', r'^[\\S\\s]+$')\ndf.expect_column_values_to_be_of_type('categories', 'list')\ndf.expect_column_values_to_be_in_set('categories', valid_categories)\n\nresults = df.validate()\nprint(results['success'], results[' statistics'])"
+        },
+        duration: "2小时",
+        resources: [
+          { title: "Great Expectations 文档", url: "https://docs.greatexpectations.io/", required: true },
+          { title: "Pandas 数据清洗技巧", url: "https://pandas.pydata.org/pandas-docs/stable/user_guide/missing_data.html", required: true }
+        ],
+        checkpoint: "GE 报告显示 > 80% 数据通过全部契约，失败条目有明确原因记录"
+      },
+      {
+        day: 3,
+        title: "数据标注流水线：Label Studio",
+        content: {
+          objective: "搭建多人协作的数据标注平台",
+          api_checklist: [
+            "Label Studio 部署（Docker one-liner）",
+            "配置 XML 标注模板：NER / 文本分类 / 关系抽取",
+            "Label Studio API：创建项目 / 上传数据 / 导出标注",
+            "Active Learning：模型不确定性驱动优先标注"
+          ],
+          practice: "启动 Label Studio（Docker），创建文本分类项目，配置 3 类标注（AI/ML/Data Science）。上传 200 条未标注文本，邀请 2 个标注者（模拟）。完成 50 条标注后，用 Label Studio API 导出 COCO 格式标注结果，与原始文本合并保存为训练集格式。",
+          answer: "Label Studio API 使用：\nfrom label_studio_sdk import Client\n\nls = Client(url='http://localhost:8080', api_key='your-api-key')\nproject = ls.get_project(project_name='Text Classification')\n\n# 上传数据\nimport json\ntasks = [{'data': {'text': row['summary']}} for _, row in df.iterrows()]\nproject.import_tasks(tasks)\n\n# 导出标注\nannotations = project.export_labels(format='JSON')\nwith open('annotations.json', 'w') as f:\n    f.write(annotations)"
+        },
+        duration: "2.5小时",
+        resources: [
+          { title: "Label Studio GitHub", url: "https://github.com/HumanSignal/label-studio", required: true },
+          { title: "Label Studio API 文档", url: "https://labelstud.io/sdk/", required: true }
+        ],
+        checkpoint: "50 条标注数据成功导出，格式与原始文本正确合并，人工抽检标注一致性 > 80%"
+      },
+      {
+        day: 4,
+        title: "DVC 数据版本控制",
+        content: {
+          objective: "用 DVC 管理数据集版本，与 Git 工作流无缝结合",
+          api_checklist: [
+            "dvc init / dvc add data/file.csv：跟踪数据文件",
+            "dvc push / pull：上传下载数据到远程存储（S3/GCS/HTTP）",
+            "dvc.yaml：定义 Pipeline stages（预处理/训练/评估）",
+            "dvc repro：基于依赖图自动重跑需要更新的 stage"
+          ],
+          practice: "写 dvc_pipeline.py：创建 data/ 目录放入原始文本，用 dvc add data/text.jsonl 跟踪。用 dvc remote add -d myremote s3://my-bucket/dvc-store 配置 S3 远程存储。写 dvc.yaml 定义 stages：preprocess（清洗数据）→ featurize（向量化）→ train（训练模型）。修改 preprocess 源码后用 dvc repro 自动重跑受影响的所有 stage。",
+          answer: "dvc.yaml 模板：\nstages:\n  preprocess:\n    cmd: python preprocess.py\n    deps:\n      - data/raw.jsonl\n    outs:\n      - data/clean.jsonl\n  featurize:\n    cmd: python featurize.py\n    deps:\n      - data/clean.jsonl\n    outs:\n      - data/features.pkl\n  train:\n    cmd: python train.py\n    deps:\n      - data/features.pkl\n    params:\n      - model.lr\n      - model.epochs\n    outs:\n      - models/model.pkl"
+        },
+        duration: "1.5小时",
+        resources: [
+          { title: "DVC 官方文档", url: "https://dvc.org/doc/start", required: true }
+        ],
+        checkpoint: "修改 preprocess.py 后 dvc repro 只重跑 preprocess 和 train（不重跑 featurize），依赖图正确"
+      },
+      {
+        day: 5,
+        title: "Airflow 定时任务与数据质量监控",
+        content: {
+          objective: "用 Airflow 编排定时数据处理任务",
+          api_checklist: [
+            "Airflow DAG：定义 tasks + dependencies",
+            "@dag / @task 装饰器写法",
+            "Cron 调度：schedule_interval='0 2 * * *'（每天凌晨 2 点）",
+            "Airflow XCom：任务间传递数据"
+          ],
+          practice: "写 data_pipeline_dag.py：用 Airflow 定义一个每日运行的 DAG：\n1) fetch_wikipedia（每天抓取新文章）\n2) clean_data（清洗新增数据）\n3) validate_quality（运行 Great Expectations 检查）\n4) update_vector_db（更新向量数据库）\n配置 schedule_interval='0 3 * * *'（凌晨 3 点运行）。用 airflow dags test 手动触发一次 DAG，验证所有任务成功。",
+          answer: "Airflow DAG 模板：\nfrom airflow import DAG\nfrom airflow.operators.python import PythonOperator\nfrom datetime import datetime, timedelta\n\ndefault_args = {\n    'owner': 'data-team',\n    'retries': 2,\n    'retry_delay': timedelta(minutes=10),\n}\n\nwith DAG(\n    'data_pipeline',\n    default_args=default_args,\n    schedule_interval='0 3 * * *',\n    start_date=datetime(2024, 1, 1),\n    catchup=False,\n) as dag:\n    \n    fetch = PythonOperator(\n        task_id='fetch_wikipedia',\n        python_callable=fetch_wikipedia_articles,\n    )\n    \n    clean = PythonOperator(\n        task_id='clean_data',\n        python_callable=clean_data,\n    )\n    \n    validate = PythonOperator(\n        task_id='validate_quality',\n        python_callable=validate_data,\n    )\n    \n    fetch >> clean >> validate"
+        },
+        duration: "2.5小时",
+        resources: [
+          { title: "Airflow 官方文档", url: "https://airflow.apache.org/docs/apache-airflow/stable/index.html", required: true }
+        ],
+        checkpoint: "DAG 手动触发成功，所有 4 个任务完成，Airflow UI 显示 success 状态"
+      }
+    ]
   }
 ];
 
