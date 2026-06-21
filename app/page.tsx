@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { GlobalSearchBar } from "@/components/GlobalSearchBar";
 import { RecentList } from "@/components/RecentList";
+import { getAllTerms } from "@/lib/glossary";
+
+// 首页展示的热门术语（精选 6 个）
+const FEATURED_TERMS = ["transformer", "docker", "lora", "cnn", "pytorch", "git"];
 
 export default function Home() {
   return (
@@ -87,6 +91,73 @@ export default function Home() {
               结构化 FAQ，强制「环境 → 报错 → 排查 → 解决」格式
             </p>
           </Link>
+
+          <Link
+            href="/glossary"
+            className="group block bg-neutral-900 border border-neutral-700 rounded-lg p-6 hover:border-purple-400/50 transition-colors"
+          >
+            <div className="flex items-center gap-4 mb-3">
+              <span className="font-mono text-sm font-bold text-purple-400 bg-purple-400/10 w-10 h-10 rounded-lg flex items-center justify-center">
+                05
+              </span>
+              <h2 className="text-xl font-bold">专业术语</h2>
+              <span className="text-[10px] px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-400 font-medium">
+                NEW
+              </span>
+            </div>
+            <p className="text-neutral-400 text-sm">
+              AI/ML、工程部署、数学基础等领域的专业术语详解
+            </p>
+          </Link>
+        </div>
+
+        {/* 热门术语 */}
+        <div className="mt-12">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="h-px flex-1 bg-gradient-to-r from-purple-400/0 via-purple-400/40 to-transparent"></div>
+            <div className="flex items-center gap-2 shrink-0">
+              <span className="font-mono text-[11px] text-purple-400 uppercase tracking-widest">
+                热门术语
+              </span>
+            </div>
+            <div className="h-px flex-1 bg-gradient-to-l from-purple-400/0 via-purple-400/40 to-transparent"></div>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            {FEATURED_TERMS.map((slug) => {
+              const term = getAllTerms().find((t) => t.slug === slug);
+              if (!term) return null;
+              return (
+                <Link
+                  key={slug}
+                  href={`/glossary/${slug}`}
+                  className="group block bg-neutral-900 border border-neutral-800 rounded-lg p-4 hover:border-purple-400/30 hover:bg-purple-400/5 transition-all"
+                >
+                  <div className="flex items-center gap-2 mb-2">
+                    <h3 className="font-bold text-neutral-100 group-hover:text-purple-400 transition-colors text-sm">
+                      {term.name}
+                    </h3>
+                    {term.nameEn && (
+                      <span className="text-[10px] text-neutral-500 font-mono">
+                        {term.nameEn}
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-xs text-neutral-400 line-clamp-2 leading-relaxed">
+                    {term.summary}
+                  </p>
+                </Link>
+              );
+            })}
+          </div>
+          <div className="mt-4 text-center">
+            <Link
+              href="/glossary"
+              className="inline-flex items-center gap-2 text-sm text-purple-400 hover:text-purple-300 transition-colors"
+            >
+              查看全部术语
+              <span aria-hidden="true">→</span>
+            </Link>
+          </div>
         </div>
 
         {/* 最近访问记录 */}
