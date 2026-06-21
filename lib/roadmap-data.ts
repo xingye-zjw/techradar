@@ -436,4 +436,788 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
       { day: 14, title: "复盘、迭代与发布", content: ["独立完成一次完整的 Live Demo 录像：模拟真实用户操作流程，记录演示中遇到的问题和失败点，作为后续迭代改进的依据", "规划后续迭代方向：功能增强（多模型切换/A-B测试）、性能优化（推理缓存/批处理/异步队列）、数据飞轮（持续收集用户反馈数据用于模型迭代）", "在 GitHub 上创建 Release v1.0 版本：编写 Release Notes 总结核心功能和改进，附上模型权重文件下载链接或 HuggingFace Model Hub 链接", "撰写一篇技术博客文章记录项目历程（中文/英文均可），按「问题定义 → 技术方案 → 实验结果 → 经验教训」的结构组织，作为长期技术积累和学习记录"], duration: "2.5小时", resources: [{ title: "GitHub Releases 使用指南", url: "https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository", required: false }, { title: "HuggingFace Model Hub", url: "https://huggingface.co/docs/hub/en/models", required: false }, { title: "技术博客写作指南", url: "https://github.com/readme/guides/writing-on-github", required: false }, { title: "Markdown 写作技巧", url: "https://www.markdownguide.org/basic-syntax/", required: false }], checkpoint: "GitHub Release v1.0 + 一篇技术博客 + demo 录像链接" },
     ],
   },
+
+  // =====================================================
+  // Node: cv-instance-segmentation
+  // =====================================================
+  {
+    id: "cv-instance-segmentation",
+    name: "YOLOv8-seg 实例分割实战",
+    track: "cv",
+    duration: "1周",
+    prerequisites: ["linux-basic"],
+    status: "locked",
+    description: "围绕 YOLOv8-seg 的实例分割实战。重点讲解如何将标注好的多边形数据集转化为 YOLO 格式并进行模型微调训练。",
+    outcomes: ["掌握多边形标注到 YOLO 格式的转换流程", "完成 YOLOv8-seg 微调训练并推理"],
+    relatedIntel: ["002-yolo"],
+    relatedTerms: ["yolo", "instance-segmentation", "coco-format"],
+    dailyTasks: [
+      {
+        day: 1,
+        title: "COCO/VOC 到 YOLO 格式转换",
+        content: {
+          objective: "掌握 COCO JSON 标注转换为 YOLO txt 格式的核心逻辑",
+          api_checklist: [
+            "json.load() 解析 COCO annotation",
+            "归一化 polygon 坐标 (x_center, width) / image_size",
+            "Image.open() 读取图片尺寸",
+            "os.path.join / Path.mkdir 构建输出目录"
+          ],
+          practice: "编写 convert_coco_to_yolo.py：读取 coco_instances_results.json，遍历每张图片的 segmentations，按类别 ID 写入 class_id x_center y_center width height 到同名 .txt 文件，输出目录结构严格遵循 YOLO 要求（images/train、labels/train）。",
+          answer: "核心公式：对于 polygon [x1,y1,x2,y2,...,xn,yn]，取外接矩形并归一化：x_center = (min_x + max_x)/2/image_width, y_center = (min_y + max_y)/2/image_height, width = (max_x - min_x)/image_width, height = (max_y - min_y)/image_height"
+        },
+        duration: "2小时",
+        resources: [
+          { title: "Ultralytics YOLO 数据格式文档", url: "https://docs.ultralytics.com/datasets/segment/", required: true },
+          { title: "COCO Dataset 官方标注格式", url: "https://cocodataset.org/#format-data", required: false }
+        ],
+        checkpoint: "用 Labelme 标注 3 张图片（多边形），运行脚本转换后，用 yolo val 验证标注是否正确（mAP>0 即说明格式有效）"
+      },
+      {
+        day: 2,
+        title: "YOLOv8-seg 数据集配置与预训练模型加载",
+        content: {
+          objective: "配置数据集 YAML 并加载预训练 YOLOv8-seg 模型",
+          api_checklist: [
+            "ultralytics.YOLO('yolov8n-seg.pt') 加载模型",
+            "data.yaml 的 nc / names / train / val 字段配置",
+            "model.train(data='data.yaml', epochs=3) 启动训练",
+            "results = model.val() 获取验证指标"
+          ],
+          practice: "创建 dataset.yaml，train 指向昨天转换好的 images/train，val 指向 images/val（从 train 随机抽取 10%）。运行 python train.py --model yolov8n-seg.pt --data dataset.yaml --epochs 5 --imgsz 640，用 wandb 或 tensorboard 观察 loss 下降曲线。",
+          answer: "data.yaml 模板：\nnc: 1\nnames: ['object']\ntrain: ./datasets/images/train\nval: ./datasets/images/val"
+        },
+        duration: "2小时",
+        resources: [
+          { title: "Ultralytics YOLOv8 训练教程", url: "https://docs.ultralytics.com/modes/train/", required: true },
+          { title: "YOLO 数据集配置 YAML 示例", url: "https://github.com/ultralytics/ultralytics/blob/main/ultralytics/cfg/datasets/coco8-seg.yaml", required: true }
+        ],
+        checkpoint: "训练日志显示 mAP50 从 0 增长到 >0.3，说明模型正在学习"
+      },
+      {
+        day: 3,
+        title: "模型微调与超参数调优",
+        content: {
+          objective: "理解冻结骨干网络 + 解码头微调的策略",
+          api_checklist: [
+            "model.fuse() 融合卷积层加速推理",
+            "optimizer AdamW / SGD 的选择",
+            "学习率 warmup 与 cosine decay",
+            "augmentation hsv / fliplr / scale 参数"
+          ],
+          practice: "写一个 train_finetune.py：freeze 参数冻结 backbone 前 10 层，只训练 segmentation head。分别用 lr0=1e-3 和 lr0=1e-4 训练，对比最终 mAP50-95 的差异。",
+          answer: "冻结策略：\nmodel = YOLO('yolov8n-seg.pt')\nfor i, layer in enumerate(model.model.parameters()):\n    layer.requires_grad = False  # 冻结 backbone"
+        },
+        duration: "2.5小时",
+        resources: [
+          { title: "YOLO 超参数文档", url: "https://docs.ultralytics.com/hyp/", required: true },
+          { title: "迁移学习微调策略", url: "https://cs231n.github.io/transfer-learning/", required: false }
+        ],
+        checkpoint: "对比冻结/非冻结训练日志，冻结策略在数据少时 mAP 更高"
+      },
+      {
+        day: 4,
+        title: "推理与后处理：NMS / Mask 渲染",
+        content: {
+          objective: "掌握推理输出解析与分割掩码可视化",
+          api_checklist: [
+            "results = model.predict(source='img.jpg') 获取预测结果",
+            "results[0].masks.xy 获取多边形坐标",
+            "results[0].boxes.conf / cls 提取置信度和类别",
+            "cv2.polylines / cv2.fillPoly 渲染 mask"
+          ],
+          practice: "写 inference_pipeline.py：加载 best.pt，对测试集每张图预测后，将分割掩码覆盖在原图上保存到 output/ 目录，文件名格式 pred_classname_confidence.jpg（如 pred_car_0.92.jpg）。",
+          answer: "mask 渲染核心代码：\nmask = results[0].masks.data[0].cpu().numpy()\ncolor = np.random.randint(0, 255, 3)\nimg[mask > 0] = img[mask > 0] * 0.5 + color * 0.5"
+        },
+        duration: "1.5小时",
+        resources: [
+          { title: "YOLO 推理文档", url: "https://docs.ultralytics.com/modes/predict/", required: true },
+          { title: "OpenCV 绘图函数", url: "https://docs.opencv.org/4.x/d/d00/sche", required: false }
+        ],
+        checkpoint: "输出目录有正确的掩码覆盖图，文件名包含预测类别和置信度"
+      },
+      {
+        day: 5,
+        title: "端到端 Pipeline 串联",
+        content: {
+          objective: "从原始图片到最终分割结果的完整 Pipeline 串联",
+          api_checklist: [
+            "os.walk 遍历数据目录",
+            "shutil.copytree 备份数据集",
+            "subprocess.run 调用 yolo 命令",
+            "PIL.Image 与 numpy array 互转"
+          ],
+          practice: "写一个 main.py，整合前 4 天代码：输入 raw_images/ 目录 → 自动创建 YOLO 格式数据集 → 训练 10 epochs → 推理测试集 → 输出带掩码的结果图到 results/。整个流程只需 python main.py 即可运行。",
+          answer: "入口函数结构：\ndef main():\n    convert_and_prepare()\n    train_model(epochs=10)\n    run_inference()"
+        },
+        duration: "3小时",
+        resources: [
+          { title: "YOLOv8-seg 完整示例", url: "https://docs.ultralytics.com/tasks/segment/", required: true }
+        ],
+        checkpoint: "python main.py 完整运行无报错，results/ 目录有分割结果图"
+      }
+    ]
+  },
+
+  // =====================================================
+  // Node: project-iot-fastapi
+  // =====================================================
+  {
+    id: "project-iot-fastapi",
+    name: "ESP32 传感器数据链路",
+    track: "project",
+    duration: "1周",
+    prerequisites: ["linux-basic"],
+    status: "locked",
+    description: "围绕软硬件结合的数据链路打通。重点讲解如何使用 ESP32 采集传感器数据，并通过 WiFi 发送 HTTP 请求到 FastAPI 构建的后端接收端点。",
+    outcomes: ["ESP32 传感器数据采集与 WiFi HTTP 上报", "FastAPI 接收端点 + 数据持久化"],
+    relatedIntel: ["007-docker"],
+    relatedTerms: ["esp32", "wifi", "http", "rest-api", "uart"],
+    dailyTasks: [
+      {
+        day: 1,
+        title: "ESP32 开发环境与 WiFi 连接",
+        content: {
+          objective: "在 ESP32 上用 Arduino IDE / PlatformIO 连接 WiFi",
+          api_checklist: [
+            "WiFi.begin(ssid, password) 建立 WiFi 连接",
+            "WiFi.status() == WL_CONNECTED 判断连接状态",
+            "WiFi.localIP() 获取本机 IP",
+            "Serial.begin(115200) 初始化调试串口"
+          ],
+          practice: "写一个 esp32_wifi_test.ino：ESP32 连接 WiFi 后，每 5 秒通过 Serial 打印 localIP、rssi、RSSI 信号强度。将代码烧录到 ESP32，观察串口监视器输出正确的 IP 地址。",
+          answer: "关键代码段：\nvoid setup() {\n  Serial.begin(115200);\n  WiFi.begin(\"SSID\", \"PASSWORD\");\n  while (WiFi.status() != WL_CONNECTED) {\n    delay(500);\n    Serial.print(\".\");\n  }\n  Serial.println(WiFi.localIP());\n}"
+        },
+        duration: "1.5小时",
+        resources: [
+          { title: "ESP32 WiFi 库文档", url: "https://docs.espressif.com/projects/arduino-esp32/en/latest/api/wifi.html", required: true },
+          { title: "Arduino ESP32 安装指南", url: "https://docs.espressif.com/projects/arduino-esp32/en/latest/installing.html", required: true }
+        ],
+        checkpoint: "串口监视器显示 ESP32 获取到局域网 IP（如 192.168.1.100）"
+      },
+      {
+        day: 2,
+        title: "DHT11 / BMP280 传感器数据采集",
+        content: {
+          objective: "读取温湿度或气压传感器的原始数值",
+          api_checklist: [
+            "Adafruit_DHT 库读取 DHT11/DHT22",
+            "Adafruit_BMP280 库读取气压",
+            "Wire.begin() 初始化 I2C 总线",
+            "sensor.readTemperature() / readHumidity() / readPressure()"
+          ],
+          practice: "写 read_sensor.ino：DHT11 每 2 秒读取一次温湿度，BMP280 读取气压，通过 Serial 输出 JSON 格式数据 {\"temp\": 25.3, \"humidity\": 60.5, \"pressure\": 1013.25}。在 Arduino 串口绘图器中观察曲线。",
+          answer: "接线：DHT11 Data → GPIO4，BMP280 SDA→GPIO21 SCL→GPIO22（I2C 默认引脚）"
+        },
+        duration: "1.5小时",
+        resources: [
+          { title: "DHT Sensor Library", url: "https://github.com/adafruit/DHT-sensor-library", required: true },
+          { title: "BMP280 驱动文档", url: "https://github.com/adafruit/Adafruit_BMP280_Library", required: true }
+        ],
+        checkpoint: "串口输出正确格式的 JSON，每组数据在合理范围内（温度 15-35°C，湿度 30-80%）"
+      },
+      {
+        day: 3,
+        title: "HTTP POST 上报到 FastAPI 端点",
+        content: {
+          objective: "ESP32 通过 HTTP POST 发送 JSON 数据到服务器",
+          api_checklist: [
+            "WiFiClient client 建立 TCP 连接",
+            "client.connect(host, port) 建立 HTTP 连接",
+            "String payload = JsonObject.as<String>() 构建 JSON 请求体",
+            "client.print(String(\"POST /sensor HTTP/1.1\\r\\n...\")) 发送请求"
+          ],
+          practice: "用 ArduinoJson 库构造 JSON：{\n  \"device_id\": \"esp32_001\",\n  \"temperature\": 25.6,\n  \"humidity\": 62.3,\n  \"timestamp\": 1718900000\n}，POST 到 http://192.168.1.100:8000/api/sensor。用串口打印服务器返回的 HTTP 状态码。",
+          answer: "POST 请求格式：\nPOST /api/sensor HTTP/1.1\\r\nHost: 192.168.1.100:8000\\r\nContent-Type: application/json\\r\nContent-Length: <len>\\r\n\\r\n<payload>"
+        },
+        duration: "2小时",
+        resources: [
+          { title: "ArduinoJson 库文档", url: "https://arduinojson.org/", required: true },
+          { title: "ESP32 HTTP Client 示例", url: "https://docs.espressif.com/projects/arduino-esp32/en/latest/api/wificient.html", required: false }
+        ],
+        checkpoint: "ESP32 串口显示 HTTP/1.1 201 Created 或 200 OK，服务器端收到数据"
+      },
+      {
+        day: 4,
+        title: "FastAPI 后端接收服务",
+        content: {
+          objective: "搭建 FastAPI 后端接收 ESP32 上报的数据",
+          api_checklist: [
+            "FastAPI app = FastAPI() 创建应用",
+            "@app.post('/api/sensor') 定义端点",
+            "pydantic BaseModel 定义数据模型",
+            "uvicorn main:app --reload 启动服务"
+          ],
+          practice: "写 main.py：定义 SensorData(BaseModel)：device_id(str)、temperature(float)、humidity(float)、timestamp(int)。POST /api/sensor 端点打印数据并返回 {\"status\": \"ok\", \"received\": len(data)}。启动服务后用 curl 测试：curl -X POST http://localhost:8000/api/sensor -H \"Content-Type: application/json\" -d '{\"device_id\":\"test\",\"temperature\":25.0,\"humidity\":60.0,\"timestamp\":1718900000}'",
+          answer: "核心端点代码：\nclass SensorData(BaseModel):\n    device_id: str\n    temperature: float\n    humidity: float\n    timestamp: int\n\n@app.post(\"/api/sensor\")\ndef receive_sensor(data: SensorData):\n    print(data.model_dump())\n    return {\"status\": \"ok\", \"received\": data.device_id}"
+        },
+        duration: "1.5小时",
+        resources: [
+          { title: "FastAPI 官方教程", url: "https://fastapi.tiangolo.com/tutorial/", required: true },
+          { title: "Pydantic 数据验证", url: "https://docs.pydantic.dev/", required: true }
+        ],
+        checkpoint: "curl 返回 {\"status\": \"ok\"}，服务器终端打印出完整的 SensorData"
+      },
+      {
+        day: 5,
+        title: "数据持久化到 SQLite",
+        content: {
+          objective: "将传感器数据写入 SQLite 数据库",
+          api_checklist: [
+            "sqlite3.connect('sensor.db') 建立连接",
+            "CREATE TABLE sensor_logs(...) 建表",
+            "INSERT INTO sensor_logs VALUES(?,?,?,?) 插入数据",
+            "SELECT * FROM sensor_logs 查询验证"
+          ],
+          practice: "扩展昨天的 FastAPI：在 /api/sensor 端点中加入 sqlite3.insert()，每次 POST 请求都将数据写入 sensor_logs 表。新增 GET /api/sensor/history?device_id=esp32_001&limit=10 返回该设备最近 10 条记录。用 curl 发送数据后，用 sqlite3 sensor.db \"SELECT * FROM sensor_logs\" 验证。",
+          answer: "建表语句：\nCREATE TABLE sensor_logs (\n    id INTEGER PRIMARY KEY AUTOINCREMENT,\n    device_id TEXT,\n    temperature REAL,\n    humidity REAL,\n    timestamp INTEGER,\n    created_at DATETIME DEFAULT CURRENT_TIMESTAMP\n)"
+        },
+        duration: "2小时",
+        resources: [
+          { title: "SQLite Python 文档", url: "https://docs.python.org/3/library/sqlite3.html", required: true },
+          { title: "FastAPI SQL 教程", url: "https://fastapi.tiangolo.com/tutorial/sql-databases/", required: false }
+        ],
+        checkpoint: "sqlite3 命令行查询到历史记录，GET 端点返回正确 JSON"
+      },
+      {
+        day: 6,
+        title: "端到端联调与异常处理",
+        content: {
+          objective: "ESP32 + FastAPI 完整链路联调，处理网络异常",
+          api_checklist: [
+            "try-except 捕获 WiFiClient 连接异常",
+            "delay() 和 millis() 实现非阻塞重试",
+            "ESP.deepSleep() 低功耗策略",
+            "服务器端 requestValidation 验证数据合法性"
+          ],
+          practice: "ESP32 每 30 秒上报一次数据，网络断开时自动重试 3 次（间隔 5 秒），重试失败后进入 deepSleep(60e6) 等待下次唤醒。服务器端过滤 temperature<-50 或 >100 的异常数据，返回 422 Unprocessable Entity。",
+          answer: "重试逻辑框架：\nint retries = 0;\nwhile (retries < 3 && !sendData()) {\n  delay(5000);\n  retries++;\n}\nif (retries == 3) ESP.deepSleep(60e6);"
+        },
+        duration: "2小时",
+        resources: [
+          { title: "ESP32 低功耗指南", url: "https://docs.espressif.com/projects/esp-idf/en/latest/api-reference/system/deep_sleep.html", required: false }
+        ],
+        checkpoint: "拔掉 WiFi 路由器的网线，ESP32 重试 3 次后进入深度睡眠，插回网线后自动恢复上报"
+      },
+      {
+        day: 7,
+        title: "综合：实时数据仪表盘",
+        content: {
+          objective: "在前端页面实时展示传感器数据流",
+          api_checklist: [
+            "FastAPI 挂载静态文件 app.mount('/static', StaticFiles(directory='static'))",
+            "JavaScript fetch() 轮询 /api/sensor/history 端点",
+            "Chart.js 绘制实时折线图",
+            "setInterval() 定时刷新数据"
+          ],
+          practice: "创建 static/ 目录，写 index.html：页面加载后每 10 秒 fetch('/api/sensor/history?limit=20')，用 Chart.js 渲染 temperature 和 humidity 两条实时曲线。启动 FastAPI 后浏览器访问 http://localhost:8000/static/index.html 观察数据滚动更新。",
+          answer: "Chart.js 最小配置：\nnew Chart(ctx, {\n  type: 'line',\n  data: { labels: [...], datasets: [\n    { label: 'Temp', data: [...] },\n    { label: 'Humidity', data: [...] }\n  ] },\n  options: { animation: false, responsive: true }\n});"
+        },
+        duration: "2.5小时",
+        resources: [
+          { title: "FastAPI 静态文件挂载", url: "https://fastapi.tiangolo.com/tutorial/static-files/", required: true },
+          { title: "Chart.js 入门", url: "https://www.chartjs.org/docs/latest/", required: true }
+        ],
+        checkpoint: "浏览器页面显示两条实时更新的折线图，数据来自真实 ESP32 上报"
+      }
+    ]
+  },
+
+  // =====================================================
+  // Node: nlp-local-rag
+  // =====================================================
+  {
+    id: "nlp-local-rag",
+    name: "本地知识库 RAG 系统",
+    track: "nlp",
+    duration: "2周",
+    prerequisites: ["linux-basic"],
+    status: "locked",
+    description: "围绕本地知识库构建。重点讲如何使用脚本自动化解析学术文献或网页内容，并结合向量数据库搭建一个轻量级的本地 RAG（检索增强生成）系统。",
+    outcomes: ["自动化文档解析与分块", "向量数据库存储与相似度检索", "本地 LLM 生成回答"],
+    relatedIntel: ["005-rag", "001-transformer"],
+    relatedTerms: ["rag", "vector-database", "embedding", "chunking", "llm"],
+    dailyTasks: [
+      {
+        day: 1,
+        title: "PDF 文档解析与文本提取",
+        content: {
+          objective: "用 Python 从 PDF 中提取结构化文本",
+          api_checklist: [
+            "PyPDF2.PdfReader 加载 PDF",
+            "page.extract_text() 提取单页文本",
+            "re.split('[.!?。！？]\\s+', text) 按句子分割",
+            "len(text) > 100 过滤短文本块"
+          ],
+          practice: "写 extract_pdf.py：遍历 input_pdfs/ 目录下所有 PDF，提取全部文本，按句子分块（最小 100 字符），输出为 JSONL 格式（每行 {\"text\": \"...\", \"source\": \"filename\", \"page\": 1}）。用 arXiv 下载一篇 PDF 论文测试。",
+          answer: "核心循环：\nreader = PdfReader(filepath)\nfor i, page in enumerate(reader.pages):\n    text = page.extract_text()\n    for chunk in split_into_chunks(text, min_len=100):\n        records.append({\"text\": chunk, \"source\": filename, \"page\": i+1})"
+        },
+        duration: "1.5小时",
+        resources: [
+          { title: "PyPDF2 文档", url: "https://pypdf.readthedocs.io/", required: true },
+          { title: "PDF 论文示例 (arXiv)", url: "https://arxiv.org/pdf/2303.08774.pdf", required: true }
+        ],
+        checkpoint: "输出的 JSONL 文件行数 > 50，每条记录包含 text、source、page 三个字段"
+      },
+      {
+        day: 2,
+        title: "网页内容抓取与清洗",
+        content: {
+          objective: "用 requests + BeautifulSoup 抓取网页正文",
+          api_checklist: [
+            "requests.get(url, timeout=10) 发送 HTTP 请求",
+            "BeautifulSoup(response.text, 'html.parser') 解析 DOM",
+            "soup.find('article') 或 .find('main') 定位正文",
+            "soup.get_text(separator=' ') 提取纯净文本"
+          ],
+          practice: "写 crawl_web.py：读取 urls.txt（一行一个 URL），抓取每个页面的 article/main 内容，去除 nav/header/footer/script 标签，对正文按 500 字符分块，输出到 articles.jsonl。用 Wikipedia 或博客文章测试。",
+          answer: "关键清洗逻辑：\nfor tag in soup.find_all(['nav', 'header', 'footer', 'script', 'style']):\n    tag.decompose()  # 删除标签\narticle = soup.find('article') or soup.find('main')\ntext = article.get_text(separator=' ', strip=True)"
+        },
+        duration: "1.5小时",
+        resources: [
+          { title: "BeautifulSoup 文档", url: "https://www.crummy.com/software/BeautifulSoup/bs4/doc/", required: true },
+          { title: "requests 库文档", url: "https://docs.python-requests.org/", required: true }
+        ],
+        checkpoint: "输出 JSONL 中每条记录正文无 HTML 标签，无导航菜单内容"
+      },
+      {
+        day: 3,
+        title: "Sentence-Transformers Embedding 向量化",
+        content: {
+          objective: "使用预训练模型将文本块转为向量",
+          api_checklist: [
+            "SentenceTransformer('all-MiniLM-L6-v2') 加载模型",
+            "model.encode(texts, show_progress_bar=True) 批量编码",
+            "numpy.save('embeddings.npy') 持久化向量",
+            "cosine_similarity(a, b) 计算相似度"
+          ],
+          practice: "写 embed.py：加载 articles.jsonl，用 SentenceTransformer('all-MiniLM-L6-v2') 对所有文本块编码，输出 embeddings.npy（形状 [N, 384]）和 metadata.json（对应每个向量的 text、source）。验证：随机取一条文本，用 numpy.dot 计算与所有向量的相似度，找出 Top-5 最相似的块。",
+          answer: "相似度搜索：\nquery_vec = model.encode([query_text])\nsimilarities = np.dot(embeddings, query_vec.T).flatten()\ntop_k_idx = np.argsort(similarities)[-5:][::-1]"
+        },
+        duration: "2小时",
+        resources: [
+          { title: "Sentence-Transformers 文档", url: "https://www.sbert.net/", required: true },
+          { title: "HuggingFace MTEB 榜单", url: "https://huggingface.co/spaces/mteb/leaderboard", required: false }
+        ],
+        checkpoint: "Top-5 返回结果与查询语义相关（可用肉眼判断），相似度数值合理（0.3-0.9 之间）"
+      },
+      {
+        day: 4,
+        title: "ChromaDB 向量数据库集成",
+        content: {
+          objective: "用 ChromaDB 管理向量存储与检索",
+          api_checklist: [
+            "chromadb.Client() 创建客户端",
+            "client.create_collection('knowledge_base') 建集合",
+            "collection.add(ids, embeddings, documents, metadatas) 添加数据",
+            "collection.query(query_embeddings, n_results=5) 相似检索"
+          ],
+          practice: "写 rag_retriever.py：初始化 ChromaDB collection，将 articles.jsonl 的文本和 embeddings 批量导入。实现 get_relevant_context(query_text, top_k=3) 函数：输入自然语言问题，返回最相关的 3 个文本块拼接成上下文字符串。",
+          answer: "核心函数：\ndef get_relevant_context(query, top_k=3):\n    query_emb = model.encode([query])\n    results = collection.query(\n        query_embeddings=query_emb.tolist(),\n        n_results=top_k\n    )\n    return '\\n'.join(results['documents'][0])"
+        },
+        duration: "1.5小时",
+        resources: [
+          { title: "ChromaDB 快速入门", url: "https://docs.trychroma.com/getting-started", required: true },
+          { title: "ChromaDB Python 客户端", url: "https://docs.trychroma.com/api-reference", required: true }
+        ],
+        checkpoint: "输入「论文作者是谁」能返回包含作者信息的文本块"
+      },
+      {
+        day: 5,
+        title: "本地 LLM 生成：Ollama / vLLM 接口调用",
+        content: {
+          objective: "通过本地 LLM API 生成 RAG 回答",
+          api_checklist: [
+            "ollama run llama3（或 qwen2）本地运行模型",
+            "requests.post('http://localhost:11434/api/generate') 调用生成",
+            "构造 prompt: [context] + [question] 注入上下文",
+            "response.json()['response'] 提取生成文本"
+          ],
+          practice: "写 generate_answer.py：先启动 ollama run llama3，然后用 get_relevant_context(question) 获取相关上下文，构造 prompt=f\"基于以下内容回答问题：\\n{context}\\n\\n问题：{question}\\n回答：\"，调用 Ollama API 生成回答，输出到终端。",
+          answer: "API 调用：\nimport requests\ndef ask_local_llm(question, context):\n    prompt = f\"基于以下内容回答问题：\\n{context}\\n\\n问题：{question}\\n回答：\"\n    resp = requests.post('http://localhost:11434/api/generate', \n        json={'model': 'llama3', 'prompt': prompt, 'stream': False})\n    return resp.json()['response']"
+        },
+        duration: "2.5小时",
+        resources: [
+          { title: "Ollama 官方文档", url: "https://github.com/ollama/ollama", required: true },
+          { title: "Ollama API 参考", url: "https://github.com/ollama/ollama/blob/main/docs/api.md", required: true }
+        ],
+        checkpoint: "提出一个文档相关的问题，能得到基于文档内容的回答（不是通用回答）"
+      },
+      {
+        day: 6,
+        title: "RAG Pipeline 串联与评估",
+        content: {
+          objective: "串联文档解析→向量化→检索→生成的完整 Pipeline",
+          api_checklist: [
+            "argparse 接收命令行参数",
+            "datetime.datetime.now() 给检索结果打时间戳",
+            "json.dump 结果输出到文件",
+            "BLEU / ROUGE 评估生成质量"
+          ],
+          practice: "写 main.py：整合前 5 天代码，支持命令行参数 --pdf 或 --url 指定数据源，--question 指定问题。输出格式：\n{\"question\": \"...\", \"answer\": \"...\", \"sources\": [\"source1\", \"source2\"]}。准备 5 个测试问题，人工判断回答是否正确引用了文档内容。",
+          answer: "主函数结构：\ndef main():\n    parser = argparse.ArgumentParser()\n    parser.add_argument('--pdf', type=str)\n    parser.add_argument('--url', type=str)\n    parser.add_argument('--question', type=str, required=True)\n    args = parser.parse_args()\n    \n    docs = extract(args.pdf or args.url)\n    context = retrieve(args.question)\n    answer = generate(args.question, context)\n    print(json.dumps({\"question\": args.question, \"answer\": answer, \"sources\": docs}))"
+        },
+        duration: "2小时",
+        resources: [
+          { title: "RAG 系统评估方法", url: "https://github.com/run-llama/llama-hub", required: false }
+        ],
+        checkpoint: "5 个测试问题中至少 4 个能正确引用文档内容生成回答"
+      },
+      {
+        day: 7,
+        title: "Web 界面封装",
+        content: {
+          objective: "用 Gradio 或 Streamlit 提供 Web UI",
+          api_checklist: [
+            "gr.Interface(fn, inputs, outputs) 创建界面",
+            "st.text_input / st.button Streamlit 组件",
+            "st.write(result) 渲染回答结果",
+            "subprocess.Popen 启动后端 Ollama 服务"
+          ],
+          practice: "用 Gradio 写 web_ui.py：左侧输入框接收问题，右侧显示回答和引用来源。点击提交后调用 rag_pipeline 获得结果。添加「参考来源」折叠区，点击可展开查看原始文本块。",
+          answer: "最小 Gradio 实现：\nimport gradio as gr\n\ndef answer_question(question):\n    result = rag_pipeline(question)\n    return result['answer'], result['sources']\n\ndemo = gr.Interface(\n    fn=answer_question,\n    inputs=gr.Textbox(label=\"问题\"),\n    outputs=[gr.Textbox(label=\"回答\"), gr.JSON(label=\"参考来源\")]\n)\ndemo.launch()"
+        },
+        duration: "2小时",
+        resources: [
+          { title: "Gradio 快速入门", url: "https://gradio.app/quickstart/", required: true },
+          { title: "Streamlit 快速入门", url: "https://docs.streamlit.io/get-started", required: false }
+        ],
+        checkpoint: "浏览器打开 Web UI，输入问题得到完整 RAG 回答和来源展示"
+      }
+    ]
+  },
+
+  // =====================================================
+  // Node: devops-docker-api
+  // =====================================================
+  {
+    id: "devops-docker-api",
+    name: "模型服务 Docker 化部署",
+    track: "devops",
+    duration: "1周",
+    prerequisites: ["linux-basic", "git-github"],
+    status: "locked",
+    description: "围绕模型服务化部署。重点讲如何编写 Dockerfile，将一个包含了深度学习推理逻辑的 Python/FastAPI 服务打包成体积优化的镜像。",
+    outcomes: ["Dockerfile 多阶段构建优化", "FastAPI 模型推理服务容器化", "镜像体积控制 < 2GB"],
+    relatedIntel: ["007-docker"],
+    relatedTerms: ["docker", "dockerfile", "multi-stage-build", "uvicorn", "fastapi"],
+    dailyTasks: [
+      {
+        day: 1,
+        title: "FastAPI 推理服务编写",
+        content: {
+          objective: "编写包含模型推理逻辑的 FastAPI 服务",
+          api_checklist: [
+            "torch.load('model.pt') 加载 PyTorch 模型",
+            "model.eval() 切换推理模式",
+            "@app.post('/predict') 定义推理端点",
+            "torch.no_grad() 禁用梯度计算加速"
+          ],
+          practice: "写一个简单的 FastAPI 推理服务：加载 torchvision.models.resnet18(pretrained=True)，实现 POST /predict 端点，接收 base64 编码的图片字符串，解码后送入模型推理，返回 Top-5 预测类别和概率。启动服务并 curl 测试。",
+          answer: "推理端点核心：\n@app.post('/predict')\ndef predict(file: UploadFile):\n    img = Image.open(BytesIO(file.read())).convert('RGB')\n    tensor = transforms(img).unsqueeze(0)\n    with torch.no_grad():\n        output = model(tensor)\n    probs = torch.softmax(output, dim=1)[0]\n    top5 = torch.topk(probs, 5)\n    return {'predictions': [{'class': classes[i], 'prob': p} for i, p in zip(top5.indices, top5.values)]}"
+        },
+        duration: "2小时",
+        resources: [
+          { title: "FastAPI 官方教程", url: "https://fastapi.tiangolo.com/tutorial/", required: true },
+          { title: "PyTorch 模型推理", url: "https://pytorch.org/tutorials/beginner/saving_loading_models.html", required: true }
+        ],
+        checkpoint: "curl 上传一张图片，返回包含 ImageNet 类别的 Top-5 预测"
+      },
+      {
+        day: 2,
+        title: "单阶段 Dockerfile 基础镜像构建",
+        content: {
+          objective: "编写第一版 Dockerfile 并成功构建",
+          api_checklist: [
+            "FROM python:3.10 设置基础镜像",
+            "WORKDIR /app 设置工作目录",
+            "COPY requirements.txt 复制依赖文件",
+            "RUN pip install --no-cache-dir -r requirements.txt 安装依赖",
+            "COPY . . 复制应用代码",
+            "CMD [\"uvicorn\", \"main:app\", \"--host\", \"0.0.0.0\", \"--port\", \"8000\"] 启动命令"
+          ],
+          practice: "写 Dockerfile.v1（单阶段），requirements.txt 包含 fastapi、uvicorn、torch、torchvision、Pillow。构建镜像 docker build -f Dockerfile.v1 -t resnet-api:v1 .，然后 docker run -p 8000:8000 resnet-api:v1，curl 测试端点是否正常。记录镜像大小。",
+          answer: "Dockerfile.v1 模板：\nFROM python:3.10\nWORKDIR /app\nCOPY requirements.txt .\nRUN pip install --no-cache-dir -r requirements.txt\nCOPY . .\nCMD [\"uvicorn\", \"main:app\", \"--host\", \"0.0.0.0\", \"--port\", \"8000\"]"
+        },
+        duration: "1.5小时",
+        resources: [
+          { title: "Dockerfile 官方参考", url: "https://docs.docker.com/engine/reference/builder/", required: true },
+          { title: "pip requirements 文件格式", url: "https://pip.pypa.io/en/stable/reference/requirements-file-format/", required: true }
+        ],
+        checkpoint: "docker images 查看镜像大小，通常 > 5GB"
+      },
+      {
+        day: 3,
+        title: "多阶段构建：构建层与运行层分离",
+        content: {
+          objective: "使用多阶段构建分离编译环境和运行环境",
+          api_checklist: [
+            "FROM python:3.10 AS builder 创建编译阶段",
+            "COPY --from=builder 复制编译产物",
+            "FROM python:3.10-slim 精简运行环境",
+            "RUN apt-get install -y --no-install-recommends 少量系统依赖"
+          ],
+          practice: "写 Dockerfile.v2（两阶段）：第一阶段用 python:3.10 安装所有编译工具，pip wheel --wheel-dir 预编译 torchvision；第二阶段用 python:3.10-slim 只安装预编译的 wheel 包。对比 v1 和 v2 的镜像大小差异。",
+          answer: "两阶段关键段：\n# Stage 1: builder\nFROM python:3.10 AS builder\nRUN pip install --user torch torchvision\nRUN pip wheel --wheel-dir /wheels torchvision\n\n# Stage 2: runtime  \nFROM python:3.10-slim\nCOPY --from=builder /wheels /wheels\nRUN pip install --no-cache-dir --prefix=/opt/venv /wheels/*.whl\nENV PATH=/opt/venv/bin:$PATH"
+        },
+        duration: "2小时",
+        resources: [
+          { title: "Docker 多阶段构建文档", url: "https://docs.docker.com/build/building/multi-stage/", required: true },
+          { title: "Python slim 镜像优化", url: "https://pythonspeed.com/articles/base-image-python/", required: false }
+        ],
+        checkpoint: "v2 镜像大小 < v1 的 60%（通常可从 6GB 降到 2-3GB）"
+      },
+      {
+        day: 4,
+        title: ".dockerignore 与构建上下文优化",
+        content: {
+          objective: "减少构建上下文体积，加速镜像构建",
+          api_checklist: [
+            ".dockerignore 排除无关文件",
+            "__pycache__/ *.pyc .git/ 排除缓存和版本控制",
+            "node_modules/ .venv/ 排除虚拟环境",
+            "*.mp4 *.zip 大文件不上传"
+          ],
+          practice: "创建 .dockerignore 文件，排除 __pycache__/、*.pyc、.git/、.venv/、tests/、*.md、.gitignore。同时在 Dockerfile 中用 .dockerignore 配合 pip install 的 --no-deps 先安装核心依赖，验证 .dockerignore 生效后构建速度明显加快。",
+          answer: ".dockerignore 示例：\n__pycache__\n*.pyc\n.git\n.gitignore\n.venv\nvenv\nenv\n*.md\nLICENSE\ntests\n*.mp4\n*.zip\ndata\nmodels/*.pt"
+        },
+        duration: "1小时",
+        resources: [
+          { title: ".dockerignore 官方文档", url: "https://docs.docker.com/engine/reference/builder/#dockerignore-file", required: true }
+        ],
+        checkpoint: "构建日志显示 COPY . . 时传输的文件列表中不包含 .git 和 __pycache__"
+      },
+      {
+        day: 5,
+        title: "Docker Compose 编排多容器服务",
+        content: {
+          objective: "用 Docker Compose 编排 API 服务和健康检查",
+          api_checklist: [
+            "docker-compose.yml 定义服务",
+            "image / build 指定镜像或 Dockerfile",
+            "ports 端口映射",
+            "healthcheck 配置健康检查",
+            "depends_on 服务依赖声明"
+          ],
+          practice: "写 docker-compose.yml：用 build: . 构建当前目录的 Dockerfile，服务名设为 resnet-api。配置 ports: ['8000:8000']，添加 healthcheck: {test: [\"CMD\", \"curl\", \"-f\", \"http://localhost:8000/health\"], interval: 30s, timeout: 10s}。添加 /health 端点返回 {\"status\": \"ok\"}。",
+          answer: "docker-compose.yml：\nservices:\n  resnet-api:\n    build: .\n    ports:\n      - \"8000:8000\"\n    healthcheck:\n      test: [\"CMD\", \"curl\", \"-f\", \"http://localhost:8000/health\"]\n      interval: 30s\n      timeout: 10s\n      retries: 3\n    deploy:\n      resources:\n        limits:\n          memory: 4G"
+        },
+        duration: "1.5小时",
+        resources: [
+          { title: "Docker Compose 文件参考", url: "https://docs.docker.com/compose/compose-file/", required: true },
+          { title: "Docker 健康检查", url: "https://docs.docker.com/engine/reference/builder/#healthcheck", required: true }
+        ],
+        checkpoint: "docker compose up -d 后 docker compose ps 显示 healthy 状态"
+      },
+      {
+        day: 6,
+        title: "镜像安全加固与最小化",
+        content: {
+          objective: "减少攻击面，移除非必要的 shell 和工具",
+          api_checklist: [
+            "RUN apt-get install -y --no-install-recommends 删除缓存",
+            "rm -rf /var/lib/apt/lists/* 清理 apt 缓存",
+            "USER www-data 使用非 root 用户运行",
+            "EXPOSE 8000 声明端口"
+          ],
+          practice: "优化 Dockerfile.v2：添加 non-root 用户 www-data，Dockerfile 末尾加 USER www-data。确保 pip install 不带 --user 时使用 --prefix=/usr/local。apt-get 安装后清理 /var/lib/apt/lists/*。最终镜像执行 docker run --read-only 验证只读文件系统启动成功。",
+          answer: "安全加固关键：\nRUN apt-get update && \\\n    apt-get install -y --no-install-recommends curl && \\\n    rm -rf /var/lib/apt/lists/*\n\nRUN useradd -m -u 1000 -s /bin/bash www-data\nCOPY --chown=www-data:www-data . .\nUSER www-data"
+        },
+        duration: "1.5小时",
+        resources: [
+          { title: "Docker 安全最佳实践", url: "https://docs.docker.com/develop/security/", required: true },
+          { title: "Docker CIS Benchmark", url: "https://www.cisecurity.org/benchmark/docker", required: false }
+        ],
+        checkpoint: "docker run --read-only 启动成功，USER 为 www-data，非 root 运行"
+      },
+      {
+        day: 7,
+        title: "CI/CD 自动构建与推送",
+        content: {
+          objective: "GitHub Actions 自动构建并推送到 Docker Hub",
+          api_checklist: [
+            "docker/login-action 登录 Docker Hub",
+            "docker/setup-buildx-action 构建 Kit",
+            "docker/build-push-action 构建并推送",
+            "tags: type=sha 动态版本标签"
+          ],
+          practice: "在项目 .github/workflows/docker.yml 中配置：push 到 main 分支时自动构建，tag 为 latest；push tag v* 时 tag 为对应版本号。用 docker/build-push-action，cache-from 指定上一版的镜像层缓存。验证：push 一个 git tag v0.1.0，GitHub Actions 自动构建并推送到 Docker Hub。",
+          answer: "GitHub Actions workflow 核心：\n- uses: docker/login-action@v3\n  with:\n    username: ${{ secrets.DOCKERHUB_USERNAME }}\n    password: ${{ secrets.DOCKERHUB_TOKEN }}\n- uses: docker/build-push-action@v5\n  with:\n    context: .\n    push: true\n    tags: user/resnet-api:latest,user/resnet-api:${{ github.ref_name }}\n    cache-from: type=gha\n    cache-to: type=gha,mode=max"
+        },
+        duration: "2.5小时",
+        resources: [
+          { title: "GitHub Actions Docker 构建", url: "https://github.com/docker/build-push-action", required: true },
+          { title: "GitHub Actions 缓存优化", url: "https://docs.docker.com/build/cache/backend/buildkit/", required: false }
+        ],
+        checkpoint: "GitHub Actions 显示构建成功，Docker Hub 仓库有对应 tag 的镜像"
+      }
+    ]
+  },
+
+  // =====================================================
+  // Node: math-tensor-ops
+  // =====================================================
+  {
+    id: "math-tensor-ops",
+    name: "PyTorch 张量运算与广播机制",
+    track: "math",
+    duration: "1周",
+    prerequisites: [],
+    status: "locked",
+    description: "围绕深度学习中的矩阵运算。重点解析 PyTorch 中的高维张量乘法（如 torch.matmul）与广播机制（Broadcasting）在实际神经网络前向传播中的应用。",
+    outcomes: ["理解高维张量的维度语义", "掌握 matmul / mm / bmm 差异", "熟练运用广播机制避免显式维度扩展"],
+    relatedIntel: ["010-numpy-pandas", "011-pytorch"],
+    relatedTerms: ["tensor", "matrix-multiplication", "broadcasting", "torch.matmul", "reshape"],
+    dailyTasks: [
+      {
+        day: 1,
+        title: "张量创建与维度语义",
+        content: {
+          objective: "理解 PyTorch 张量的维度含义（batch/seq/feature）",
+          api_checklist: [
+            "torch.tensor([[[1,2],[3,4]]]) 创建 3D 张量",
+            "tensor.shape / tensor.ndim 查看维度",
+            "tensor[0] / tensor[:,0,:] 索引和切片",
+            "torch.randn(B, N, D) 批量生成随机张量"
+          ],
+          practice: "写 tensor_shapes.py：用 torch.randn(8, 32, 128) 创建一个 B=8（batch size）、N=32（序列长度）、D=128（特征维度）的张量 x。验证：x.shape == (8, 32, 128)，x[:, 0, :].shape == (8, 128) 是第一个 token 的特征，x[0, :, :].shape == (32, 128) 是第一条样本的完整序列。",
+          answer: "维度语义解释：\n# B=8: 8 个独立样本并行处理\n# N=32: 每个样本有 32 个位置（如 32 个 token）\n# D=128: 每个位置用 128 维向量表示\nx[:, 0, :]  # 所有 batch 的第一个 token 特征\nx[0, :, :]  # 第一条样本的完整 32 个 token 序列"
+        },
+        duration: "1.5小时",
+        resources: [
+          { title: "PyTorch 张量文档", url: "https://pytorch.org/docs/stable/tensors.html", required: true },
+          { title: "张量维度约定 (NCHW vs NHWC)", url: "https://pytorch.org/docs/stable/generated/torch.randn.html", required: false }
+        ],
+        checkpoint: "能清晰解释 x[:, i:i+2, :].shape == (8, 2, 128) 的含义"
+      },
+      {
+        day: 2,
+        title: "矩阵乘法：matmul / mm / bmm / dot",
+        content: {
+          objective: "区分不同维度的矩阵乘法 API 及其适用场景",
+          api_checklist: [
+            "torch.mm(A, B) 2D × 2D 矩阵乘法",
+            "torch.bmm(A, B) 3D batch 矩阵乘法 (B×N×M × B×M×K → B×N×K)",
+            "torch.matmul(A, B) 高维泛化（自动适配不同维度组合）",
+            "torch.einsum('bnk,bkd->bnd', A, B) 爱因斯坦求和"
+          ],
+          practice: "验证四种乘法的维度匹配规则：\n1. A@(B) 用 mm\n2. A(b,n,m) @ B(b,m,k) 用 bmm，结果 shape\n3. A(b,n,m) @ B(m,k) 用 matmul（触发广播），结果 shape\n4. 写 einsum 等价形式：torch.einsum('bik,bkj->bij', A, B)。\n用 assert 验证每种结果形状正确，数值等价。",
+          answer: "维度规则：\ntorch.mm: (n,m) @ (m,k) → (n,k)\ntorch.bmm: (b,n,m) @ (b,m,k) → (b,n,k)\ntorch.matmul: 自动处理 - (b,n,m) @ (m,k) → (b,n,k) 广播\ntorch.einsum: 任意维度，通过索引字母指定乘法/求和顺序"
+        },
+        duration: "2小时",
+        resources: [
+          { title: "torch.matmul 官方文档", url: "https://pytorch.org/docs/stable/generated/torch.matmul.html", required: true },
+          { title: "torch.einsum 文档", url: "https://pytorch.org/docs/stable/generated/torch.einsum.html", required: true }
+        ],
+        checkpoint: "能解释为什么 Linear 层权重 (W: [out_features, in_features]) 用 weight.t() 后可以用 matmul 直接计算 batch 推理"
+      },
+      {
+        day: 3,
+        title: "广播机制 Broadcasting 详解",
+        content: {
+          objective: "理解 PyTorch 自动广播的规则：右对齐，从后往前扩展",
+          api_checklist: [
+            "张量右对齐后每个维度需相等或为 1 或不存在",
+            "torch.randn(B, 1, D) + torch.randn(1, N, D) → (B, N, D)",
+            "tensor.unsqueeze(dim) 增加维度",
+            "tensor.expand(B, -1, D) 扩展维度（不复制数据）"
+          ],
+          practice: "实现一个带位置偏置的注意力分数计算：\nscores = torch.matmul(q, k.transpose(-2, -1)) / sqrt(d_k)  # (B, N, N)\nbias = torch.randn(B, 1, N)  # (B, 1, N) 广播到 (B, N, N)\nscores = scores + bias\n验证 scores.shape == (B, N, N)，其中 bias 的 (B,1,N) 自动广播。",
+          answer: "广播流程图：\nscores:     (B,  N,  N)\nbias:      (B,  1,  N)\n结果:       (B,  N,  N)  ← 从右往左，N match，1→N\n\n实际计算等价于 bias(b,0,n) 被加到 scores(b,i,n) 的每一行 i"
+        },
+        duration: "1.5小时",
+        resources: [
+          { title: "NumPy 广播官方文档", url: "https://numpy.org/doc/stable/user/basics.broadcasting.html", required: true },
+          { title: "PyTorch broadcasting 语义", url: "https://pytorch.org/docs/stable/generated/torch.broadcast_shapes.html", required: true }
+        ],
+        checkpoint: "能用广播实现层归一化：layer_norm(x) = (x - mean) / std，其中 mean shape 为 (B, N, 1) 能正确广播到 (B, N, D)"
+      },
+      {
+        day: 4,
+        title: "Reshape / View / Permute 维度变换",
+        content: {
+          objective: "掌握张量变形与维度重排的正确用法",
+          api_checklist: [
+            "tensor.view(-1, D) 展平到 2D",
+            "tensor.reshape(...) 相似但更宽松（copy 不必需时也可返回视图）",
+            "tensor.permute(0, 2, 1) 维度重排",
+            "tensor.transpose(dim0, dim1) 交换两个维度"
+          ],
+          practice: "写一个 reshape_attention.py：将 batch self-attention 的输入 x (B, N, D) 通过 view 重排为多头形式：\nnum_heads = 8\nhead_dim = D // num_heads\nx = x.view(B, N, num_heads, head_dim).permute(0, 2, 1, 3)  # (B, 8, N, head_dim)\n最后再转回来，用 assert 验证信息不丢失（数值完全相等）。",
+          answer: "维度追踪：\nx: (B, N, D=512)\n↓ view(B, N, 8, 64)\n↓ permute(0, 2, 1, 3)\n→ (B, 8, N, 64)\n↓ .reshape(B, N, D) 或 .permute(0, 2, 1).contiguous().view(B, N, D)\n→ (B, N, D) 完全恢复"
+        },
+        duration: "1.5小时",
+        resources: [
+          { title: "tensor.view vs reshape", url: "https://pytorch.org/docs/stable/generated/torch.Tensor.view.html", required: true },
+          { title: "PyTorch contiguous 文档", url: "https://pytorch.org/docs/stable/generated/torch.Tensor.contiguous.html", required: true }
+        ],
+        checkpoint: "assert torch.allclose(original, reconstructed)，说明多头 reshape + 还原是无损操作"
+      },
+      {
+        day: 5,
+        title: "手写 MLP / Linear Layer 前向传播",
+        content: {
+          objective: "用张量运算实现一个完整 MLP 层的 forward",
+          api_checklist: [
+            "nn.Linear(in_features, out_features) 权重 shape",
+            "F.linear(x, weight, bias) 等价手动计算",
+            "torch.cat([x1, x2], dim=-1) 拼接多个输入",
+            "F.gelu / F.relu 激活函数的 broadcast 特性"
+          ],
+          practice: "不依赖 nn.Linear，手写 MLP 层：\nclass ManualMLP(nn.Module):\n    def __init__(self, d_model, d_ff):\n        self.W1 = nn.Parameter(torch.randn(d_model, d_ff))\n        self.b1 = nn.Parameter(torch.zeros(d_ff))\n        self.W2 = nn.Parameter(torch.randn(d_ff, d_model))\n        self.b2 = nn.Parameter(torch.zeros(d_model))\n    def forward(self, x):  # x: (B, N, d_model)\n        return ???\n验证与 nn.Sequential(nn.Linear(d_model, d_ff), nn.GELU(), nn.Linear(d_ff, d_model)) 的输出数值完全一致。",
+          answer: "forward 实现：\ndef forward(self, x):\n    # x: (B, N, d_model)\n    h = torch.matmul(x, self.W1) + self.b1  # (B, N, d_ff) 广播\n    h = F.gelu(h)\n    out = torch.matmul(h, self.W2) + self.b2  # (B, N, d_model)\n    return out"
+        },
+        duration: "2小时",
+        resources: [
+          { title: "nn.Linear 源码实现", url: "https://pytorch.org/docs/stable/generated/torch.nn.Linear.html", required: true },
+          { title: "F.gelu 实现", url: "https://pytorch.org/docs/stable/generated/nn.functional.gelu.html", required: true }
+        ],
+        checkpoint: "ManualMLP 与 nn.Sequential 输出差值 < 1e-6（浮点误差范围内相等）"
+      },
+      {
+        day: 6,
+        title: "Batch Matrix Multiply 实现 Transformer Attention",
+        content: {
+          objective: "综合运用 matmul + mask + softmax 实现 Scaled Dot-Product Attention",
+          api_checklist: [
+            "torch.matmul(Q, K.transpose(-2, -1)) 计算注意力分数",
+            "torch.nn.functional.softmax(score, dim=-1) 归一化",
+            "torch.where(mask, scores, scores.new_full(..., -1e9)) 应用 mask",
+            "torch.matmul(attn_weights, V) 聚合值向量"
+          ],
+          practice: "实现 scaled_dot_product_attention 函数：\ndef scaled_dot_product_attention(Q, K, V, mask=None):\n    d_k = Q.size(-1)\n    scores = torch.matmul(Q, K.transpose(-2, -1)) / math.sqrt(d_k)\n    if mask is not None:\n        scores = torch.where(mask.bool(), scores, torch.full_like(scores, -1e9))\n    attn_weights = F.softmax(scores, dim=-1)\n    return torch.matmul(attn_weights, V), attn_weights\n验证：输入 (B=2, num_heads=8, N=32, dk=64)，输出 shape 正确，attn_weights 每行和为 1。",
+          answer: "完整 forward：\ndef scaled_dot_product_attention(Q, K, V, mask=None):\n    d_k = Q.size(-1)\n    scores = torch.matmul(Q, K.transpose(-2, -1)) / math.sqrt(d_k)\n    if mask is not None:\n        scores = scores.masked_fill(mask == 0, -1e9)\n    attn_weights = F.softmax(scores, dim=-1)\n    return torch.matmul(attn_weights, V), attn_weights"
+        },
+        duration: "2.5小时",
+        resources: [
+          { title: "PyTorch scaled_dot_product_attention（官方实现）", url: "https://pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html", required: true },
+          { title: "Attention Is All You Need", url: "https://arxiv.org/abs/1706.03762", required: true }
+        ],
+        checkpoint: "与 F.scaled_dot_product_attention 的输出差值 < 1e-5，mask 正确屏蔽了 padding 位置"
+      },
+      {
+        day: 7,
+        title: "综合：用张量运算实现一个微型 GPT",
+        content: {
+          objective: "串联张量运算知识，实现一个可运行的微型 GPT 前向传播",
+          api_checklist: [
+            "nn.Embedding 词嵌入与位置编码",
+            "第 6 天的 scaled_dot_product_attention",
+            "nn.ModuleList 堆叠 Transformer Block",
+            "tensor.contiguous().view() 展平输出",
+            "nn.Linear 投影到词表大小"
+          ],
+          practice: "实现一个 TinyGPT：vocab_size=1000, d_model=128, num_heads=4, num_layers=2, max_len=64。用随机初始化的输入 token_ids (B=4, N=32) 测试 forward，验证输出 logits shape == (4, 32, 1000)。打印参数量，确认 < 1M。",
+          answer: "结构概览：\nclass TinyGPT(nn.Module):\n    def __init__(self):\n        self.token_emb = nn.Embedding(1000, 128)\n        self.pos_emb = nn.Embedding(64, 128)\n        self.blocks = nn.ModuleList([TransformerBlock(128, 4) for _ in range(2)])\n        self.ln = nn.LayerNorm(128)\n        self.lm_head = nn.Linear(128, 1000)\n    def forward(self, x):\n        x = self.token_emb(x) + self.pos_emb(torch.arange(x.size(1)))\n        for block in self.blocks:\n            x = block(x)\n        x = self.ln(x)\n        return self.lm_head(x)"
+        },
+        duration: "3小时",
+        resources: [
+          { title: "minGPT 实现参考", url: "https://github.com/karpathy/minGPT", required: false },
+          { title: "LayerNorm broadcasting", url: "https://pytorch.org/docs/stable/generated/torch.nn.LayerNorm.html", required: true }
+        ],
+        checkpoint: "Forward 成功运行，输出 logits shape 正确，参数量约 700K（< 1M），loss 有下降趋势"
+      }
+    ]
+  }
 ];
+
