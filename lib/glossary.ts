@@ -50,6 +50,11 @@ interface GlossaryIndex {
   categories: GlossaryCategory[];
 }
 
+interface GlossaryIndex {
+  terms: RawGlossaryTerm[];
+  categories: GlossaryCategory[];
+}
+
 // ============ 模块级缓存 ============
 
 let cachedTerms: GlossaryTerm[] | null = null;

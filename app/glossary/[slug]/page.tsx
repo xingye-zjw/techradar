@@ -1,10 +1,29 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import fs from "fs";
+import path from "path";
 import { getTermBySlug, getRelatedTerms, getAllCategories } from "@/lib/glossary";
 import { INTEL_LINKS, TOOL_LINKS, CATEGORY_COLORS } from "@/lib/constants";
+import { MarkdownRenderer } from "@/components/radar/MarkdownRenderer";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
+}
+
+// 读取术语的 markdown 文件内容
+function loadTermMarkdown(slug: string): string {
+  const termsDir = path.join(process.cwd(), "content", "glossary", "terms");
+  const mdPath = path.join(termsDir, `${slug}.md`);
+
+  try {
+    if (fs.existsSync(mdPath)) {
+      return fs.readFileSync(mdPath, "utf-8");
+    }
+  } catch (error) {
+    console.error(`Failed to load markdown for term: ${slug}`, error);
+  }
+
+  return "";
 }
 
 export async function generateStaticParams() {
@@ -30,6 +49,9 @@ export default async function GlossaryDetailPage({ params }: PageProps) {
   if (!term) {
     notFound();
   }
+
+  // 加载 markdown 内容
+  const markdownContent = loadTermMarkdown(slug);
 
   const relatedTerms = getRelatedTerms(slug);
   const categories = getAllCategories();
@@ -88,9 +110,13 @@ export default async function GlossaryDetailPage({ params }: PageProps) {
             // 详细解释
           </h2>
           <div className="prose prose-invert prose-sm max-w-none">
-            <div className="text-neutral-300 leading-relaxed whitespace-pre-wrap">
-              {term.description || term.summary}
-            </div>
+            {markdownContent ? (
+              <MarkdownRenderer source={markdownContent} />
+            ) : (
+              <div className="text-neutral-300 leading-relaxed whitespace-pre-wrap">
+                {term.description || term.summary}
+              </div>
+            )}
           </div>
         </section>
 
