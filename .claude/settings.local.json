@@ -3,7 +3,9 @@
     "allow": [
       "Bash(npx tsc *)",
       "Bash(npm run *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(git add *)",
+      "Bash(git commit -m 'feat\\(roadmap\\): 资源链接增强 - 支持类型和来源平台 *)"
     ]
   }
 }

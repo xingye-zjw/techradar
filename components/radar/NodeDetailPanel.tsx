@@ -10,6 +10,7 @@ import type { TrackId } from "@/lib/constants";
 import { getTermByName, identifyTermsInText, getMirrorHint } from "@/lib/terms";
 import { getAllTerms, getTermsBySlugs, type GlossaryTerm } from "@/lib/glossary";
 import { toast } from "@/components/Toast";
+import type { ResourceSource, ResourceType } from "./types";
 
 interface NodeDetailPanelProps {
   node: RoadmapNodeType | null;
@@ -29,6 +30,46 @@ function loadTaskProgress(): Record<string, Record<number, boolean>> {
 
 function saveTaskProgress(progress: Record<string, Record<number, boolean>>) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+}
+
+/** 获取资源来源平台的图标和颜色 */
+function getSourceInfo(source?: ResourceSource): { icon: string; color: string; label: string } {
+  switch (source) {
+    case "bilibili":
+      return { icon: "📺", color: "text-pink-400", label: "B站" };
+    case "youtube":
+      return { icon: "🎬", color: "text-red-400", label: "YouTube" };
+    case "github":
+      return { icon: "🐙", color: "text-neutral-300", label: "GitHub" };
+    case "official":
+      return { icon: "📚", color: "text-blue-400", label: "官方" };
+    case "zhihu":
+      return { icon: "💡", color: "text-blue-500", label: "知乎" };
+    case "juejin":
+      return { icon: "📝", color: "text-cyan-400", label: "掘金" };
+    default:
+      return { icon: "🔗", color: "text-neutral-400", label: "" };
+  }
+}
+
+/** 获取资源类型的标签 */
+function getTypeLabel(type?: ResourceType): { label: string; color: string } {
+  switch (type) {
+    case "video":
+      return { label: "视频", color: "bg-pink-500/20 text-pink-400 border-pink-500/30" };
+    case "article":
+      return { label: "文章", color: "bg-blue-500/20 text-blue-400 border-blue-500/30" };
+    case "doc":
+      return { label: "文档", color: "bg-green-500/20 text-green-400 border-green-500/30" };
+    case "code":
+      return { label: "代码", color: "bg-purple-500/20 text-purple-400 border-purple-500/30" };
+    case "tool":
+      return { label: "工具", color: "bg-orange-500/20 text-orange-400 border-orange-500/30" };
+    case "book":
+      return { label: "书籍", color: "bg-amber-500/20 text-amber-400 border-amber-500/30" };
+    default:
+      return { label: "", color: "" };
+  }
 }
 
 /** 渲染 API 项，将函数名用 code 标签高亮 */
@@ -493,24 +534,32 @@ export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailP
                           {requiredResources(task).length > 0 && (
                             <div className="mt-3 ml-6 sm:ml-9">
                               <div className="font-mono text-[9px] text-green-500/70 uppercase mb-1.5 tracking-wider">必学资源</div>
-                              <div className="flex flex-col gap-1">
+                              <div className="flex flex-col gap-1.5">
                                 {requiredResources(task).map((r, idx) => {
                                   const mirror = getMirrorHint(r.url);
+                                  const sourceInfo = getSourceInfo(r.source);
+                                  const typeInfo = getTypeLabel(r.type);
                                   return (
-                                    <div key={idx}>
+                                    <div key={idx} className="group">
                                       <a
                                         href={r.url}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="flex items-center gap-2 text-xs text-green-400 hover:text-green-300 hover:underline decoration-green-400/50 underline-offset-2"
                                       >
-                                        <svg className="w-3 h-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                        </svg>
-                                        <span>{r.title}</span>
+                                        <span className="text-sm">{sourceInfo.icon}</span>
+                                        <span className="flex-1">{r.title}</span>
+                                        {r.duration && (
+                                          <span className="font-mono text-[10px] text-neutral-500">{r.duration}</span>
+                                        )}
+                                        {typeInfo.label && (
+                                          <span className={`font-mono text-[9px] px-1.5 py-0.5 rounded border ${typeInfo.color}`}>
+                                            {typeInfo.label}
+                                          </span>
+                                        )}
                                       </a>
                                       {mirror.needsMirror && (
-                                        <div className="ml-5 mt-0.5 text-[10px] text-amber-400/70">
+                                        <div className="ml-6 mt-0.5 text-[10px] text-amber-400/70">
                                           💡 {mirror.hint}
                                         </div>
                                       )}
@@ -525,24 +574,32 @@ export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailP
                           {optionalResources(task).length > 0 && (
                             <div className="mt-3 ml-6 sm:ml-9">
                               <div className="font-mono text-[9px] text-neutral-500 uppercase mb-1.5 tracking-wider">可选资源</div>
-                              <div className="flex flex-col gap-1">
+                              <div className="flex flex-col gap-1.5">
                                 {optionalResources(task).map((r, idx) => {
                                   const mirror = getMirrorHint(r.url);
+                                  const sourceInfo = getSourceInfo(r.source);
+                                  const typeInfo = getTypeLabel(r.type);
                                   return (
-                                    <div key={idx}>
+                                    <div key={idx} className="group">
                                       <a
                                         href={r.url}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="flex items-center gap-2 text-xs text-neutral-500 hover:text-neutral-400 hover:underline decoration-neutral-600/50 underline-offset-2"
                                       >
-                                        <svg className="w-3 h-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-                                        </svg>
-                                        <span>{r.title}</span>
+                                        <span className="text-sm">{sourceInfo.icon}</span>
+                                        <span className="flex-1">{r.title}</span>
+                                        {r.duration && (
+                                          <span className="font-mono text-[10px] text-neutral-500">{r.duration}</span>
+                                        )}
+                                        {typeInfo.label && (
+                                          <span className={`font-mono text-[9px] px-1.5 py-0.5 rounded border ${typeInfo.color}`}>
+                                            {typeInfo.label}
+                                          </span>
+                                        )}
                                       </a>
                                       {mirror.needsMirror && (
-                                        <div className="ml-5 mt-0.5 text-[10px] text-amber-400/70">
+                                        <div className="ml-6 mt-0.5 text-[10px] text-amber-400/70">
                                           💡 {mirror.hint}
                                         </div>
                                       )}

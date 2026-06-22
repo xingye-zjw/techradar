@@ -3,11 +3,20 @@
 // Roadmap types
 export type NodeStatus = "locked" | "available" | "completed";
 
+/** 资源类型 */
+export type ResourceType = "video" | "article" | "doc" | "code" | "tool" | "book";
+
+/** 资源来源平台 */
+export type ResourceSource = "bilibili" | "youtube" | "github" | "official" | "zhihu" | "juejin" | "other";
+
 /** 单日学习任务 */
 export interface ResourceLink {
   title: string;
   url: string;
   required: boolean;     // true = 必学，false = 可选
+  type?: ResourceType;   // 资源类型
+  source?: ResourceSource; // 来源平台
+  duration?: string;     // 视频时长，如 "15:30"
 }
 
 /** 结构化任务内容 */
