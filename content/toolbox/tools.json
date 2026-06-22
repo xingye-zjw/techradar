@@ -339,6 +339,162 @@
       "relatedTerms": ["cuda", "gpu"]
     },
     {
+      "name": "GCC",
+      "slug": "gcc",
+      "category": "cs",
+      "purpose": "GNU编译器套件，支持C/C++/Fortran等多种语言，是嵌入式和系统开发的基础工具",
+      "description": "GCC（GNU Compiler Collection）是开源的编译器套件，支持C、C++、Fortran等多种编程语言。在嵌入式开发中，arm-none-eabi-gcc是ARM Cortex-M系列微控制器的标准编译器。GCC的工作流程包括预处理、编译、汇编、链接四个阶段，通过优化选项（-O0/-O1/-O2/-O3/-Os）平衡代码大小和执行速度。",
+      "install": "sudo apt install gcc build-essential",
+      "features": [
+        "支持C/C++/Fortran等多种语言",
+        "arm-none-eabi-gcc用于ARM嵌入式开发",
+        "丰富的优化选项控制代码大小和性能",
+        "支持交叉编译，在x86上编译ARM程序"
+      ],
+      "tags": ["编译器", "C语言", "嵌入式"],
+      "github": {
+        "stars": "8k",
+        "last_release": "2025-05",
+        "url": "https://github.com/gcc-mirror/gcc"
+      },
+      "difficulty": "intermediate",
+      "official_url": "https://gcc.gnu.org",
+      "use_cases": ["C程序编译", "嵌入式固件编译", "交叉编译"],
+      "relatedIntel": [],
+      "relatedNodes": ["embedded-c"],
+      "relatedTerms": ["c-language", "compiler", "linker"]
+    },
+    {
+      "name": "FreeRTOS",
+      "slug": "freertos",
+      "category": "embedded",
+      "purpose": "最流行的开源实时操作系统，用于微控制器的多任务调度和资源管理",
+      "description": "FreeRTOS是市场份额最大的开源实时操作系统，代码简洁高效，被用于数十亿台设备。它提供抢占式任务调度、信号量、消息队列、软件定时器、中断管理等核心机制。FreeRTOS支持多种处理器架构（ARM、RISC-V、x86等），与AWS IoT集成后成为AWS FreeRTOS，提供云端连接能力。",
+      "install": "通过STM32CubeMX或手动下载源码集成到项目",
+      "features": [
+        "抢占式多任务调度，最多255个优先级",
+        "信号量、互斥锁、消息队列、事件组",
+        "软件定时器和中断管理",
+        "内存管理五种堆分配策略可选"
+      ],
+      "tags": ["RTOS", "嵌入式", "实时系统"],
+      "github": {
+        "stars": "5k",
+        "last_release": "2025-06",
+        "url": "https://github.com/FreeRTOS/FreeRTOS"
+      },
+      "difficulty": "advanced",
+      "official_url": "https://www.freertos.org",
+      "use_cases": ["传感器数据采集", "工业控制", "物联网设备"],
+      "relatedIntel": [],
+      "relatedNodes": ["embedded-rtos"],
+      "relatedTerms": ["rtos", "task-scheduling", "semaphore"]
+    },
+    {
+      "name": "LTspice",
+      "slug": "ltspice",
+      "category": "electronics",
+      "purpose": "Analog Devices推出的免费电路仿真软件，用于模拟电路设计和分析",
+      "description": "LTspice是Analog Devices推出的免费高性能电路仿真软件，支持SPICE仿真、瞬态分析、AC分析、DC扫描等。它内置了大量ADI和第三方元件模型，是电子工程师和学生学习模拟电路、验证电路设计的必备工具。LTspice的波形查看器功能强大，支持数学运算和FFT分析。",
+      "install": "从Analog Devices官网免费下载",
+      "features": [
+        "SPICE电路仿真，支持瞬态/AC/DC分析",
+        "内置大量ADI元件模型库",
+        "强大的波形查看器和FFT分析",
+        "完全免费，无功能限制"
+      ],
+      "tags": ["电路仿真", "模拟电路", "EDA"],
+      "github": {
+        "stars": "N/A",
+        "last_release": "2024-10",
+        "url": "https://www.analog.com/en/design-center/design-tools-and-calculators/ltspice-simulator.html"
+      },
+      "difficulty": "intermediate",
+      "official_url": "https://www.analog.com/en/design-center/design-tools-and-calculators/ltspice-simulator.html",
+      "use_cases": ["模拟电路设计", "电源电路验证", "滤波器设计"],
+      "relatedIntel": [],
+      "relatedNodes": ["elec-circuit"],
+      "relatedTerms": ["circuit", "op-amp", "simulation"]
+    },
+    {
+      "name": "MATLAB",
+      "slug": "matlab",
+      "category": "signals",
+      "purpose": "MathWorks推出的科学计算和仿真平台，广泛用于信号处理、控制系统和通信仿真",
+      "description": "MATLAB是MathWorks推出的高性能科学计算语言和交互式环境，在工程教育和工业研发中广泛使用。它的Signal Processing Toolbox提供滤波器设计、频谱分析等功能，Communications Toolbox支持调制解调、信道编码等通信系统仿真，Control System Toolbox用于控制系统分析和设计。",
+      "install": "从MathWorks官网购买或申请学生版",
+      "features": [
+        "强大的矩阵运算和数值计算能力",
+        "Signal Processing Toolbox信号处理工具箱",
+        "Communications Toolbox通信系统仿真",
+        "Simulink图形化建模和仿真"
+      ],
+      "tags": ["科学计算", "信号处理", "仿真"],
+      "github": {
+        "stars": "N/A",
+        "last_release": "2025-03",
+        "url": "https://www.mathworks.com"
+      },
+      "difficulty": "intermediate",
+      "official_url": "https://www.mathworks.com",
+      "use_cases": ["信号处理算法验证", "通信系统仿真", "控制系统设计"],
+      "relatedIntel": [],
+      "relatedNodes": ["elec-signals", "signals-comm", "ctrl-pid"],
+      "relatedTerms": ["fourier-transform", "filter", "modulation"]
+    },
+    {
+      "name": "ROS2",
+      "slug": "ros2",
+      "category": "control",
+      "purpose": "机器人操作系统第二代，提供机器人软件开发的标准框架和中间件",
+      "description": "ROS2（Robot Operating System 2）是用于机器人软件开发的开源中间件，基于DDS（Data Distribution Service）实现分布式通信。它提供节点（Node）、话题（Topic）、服务（Service）、动作（Action）等核心概念，以及导航堆栈（Navigation2）、MoveIt2运动规划等高级功能。ROS2支持多种机器人平台，是学术研究和工业应用的标准选择。",
+      "install": "sudo apt install ros-humble-desktop",
+      "features": [
+        "基于DDS的分布式通信机制",
+        "Navigation2自主导航堆栈",
+        "MoveIt2机械臂运动规划",
+        "Gazebo仿真环境集成"
+      ],
+      "tags": ["机器人", "ROS", "导航"],
+      "github": {
+        "stars": "6k",
+        "last_release": "2025-05",
+        "url": "https://github.com/ros2/ros2"
+      },
+      "difficulty": "advanced",
+      "official_url": "https://docs.ros.org/en/humble/",
+      "use_cases": ["移动机器人导航", "机械臂控制", "多机器人协调"],
+      "relatedIntel": [],
+      "relatedNodes": ["ctrl-ros"],
+      "relatedTerms": ["slam", "navigation", "robot"]
+    },
+    {
+      "name": "STM32CubeMX",
+      "slug": "stm32cubemx",
+      "category": "embedded",
+      "purpose": "STM32微控制器的图形化配置工具，自动生成初始化代码和Makefile",
+      "description": "STM32CubeMX是ST官方推出的图形化配置工具，用于STM32微控制器的引脚分配、时钟树配置、外设初始化。它可以根据配置自动生成C语言初始化代码和Makefile，支持多种IDE（Keil、IAR、STM32CubeIDE、VSCode）。与STM32Cube HAL库配合，大幅降低了嵌入式开发的门槛。",
+      "install": "从ST官网免费下载",
+      "features": [
+        "图形化引脚分配和时钟树配置",
+        "自动生成初始化代码和Makefile",
+        "支持FreeRTOS和Middleware配置",
+        "功耗计算器辅助低功耗设计"
+      ],
+      "tags": ["STM32", "嵌入式", "代码生成"],
+      "github": {
+        "stars": "N/A",
+        "last_release": "2025-05",
+        "url": "https://www.st.com/en/development-tools/stm32cubemx.html"
+      },
+      "difficulty": "beginner",
+      "official_url": "https://www.st.com/en/development-tools/stm32cubemx.html",
+      "use_cases": ["STM32项目初始化", "引脚配置", "时钟配置"],
+      "relatedIntel": [],
+      "relatedNodes": ["embedded-c", "embedded-rtos"],
+      "relatedTerms": ["stm32", "hal", "gpio"]
+    },
+    {
       "name": "Dask",
       "slug": "dask",
       "category": "tools",

@@ -1,5 +1,75 @@
 [
   {
+    "term": "algorithm",
+    "slug": "algorithm",
+    "definition": "算法是解决特定问题的一系列明确步骤。在计算机科学中，算法描述了如何将输入转换为输出的计算过程。好的算法需要满足正确性、可读性、健壮性和高效性。常用算法设计范式包括分治法（Divide and Conquer）、动态规划（Dynamic Programming）、贪心算法（Greedy）、回溯法（Backtracking）等。算法复杂度分析（时间复杂度和空间复杂度）是评价算法优劣的核心标准。",
+    "category": "cs",
+    "relatedTerms": ["data-structure", "complexity", "dynamic-programming", "greedy"]
+  },
+  {
+    "term": "data structure",
+    "slug": "data-structure",
+    "definition": "数据结构是计算机中存储、组织数据的方式，使得数据可以高效地被访问和修改。常见数据结构包括数组（Array）、链表（Linked List）、栈（Stack）、队列（Queue）、哈希表（Hash Table）、树（Tree）、图（Graph）、堆（Heap）等。选择合适的数据结构是算法设计的关键，不同数据结构在插入、删除、查找等操作上的时间复杂度差异巨大。",
+    "category": "cs",
+    "relatedTerms": ["algorithm", "complexity", "hash-table", "tree"]
+  },
+  {
+    "term": "complexity analysis",
+    "slug": "complexity",
+    "definition": "复杂度分析是评价算法效率的理论方法，分为时间复杂度（算法执行时间随输入规模增长的趋势）和空间复杂度（算法所需内存随输入规模增长的趋势）。大O表示法（Big O Notation）是最常用的复杂度标记：O(1)常数级、O(log n)对数级、O(n)线性级、O(n log n)线性对数级、O(n²)平方级、O(2^n)指数级。复杂度分析帮助我们选择最优算法，避免在实际应用中出现性能瓶颈。",
+    "category": "cs",
+    "relatedTerms": ["algorithm", "data-structure", "big-o"]
+  },
+  {
+    "term": "pointer",
+    "slug": "pointer",
+    "definition": "指针是存储内存地址的变量，是C/C++等语言的核心概念。通过指针可以直接访问和修改内存中的数据，实现高效的数据操作。指针运算（如加减整数）会根据指针类型自动调整步长。指针的灵活也带来了风险：空指针解引用、野指针、内存泄漏等。在嵌入式开发中，指针用于直接操作硬件寄存器（Memory-Mapped IO），是底层编程的基础。",
+    "category": "embedded",
+    "relatedTerms": ["memory-management", "c-language", "mmio"]
+  },
+  {
+    "term": "RTOS",
+    "slug": "rtos",
+    "definition": "RTOS（Real-Time Operating System，实时操作系统）是专为实时应用设计的操作系统，能够在确定的时间内响应外部事件。与通用操作系统（如Windows/Linux）不同，RTOS强调响应时间的可预测性而非吞吐量。FreeRTOS是最流行的开源RTOS，被广泛应用于STM32、ESP32等微控制器。RTOS的核心机制包括任务调度、信号量、消息队列、中断管理等。",
+    "category": "embedded",
+    "relatedTerms": ["task-scheduling", "semaphore", "interrupt", "freertos"]
+  },
+  {
+    "term": "operating system",
+    "slug": "operating-system",
+    "definition": "操作系统是管理计算机硬件与软件资源的系统软件，为应用程序提供统一的抽象接口。核心功能包括进程管理（程序运行）、内存管理（地址空间）、文件系统（持久存储）、设备管理（IO管理）。Linux是最流行的开源操作系统内核，采用宏内核架构，通过模块化设计获得灵活性。理解操作系统原理对系统级编程、性能优化和嵌入式开发至关重要。",
+    "category": "cs",
+    "relatedTerms": ["process", "thread", "memory-management", "filesystem"]
+  },
+  {
+    "term": "circuit",
+    "slug": "circuit",
+    "definition": "电路是由电源、负载、导线和开关组成的电流通路。电路分析的核心定律包括欧姆定律（V=IR）和基尔霍夫定律（KCL电流定律和KVL电压定律）。电路分为直流电路（DC）和交流电路（AC），在电子工程和电气工程中，电路设计是构建所有电子系统的基础。模拟电路处理连续信号，数字电路处理离散信号。",
+    "category": "electronics",
+    "relatedTerms": ["resistor", "capacitor", "inductor", "op-amp"]
+  },
+  {
+    "term": "Fourier transform",
+    "slug": "fourier-transform",
+    "definition": "傅里叶变换是将时域信号转换为频域表示的数学工具，是信号处理的核心。它揭示了任何信号都可以分解为不同频率正弦波的叠加。离散傅里叶变换（DFT）适用于数字信号，快速傅里叶变换（FFT）是计算DFT的高效算法，复杂度从O(n²)降到O(n log n)。在通信系统中，傅里叶变换用于分析信号频谱、设计滤波器；在图像处理中用于频域滤波和压缩。",
+    "category": "signals",
+    "relatedTerms": ["fft", "spectrum", "signal-processing", "filter"]
+  },
+  {
+    "term": "PID controller",
+    "slug": "pid-controller",
+    "definition": "PID控制器是工业控制中最广泛使用的反馈控制器，由比例（P）、积分（I）、微分（D）三个环节组成。P环节放大误差，I环节消除稳态误差，D环节预测误差变化趋势。PID参数整定方法包括Ziegler-Nichols法、Cohen-Coon法等。PID控制器结构简单、鲁棒性强，被应用于温度控制、电机调速、机器人运动控制等几乎所有工业自动化场景。",
+    "category": "control",
+    "relatedTerms": ["feedback-control", "control-system", "automation"]
+  },
+  {
+    "term": "FOC",
+    "slug": "foc",
+    "definition": "FOC（Field Oriented Control，磁场定向控制）是一种高效的交流电机控制技术，通过Clarke变换和Park变换将三相电流分解为励磁分量和转矩分量，实现像直流电机一样精确控制交流电机。FOC结合SVPWM（空间矢量脉宽调制）技术，使电机在宽速度范围内高效运行，被广泛应用于电动汽车、机器人关节、无人机等高性能驱动场景。",
+    "category": "electrical",
+    "relatedTerms": ["pmsm", "svpwm", "motor-control", "inverter"]
+  },
+  {
     "term": "instance segmentation",
     "slug": "instance-segmentation",
     "definition": "实例分割是计算机视觉中比目标检测更进一步的任务：不仅要找出图中所有目标「在哪里」，还要精确勾勒出每个目标的轮廓「是什么形状」。与语义分割（semantic segmentation，将所有同类物体合并为一个 mask）不同，实例分割为每个独立目标生成独立的 mask，即便两个同类物体紧挨在一起也能区分。YOLOv8-seg、Mask R-CNN 是此类任务的代表模型。实现方式通常是：在检测框内做像素级分割，或直接用单阶段分割头输出 polygon / mask。",

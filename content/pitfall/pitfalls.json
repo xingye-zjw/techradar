@@ -1,5 +1,119 @@
 [
   {
+    "title": "C语言指针越界访问导致段错误",
+    "slug": "c-pointer-out-of-bounds",
+    "category": "embedded",
+    "description": "C语言中指针越界访问是最常见的运行时错误，会导致段错误（Segmentation Fault）或数据损坏。在嵌入式系统中，这类错误可能导致系统崩溃或硬件损坏。",
+    "root_cause": "指针算术错误、数组索引越界、字符串操作未检查长度、或使用已释放的内存（野指针）。嵌入式系统中直接操作硬件寄存器时，错误的地址可能导致不可预测的行为。",
+    "symptoms": [
+      "Segmentation fault (core dumped)",
+      "程序崩溃在看似无关的代码位置",
+      "数据被莫名其妙地修改",
+      "嵌入式系统死机或看门狗复位"
+    ],
+    "solution": [
+      "使用Valgrind检测内存错误：valgrind --leak-check=full ./program",
+      "数组访问前检查索引范围：if (index >= 0 && index < array_size)",
+      "字符串操作使用安全版本：strncpy替代strcpy，snprintf替代sprintf",
+      "指针释放后设为NULL：free(ptr); ptr = NULL;",
+      "嵌入式开发中使用MPU（内存保护单元）限制访问范围",
+      "启用编译器边界检查选项：-fsanitize=address（调试时）"
+    ],
+    "quickFix": "Valgrind检测 + 安全字符串函数 + 释放后置NULL",
+    "tags": ["C语言", "指针", "内存安全", "嵌入式"]
+  },
+  {
+    "title": "RTOS任务栈溢出",
+    "slug": "rtos-task-stack-overflow",
+    "category": "embedded",
+    "description": "FreeRTOS等RTOS中任务栈空间不足导致栈溢出，表现为 HardFault 或任务异常行为。这是嵌入式多任务开发中最隐蔽的错误之一。",
+    "root_cause": "任务栈大小设置过小、函数调用嵌套过深、局部数组过大、或中断嵌套消耗额外栈空间。RTOS任务栈通常只有几百字节到几KB，远小于Linux线程栈。",
+    "symptoms": [
+      "HardFault_Handler被触发",
+      "任务运行一段时间后崩溃",
+      "变量值被莫名其妙修改",
+      "调试时发现LR（链接寄存器）值异常"
+    ],
+    "solution": [
+      "使用FreeRTOS的uxTaskGetStackHighWaterMark()监控栈使用情况",
+      "初始设置较大的栈（如2KB），稳定后再优化",
+      "避免在任务中使用大的局部数组，改用静态分配或动态分配",
+      "减少函数调用嵌套深度，避免递归",
+      "启用MPU栈溢出检测：configCHECK_FOR_STACK_OVERFLOW = 2",
+      "使用静态分析工具（如PC-lint）检查栈深度"
+    ],
+    "quickFix": "增大栈大小 + 监控高水位标记 + 避免大局部变量",
+    "tags": ["FreeRTOS", "栈溢出", "嵌入式", "HardFault"]
+  },
+  {
+    "title": "PID参数整定不当导致系统振荡",
+    "slug": "pid-tuning-oscillation",
+    "category": "control",
+    "description": "PID控制器参数设置不当导致系统输出剧烈振荡或响应迟缓，是自动化控制中最常见的问题。",
+    "root_cause": "比例增益Kp过大导致系统超调振荡，积分时间Ti过小导致积分饱和，微分时间Td过大对噪声过于敏感。实际系统中还存在死区、滞后等非线性因素。",
+    "symptoms": [
+      "系统输出围绕设定值持续振荡",
+      "响应速度极慢，长时间达不到设定值",
+      "执行机构频繁动作，磨损加剧",
+      "微分环节对测量噪声过度敏感"
+    ],
+    "solution": [
+      "先用纯P控制，逐渐增大Kp直到系统开始振荡，记录临界增益Kc和周期Pc",
+      "用Ziegler-Nichols公式整定：Kp=0.6Kc, Ti=0.5Pc, Td=0.125Pc",
+      "积分抗饱和：当执行器饱和时停止积分累积",
+      "微分先行：对测量值而非误差做微分，避免设定值突变引起冲击",
+      "使用试凑法：先P后I最后D，观察响应曲线调整",
+      "考虑使用自整定PID或模糊PID适应非线性系统"
+    ],
+    "quickFix": "Z-N法整定 + 积分抗饱和 + 微分先行",
+    "tags": ["PID", "控制", "振荡", "参数整定"]
+  },
+  {
+    "title": "傅里叶变换频谱泄漏",
+    "slug": "fft-spectral-leakage",
+    "category": "signals",
+    "description": "对非周期信号做FFT时，频谱能量泄漏到相邻频率 bin，导致频谱分析结果不准确。",
+    "root_cause": "FFT假设信号是周期性的，如果信号周期不是采样长度的整数倍，在边界处会出现不连续，产生频谱泄漏。矩形窗的频谱旁瓣较高，泄漏严重。",
+    "symptoms": [
+      "单一频率信号的频谱展宽到多个bin",
+      "频谱峰值幅度低于理论值",
+      "相邻频率成分难以分辨",
+      "频谱出现虚假旁瓣"
+    ],
+    "solution": [
+      "加窗处理：使用汉宁窗（Hanning）、汉明窗（Hamming）或布莱克曼窗（Blackman）",
+      "增加采样点数（补零）提高频率分辨率",
+      "确保采样长度包含整数个信号周期",
+      "使用平顶窗（Flat Top）做精确幅度测量",
+      "频谱平均：多次测量取平均降低噪声影响"
+    ],
+    "quickFix": "加汉宁窗 + 增加采样点数 + 确保整数周期",
+    "tags": ["FFT", "频谱分析", "信号处理", "窗函数"]
+  },
+  {
+    "title": "H桥驱动电机时的直通短路",
+    "slug": "h-bridge-shoot-through",
+    "category": "electrical",
+    "description": "H桥驱动电机时，同一桥臂上下两个开关管同时导通导致电源短路，产生极大电流烧毁器件。",
+    "root_cause": "开关管关断需要时间（尤其是MOSFET的关断延迟），如果在关断完成前就打开对侧开关，两个管子会短暂同时导通。死区时间（Dead Time）设置不足或缺失是根本原因。",
+    "symptoms": [
+      "H桥MOSFET迅速发热甚至烧毁",
+      "电源电流异常增大",
+      "电机驱动时电源电压跌落",
+      "PWM占空比接近100%时问题更严重"
+    ],
+    "solution": [
+      "设置足够的死区时间（通常1-5μs，根据MOSFET开关时间调整）",
+      "使用带死区插入功能的专用栅极驱动芯片（如IR2104）",
+      "软件实现互补PWM时确保先关后开",
+      "添加过流保护电路，检测短路时立即关断",
+      "选择开关速度快的MOSFET，减少死区时间需求",
+      "用示波器观察栅极驱动波形，确认死区时间足够"
+    ],
+    "quickFix": "设置死区时间 + 使用专用栅极驱动芯片 + 过流保护",
+    "tags": ["H桥", "电机驱动", "短路", "MOSFET"]
+  },
+  {
     "title": "CUDA 版本与 PyTorch 不匹配",
     "slug": "cuda-pytorch-version-mismatch",
     "category": "devops",
