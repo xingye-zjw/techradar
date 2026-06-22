@@ -213,6 +213,8 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
           onEdgesChange={onEdgesChange}
           onNodeClick={(evt, node) => {
             onNodeClick(evt, node);
+          }}
+          onNodeDoubleClick={(evt, node) => {
             onNodeToggleComplete(node.id);
           }}
           nodeTypes={nodeTypes}
@@ -231,8 +233,8 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
 
       {/* 操作说明 */}
       <div className="mt-3 flex flex-wrap gap-4 justify-center font-mono text-[10px] text-neutral-500">
-        <span>单击节点：切换完成状态</span>
-        <span>再次单击：打开每日任务详情</span>
+        <span>单击节点：打开每日任务详情</span>
+        <span>双击节点：切换完成状态</span>
         <span>↑ ↓ 筛选 Track</span>
       </div>
     </div>

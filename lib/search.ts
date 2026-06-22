@@ -18,6 +18,25 @@ export interface UnifiedSearchItem {
   category?: string;
 }
 
+/** 工具 JSON 数据结构 */
+interface ToolJsonItem {
+  name: string;
+  purpose: string;
+  features: string[];
+  use_cases: string[];
+  tags?: string[];
+  category?: string;
+}
+
+/** 踩坑 JSON 数据结构 */
+interface PitfallJsonItem {
+  title: string;
+  symptoms: string[];
+  solution: string[];
+  tags?: string[];
+  category?: string;
+}
+
 // ============================================================
 // 路由节点数据提取
 // ============================================================
@@ -82,7 +101,7 @@ function getToolSearchItems(): UnifiedSearchItem[] {
   const raw = fs.readFileSync(toolsPath, "utf8");
   const data = JSON.parse(raw);
 
-  return (data.tools || []).map((tool: any) => ({
+  return (data.tools || []).map((tool: ToolJsonItem) => ({
     id: `tool-${tool.name.toLowerCase().replace(/\s+/g, "-")}`,
     title: tool.name,
     content: `${tool.purpose} ${tool.features.join(" ")} ${tool.use_cases.join(" ")}`,
@@ -107,7 +126,7 @@ function getPitfallSearchItems(): UnifiedSearchItem[] {
   const raw = fs.readFileSync(pitfallsPath, "utf8");
   const data = JSON.parse(raw);
 
-  return (data || []).map((pitfall: any, index: number) => ({
+  return (data || []).map((pitfall: PitfallJsonItem, index: number) => ({
     id: `pitfall-${index}`,
     title: pitfall.title,
     content: `${pitfall.symptoms.join(" ")} ${pitfall.solution.join(" ")}`,

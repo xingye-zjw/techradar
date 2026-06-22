@@ -82,10 +82,21 @@ function parseIntelCard(file: string, contentDir: string): IntelCard {
   };
 }
 
+/** Markdown frontmatter 数据结构 */
+interface IntelFrontmatter {
+  title?: string;
+  category?: string;
+  keywords?: string[];
+  difficulty?: string;
+  duration?: string;
+  summary?: string;
+  takeaways?: string[];
+}
+
 /**
  * 根据内容自动生成标签
  */
-function generateTags(data: any, slug: string): string[] {
+function generateTags(data: IntelFrontmatter, slug: string): string[] {
   const tags: string[] = [];
 
   // 根据 category 推断领域标签

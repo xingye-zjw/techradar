@@ -5,8 +5,9 @@ import Link from "next/link";
 import type { RoadmapNode as RoadmapNodeType, DailyTask, ResourceLink, Track, TaskContent } from "./types";
 import { ROADMAP_TRACKS } from "./types";
 import { TermPopover } from "@/components/TermPopover";
-import { INTEL_LINKS, TOOL_LINKS } from "@/lib/constants";
-import { getTermByName, identifyTermsInText } from "@/lib/terms";
+import { INTEL_LINKS, TOOL_LINKS, getTrackColorClasses } from "@/lib/constants";
+import type { TrackId } from "@/lib/constants";
+import { getTermByName, identifyTermsInText, getMirrorHint } from "@/lib/terms";
 import { getAllTerms, getTermsBySlugs, type GlossaryTerm } from "@/lib/glossary";
 import { toast } from "@/components/Toast";
 
@@ -16,14 +17,6 @@ interface NodeDetailPanelProps {
 }
 
 const STORAGE_KEY = "techradar-task-progress";
-
-const trackColors: Record<string, string> = {
-  cv: "text-orange-400 bg-orange-400/10 border-orange-400/30",
-  nlp: "text-violet-400 bg-violet-400/10 border-violet-400/30",
-  devops: "text-sky-400 bg-sky-400/10 border-sky-400/30",
-  math: "text-emerald-400 bg-emerald-400/10 border-emerald-400/30",
-  project: "text-pink-400 bg-pink-400/10 border-pink-400/30",
-};
 
 function loadTaskProgress(): Record<string, Record<number, boolean>> {
   if (typeof window === "undefined") return {};
@@ -50,30 +43,6 @@ function renderApiItem(item: string) {
     }
     return <span key={idx}>{part}</span>;
   });
-}
-
-/** 检测链接是否可能需要国内镜像 */
-function getMirrorHint(url: string): { needsMirror: boolean; hint?: string } {
-  const mirrorMap: Record<string, string> = {
-    "github.com": "GitHub 镜像：gitclone.com 或 hub.fastgit.xyz",
-    "raw.githubusercontent.com": "GitHub 文件镜像：raw.gitmirror.com",
-    "pytorch.org": "PyTorch 国内镜像：pytorch.org/zh 或清华源",
-    "huggingface.co": "HuggingFace 镜像：hf-mirror.com",
-    "arxiv.org": "论文镜像：arxiv.xixiaoyao.com",
-    "paperswithcode.com": "论文代码镜像：paperswithcode.com（国内可访问）",
-    "stackoverflow.com": "StackOverflow 国内可访问",
-    "medium.com": "Medium 镜像：towardsdatascience.com",
-    "youtube.com": "YouTube 镜像：bilibili.com 有大量教程",
-    "kaggle.com": "Kaggle 国内可访问",
-    "colab.research.google.com": "Colab 镜像：使用 Kaggle Notebooks 或本地 Jupyter",
-  };
-
-  for (const [domain, hint] of Object.entries(mirrorMap)) {
-    if (url.includes(domain)) {
-      return { needsMirror: true, hint };
-    }
-  }
-  return { needsMirror: false };
 }
 
 /** 渲染带有术语 Tooltip 的文本 */
@@ -133,7 +102,7 @@ export function NodeDetailPanel({ node, onClose }: NodeDetailPanelProps) {
   if (!node) return null;
 
   const track = ROADMAP_TRACKS.find((t) => t.id === node.track);
-  const colorStyle = trackColors[node.track] || "text-neutral-400 bg-neutral-800/50 border-neutral-700";
+  const colorStyle = getTrackColorClasses(node.track as TrackId) || "text-neutral-400 bg-neutral-800/50 border-neutral-700";
   const trackColorClass = colorStyle.split(" ")[0];
 
   const toggleTask = (day: number) => {

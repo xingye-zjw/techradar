@@ -3,6 +3,7 @@
 import { memo } from "react";
 import { Handle, Position } from "@xyflow/react";
 import type { NodeStatus, TrackId } from "./types";
+import { TRACK_COLORS } from "@/lib/constants";
 
 interface RoadmapNodeData {
   name: string;
@@ -22,20 +23,21 @@ interface RoadmapNodeProps {
   selected?: boolean;
 }
 
-const trackColors: Record<TrackId, string> = {
-  cv: "border-orange-400",
-  nlp: "border-violet-400",
-  devops: "border-sky-400",
-  math: "border-emerald-400",
-  project: "border-pink-400",
+// 从统一的 TRACK_COLORS 派生边框色和点颜色
+const trackBorders: Record<TrackId, string> = {
+  cv: TRACK_COLORS.cv.border.replace("border-", "border-"),
+  nlp: TRACK_COLORS.nlp.border.replace("border-", "border-"),
+  devops: TRACK_COLORS.devops.border.replace("border-", "border-"),
+  math: TRACK_COLORS.math.border.replace("border-", "border-"),
+  project: TRACK_COLORS.project.border.replace("border-", "border-"),
 };
 
 const trackDots: Record<TrackId, string> = {
-  cv: "bg-orange-400",
-  nlp: "bg-violet-400",
-  devops: "bg-sky-400",
-  math: "bg-emerald-400",
-  project: "bg-pink-400",
+  cv: TRACK_COLORS.cv.text.replace("text-", "bg-"),
+  nlp: TRACK_COLORS.nlp.text.replace("text-", "bg-"),
+  devops: TRACK_COLORS.devops.text.replace("text-", "bg-"),
+  math: TRACK_COLORS.math.text.replace("text-", "bg-"),
+  project: TRACK_COLORS.project.text.replace("text-", "bg-"),
 };
 
 const statusStyles: Record<NodeStatus, {
@@ -116,7 +118,7 @@ function ProgressRing({ percent, size = 20 }: { percent: number; size?: number }
 function RoadmapNodeComponent({ data, selected }: RoadmapNodeProps) {
   const style = statusStyles[data.status];
   const isLocked = data.status === "locked";
-  const trackBorder = trackColors[data.track] || "border-neutral-500";
+  const trackBorder = trackBorders[data.track] || "border-neutral-500";
   const trackDot = trackDots[data.track] || "bg-neutral-500";
   const progress = data.progressPercent || 0;
 

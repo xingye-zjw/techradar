@@ -29,31 +29,17 @@ export interface GlossaryCategory {
   description: string;
 }
 
-// JSON 数据的原始类型（description 字段来自 JSON，可能是空字符串）
+// JSON 数据的实际结构
 interface RawGlossaryTerm {
+  term: string;
   slug: string;
-  name: string;
-  nameEn?: string;
+  definition: string;
   category: string;
-  tags: string[];
-  summary: string;
-  description?: string;
   relatedTerms: string[];
-  relatedNodes: string[];
-  relatedIntel: string[];
-  relatedTools: string[];
-  resources: ResourceLink[];
 }
 
-interface GlossaryIndex {
-  terms: RawGlossaryTerm[];
-  categories: GlossaryCategory[];
-}
-
-interface GlossaryIndex {
-  terms: RawGlossaryTerm[];
-  categories: GlossaryCategory[];
-}
+// JSON 文件是数组格式
+type GlossaryData = RawGlossaryTerm[];
 
 // ============ 模块级缓存 ============
 
@@ -65,10 +51,20 @@ let cachedTerms: GlossaryTerm[] | null = null;
 export function getAllTerms(): GlossaryTerm[] {
   if (cachedTerms) return cachedTerms;
 
-  const data = glossaryData as GlossaryIndex;
-  cachedTerms = data.terms.map((term) => ({
-    ...term,
-    description: term.description || term.summary,
+  const data = glossaryData as unknown as GlossaryData;
+  cachedTerms = data.map((item) => ({
+    slug: item.slug,
+    name: item.term,
+    nameEn: undefined,
+    category: item.category,
+    tags: [],
+    summary: item.definition,
+    description: item.definition,
+    relatedTerms: item.relatedTerms || [],
+    relatedNodes: [],
+    relatedIntel: [],
+    relatedTools: [],
+    resources: [],
   }));
 
   return cachedTerms;
@@ -76,13 +72,8 @@ export function getAllTerms(): GlossaryTerm[] {
 
 // 根据 slug 获取术语
 export function getTermBySlug(slug: string): GlossaryTerm | undefined {
-  const data = glossaryData as GlossaryIndex;
-  const term = data.terms.find((t) => t.slug === slug);
-  if (!term) return undefined;
-  return {
-    ...term,
-    description: term.description || term.summary,
-  };
+  const terms = getAllTerms();
+  return terms.find((t) => t.slug === slug);
 }
 
 // 根据分类获取术语
@@ -92,8 +83,21 @@ export function getTermsByCategory(category: string): GlossaryTerm[] {
 
 // 获取所有分类
 export function getAllCategories(): GlossaryCategory[] {
-  const data = glossaryData as GlossaryIndex;
-  return data.categories || [];
+  // 从术语中动态提取分类
+  const terms = getAllTerms();
+  const categoryMap = new Map<string, GlossaryCategory>();
+
+  for (const term of terms) {
+    if (!categoryMap.has(term.category)) {
+      categoryMap.set(term.category, {
+        id: term.category,
+        name: term.category,
+        description: '',
+      });
+    }
+  }
+
+  return Array.from(categoryMap.values());
 }
 
 // 获取相关术语

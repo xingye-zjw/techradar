@@ -1,5 +1,29 @@
 // lib/constants.ts - 共享常量
 
+// ============ 路线图 Track 颜色定义 ============
+
+export type TrackId = "cv" | "nlp" | "devops" | "math" | "project";
+
+export interface TrackColors {
+  text: string;
+  bg: string;
+  border: string;
+}
+
+export const TRACK_COLORS: Record<TrackId, TrackColors> = {
+  cv: { text: "text-orange-400", bg: "bg-orange-400/10", border: "border-orange-400/30" },
+  nlp: { text: "text-violet-400", bg: "bg-violet-400/10", border: "border-violet-400/30" },
+  devops: { text: "text-sky-400", bg: "bg-sky-400/10", border: "border-sky-400/30" },
+  math: { text: "text-emerald-400", bg: "bg-emerald-400/10", border: "border-emerald-400/30" },
+  project: { text: "text-pink-400", bg: "bg-pink-400/10", border: "border-pink-400/30" },
+};
+
+// 便捷函数：获取 track 的完整样式字符串
+export function getTrackColorClasses(track: TrackId): string {
+  const colors = TRACK_COLORS[track];
+  return `${colors.text} ${colors.bg} ${colors.border}`;
+}
+
 // ============ 情报链接映射 ============
 
 export const INTEL_LINKS: Record<string, string> = {

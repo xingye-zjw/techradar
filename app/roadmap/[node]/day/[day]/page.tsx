@@ -1,20 +1,13 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { FULL_ROADMAP } from "@/lib/roadmap-data";
-import { INTEL_LINKS, TOOL_LINKS } from "@/lib/constants";
+import { INTEL_LINKS, TOOL_LINKS, TRACK_COLORS } from "@/lib/constants";
+import type { TrackId } from "@/lib/constants";
 import type { DailyTask, TaskContent } from "@/components/radar/types";
 
 interface PageProps {
   params: Promise<{ node: string; day: string }>;
 }
-
-const trackColors: Record<string, { bg: string; border: string; text: string }> = {
-  cv: { bg: "bg-orange-400/10", border: "border-orange-400/30", text: "text-orange-400" },
-  nlp: { bg: "bg-violet-400/10", border: "border-violet-400/30", text: "text-violet-400" },
-  devops: { bg: "bg-sky-400/10", border: "border-sky-400/30", text: "text-sky-400" },
-  math: { bg: "bg-emerald-400/10", border: "border-emerald-400/30", text: "text-emerald-400" },
-  project: { bg: "bg-pink-400/10", border: "border-pink-400/30", text: "text-pink-400" },
-};
 
 export async function generateStaticParams() {
   const params: { node: string; day: string }[] = [];
@@ -149,7 +142,9 @@ export default async function DailyTaskPage({ params }: PageProps) {
     notFound();
   }
 
-  const colors = trackColors[node.track] || trackColors.devops;
+  const trackId = node.track as TrackId;
+  const trackColor = TRACK_COLORS[trackId] || TRACK_COLORS.devops;
+  const colors = { bg: trackColor.bg, border: trackColor.border, text: trackColor.text };
 
   // 找到前一天和后一天（使用副本避免原地修改 FULL_ROADMAP）
   const sortedTasks = [...(node.dailyTasks || [])].sort((a, b) => a.day - b.day);

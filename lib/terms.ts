@@ -7,6 +7,19 @@ export interface Term {
   relatedNodes?: string[];
 }
 
+// ============ 正则缓存 ============
+
+const REGEX_CACHE = new Map<string, RegExp>();
+
+function getTermRegex(term: string): RegExp {
+  if (!REGEX_CACHE.has(term)) {
+    REGEX_CACHE.set(term, new RegExp(`\\b${term}\\b`, "gi"));
+  }
+  return REGEX_CACHE.get(term)!;
+}
+
+// ============ 术语数据访问 ============
+
 /**
  * 获取所有术语
  */
@@ -46,9 +59,10 @@ export function identifyTermsInText(text: string, nodeId?: string): Array<{ type
   let remaining = text;
   let lastIndex = 0;
 
-  // 使用正则表达式匹配术语
+  // 使用缓存的正则表达式匹配术语
   for (const term of sortedTerms) {
-    const regex = new RegExp(`\\b${term.term}\\b`, "gi");
+    const regex = getTermRegex(term.term);
+    regex.lastIndex = 0; // 重置正则状态
     let match;
 
     while ((match = regex.exec(remaining)) !== null) {
@@ -93,8 +107,11 @@ export const MIRROR_DOMAINS: Record<string, string> = {
   "pytorch.org": "PyTorch 国内镜像：pytorch.org/zh 或清华源",
   "huggingface.co": "HuggingFace 镜像：hf-mirror.com",
   "arxiv.org": "论文镜像：arxiv.xixiaoyao.com",
+  "paperswithcode.com": "论文代码镜像：paperswithcode.com（国内可访问）",
   "stackoverflow.com": "StackOverflow 国内可访问",
+  "medium.com": "Medium 镜像：towardsdatascience.com",
   "youtube.com": "YouTube 镜像：bilibili.com 有大量教程",
+  "kaggle.com": "Kaggle 国内可访问",
   "colab.research.google.com": "Colab 镜像：使用 Kaggle Notebooks 或本地 Jupyter",
 };
 

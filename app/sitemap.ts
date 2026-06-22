@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getAllIntelCards } from "@/lib/intel";
 
-const BASE_URL = "https://techradar.example.com"; // TODO: 替换为实际域名
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://techradar.example.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const cards = getAllIntelCards();

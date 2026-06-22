@@ -7,10 +7,21 @@
  * 设计思路：先扫描拆分出"块"（block），再逐块渲染
  */
 
+interface HeadingMeta {
+  level: number;
+}
+
+interface TableMeta {
+  lang?: string;
+  headerCells?: string[];
+  aligns?: ("left" | "center" | "right")[];
+  rows?: string[][];
+}
+
 interface Block {
   type: "code" | "heading" | "list" | "ordered-list" | "quote" | "table" | "paragraph";
   raw: string;
-  meta?: any;
+  meta?: HeadingMeta | TableMeta;
 }
 
 function parseBlocks(source: string): Block[] {
@@ -199,7 +210,7 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
 
         switch (block.type) {
           case "heading": {
-            const level = block.meta.level;
+            const level = (block.meta as HeadingMeta)?.level ?? 2;
             const Text = block.raw;
             if (level === 1) {
               return (
@@ -230,7 +241,7 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
           }
 
           case "code": {
-            const lang = block.meta?.lang || "code";
+            const lang = ('lang' in (block.meta || {})) ? (block.meta as TableMeta).lang || "code" : "code";
             return (
               <pre
                 key={idx}
@@ -283,7 +294,8 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
           }
 
           case "table": {
-            const { headerCells, aligns, rows } = block.meta;
+            const tableMeta = block.meta as TableMeta;
+            const { headerCells = [], aligns = [], rows = [] } = tableMeta;
             return (
               <div key={idx} className="overflow-x-auto border border-neutral-800 rounded-lg">
                 <table className="w-full text-sm">
@@ -292,7 +304,7 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
                       {headerCells.map((h: string, hIdx: number) => (
                         <th
                           key={hIdx}
-                          style={{ textAlign: aligns[hIdx] as any }}
+                          style={{ textAlign: aligns[hIdx] }}
                           className="px-3 py-2 font-semibold text-cyan-400 border-b border-neutral-800 font-mono text-xs"
                         >
                           {h}
@@ -306,7 +318,7 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
                         {row.map((cell: string, cIdx: number) => (
                           <td
                             key={cIdx}
-                            style={{ textAlign: aligns[cIdx] as any }}
+                            style={{ textAlign: aligns[cIdx] }}
                             className="px-3 py-2 text-neutral-400 text-xs"
                           >
                             {renderInline(cell, `table-${idx}-${rIdx}-${cIdx}`)}
@@ -341,7 +353,7 @@ export function extractToc(source: string): TocItem[] {
   const blocks = parseBlocks(source);
   const toc: TocItem[] = [];
   blocks.forEach((b, idx) => {
-    if (b.type === "heading" && b.meta.level === 2) {
+    if (b.type === "heading" && b.meta && 'level' in b.meta && b.meta.level === 2) {
       toc.push({ id: `section-${idx}`, text: b.raw, level: b.meta.level });
     }
   });
