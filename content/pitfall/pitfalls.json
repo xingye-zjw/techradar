@@ -1,7 +1,10 @@
 [
   {
     "title": "CUDA 版本与 PyTorch 不匹配",
-    "category": "环境配置",
+    "slug": "cuda-pytorch-version-mismatch",
+    "category": "devops",
+    "description": "安装 PyTorch 时未根据本机 CUDA 版本选择对应的 wheel 包，导致 CUDA 无法正常工作。这是新手最容易踩的第一个环境坑，常见于 Windows 和 Ubuntu 系统。",
+    "root_cause": "CUDA Toolkit、NVIDIA 驱动、PyTorch CUDA wheel 三者版本不兼容。pytorch.org 官方安装命令是根据特定 CUDA 版本生成的，手动拼接版本号容易出错。",
     "symptoms": [
       "RuntimeError: CUDA error: no kernel image is available",
       "torch.cuda.is_available() 返回 False",
@@ -19,7 +22,10 @@
   },
   {
     "title": "显存不足 (CUDA out of memory)",
-    "category": "训练",
+    "slug": "cuda-out-of-memory",
+    "category": "deep-learning",
+    "description": "训练或推理时 GPU 显存不足导致程序崩溃，是深度学习开发中最常见的运行时错误。通常发生在 batch_size 过大、模型参数量超过显卡容量、或显存未正确释放时。",
+    "root_cause": "GPU 显存容量有限，batch_size 过大、模型参数量过高、中间激活值过多、或前一次推理的张量未释放都会导致显存不足。混合精度训练可有效降低显存占用。",
     "symptoms": [
       "RuntimeError: CUDA out of memory at torch/csrc/generic/StorageSharing.cpp",
       "训练第一步就 OOM",
@@ -38,7 +44,10 @@
   },
   {
     "title": "Loss NaN / 梯度爆炸",
-    "category": "训练",
+    "slug": "loss-nan-gradient-explosion",
+    "category": "deep-learning",
+    "description": "训练过程中 Loss 突然变为 NaN 或 inf，通常是学习率过大或数据中存在异常值导致的。梯度爆炸会导致参数更新过大，最终数值溢出。",
+    "root_cause": "学习率过高导致梯度更新过大，数值溢出为 NaN/inf。也可能是输入数据中存在 NaN/inf，或使用 FP16 训练时动态范围不足。warmup 预热和梯度裁剪是标准解决方案。",
     "symptoms": [
       "train_loss 突然跳到 inf / NaN",
       "eval_loss 稳定但 train_loss 异常",
@@ -57,7 +66,10 @@
   },
   {
     "title": "ONNX 导出失败 / 动态 shape",
-    "category": "部署",
+    "slug": "onnx-export-dynamic-shape",
+    "category": "devops",
+    "description": "使用 torch.onnx.export 导出模型时遇到 shape 不匹配或算子不支持的错误，导出成功后推理结果与 PyTorch 不一致。动态输入 shape 场景尤其容易出问题。",
+    "root_cause": "PyTorch 某些算子在 ONNX opset 版本中未实现，或 dynamic_axes 未正确声明导致固定 shape 推理。导出时未调用 model.eval() 会导致 BatchNorm 使用错误的 running stats。",
     "symptoms": [
       "torch.onnx.export 报 shape mismatch 或 unsupported op",
       "导出成功但推理输出与 PyTorch 不一致（diff > 1e-3）",
@@ -76,7 +88,10 @@
   },
   {
     "title": "多进程 DataLoader (num_workers > 0) 卡死",
-    "category": "训练",
+    "slug": "multiprocess-dataloader-hang",
+    "category": "deep-learning",
+    "description": "设置 num_workers > 0 后程序卡死无响应，这是 Windows 用户的高频问题。根本原因是 Windows 的多进程启动方式与 Linux 不同，需要特殊处理。",
+    "root_cause": "Windows 默认使用 spawn 方式启动子进程，而 CUDA 不支持 fork。多进程 DataLoader 在 Windows 下需要 if __name__ == '__main__' 保护，否则会无限递归创建子进程。",
     "symptoms": [
       "Windows 下运行即卡死，Linux 正常",
       "报错: Broken pipe / DataLoader worker (pid xxx) exited unexpectedly",
@@ -94,7 +109,10 @@
   },
   {
     "title": "RAG 检索到了但回答不对 / 幻觉严重",
-    "category": "部署",
+    "slug": "rag-retrieval-hallucination",
+    "category": "llm",
+    "description": "RAG 系统检索到了相关文档，但 LLM 生成的回答与检索内容不符，甚至凭空捏造事实。这是 RAG 项目中最常见的质量问题，直接影响系统可用性。",
+    "root_cause": "检索阶段：embedding 模型对中文语义理解不足，或 chunk 切分不合理导致关键信息丢失。生成阶段：Prompt 未明确约束 LLM 只能基于给定上下文回答，导致模型依赖预训练知识。",
     "symptoms": [
       "向量搜索返回了相关文档，但 LLM 回答与文档不符",
       "答案引用了训练知识而非检索文档（幻觉）",
@@ -113,7 +131,10 @@
   },
   {
     "title": "SSH 连接远程服务器频繁掉线",
-    "category": "环境配置",
+    "slug": "ssh-connection-drop",
+    "category": "devops",
+    "description": "SSH 连接远程服务器后几分钟无操作就自动断开，导致正在运行的训练任务中断。这是远程开发环境的常见问题。",
+    "root_cause": "服务器端或客户端配置了空闲超时（ClientAliveInterval），或中间网络设备（NAT/防火墙）会清理空闲连接。tmux/screen 可以解决会话保持问题。",
     "symptoms": [
       "SSH 连接服务器后几分钟无操作就自动断开",
       "scp 传输大文件时中途断开",
@@ -131,7 +152,10 @@
   },
   {
     "title": "Docker 容器中无法使用 GPU (nvidia-smi 报错)",
-    "category": "部署",
+    "slug": "docker-gpu-not-available",
+    "category": "devops",
+    "description": "Docker 容器内无法访问 GPU，nvidia-smi 报 No devices were found。这是容器化部署 GPU 任务时的必经之路，需要正确配置 NVIDIA Container Toolkit。",
+    "root_cause": "Docker 默认不暴露 GPU 设备。需要安装 NVIDIA Container Toolkit 并在 docker run 时加 --gpus all 参数。基础镜像必须包含 CUDA 运行时。",
     "symptoms": [
       "容器内 nvidia-smi: No devices were found",
       "RuntimeError: CUDA error: no kernel image is available (in container)",
@@ -149,7 +173,10 @@
   },
   {
     "title": "模型训练收敛慢 / 几乎不收敛",
-    "category": "训练",
+    "slug": "slow-convergence",
+    "category": "deep-learning",
+    "description": "Loss 下降极慢或完全不下降，训练多个 epoch 后模型仍无明显改善。通常与学习率设置、数据质量、或模型架构选择有关。",
+    "root_cause": "学习率不合适（太大导致震荡，太小导致收敛慢）、数据标注错误、loss 函数选择不当、或数据归一化方式与预训练模型不匹配。预训练模型的 FC 层未正确重新初始化也会导致问题。",
     "symptoms": [
       "Loss 下降极慢，几十个 epoch 后仍无明显变化",
       "训练集和验证集 Loss 同时偏高或不下降",
@@ -168,7 +195,10 @@
   },
   {
     "title": "Git 合并冲突处理不当导致代码丢失",
-    "category": "开发协作",
+    "slug": "git-merge-conflict-code-loss",
+    "category": "best-practices",
+    "description": "多人协作开发时，git merge 冲突处理不当导致本地修改被覆盖或代码丢失。这是团队协作中最常见的版本控制问题。",
+    "root_cause": "在未提交本地修改的情况下执行 git pull/merge，或解决冲突时误删了他人代码。缺乏 stash 操作习惯和冲突解决流程是根本原因。",
     "symptoms": [
       "git merge 后某些文件变成了旧版本",
       "git pull 后本地修改被覆盖",
@@ -187,7 +217,10 @@
   },
   {
     "title": "Python 环境依赖冲突导致 import 失败",
-    "category": "环境配置",
+    "slug": "python-dependency-conflict",
+    "category": "devops",
+    "description": "Python 项目依赖包版本冲突导致 import 失败或运行时崩溃。不同项目需要不同版本的同一包是常见问题，尤其在 CUDA/cuDNN 相关包上。",
+    "root_cause": "pip 和 conda 混用安装同一批包导致版本冲突，或不同项目共用同一个环境。torch/tensorflow 等大包的 CUDA 依赖与系统 CUDA 不一致也会引发此类问题。",
     "symptoms": [
       "ImportError: cannot import name 'xxx' from 'yyy'",
       "python -c 'import torch' 报错：libtorch_cuda.so is not a symbol",
@@ -206,7 +239,10 @@
   },
   {
     "title": "SSH 端口被防火墙拦截 / 服务器无法访问",
-    "category": "环境配置",
+    "slug": "ssh-firewall-blocked",
+    "category": "devops",
+    "description": "SSH 无法连接远程服务器，即使服务正常运行。通常是云服务器安全组配置错误或网络防火墙拦截所致。",
+    "root_cause": "云服务器安全组未开放 SSH 端口、家用宽带封禁 22 端口、或防火墙规则配置错误。也可能是 ISP 对非标准端口的封锁。",
     "symptoms": [
       "ssh: connect to host x.x.x.x port 22: Connection timed out",
       "云服务器安全组已开端口但仍无法连接",
@@ -225,7 +261,10 @@
   },
   {
     "title": "数据标注质量差导致模型无法收敛",
-    "category": "数据处理",
+    "slug": "poor-data-labeling",
+    "category": "data-processing",
+    "description": "训练数据标注质量差导致模型无法学习到正确的特征，表现为 Loss 不下降或类别预测偏向错误方向。数据质量是模型性能的天花板。",
+    "root_cause": "标注人员理解不一致、标注规范缺失、类别定义模糊、或标注工具配置错误。inter-annotator agreement 低是数据质量差的直接信号。",
     "symptoms": [
       "Loss 不下降，但学习率、数据量、网络结构都正常",
       "验证集 accuracy 在某几个类别之间来回震荡",
@@ -243,7 +282,10 @@
   },
   {
     "title": "CUDA 隐式同步导致推理速度异常慢",
-    "category": "训练",
+    "slug": "cuda-implicit-sync-slow-inference",
+    "category": "deep-learning",
+    "description": "GPU 推理速度远低于预期，profiler 显示大量时间花在 CPU 等待 GPU。这是 CUDA 编程中一个隐蔽但影响巨大的性能陷阱。",
+    "root_cause": "调用 .item()、.cpu()、.numpy() 等操作会触发 CUDA 隐式同步，强制等待所有 GPU 操作完成后才返回。在推理循环中频繁调用这些操作会导致 GPU 利用率极低。",
     "symptoms": [
       "torch profiler 显示 GPU Time << CPU Time，大量化 GPU 时间花在等待",
       "逐行 profiler 发现某行代码的 .item() / .cpu() / .numpy() 阻塞了 GPU",
@@ -261,7 +303,10 @@
   },
   {
     "title": "Docker 容器时间与宿主机不一致",
-    "category": "部署",
+    "slug": "docker-timezone-mismatch",
+    "category": "devops",
+    "description": "Docker 容器默认使用 UTC 时区，导致日志时间戳、定时任务、数据库记录与实际时间差 8 小时（中国时区）。",
+    "root_cause": "Docker 基础镜像默认使用 UTC 时区，未挂载宿主机时区文件或设置 TZ 环境变量。这在涉及日志分析和定时任务时尤为明显。",
     "symptoms": [
       "日志时间戳比实际时间晚 8 小时（容器用了 UTC 而非 CST）",
       "定时任务 cron 执行时间与预期不符",
@@ -279,7 +324,10 @@
   },
   {
     "title": "pandas inplace=True 链式赋值警告",
-    "category": "数据处理",
+    "slug": "pandas-chained-assignment-warning",
+    "category": "data-processing",
+    "description": "使用 pandas 进行数据清洗时出现 SettingWithCopyWarning 警告，数据修改未按预期生效。这是 pandas 版本升级后最常见的兼容性问题。",
+    "root_cause": "链式赋值 df[mask]['col'] = value 操作的是 DataFrame 的副本而非视图，导致值未被设置。pandas 1.x 开始将 inplace=True 标记为 deprecated。",
     "symptoms": [
       "SettingWithCopyWarning 或 FutureWarning: A value is trying to be set on a copy of a slice",
       "链式赋值 df[df['a']>0]['b'] = 100 警告后值未正确设置",
@@ -297,7 +345,10 @@
   },
   {
     "title": "训练用 GPU 卡与推理用卡架构不一致",
-    "category": "训练",
+    "slug": "gpu-architecture-mismatch",
+    "category": "deep-learning",
+    "description": "在一种 GPU 架构上训练的模型，部署到不同架构的 GPU 上出现兼容性问题或性能下降。这是模型部署到生产环境时的常见挑战。",
+    "root_cause": "NVIDIA GPU 不同架构（Ampere/Ada/Hopper）的 CUDA Compute Capability 不同，某些算子在旧架构上可能不支持或行为不一致。混合精度在不同架构上的支持程度也不同。",
     "symptoms": [
       "在 A100 上训练成功，部署到 RTX 3090 上报 CUDA 架构不兼容错误",
       "PyTorch 模型权重在两台机器之间迁移后出现 NaN",
@@ -315,7 +366,10 @@
   },
   {
     "title": "大模型 Prompt 转义字符错误导致 JSON 输出截断",
-    "category": "LLM",
+    "slug": "llm-prompt-escape-json-truncation",
+    "category": "llm",
+    "description": "大语言模型输出的 JSON 在中途被截断或解析失败，通常是 Prompt 中的特殊字符未正确转义所致。这在需要结构化输出的 LLM 应用中非常常见。",
+    "root_cause": "Prompt 中包含未转义的双引号、换行符或特殊字符，干扰了 JSON 的格式。Python 字符串拼接 Prompt 时容易引入此类问题。",
     "symptoms": [
       "LLM 输出的 JSON 在中途被截断，后半部分丢失",
       "JSON 解析报 Unexpected end of JSON input",
