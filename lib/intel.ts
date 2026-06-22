@@ -21,6 +21,12 @@ export interface IntelCard {
   tags: string[];
   /** 预计阅读时间（分钟） */
   readingTime: number;
+  /** 前置知识要求 */
+  prerequisites?: string[];
+  /** 关联术语 slug 列表 */
+  relatedTerms?: string[];
+  /** 关联路线图节点 ID 列表 */
+  relatedNodes?: string[];
 }
 
 // 模块级缓存，避免每次请求都读取文件系统
@@ -79,6 +85,9 @@ function parseIntelCard(file: string, contentDir: string): IntelCard {
     content,
     tags,
     readingTime,
+    prerequisites: Array.isArray(data.prerequisites) ? data.prerequisites.map(String) : [],
+    relatedTerms: Array.isArray(data.relatedTerms) ? data.relatedTerms.map(String) : [],
+    relatedNodes: Array.isArray(data.relatedNodes) ? data.relatedNodes.map(String) : [],
   };
 }
 
@@ -91,6 +100,9 @@ interface IntelFrontmatter {
   duration?: string;
   summary?: string;
   takeaways?: string[];
+  prerequisites?: string[];
+  relatedTerms?: string[];
+  relatedNodes?: string[];
 }
 
 /**
