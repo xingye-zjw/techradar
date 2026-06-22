@@ -156,7 +156,7 @@ export default async function DailyTaskPage({ params }: PageProps) {
     <div className="min-h-screen bg-neutral-950">
       {/* Header */}
       <header className="bg-neutral-900 border-b border-neutral-800">
-        <div className="max-w-4xl mx-auto px-6 py-4">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4">
           <Link
             href="/roadmap"
             className="inline-flex items-center gap-2 text-sm text-neutral-400 hover:text-cyan-400 transition-colors mb-4"
@@ -184,7 +184,7 @@ export default async function DailyTaskPage({ params }: PageProps) {
       </header>
 
       {/* Content */}
-      <article className="max-w-4xl mx-auto px-6 py-8">
+      <article className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
         {/* 任务内容 */}
         <section className="mb-10">
           <h2 className="font-mono text-[10px] text-neutral-500 uppercase tracking-wider mb-4 pb-2 border-b border-neutral-800">

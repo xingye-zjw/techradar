@@ -214,3 +214,19 @@
   border-right: 6px solid transparent;
   border-top: 6px solid var(--bg3);
 }
+
+/* Safe area insets for iPhone notch/home indicator */
+@supports (padding: env(safe-area-inset-top)) {
+  .sidebar {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .toast-container {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .mobile-menu-button {
+    top: calc(env(safe-area-inset-top) + 16px);
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "term": "[英文术语名]",
+  "slug": "[url-friendly-slug]",
+  "definition": "[术语的完整定义，一段话描述]",
+  "category": "[cv/llm/infrastructure/math/deployment]",
+  "relatedTerms": ["[关联术语slug1]", "[关联术语slug2]"]
+}

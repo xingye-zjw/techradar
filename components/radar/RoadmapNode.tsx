@@ -125,7 +125,7 @@ function RoadmapNodeComponent({ data, selected }: RoadmapNodeProps) {
   return (
     <div
       className={`
-        relative min-w-[200px] max-w-[240px] rounded-lg border-2 p-4
+        relative min-w-[140px] max-w-[180px] sm:min-w-[200px] sm:max-w-[240px] rounded-lg border-2 p-3 sm:p-4
         transition-all duration-300
         ${style.border} ${style.bg} ${style.glow}
         ${isLocked ? "opacity-55" : "opacity-100"}
@@ -182,7 +182,7 @@ function RoadmapNodeComponent({ data, selected }: RoadmapNodeProps) {
 
         {/* Duration + Progress */}
         <div className="flex items-center justify-between">
-          <div className={`font-mono text-[0.6rem] ${style.muted}`}>
+          <div className={`font-mono text-[0.65rem] sm:text-[0.6rem] ${style.muted}`}>
             <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-sm ${style.icon}`}>
               <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />

@@ -260,7 +260,7 @@ export function Sidebar() {
 
       {/* 移动端汉堡菜单按钮 */}
       <button
-        className="fixed top-4 left-4 z-30 lg:hidden w-10 h-10 rounded-lg bg-neutral-800 border border-neutral-700 flex items-center justify-center text-neutral-400"
+        className="fixed top-4 left-4 z-30 lg:hidden w-11 h-11 rounded-lg bg-neutral-800 border border-neutral-700 flex items-center justify-center text-neutral-400"
         onClick={() => setIsMobileOpen(true)}
         aria-label="打开菜单"
         aria-expanded={isMobileOpen}

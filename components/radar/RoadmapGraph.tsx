@@ -239,7 +239,7 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
       )}
 
       {/* DAG 图 */}
-      <div className="h-[600px] w-full rounded-lg border border-neutral-700 overflow-hidden bg-neutral-950">
+      <div className="h-[400px] sm:h-[500px] md:h-[600px] w-full rounded-lg border border-neutral-700 overflow-hidden bg-neutral-950">
         <ReactFlow
           nodes={visibleNodes}
           edges={visibleEdges}
@@ -293,15 +293,17 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
             );
           })}
 
-          <Controls className="!bg-neutral-900 !border-neutral-700 !rounded-lg" />
+          <Controls className="!bg-neutral-900 !border-neutral-700 !rounded-lg hidden md:block" />
         </ReactFlow>
       </div>
 
       {/* 操作说明 */}
       <div className="mt-3 flex flex-wrap gap-4 justify-center font-mono text-[10px] text-neutral-500">
-        <span>单击节点：打开每日任务详情</span>
-        <span>双击节点：切换完成状态</span>
-        <span>↑ ↓ 筛选 Track</span>
+        <span className="hidden sm:inline">单击节点：打开每日任务详情</span>
+        <span className="sm:hidden">点击节点：查看详情</span>
+        <span className="hidden sm:inline">双击节点：切换完成状态</span>
+        <span className="sm:hidden">长按节点：切换完成</span>
+        <span>筛选 Track</span>
       </div>
     </div>
   );

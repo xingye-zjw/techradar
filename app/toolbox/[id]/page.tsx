@@ -69,7 +69,7 @@ export default function ToolDetailPage({ params }: ToolDetailPageProps) {
 
   return (
     <main className="min-h-screen bg-neutral-950 text-neutral-200">
-      <div className="max-w-4xl mx-auto px-6 py-12">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12">
         {/* 面包屑 */}
         <div className="flex items-center gap-2 mb-8 font-mono text-xs text-neutral-500">
           <Link href="/" className="hover:text-cyan-400 transition-colors">首页</Link>

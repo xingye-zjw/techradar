@@ -100,7 +100,7 @@ export function SearchPageClient({ items }: SearchPageClientProps) {
 
   return (
     <main className="min-h-screen bg-neutral-950 text-neutral-200">
-      <div className="max-w-3xl mx-auto px-6 py-12">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-12">
         {/* 页头 */}
         <div className="mb-8">
           <div className="font-mono text-xs tracking-[0.15em] text-cyan-400 uppercase mb-2">

@@ -61,7 +61,7 @@ export default async function GlossaryDetailPage({ params }: PageProps) {
     <div className="min-h-screen bg-neutral-950">
       {/* Back link */}
       <div className="bg-neutral-900 border-b border-neutral-800">
-        <div className="max-w-4xl mx-auto px-6 py-4">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4">
           <Link
             href="/glossary"
             className="inline-flex items-center gap-2 text-sm text-neutral-400 hover:text-cyan-400 transition-colors"
@@ -71,7 +71,7 @@ export default async function GlossaryDetailPage({ params }: PageProps) {
         </div>
       </div>
 
-      <article className="max-w-4xl mx-auto px-6 py-8">
+      <article className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
         {/* Header */}
         <header className="mb-8">
           <div className="flex items-center gap-3 mb-4">

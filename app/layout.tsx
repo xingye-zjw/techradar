@@ -21,6 +21,8 @@ export default function RootLayout({
           href="https://fonts.loli.net/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
           rel="stylesheet"
         />
+        {/* 移动端 viewport 设置 */}
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
       </head>
       <body className="antialiased">
         <div className="animate-in fade-in duration-200">

@@ -80,12 +80,16 @@ export function TermPopover({ term, children, showRelated = false }: TermPopover
   }, [isOpen]);
 
   const handleMouseEnter = () => {
+    // 移动端禁用 hover 行为，仅使用点击交互
+    if (typeof window !== "undefined" && window.innerWidth < 768) return;
     if (!isClickOpen.current) {
       setIsOpen(true);
     }
   };
 
   const handleMouseLeave = () => {
+    // 移动端禁用 hover 行为，仅使用点击交互
+    if (typeof window !== "undefined" && window.innerWidth < 768) return;
     if (!isClickOpen.current) {
       setIsOpen(false);
     }

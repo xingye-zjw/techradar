@@ -10,7 +10,7 @@ export default function Home() {
     <main className="min-h-screen bg-neutral-950 text-neutral-200">
       <section className="relative w-full min-h-[380px] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 to-neutral-950" />
-        <div className="relative z-10 text-center px-6 py-20 max-w-[680px]">
+        <div className="relative z-10 text-center px-4 sm:px-6 py-20 max-w-[680px]">
           <div className="inline-block font-mono text-xs tracking-widest uppercase text-green-400 border border-green-400 px-3 py-1 rounded-sm mb-6">
             TRAE AI 创造力大赛
           </div>
@@ -36,7 +36,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="max-w-[860px] mx-auto px-6 py-12">
+      <section className="max-w-[860px] mx-auto px-4 sm:px-6 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Link
             href="/roadmap"
@@ -182,7 +182,7 @@ export default function Home() {
       </section>
 
       <footer className="border-t border-neutral-800 mt-12">
-        <div className="max-w-[860px] mx-auto px-6 py-8">
+        <div className="max-w-[860px] mx-auto px-4 sm:px-6 py-8">
           <div className="flex justify-between items-center flex-wrap gap-4 font-mono text-xs text-neutral-500">
             <span>TechRadar 极客雷达 — TRAE AI 创造力大赛</span>
             <span>Generated with TRAE Work</span>

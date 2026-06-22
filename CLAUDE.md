@@ -21,6 +21,7 @@ techradar/
 │   ├── layout.tsx         # 根布局（国内 CDN 字体镜像 + Toast 容器）
 │   ├── roadmap/           # 学习路线图（DAG 可视化）
 │   ├── intel/             # 技术情报列表 + [slug] 动态详情页
+│   ├── glossary/          # 专业术语表
 │   ├── search/            # 全站搜索页
 │   ├── toolbox/           # 工具推荐箱
 │   └── pitfall/           # 踩坑避雷指南
@@ -37,13 +38,24 @@ techradar/
 ├── lib/                    # 业务逻辑
 │   ├── roadmap-data.ts    # 全量路线图数据（~230KB）
 │   ├── intel.ts           # Markdown 情报解析
+│   ├── glossary.ts        # 术语数据处理
 │   ├── toolbox.ts         # 工具推荐算法
 │   ├── terms.ts           # 术语数据处理
 │   └── terms.json         # 术语数据（50+ 专业术语）
 ├── content/                # 静态内容
-│   ├── intel/*.md         # 18 篇技术情报
-│   ├── toolbox/tools.json
-│   └── pitfall/pitfalls.json
+│   ├── intel/*.md         # 技术情报
+│   ├── glossary/          # 术语数据
+│   │   ├── terms.json     # 术语索引
+│   │   └── terms/*.md     # 术语详情
+│   ├── toolbox/tools.json # 工具推荐
+│   └── pitfall/pitfalls.json # 踩坑记录
+├── templates/              # 内容模板
+│   ├── intel/             # 情报模板
+│   ├── glossary/          # 术语模板
+│   ├── pitfall/           # 踩坑模板
+│   └── toolbox/           # 工具箱模板
+├── docs/                   # 开发文档
+│   └── content-spec.md    # 内容规范文档
 └── next.config.js          # 静态导出配置
 ```
 
@@ -86,18 +98,27 @@ interface DailyTask {
 
 ### 2. 技术情报 (`/intel`)
 
-- 18 篇 Markdown 格式的情报卡片
+- 42 篇 Markdown 格式的情报卡片
 - 涵盖 Transformer、YOLO、LoRA、RAG 等热门技术
 - 支持 slug 动态路由
+- 自动计算阅读时间和标签
 
-### 3. 工具推荐箱 (`/toolbox`)
+### 3. 专业术语 (`/glossary`)
 
-- 推荐各类开发工具
+- 20+ 术语详解
+- 支持按分类、标签筛选
+- 术语间关联关系
+
+### 4. 工具推荐箱 (`/toolbox`)
+
+- 14 个开发工具推荐
+- 7 个使用场景
 - 与情报卡片智能关联
 
-### 4. 踩坑避雷 (`/pitfall`)
+### 5. 踩坑避雷 (`/pitfall`)
 
-- 常见问题 FAQ 集合
+- 17 条常见问题 FAQ
+- 结构化解决方案
 
 ---
 
@@ -171,6 +192,102 @@ interface DailyTask {
 
 - [ ] 其他节点（D03-D14 及其他方向）迁移到新的结构化内容格式
 - [ ] robots.ts 和 sitemap.ts 中的域名需替换为实际域名
+- [ ] 扩展更多技术方向（NLP、强化学习等）
+
+---
+
+## 📚 内容规范模板体系
+
+### 模板目录
+
+```
+templates/
+├── intel/             # 情报模板
+│   └── template.md
+├── glossary/          # 术语模板
+│   ├── terms.json.template
+│   └── term-detail.md
+├── pitfall/           # 踩坑模板
+│   └── pitfalls.json.template
+└── toolbox/           # 工具箱模板
+    └── tools.json.template
+```
+
+### 规范文档
+
+- `docs/content-spec.md` - 完整的内容规范文档
+- `templates/README.md` - 模板使用说明
+
+### 快速参考
+
+#### 情报模板 (Intel)
+
+```yaml
+---
+title: [技术名称]
+category: [分类slug]
+keywords: [关键词]
+difficulty: [beginner/intermediate/advanced]
+duration: [预计学习时长]
+summary: [一句话概要]
+takeaways:
+  - [你将学到什么]
+---
+```
+
+#### 术语模板 (Glossary)
+
+```json
+{
+  "term": "[英文术语名]",
+  "slug": "[url-friendly-slug]",
+  "definition": "[术语定义]",
+  "category": "[cv/llm/infrastructure/math/deployment]",
+  "relatedTerms": ["[关联术语slug]"]
+}
+```
+
+#### 踩坑模板 (Pitfall)
+
+```json
+{
+  "title": "[问题标题]",
+  "category": "[环境配置/训练/部署/数据处理/开发协作/LLM]",
+  "symptoms": ["[错误信息]"],
+  "solution": ["[解决步骤]"],
+  "quickFix": "[快速修复]",
+  "tags": ["[标签]"]
+}
+```
+
+#### 工具箱模板 (Toolbox)
+
+```json
+{
+  "name": "[工具名称]",
+  "category": "[分类]",
+  "purpose": "[用途说明]",
+  "install": "[安装命令]",
+  "features": ["[特性]"],
+  "github": {
+    "stars": "[star数]",
+    "last_release": "[发布日期]",
+    "url": "[仓库URL]"
+  },
+  "difficulty": "[beginner/intermediate/advanced]",
+  "official_url": "[官方文档]",
+  "use_cases": ["[使用场景]"]
+}
+```
+
+### 扩展新方向指南
+
+当需要添加新的技术方向时：
+
+1. **情报分类**: 在 `lib/intel-meta.ts` 中添加新的 category
+2. **术语分类**: 在 `lib/glossary.ts` 中添加新的 category
+3. **路线图节点**: 在 `lib/roadmap-data.ts` 中添加新的 track 和 node
+4. **工具分类**: 在 `content/toolbox/tools.json` 中使用新的 category
 
 ---
 

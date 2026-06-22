@@ -71,7 +71,7 @@ export default function GlossaryPage() {
     <div className="min-h-screen bg-neutral-950">
       {/* Header */}
       <header className="bg-neutral-900 border-b border-neutral-800">
-        <div className="max-w-4xl mx-auto px-6 py-12">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-neutral-100 mb-2">
               📖 专业术语

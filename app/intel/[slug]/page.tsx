@@ -130,7 +130,7 @@ export default function IntelPage({ params }: { params: { slug: string } }) {
       <ReadingProgress />
       {/* 顶部导航 */}
       <div className="border-b border-neutral-800 bg-neutral-950/90 backdrop-blur-sm sticky top-0 z-20">
-        <div className="max-w-5xl mx-auto px-6 py-3 flex items-center justify-between">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
           <Link href="/intel" className="inline-flex items-center gap-2 font-mono text-xs text-neutral-500 hover:text-green-400 transition-colors">
             <span>←</span>
             <span>返回情报列表</span>
@@ -141,7 +141,7 @@ export default function IntelPage({ params }: { params: { slug: string } }) {
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-6 py-10">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
         {/* ========================================
             第一屏：快速概览（先简单介绍）
         ======================================== */}
