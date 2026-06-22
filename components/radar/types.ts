@@ -4,10 +4,10 @@
 export type NodeStatus = "locked" | "available" | "completed";
 
 /** 资源类型 */
-export type ResourceType = "video" | "article" | "doc" | "code" | "tool" | "book";
+export type ResourceType = "video" | "article" | "doc" | "code" | "tool" | "book" | "repo" | "paper";
 
 /** 资源来源平台 */
-export type ResourceSource = "bilibili" | "youtube" | "github" | "official" | "zhihu" | "juejin" | "other";
+export type ResourceSource = "bilibili" | "youtube" | "github" | "official" | "zhihu" | "juejin" | "academic" | "blog" | "other";
 
 /** 单日学习任务 */
 export interface ResourceLink {

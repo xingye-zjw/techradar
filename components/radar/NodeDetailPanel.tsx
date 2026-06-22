@@ -47,6 +47,10 @@ function getSourceInfo(source?: ResourceSource): { icon: string; color: string; 
       return { icon: "💡", color: "text-blue-500", label: "知乎" };
     case "juejin":
       return { icon: "📝", color: "text-cyan-400", label: "掘金" };
+    case "academic":
+      return { icon: "📄", color: "text-emerald-400", label: "论文" };
+    case "blog":
+      return { icon: "🌐", color: "text-teal-400", label: "博客" };
     default:
       return { icon: "🔗", color: "text-neutral-400", label: "" };
   }
@@ -67,6 +71,10 @@ function getTypeLabel(type?: ResourceType): { label: string; color: string } {
       return { label: "工具", color: "bg-orange-500/20 text-orange-400 border-orange-500/30" };
     case "book":
       return { label: "书籍", color: "bg-amber-500/20 text-amber-400 border-amber-500/30" };
+    case "repo":
+      return { label: "仓库", color: "bg-neutral-500/20 text-neutral-300 border-neutral-500/30" };
+    case "paper":
+      return { label: "论文", color: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30" };
     default:
       return { label: "", color: "" };
   }
