@@ -1,4 +1,4 @@
-# Transformer
+# Transformer（变换器）
 
 **Transformer** 是一种基于自注意力机制的深度学习架构，由 Google Brain 的研究团队于 2017 年在论文 [*Attention Is All You Need*](https://arxiv.org/abs/1706.03762) 中提出。它解决了传统 RNN（循环神经网络）无法并行计算以及处理长序列时的梯度消失问题。Transformer 已成为 BERT、GPT 等几乎所有大型语言模型（LLM）的基础架构，并被广泛应用于 NLP、计算机视觉、语音等多个领域。
 

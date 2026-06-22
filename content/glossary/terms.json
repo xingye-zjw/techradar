@@ -1,181 +1,181 @@
 [
   {
-    "term": "algorithm",
+    "term": "算法",
     "slug": "algorithm",
     "definition": "算法是解决特定问题的一系列明确步骤。在计算机科学中，算法描述了如何将输入转换为输出的计算过程。好的算法需要满足正确性、可读性、健壮性和高效性。常用算法设计范式包括分治法（Divide and Conquer）、动态规划（Dynamic Programming）、贪心算法（Greedy）、回溯法（Backtracking）等。算法复杂度分析（时间复杂度和空间复杂度）是评价算法优劣的核心标准。",
     "category": "cs",
     "relatedTerms": ["data-structure", "complexity", "dynamic-programming", "greedy"]
   },
   {
-    "term": "data structure",
+    "term": "数据结构",
     "slug": "data-structure",
     "definition": "数据结构是计算机中存储、组织数据的方式，使得数据可以高效地被访问和修改。常见数据结构包括数组（Array）、链表（Linked List）、栈（Stack）、队列（Queue）、哈希表（Hash Table）、树（Tree）、图（Graph）、堆（Heap）等。选择合适的数据结构是算法设计的关键，不同数据结构在插入、删除、查找等操作上的时间复杂度差异巨大。",
     "category": "cs",
     "relatedTerms": ["algorithm", "complexity", "hash-table", "tree"]
   },
   {
-    "term": "complexity analysis",
+    "term": "复杂度分析",
     "slug": "complexity",
     "definition": "复杂度分析是评价算法效率的理论方法，分为时间复杂度（算法执行时间随输入规模增长的趋势）和空间复杂度（算法所需内存随输入规模增长的趋势）。大O表示法（Big O Notation）是最常用的复杂度标记：O(1)常数级、O(log n)对数级、O(n)线性级、O(n log n)线性对数级、O(n²)平方级、O(2^n)指数级。复杂度分析帮助我们选择最优算法，避免在实际应用中出现性能瓶颈。",
     "category": "cs",
     "relatedTerms": ["algorithm", "data-structure", "big-o"]
   },
   {
-    "term": "pointer",
+    "term": "指针",
     "slug": "pointer",
     "definition": "指针是存储内存地址的变量，是C/C++等语言的核心概念。通过指针可以直接访问和修改内存中的数据，实现高效的数据操作。指针运算（如加减整数）会根据指针类型自动调整步长。指针的灵活也带来了风险：空指针解引用、野指针、内存泄漏等。在嵌入式开发中，指针用于直接操作硬件寄存器（Memory-Mapped IO），是底层编程的基础。",
     "category": "embedded",
     "relatedTerms": ["memory-management", "c-language", "mmio"]
   },
   {
-    "term": "RTOS",
+    "term": "实时操作系统",
     "slug": "rtos",
     "definition": "RTOS（Real-Time Operating System，实时操作系统）是专为实时应用设计的操作系统，能够在确定的时间内响应外部事件。与通用操作系统（如Windows/Linux）不同，RTOS强调响应时间的可预测性而非吞吐量。FreeRTOS是最流行的开源RTOS，被广泛应用于STM32、ESP32等微控制器。RTOS的核心机制包括任务调度、信号量、消息队列、中断管理等。",
     "category": "embedded",
     "relatedTerms": ["task-scheduling", "semaphore", "interrupt", "freertos"]
   },
   {
-    "term": "operating system",
+    "term": "操作系统",
     "slug": "operating-system",
     "definition": "操作系统是管理计算机硬件与软件资源的系统软件，为应用程序提供统一的抽象接口。核心功能包括进程管理（程序运行）、内存管理（地址空间）、文件系统（持久存储）、设备管理（IO管理）。Linux是最流行的开源操作系统内核，采用宏内核架构，通过模块化设计获得灵活性。理解操作系统原理对系统级编程、性能优化和嵌入式开发至关重要。",
     "category": "cs",
     "relatedTerms": ["process", "thread", "memory-management", "filesystem"]
   },
   {
-    "term": "circuit",
+    "term": "电路",
     "slug": "circuit",
     "definition": "电路是由电源、负载、导线和开关组成的电流通路。电路分析的核心定律包括欧姆定律（V=IR）和基尔霍夫定律（KCL电流定律和KVL电压定律）。电路分为直流电路（DC）和交流电路（AC），在电子工程和电气工程中，电路设计是构建所有电子系统的基础。模拟电路处理连续信号，数字电路处理离散信号。",
     "category": "electronics",
     "relatedTerms": ["resistor", "capacitor", "inductor", "op-amp"]
   },
   {
-    "term": "Fourier transform",
+    "term": "傅里叶变换",
     "slug": "fourier-transform",
     "definition": "傅里叶变换是将时域信号转换为频域表示的数学工具，是信号处理的核心。它揭示了任何信号都可以分解为不同频率正弦波的叠加。离散傅里叶变换（DFT）适用于数字信号，快速傅里叶变换（FFT）是计算DFT的高效算法，复杂度从O(n²)降到O(n log n)。在通信系统中，傅里叶变换用于分析信号频谱、设计滤波器；在图像处理中用于频域滤波和压缩。",
     "category": "signals",
     "relatedTerms": ["fft", "spectrum", "signal-processing", "filter"]
   },
   {
-    "term": "PID controller",
+    "term": "PID控制器",
     "slug": "pid-controller",
     "definition": "PID控制器是工业控制中最广泛使用的反馈控制器，由比例（P）、积分（I）、微分（D）三个环节组成。P环节放大误差，I环节消除稳态误差，D环节预测误差变化趋势。PID参数整定方法包括Ziegler-Nichols法、Cohen-Coon法等。PID控制器结构简单、鲁棒性强，被应用于温度控制、电机调速、机器人运动控制等几乎所有工业自动化场景。",
     "category": "control",
     "relatedTerms": ["feedback-control", "control-system", "automation"]
   },
   {
-    "term": "FOC",
+    "term": "磁场定向控制",
     "slug": "foc",
     "definition": "FOC（Field Oriented Control，磁场定向控制）是一种高效的交流电机控制技术，通过Clarke变换和Park变换将三相电流分解为励磁分量和转矩分量，实现像直流电机一样精确控制交流电机。FOC结合SVPWM（空间矢量脉宽调制）技术，使电机在宽速度范围内高效运行，被广泛应用于电动汽车、机器人关节、无人机等高性能驱动场景。",
     "category": "electrical",
     "relatedTerms": ["pmsm", "svpwm", "motor-control", "inverter"]
   },
   {
-    "term": "instance segmentation",
+    "term": "实例分割",
     "slug": "instance-segmentation",
     "definition": "实例分割是计算机视觉中比目标检测更进一步的任务：不仅要找出图中所有目标「在哪里」，还要精确勾勒出每个目标的轮廓「是什么形状」。与语义分割（semantic segmentation，将所有同类物体合并为一个 mask）不同，实例分割为每个独立目标生成独立的 mask，即便两个同类物体紧挨在一起也能区分。YOLOv8-seg、Mask R-CNN 是此类任务的代表模型。实现方式通常是：在检测框内做像素级分割，或直接用单阶段分割头输出 polygon / mask。",
     "category": "computer-vision",
     "relatedTerms": ["object-detection", "semantic-segmentation", "yolo", "coco-format"]
   },
   {
-    "term": "pose estimation",
+    "term": "姿态估计",
     "slug": "pose-estimation",
     "definition": "人体姿态估计从图像或视频中定位人体关键点（如 COCO 17 点：鼻子、双眼、双耳、双肩、双肘、双腕、双髋、双膝、双踝），并用骨架连线表示人体结构。关键点检测分为自顶向下（先用检测器找人，再在框内检测关键点）和自底向上（先检测所有关键点，再通过 grouping 连接成不同人体）两种范式。HRNet 在姿态估计中以保留高分辨率特征著称，OpenPose 是自底向上的经典方案。",
     "category": "computer-vision",
     "relatedTerms": ["keypoint-detection", "coco", "hrnet", "object-detection"]
   },
   {
-    "term": "optical character recognition",
+    "term": "光学字符识别",
     "slug": "ocr",
     "definition": "OCR（光学字符识别）从图像中提取文字信息，包含两个核心子任务：文本检测（Text Detection，确定文字的位置和范围）和文本识别（Text Recognition，将图像中的文字转录为字符序列）。现代 OCR 系统如 PaddleOCR 采用 DBNet 进行任意形状文本检测（处理弯曲/倾斜文字），CRNN（卷积循环神经网络）进行序列到序列的字符识别，Attention 机制进一步提升了对低质量图像的鲁棒性。",
     "category": "computer-vision",
     "relatedTerms": ["text-detection", "crnn", "dbnet", "paddleocr"]
   },
   {
-    "term": "diffusion model",
+    "term": "扩散模型",
     "slug": "diffusion-model",
     "definition": "扩散模型是一类基于概率论的生成模型，其核心思想是：向数据中逐步添加噪声（正向过程 q(xt|xt-1)），然后学习一个逆向去噪过程 pθ(xt-1|xt)。训练完成后，从纯噪声开始运行逆向过程，即可生成图像。DDPM 是扩散模型的开创性工作，Stable Diffusion 将扩散过程搬到低维潜在空间（VAE encoder 输出），大幅降低了计算成本，实现了文生图（text-to-image）的主流应用。LoRA、ControlNet、IP-Adapter 等技术在此基础上实现了高效微调和条件控制。",
     "category": "computer-vision",
     "relatedTerms": ["stable-diffusion", "ddpm", "vae", "lora", "latent-space"]
   },
   {
-    "term": "vllm",
+    "term": "vLLM",
     "slug": "vllm",
     "definition": "vLLM 是一个开源的大语言模型推理引擎，核心技术创新是 PagedAttention（将 KV Cache 分页管理，类似操作系统虚拟内存）和连续批处理（continuous batching）。通过减少显存碎片和提升 GPU 利用率，vLLM 能将推理吞吐量提升 10-30x，同时支持 OpenAI 兼容 API（/v1/chat/completions），可直接替代 OpenAI API 使用。支持的量化方式包括 AWQ、GPTQ、INT4 等。",
     "category": "devops",
     "relatedTerms": ["kv-cache", "pagedattention", "batch-inference", "quantization", "llm-inference"]
   },
   {
-    "term": "kv cache",
+    "term": "KV缓存",
     "slug": "kv-cache",
     "definition": "KV Cache 是 LLM 推理优化中的核心技术。在自回归生成中，每个新 token 都需要 attend 到之前所有的 token，如果不缓存 Key 和 Value，每次生成都要重新计算，造成巨大浪费。KV Cache 在首次 Prefill 阶段计算出所有历史 token 的 K 和 V 并缓存，后续 Decode 阶段只需计算新 token 的 Q，三者做 attention即可。显存占用估算：2 × n_layers × 2 × seq_len × n_heads × head_dim × batch_size × bytes_per_param。",
     "category": "llm",
     "relatedTerms": ["llm-inference", "prefill", "decode", "vllm", "attention"]
   },
   {
-    "term": "chain-of-thought",
+    "term": "思维链",
     "slug": "chain-of-thought",
     "definition": "Chain-of-Thought（CoT，思维链）是一种 Prompt Engineering 技术，通过在问题后附加「Let's think step by step」或提供完整的推理示例，引导模型先生成中间推理步骤再给出最终答案。CoT 的有效性可能源于：模型在前向传播中利用了更多中间层的表示，从而支撑最终答案的生成。Self-Consistency（自一致性）在 CoT 基础上通过多条推理路径的多数投票进一步提升复杂推理任务的准确率。Tree-of-Thoughts 将其扩展为树搜索形式，探索多种解题路径。",
     "category": "llm",
     "relatedTerms": ["prompt-engineering", "few-shot", "self-consistency", "reasoning"]
   },
   {
-    "term": "function calling",
+    "term": "函数调用",
     "slug": "function-calling",
     "definition": "Function Calling（也称 Tool Use）是 LLM Agent 系统的基础能力：模型在回复中插入结构化的工具调用请求（如 get_weather(location='北京')），由外部程序执行后把结果传回模型继续处理。实现方式是在 Chat Completion API 中声明可用工具的 schema（名称、参数类型、描述），模型会根据对话内容决定是否调用以及传入什么参数。这解决了 LLM 的两大局限：知识截止日期限制和无法执行计算/查询的动态需求。",
     "category": "llm",
     "relatedTerms": ["tool-use", "agent", "react", "openai-api", "structured-output"]
   },
   {
-    "term": "kubernetes",
+    "term": "Kubernetes",
     "slug": "kubernetes",
     "definition": "Kubernetes（K8s）是 CNCF 的容器编排平台，将多台机器组成统一集群，对外提供声明式的应用部署、扩缩容、自我修复和服务发现能力。核心对象：Pod（最小调度单位）、Deployment（管理 Pod 版本和副本）、Service（为 Pod 提供稳定网络入口）、ConfigMap/Secret（配置与密钥管理）、PersistentVolume（持久化存储）。Helm 是 K8s 的包管理器，通过模板化管理复杂应用的 YAML 配置。GPU 调度通过 nvidia.com/gpu 资源标签实现。",
     "category": "devops",
     "relatedTerms": ["docker", "pod", "deployment", "helm", "hpa", "kubectl"]
   },
   {
-    "term": "prometheus",
+    "term": "Prometheus",
     "slug": "prometheus",
     "definition": "Prometheus 是 CNCF 的开源时序数据库和监控系统，采用 Pull 模式从每个服务的 /metrics 端点定期拉取数据。核心概念：四大指标类型——Counter（只增计数器）、Gauge（可增可减仪表）、Histogram（延迟分布直方图，用于计算 P50/P95/P99）、Summary（预计算分位数）；PromQL 是其查询语言，支持 rate()、increase()、histogram_quantile() 等时间序列函数。Alertmanager 接收 Prometheus 告警并路由到邮件/Slack 等渠道。",
     "category": "devops",
     "relatedTerms": ["grafana", "metrics", "alerting", "observability", "promql"]
   },
   {
-    "term": "entropy",
+    "term": "信息熵",
     "slug": "entropy",
     "definition": "信息熵 H(X) = -Σ P(x)logP(x) 衡量一个概率分布的不确定性（或信息量期望）。熵越高，分布越均匀（最不确定，如公平硬币 H=1 bit）；熵越低，分布越尖锐（越确定，如硬币正面概率 0.9 时 H≈0.47 bit）。单位：bit（log base 2）或 nat（log base e）。联合熵 H(X,Y) = -ΣΣ P(x,y)logP(x,y) 衡量两个随机变量一起的不确定性。条件熵 H(Y|X) = Σ P(x)H(Y|X=x) 衡量已知 X 后 Y 的剩余不确定性。",
     "category": "math",
     "relatedTerms": ["cross-entropy", "kl-divergence", "mutual-information", "information-theory"]
   },
   {
-    "term": "kl-divergence",
+    "term": "KL散度",
     "slug": "kl-divergence",
     "definition": "KL 散度（Kullback-Leibler Divergence）D_KL(P||Q) = Σ P(x)log(P(x)/Q(x)) 衡量用 Q 分布编码来 P 分布的信息的额外代价（非对称，不可称作「距离」）。重要性质：D_KL(P||Q) ≥ 0，当且仅当 P=Q 时等于 0。由于非对称性，D_KL(P||Q) ≠ D_KL(Q||P)。在机器学习中，最小化交叉熵 H(P,Q) 等价于最小化 D_KL(P||Q)（因为 H(P) 对 Q 是常数），这正是训练时用 Cross-Entropy Loss 的数学基础。",
     "category": "math",
     "relatedTerms": ["entropy", "cross-entropy", "mle", "loss-function"]
   },
   {
-    "term": "convex optimization",
+    "term": "凸优化",
     "slug": "convex-optimization",
     "definition": "凸优化研究的是凸函数在凸集上的最小化问题。关键性质：凸优化问题没有局部最优陷阱——任何局部最优都是全局最优。L-Smooth（梯度 Lipschitz 平滑）保证了梯度下降的收敛性，在 L-smooth 凸函数上 GD 以 O(1/T) 速率收敛。KKT（Karush-Kuhn-Tucker）条件是约束优化的最优性必要条件。Adam/AdamW 等自适应优化器本质上是随机优化的近似解法。",
     "category": "math",
     "relatedTerms": ["gradient-descent", "adam", "kkt", "lagrangian", "regularization"]
   },
   {
-    "term": "onnx",
+    "term": "ONNX",
     "slug": "onnx",
     "definition": "ONNX（Open Neural Network Exchange）是微软和 Facebook 共同推出的跨框架模型格式，定义了一套标准化的算子 IR（Intermediate Representation）。通过 torch.onnx.export() 可以将 PyTorch 模型导出为 .onnx 文件，之后用 ONNXRuntime 或其他 ONNX 兼容引擎加载推理。ONNXRuntime 比 PyTorch 原生推理快 1.5-3x，支持 CPU/GPU，并可通过 onnxsim 做常量折叠优化。ONNX 是模型从训练框架到部署平台的「中间语言」。",
     "category": "devops",
     "relatedTerms": ["onnxruntime", "model-export", "tensorrt", "inference-optimization"]
   },
   {
-    "term": "rlhf",
+    "term": "RLHF",
     "slug": "rlhf",
     "definition": "RLHF（Reinforcement Learning from Human Feedback）是让大语言模型对齐人类意图的核心技术，包含三阶段：SFT（有监督微调，用人工标注数据教会模型「好回答长什么样」）→ Reward Model（训练一个模型学习「哪个回答更好」，输入是 (prompt, response)，输出是标量 reward）→ PPO 微调（用 Reward Model 的 reward 信号，通过强化学习进一步微调 SFT 模型）。InstructGPT 和 ChatGPT 是 RLHF 的代表性应用，PPO 中的 KL 散度惩罚项（β·KL(π_RL||π_SFT)）是为了防止模型在最大化 reward 时偏离 SFT 太远。",
     "category": "llm",
     "relatedTerms": ["reward-model", "ppo", "sft", "alignment", "instructgpt"]
   },
   {
-    "term": "batch inference",
+    "term": "批量推理",
     "slug": "batch-inference",
     "definition": "批量推理是在 GPU 上同时处理多个推理请求以提升吞吐量的技术。相比在线推理（一次处理一个请求），批量推理通过矩阵运算充分调动 GPU 并行能力，QPS 可提升 10-100x。连续批处理（Continuous Batching / Iteration-Level Scheduling）在每个 token 生成后动态插入新请求，不等当前 batch 全部完成就开始处理下一批，是 vLLM 等推理引擎的核心优化。",
     "category": "devops",

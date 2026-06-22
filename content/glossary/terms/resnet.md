@@ -1,4 +1,4 @@
-# ResNet (Residual Network)
+# ResNet（残差网络）
 
 **ResNet（残差网络）** 是何恺明等人于 2015 年在论文 *Deep Residual Learning for Image Recognition* 中提出的架构。它通过引入**跳跃连接（Skip Connection）**，首次让训练超过 100 层的 CNN 成为可能，并在 ImageNet 分类任务上大幅刷新当时的最佳成绩。
 

@@ -1,4 +1,4 @@
-# RAG (Retrieval-Augmented Generation)
+# RAG（检索增强生成）
 
 **RAG（检索增强生成）** 是一种结合信息检索与文本生成的技术框架，由 Facebook AI Research（现 Meta AI）于 2020 年在论文 [*Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks*](https://arxiv.org/abs/2005.11401) 中提出。
 

@@ -1,9 +1,3 @@
----
-title: vLLM
-category: infrastructure
-summary: 通过 PagedAttention 和连续批处理，把 GPU 利用率从 30% 拉到 80%，吞吐量提升 10-30x 的 LLM 推理引擎
----
-
 vLLM 是伯克利大学 LMSYS 组织开源的大语言模型推理引擎，核心解决了 LLM 推理中 **KV Cache 显存碎片化** 和 **GPU 利用率低** 两个根本问题。
 
 ## 核心问题：为什么 GPU 利用率这么低？

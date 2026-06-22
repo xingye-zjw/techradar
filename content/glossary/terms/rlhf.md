@@ -1,9 +1,3 @@
----
-title: rlhf
-category: llm
-summary: ChatGPT 为什么「对齐」了？RLHF 通过「让人评判」而非「教它说话」，三阶段训练让模型学会遵循人类意图
----
-
 RLHF（Reinforcement Learning from Human Feedback）是让大语言模型对齐人类意图的核心技术，是 InstructGPT 和 ChatGPT 的关键技术。
 
 ## 三阶段训练流程

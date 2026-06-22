@@ -1,9 +1,3 @@
----
-title: chain-of-thought
-category: llm
-summary: 在 Prompt 里加一句「让我们一步步思考」，复杂推理准确率提升 20-50%——没有改变模型，只是改变了提问方式
----
-
 Chain-of-Thought（CoT，思维链）是一种 Prompt Engineering 技术，通过引导模型先生成中间推理步骤再给出最终答案，显著提升复杂推理任务的准确率。
 
 ## 核心观察

@@ -1,4 +1,4 @@
-# 自注意力机制 (Self-Attention)
+# 自注意力机制（Self-Attention）
 
 **自注意力机制** 是 Transformer 的核心组件，它让序列中的每个位置能够**同时关注到其他所有位置**，从而捕捉全局依赖关系。它是 Transformer 取代 RNN 和 CNN 的关键技术。
 

@@ -1,4 +1,4 @@
-# Linux
+# Linux（操作系统）
 
 **Linux** 是一个开源的 Unix-like 操作系统内核，由芬兰学生 Linus Torvalds 于 1991 年创建。基于 Linux 内核构建的操作系统被称为「Linux 发行版」，它是服务器、嵌入式系统、超级计算机等领域的事实标准操作系统。
 

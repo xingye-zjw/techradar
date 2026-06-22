@@ -1,4 +1,4 @@
-# LoRA (Low-Rank Adaptation)
+# LoRA（低秩适应）
 
 **LoRA（低秩适应）** 是一种高效的大型模型微调方法，由 Microsoft 研究团队于 2021 年在论文 [*LoRA: Low-Rank Adaptation of Large Language Models*](https://arxiv.org/abs/2106.09685) 中提出。它通过对权重矩阵的**低秩分解**来更新模型，极大地减少了可训练参数的数量，使得在消费级 GPU 上微调大型语言模型成为可能。
 

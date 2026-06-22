@@ -1,9 +1,3 @@
----
-title: kubernetes
-category: infrastructure
-summary: Docker 解决了「怎么打包」，K8s 解决了「怎么运行」——服务治理、扩缩容、滚动更新全部自动化
----
-
 Kubernetes（K8s）是 CNCF 的容器编排平台，将多台机器组成统一集群，对外提供声明式的应用部署、扩缩容、自我修复和服务发现能力。
 
 ## 核心概念
