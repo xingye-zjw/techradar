@@ -30,6 +30,12 @@ const trackBorders: Record<TrackId, string> = {
   devops: TRACK_COLORS.devops.border.replace("border-", "border-"),
   math: TRACK_COLORS.math.border.replace("border-", "border-"),
   project: TRACK_COLORS.project.border.replace("border-", "border-"),
+  cs: TRACK_COLORS.cs.border.replace("border-", "border-"),
+  embedded: TRACK_COLORS.embedded.border.replace("border-", "border-"),
+  electronics: TRACK_COLORS.electronics.border.replace("border-", "border-"),
+  signals: TRACK_COLORS.signals.border.replace("border-", "border-"),
+  control: TRACK_COLORS.control.border.replace("border-", "border-"),
+  electrical: TRACK_COLORS.electrical.border.replace("border-", "border-"),
 };
 
 const trackDots: Record<TrackId, string> = {
@@ -38,6 +44,12 @@ const trackDots: Record<TrackId, string> = {
   devops: TRACK_COLORS.devops.text.replace("text-", "bg-"),
   math: TRACK_COLORS.math.text.replace("text-", "bg-"),
   project: TRACK_COLORS.project.text.replace("text-", "bg-"),
+  cs: TRACK_COLORS.cs.text.replace("text-", "bg-"),
+  embedded: TRACK_COLORS.embedded.text.replace("text-", "bg-"),
+  electronics: TRACK_COLORS.electronics.text.replace("text-", "bg-"),
+  signals: TRACK_COLORS.signals.text.replace("text-", "bg-"),
+  control: TRACK_COLORS.control.text.replace("text-", "bg-"),
+  electrical: TRACK_COLORS.electrical.text.replace("text-", "bg-"),
 };
 
 const statusStyles: Record<NodeStatus, {

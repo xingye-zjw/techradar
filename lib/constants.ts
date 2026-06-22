@@ -2,7 +2,7 @@
 
 // ============ 路线图 Track 颜色定义 ============
 
-export type TrackId = "cv" | "nlp" | "devops" | "math" | "project";
+export type TrackId = "cv" | "nlp" | "devops" | "math" | "project" | "cs" | "embedded" | "electronics" | "signals" | "control" | "electrical";
 
 export interface TrackColors {
   text: string;
@@ -16,6 +16,12 @@ export const TRACK_COLORS: Record<TrackId, TrackColors> = {
   devops: { text: "text-sky-400", bg: "bg-sky-400/10", border: "border-sky-400/30" },
   math: { text: "text-emerald-400", bg: "bg-emerald-400/10", border: "border-emerald-400/30" },
   project: { text: "text-pink-400", bg: "bg-pink-400/10", border: "border-pink-400/30" },
+  cs: { text: "text-blue-500", bg: "bg-blue-500/10", border: "border-blue-500/30" },
+  embedded: { text: "text-green-500", bg: "bg-green-500/10", border: "border-green-500/30" },
+  electronics: { text: "text-yellow-500", bg: "bg-yellow-500/10", border: "border-yellow-500/30" },
+  signals: { text: "text-red-500", bg: "bg-red-500/10", border: "border-red-500/30" },
+  control: { text: "text-purple-500", bg: "bg-purple-500/10", border: "border-purple-500/30" },
+  electrical: { text: "text-cyan-500", bg: "bg-cyan-500/10", border: "border-cyan-500/30" },
 };
 
 // 便捷函数：获取 track 的完整样式字符串
