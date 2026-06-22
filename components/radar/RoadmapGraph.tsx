@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useMemo, useRef } from "react";
 import {
   ReactFlow,
   Controls,
@@ -90,6 +90,7 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
   const [completedNodes, setCompletedNodes] = useState<Set<string>>(new Set());
   const [activeTrack, setActiveTrack] = useState<TrackId | "all">("all");
   const [selectedNode, setSelectedNode] = useState<RoadmapNodeType | null>(null);
+  const initializedRef = useRef(false);
 
   const loadProgress = useCallback((): Record<string, NodeStatus> => {
     if (typeof window === "undefined") return {};
@@ -109,10 +110,13 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
     }, []
   );
 
-  // 使用 dagre 自动布局计算节点位置
-  const autoLayoutPositions = autoLayout(initialNodes);
+  // 使用 useMemo 缓存布局计算结果，避免每次渲染都重新计算
+  const autoLayoutPositions = useMemo(() => autoLayout(initialNodes), [initialNodes]);
 
   useEffect(() => {
+    if (initializedRef.current) return;
+    initializedRef.current = true;
+
     const saved = loadProgress();
     const completed = new Set(Object.keys(saved).filter((id) => saved[id] === "completed"));
     setCompletedNodes(completed);
@@ -198,7 +202,10 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
   const visibleEdges = edges.filter((e) => visibleNodeIds.has(e.source) && visibleNodeIds.has(e.target));
 
   // 计算每个 track 的边界框（用于泳道背景）
-  const trackBounds = activeTrack === "all" ? getTrackBounds(initialNodes, autoLayoutPositions) : null;
+  const trackBounds = useMemo(
+    () => activeTrack === "all" ? getTrackBounds(initialNodes, autoLayoutPositions) : null,
+    [activeTrack, initialNodes, autoLayoutPositions]
+  );
 
   return (
     <div className="relative">
