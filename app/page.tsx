@@ -14,10 +14,10 @@ export default function Home() {
           <div className="inline-block font-mono text-xs tracking-widest uppercase text-green-400 border border-green-400 px-3 py-1 rounded-sm mb-6">
             TRAE AI 创造力大赛
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4">
             <span className="text-green-400">TechRadar</span> 极客雷达
           </h1>
-          <p className="text-lg text-neutral-400 max-w-[560px] mx-auto mb-8">
+          <p className="text-base sm:text-lg text-neutral-400 max-w-[560px] mx-auto mb-8">
             AI 驱动的大学生硬核开源实战导航系统 — 经过验证的通关攻略，而非知识搬运
           </p>
           <div className="max-w-xl mx-auto">
@@ -27,7 +27,7 @@ export default function Home() {
             >
               <span className="text-green-400 font-mono text-xs mr-3">&gt;</span>
               <span className="flex-1 text-left font-mono text-sm">搜索全站内容…</span>
-              <span className="font-mono text-[10px] text-neutral-600">⌘K</span>
+              <span className="font-mono text-[10px] text-neutral-600 hidden sm:inline">⌘K</span>
             </Link>
             <p className="mt-3 font-mono text-[10px] text-neutral-500">
               全站搜索 · 路线图 / 情报 / 工具 / 踩坑 / 术语

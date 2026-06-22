@@ -28,8 +28,7 @@ export default function RootLayout({
         <div className="animate-in fade-in duration-200">
           <Sidebar />
           <main
-            className="min-h-screen transition-[margin] duration-300"
-            style={{ marginLeft: "var(--sidebar-width)" }}
+            className="min-h-screen transition-[margin] duration-300 lg:ml-[var(--sidebar-width)]"
           >
             {children}
           </main>

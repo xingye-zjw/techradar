@@ -74,10 +74,10 @@ export default async function GlossaryDetailPage({ params }: PageProps) {
       <article className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
         {/* Header */}
         <header className="mb-8">
-          <div className="flex items-center gap-3 mb-4">
-            <h1 className="text-3xl font-bold text-neutral-100">{term.name}</h1>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-4">
+            <h1 className="text-2xl sm:text-3xl font-bold text-neutral-100">{term.name}</h1>
             {term.nameEn && (
-              <span className="text-lg text-neutral-500 font-mono">{term.nameEn}</span>
+              <span className="text-base sm:text-lg text-neutral-500 font-mono">{term.nameEn}</span>
             )}
           </div>
 
@@ -99,7 +99,7 @@ export default async function GlossaryDetailPage({ params }: PageProps) {
           </div>
 
           {/* Summary */}
-          <blockquote className="text-lg text-neutral-300 border-l-4 border-cyan-500 pl-4 py-2 bg-cyan-500/5 rounded-r-lg">
+          <blockquote className="text-base sm:text-lg text-neutral-300 border-l-4 border-cyan-500 pl-4 py-2 bg-cyan-500/5 rounded-r-lg">
             {term.summary}
           </blockquote>
         </header>

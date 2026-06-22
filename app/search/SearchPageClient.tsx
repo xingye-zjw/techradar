@@ -106,7 +106,7 @@ export function SearchPageClient({ items }: SearchPageClientProps) {
           <div className="font-mono text-xs tracking-[0.15em] text-cyan-400 uppercase mb-2">
             全站搜索
           </div>
-          <h1 className="text-3xl md:text-4xl font-bold mb-3">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3">
             <span className="text-green-400">TechRadar</span> 全站搜索
           </h1>
           <p className="text-sm text-neutral-400 leading-relaxed">
@@ -141,7 +141,7 @@ export function SearchPageClient({ items }: SearchPageClientProps) {
               ESC
             </button>
           )}
-          <span className="absolute right-12 top-1/2 -translate-y-1/2 text-neutral-500 font-mono text-[11px]">
+          <span className="absolute right-12 top-1/2 -translate-y-1/2 text-neutral-500 font-mono text-[11px] hidden sm:inline">
             {results.length > 0 ? `${results.length} hits` : ""}
           </span>
         </div>

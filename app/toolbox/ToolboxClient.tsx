@@ -138,7 +138,7 @@ export function ToolboxClient({
           <span className="font-mono text-xs tracking-[0.15em] text-amber-400 uppercase">
             03 / 工具箱
           </span>
-          <h1 className="text-3xl font-bold mt-2">工具推荐箱</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold mt-2">工具推荐箱</h1>
           <p className="text-sm text-neutral-400 mt-2">
             按实际场景分类 — 可运行最小示例 + 一行安装命令
           </p>
@@ -467,7 +467,7 @@ function ToolCard({
       </div>
 
       {/* 名称 + GitHub 信息 */}
-      <div className="flex items-start justify-between gap-4 mb-3">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 sm:gap-4 mb-3">
         <h2 className="text-lg font-bold text-neutral-100">{highlightText(tool.name, query)}</h2>
         <a
           href={tool.github.url}
@@ -502,7 +502,7 @@ function ToolCard({
             {isCopied ? "✓ 已复制" : "⧉ 复制"}
           </button>
         </div>
-        <code className="font-mono text-xs text-green-400 break-all">
+        <code className="font-mono text-xs text-green-400 break-all block overflow-x-auto whitespace-nowrap">
           {tool.install}
         </code>
       </div>
@@ -518,7 +518,7 @@ function ToolCard({
       </ul>
 
       {/* 底部：tags + 官方链接 */}
-      <div className="flex items-start justify-between gap-3 flex-wrap">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 flex-wrap">
         <div className="flex flex-wrap gap-1.5">
           {tool.tags.map((tag) => (
             <span
@@ -593,7 +593,7 @@ function ToolCard({
 /* ========== 子组件：对比表格 ========== */
 function CompareTable({ tools }: { tools: ToolWithRelated[] }) {
   return (
-    <div className="overflow-x-auto border border-neutral-800 rounded-lg bg-neutral-900">
+    <div className="overflow-x-auto border border-neutral-800 rounded-lg bg-neutral-900 -mx-4 sm:mx-0">
       <table className="w-full min-w-[600px]">
         <tbody>
           {/* 表头 */}

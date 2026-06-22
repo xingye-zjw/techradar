@@ -193,10 +193,10 @@ export default function IntelPage({ params }: { params: { slug: string } }) {
           </div>
 
           {/* 大标题 */}
-          <h1 className="text-3xl md:text-4xl font-bold mb-4 leading-tight">{card.title}</h1>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 leading-tight">{card.title}</h1>
 
           {/* 一句话摘要 */}
-          <p className="text-base text-neutral-300 leading-relaxed mb-6 max-w-3xl">{card.summary}</p>
+          <p className="text-sm sm:text-base text-neutral-300 leading-relaxed mb-6 max-w-3xl">{card.summary}</p>
 
           {/* 关键词 */}
           <div className="flex flex-wrap gap-1.5 mb-6">

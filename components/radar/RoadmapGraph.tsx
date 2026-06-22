@@ -240,19 +240,19 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
       <div className="flex flex-wrap gap-2 mb-4">
         <button
           onClick={() => setActiveTrack("all")}
-          className={`px-3 py-1.5 rounded-lg font-mono text-xs border transition-colors ${
+          className={`px-2 sm:px-3 py-1.5 rounded-lg font-mono text-xs border transition-colors ${
             activeTrack === "all"
               ? "bg-neutral-200 text-neutral-900 border-neutral-300"
               : "bg-neutral-900 text-neutral-400 border-neutral-700 hover:border-neutral-500"
           }`}
         >
-          全部 Track
+          全部
         </button>
         {ROADMAP_TRACKS.map((t) => (
           <button
             key={t.id}
             onClick={() => setActiveTrack(t.id)}
-            className={`px-3 py-1.5 rounded-lg font-mono text-xs border transition-colors ${
+            className={`px-2 sm:px-3 py-1.5 rounded-lg font-mono text-xs border transition-colors ${
               activeTrack === t.id
                 ? `bg-neutral-900 ${t.color.replace("text-", "border-")} ${t.color.replace("text-", "bg-opacity-10 ")}`
                 : "bg-neutral-900 text-neutral-400 border-neutral-700 hover:border-neutral-500"

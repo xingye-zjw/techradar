@@ -230,3 +230,30 @@
     top: calc(env(safe-area-inset-top) + 16px);
   }
 }
+
+/* 移动端优化 */
+@media (max-width: 1023px) {
+  /* 移动端隐藏滚动条但保留功能 */
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+
+  /* 移动端优化触摸目标大小 */
+  button, a, [role="button"] {
+    min-height: 44px;
+  }
+
+  /* 移动端优化文本大小 */
+  body {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+}
+
+/* 移动端安全区域 */
+@supports (padding: env(safe-area-inset-bottom)) {
+  body {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}

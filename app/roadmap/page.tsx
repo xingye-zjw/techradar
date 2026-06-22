@@ -23,13 +23,13 @@ export default function RoadmapPage() {
           <span className="font-mono text-xs tracking-[0.15em] text-green-400 uppercase">
             01 / 路线图
           </span>
-          <h1 className="text-3xl font-bold mt-2">学习路线图</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold mt-2">学习路线图</h1>
           <p className="text-sm text-neutral-400 mt-2">
             点击节点切换完成状态 · 进度自动保存在浏览器本地
           </p>
         </div>
 
-        <div className="flex flex-wrap gap-4 mb-8 font-mono text-xs">
+        <div className="flex flex-wrap gap-2 sm:gap-4 mb-8 font-mono text-xs">
           <div className="flex items-center gap-2 px-3 py-1.5 bg-neutral-900 border border-neutral-700 rounded-md">
             <span className="w-2 h-2 rounded-full bg-green-400"></span>
             <span className="text-neutral-400">已完成</span>

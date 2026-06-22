@@ -90,8 +90,8 @@ export default function ToolDetailPage({ params }: ToolDetailPageProps) {
             </span>
           </div>
 
-          <h1 className="text-3xl md:text-4xl font-bold mb-4">{tool.name}</h1>
-          <p className="text-lg text-neutral-400 leading-relaxed">{tool.purpose}</p>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">{tool.name}</h1>
+          <p className="text-base sm:text-lg text-neutral-400 leading-relaxed">{tool.purpose}</p>
         </div>
 
         {/* 快速信息 */}
@@ -99,7 +99,7 @@ export default function ToolDetailPage({ params }: ToolDetailPageProps) {
           {/* 安装命令 */}
           <div className="p-4 bg-neutral-900 rounded-lg border border-neutral-800">
             <h3 className="font-mono text-[10px] text-neutral-500 uppercase mb-2">安装命令</h3>
-            <code className="block p-3 bg-neutral-950 rounded text-sm text-cyan-400 font-mono break-all">
+            <code className="block p-3 bg-neutral-950 rounded text-sm text-cyan-400 font-mono break-all overflow-x-auto">
               {tool.install}
             </code>
           </div>
@@ -107,7 +107,7 @@ export default function ToolDetailPage({ params }: ToolDetailPageProps) {
           {/* GitHub 信息 */}
           <div className="p-4 bg-neutral-900 rounded-lg border border-neutral-800">
             <h3 className="font-mono text-[10px] text-neutral-500 uppercase mb-2">GitHub</h3>
-            <div className="flex items-center gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
               <a
                 href={tool.github.url}
                 target="_blank"
@@ -116,12 +116,14 @@ export default function ToolDetailPage({ params }: ToolDetailPageProps) {
               >
                 查看仓库 →
               </a>
-              <span className="font-mono text-xs text-neutral-500">
-                ⭐ {tool.github.stars}
-              </span>
-              <span className="font-mono text-xs text-neutral-500">
-                📦 {tool.github.last_release}
-              </span>
+              <div className="flex items-center gap-4">
+                <span className="font-mono text-xs text-neutral-500">
+                  ⭐ {tool.github.stars}
+                </span>
+                <span className="font-mono text-xs text-neutral-500">
+                  📦 {tool.github.last_release}
+                </span>
+              </div>
             </div>
           </div>
         </div>
