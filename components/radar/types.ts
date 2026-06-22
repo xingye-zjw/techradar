@@ -43,7 +43,7 @@ export interface DailyTask {
 }
 
 /** 技术方向 */
-export type TrackId = "cv" | "nlp" | "devops" | "math" | "project";
+export type TrackId = "cv" | "nlp" | "devops" | "math" | "project" | "cs" | "embedded" | "electronics" | "signals" | "control" | "electrical";
 
 export interface Track {
   id: TrackId;
@@ -54,6 +54,48 @@ export interface Track {
 }
 
 export const ROADMAP_TRACKS: Track[] = [
+  {
+    id: "cs",
+    name: "计算机基础",
+    color: "text-blue-500",
+    borderColor: "border-blue-500",
+    description: "算法、数据结构、操作系统、计算机网络等基础课程",
+  },
+  {
+    id: "embedded",
+    name: "嵌入式开发",
+    color: "text-green-500",
+    borderColor: "border-green-500",
+    description: "C语言、RTOS、驱动开发、裸机编程等嵌入式技术",
+  },
+  {
+    id: "electronics",
+    name: "电子电路",
+    color: "text-yellow-500",
+    borderColor: "border-yellow-500",
+    description: "电路基础、信号系统、DSP、FPGA 等电子技术",
+  },
+  {
+    id: "signals",
+    name: "通信信号",
+    color: "text-red-500",
+    borderColor: "border-red-500",
+    description: "通信原理、无线通信、网络协议等通信技术",
+  },
+  {
+    id: "control",
+    name: "自动化控制",
+    color: "text-purple-500",
+    borderColor: "border-purple-500",
+    description: "PID控制、现代控制理论、ROS、工业物联网等",
+  },
+  {
+    id: "electrical",
+    name: "电气工程",
+    color: "text-cyan-500",
+    borderColor: "border-cyan-500",
+    description: "电机控制、电力电子、PLC编程、电力系统等",
+  },
   {
     id: "cv",
     name: "计算机视觉",
