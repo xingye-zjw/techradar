@@ -61,6 +61,28 @@ templates/
 | `training` | 模型训练 |
 | `evaluation` | 模型评估 |
 | `math-foundations` | 数学基础 |
+| `cs` | 计算机基础 |
+| `embedded` | 嵌入式开发 |
+| `electronics` | 电子电路 |
+| `signals` | 通信信号 |
+| `control` | 自动化控制 |
+| `electrical` | 电气工程 |
+
+### 路线图 Track 列表 (Roadmap Track)
+
+| Slug | 说明 | 覆盖专业 |
+|------|------|----------|
+| `devops` | 工程部署 | 计算机技术 |
+| `math` | 数学基础 | 所有专业 |
+| `cs` | 计算机基础 | 计算机技术 |
+| `embedded` | 嵌入式开发 | 电子信息工程 |
+| `electronics` | 电子电路 | 电子信息工程 |
+| `signals` | 通信信号 | 通信工程 |
+| `control` | 自动化控制 | 自动化 |
+| `electrical` | 电气工程 | 电气工程 |
+| `cv` | 计算机视觉 | 计算机技术 |
+| `nlp` | 自然语言处理 | 计算机技术 |
+| `project` | 项目管理 | 所有专业 |
 
 ### 术语分类 (Glossary Category)
 

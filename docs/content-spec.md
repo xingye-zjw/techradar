@@ -38,6 +38,12 @@ TechRadar 是一个 AI 驱动的大学生硬核开源实战导航系统，包含
 | `deployment` | 模型部署 | ONNX、TensorRT 等 |
 | `training` | 模型训练 | 分布式训练、MLOps |
 | `evaluation` | 模型评估 | mAP、IoU、AUC 等评估指标 |
+| `cs` | 计算机基础 | 算法、数据结构、操作系统、计算机网络 |
+| `embedded` | 嵌入式开发 | C语言、RTOS、驱动开发、裸机编程 |
+| `electronics` | 电子电路 | 电路基础、信号系统、DSP、FPGA |
+| `signals` | 通信信号 | 通信原理、无线通信、网络协议 |
+| `control` | 自动化控制 | PID控制、现代控制理论、ROS、工业物联网 |
+| `electrical` | 电气工程 | 电机控制、电力电子、PLC编程 |
 | `uncategorized` | 未分类 | 未分类的其他主题 |
 
 ### 数据验证系统
@@ -96,6 +102,12 @@ npm run validate-content
 | `training` | 模型训练 |
 | `evaluation` | 模型评估 |
 | `math-foundations` | 数学基础 |
+| `cs` | 计算机基础 |
+| `embedded` | 嵌入式开发 |
+| `electronics` | 电子电路 |
+| `signals` | 通信信号 |
+| `control` | 自动化控制 |
+| `electrical` | 电气工程 |
 
 #### 正文章节规范
 

@@ -93,6 +93,36 @@ export const categoryMeta: Record<
     color: "bg-indigo-400/10 text-indigo-400 border-indigo-400/30",
     desc: "信息论、凸优化等数学理论基础",
   },
+  cs: {
+    label: "计算机基础",
+    color: "bg-blue-600/10 text-blue-500 border-blue-500/30",
+    desc: "算法、数据结构、操作系统、计算机网络等基础课程",
+  },
+  embedded: {
+    label: "嵌入式开发",
+    color: "bg-green-600/10 text-green-500 border-green-500/30",
+    desc: "C语言、RTOS、驱动开发、裸机编程等嵌入式技术",
+  },
+  electronics: {
+    label: "电子电路",
+    color: "bg-yellow-600/10 text-yellow-500 border-yellow-500/30",
+    desc: "电路基础、信号系统、DSP、FPGA 等电子技术",
+  },
+  signals: {
+    label: "通信信号",
+    color: "bg-red-600/10 text-red-500 border-red-500/30",
+    desc: "通信原理、无线通信、网络协议等通信技术",
+  },
+  control: {
+    label: "自动化控制",
+    color: "bg-purple-600/10 text-purple-500 border-purple-500/30",
+    desc: "PID控制、现代控制理论、ROS、工业物联网等",
+  },
+  electrical: {
+    label: "电气工程",
+    color: "bg-cyan-600/10 text-cyan-500 border-cyan-500/30",
+    desc: "电机控制、电力电子、PLC编程、电力系统等",
+  },
   uncategorized: {
     label: "其他",
     color: "bg-neutral-400/10 text-neutral-400 border-neutral-500/30",
