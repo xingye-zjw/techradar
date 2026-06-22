@@ -222,5 +222,113 @@
     ],
     "quickFix": "检查安全组规则 → 改端口 443 → 开启密钥登录 + fail2ban",
     "tags": ["SSH", "服务器", "网络安全"]
+  },
+  {
+    "title": "数据标注质量差导致模型无法收敛",
+    "category": "数据处理",
+    "symptoms": [
+      "Loss 不下降，但学习率、数据量、网络结构都正常",
+      "验证集 accuracy 在某几个类别之间来回震荡",
+      "模型对某些类别的预测始终偏向某一错误类别"
+    ],
+    "solution": [
+      "随机抽样 50-100 条数据，人工逐一检查标注是否正确",
+      "检查类别分布是否严重不均衡：某类样本过少导致模型倾向于多数类",
+      "检查标注一致性：同一张图不同标注者结果是否一致（inter-annotator agreement）",
+      "用混淆矩阵分析哪两个类别最容易混淆，针对性补充该类别的标注数据",
+      "对低质量标注数据用 active learning 优先重新标注"
+    ],
+    "quickFix": "可视化混淆矩阵 → 定位错误类别 → 补充该类别标注数据",
+    "tags": ["数据标注", "数据质量", "收敛"]
+  },
+  {
+    "title": "CUDA 隐式同步导致推理速度异常慢",
+    "category": "训练",
+    "symptoms": [
+      "torch profiler 显示 GPU Time << CPU Time，大量化 GPU 时间花在等待",
+      "逐行 profiler 发现某行代码的 .item() / .cpu() / .numpy() 阻塞了 GPU",
+      "单次推理明明很简单却耗时几十毫秒"
+    ],
+    "solution": [
+      ".item() / .cpu() / .numpy() 会在 GPU 和 CPU 之间触发隐式同步，等待所有 CUDA 操作完成",
+      "在循环中将 .item() 替换为 tensor.item() 后收集，最后统一转 CPU",
+      "使用 torch.cuda.synchronize() 显式等待（性能分析时用，不要在推理循环中加）",
+      "检查代码中是否有 tensor.cpu() 放在了推理循环内",
+      "对批量推理确保在 GPU 端完成所有计算后再统一取结果"
+    ],
+    "quickFix": "删除循环内的 .item() / .cpu() → 最后统一转 CPU",
+    "tags": ["CUDA", "推理加速", "性能优化"]
+  },
+  {
+    "title": "Docker 容器时间与宿主机不一致",
+    "category": "部署",
+    "symptoms": [
+      "日志时间戳比实际时间晚 8 小时（容器用了 UTC 而非 CST）",
+      "定时任务 cron 执行时间与预期不符",
+      "数据库记录的创建时间与实际文件修改时间差 8 小时"
+    ],
+    "solution": [
+      "Docker run 时加 -v /etc/localtime:/etc/localtime:ro 挂载宿主机时区",
+      "或 Docker run 加 -e TZ=Asia/Shanghai 设置容器环境变量",
+      "在 Dockerfile 中 RUN ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime",
+      "定时任务用 cron 时确保容器内时区正确：ENV TZ=Asia/Shanghai",
+      "日志框架（Python logging / loguru）确认使用了正确的时区配置"
+    ],
+    "quickFix": "docker run -e TZ=Asia/Shanghai 或 -v /etc/localtime:/etc/localtime:ro",
+    "tags": ["Docker", "时区", "日志"]
+  },
+  {
+    "title": "pandas inplace=True 链式赋值警告",
+    "category": "数据处理",
+    "symptoms": [
+      "SettingWithCopyWarning 或 FutureWarning: A value is trying to be set on a copy of a slice",
+      "链式赋值 df[df['a']>0]['b'] = 100 警告后值未正确设置",
+      "数据清洗后部分值没有按预期被修改"
+    ],
+    "solution": [
+      "永远不要用链式赋值：df[df['a']>0]['b'] = 100，改用 df.loc 或 df.iloc",
+      "正确写法：df.loc[df['a']>0, 'b'] = 100",
+      "避免 inplace=True（pandas 1.x 开始已标记为 deprecated），改为链式方法：df = df.dropna()",
+      "怀疑 DataFrame 是视图还是副本时，用 df._is_view 判断",
+      "chain 导致的 SettingWithCopyWarning：检查是否在对 slice 操作时触发了"
+    ],
+    "quickFix": "df.loc[mask, 'col'] = value 而非 df[mask]['col'] = value",
+    "tags": ["Pandas", "Python", "数据处理"]
+  },
+  {
+    "title": "训练用 GPU 卡与推理用卡架构不一致",
+    "category": "训练",
+    "symptoms": [
+      "在 A100 上训练成功，部署到 RTX 3090 上报 CUDA 架构不兼容错误",
+      "PyTorch 模型权重在两台机器之间迁移后出现 NaN",
+      "混合精度（AMP）在不同架构 GPU 上行为不一致"
+    ],
+    "solution": [
+      "NVIDIA GPU 架构分几代：Ampere(A100/3090) / Ada(4090) / Hopper(H100)，PTX/SM 兼容但性能不同",
+      "训练和推理尽量使用相同系列 GPU，或确保 CUDA Compute Capability 兼容",
+      "导出模型时设置 _torchscript_itrace 或保存完整计算图避免架构依赖",
+      "ONNX 导出后验证在不同 GPU 上推理输出一致",
+      "确认 PyTorch 版本一致：torch.__version__ + torch.version.cuda"
+    ],
+    "quickFix": "训练推理同架构 GPU，或导出 ONNX 跨架构验证",
+    "tags": ["GPU", "CUDA", "模型迁移"]
+  },
+  {
+    "title": "大模型 Prompt 转义字符错误导致 JSON 输出截断",
+    "category": "LLM",
+    "symptoms": [
+      "LLM 输出的 JSON 在中途被截断，后半部分丢失",
+      "JSON 解析报 Unexpected end of JSON input",
+      "只在特定 Prompt 内容时出现，换了 Prompt 就正常"
+    ],
+    "solution": [
+      "检查 Prompt 中是否有未转义的双引号、换行符、特殊字符",
+      "Python 中构建 Prompt 时用 json.dumps() 或手动对引号做 re.escape()",
+      "Prompt 中避免直接放 JSON 模板中的未转义双引号",
+      "使用 Function Calling / response_format 的 JSON mode 让模型保证输出格式",
+      "对长 Prompt 截断检查：print(repr(prompt)) 看是否有 \\n 或 \" 未正确转义"
+    ],
+    "quickFix": "json.dumps(prompt_content) 或使用 Function Calling 代替手动拼接",
+    "tags": ["LLM", "Prompt", "JSON", "字符串转义"]
   }
 ]
