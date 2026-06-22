@@ -80,6 +80,20 @@ export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailP
   const [taskProgress, setTaskProgress] = useState<Record<number, boolean>>({});
   const [visibleCount, setVisibleCount] = useState(5);
   const [expandedAnswers, setExpandedAnswers] = useState<Record<number, boolean>>({});
+  const [expandedTasks, setExpandedTasks] = useState<Set<number>>(new Set());
+
+  // 展开/折叠任务
+  const toggleExpand = (day: number) => {
+    setExpandedTasks(prev => {
+      const next = new Set(prev);
+      if (next.has(day)) {
+        next.delete(day);
+      } else {
+        next.add(day);
+      }
+      return next;
+    });
+  };
 
   // 获取所有术语（用于术语高亮）
   const allTerms = useMemo(() => getAllTerms(), []);
@@ -325,207 +339,232 @@ export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailP
               <h3 className="font-mono text-[10px] text-neutral-500 uppercase tracking-wider mb-3">
                 // 📅 每日学习计划（共 {node.dailyTasks.length} 天）
               </h3>
-              <div className="space-y-3">
-                {node.dailyTasks.slice(0, visibleCount).map((task) => (
-                  <div
-                    key={task.day}
-                    className={`rounded-lg border p-4 transition-all duration-300 hover-lift ${
-                      taskProgress[task.day]
-                        ? "border-green-500/30 bg-green-500/5"
-                        : "border-neutral-800 bg-neutral-950"
-                    }`}
-                  >
-                    {/* Day header */}
-                    <div className="flex items-start gap-3 mb-3">
-                      {/* Checkbox */}
-                      <button
-                        onClick={() => toggleTask(task.day)}
-                        className={`mt-0.5 flex-shrink-0 w-4 h-4 rounded border-2 flex items-center justify-center transition-all duration-200 ${
-                          taskProgress[task.day]
-                            ? "bg-green-500 border-green-500"
-                            : "border-neutral-600 hover:border-green-400"
-                        }`}
-                        aria-label={`标记第 ${task.day} 天为${taskProgress[task.day] ? "未完成" : "已完成"}`}
+              <div className="space-y-2">
+                {node.dailyTasks.slice(0, visibleCount).map((task) => {
+                  const isExpanded = expandedTasks.has(task.day);
+                  return (
+                    <div
+                      key={task.day}
+                      className={`rounded-lg border transition-all duration-300 ${
+                        taskProgress[task.day]
+                          ? "border-green-500/30 bg-green-500/5"
+                          : "border-neutral-800 bg-neutral-950"
+                      }`}
+                    >
+                      {/* 可点击的头部区域 */}
+                      <div
+                        className="flex items-center gap-3 p-3 cursor-pointer hover:bg-neutral-800/30 transition-colors"
+                        onClick={() => toggleExpand(task.day)}
                       >
-                        {taskProgress[task.day] && (
-                          <svg className="w-2.5 h-2.5 text-neutral-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={4}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                          </svg>
-                        )}
-                      </button>
+                        {/* Checkbox - 阻止事件冒泡 */}
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleTask(task.day);
+                          }}
+                          className={`flex-shrink-0 w-4 h-4 rounded border-2 flex items-center justify-center transition-all duration-200 ${
+                            taskProgress[task.day]
+                              ? "bg-green-500 border-green-500"
+                              : "border-neutral-600 hover:border-green-400"
+                          }`}
+                          aria-label={`标记第 ${task.day} 天为${taskProgress[task.day] ? "未完成" : "已完成"}`}
+                        >
+                          {taskProgress[task.day] && (
+                            <svg className="w-2.5 h-2.5 text-neutral-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={4}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                          )}
+                        </button>
 
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className={`font-mono text-[10px] w-6 h-6 rounded flex items-center justify-center font-bold flex-shrink-0 ${
-                            colorStyle.split(" ")[1]
-                          } ${taskProgress[task.day] ? "opacity-60 line-through" : ""}`}>
-                            D{String(task.day).padStart(2, "0")}
-                          </span>
+                        {/* 日期标签 */}
+                        <span className={`font-mono text-[10px] w-6 h-6 rounded flex items-center justify-center font-bold flex-shrink-0 ${
+                          colorStyle.split(" ")[1]
+                        } ${taskProgress[task.day] ? "opacity-60 line-through" : ""}`}>
+                          D{String(task.day).padStart(2, "0")}
+                        </span>
+
+                        {/* 标题和时长 */}
+                        <div className="flex-1 min-w-0">
                           <span className={`font-semibold text-sm ${taskProgress[task.day] ? "text-neutral-500 line-through" : "text-neutral-200"}`}>
                             {task.title || `第 ${task.day} 天学习任务`}
                           </span>
-                        </div>
-                        <div className="flex items-center gap-2 font-mono text-[10px] text-neutral-500">
-                          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                          </svg>
-                          <span>{task.duration || "2-3小时"}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Content items */}
-                    <div className="mb-3 ml-6 sm:ml-9">
-                      {task.content && typeof task.content === 'object' && !Array.isArray(task.content) && 'objective' in task.content ? (
-                        /* 新格式：结构化内容 */
-                        <div className="space-y-3">
-                          {/* 核心目标 */}
-                          <div>
-                            <h4 className="text-xs font-bold text-emerald-400 mb-1 uppercase tracking-wider">核心目标</h4>
-                            <p className={`text-xs text-neutral-400 leading-relaxed ${taskProgress[task.day] ? "line-through opacity-50" : ""}`}>
-                              {renderTextWithTerms(task.content.objective, allTerms, node.id)}
-                            </p>
+                          <div className="flex items-center gap-2 font-mono text-[10px] text-neutral-500 mt-0.5">
+                            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span>{task.duration || "2-3小时"}</span>
                           </div>
+                        </div>
 
-                          {/* 核心 API */}
-                          {task.content.api_checklist && task.content.api_checklist.length > 0 && (
-                            <div>
-                              <h4 className="text-xs font-bold text-emerald-400 mb-1 uppercase tracking-wider">核心 API</h4>
-                              <ul className="space-y-1">
-                                {task.content.api_checklist.map((api, idx) => (
-                                  <li key={idx} className={`flex items-start gap-2 text-xs text-neutral-400 ${taskProgress[task.day] ? "line-through opacity-50" : ""}`}>
+                        {/* 展开/折叠箭头 */}
+                        <svg
+                          className={`w-4 h-4 text-neutral-500 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`}
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </div>
+
+                      {/* 可折叠的内容区域 */}
+                      {isExpanded && (
+                        <div className="px-3 pb-3 border-t border-neutral-800/50">
+                          {/* Content items */}
+                          <div className="mt-3 ml-6 sm:ml-9">
+                            {task.content && typeof task.content === 'object' && !Array.isArray(task.content) && 'objective' in task.content ? (
+                              /* 新格式：结构化内容 */
+                              <div className="space-y-3">
+                                {/* 核心目标 */}
+                                <div>
+                                  <h4 className="text-xs font-bold text-emerald-400 mb-1 uppercase tracking-wider">核心目标</h4>
+                                  <p className={`text-xs text-neutral-400 leading-relaxed ${taskProgress[task.day] ? "line-through opacity-50" : ""}`}>
+                                    {renderTextWithTerms(task.content.objective, allTerms, node.id)}
+                                  </p>
+                                </div>
+
+                                {/* 核心 API */}
+                                {task.content.api_checklist && task.content.api_checklist.length > 0 && (
+                                  <div>
+                                    <h4 className="text-xs font-bold text-emerald-400 mb-1 uppercase tracking-wider">核心 API</h4>
+                                    <ul className="space-y-1">
+                                      {task.content.api_checklist.map((api, idx) => (
+                                        <li key={idx} className={`flex items-start gap-2 text-xs text-neutral-400 ${taskProgress[task.day] ? "line-through opacity-50" : ""}`}>
+                                          <span className="text-neutral-600 font-mono mt-0.5 flex-shrink-0">·</span>
+                                          <span>{renderApiItem(api)}</span>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                )}
+
+                                {/* 场景实操 */}
+                                {task.content.practice && (
+                                  <div className={`relative border-l-4 border-emerald-500 bg-gradient-to-r from-emerald-500/10 to-transparent pl-4 pr-3 py-3 rounded-r-lg ${taskProgress[task.day] ? "opacity-50" : ""}`}>
+                                    <div className="flex items-center gap-2 mb-2">
+                                      <span className="text-base">🎯</span>
+                                      <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider">场景实操</span>
+                                    </div>
+                                    <p className="text-sm text-zinc-200 leading-relaxed">{renderTextWithTerms(task.content.practice, allTerms, node.id)}</p>
+
+                                    {/* 查看答案折叠面板 */}
+                                    {task.content.answer && (
+                                      <div className="mt-3 pt-3 border-t border-emerald-500/20">
+                                        <button
+                                          onClick={() => setExpandedAnswers(prev => ({ ...prev, [task.day]: !prev[task.day] }))}
+                                          className="flex items-center gap-2 text-xs text-emerald-400 hover:text-emerald-300 transition-colors"
+                                        >
+                                          <span>{expandedAnswers[task.day] ? "🔽" : "▶️"}</span>
+                                          <span className="font-medium">{expandedAnswers[task.day] ? "收起答案" : "查看参考答案"}</span>
+                                        </button>
+                                        {expandedAnswers[task.day] && (
+                                          <div className="mt-2 p-3 bg-zinc-900/80 rounded-lg border border-zinc-700/50">
+                                            <pre className="text-xs text-zinc-300 whitespace-pre-wrap font-mono leading-relaxed">
+                                              {task.content.answer}
+                                            </pre>
+                                          </div>
+                                        )}
+                                      </div>
+                                    )}
+                                  </div>
+                                )}
+                              </div>
+                            ) : typeof task.content === 'string' ? (
+                              /* 旧格式：字符串 */
+                              <p className={`text-xs text-neutral-400 leading-relaxed ${taskProgress[task.day] ? "line-through opacity-50" : ""}`}>
+                                {renderTextWithTerms(task.content, allTerms, node.id)}
+                              </p>
+                            ) : Array.isArray(task.content) ? (
+                              /* 旧格式：数组 */
+                              <ul className="space-y-1.5">
+                                {(task.content || []).map((item, idx) => (
+                                  <li key={idx} className="flex items-start gap-2 text-xs text-neutral-400">
                                     <span className="text-neutral-600 font-mono mt-0.5 flex-shrink-0">·</span>
-                                    <span>{renderApiItem(api)}</span>
+                                    <span className={taskProgress[task.day] ? "line-through opacity-50" : ""}>
+                                      {renderTextWithTerms(item || "学习内容更新中...", allTerms, node.id)}
+                                    </span>
                                   </li>
                                 ))}
                               </ul>
-                            </div>
-                          )}
+                            ) : null}
+                          </div>
 
-                          {/* 场景实操 */}
-                          {task.content.practice && (
-                            <div className={`relative border-l-4 border-emerald-500 bg-gradient-to-r from-emerald-500/10 to-transparent pl-4 pr-3 py-3 rounded-r-lg ${taskProgress[task.day] ? "opacity-50" : ""}`}>
-                              <div className="flex items-center gap-2 mb-2">
-                                <span className="text-base">🎯</span>
-                                <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider">场景实操</span>
-                              </div>
-                              <p className="text-sm text-zinc-200 leading-relaxed">{renderTextWithTerms(task.content.practice, allTerms, node.id)}</p>
-
-                              {/* 查看答案折叠面板 */}
-                              {task.content.answer && (
-                                <div className="mt-3 pt-3 border-t border-emerald-500/20">
-                                  <button
-                                    onClick={() => setExpandedAnswers(prev => ({ ...prev, [task.day]: !prev[task.day] }))}
-                                    className="flex items-center gap-2 text-xs text-emerald-400 hover:text-emerald-300 transition-colors"
-                                  >
-                                    <span>{expandedAnswers[task.day] ? "🔽" : "▶️"}</span>
-                                    <span className="font-medium">{expandedAnswers[task.day] ? "收起答案" : "查看参考答案"}</span>
-                                  </button>
-                                  {expandedAnswers[task.day] && (
-                                    <div className="mt-2 p-3 bg-zinc-900/80 rounded-lg border border-zinc-700/50">
-                                      <pre className="text-xs text-zinc-300 whitespace-pre-wrap font-mono leading-relaxed">
-                                        {task.content.answer}
-                                      </pre>
+                          {/* Resources: Required */}
+                          {requiredResources(task).length > 0 && (
+                            <div className="mt-3 ml-6 sm:ml-9">
+                              <div className="font-mono text-[9px] text-green-500/70 uppercase mb-1.5 tracking-wider">必学资源</div>
+                              <div className="flex flex-col gap-1">
+                                {requiredResources(task).map((r, idx) => {
+                                  const mirror = getMirrorHint(r.url);
+                                  return (
+                                    <div key={idx}>
+                                      <a
+                                        href={r.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-center gap-2 text-xs text-green-400 hover:text-green-300 hover:underline decoration-green-400/50 underline-offset-2"
+                                      >
+                                        <svg className="w-3 h-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                        </svg>
+                                        <span>{r.title}</span>
+                                      </a>
+                                      {mirror.needsMirror && (
+                                        <div className="ml-5 mt-0.5 text-[10px] text-amber-400/70">
+                                          💡 {mirror.hint}
+                                        </div>
+                                      )}
                                     </div>
-                                  )}
-                                </div>
-                              )}
+                                  );
+                                })}
+                              </div>
                             </div>
                           )}
-                        </div>
-                      ) : typeof task.content === 'string' ? (
-                        /* 旧格式：字符串 */
-                        <p className={`text-xs text-neutral-400 leading-relaxed ${taskProgress[task.day] ? "line-through opacity-50" : ""}`}>
-                          {renderTextWithTerms(task.content, allTerms, node.id)}
-                        </p>
-                      ) : Array.isArray(task.content) ? (
-                        /* 旧格式：数组 */
-                        <ul className="space-y-1.5">
-                          {(task.content || []).map((item, idx) => (
-                            <li key={idx} className="flex items-start gap-2 text-xs text-neutral-400">
-                              <span className="text-neutral-600 font-mono mt-0.5 flex-shrink-0">·</span>
-                              <span className={taskProgress[task.day] ? "line-through opacity-50" : ""}>
-                                {renderTextWithTerms(item || "学习内容更新中...", allTerms, node.id)}
-                              </span>
-                            </li>
-                          ))}
-                        </ul>
-                      ) : null}
-                    </div>
 
-                    {/* Resources: Required */}
-                    {requiredResources(task).length > 0 && (
-                      <div className="mb-3 ml-9">
-                        <div className="font-mono text-[9px] text-green-500/70 uppercase mb-1.5 tracking-wider">必学资源</div>
-                        <div className="flex flex-col gap-1">
-                          {requiredResources(task).map((r, idx) => {
-                            const mirror = getMirrorHint(r.url);
-                            return (
-                              <div key={idx}>
-                                <a
-                                  href={r.url}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="flex items-center gap-2 text-xs text-green-400 hover:text-green-300 hover:underline decoration-green-400/50 underline-offset-2"
-                                >
-                                  <svg className="w-3 h-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                  </svg>
-                                  <span>{r.title}</span>
-                                </a>
-                                {mirror.needsMirror && (
-                                  <div className="ml-5 mt-0.5 text-[10px] text-amber-400/70">
-                                    💡 {mirror.hint}
-                                  </div>
-                                )}
+                          {/* Resources: Optional */}
+                          {optionalResources(task).length > 0 && (
+                            <div className="mt-3 ml-6 sm:ml-9">
+                              <div className="font-mono text-[9px] text-neutral-500 uppercase mb-1.5 tracking-wider">可选资源</div>
+                              <div className="flex flex-col gap-1">
+                                {optionalResources(task).map((r, idx) => {
+                                  const mirror = getMirrorHint(r.url);
+                                  return (
+                                    <div key={idx}>
+                                      <a
+                                        href={r.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-center gap-2 text-xs text-neutral-500 hover:text-neutral-400 hover:underline decoration-neutral-600/50 underline-offset-2"
+                                      >
+                                        <svg className="w-3 h-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                                        </svg>
+                                        <span>{r.title}</span>
+                                      </a>
+                                      {mirror.needsMirror && (
+                                        <div className="ml-5 mt-0.5 text-[10px] text-amber-400/70">
+                                          💡 {mirror.hint}
+                                        </div>
+                                      )}
+                                    </div>
+                                  );
+                                })}
                               </div>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    )}
+                            </div>
+                          )}
 
-                    {/* Resources: Optional */}
-                    {optionalResources(task).length > 0 && (
-                      <div className="mb-3 ml-9">
-                        <div className="font-mono text-[9px] text-neutral-500 uppercase mb-1.5 tracking-wider">可选资源</div>
-                        <div className="flex flex-col gap-1">
-                          {optionalResources(task).map((r, idx) => {
-                            const mirror = getMirrorHint(r.url);
-                            return (
-                              <div key={idx}>
-                                <a
-                                  href={r.url}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="flex items-center gap-2 text-xs text-neutral-500 hover:text-neutral-400 hover:underline decoration-neutral-600/50 underline-offset-2"
-                                >
-                                  <svg className="w-3 h-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-                                  </svg>
-                                  <span>{r.title}</span>
-                                </a>
-                                {mirror.needsMirror && (
-                                  <div className="ml-5 mt-0.5 text-[10px] text-amber-400/70">
-                                    💡 {mirror.hint}
-                                  </div>
-                                )}
-                              </div>
-                            );
-                          })}
+                          {/* Checkpoint */}
+                          <div className={`mt-3 pt-2 border-t ml-6 sm:ml-9 ${taskProgress[task.day] ? "border-green-500/20" : "border-neutral-800/50"}`}>
+                            <div className="font-mono text-[9px] text-neutral-600 uppercase mb-1">✓ 完成标准</div>
+                            <p className={`text-[11px] ${taskProgress[task.day] ? "text-neutral-500 line-through" : "text-neutral-300"}`}>
+                              {renderTextWithTerms(task.checkpoint || "独立完成当日内容的学习与练习", allTerms, node.id)}
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                    )}
-
-                    {/* Checkpoint */}
-                    <div className={`pt-2 border-t ml-9 ${taskProgress[task.day] ? "border-green-500/20" : "border-neutral-800/50"}`}>
-                      <div className="font-mono text-[9px] text-neutral-600 uppercase mb-1">✓ 完成标准</div>
-                      <p className={`text-[11px] ${taskProgress[task.day] ? "text-neutral-500 line-through" : "text-neutral-300"}`}>
-                        {renderTextWithTerms(task.checkpoint || "独立完成当日内容的学习与练习", allTerms, node.id)}
-                      </p>
+                      )}
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
               {/* 加载更多 */}
