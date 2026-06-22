@@ -162,7 +162,7 @@ export function PitfallListClient({ pitfalls }: PitfallListClientProps) {
                   onClick={() => setActiveCategory(key)}
                   className={`text-left p-3 rounded-lg border transition-all ${
                     activeCategory === key
-                      ? `bg-neutral-900 ${meta.borderColor} border-current ${meta.color}`
+                      ? `bg-neutral-900 border ${meta.borderColor} ${meta.color}`
                       : "bg-neutral-900/50 border-neutral-800 hover:border-neutral-600"
                   }`}
                 >
