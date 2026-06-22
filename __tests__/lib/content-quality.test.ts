@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
+import matter from 'gray-matter';
 
 // 直接读取 JSON 数据，避免 server-only 模块问题
 function readIntelFiles(): { name: string; content: string; frontmatter: Record<string, any> }[] {
@@ -10,19 +11,8 @@ function readIntelFiles(): { name: string; content: string; frontmatter: Record<
   const files = fs.readdirSync(intelDir).filter(f => f.endsWith('.md'));
   return files.map(name => {
     const raw = fs.readFileSync(path.join(intelDir, name), 'utf8');
-    // 简单提取 frontmatter
-    const fmMatch = raw.match(/^---\n([\s\S]*?)\n---/);
-    const frontmatter: Record<string, any> = {};
-    if (fmMatch) {
-      fmMatch[1].split('\n').forEach(line => {
-        const [key, ...rest] = line.split(':');
-        if (key && rest.length) {
-          frontmatter[key.trim()] = rest.join(':').trim().replace(/^["']|["']$/g, '');
-        }
-      });
-    }
-    const content = fmMatch ? raw.slice(fmMatch[0].length).trim() : raw;
-    return { name, content, frontmatter };
+    const { data: frontmatter, content } = matter(raw);
+    return { name, content: content.trim(), frontmatter };
   });
 }
 
@@ -145,7 +135,11 @@ describe('工具内容质量', () => {
     official_url: string;
   }
 
-  const tools = readJsonFile<ToolEntry>('content/toolbox/tools.json');
+  const toolsFilePath = path.join(process.cwd(), 'content', 'toolbox', 'tools.json');
+  const toolsRaw = fs.existsSync(toolsFilePath)
+    ? JSON.parse(fs.readFileSync(toolsFilePath, 'utf8'))
+    : { tools: [] };
+  const tools: ToolEntry[] = Array.isArray(toolsRaw) ? toolsRaw : (toolsRaw.tools ?? []);
 
   it('应有足够的工具数量', () => {
     expect(tools.length).toBeGreaterThanOrEqual(15);
