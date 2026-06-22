@@ -5,7 +5,7 @@ keywords:
   - rag
   - retrieval
   - reranker
-  -hyde
+  - hyde
   - contextual chunking
   - knowledge graph rag
 difficulty: intermediate

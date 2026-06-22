@@ -19,6 +19,7 @@ import type { RoadmapNode as RoadmapNodeType, NodeStatus, TrackId } from "./type
 import { ROADMAP_TRACKS } from "./types";
 import { FULL_ROADMAP } from "@/lib/roadmap-data";
 import { getNodeProgressPercent } from "@/lib/progress";
+import { autoLayout, getTrackBounds, TRACK_ORDER } from "@/lib/layout";
 
 const STORAGE_KEY = "techradar-roadmap-progress";
 
@@ -52,6 +53,33 @@ function generateEdges(nodes: RoadmapNodeType[]): Edge[] {
 
 const nodeTypes = { roadmap: RoadmapNode };
 
+// 泳道背景颜色（每个 track 的半透明背景）
+const TRACK_SWIMLANE_COLORS: Record<TrackId, string> = {
+  devops: "rgba(56, 189, 248, 0.06)",    // sky-400
+  math: "rgba(52, 211, 153, 0.06)",      // emerald-400
+  cv: "rgba(251, 146, 60, 0.06)",        // orange-400
+  nlp: "rgba(167, 139, 250, 0.06)",      // violet-400
+  project: "rgba(244, 114, 182, 0.06)",  // pink-400
+};
+
+// 泳道边框颜色
+const TRACK_SWIMLANE_BORDERS: Record<TrackId, string> = {
+  devops: "rgba(56, 189, 248, 0.15)",
+  math: "rgba(52, 211, 153, 0.15)",
+  cv: "rgba(251, 146, 60, 0.15)",
+  nlp: "rgba(167, 139, 250, 0.15)",
+  project: "rgba(244, 114, 182, 0.15)",
+};
+
+// Track 名称映射
+const TRACK_NAMES: Record<TrackId, string> = {
+  devops: "DevOps",
+  math: "数学",
+  cv: "CV",
+  nlp: "NLP",
+  project: "项目",
+};
+
 interface RoadmapGraphProps {
   initialNodes?: RoadmapNodeType[];
 }
@@ -81,6 +109,9 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
     }, []
   );
 
+  // 使用 dagre 自动布局计算节点位置
+  const autoLayoutPositions = autoLayout(initialNodes);
+
   useEffect(() => {
     const saved = loadProgress();
     const completed = new Set(Object.keys(saved).filter((id) => saved[id] === "completed"));
@@ -89,7 +120,7 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
     const initialized = initialNodes.map((node) => ({
       id: node.id,
       type: "roadmap" as const,
-      position: node.position || { x: 0, y: 0 },
+      position: autoLayoutPositions.get(node.id) || { x: 0, y: 0 },
       data: {
         name: node.name,
         duration: node.duration,
@@ -106,7 +137,7 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
 
     setNodes(initialized);
     setEdges(generateEdges(initialNodes));
-  }, [initialNodes, loadProgress, calculateNodeStatus, setNodes, setEdges]);
+  }, [initialNodes, loadProgress, calculateNodeStatus, setNodes, setEdges, autoLayoutPositions]);
 
   const saveProgress = useCallback((completed: Set<string>) => {
     const progress: Record<string, NodeStatus> = {};
@@ -166,6 +197,9 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
   const visibleNodeIds = new Set(visibleNodes.map((n) => n.id));
   const visibleEdges = edges.filter((e) => visibleNodeIds.has(e.source) && visibleNodeIds.has(e.target));
 
+  // 计算每个 track 的边界框（用于泳道背景）
+  const trackBounds = activeTrack === "all" ? getTrackBounds(initialNodes, autoLayoutPositions) : null;
+
   return (
     <div className="relative">
       {/* Track 切换标签栏 */}
@@ -205,7 +239,7 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
       )}
 
       {/* DAG 图 */}
-      <div className="h-[700px] w-full rounded-lg border border-neutral-700 overflow-hidden bg-neutral-950">
+      <div className="h-[600px] w-full rounded-lg border border-neutral-700 overflow-hidden bg-neutral-950">
         <ReactFlow
           nodes={visibleNodes}
           edges={visibleEdges}
@@ -219,14 +253,46 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
           }}
           nodeTypes={nodeTypes}
           fitView
-          fitViewOptions={{ padding: 0.2 }}
-          minZoom={0.3}
-          maxZoom={1.2}
+          fitViewOptions={{ padding: 0.15 }}
+          minZoom={0.2}
+          maxZoom={1.5}
           onConnect={(conn) => {
             // Handle edge creation if needed
           }}
         >
           <Background color="#1a1a1a" gap={20} />
+
+          {/* 泳道背景 - 仅在"全部 Track"模式下显示 */}
+          {activeTrack === "all" && trackBounds && TRACK_ORDER.map((track) => {
+            const bounds = trackBounds.get(track);
+            if (!bounds) return null;
+            return (
+              <div
+                key={track}
+                className="absolute rounded-xl border pointer-events-none"
+                style={{
+                  left: bounds.x,
+                  top: bounds.y,
+                  width: bounds.width,
+                  height: bounds.height,
+                  backgroundColor: TRACK_SWIMLANE_COLORS[track],
+                  borderColor: TRACK_SWIMLANE_BORDERS[track],
+                }}
+              >
+                {/* Track 标签 */}
+                <div
+                  className="absolute -top-3 left-4 px-2 py-0.5 rounded text-[10px] font-mono font-bold"
+                  style={{
+                    backgroundColor: TRACK_SWIMLANE_BORDERS[track],
+                    color: TRACK_SWIMLANE_BORDERS[track].replace('0.15', '0.8'),
+                  }}
+                >
+                  {TRACK_NAMES[track]}
+                </div>
+              </div>
+            );
+          })}
+
           <Controls className="!bg-neutral-900 !border-neutral-700 !rounded-lg" />
         </ReactFlow>
       </div>
