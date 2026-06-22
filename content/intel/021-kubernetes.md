@@ -146,6 +146,32 @@ helm install inference ./my-inference \
 helm upgrade inference ./my-inference --set image.tag=v2.2
 ```
 
+## 常见误区
+
+### 误区 1：把 Pod 当成容器直接使用
+
+**错误理解**：很多人刚开始学习 K8s 时，认为一个 Pod 就是一个容器，直接在 Pod 里运行多个不相关的应用。
+
+**正确理解**：Pod 是 K8s 的调度单位，一个 Pod 可以包含多个紧密协作的容器，但通常建议一个 Pod 只运行一个主容器。如果有多个应用需要通信，应该用多个独立的 Pod + Service 来管理，而不是把它们塞进同一个 Pod。
+
+**如何避免**：遵循"一个 Pod 一个应用"原则。只有当容器之间需要共享网络、存储或紧密协作（如 sidecar 模式）时，才考虑在同一个 Pod 中运行多个容器。
+
+### 误区 2：忽略资源限制导致资源争抢
+
+**错误理解**：部署 Pod 时不设置 resources.limits，认为 K8s 会自动管理资源，或者设置的限制过于宽松。
+
+**正确理解**：没有资源限制的 Pod 可能会消耗节点的所有 CPU 和内存，导致其他 Pod 被驱逐或 OOM。K8s 的调度器依赖 resources.requests 来决定 Pod 放在哪个节点，依赖 resources.limits 来限制实际使用量。
+
+**如何避免**：始终为每个容器设置 resources.requests（调度依据）和 resources.limits（资源上限）。对于 GPU 任务，必须设置 nvidia.com/gpu 的 limits，否则一个 Pod 可能占用所有 GPU 显存。
+
+### 误区 3：过度使用 ConfigMap 存储敏感信息
+
+**错误理解**：把数据库密码、API Key 等敏感信息直接写入 ConfigMap，认为 ConfigMap 是安全的存储方式。
+
+**正确理解**：ConfigMap 本质上是明文存储，任何有权限访问 K8s API 的人都能读取其中的内容。Secret 虽然也只是 Base64 编码，但提供了更好的隔离性，且可以配合外部密钥管理工具（如 Vault）使用。
+
+**如何避免**：敏感信息必须使用 Secret，而非 ConfigMap。在生产环境中，建议使用 External Secrets Operator 或 Sealed Secrets 等方案，将密钥存储在外部安全服务中。
+
 ## 相关资源
 
 - [K8s 官方教程](https://kubernetes.io/zh-cn/docs/tutorials/)

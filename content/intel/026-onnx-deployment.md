@@ -142,6 +142,32 @@ max_diff = np.abs(pt_output.numpy() - output[0]).max()
 print(f"Max diff: {max_diff:.6f}")  # 应 < 1e-3
 ```
 
+## 常见误区
+
+### 误区 1：导出 ONNX 时不考虑动态 shape
+
+**错误理解**：导出 ONNX 模型时只用固定 shape 的 dummy_input，认为部署时也能用相同 shape。
+
+**正确理解**：如果导出时不声明 dynamic_axes，ONNX 模型会被固定为特定的输入 shape（如 batch_size=1）。部署时如果需要动态 batch 或序列长度，就必须重新导出，导致反复修改代码和重新测试。
+
+**如何避免**：导出前就明确部署场景的 shape 需求。对于 NLP 模型，batch_size 和 seq_len 通常是动态的；对于 CV 模型，通常只需要动态 batch_size。使用 dynamic_axes 参数声明所有可变维度。
+
+### 误区 2：忽略模型简化步骤
+
+**错误理解**：直接把导出的 ONNX 模型用于推理，认为 PyTorch 导出的模型已经是最优的。
+
+**正确理解**：PyTorch 导出的 ONNX 模型通常包含冗余算子和不必要的计算。onnxsim 可以做常量折叠、冗余算子消除、Shape 推断优化，显著减少模型大小和推理延迟。跳过这一步可能浪费 20-30% 的推理性能。
+
+**如何避免**：导出后始终运行 onnxsim.simplify() 进行简化。对于复杂模型，可能需要调整 onnxsim 的参数（如 dynamic_input_shape）来处理动态 shape 情况。
+
+### 误区 3：不做精度验证就部署
+
+**错误理解**：ONNX 导出后直接部署到生产环境，假设输出和 PyTorch 完全一致。
+
+**正确理解**：ONNX 导出过程中可能引入精度误差（如 BatchNorm 的 running stats 问题、自定义算子不支持等）。如果不做精度验证，可能部署了一个输出完全错误的模型，导致线上事故。
+
+**如何避免**：导出后必须对比 PyTorch 和 ONNX 的输出差异。使用相同的输入数据，计算最大误差和平均误差。通常最大误差应小于 1e-3，如果超过这个阈值，需要检查模型是否有不支持的算子或模式。同时验证模型在不同输入 shape 下的输出一致性。
+
 ## 相关资源
 
 - [ONNX 官方文档](https://onnxruntime.ai/docs/)
