@@ -14,6 +14,7 @@ import { toast } from "@/components/Toast";
 interface NodeDetailPanelProps {
   node: RoadmapNodeType | null;
   onClose: () => void;
+  onToggleComplete?: (nodeId: string) => void;
 }
 
 const STORAGE_KEY = "techradar-task-progress";
@@ -75,7 +76,7 @@ function renderTextWithTerms(text: string, terms: GlossaryTerm[], nodeId?: strin
   });
 }
 
-export function NodeDetailPanel({ node, onClose }: NodeDetailPanelProps) {
+export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailPanelProps) {
   const [taskProgress, setTaskProgress] = useState<Record<number, boolean>>({});
   const [visibleCount, setVisibleCount] = useState(5);
   const [expandedAnswers, setExpandedAnswers] = useState<Record<number, boolean>>({});
@@ -186,6 +187,34 @@ export function NodeDetailPanel({ node, onClose }: NodeDetailPanelProps) {
                 />
               </div>
             </div>
+          )}
+
+          {/* 标记完成按钮 */}
+          {onToggleComplete && (
+            <button
+              onClick={() => onToggleComplete(node.id)}
+              className={`w-full mt-3 py-2.5 px-4 rounded-lg font-medium text-sm transition-all duration-200 ${
+                node.status === "completed"
+                  ? "bg-neutral-800 text-neutral-400 border border-neutral-700 hover:bg-neutral-700 hover:text-neutral-300"
+                  : "bg-green-500/20 text-green-400 border border-green-500/50 hover:bg-green-500/30 hover:border-green-500/70"
+              }`}
+            >
+              {node.status === "completed" ? (
+                <span className="flex items-center justify-center gap-2">
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  已完成 - 点击取消
+                </span>
+              ) : (
+                <span className="flex items-center justify-center gap-2">
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  标记为已完成
+                </span>
+              )}
+            </button>
           )}
         </div>
 

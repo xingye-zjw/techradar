@@ -207,6 +207,15 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
     [activeTrack, initialNodes, autoLayoutPositions]
   );
 
+  // 获取 selectedNode 的最新状态（从 nodes 状态中获取，确保状态同步）
+  const selectedNodeWithStatus = useMemo(() => {
+    if (!selectedNode) return null;
+    const nodeData = nodes.find((n) => n.id === selectedNode.id);
+    if (!nodeData) return selectedNode;
+    // 返回带有最新 status 的节点数据
+    return { ...selectedNode, status: nodeData.data.status };
+  }, [selectedNode, nodes]);
+
   return (
     <div className="relative">
       {/* Track 切换标签栏 */}
@@ -238,10 +247,11 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
       </div>
 
       {/* 节点点击提示 */}
-      {selectedNode && (
+      {selectedNodeWithStatus && (
         <NodeDetailPanel
-          node={selectedNode}
+          node={selectedNodeWithStatus}
           onClose={() => setSelectedNode(null)}
+          onToggleComplete={onNodeToggleComplete}
         />
       )}
 
