@@ -171,6 +171,32 @@ ncu --set full ./my_program
 # - Memory Warp Stall（访存停顿）
 ```
 
+## 常见误区
+
+### 误区 1：线程数越多，性能越好
+
+**错误理解**：很多人认为在 CUDA Kernel 中启动尽可能多的线程（如 1024 个线程/block）就能获得最佳性能。
+
+**正确理解**：GPU 的性能取决于资源的有效利用，而不是线程数量。过多的线程会导致 register spilling（寄存器溢出到显存）和 occupancy 降低。实际上，很多优化良好的 Kernel 只使用 128-256 个线程/block，但通过更好的内存访问模式获得更高性能。
+
+**如何避免**：使用 Nsight Compute 分析 Kernel 的 occupancy 和资源使用情况。关注 memory coalescing 而不是线程数量。对于计算密集型任务，确保计算和内存访问平衡；对于内存密集型任务，优先优化内存访问模式。
+
+### 误区 2：Shared Memory 总是比 Global Memory 快
+
+**错误理解**：很多人认为只要把数据加载到 Shared Memory，性能就一定会提升。
+
+**正确理解**：Shared Memory 的优势在于 block 内线程的低延迟访问，但它有容量限制（通常 48KB/block），而且需要显式的数据加载和同步（`__syncthreads()`）。如果数据只被访问一次，加载到 Shared Memory 反而会增加开销。此外，Shared Memory 的 bank conflict 也会降低性能。
+
+**如何避免**：只在数据被同一 block 内线程多次访问时才使用 Shared Memory（如矩阵乘法中的分块计算）。监控 Shared Memory 的使用量，避免超过硬件限制。注意避免 bank conflict（连续线程访问不同 bank 的数据）。
+
+### 误区 3：CUDA Kernel 写好就不用管了
+
+**错误理解**：很多人认为只要 Kernel 能正确运行，就不需要进一步优化。
+
+**正确理解**：CUDA Kernel 的性能优化是一个持续过程。硬件架构差异（如 A100 vs V100）、编译器优化、数据规模变化都会影响性能。此外，随着算法演进，可能需要重新设计 Kernel 以适应新的计算模式（如 FlashAttention 的分块计算）。
+
+**如何避免**：建立性能基准，定期使用 Nsight 进行 profiling。关注关键指标：DRAM 利用率、SM 利用率、warp 效率。对于关键路径的 Kernel，考虑多种优化策略（如 vectorized access、loop unrolling、warp-level primitives）并对比效果。
+
 ## 相关资源
 
 - [CUDA C++ Programming Guide](https://docs.nvidia.com/cuda/cuda-c-programming-guide/)
