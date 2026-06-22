@@ -20,6 +20,12 @@
       "启用编译器边界检查选项：-fsanitize=address（调试时）"
     ],
     "quickFix": "Valgrind检测 + 安全字符串函数 + 释放后置NULL",
+    "prevention": [
+      "养成使用 -fsanitize=address 编译调试版本的习惯，尽早发现越界问题",
+      "优先使用 strn 系列函数（strncpy、strncat）替代不安全的字符串操作",
+      "编写代码时始终进行指针有效性检查，使用前验证地址是否在合法范围内",
+      "嵌入式开发中启用 MPU 保护，限制每个任务的内存访问区域"
+    ],
     "tags": ["C语言", "指针", "内存安全", "嵌入式"]
   },
   {
@@ -43,6 +49,12 @@
       "使用静态分析工具（如PC-lint）检查栈深度"
     ],
     "quickFix": "增大栈大小 + 监控高水位标记 + 避免大局部变量",
+    "prevention": [
+      "在任务创建时预留足够栈空间，建议至少 2KB 起步，复杂任务预留 4KB",
+      "定期调用 uxTaskGetStackHighWaterMark() 监控栈使用峰值，保持 20% 余量",
+      "避免在任务函数中定义大局部数组，改用静态分配或动态 malloc",
+      "启用 configCHECK_FOR_STACK_OVERFLOW = 2，运行时自动检测栈溢出"
+    ],
     "tags": ["FreeRTOS", "栈溢出", "嵌入式", "HardFault"]
   },
   {
@@ -66,6 +78,12 @@
       "考虑使用自整定PID或模糊PID适应非线性系统"
     ],
     "quickFix": "Z-N法整定 + 积分抗饱和 + 微分先行",
+    "prevention": [
+      "整定参数前先记录系统特性（响应时间、超调量、稳态误差要求）",
+      "采用先 P 后 I 再 D 的顺序逐步添加，每步确认系统稳定后再进行",
+      "对设定值突变场景，务必使用微分先行或设定值滤波，避免冲击",
+      "实现积分抗饱和逻辑，当执行器输出饱和时停止积分累积"
+    ],
     "tags": ["PID", "控制", "振荡", "参数整定"]
   },
   {
@@ -88,6 +106,12 @@
       "频谱平均：多次测量取平均降低噪声影响"
     ],
     "quickFix": "加汉宁窗 + 增加采样点数 + 确保整数周期",
+    "prevention": [
+      "分析前先估算信号频率范围，确保采样长度包含多个完整周期",
+      "默认使用汉宁窗（Hanning），需要精确幅度时改用平顶窗",
+      "增加采样点数至 1024 或 2048，提高频率分辨率",
+      "对周期信号采用整周期采样，从源头避免频谱泄漏"
+    ],
     "tags": ["FFT", "频谱分析", "信号处理", "窗函数"]
   },
   {
@@ -111,6 +135,12 @@
       "用示波器观察栅极驱动波形，确认死区时间足够"
     ],
     "quickFix": "设置死区时间 + 使用专用栅极驱动芯片 + 过流保护",
+    "prevention": [
+      "硬件设计时使用带死区插入的专用栅极驱动芯片（如 IR2104），从源头避免直通",
+      "软件实现互补 PWM 时，必须先关闭上管再开启下管，预留 1-5μs 死区",
+      "设计过流保护电路，在检测到异常大电流时立即关断所有开关管",
+      "用示波器验证死区时间，确保在极端占空比下仍有足够余量"
+    ],
     "tags": ["H桥", "电机驱动", "短路", "MOSFET"]
   },
   {
@@ -132,6 +162,12 @@
       "确认 cuDNN 版本与 CUDA 兼容（cuDNN 8.x 匹配 CUDA 11.x，cuDNN 9.x 匹配 CUDA 12.x）"
     ],
     "quickFix": "nvidia-smi → pytorch.org 官方命令安装 → conda 隔离",
+    "prevention": [
+      "安装前运行 nvidia-smi 记录驱动支持的最高 CUDA 版本，作为基准参考",
+      "始终从 pytorch.org/get-started/locally/ 获取官方安装命令，不要手动拼版本",
+      "使用 conda 创建独立虚拟环境隔离不同项目的 CUDA 依赖",
+      "创建环境后立即验证：python -c 'import torch; print(torch.cuda.is_available())'"
+    ],
     "tags": ["CUDA", "PyTorch", "Windows", "环境配置"]
   },
   {
@@ -154,6 +190,12 @@
       "推理时也 OOM：检查是否有张量未从显存释放（del model; torch.cuda.empty_cache()）"
     ],
     "quickFix": "batch_size /= 2 → FP16 → gradient_checkpointing → 4-bit",
+    "prevention": [
+      "训练前用小 batch_size（如 1）测试显存占用，再逐步增大找到极限",
+      "启用 FP16/BF16 混合精度训练，显存占用直接减半",
+      "7B 以上大模型务必使用 4-bit 量化（bitsandbytes），6GB 显存即可运行",
+      "训练脚本中加入 torch.cuda.empty_cache()，及时释放未使用的显存"
+    ],
     "tags": ["OOM", "显存", "训练", "LLM"]
   },
   {
@@ -176,6 +218,12 @@
       "如果发生在第一个 epoch 检查数据本身是否正常（可视化第一批数据）"
     ],
     "quickFix": "降学习率 + 梯度裁剪 + warmup，优先排查数据",
+    "prevention": [
+      "训练开始前先用 1-2 步小数据验证 loss 是否正常下降，发现问题立即停止",
+      "始终启用梯度裁剪：torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)",
+      "使用 AdamW 优化器并配置 warmup（前 2-3% 的 step 线性预热学习率）",
+      "检查训练数据中是否存在 NaN 或异常值，清洗后再训练"
+    ],
     "tags": ["Loss", "梯度", "数值稳定性"]
   },
   {
@@ -198,6 +246,12 @@
       "导出后对比 PyTorch 输出与 ONNXRuntime 输出的最大误差（应 < 1e-3）"
     ],
     "quickFix": "dynamic_axes 声明 + opset 14+ + onnxsim 简化",
+    "prevention": [
+      "导出前调用 model.eval()，确保 BatchNorm 和 Dropout 使用推理模式",
+      "使用 opset_version >= 14，获得更全面的算子支持",
+      "用 onnx-simplifier 做常量折叠，简化计算图并修复形状推断问题",
+      "导出后立即对比 PyTorch 和 ONNXRuntime 的输出，误差应 < 1e-3"
+    ],
     "tags": ["ONNX", "导出", "部署", "推理加速"]
   },
   {
@@ -219,6 +273,12 @@
       "检查 CUDA 是否支持 fork（默认不支持，改用 spawn 或 CUDA_VISIBLE_DEVICES 隔离）"
     ],
     "quickFix": "Windows → num_workers=0；Linux OK；入口加 __main__ 保护",
+    "prevention": [
+      "Windows 开发环境建议将 num_workers 设为 0，或使用 WSL2/Linux 训练",
+      "代码入口必须加 if __name__ == '__main__': 保护，这是 Windows 多进程的硬性要求",
+      "在 Dataset.__getitem__ 中避免持有文件句柄或数据库连接，防止资源泄漏",
+      "使用 pin_memory=True 加速 GPU 数据搬运，仅在 CUDA 可用时启用"
+    ],
     "tags": ["DataLoader", "多进程", "Windows"]
   },
   {
@@ -241,6 +301,12 @@
       "检查是否向量数据库中真的存入了正确的 chunk（抽查几条 embedding）"
     ],
     "quickFix": "换中文 embedding + rerank + 明确引用约束的 Prompt",
+    "prevention": [
+      "中文任务优先选用 BGE-M3 或 text-embedding-3-large 等中文表现强的 embedding 模型",
+      "chunk 切分时设置 10-20% overlap，避免关键信息被切断",
+      "Prompt 中明确约束：仅基于给定上下文回答，无法回答则说不知道",
+      "使用 reranker 对检索结果二次排序，只取 Top-3 最相关的文档给 LLM"
+    ],
     "tags": ["RAG", "LLM", "检索", "Prompt"]
   },
   {
@@ -262,6 +328,12 @@
       "长期训练任务用 nohup 或 systemd service 替代 SSH 会话"
     ],
     "quickFix": "ssh config 加 ServerAliveInterval + tmux 保持会话",
+    "prevention": [
+      "配置 SSH 客户端：编辑 ~/.ssh/config 添加 ServerAliveInterval 60 和 ServerAliveCountMax 3",
+      "长期任务使用 tmux 或 screen 保持会话，SSH 断开后任务继续运行",
+      "传输大文件使用 rsync 替代 scp，支持断点续传",
+      "重要训练任务使用 nohup 或 systemd service，不依赖 SSH 会话"
+    ],
     "tags": ["SSH", "Linux", "远程服务器"]
   },
   {
@@ -283,6 +355,12 @@
       "验证：docker run --rm --gpus all nvidia/cuda:11.8.0-base-ubuntu22.04 nvidia-smi"
     ],
     "quickFix": "安装 NVIDIA Container Toolkit + nvidia/cuda 基础镜像 + --gpus all",
+    "prevention": [
+      "部署前在宿主机安装 NVIDIA Container Toolkit，确保 Docker 能访问 GPU",
+      "使用 nvidia/cuda 官方基础镜像，版本与宿主机 CUDA 兼容",
+      "docker run 时始终加 --gpus all 参数，或在 docker-compose.yml 中配置",
+      "验证命令：docker run --rm --gpus all nvidia/cuda:11.8.0-base-ubuntu22.04 nvidia-smi"
+    ],
     "tags": ["Docker", "GPU", "CUDA", "容器"]
   },
   {
@@ -305,6 +383,12 @@
       "如果用了预训练模型，检查是否正确加载了权重（最后一层 FC 通常需要重新初始化）"
     ],
     "quickFix": "可视化第一批数据 + 学习率扫描 + 检查 loss 类型",
+    "prevention": [
+      "训练前随机抽样 10-20 条数据可视化检查，确保标注正确",
+      "学习率采用网格搜索，在 1e-5 到 1e-2 之间尝试 10 倍递增",
+      "确认 loss 函数与任务类型匹配：多分类用 CrossEntropyLoss，二分类用 BCELoss",
+      "使用预训练模型时，检查最后一层 FC 是否正确重新初始化"
+    ],
     "tags": ["收敛", "训练", "学习率", "数据质量"]
   },
   {
@@ -327,6 +411,12 @@
       "如果误操作：git reflog 找回操作历史，git reset --hard HEAD@{N} 回退"
     ],
     "quickFix": "合并前先 git stash → 解决冲突后 git add + commit → git stash pop",
+    "prevention": [
+      "养成习惯：每次开始新工作前先 git pull --rebase，合并前先 git stash 本地修改",
+      "解决冲突时逐行对比，不要盲目接受 theirs 或 ours，理解每处变更的意图",
+      "使用 git diff --staged 检查暂存区内容，确认无误后再 commit",
+      "重要操作前创建分支备份：git branch backup-branch，便于回退"
+    ],
     "tags": ["Git", "协作", "版本控制"]
   },
   {
@@ -349,6 +439,12 @@
       "遇到 .so 文件报错时通常是 CUDA 版本不一致，检查 LD_LIBRARY_PATH"
     ],
     "quickFix": "conda create 独立环境 → pip install 分批安装 → freeze 导出依赖",
+    "prevention": [
+      "每个项目使用独立的 conda 或 venv 虚拟环境，避免全局安装",
+      "使用 pip freeze > requirements.txt 固定依赖版本，新环境一键复现",
+      "避免 pip 和 conda 混用同一批包，大包（如 torch）只用 pip install",
+      "安装后验证：python -c 'import torch; print(torch.__version__)' 确认无报错"
+    ],
     "tags": ["Python", "环境配置", "依赖管理"]
   },
   {
@@ -371,6 +467,12 @@
       "长期解决方案：使用 Tailscale 或 WireGuard 建立 VPN 隧道"
     ],
     "quickFix": "检查安全组规则 → 改端口 443 → 开启密钥登录 + fail2ban",
+    "prevention": [
+      "云服务器部署时，第一件事就是配置安全组，开放 SSH 端口（22 或自定义端口）",
+      "使用密钥登录替代密码，并禁用 root 远程登录，减少暴力破解风险",
+      "安装 fail2ban 自动封禁多次登录失败的 IP，增强服务器安全性",
+      "家用宽带用户提前配置内网穿透（frp / Tailscale），避免临时无法连接"
+    ],
     "tags": ["SSH", "服务器", "网络安全"]
   },
   {
@@ -392,6 +494,12 @@
       "对低质量标注数据用 active learning 优先重新标注"
     ],
     "quickFix": "可视化混淆矩阵 → 定位错误类别 → 补充该类别标注数据",
+    "prevention": [
+      "标注前制定详细的标注规范文档，明确定义每个类别的边界",
+      "安排多人交叉标注，计算 inter-annotator agreement，低于 0.8 需重新规范",
+      "训练前随机抽样 50-100 条数据人工检查，发现错误立即修正",
+      "使用混淆矩阵分析易混淆类别，针对性补充该类别的标注样本"
+    ],
     "tags": ["数据标注", "数据质量", "收敛"]
   },
   {
@@ -413,6 +521,12 @@
       "对批量推理确保在 GPU 端完成所有计算后再统一取结果"
     ],
     "quickFix": "删除循环内的 .item() / .cpu() → 最后统一转 CPU",
+    "prevention": [
+      "性能关键代码中避免在循环内调用 .item()、.cpu()、.numpy()，批量计算后再统一取结果",
+      "使用 torch.profiler 分析 GPU 利用率，确保 GPU Time 接近 CPU Time",
+      "推理时使用 torch.no_grad() 装饰器，减少不必要的计算图开销",
+      "检查代码中是否有 tensor.cpu() 放在了热路径上，改为循环结束后统一转换"
+    ],
     "tags": ["CUDA", "推理加速", "性能优化"]
   },
   {
@@ -434,6 +548,12 @@
       "日志框架（Python logging / loguru）确认使用了正确的时区配置"
     ],
     "quickFix": "docker run -e TZ=Asia/Shanghai 或 -v /etc/localtime:/etc/localtime:ro",
+    "prevention": [
+      "docker run 时始终加 -e TZ=Asia/Shanghai 设置时区环境变量",
+      "或挂载宿主机时区文件：-v /etc/localtime:/etc/localtime:ro",
+      "在 Dockerfile 中设置 ENV TZ=Asia/Shanghai，确保镜像构建时就正确",
+      "日志框架配置时确认时区设置，避免 UTC 和本地时间混用"
+    ],
     "tags": ["Docker", "时区", "日志"]
   },
   {
@@ -455,6 +575,12 @@
       "chain 导致的 SettingWithCopyWarning：检查是否在对 slice 操作时触发了"
     ],
     "quickFix": "df.loc[mask, 'col'] = value 而非 df[mask]['col'] = value",
+    "prevention": [
+      "始终使用 df.loc[mask, 'col'] = value 进行赋值，避免链式操作",
+      "不使用 inplace=True，改为 df = df.dropna() 这种显式赋值方式",
+      "对数据操作后立即检查 df.info() 确认修改是否生效",
+      "升级 pandas 版本后运行测试，及时发现 deprecated API 警告"
+    ],
     "tags": ["Pandas", "Python", "数据处理"]
   },
   {
@@ -476,6 +602,12 @@
       "确认 PyTorch 版本一致：torch.__version__ + torch.version.cuda"
     ],
     "quickFix": "训练推理同架构 GPU，或导出 ONNX 跨架构验证",
+    "prevention": [
+      "训练和推理尽量使用相同架构的 GPU，减少兼容性风险",
+      "导出模型时使用 ONNX 格式，跨架构验证输出一致性",
+      "记录训练环境的 PyTorch 版本、CUDA 版本和 GPU 型号，部署时对齐",
+      "混合精度训练前确认目标 GPU 的 Compute Capability 支持 BF16/FP16"
+    ],
     "tags": ["GPU", "CUDA", "模型迁移"]
   },
   {
@@ -497,6 +629,12 @@
       "对长 Prompt 截断检查：print(repr(prompt)) 看是否有 \\n 或 \" 未正确转义"
     ],
     "quickFix": "json.dumps(prompt_content) 或使用 Function Calling 代替手动拼接",
+    "prevention": [
+      "构建 Prompt 时使用 json.dumps() 处理动态内容，自动转义特殊字符",
+      "优先使用 Function Calling 或 response_format JSON mode，让模型保证格式",
+      "打印 repr(prompt) 检查转义字符是否正确，避免隐藏的换行或引号问题",
+      "对长输出设置 max_tokens，并验证返回的 JSON 完整性"
+    ],
     "tags": ["LLM", "Prompt", "JSON", "字符串转义"]
   }
 ]
