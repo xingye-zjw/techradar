@@ -22,6 +22,8 @@ export const TAG_DEFINITIONS: TagDefinition[] = [
   { key: "math", label: "数学", category: "domain", color: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30" },
   { key: "llm", label: "LLM", category: "domain", color: "bg-pink-500/15 text-pink-400 border-pink-500/30" },
   { key: "mlops", label: "MLOps", category: "domain", color: "bg-amber-500/15 text-amber-400 border-amber-500/30" },
+  { key: "infra", label: "基础设施", category: "domain", color: "bg-cyan-500/15 text-cyan-400 border-cyan-500/30" },
+  { key: "training", label: "训练", category: "domain", color: "bg-rose-500/15 text-rose-400 border-rose-500/30" },
 
   // 难度等级
   { key: "beginner", label: "基础", category: "level", color: "bg-green-500/15 text-green-400 border-green-500/30" },

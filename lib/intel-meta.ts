@@ -38,12 +38,17 @@ export const categoryMeta: Record<
     color: "bg-purple-400/10 text-purple-400 border-purple-400/30",
     desc: "Transformer、LoRA、RAG、RLHF 等 LLM 相关技术",
   },
-  "computer-vision": {
-    label: "计算机视觉",
-    color: "bg-blue-400/10 text-blue-400 border-blue-400/30",
-    desc: "目标检测、图像分类、分割等视觉任务",
+  "llm-fundamentals": {
+    label: "LLM 基础",
+    color: "bg-violet-400/10 text-violet-400 border-violet-400/30",
+    desc: "大语言模型核心原理、架构与训练方法",
   },
-  cv: {
+  "llm-application": {
+    label: "LLM 应用",
+    color: "bg-fuchsia-400/10 text-fuchsia-400 border-fuchsia-400/30",
+    desc: "Prompt Engineering、RAG、Agent 等 LLM 应用技术",
+  },
+  "computer-vision": {
     label: "计算机视觉",
     color: "bg-blue-400/10 text-blue-400 border-blue-400/30",
     desc: "目标检测、图像分类、分割等视觉任务",
@@ -52,6 +57,11 @@ export const categoryMeta: Record<
     label: "工程部署",
     color: "bg-amber-400/10 text-amber-400 border-amber-400/30",
     desc: "Docker、GPU 部署、环境配置、服务器管理",
+  },
+  infrastructure: {
+    label: "基础设施",
+    color: "bg-sky-400/10 text-sky-400 border-sky-400/30",
+    desc: "vLLM、Kubernetes、监控系统等基础架构",
   },
   tools: {
     label: "工具库",
@@ -68,10 +78,20 @@ export const categoryMeta: Record<
     color: "bg-pink-400/10 text-pink-400 border-pink-400/30",
     desc: "ONNX、TensorRT 等模型导出与推理优化",
   },
+  training: {
+    label: "模型训练",
+    color: "bg-rose-400/10 text-rose-400 border-rose-400/30",
+    desc: "分布式训练、MLOps、训练优化等",
+  },
   evaluation: {
     label: "模型评估",
     color: "bg-teal-400/10 text-teal-400 border-teal-400/30",
     desc: "mAP、IoU、AUC 等评估指标详解与实战",
+  },
+  "math-foundations": {
+    label: "数学基础",
+    color: "bg-indigo-400/10 text-indigo-400 border-indigo-400/30",
+    desc: "信息论、凸优化等数学理论基础",
   },
   uncategorized: {
     label: "其他",
