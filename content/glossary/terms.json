@@ -3,35 +3,35 @@
     "term": "instance segmentation",
     "slug": "instance-segmentation",
     "definition": "实例分割是计算机视觉中比目标检测更进一步的任务：不仅要找出图中所有目标「在哪里」，还要精确勾勒出每个目标的轮廓「是什么形状」。与语义分割（semantic segmentation，将所有同类物体合并为一个 mask）不同，实例分割为每个独立目标生成独立的 mask，即便两个同类物体紧挨在一起也能区分。YOLOv8-seg、Mask R-CNN 是此类任务的代表模型。实现方式通常是：在检测框内做像素级分割，或直接用单阶段分割头输出 polygon / mask。",
-    "category": "cv",
+    "category": "computer-vision",
     "relatedTerms": ["object-detection", "semantic-segmentation", "yolo", "coco-format"]
   },
   {
     "term": "pose estimation",
     "slug": "pose-estimation",
     "definition": "人体姿态估计从图像或视频中定位人体关键点（如 COCO 17 点：鼻子、双眼、双耳、双肩、双肘、双腕、双髋、双膝、双踝），并用骨架连线表示人体结构。关键点检测分为自顶向下（先用检测器找人，再在框内检测关键点）和自底向上（先检测所有关键点，再通过 grouping 连接成不同人体）两种范式。HRNet 在姿态估计中以保留高分辨率特征著称，OpenPose 是自底向上的经典方案。",
-    "category": "cv",
+    "category": "computer-vision",
     "relatedTerms": ["keypoint-detection", "coco", "hrnet", "object-detection"]
   },
   {
     "term": "optical character recognition",
     "slug": "ocr",
     "definition": "OCR（光学字符识别）从图像中提取文字信息，包含两个核心子任务：文本检测（Text Detection，确定文字的位置和范围）和文本识别（Text Recognition，将图像中的文字转录为字符序列）。现代 OCR 系统如 PaddleOCR 采用 DBNet 进行任意形状文本检测（处理弯曲/倾斜文字），CRNN（卷积循环神经网络）进行序列到序列的字符识别，Attention 机制进一步提升了对低质量图像的鲁棒性。",
-    "category": "cv",
+    "category": "computer-vision",
     "relatedTerms": ["text-detection", "crnn", "dbnet", "paddleocr"]
   },
   {
     "term": "diffusion model",
     "slug": "diffusion-model",
     "definition": "扩散模型是一类基于概率论的生成模型，其核心思想是：向数据中逐步添加噪声（正向过程 q(xt|xt-1)），然后学习一个逆向去噪过程 pθ(xt-1|xt)。训练完成后，从纯噪声开始运行逆向过程，即可生成图像。DDPM 是扩散模型的开创性工作，Stable Diffusion 将扩散过程搬到低维潜在空间（VAE encoder 输出），大幅降低了计算成本，实现了文生图（text-to-image）的主流应用。LoRA、ControlNet、IP-Adapter 等技术在此基础上实现了高效微调和条件控制。",
-    "category": "cv",
+    "category": "computer-vision",
     "relatedTerms": ["stable-diffusion", "ddpm", "vae", "lora", "latent-space"]
   },
   {
     "term": "vllm",
     "slug": "vllm",
     "definition": "vLLM 是一个开源的大语言模型推理引擎，核心技术创新是 PagedAttention（将 KV Cache 分页管理，类似操作系统虚拟内存）和连续批处理（continuous batching）。通过减少显存碎片和提升 GPU 利用率，vLLM 能将推理吞吐量提升 10-30x，同时支持 OpenAI 兼容 API（/v1/chat/completions），可直接替代 OpenAI API 使用。支持的量化方式包括 AWQ、GPTQ、INT4 等。",
-    "category": "infrastructure",
+    "category": "devops",
     "relatedTerms": ["kv-cache", "pagedattention", "batch-inference", "quantization", "llm-inference"]
   },
   {
@@ -59,14 +59,14 @@
     "term": "kubernetes",
     "slug": "kubernetes",
     "definition": "Kubernetes（K8s）是 CNCF 的容器编排平台，将多台机器组成统一集群，对外提供声明式的应用部署、扩缩容、自我修复和服务发现能力。核心对象：Pod（最小调度单位）、Deployment（管理 Pod 版本和副本）、Service（为 Pod 提供稳定网络入口）、ConfigMap/Secret（配置与密钥管理）、PersistentVolume（持久化存储）。Helm 是 K8s 的包管理器，通过模板化管理复杂应用的 YAML 配置。GPU 调度通过 nvidia.com/gpu 资源标签实现。",
-    "category": "infrastructure",
+    "category": "devops",
     "relatedTerms": ["docker", "pod", "deployment", "helm", "hpa", "kubectl"]
   },
   {
     "term": "prometheus",
     "slug": "prometheus",
     "definition": "Prometheus 是 CNCF 的开源时序数据库和监控系统，采用 Pull 模式从每个服务的 /metrics 端点定期拉取数据。核心概念：四大指标类型——Counter（只增计数器）、Gauge（可增可减仪表）、Histogram（延迟分布直方图，用于计算 P50/P95/P99）、Summary（预计算分位数）；PromQL 是其查询语言，支持 rate()、increase()、histogram_quantile() 等时间序列函数。Alertmanager 接收 Prometheus 告警并路由到邮件/Slack 等渠道。",
-    "category": "infrastructure",
+    "category": "devops",
     "relatedTerms": ["grafana", "metrics", "alerting", "observability", "promql"]
   },
   {
@@ -94,7 +94,7 @@
     "term": "onnx",
     "slug": "onnx",
     "definition": "ONNX（Open Neural Network Exchange）是微软和 Facebook 共同推出的跨框架模型格式，定义了一套标准化的算子 IR（Intermediate Representation）。通过 torch.onnx.export() 可以将 PyTorch 模型导出为 .onnx 文件，之后用 ONNXRuntime 或其他 ONNX 兼容引擎加载推理。ONNXRuntime 比 PyTorch 原生推理快 1.5-3x，支持 CPU/GPU，并可通过 onnxsim 做常量折叠优化。ONNX 是模型从训练框架到部署平台的「中间语言」。",
-    "category": "deployment",
+    "category": "devops",
     "relatedTerms": ["onnxruntime", "model-export", "tensorrt", "inference-optimization"]
   },
   {
@@ -108,7 +108,7 @@
     "term": "batch inference",
     "slug": "batch-inference",
     "definition": "批量推理是在 GPU 上同时处理多个推理请求以提升吞吐量的技术。相比在线推理（一次处理一个请求），批量推理通过矩阵运算充分调动 GPU 并行能力，QPS 可提升 10-100x。连续批处理（Continuous Batching / Iteration-Level Scheduling）在每个 token 生成后动态插入新请求，不等当前 batch 全部完成就开始处理下一批，是 vLLM 等推理引擎的核心优化。",
-    "category": "infrastructure",
+    "category": "devops",
     "relatedTerms": ["vllm", "kv-cache", "llm-inference", "quantization"]
   }
 ]
