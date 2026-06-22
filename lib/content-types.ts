@@ -140,6 +140,91 @@ export interface Pitfall {
   relatedTools?: string[];
 }
 
+/** 踩坑分类元数据 */
+export interface PitfallCategoryMeta {
+  label: string;
+  icon: string;
+  color: string; // Tailwind class e.g. "text-red-400"
+  bgColor: string;
+  borderColor: string;
+  desc: string;
+}
+
+export const PITFALL_CATEGORY_META: Record<string, PitfallCategoryMeta> = {
+  embedded: {
+    label: "嵌入式",
+    icon: "🔌",
+    color: "text-orange-400",
+    bgColor: "bg-orange-400/10",
+    borderColor: "border-orange-400/30",
+    desc: "嵌入式开发中的常见问题",
+  },
+  control: {
+    label: "控制系统",
+    icon: "⚙️",
+    color: "text-blue-400",
+    bgColor: "bg-blue-400/10",
+    borderColor: "border-blue-400/30",
+    desc: "控制系统与自动化相关问题",
+  },
+  signals: {
+    label: "信号处理",
+    icon: "📡",
+    color: "text-cyan-400",
+    bgColor: "bg-cyan-400/10",
+    borderColor: "border-cyan-400/30",
+    desc: "信号处理与通信相关问题",
+  },
+  electrical: {
+    label: "电气工程",
+    icon: "⚡",
+    color: "text-yellow-400",
+    bgColor: "bg-yellow-400/10",
+    borderColor: "border-yellow-400/30",
+    desc: "电气工程与硬件相关问题",
+  },
+  devops: {
+    label: "环境配置",
+    icon: "🛠️",
+    color: "text-green-400",
+    bgColor: "bg-green-400/10",
+    borderColor: "border-green-400/30",
+    desc: "开发环境与部署配置问题",
+  },
+  "deep-learning": {
+    label: "深度学习",
+    icon: "🧠",
+    color: "text-purple-400",
+    bgColor: "bg-purple-400/10",
+    borderColor: "border-purple-400/30",
+    desc: "深度学习训练与推理问题",
+  },
+  llm: {
+    label: "大语言模型",
+    icon: "💬",
+    color: "text-pink-400",
+    bgColor: "bg-pink-400/10",
+    borderColor: "border-pink-400/30",
+    desc: "LLM 微调与部署相关问题",
+  },
+  "data-processing": {
+    label: "数据处理",
+    icon: "📊",
+    color: "text-teal-400",
+    bgColor: "bg-teal-400/10",
+    borderColor: "border-teal-400/30",
+    desc: "数据处理与 ETL 相关问题",
+  },
+  "best-practices": {
+    label: "最佳实践",
+    icon: "✨",
+    color: "text-emerald-400",
+    bgColor: "bg-emerald-400/10",
+    borderColor: "border-emerald-400/30",
+    desc: "开发流程与最佳实践",
+  },
+};
+
 /**
  * 验证 category 是否有效
  * @param category - 要验证的分类字符串
