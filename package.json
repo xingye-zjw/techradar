@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "validate-content": "npx tsx scripts/validate-content.ts"
   },
   "dependencies": {
     "@radix-ui/react-separator": "^1.1.10",
@@ -30,6 +31,7 @@
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.38",
     "tailwindcss": "^3.4.4",
+    "tsx": "^4.22.4",
     "typescript": "^5"
   }
 }
