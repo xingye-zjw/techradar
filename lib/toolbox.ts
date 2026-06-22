@@ -1,6 +1,10 @@
 import fs from "node:fs";
 import path from "node:path";
 import { getAllIntelCards, type IntelCard } from "./intel";
+import type { ContentCategory, Tool, ToolboxData, ToolScenario } from "./content-types";
+
+// 重新导出类型以保持向后兼容
+export type { ContentCategory, Tool, ToolboxData, ToolScenario };
 
 export interface ToolGithubInfo {
   stars: string;
@@ -8,31 +12,18 @@ export interface ToolGithubInfo {
   url: string;
 }
 
-export interface Tool {
-  name: string;
-  category: string;
-  purpose: string;
-  install: string;
-  features: string[];
-  tags: string[];
-  github: ToolGithubInfo;
-  difficulty: "beginner" | "intermediate" | "advanced";
-  official_url: string;
-  use_cases: string[];
-  relatedIntel?: string[];
-  relatedNodes?: string[];
-}
-
-export interface ToolScenario {
-  key: string;
-  label: string;
-  description: string;
-  tool_names: string[];
-}
-
-export interface ToolboxData {
-  tools: Tool[];
-  scenarios: ToolScenario[];
+/**
+ * 从工具名称生成 URL 友好的 slug
+ * @param name - 工具名称
+ * @returns URL 友好的 slug 字符串
+ */
+export function generateSlug(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9-]/g, "")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
 }
 
 let cachedData: ToolboxData | null = null;

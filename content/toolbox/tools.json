@@ -2,8 +2,10 @@
   "tools": [
     {
       "name": "Ultralytics YOLO",
-      "category": "CV · 目标检测",
+      "slug": "ultralytics-yolo",
+      "category": "computer-vision",
       "purpose": "工业界首选的端到端目标检测框架，YOLOv8/v11/v13 统一维护",
+      "description": "Ultralytics YOLO 是工业界最受欢迎的实时目标检测框架，支持 YOLOv8/v11/v13 多版本统一维护。它提供一行命令训练自定义数据集的能力，内置目标检测、实例分割、姿态估计和旋转边界框检测等多种任务支持，并可一键导出到 ONNX、TensorRT、CoreML 等多种部署格式。",
       "install": "pip install ultralytics",
       "features": [
         "一行命令训练自定义数据集",
@@ -26,8 +28,10 @@
     },
     {
       "name": "Hugging Face Transformers",
-      "category": "NLP · LLM",
+      "slug": "huggingface-transformers",
+      "category": "nlp",
       "purpose": "10 万+ 预训练模型的统一加载接口，PyTorch / JAX 双后端",
+      "description": "Hugging Face Transformers 是 NLP 和 LLM 领域最核心的工具库，提供了超过 10 万个预训练模型的统一加载接口。通过 AutoModel 和 AutoTokenizer 实现即插即用，配合 Trainer API 支持分布式训练和混合精度，同时与 PEFT 集成支持 LoRA/QLoRA 高效微调。",
       "install": "pip install transformers datasets accelerate",
       "features": [
         "AutoModel / AutoTokenizer 即插即用",
@@ -50,8 +54,10 @@
     },
     {
       "name": "PyTorch",
-      "category": "深度学习框架",
+      "slug": "pytorch",
+      "category": "deep-learning",
       "purpose": "研究界最流行的动态计算图深度学习框架，debug 友好，与 Python 完全融合",
+      "description": "PyTorch 是当前深度学习研究领域最流行的框架，采用动态计算图设计使得调试和开发体验极佳。它与 Python 生态完全融合，支持 torch.compile() 编译优化、分布式训练和 TorchScript 脚本化导出，是学术研究和工程实践的首选框架。",
       "install": "pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118",
       "features": [
         "动态图：代码即模型，可直接 print 中间变量",
@@ -74,8 +80,10 @@
     },
     {
       "name": "LangChain",
-      "category": "LLM 应用框架",
+      "slug": "langchain",
+      "category": "llm",
       "purpose": "大模型应用开发瑞士军刀：RAG / Agent / Chain / Memory 一站式",
+      "description": "LangChain 是大模型应用开发的瑞士军刀，提供 RAG、Agent、Chain、Memory 等核心组件的一站式解决方案。它统一了多种向量数据库的抽象，支持 Agent 工具调用和自定义 Tool，并通过 LangSmith 提供可观测性，LangServe 实现一键部署为 REST API。",
       "install": "pip install langchain langchain-core langchain-community",
       "features": [
         "统一的 VectorStore 抽象（FAISS / Chroma / pgvector）",
@@ -98,8 +106,10 @@
     },
     {
       "name": "Streamlit",
-      "category": "可视化界面",
+      "slug": "streamlit",
+      "category": "tools",
       "purpose": "纯 Python 构建交互式 Web 界面，无需前端知识，快速原型展示",
+      "description": "Streamlit 是一个纯 Python 的交互式 Web 界面框架，无需任何前端开发知识即可快速构建数据应用。它提供了丰富的数据可视化图表和交互组件，支持 Session State 保持页面状态，并可一键部署到 Streamlit Cloud 免费公开访问。",
       "install": "pip install streamlit",
       "features": [
         "数据可视化图表（折线/柱状/散点/地图）",
@@ -122,8 +132,10 @@
     },
     {
       "name": "MLflow",
-      "category": "实验追踪",
+      "slug": "mlflow",
+      "category": "tools",
       "purpose": "开源 ML 生命周期管理平台，自动记录参数/指标/模型，支持超参搜索",
+      "description": "MLflow 是一个开源的机器学习生命周期管理平台，能够自动记录 PyTorch、Keras、XGBoost 等框架的训练指标。它提供 Web UI 对比不同实验的参数与 Loss 曲线，支持 Model Registry 版本化管理，并可对接 PostgreSQL、S3 等生产级存储后端。",
       "install": "pip install mlflow",
       "features": [
         "自动记录 PyTorch / Keras / XGBoost 等框架的训练指标",
@@ -146,8 +158,10 @@
     },
     {
       "name": "Weights & Biases",
-      "category": "实验可视化",
+      "slug": "weights-and-biases",
+      "category": "tools",
       "purpose": "实验可视化 + 超参数 Sweep + 模型版本管理，团队协作友好",
+      "description": "Weights & Biases (W&B) 是一个强大的实验可视化和管理平台，通过一条 wandb.init() 即可自动记录 Loss、指标和产出物。它支持 Sweep 超参数搜索（Bayesian/Grid/Random）、Artifacts 数据集与模型版本管理，以及多种数据类型可视化，是团队协作的理想选择。",
       "install": "pip install wandb",
       "features": [
         "一条 wandb.init() 自动记录 Loss / 指标 / 产出",
@@ -170,8 +184,10 @@
     },
     {
       "name": "DVC (Data Version Control)",
-      "category": "数据版本管理",
+      "slug": "dvc",
+      "category": "tools",
       "purpose": "用 Git 的方式管理数据集和模型文件，支持大规模数据的版本控制与共享",
+      "description": "DVC（Data Version Control）是一个用 Git 方式管理数据集和模型文件的工具，解决了大规模数据的版本控制与共享问题。它通过存储指针文件到 Git 而将实际内容存到远程存储，支持 dvc repro 自动检测变化并重新运行训练流程，与 Git 完全兼容。",
       "install": "pip install dvc",
       "features": [
         "dvc add data/ 将大文件纳入版本控制（存指针到 Git，内容存远程存储）",
@@ -194,8 +210,10 @@
     },
     {
       "name": "Docker",
-      "category": "容器化部署",
+      "slug": "docker",
+      "category": "devops",
       "purpose": "将模型或服务封装为 Docker 镜像，实现跨环境无差异部署",
+      "description": "Docker 是容器化部署的标准工具，能够将模型或服务封装为 Docker 镜像，实现开发、测试、生产环境的无差异部署。它支持 nvidia-docker GPU 容器分配、Docker Compose 多容器编排，以及多阶段构建大幅减小镜像体积。",
       "install": "curl -fsSL https://get.docker.com | sh",
       "features": [
         "Dockerfile 定义镜像构建步骤，一次构建多处运行",
@@ -218,8 +236,10 @@
     },
     {
       "name": "Gradio",
-      "category": "ML 界面框架",
+      "slug": "gradio",
+      "category": "tools",
       "purpose": "专为机器学习设计的快速 Web 界面框架，比 Streamlit 更适合 AI 模型展示",
+      "description": "Gradio 是专为机器学习设计的快速 Web 界面框架，比 Streamlit 更适合 AI 模型展示。它提供 chatbot、sketch、image、audio 等 AI 专属组件，内置分享链接生成功能，支持加载 Hugging Face Space，Blocks API 支持自定义复杂布局与交互。",
       "install": "pip install gradio",
       "features": [
         "chatbot / sketch / image / audio 等 AI 专属组件",
@@ -242,8 +262,10 @@
     },
     {
       "name": "Label Studio",
-      "category": "数据标注",
+      "slug": "label-studio",
+      "category": "tools",
       "purpose": "多模态标注平台：图像检测框 / 文本 NER / 音频分段 / 视频",
+      "description": "Label Studio 是一个功能强大的多模态数据标注平台，支持图像检测框、文本 NER、音频分段和视频标注等多种任务。它导出格式兼容 COCO、YOLO、Pascal VOC 等主流格式，支持自托管和多人协作，并可接入 ML 模型做预标注实现主动学习。",
       "install": "pip install label-studio && label-studio start",
       "features": [
         "导出格式兼容 COCO / YOLO / Pascal VOC / JSON-MIN",
@@ -266,8 +288,10 @@
     },
     {
       "name": "pgvector + PostgreSQL",
-      "category": "向量数据库",
+      "slug": "pgvector",
+      "category": "tools",
       "purpose": "PostgreSQL 扩展，在 SQL 中直接做 KNN 向量检索，无需引入新组件",
+      "description": "pgvector 是 PostgreSQL 的向量检索扩展，允许在 SQL 中直接执行 KNN 向量检索，无需引入新的数据库组件。它与现有 PostgreSQL 无缝融合，支持 HNSW 和 ivfflat 索引实现毫秒级查询，以及 Hybrid Search 实现 metadata filter + vector 的混合搜索。",
       "install": "CREATE EXTENSION vector;  pip install pgvector",
       "features": [
         "与现有 PostgreSQL 无缝融合，零额外运维",
@@ -290,8 +314,10 @@
     },
     {
       "name": "ONNX Runtime",
-      "category": "推理引擎",
+      "slug": "onnx-runtime",
+      "category": "tools",
       "purpose": "跨框架、高性能模型推理引擎，比原生框架快 1.5-3 倍",
+      "description": "ONNX Runtime 是一个跨框架、高性能的模型推理引擎，通常比原生框架快 1.5-3 倍。它支持 PyTorch、TensorFlow、ONNX 等多种模型格式输入，提供 GPU 加速（CUDA/TensorRT/ROCm），并通过图优化技术（常量折叠/算子融合/内存规划）大幅提升推理性能。",
       "install": "pip install onnxruntime-gpu",
       "features": [
         "支持 PyTorch / TensorFlow / ONNX 模型输入",
@@ -314,8 +340,10 @@
     },
     {
       "name": "Dask",
-      "category": "并行计算",
+      "slug": "dask",
+      "category": "tools",
       "purpose": "用纯 Python 代码实现 pandas / numpy / scikit-learn 的并行化，处理 TB 级数据",
+      "description": "Dask 是一个用纯 Python 代码实现 pandas、numpy、scikit-learn 并行化的分布式计算框架，能够处理比单机内存大几个数量级的数据集。它提供 dask.array、dask.dataframe、dask.delayed 等透明并行化接口，与现有 Python API 几乎完全兼容，并可对接 Kubernetes、HPC、Yarn 集群。",
       "install": "pip install dask",
       "features": [
         "dask.array / dask.dataframe / dask.delayed 透明并行化",
