@@ -11,6 +11,52 @@ TechRadar 是一个 AI 驱动的大学生硬核开源实战导航系统，包含
 
 ---
 
+## 统一内容类型系统
+
+### ContentCategory 枚举
+
+所有内容模块共享统一的分类枚举类型 `ContentCategory`，定义在 `lib/content-types.ts`。
+
+| 分类值 | 说明 | 使用场景 |
+|--------|------|----------|
+| `computer-vision` | 计算机视觉 | 目标检测、图像分类、分割等 |
+| `nlp` | 自然语言处理 | 文本处理、NLP 任务 |
+| `deep-learning` | 深度学习 | 神经网络基础架构、训练方法 |
+| `machine-learning` | 机器学习 | 传统机器学习算法 |
+| `math` | 数学基础 | 线性代数、概率统计 |
+| `math-foundations` | 数学基础理论 | 信息论、凸优化等 |
+| `devops` | 工程部署 | Docker、GPU 部署、环境配置 |
+| `llm` | 大语言模型 | Transformer、LoRA、RAG 等 |
+| `llm-fundamentals` | LLM 基础 | 大语言模型核心原理、架构 |
+| `llm-application` | LLM 应用 | Prompt Engineering、RAG、Agent |
+| `reinforcement-learning` | 强化学习 | 强化学习相关技术 |
+| `data-processing` | 数据处理 | 数据预处理和清洗 |
+| `data-engineering` | 数据工程 | NumPy、Pandas、数据管道 |
+| `tools` | 工具相关 | 开发工具和框架 |
+| `best-practices` | 最佳实践 | 开发规范和最佳实践 |
+| `infrastructure` | 基础设施 | vLLM、Kubernetes、监控系统 |
+| `deployment` | 模型部署 | ONNX、TensorRT 等 |
+| `training` | 模型训练 | 分布式训练、MLOps |
+| `evaluation` | 模型评估 | mAP、IoU、AUC 等评估指标 |
+| `uncategorized` | 未分类 | 未分类的其他主题 |
+
+### 数据验证系统
+
+项目提供统一的数据验证器 `lib/content-validator.ts`，用于验证所有内容数据是否符合规范。
+
+**验证命令**:
+```bash
+npm run validate-content
+```
+
+**验证函数**:
+- `validateIntel(data)` - 验证情报数据
+- `validateTerm(data)` - 验证术语数据（支持 GlossaryTerm 和 TermIndex 格式）
+- `validateTool(data)` - 验证工具数据
+- `validatePitfall(data)` - 验证踩坑数据
+
+---
+
 ## 内容模块详解
 
 ### 1. 情报模块 (Intel)
@@ -33,16 +79,23 @@ TechRadar 是一个 AI 驱动的大学生硬核开源实战导航系统，包含
 
 #### 分类 Slug 列表
 
+情报模块使用 `ContentCategory` 枚举中的所有分类值，常用分类包括：
+
 | Slug | 说明 |
 |------|------|
 | `deep-learning` | 深度学习 |
 | `llm` | 大语言模型 |
-| `computer-vision` / `cv` | 计算机视觉 |
+| `llm-fundamentals` | LLM 基础 |
+| `llm-application` | LLM 应用 |
+| `computer-vision` | 计算机视觉 |
 | `devops` | DevOps |
+| `infrastructure` | 基础设施 |
 | `tools` | 开发工具 |
 | `data-engineering` | 数据工程 |
-| `deployment` | 部署 |
-| `evaluation` | 评估 |
+| `deployment` | 模型部署 |
+| `training` | 模型训练 |
+| `evaluation` | 模型评估 |
+| `math-foundations` | 数学基础 |
 
 #### 正文章节规范
 
@@ -73,15 +126,16 @@ TechRadar 是一个 AI 驱动的大学生硬核开源实战导航系统，包含
 
 #### 分类列表
 
+术语模块使用 `ContentCategory` 枚举中的分类值：
+
 | Slug | 说明 |
 |------|------|
-| `cv` | 计算机视觉 |
+| `computer-vision` | 计算机视觉 |
 | `llm` | 大语言模型 |
 | `infrastructure` | 基础设施 |
 | `math` | 数学基础 |
-| `deployment` | 部署 |
-| `ai-ml` | AI/ML 通用 |
-| `project` | 项目管理 |
+| `deployment` | 模型部署 |
+| `devops` | 工程部署 |
 
 ---
 

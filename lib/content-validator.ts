@@ -31,20 +31,27 @@ export function validateIntel(data: any): string[] {
 
 /**
  * 验证术语数据
- * @param data - 待验证的术语数据
+ * @param data - 待验证的术语数据（支持 GlossaryTerm 或 TermIndex 格式）
  * @returns 错误消息数组，空数组表示验证通过
  */
 export function validateTerm(data: any): string[] {
   const errors: string[] = [];
 
-  if (!data.term) errors.push('术语缺少 term 字段');
+  // 支持两种格式：GlossaryTerm (name/summary) 或 TermIndex (term/definition)
+  const hasTerm = data.term || data.name;
+  if (!hasTerm) errors.push('术语缺少 term/name 字段');
+
   if (!data.slug) errors.push('术语缺少 slug 字段');
+
   if (!data.category) {
     errors.push('术语缺少 category 字段');
   } else if (!isValidCategory(data.category)) {
     errors.push(`术语 category 无效: ${data.category}`);
   }
-  if (!data.definition) errors.push('术语缺少 definition 字段');
+
+  // 支持 definition 或 summary 字段
+  const hasDefinition = data.definition || data.summary;
+  if (!hasDefinition) errors.push('术语缺少 definition/summary 字段');
 
   return errors;
 }

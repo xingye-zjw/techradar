@@ -38,10 +38,15 @@ techradar/
 ├── lib/                    # 业务逻辑
 │   ├── roadmap-data.ts    # 全量路线图数据（~230KB）
 │   ├── intel.ts           # Markdown 情报解析
+│   ├── intel-meta.ts      # 情报分类元数据
 │   ├── glossary.ts        # 术语数据处理
 │   ├── toolbox.ts         # 工具推荐算法
 │   ├── terms.ts           # 术语数据处理
-│   └── terms.json         # 术语数据（50+ 专业术语）
+│   ├── terms.json         # 术语数据（50+ 专业术语）
+│   ├── content-types.ts   # 统一内容类型定义（ContentCategory）
+│   └── content-validator.ts # 数据验证器
+├── scripts/                # 构建脚本
+│   └── validate-content.ts # 内容验证脚本
 ├── content/                # 静态内容
 │   ├── intel/*.md         # 技术情报
 │   ├── glossary/          # 术语数据
@@ -186,10 +191,18 @@ interface DailyTask {
 - 骨架屏组件：`Skeleton` + 多种预设样式（卡片/列表/任务/情报/工具）
 - Toast 反馈组件：成功/失败/信息/警告四种类型，自动消失
 
+### 7. 内容格式统一（阶段 7）
+
+- 统一内容类型系统：`lib/content-types.ts` 定义 `ContentCategory` 枚举
+- 数据验证器：`lib/content-validator.ts` 提供统一的数据验证
+- 验证命令：`npm run validate-content` 验证所有内容数据
+- 分类枚举扩展：支持 20 种内容分类，涵盖所有模块
+
 ---
 
 ## 📝 待办事项
 
+- [x] 内容格式统一（ContentCategory + 验证器）
 - [ ] 其他节点（D03-D14 及其他方向）迁移到新的结构化内容格式
 - [ ] robots.ts 和 sitemap.ts 中的域名需替换为实际域名
 - [ ] 扩展更多技术方向（NLP、强化学习等）
@@ -387,3 +400,12 @@ module.exports = nextConfig
   - hover-lift 悬停效果
   - Skeleton 骨架屏组件
   - Toast 反馈组件
+
+### 2026-06-22
+
+- **阶段 7 完成**：内容格式统一
+  - 新增统一内容类型系统（`content-types.ts`）
+  - 新增数据验证器（`content-validator.ts`）
+  - 扩展 ContentCategory 枚举：支持 20 种分类
+  - 新增内容验证脚本（`npm run validate-content`）
+  - 更新文档：content-spec.md 和 CLAUDE.md

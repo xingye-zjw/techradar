@@ -14,10 +14,19 @@ export type ContentCategory =
   | 'math'                  // 数学基础
   | 'devops'                // 工程部署
   | 'llm'                   // 大语言模型
+  | 'llm-fundamentals'      // LLM 基础
+  | 'llm-application'       // LLM 应用
   | 'reinforcement-learning' // 强化学习
   | 'data-processing'       // 数据处理
+  | 'data-engineering'      // 数据工程
   | 'tools'                 // 工具相关
-  | 'best-practices';       // 最佳实践
+  | 'best-practices'        // 最佳实践
+  | 'infrastructure'        // 基础设施
+  | 'deployment'            // 模型部署
+  | 'training'              // 模型训练
+  | 'evaluation'            // 模型评估
+  | 'math-foundations'      // 数学基础
+  | 'uncategorized';        // 未分类
 
 // 难度级别
 export type Difficulty = 'beginner' | 'intermediate' | 'advanced';
@@ -139,8 +148,10 @@ export interface Pitfall {
 export function isValidCategory(category: string): category is ContentCategory {
   const validCategories: ContentCategory[] = [
     'computer-vision', 'nlp', 'deep-learning', 'machine-learning',
-    'math', 'devops', 'llm', 'reinforcement-learning',
-    'data-processing', 'tools', 'best-practices'
+    'math', 'devops', 'llm', 'llm-fundamentals', 'llm-application',
+    'reinforcement-learning', 'data-processing', 'data-engineering',
+    'tools', 'best-practices', 'infrastructure', 'deployment',
+    'training', 'evaluation', 'math-foundations', 'uncategorized'
   ];
   return validCategories.includes(category as ContentCategory);
 }
