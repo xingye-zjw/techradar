@@ -9,7 +9,8 @@
     "lint": "next lint",
     "validate-content": "npx tsx scripts/validate-content.ts",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "prepare": "husky"
   },
   "dependencies": {
     "@radix-ui/react-separator": "^1.1.10",
@@ -31,6 +32,7 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.4.19",
+    "husky": "^9.1.7",
     "postcss": "^8.4.38",
     "tailwindcss": "^3.4.4",
     "tsx": "^4.22.4",

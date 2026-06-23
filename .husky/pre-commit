@@ -1,0 +1,7 @@
+echo "🔍 运行内容质量检查..."
+npm test
+if [ $? -ne 0 ]; then
+  echo "❌ 内容质量检查未通过，请修复后重试"
+  exit 1
+fi
+echo "✅ 内容质量检查通过"
