@@ -1,0 +1,202 @@
+{
+  "projects": [
+    {
+      "slug": "cv-image-classification",
+      "title": "CV 图像分类实战",
+      "category": "computer-vision",
+      "difficulty": 3,
+      "duration": "2周",
+      "summary": "使用 PyTorch 实现图像分类，掌握 CNN 完整训练流程",
+      "prerequisites": ["Python 基础", "PyTorch 基础", "CNN 基础概念"],
+      "relatedNodes": ["cv-cnn", "pytorch-core"],
+      "objectives": [
+        "掌握 CNN 完整训练流程",
+        "理解数据增强技术",
+        "学会模型评估和优化",
+        "了解迁移学习方法"
+      ],
+      "projectStructure": [
+        { "path": "data/", "description": "数据集目录", "isRequired": true },
+        { "path": "models/", "description": "模型定义", "isRequired": true },
+        { "path": "utils/", "description": "工具函数", "isRequired": false },
+        { "path": "train.py", "description": "训练脚本", "isRequired": true },
+        { "path": "README.md", "description": "项目说明", "isRequired": true }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "title": "环境准备",
+          "description": "安装必要的依赖包，配置 GPU 环境",
+          "code": "pip install torch torchvision matplotlib",
+          "hint": "确保 CUDA 版本与 PyTorch 匹配"
+        },
+        {
+          "order": 2,
+          "title": "数据加载",
+          "description": "使用 torchvision 加载 CIFAR-10 数据集，进行预处理",
+          "code": "from torchvision import datasets, transforms",
+          "hint": "记得做数据增强提高泛化能力"
+        },
+        {
+          "order": 3,
+          "title": "模型构建",
+          "description": "构建 CNN 模型，定义卷积层和全连接层",
+          "hint": "从简单模型开始，逐步增加复杂度"
+        },
+        {
+          "order": 4,
+          "title": "训练优化",
+          "description": "定义损失函数和优化器，开始训练",
+          "hint": "使用学习率调度器提高训练效果"
+        },
+        {
+          "order": 5,
+          "title": "测试评估",
+          "description": "在测试集上评估模型性能，分析混淆矩阵",
+          "hint": "关注准确率、召回率、F1 分数"
+        }
+      ],
+      "resources": [
+        { "title": "PyTorch 官方教程", "url": "https://pytorch.org/tutorials/", "type": "documentation" },
+        { "title": "CIFAR-10 数据集", "url": "https://www.cs.toronto.edu/~kriz/cifar.html", "type": "documentation" }
+      ],
+      "relatedIntel": ["015-cnn-architecture"],
+      "relatedTerms": ["convolutional-neural-network", "image-classification"],
+      "relatedTools": ["pytorch", "jupyter"],
+      "templateRepo": "https://github.com/example/cv-image-classification-template",
+      "solutionRepo": "https://github.com/example/cv-image-classification-solution"
+    },
+    {
+      "slug": "nlp-sentiment-analysis",
+      "title": "NLP 情感分析实战",
+      "category": "nlp",
+      "difficulty": 2,
+      "duration": "1周",
+      "summary": "使用 Transformers 实现情感分析，理解预训练模型",
+      "prerequisites": ["Python 基础", "NLP 基础概念"],
+      "relatedNodes": ["nlp-transformer"],
+      "objectives": [
+        "理解预训练模型的工作原理",
+        "掌握 HuggingFace Transformers 使用",
+        "学会微调预训练模型",
+        "了解情感分析应用场景"
+      ],
+      "projectStructure": [
+        { "path": "data/", "description": "数据集目录", "isRequired": true },
+        { "path": "models/", "description": "模型定义", "isRequired": false },
+        { "path": "train.py", "description": "训练脚本", "isRequired": true },
+        { "path": "predict.py", "description": "预测脚本", "isRequired": true },
+        { "path": "README.md", "description": "项目说明", "isRequired": true }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "title": "环境准备",
+          "description": "安装 transformers 和 datasets 库",
+          "code": "pip install transformers datasets",
+          "hint": "使用 GPU 加速训练"
+        },
+        {
+          "order": 2,
+          "title": "数据加载",
+          "description": "加载情感分析数据集，进行预处理",
+          "code": "from datasets import load_dataset",
+          "hint": "使用 HuggingFace datasets 库"
+        },
+        {
+          "order": 3,
+          "title": "模型选择",
+          "description": "选择合适的预训练模型（如 BERT、RoBERTa）",
+          "hint": "根据任务选择合适大小的模型"
+        },
+        {
+          "order": 4,
+          "title": "微调训练",
+          "description": "使用 Trainer API 进行微调",
+          "code": "from transformers import Trainer",
+          "hint": "注意学习率设置"
+        },
+        {
+          "order": 5,
+          "title": "模型评估",
+          "description": "在测试集上评估模型性能",
+          "hint": "关注 F1 分数和混淆矩阵"
+        }
+      ],
+      "resources": [
+        { "title": "HuggingFace 教程", "url": "https://huggingface.co/docs/transformers/training", "type": "documentation" },
+        { "title": "IMDB 数据集", "url": "https://huggingface.co/datasets/imdb", "type": "documentation" }
+      ],
+      "relatedIntel": ["002-rag", "008-huggingface"],
+      "relatedTerms": ["transformer", "bert", "sentiment-analysis"],
+      "relatedTools": ["huggingface", "jupyter"],
+      "templateRepo": "https://github.com/example/nlp-sentiment-template",
+      "solutionRepo": "https://github.com/example/nlp-sentiment-solution"
+    },
+    {
+      "slug": "devops-cicd-pipeline",
+      "title": "DevOps CI/CD 流水线实战",
+      "category": "devops",
+      "difficulty": 2,
+      "duration": "1周",
+      "summary": "搭建完整的 CI/CD 流水线，实现自动化部署",
+      "prerequisites": ["Linux 基础", "Git 基础", "Docker 基础"],
+      "relatedNodes": ["docker-basic", "git-github"],
+      "objectives": [
+        "理解 CI/CD 概念和流程",
+        "掌握 GitHub Actions 使用",
+        "学会 Docker 容器化部署",
+        "了解自动化测试集成"
+      ],
+      "projectStructure": [
+        { "path": ".github/workflows/", "description": "GitHub Actions 配置", "isRequired": true },
+        { "path": "Dockerfile", "description": "Docker 镜像构建文件", "isRequired": true },
+        { "path": "docker-compose.yml", "description": "容器编排配置", "isRequired": false },
+        { "path": "tests/", "description": "测试目录", "isRequired": true },
+        { "path": "README.md", "description": "项目说明", "isRequired": true }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "title": "创建 GitHub 仓库",
+          "description": "创建新的 GitHub 仓库并初始化项目",
+          "hint": "使用 README.md 初始化仓库"
+        },
+        {
+          "order": 2,
+          "title": "编写 Dockerfile",
+          "description": "创建 Docker 镜像构建文件",
+          "code": "FROM python:3.9-slim\nWORKDIR /app\nCOPY . .\nRUN pip install -r requirements.txt\nCMD [\"python\", \"app.py\"]",
+          "hint": "使用多阶段构建减小镜像体积"
+        },
+        {
+          "order": 3,
+          "title": "配置 GitHub Actions",
+          "description": "创建 CI/CD 流水线配置文件",
+          "hint": "包含测试、构建、部署步骤"
+        },
+        {
+          "order": 4,
+          "title": "编写测试",
+          "description": "编写单元测试和集成测试",
+          "hint": "使用 pytest 框架"
+        },
+        {
+          "order": 5,
+          "title": "测试流水线",
+          "description": "推送代码触发流水线，验证各阶段",
+          "hint": "检查 GitHub Actions 日志"
+        }
+      ],
+      "resources": [
+        { "title": "GitHub Actions 文档", "url": "https://docs.github.com/en/actions", "type": "documentation" },
+        { "title": "Docker 官方文档", "url": "https://docs.docker.com/", "type": "documentation" }
+      ],
+      "relatedIntel": ["005-docker", "010-git"],
+      "relatedTerms": ["ci-cd", "docker", "github-actions"],
+      "relatedTools": ["docker", "github"],
+      "templateRepo": "https://github.com/example/cicd-template",
+      "solutionRepo": "https://github.com/example/cicd-solution"
+    }
+  ]
+}

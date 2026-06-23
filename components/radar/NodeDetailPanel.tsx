@@ -11,6 +11,7 @@ import { getTermByName, identifyTermsInText, getMirrorHint } from "@/lib/terms";
 import { getAllTerms, getTermsBySlugs, type GlossaryTerm } from "@/lib/glossary";
 import { toast } from "@/components/Toast";
 import type { ResourceSource, ResourceType } from "./types";
+import { getProjectsByNode, getDifficultyStars } from "@/lib/practice";
 
 interface NodeDetailPanelProps {
   node: RoadmapNodeType | null;
@@ -168,6 +169,9 @@ export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailP
   const track = ROADMAP_TRACKS.find((t) => t.id === node.track);
   const colorStyle = getTrackColorClasses(node.track as TrackId) || "text-neutral-400 bg-neutral-800/50 border-neutral-700";
   const trackColorClass = colorStyle.split(" ")[0];
+
+  // 获取关联的实战项目
+  const relatedProjects = getProjectsByNode(node.id);
 
   const toggleTask = (day: number) => {
     const wasCompleted = taskProgress[day];
@@ -376,6 +380,35 @@ export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailP
                       {TOOL_LINKS[toolName] || toolName}
                     </span>
                     <span className="text-[10px] text-neutral-600 group-hover:text-purple-400 transition-colors">→</span>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* 实战项目 */}
+          {relatedProjects.length > 0 && (
+            <section>
+              <h3 className="font-mono text-[10px] text-neutral-500 uppercase tracking-wider mb-2">// 🚀 实战项目</h3>
+              <div className="space-y-2">
+                {relatedProjects.map((project) => (
+                  <Link
+                    key={project.slug}
+                    href={`/practice/${project.slug}`}
+                    className="flex items-center gap-2 p-2 rounded-lg bg-neutral-950 border border-neutral-800 hover:border-emerald-500/30 hover:bg-emerald-500/5 transition-all group hover-lift-subtle"
+                  >
+                    <span className="text-emerald-400 text-sm">🚀</span>
+                    <div className="flex-1 min-w-0">
+                      <span className="text-xs text-neutral-300 group-hover:text-emerald-400 transition-colors block truncate">
+                        {project.title}
+                      </span>
+                      <div className="flex items-center gap-2 mt-0.5">
+                        <span className="text-[10px] text-neutral-500">{getDifficultyStars(project.difficulty)}</span>
+                        <span className="text-[10px] text-neutral-600">|</span>
+                        <span className="text-[10px] text-neutral-500">{project.duration}</span>
+                      </div>
+                    </div>
+                    <span className="text-[10px] text-neutral-600 group-hover:text-emerald-400 transition-colors">→</span>
                   </Link>
                 ))}
               </div>

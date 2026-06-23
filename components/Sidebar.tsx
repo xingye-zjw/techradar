@@ -17,7 +17,8 @@ const NAV_ITEMS: NavItem[] = [
   { label: "技术情报", href: "/intel", icon: "📰" },
   { label: "工具推荐箱", href: "/toolbox", icon: "🧰" },
   { label: "踩坑避雷", href: "/pitfall", icon: "⚡" },
-  { label: "专业术语", href: "/glossary", icon: "📖", isNew: true },
+  { label: "专业术语", href: "/glossary", icon: "📖" },
+  { label: "实战项目", href: "/practice", icon: "🚀", isNew: true },
 ];
 
 // 路线图页的目录结构

@@ -240,3 +240,52 @@ export function isValidCategory(category: string): category is ContentCategory {
   ];
   return validCategories.includes(category as ContentCategory);
 }
+
+// ============================================================================
+// 实战项目类型
+// ============================================================================
+
+// 实战项目
+export interface PracticeProject {
+  slug: string;                      // URL 友好标识
+  title: string;                     // 项目名称
+  category: ContentCategory;         // 所属分类
+  difficulty: 1 | 2 | 3 | 4 | 5;    // 难度等级 (1-5)
+  duration: string;                  // 预计时长
+  summary: string;                   // 项目简介
+
+  // 前置要求
+  prerequisites: string[];           // 前置知识
+  relatedNodes?: string[];           // 关联路线图节点
+
+  // 项目内容
+  objectives: string[];              // 学习目标
+  projectStructure: ProjectFile[];   // 项目结构
+  steps: ProjectStep[];              // 实现步骤
+
+  // 资源
+  resources: ResourceLink[];         // 参考资源
+  relatedIntel?: string[];           // 关联情报
+  relatedTerms?: string[];           // 关联术语
+  relatedTools?: string[];           // 关联工具
+
+  // 代码
+  templateRepo?: string;             // 模板仓库 URL
+  solutionRepo?: string;             // 参考实现 URL
+}
+
+// 项目文件结构
+export interface ProjectFile {
+  path: string;                      // 文件路径
+  description: string;               // 文件说明
+  isRequired: boolean;               // 是否必需
+}
+
+// 项目实现步骤
+export interface ProjectStep {
+  order: number;                     // 步骤顺序
+  title: string;                     // 步骤标题
+  description: string;               // 步骤说明
+  code?: string;                     // 代码示例（可选）
+  hint?: string;                     // 提示（可选）
+}
