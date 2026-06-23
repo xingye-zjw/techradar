@@ -25,35 +25,116 @@
       "steps": [
         {
           "order": 1,
-          "title": "环境准备",
-          "description": "安装必要的依赖包，配置 GPU 环境",
-          "code": "pip install torch torchvision matplotlib",
-          "hint": "确保 CUDA 版本与 PyTorch 匹配"
+          "title": "环境准备与 GPU 验证",
+          "content": {
+            "objective": "配置 PyTorch 深度学习环境，确保 GPU 可用",
+            "api_checklist": [
+              "torch.cuda.is_available() 检查 GPU 是否可用",
+              "torch.version.cuda 查看 CUDA 版本",
+              "torch.cuda.get_device_name(0) 获取 GPU 型号",
+              "torch.backends.cudnn.enabled 确认 cuDNN 已启用"
+            ],
+            "practice": "创建一个虚拟环境，安装 PyTorch（匹配 CUDA 版本）和 torchvision。运行验证脚本确认 GPU 可用，并打印 GPU 型号和显存大小。",
+            "answer": "核心验证代码：import torch; print(f'CUDA available: {torch.cuda.is_available()}'); print(f'GPU: {torch.cuda.get_device_name(0)}'); print(f'Memory: {torch.cuda.get_device_properties(0).total_mem / 1024**3:.1f} GB')"
+          },
+          "duration": "1.5小时",
+          "resources": [
+            { "title": "PyTorch 安装指南", "url": "https://pytorch.org/get-started/locally/", "type": "documentation" },
+            { "title": "CUDA 兼容性检查", "url": "https://developer.nvidia.com/cuda-gpus", "type": "documentation" }
+          ],
+          "checkpoint": "能打印出 GPU 型号和显存大小"
         },
         {
           "order": 2,
-          "title": "数据加载",
-          "description": "使用 torchvision 加载 CIFAR-10 数据集，进行预处理",
-          "code": "from torchvision import datasets, transforms",
-          "hint": "记得做数据增强提高泛化能力"
+          "title": "数据加载与增强",
+          "content": {
+            "objective": "使用 torchvision 加载 CIFAR-10 数据集，实现数据增强 pipeline",
+            "api_checklist": [
+              "torchvision.datasets.CIFAR10() 加载数据集",
+              "transforms.Compose() 组合多个变换",
+              "transforms.RandomHorizontalFlip() 随机水平翻转",
+              "transforms.RandomCrop(32, padding=4) 随机裁剪",
+              "transforms.Normalize() 归一化处理",
+              "torch.utils.data.DataLoader() 创建数据加载器"
+            ],
+            "practice": "实现完整的数据 pipeline：加载 CIFAR-10 训练集和测试集，对训练集应用数据增强（随机翻转、裁剪、颜色抖动），对测试集只做归一化。用 DataLoader 创建 batch，设置 num_workers=4 加速加载。",
+            "answer": "训练集增强：transform_train = transforms.Compose([transforms.RandomCrop(32, padding=4), transforms.RandomHorizontalFlip(), transforms.ColorJitter(brightness=0.2, contrast=0.2), transforms.ToTensor(), transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))])"
+          },
+          "duration": "2小时",
+          "resources": [
+            { "title": "torchvision transforms 文档", "url": "https://pytorch.org/vision/stable/transforms.html", "type": "documentation" },
+            { "title": "CIFAR-10 数据集说明", "url": "https://www.cs.toronto.edu/~kriz/cifar.html", "type": "documentation" }
+          ],
+          "checkpoint": "能可视化一个 batch 的图片，确认增强效果正常"
         },
         {
           "order": 3,
-          "title": "模型构建",
-          "description": "构建 CNN 模型，定义卷积层和全连接层",
-          "hint": "从简单模型开始，逐步增加复杂度"
+          "title": "CNN 模型构建",
+          "content": {
+            "objective": "构建一个包含残差连接的 CNN 模型，理解网络设计原则",
+            "api_checklist": [
+              "nn.Module 自定义网络模块",
+              "nn.Conv2d() 卷积层定义",
+              "nn.BatchNorm2d() 批归一化",
+              "nn.ReLU() 激活函数",
+              "nn.MaxPool2d() 池化层",
+              "nn.Linear() 全连接层",
+              "残差连接实现"
+            ],
+            "practice": "实现一个简化版 ResNet：包含 3 个残差块，每个块有 2 个 3x3 卷积层 + BN + ReLU，使用 skip connection。最后接全局平均池化和全连接分类层。",
+            "answer": "残差块核心：class ResBlock(nn.Module): def __init__(self, in_ch, out_ch): self.conv1 = nn.Conv2d(in_ch, out_ch, 3, padding=1); self.bn1 = nn.BatchNorm2d(out_ch); self.conv2 = nn.Conv2d(out_ch, out_ch, 3, padding=1); self.bn2 = nn.BatchNorm2d(out_ch); self.shortcut = nn.Conv2d(in_ch, out_ch, 1) if in_ch != out_ch else nn.Identity()"
+          },
+          "duration": "3小时",
+          "resources": [
+            { "title": "ResNet 论文", "url": "https://arxiv.org/abs/1512.03385", "type": "article" },
+            { "title": "PyTorch nn.Module 教程", "url": "https://pytorch.org/tutorials/beginner/nn_tutorial.html", "type": "documentation" }
+          ],
+          "checkpoint": "模型能正常前向传播，输出 shape 正确"
         },
         {
           "order": 4,
-          "title": "训练优化",
-          "description": "定义损失函数和优化器，开始训练",
-          "hint": "使用学习率调度器提高训练效果"
+          "title": "训练循环与优化",
+          "content": {
+            "objective": "实现完整的训练循环，掌握学习率调度和梯度裁剪",
+            "api_checklist": [
+              "nn.CrossEntropyLoss() 交叉熵损失",
+              "optim.AdamW() AdamW 优化器",
+              "optim.lr_scheduler.CosineAnnealingLR() 余弦退火",
+              "torch.nn.utils.clip_grad_norm_() 梯度裁剪",
+              "model.train() / model.eval() 模式切换",
+              "torch.no_grad() 禁用梯度计算"
+            ],
+            "practice": "实现完整训练循环：定义损失函数和优化器，使用 CosineAnnealing 学习率调度，每个 epoch 训练后在验证集上评估，保存最佳模型权重。训练 50 个 epoch，观察 loss 和 accuracy 曲线。",
+            "answer": "训练循环核心：for epoch in range(50): model.train(); for images, labels in train_loader: images, labels = images.cuda(), labels.cuda(); outputs = model(images); loss = criterion(outputs, labels); optimizer.zero_grad(); loss.backward(); torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0); optimizer.step(); scheduler.step()"
+          },
+          "duration": "3小时",
+          "resources": [
+            { "title": "PyTorch 训练教程", "url": "https://pytorch.org/tutorials/beginner/introyt/trainingyt.html", "type": "documentation" },
+            { "title": "学习率调度策略", "url": "https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate", "type": "documentation" }
+          ],
+          "checkpoint": "loss 稳定下降，验证集 accuracy > 85%"
         },
         {
           "order": 5,
-          "title": "测试评估",
-          "description": "在测试集上评估模型性能，分析混淆矩阵",
-          "hint": "关注准确率、召回率、F1 分数"
+          "title": "模型评估与可视化",
+          "content": {
+            "objective": "全面评估模型性能，分析错误样本，可视化学习成果",
+            "api_checklist": [
+              "sklearn.metrics.classification_report() 分类报告",
+              "sklearn.metrics.confusion_matrix() 混淆矩阵",
+              "matplotlib 绘制混淆矩阵热力图",
+              "Grad-CAM 可视化注意力区域",
+              "t-SNE 特征可视化"
+            ],
+            "practice": "在测试集上评估模型，生成分类报告（precision、recall、F1），绘制混淆矩阵热力图，找出混淆最严重的类别对。使用 Grad-CAM 可视化模型关注的图像区域，验证模型是否学到了正确的特征。",
+            "answer": "评估代码：from sklearn.metrics import classification_report, confusion_matrix; print(classification_report(all_preds, all_labels, target_names=classes)); sns.heatmap(confusion_matrix(all_labels, all_preds), annot=True, xticklabels=classes, yticklabels=classes)"
+          },
+          "duration": "2.5小时",
+          "resources": [
+            { "title": "sklearn 评估指标", "url": "https://scikit-learn.org/stable/modules/model_evaluation.html", "type": "documentation" },
+            { "title": "Grad-CAM 论文", "url": "https://arxiv.org/abs/1610.02391", "type": "article" }
+          ],
+          "checkpoint": "能输出分类报告，混淆矩阵可视化清晰"
         }
       ],
       "resources": [
@@ -91,36 +172,111 @@
       "steps": [
         {
           "order": 1,
-          "title": "环境准备",
-          "description": "安装 transformers 和 datasets 库",
-          "code": "pip install transformers datasets",
-          "hint": "使用 GPU 加速训练"
+          "title": "环境配置与依赖安装",
+          "content": {
+            "objective": "配置 HuggingFace Transformers 开发环境",
+            "api_checklist": [
+              "pip install transformers datasets evaluate",
+              "pip install torch --index-url https://download.pytorch.org/whl/cu118",
+              "from datasets import load_dataset",
+              "from transformers import AutoTokenizer, AutoModelForSequenceClassification"
+            ],
+            "practice": "创建虚拟环境，安装 transformers、datasets、evaluate 库。验证安装：from transformers import pipeline; classifier = pipeline('sentiment-analysis'); print(classifier('I love this movie!'))",
+            "answer": "安装命令：pip install transformers datasets evaluate accelerate; 验证：pipeline('sentiment-analysis')('Great!') 应返回 positive 标签"
+          },
+          "duration": "1.5小时",
+          "resources": [
+            { "title": "HuggingFace 安装指南", "url": "https://huggingface.co/docs/transformers/installation", "type": "documentation" },
+            { "title": "PyTorch CUDA 版本选择", "url": "https://pytorch.org/get-started/locally/", "type": "documentation" }
+          ],
+          "checkpoint": "能成功运行 sentiment-analysis pipeline"
         },
         {
           "order": 2,
-          "title": "数据加载",
-          "description": "加载情感分析数据集，进行预处理",
-          "code": "from datasets import load_dataset",
-          "hint": "使用 HuggingFace datasets 库"
+          "title": "数据加载与预处理",
+          "content": {
+            "objective": "加载 IMDB 情感分析数据集，理解数据格式和预处理流程",
+            "api_checklist": [
+              "load_dataset('imdb') 加载 IMDB 数据集",
+              "dataset['train'].shuffle().select(range(1000)) 采样子集",
+              "AutoTokenizer.from_pretrained('bert-base-uncased') 加载分词器",
+              "tokenizer(text, padding='max_length', truncation=True) 编码文本",
+              "dataset.map(tokenize_function, batched=True) 批量处理"
+            ],
+            "practice": "加载 IMDB 数据集，采样 2000 条训练集和 500 条测试集。查看数据结构：打印一条样本的 text 和 label，统计正负样本比例。使用 BERT tokenizer 对文本进行编码，理解 input_ids、attention_mask、token_type_ids 的含义。",
+            "answer": "数据加载：from datasets import load_dataset; dataset = load_dataset('imdb'); small_train = dataset['train'].shuffle(seed=42).select(range(2000)); tokenizer = AutoTokenizer.from_pretrained('bert-base-uncased'); def tokenize(ex): return tokenizer(ex['text'], padding='max_length', truncation=True, max_length=256)"
+          },
+          "duration": "2小时",
+          "resources": [
+            { "title": "HuggingFace Datasets 文档", "url": "https://huggingface.co/docs/datasets/", "type": "documentation" },
+            { "title": "IMDB 数据集说明", "url": "https://huggingface.co/datasets/imdb", "type": "documentation" }
+          ],
+          "checkpoint": "数据集加载成功，tokenize 后的 input_ids shape 正确"
         },
         {
           "order": 3,
-          "title": "模型选择",
-          "description": "选择合适的预训练模型（如 BERT、RoBERTa）",
-          "hint": "根据任务选择合适大小的模型"
+          "title": "模型加载与配置",
+          "content": {
+            "objective": "加载预训练 BERT 模型，配置分类头",
+            "api_checklist": [
+              "AutoModelForSequenceClassification.from_pretrained() 加载分类模型",
+              "model.config.num_labels 设置分类数",
+              "model.parameters() 查看模型参数",
+              "sum(p.numel() for p in model.parameters()) 统计参数量"
+            ],
+            "practice": "加载 bert-base-uncased 预训练模型，设置 num_labels=2（正面/负面）。打印模型结构，统计总参数量和可训练参数量。理解模型最后一层分类头的结构。",
+            "answer": "模型加载：from transformers import AutoModelForSequenceClassification; model = AutoModelForSequenceClassification.from_pretrained('bert-base-uncased', num_labels=2); print(f'总参数量: {sum(p.numel() for p in model.parameters()) / 1e6:.1f}M')"
+          },
+          "duration": "1.5小时",
+          "resources": [
+            { "title": "BERT 模型文档", "url": "https://huggingface.co/docs/transformers/model_doc/bert", "type": "documentation" },
+            { "title": "预训练模型列表", "url": "https://huggingface.co/models", "type": "documentation" }
+          ],
+          "checkpoint": "模型加载成功，能打印参数量"
         },
         {
           "order": 4,
           "title": "微调训练",
-          "description": "使用 Trainer API 进行微调",
-          "code": "from transformers import Trainer",
-          "hint": "注意学习率设置"
+          "content": {
+            "objective": "使用 Trainer API 进行模型微调，掌握训练参数配置",
+            "api_checklist": [
+              "TrainingArguments() 配置训练参数",
+              "Trainer() 创建训练器",
+              "trainer.train() 开始训练",
+              "trainer.evaluate() 评估模型",
+              "trainer.save_model() 保存模型"
+            ],
+            "practice": "配置训练参数：learning_rate=2e-5、batch_size=16、epochs=3、warmup_steps=100。使用 Trainer 进行训练，观察 loss 曲线。训练完成后在测试集上评估 accuracy 和 F1 分数。",
+            "answer": "训练配置：from transformers import TrainingArguments, Trainer; args = TrainingArguments(output_dir='./results', learning_rate=2e-5, per_device_train_batch_size=16, num_train_epochs=3, warmup_steps=100, evaluation_strategy='epoch'); trainer = Trainer(model=model, args=args, train_dataset=train_dataset, eval_dataset=test_dataset); trainer.train()"
+          },
+          "duration": "3小时",
+          "resources": [
+            { "title": "Trainer API 文档", "url": "https://huggingface.co/docs/transformers/main_classes/trainer", "type": "documentation" },
+            { "title": "训练参数详解", "url": "https://huggingface.co/docs/transformers/main_classes/trainer#transformers.TrainingArguments", "type": "documentation" }
+          ],
+          "checkpoint": "训练完成，loss 下降，accuracy > 85%"
         },
         {
           "order": 5,
-          "title": "模型评估",
-          "description": "在测试集上评估模型性能",
-          "hint": "关注 F1 分数和混淆矩阵"
+          "title": "模型评估与推理",
+          "content": {
+            "objective": "全面评估模型性能，实现推理接口",
+            "api_checklist": [
+              "evaluate.load('accuracy') 加载评估指标",
+              "sklearn.metrics.classification_report() 分类报告",
+              "pipeline('sentiment-analysis', model=model) 创建推理管道",
+              "model.save_pretrained() 保存模型",
+              "tokenizer.save_pretrained() 保存分词器"
+            ],
+            "practice": "在测试集上评估模型，生成分类报告（precision、recall、F1）。创建推理 pipeline，测试几条自定义文本。保存模型和分词器到本地目录。",
+            "answer": "评估代码：import evaluate; accuracy = evaluate.load('accuracy'); preds = trainer.predict(test_dataset); print(classification_report(preds.label_ids, preds.predictions.argmax(-1), target_names=['negative', 'positive'])); pipe = pipeline('sentiment-analysis', model=model, tokenizer=tokenizer); print(pipe('This movie is great!'))"
+          },
+          "duration": "2小时",
+          "resources": [
+            { "title": "evaluate 库文档", "url": "https://huggingface.co/docs/evaluate/", "type": "documentation" },
+            { "title": "sklearn 评估指标", "url": "https://scikit-learn.org/stable/modules/model_evaluation.html", "type": "documentation" }
+          ],
+          "checkpoint": "输出分类报告，推理 pipeline 正常工作"
         }
       ],
       "resources": [
@@ -158,34 +314,116 @@
       "steps": [
         {
           "order": 1,
-          "title": "创建 GitHub 仓库",
-          "description": "创建新的 GitHub 仓库并初始化项目",
-          "hint": "使用 README.md 初始化仓库"
+          "title": "项目初始化与结构搭建",
+          "content": {
+            "objective": "创建 GitHub 仓库，搭建标准项目结构",
+            "api_checklist": [
+              "git init 初始化本地仓库",
+              "git remote add origin 关联远程仓库",
+              "创建 .gitignore 文件",
+              "创建 requirements.txt 依赖文件",
+              "创建 app.py 主应用文件"
+            ],
+            "practice": "创建一个简单的 Flask/FastAPI Web 应用，包含一个健康检查接口 GET /health 返回 {'status': 'ok'}。创建 requirements.txt 列出依赖，创建 .gitignore 排除 __pycache__、.env、venv 等目录。",
+            "answer": "项目结构：app.py（Flask 应用）、requirements.txt（flask, pytest）、.gitignore、README.md。app.py: from flask import Flask, jsonify; app = Flask(__name__); @app.route('/health'); def health(): return jsonify(status='ok')"
+          },
+          "duration": "1.5小时",
+          "resources": [
+            { "title": "GitHub 创建仓库指南", "url": "https://docs.github.com/en/repositories/creating-and-managing-repositories/quickstart-for-repositories", "type": "documentation" },
+            { "title": "Python .gitignore 模板", "url": "https://github.com/github/gitignore/blob/main/Python.gitignore", "type": "documentation" }
+          ],
+          "checkpoint": "本地项目能运行，/health 接口返回正常"
         },
         {
           "order": 2,
           "title": "编写 Dockerfile",
-          "description": "创建 Docker 镜像构建文件",
-          "code": "FROM python:3.9-slim\nWORKDIR /app\nCOPY . .\nRUN pip install -r requirements.txt\nCMD [\"python\", \"app.py\"]",
-          "hint": "使用多阶段构建减小镜像体积"
+          "content": {
+            "objective": "编写生产级 Dockerfile，理解镜像构建最佳实践",
+            "api_checklist": [
+              "FROM python:3.9-slim 选择精简基础镜像",
+              "WORKDIR /app 设置工作目录",
+              "COPY requirements.txt . 单独复制依赖文件",
+              "RUN pip install --no-cache-dir -r requirements.txt 安装依赖",
+              "COPY . . 复制应用代码",
+              "EXPOSE 5000 声明端口",
+              "CMD [\"python\", \"app.py\"] 启动命令"
+            ],
+            "practice": "编写多阶段构建的 Dockerfile：第一阶段安装依赖并运行测试，第二阶段只复制运行时必需文件。使用非 root 用户运行应用，配置 HEALTHCHECK 指令。",
+            "answer": "Dockerfile 示例：FROM python:3.9-slim AS builder; WORKDIR /app; COPY requirements.txt .; RUN pip install --user -r requirements.txt; FROM python:3.9-slim; WORKDIR /app; COPY --from=builder /root/.local /root/.local; COPY . .; RUN useradd -m appuser; USER appuser; HEALTHCHECK CMD curl -f http://localhost:5000/health || exit 1; CMD [\"python\", \"app.py\"]"
+          },
+          "duration": "2小时",
+          "resources": [
+            { "title": "Dockerfile 最佳实践", "url": "https://docs.docker.com/develop/develop-images/dockerfile_best-practices/", "type": "documentation" },
+            { "title": "多阶段构建详解", "url": "https://docs.docker.com/build/building/multi-stage/", "type": "documentation" }
+          ],
+          "checkpoint": "docker build 成功，docker run 能访问 /health"
         },
         {
           "order": 3,
-          "title": "配置 GitHub Actions",
-          "description": "创建 CI/CD 流水线配置文件",
-          "hint": "包含测试、构建、部署步骤"
+          "title": "编写单元测试",
+          "content": {
+            "objective": "使用 pytest 编写单元测试和集成测试",
+            "api_checklist": [
+              "pytest.fixture() 定义测试夹具",
+              "test_client() 获取测试客户端",
+              "assert 断言验证",
+              "pytest.mark.parametrize() 参数化测试",
+              "coverage 代码覆盖率"
+            ],
+            "practice": "为 /health 接口编写单元测试，验证返回状态码和 JSON 结构。使用 pytest fixture 创建测试客户端，使用参数化测试验证不同场景。运行 pytest --cov 查看代码覆盖率。",
+            "answer": "测试代码：import pytest; from app import app; @pytest.fixture; def client(): app.config['TESTING'] = True; with app.test_client() as client: yield client; def test_health(client): response = client.get('/health'); assert response.status_code == 200; assert response.json['status'] == 'ok'"
+          },
+          "duration": "2小时",
+          "resources": [
+            { "title": "pytest 官方文档", "url": "https://docs.pytest.org/en/stable/", "type": "documentation" },
+            { "title": "Flask 测试指南", "url": "https://flask.palletsprojects.com/en/2.3.x/testing/", "type": "documentation" }
+          ],
+          "checkpoint": "pytest 通过，代码覆盖率 > 80%"
         },
         {
           "order": 4,
-          "title": "编写测试",
-          "description": "编写单元测试和集成测试",
-          "hint": "使用 pytest 框架"
+          "title": "配置 GitHub Actions",
+          "content": {
+            "objective": "创建 CI/CD 流水线，实现自动化测试和构建",
+            "api_checklist": [
+              "on: [push, pull_request] 触发条件",
+              "jobs: define 定义作业",
+              "steps: checkout, setup-python, install, test",
+              "actions/checkout@v3 检出代码",
+              "actions/setup-python@v4 配置 Python",
+              "docker/build-push-action@v4 构建镜像"
+            ],
+            "practice": "创建 .github/workflows/ci.yml 配置文件：在 push 和 PR 时触发，运行测试、构建 Docker 镜像。配置缓存加速依赖安装，添加代码覆盖率报告。",
+            "answer": "CI 配置：name: CI; on: [push, pull_request]; jobs: test: runs-on: ubuntu-latest; steps: - uses: actions/checkout@v3; - uses: actions/setup-python@v4; with: python-version: '3.9'; - run: pip install -r requirements.txt; - run: pytest --cov; build: needs: test; steps: - uses: docker/build-push-action@v4"
+          },
+          "duration": "2.5小时",
+          "resources": [
+            { "title": "GitHub Actions 入门", "url": "https://docs.github.com/en/actions/quickstart", "type": "documentation" },
+            { "title": "Actions 市场", "url": "https://github.com/marketplace?type=actions", "type": "documentation" }
+          ],
+          "checkpoint": "GitHub Actions 绿勾，测试和构建都通过"
         },
         {
           "order": 5,
-          "title": "测试流水线",
-          "description": "推送代码触发流水线，验证各阶段",
-          "hint": "检查 GitHub Actions 日志"
+          "title": "部署与监控",
+          "content": {
+            "objective": "实现自动化部署，配置监控和告警",
+            "api_checklist": [
+              "docker compose up -d 部署服务",
+              "nginx 反向代理配置",
+              "prometheus 监控指标",
+              "grafana 可视化面板",
+              "alertmanager 告警配置"
+            ],
+            "practice": "使用 Docker Compose 编排应用和 Nginx 反向代理。配置 /metrics 端点暴露 Prometheus 格式指标。编写部署文档说明如何在服务器上一键部署。",
+            "answer": "docker-compose.yml: version: '3.8'; services: app: build: .; ports: ['5000:5000']; nginx: image: nginx; ports: ['80:80']; volumes: ['./nginx.conf:/etc/nginx/nginx.conf']; depends_on: [app]"
+          },
+          "duration": "2小时",
+          "resources": [
+            { "title": "Docker Compose 文档", "url": "https://docs.docker.com/compose/", "type": "documentation" },
+            { "title": "Nginx 反向代理", "url": "https://nginx.org/en/docs/http/ngx_http_proxy_module.html", "type": "documentation" }
+          ],
+          "checkpoint": "服务可通过 Nginx 访问，/metrics 端点正常"
         }
       ],
       "resources": [
@@ -197,6 +435,879 @@
       "relatedTools": ["docker", "github"],
       "templateRepo": "https://github.com/example/cicd-template",
       "solutionRepo": "https://github.com/example/cicd-solution"
+    },
+    {
+      "slug": "math-numpy-linear-algebra",
+      "title": "NumPy 线性代数实战",
+      "category": "math-foundations",
+      "difficulty": 1,
+      "duration": "1周",
+      "summary": "使用 NumPy 实现线性代数核心运算，为深度学习打下数学基础",
+      "prerequisites": ["Python 基础"],
+      "relatedNodes": ["math-linear-algebra"],
+      "objectives": [
+        "掌握向量和矩阵的基本运算",
+        "理解矩阵分解（LU、QR、SVD）的原理与应用",
+        "学会用 NumPy 解线性方程组",
+        "实现 PCA 降维算法"
+      ],
+      "projectStructure": [
+        { "path": "notebooks/", "description": "Jupyter Notebook 实验", "isRequired": true },
+        { "path": "src/", "description": "工具函数模块", "isRequired": false },
+        { "path": "data/", "description": "示例数据", "isRequired": false },
+        { "path": "README.md", "description": "项目说明", "isRequired": true }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "title": "NumPy 基础与向量运算",
+          "content": {
+            "objective": "掌握 NumPy 数组创建和向量基本运算",
+            "api_checklist": [
+              "np.array() 创建数组",
+              "np.zeros(), np.ones(), np.arange() 特殊数组",
+              "np.dot() 向量点积",
+              "np.linalg.norm() 向量范数",
+              "np.cross() 向量叉积",
+              "向量夹角计算公式"
+            ],
+            "practice": "创建两个 3 维向量，计算它们的点积、叉积、L2 范数和夹角。验证点积公式：a·b = |a||b|cosθ。可视化两个向量及其夹角。",
+            "answer": "向量运算：a = np.array([1, 2, 3]); b = np.array([4, 5, 6]); dot = np.dot(a, b); norm_a = np.linalg.norm(a); norm_b = np.linalg.norm(b); cos_theta = dot / (norm_a * norm_b); theta = np.arccos(cos_theta)"
+          },
+          "duration": "2小时",
+          "resources": [
+            { "title": "NumPy 快速入门", "url": "https://numpy.org/doc/stable/user/quickstart.html", "type": "documentation" },
+            { "title": "3Blue1Brown: 向量介绍", "url": "https://www.3blue1brown.com/lessons/vectors", "type": "video" }
+          ],
+          "checkpoint": "能正确计算向量点积和夹角"
+        },
+        {
+          "order": 2,
+          "title": "矩阵运算与性质",
+          "content": {
+            "objective": "掌握矩阵乘法、转置、逆矩阵等核心运算",
+            "api_checklist": [
+              "np.matmul() 或 @ 运算符矩阵乘法",
+              ".T 矩阵转置",
+              "np.linalg.inv() 矩阵求逆",
+              "np.linalg.det() 行列式计算",
+              "np.linalg.matrix_rank() 矩阵秩",
+              "np.linalg.solve() 解线性方程组"
+            ],
+            "practice": "创建 3x3 矩阵，计算其转置、逆矩阵、行列式和秩。验证 A @ A_inv = I（单位矩阵）。解一个 3 元线性方程组 Ax = b。",
+            "answer": "矩阵运算：A = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 10]]); A_inv = np.linalg.inv(A); det = np.linalg.det(A); rank = np.linalg.matrix_rank(A); b = np.array([1, 2, 3]); x = np.linalg.solve(A, b)"
+          },
+          "duration": "2小时",
+          "resources": [
+            { "title": "Khan Academy: 矩阵乘法", "url": "https://www.khanacademy.org/math/precalculus/x9e81a4f98389efdf:matrices", "type": "course" },
+            { "title": "NumPy 线性代数", "url": "https://numpy.org/doc/stable/reference/routines.linalg.html", "type": "documentation" }
+          ],
+          "checkpoint": "能解线性方程组并验证逆矩阵"
+        },
+        {
+          "order": 3,
+          "title": "特征值与特征向量",
+          "content": {
+            "objective": "理解特征值分解的几何意义和计算方法",
+            "api_checklist": [
+              "np.linalg.eig() 特征值分解",
+              "np.linalg.eigh() 对称矩阵特征分解",
+              "特征值和特征向量的几何解释",
+              "谱定理：对称矩阵的特征分解",
+              "特征值在 PCA 中的应用"
+            ],
+            "practice": "对一个对称矩阵做特征分解，验证 A @ v = λ * v。理解特征值的几何意义：矩阵在特征向量方向上的缩放因子。可视化特征向量方向。",
+            "answer": "特征分解：A = np.array([[2, 1], [1, 2]]); eigenvalues, eigenvectors = np.linalg.eigh(A); # 验证 A @ v = λ * v; for i in range(len(eigenvalues)): print(np.allclose(A @ eigenvectors[:, i], eigenvalues[i] * eigenvectors[:, i]))"
+          },
+          "duration": "2小时",
+          "resources": [
+            { "title": "3Blue1Brown: 特征值与特征向量", "url": "https://www.3blue1brown.com/lessons/eigenvalues", "type": "video" },
+            { "title": "MIT OCW: 特征值讲解", "url": "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/", "type": "course" }
+          ],
+          "checkpoint": "能解释特征值的几何意义"
+        },
+        {
+          "order": 4,
+          "title": "矩阵分解：SVD 奇异值分解",
+          "content": {
+            "objective": "掌握 SVD 分解的原理和应用",
+            "api_checklist": [
+              "np.linalg.svd() 奇异值分解",
+              "U, S, Vt = svd(A) 分解结果",
+              "低秩近似：A ≈ U[:, :k] @ diag(S[:k]) @ Vt[:k, :]",
+              "图像压缩应用",
+              "SVD 与 PCA 的关系"
+            ],
+            "practice": "对一个图像矩阵做 SVD 分解，使用前 k 个奇异值重建图像，比较不同 k 值的重建效果和压缩比。理解 SVD 的几何意义：旋转-缩放-旋转。",
+            "answer": "SVD 图像压缩：U, S, Vt = np.linalg.svd(image, full_matrices=False); for k in [10, 50, 100]: compressed = U[:, :k] @ np.diag(S[:k]) @ Vt[:k, :]; compression_ratio = k * (m + n + 1) / (m * n)"
+          },
+          "duration": "2.5小时",
+          "resources": [
+            { "title": "SVD 图像压缩教程", "url": "https://www.geeksforgeeks.org/image-compression-using-singular-value-decomposition/", "type": "article" },
+            { "title": "MIT OCW: SVD 讲解", "url": "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/", "type": "course" }
+          ],
+          "checkpoint": "能用 SVD 压缩图像并可视化对比"
+        },
+        {
+          "order": 5,
+          "title": "PCA 主成分分析实战",
+          "content": {
+            "objective": "从零实现 PCA 算法，理解降维原理",
+            "api_checklist": [
+              "数据中心化：X - X.mean(axis=0)",
+              "协方差矩阵：np.cov(X_centered.T)",
+              "特征分解：np.linalg.eigh(cov_matrix)",
+              "投影：X_centered @ eigenvectors[:, :k]",
+              "sklearn.decomposition.PCA 验证"
+            ],
+            "practice": "从零实现 PCA：对 Iris 数据集做降维，将 4 维特征降到 2 维。绘制降维后的散点图，观察不同类别的分离情况。与 sklearn PCA 结果对比验证。",
+            "answer": "PCA 实现：X_centered = X - X.mean(axis=0); cov = np.cov(X_centered.T); eigenvalues, eigenvectors = np.linalg.eigh(cov); idx = np.argsort(eigenvalues)[::-1]; principal_components = eigenvectors[:, idx[:2]]; X_pca = X_centered @ principal_components"
+          },
+          "duration": "2.5小时",
+          "resources": [
+            { "title": "sklearn PCA 文档", "url": "https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html", "type": "documentation" },
+            { "title": "StatQuest: PCA 讲解", "url": "https://www.youtube.com/watch?v=FgakZw6K1QQ", "type": "video" }
+          ],
+          "checkpoint": "PCA 降维结果与 sklearn 一致，可视化清晰"
+        }
+      ],
+      "resources": [
+        { "title": "NumPy 官方文档", "url": "https://numpy.org/doc/stable/", "type": "documentation" },
+        { "title": "3Blue1Brown: 线性代数的本质", "url": "https://www.3blue1brown.com/lessons/linear-algebra", "type": "video" },
+        { "title": "Khan Academy: 线性代数", "url": "https://www.khanacademy.org/math/linear-algebra", "type": "course" }
+      ],
+      "relatedIntel": ["010-numpy-pandas"],
+      "relatedTerms": ["matrix", "vector", "eigenvalue", "tensor"],
+      "relatedTools": ["numpy", "jupyter"],
+      "templateRepo": "https://github.com/example/numpy-linear-algebra-template",
+      "solutionRepo": "https://github.com/example/numpy-linear-algebra-solution"
+    },
+    {
+      "slug": "devops-docker-deploy",
+      "title": "Docker 容器化部署实战",
+      "category": "devops",
+      "difficulty": 1,
+      "duration": "1周",
+      "summary": "掌握 Docker 核心操作，实现应用容器化部署",
+      "prerequisites": ["Linux 基础"],
+      "relatedNodes": ["docker-basic"],
+      "objectives": [
+        "理解 Docker 镜像与容器的概念",
+        "掌握 Dockerfile 编写规范",
+        "学会使用 Docker Compose 编排多容器应用",
+        "实现 Python 应用的容器化部署"
+      ],
+      "projectStructure": [
+        { "path": "Dockerfile", "description": "镜像构建文件", "isRequired": true },
+        { "path": "docker-compose.yml", "description": "容器编排配置", "isRequired": false },
+        { "path": "app/", "description": "应用代码", "isRequired": true },
+        { "path": "requirements.txt", "description": "Python 依赖", "isRequired": true },
+        { "path": "README.md", "description": "项目说明", "isRequired": true }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "title": "Docker 环境搭建与基础操作",
+          "content": {
+            "objective": "安装 Docker 并掌握基础命令",
+            "api_checklist": [
+              "docker run hello-world 验证安装",
+              "docker images 查看镜像列表",
+              "docker ps 查看运行中的容器",
+              "docker pull 拉取镜像",
+              "docker exec -it 进入容器"
+            ],
+            "practice": "安装 Docker Desktop，运行 hello-world 验证安装。拉取 nginx 镜像，运行一个容器并映射端口 8080:80。使用 docker exec 进入容器查看文件系统。",
+            "answer": "基础操作：docker pull nginx; docker run -d -p 8080:80 --name mynginx nginx; docker exec -it mynginx bash; curl http://localhost:8080"
+          },
+          "duration": "1.5小时",
+          "resources": [
+            { "title": "Docker 入门指南", "url": "https://docs.docker.com/get-started/", "type": "documentation" },
+            { "title": "Docker 命令速查", "url": "https://docs.docker.com/reference/cli/docker/", "type": "documentation" }
+          ],
+          "checkpoint": "能访问 http://localhost:8080 看到 nginx 欢迎页"
+        },
+        {
+          "order": 2,
+          "title": "编写 Dockerfile",
+          "content": {
+            "objective": "掌握 Dockerfile 编写规范和最佳实践",
+            "api_checklist": [
+              "FROM 选择基础镜像",
+              "WORKDIR 设置工作目录",
+              "COPY 复制文件",
+              "RUN 执行命令",
+              "EXPOSE 声明端口",
+              "CMD 设置启动命令",
+              "多阶段构建优化"
+            ],
+            "practice": "为 Python Flask 应用编写 Dockerfile：使用 python:3.9-slim 基础镜像，安装依赖，复制代码，暴露端口。使用多阶段构建减小镜像体积。",
+            "answer": "Dockerfile: FROM python:3.9-slim AS builder; WORKDIR /app; COPY requirements.txt .; RUN pip install --user -r requirements.txt; FROM python:3.9-slim; WORKDIR /app; COPY --from=builder /root/.local /root/.local; COPY . .; EXPOSE 5000; CMD [\"python\", \"app.py\"]"
+          },
+          "duration": "2小时",
+          "resources": [
+            { "title": "Dockerfile 最佳实践", "url": "https://docs.docker.com/develop/develop-images/dockerfile_best-practices/", "type": "documentation" },
+            { "title": "多阶段构建详解", "url": "https://docs.docker.com/build/building/multi-stage/", "type": "documentation" }
+          ],
+          "checkpoint": "docker build 成功，镜像体积 < 200MB"
+        },
+        {
+          "order": 3,
+          "title": "数据卷与持久化",
+          "content": {
+            "objective": "理解 Docker 数据卷和绑定挂载，实现数据持久化",
+            "api_checklist": [
+              "docker volume create 创建数据卷",
+              "-v 参数绑定挂载",
+              "docker volume ls 查看卷列表",
+              "docker volume rm 删除卷",
+              "tmpfs 挂载临时文件系统"
+            ],
+            "practice": "创建一个数据卷，挂载到容器的 /data 目录。在容器中创建文件，验证数据持久化：停止并删除容器后，重新创建容器并挂载同一卷，数据仍然存在。",
+            "answer": "数据卷操作：docker volume create mydata; docker run -v mydata:/data alpine sh -c 'echo hello > /data/test.txt'; docker rm -f $(docker ps -aq); docker run -v mydata:/data alpine cat /data/test.txt"
+          },
+          "duration": "1.5小时",
+          "resources": [
+            { "title": "Docker 存储详解", "url": "https://docs.docker.com/storage/", "type": "documentation" },
+            { "title": "数据卷使用指南", "url": "https://docs.docker.com/storage/volumes/", "type": "documentation" }
+          ],
+          "checkpoint": "数据在容器重建后仍然存在"
+        },
+        {
+          "order": 4,
+          "title": "Docker Compose 多容器编排",
+          "content": {
+            "objective": "使用 Docker Compose 编排多容器应用",
+            "api_checklist": [
+              "docker-compose.yml 配置文件",
+              "services 定义服务",
+              "networks 配置网络",
+              "volumes 定义卷",
+              "depends_on 服务依赖",
+              "docker compose up -d 启动服务"
+            ],
+            "practice": "创建一个 Web 应用 + Redis 缓存的 compose 配置。Web 应用从 Redis 读取数据。配置网络让服务间可以通信，使用数据卷持久化 Redis 数据。",
+            "answer": "docker-compose.yml: version: '3.8'; services: web: build: .; ports: ['5000:5000']; depends_on: [redis]; redis: image: redis:alpine; volumes: ['redis-data:/data']; volumes: redis-data:"
+          },
+          "duration": "2小时",
+          "resources": [
+            { "title": "Docker Compose 入门", "url": "https://docs.docker.com/compose/gettingstarted/", "type": "documentation" },
+            { "title": "Compose 文件规范", "url": "https://docs.docker.com/compose/compose-file/", "type": "documentation" }
+          ],
+          "checkpoint": "Web 应用能连接到 Redis 并读写数据"
+        },
+        {
+          "order": 5,
+          "title": "生产部署与优化",
+          "content": {
+            "objective": "优化镜像大小，配置健康检查和安全策略",
+            "api_checklist": [
+              "HEALTHCHECK 健康检查指令",
+              "USER 非 root 用户运行",
+              ".dockerignore 排除文件",
+              "docker scan 安全扫描",
+              "镜像标签管理"
+            ],
+            "practice": "添加 HEALTHCHECK 指令监控应用健康状态。创建非 root 用户运行应用。编写 .dockerignore 排除 .git、__pycache__ 等文件。使用 docker scan 扫描镜像漏洞。",
+            "answer": "健康检查：HEALTHCHECK --interval=30s --timeout=3s CMD curl -f http://localhost:5000/health || exit 1; 安全：RUN adduser --disabled-password appuser; USER appuser"
+          },
+          "duration": "2小时",
+          "resources": [
+            { "title": "Docker 安全最佳实践", "url": "https://docs.docker.com/develop/security-best-practices/", "type": "documentation" },
+            { "title": "镜像扫描工具", "url": "https://docs.docker.com/engine/scan/", "type": "documentation" }
+          ],
+          "checkpoint": "容器以非 root 用户运行，健康检查正常"
+        }
+      ],
+      "resources": [
+        { "title": "Docker 官方入门指南", "url": "https://docs.docker.com/get-started/", "type": "documentation" },
+        { "title": "Dockerfile 最佳实践", "url": "https://docs.docker.com/develop/develop-images/dockerfile_best-practices/", "type": "documentation" },
+        { "title": "Docker 从入门到实践", "url": "https://yeasy.gitbook.io/docker_practice/", "type": "article" }
+      ],
+      "relatedIntel": ["007-docker"],
+      "relatedTerms": ["docker", "container", "image"],
+      "relatedTools": ["docker"],
+      "templateRepo": "https://github.com/example/docker-deploy-template",
+      "solutionRepo": "https://github.com/example/docker-deploy-solution"
+    },
+    {
+      "slug": "nlp-transformer-classification",
+      "title": "Transformer 文本分类实战",
+      "category": "nlp",
+      "difficulty": 2,
+      "duration": "1周",
+      "summary": "使用 HuggingFace Transformers 微调 BERT 实现文本分类",
+      "prerequisites": ["Python 基础", "NLP 基础概念"],
+      "relatedNodes": ["nlp-transformer"],
+      "objectives": [
+        "理解 Transformer 架构核心原理",
+        "掌握 HuggingFace Transformers 库使用",
+        "学会微调预训练 BERT 模型",
+        "实现中文文本分类任务"
+      ],
+      "projectStructure": [
+        { "path": "data/", "description": "数据集目录", "isRequired": true },
+        { "path": "models/", "description": "模型保存目录", "isRequired": false },
+        { "path": "train.py", "description": "训练脚本", "isRequired": true },
+        { "path": "predict.py", "description": "预测脚本", "isRequired": true },
+        { "path": "README.md", "description": "项目说明", "isRequired": true }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "title": "Transformer 架构理解与环境配置",
+          "content": {
+            "objective": "理解 Transformer 自注意力机制，配置开发环境",
+            "api_checklist": [
+              "Self-Attention 计算：Q, K, V 矩阵",
+              "Multi-Head Attention 多头注意力",
+              "Position Encoding 位置编码",
+              "pip install transformers datasets torch"
+            ],
+            "practice": "阅读 Transformer 论文核心部分，理解 Self-Attention 的计算过程。安装 HuggingFace Transformers 库，验证安装：from transformers import pipeline; print(pipeline('sentiment-analysis')('I love AI!'))",
+            "answer": "Self-Attention: Attention(Q,K,V) = softmax(QK^T / √d_k)V; 安装验证：from transformers import pipeline; classifier = pipeline('sentiment-analysis'); print(classifier('Great!'))"
+          },
+          "duration": "2小时",
+          "resources": [
+            { "title": "Attention Is All You Need 论文", "url": "https://arxiv.org/abs/1706.03762", "type": "article" },
+            { "title": "图解 Transformer", "url": "https://jalammar.github.io/illustrated-transformer/", "type": "article" }
+          ],
+          "checkpoint": "能解释 Self-Attention 的计算过程"
+        },
+        {
+          "order": 2,
+          "title": "数据加载与预处理",
+          "content": {
+            "objective": "加载中文文本分类数据集，理解数据格式",
+            "api_checklist": [
+              "load_dataset() 加载数据集",
+              "dataset['train'].shuffle() 打乱数据",
+              "dataset.train_test_split() 划分数据集",
+              "dataset.map() 批量处理",
+              "数据清洗和格式统一"
+            ],
+            "practice": "加载 THUCNews 或自定义中文新闻数据集，查看数据结构。统计各类别样本数量，处理类别不平衡问题。划分训练集和验证集（80/20）。",
+            "answer": "数据加载：from datasets import load_dataset; dataset = load_dataset('csv', data_files='data/train.csv'); dataset = dataset['train'].train_test_split(test_size=0.2, seed=42)"
+          },
+          "duration": "1.5小时",
+          "resources": [
+            { "title": "HuggingFace Datasets 文档", "url": "https://huggingface.co/docs/datasets/", "type": "documentation" },
+            { "title": "中文 NLP 数据集", "url": "https://github.com/brightmart/nlp_chinese_corpus", "type": "documentation" }
+          ],
+          "checkpoint": "数据集加载成功，类别分布可视化"
+        },
+        {
+          "order": 3,
+          "title": "BERT Tokenizer 使用",
+          "content": {
+            "objective": "掌握 BERT Tokenizer 的使用方法和注意事项",
+            "api_checklist": [
+              "AutoTokenizer.from_pretrained() 加载分词器",
+              "tokenizer() 编码文本",
+              "tokenizer.decode() 解码回文本",
+              "padding='max_length' 填充",
+              "truncation=True 截断",
+              "return_tensors='pt' 返回 PyTorch 张量"
+            ],
+            "practice": "使用 bert-base-chinese 分词器处理中文文本。理解 input_ids、attention_mask、token_type_ids 的含义。测试不同 max_length 对截断的影响。",
+            "answer": "Tokenizer 使用：tokenizer = AutoTokenizer.from_pretrained('bert-base-chinese'); encoded = tokenizer('我喜欢人工智能', padding='max_length', truncation=True, max_length=128, return_tensors='pt'); print(encoded.keys())"
+          },
+          "duration": "1.5小时",
+          "resources": [
+            { "title": "BERT Tokenizer 文档", "url": "https://huggingface.co/docs/transformers/model_doc/bert", "type": "documentation" },
+            { "title": "中文 BERT 模型", "url": "https://huggingface.co/bert-base-chinese", "type": "documentation" }
+          ],
+          "checkpoint": "能正确编码中文文本并理解各字段含义"
+        },
+        {
+          "order": 4,
+          "title": "模型微调训练",
+          "content": {
+            "objective": "使用 Trainer API 微调 BERT 模型",
+            "api_checklist": [
+              "AutoModelForSequenceClassification 加载分类模型",
+              "TrainingArguments 配置训练参数",
+              "Trainer 创建训练器",
+              "trainer.train() 开始训练",
+              "学习率 warmup 和调度"
+            ],
+            "practice": "加载 bert-base-chinese 预训练模型，配置训练参数（lr=2e-5, epochs=3, batch_size=16）。使用 Trainer 进行训练，观察 loss 曲线。",
+            "answer": "训练配置：from transformers import AutoModelForSequenceClassification, TrainingArguments, Trainer; model = AutoModelForSequenceClassification.from_pretrained('bert-base-chinese', num_labels=10); args = TrainingArguments(output_dir='./results', learning_rate=2e-5, num_train_epochs=3, per_device_train_batch_size=16)"
+          },
+          "duration": "3小时",
+          "resources": [
+            { "title": "Trainer API 文档", "url": "https://huggingface.co/docs/transformers/main_classes/trainer", "type": "documentation" },
+            { "title": "BERT 微调教程", "url": "https://huggingface.co/docs/transformers/training", "type": "documentation" }
+          ],
+          "checkpoint": "训练完成，loss 下降，accuracy > 85%"
+        },
+        {
+          "order": 5,
+          "title": "模型评估与部署",
+          "content": {
+            "objective": "评估模型性能，实现推理接口",
+            "api_checklist": [
+              "evaluate.load() 加载评估指标",
+              "classification_report() 分类报告",
+              "confusion_matrix() 混淆矩阵",
+              "pipeline() 创建推理管道",
+              "model.save_pretrained() 保存模型"
+            ],
+            "practice": "在测试集上评估模型，生成分类报告和混淆矩阵。创建推理 pipeline，测试自定义文本。保存模型和分词器。",
+            "answer": "评估代码：import evaluate; accuracy = evaluate.load('accuracy'); preds = trainer.predict(test_dataset); from sklearn.metrics import classification_report; print(classification_report(preds.label_ids, preds.predictions.argmax(-1)))"
+          },
+          "duration": "2小时",
+          "resources": [
+            { "title": "evaluate 库文档", "url": "https://huggingface.co/docs/evaluate/", "type": "documentation" },
+            { "title": "sklearn 评估指标", "url": "https://scikit-learn.org/stable/modules/model_evaluation.html", "type": "documentation" }
+          ],
+          "checkpoint": "输出分类报告，推理 pipeline 正常工作"
+        }
+      ],
+      "resources": [
+        { "title": "HuggingFace Transformers 文档", "url": "https://huggingface.co/docs/transformers/", "type": "documentation" },
+        { "title": "BERT 论文", "url": "https://arxiv.org/abs/1810.04805", "type": "article" },
+        { "title": "HuggingFace NLP Course", "url": "https://huggingface.co/learn/nlp-course", "type": "course" }
+      ],
+      "relatedIntel": ["001-transformer", "008-huggingface"],
+      "relatedTerms": ["transformer", "self-attention", "bert"],
+      "relatedTools": ["huggingface", "pytorch"],
+      "templateRepo": "https://github.com/example/transformer-classification-template",
+      "solutionRepo": "https://github.com/example/transformer-classification-solution"
+    },
+    {
+      "slug": "cv-yolo-detection",
+      "title": "YOLO 目标检测实战",
+      "category": "computer-vision",
+      "difficulty": 3,
+      "duration": "2周",
+      "summary": "使用 Ultralytics YOLOv8 训练自定义目标检测模型",
+      "prerequisites": ["Python 基础", "PyTorch 基础", "CNN 基础概念"],
+      "relatedNodes": ["cv-detection", "cv-cnn"],
+      "objectives": [
+        "理解目标检测核心概念（IoU、NMS、mAP）",
+        "掌握 YOLO 数据集标注与格式转换",
+        "学会训练 YOLOv8 自定义数据集",
+        "实现模型导出与推理部署"
+      ],
+      "projectStructure": [
+        { "path": "datasets/", "description": "数据集目录", "isRequired": true },
+        { "path": "models/", "description": "模型权重", "isRequired": false },
+        { "path": "train.py", "description": "训练脚本", "isRequired": true },
+        { "path": "detect.py", "description": "推理脚本", "isRequired": true },
+        { "path": "README.md", "description": "项目说明", "isRequired": true }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "title": "目标检测基础与环境配置",
+          "content": {
+            "objective": "理解目标检测核心概念，配置 Ultralytics 环境",
+            "api_checklist": [
+              "IoU（交并比）计算公式",
+              "NMS（非极大值抑制）算法",
+              "mAP（平均精度均值）评估指标",
+              "pip install ultralytics",
+              "YOLO('yolov8n.pt') 加载预训练模型"
+            ],
+            "practice": "安装 ultralytics 库，加载 YOLOv8n 预训练模型。对一张示例图片进行推理，查看检测结果（边界框、置信度、类别）。理解 IoU 的计算方法。",
+            "answer": "环境验证：from ultralytics import YOLO; model = YOLO('yolov8n.pt'); results = model('test.jpg'); print(results[0].boxes)"
+          },
+          "duration": "2小时",
+          "resources": [
+            { "title": "Ultralytics 快速入门", "url": "https://docs.ultralytics.com/quickstart/", "type": "documentation" },
+            { "title": "目标检测评估指标", "url": "https://cocodataset.org/#detection-eval", "type": "documentation" }
+          ],
+          "checkpoint": "能用预训练模型检测图片中的物体"
+        },
+        {
+          "order": 2,
+          "title": "数据集标注与格式转换",
+          "content": {
+            "objective": "掌握 YOLO 数据集格式，完成数据标注",
+            "api_checklist": [
+              "YOLO 格式：class_id x_center y_center width height",
+              "LabelImg 标注工具使用",
+              "Roboflow 在线标注平台",
+              "data.yaml 配置文件",
+              "train/val 数据集划分"
+            ],
+            "practice": "使用 LabelImg 标注 50 张图片，导出 YOLO 格式。创建 data.yaml 配置文件，指定训练集和验证集路径、类别名称。验证标注是否正确。",
+            "answer": "data.yaml: train: ./datasets/images/train; val: ./datasets/images/val; nc: 3; names: ['cat', 'dog', 'bird']"
+          },
+          "duration": "3小时",
+          "resources": [
+            { "title": "YOLO 数据格式说明", "url": "https://docs.ultralytics.com/datasets/detect/", "type": "documentation" },
+            { "title": "LabelImg 标注工具", "url": "https://github.com/heartexlabs/labelImg", "type": "documentation" }
+          ],
+          "checkpoint": "标注完成，data.yaml 配置正确"
+        },
+        {
+          "order": 3,
+          "title": "模型训练与调优",
+          "content": {
+            "objective": "训练自定义 YOLOv8 模型，掌握训练参数",
+            "api_checklist": [
+              "model.train() 训练参数配置",
+              "epochs 训练轮数",
+              "batch-size 批次大小",
+              "imgsz 输入图像尺寸",
+              "learning_rate 学习率",
+              "数据增强参数"
+            ],
+            "practice": "使用 YOLOv8n 预训练权重，在自定义数据集上微调。设置 epochs=100, batch=16, imgsz=640。观察训练 loss 曲线，保存最佳模型。",
+            "answer": "训练代码：from ultralytics import YOLO; model = YOLO('yolov8n.pt'); results = model.train(data='data.yaml', epochs=100, batch=16, imgsz=640, name='my_model')"
+          },
+          "duration": "4小时",
+          "resources": [
+            { "title": "YOLOv8 训练文档", "url": "https://docs.ultralytics.com/modes/train/", "type": "documentation" },
+            { "title": "训练超参数详解", "url": "https://docs.ultralytics.com/usage/cfg/", "type": "documentation" }
+          ],
+          "checkpoint": "训练完成，mAP50 > 0.5"
+        },
+        {
+          "order": 4,
+          "title": "模型评估与错误分析",
+          "content": {
+            "objective": "全面评估模型性能，分析错误样本",
+            "api_checklist": [
+              "model.val() 验证集评估",
+              "mAP50 和 mAP50-95 指标",
+              "PR 曲线和 F1 曲线",
+              "混淆矩阵分析",
+              "Bad Case 分析"
+            ],
+            "practice": "在验证集上评估模型，查看 mAP、PR 曲线。找出漏检和误检的样本，分析错误原因（遮挡、小目标、类别混淆等）。",
+            "answer": "评估代码：model = YOLO('runs/detect/my_model/weights/best.pt'); metrics = model.val(); print(f'mAP50: {metrics.box.map50:.3f}'); print(f'mAP50-95: {metrics.box.map:.3f}')"
+          },
+          "duration": "2.5小时",
+          "resources": [
+            { "title": "YOLOv8 验证文档", "url": "https://docs.ultralytics.com/modes/val/", "type": "documentation" },
+            { "title": "目标检测错误分析", "url": "https://blog.roboflow.com/how-to-evaluate-object-detection-models/", "type": "documentation" }
+          ],
+          "checkpoint": "输出 mAP 指标，有 Bad Case 分析报告"
+        },
+        {
+          "order": 5,
+          "title": "模型导出与部署",
+          "content": {
+            "objective": "导出 ONNX 模型，部署推理服务",
+            "api_checklist": [
+              "model.export(format='onnx') 导出 ONNX",
+              "ONNX Runtime 推理",
+              "FastAPI 封装推理接口",
+              "POST /detect 接收图片",
+              "返回检测结果 JSON"
+            ],
+            "practice": "将训练好的模型导出为 ONNX 格式。使用 FastAPI 创建推理服务，接收图片并返回检测结果（边界框、置信度、类别）。",
+            "answer": "导出与部署：model.export(format='onnx'); # FastAPI: from fastapi import FastAPI, UploadFile; app = FastAPI(); @app.post('/detect'); async def detect(file: UploadFile): results = model(image); return {'boxes': results[0].boxes.xyxy.tolist()}"
+          },
+          "duration": "3小时",
+          "resources": [
+            { "title": "YOLOv8 导出文档", "url": "https://docs.ultralytics.com/modes/export/", "type": "documentation" },
+            { "title": "FastAPI 文件上传", "url": "https://fastapi.tiangolo.com/tutorial/request-files/", "type": "documentation" }
+          ],
+          "checkpoint": "能通过 HTTP 请求获取检测结果"
+        }
+      ],
+      "resources": [
+        { "title": "Ultralytics YOLOv8 文档", "url": "https://docs.ultralytics.com/", "type": "documentation" },
+        { "title": "YOLOv8 训练教程", "url": "https://docs.ultralytics.com/modes/train/", "type": "documentation" },
+        { "title": "目标检测评估指标", "url": "https://cocodataset.org/#detection-eval", "type": "documentation" }
+      ],
+      "relatedIntel": ["002-yolo", "014-onnx"],
+      "relatedTerms": ["yolo", "object-detection", "bounding-box", "map"],
+      "relatedTools": ["ultralytics", "pytorch"],
+      "templateRepo": "https://github.com/example/yolo-detection-template",
+      "solutionRepo": "https://github.com/example/yolo-detection-solution"
+    },
+    {
+      "slug": "llm-lora-finetune",
+      "title": "LoRA 微调实战",
+      "category": "llm",
+      "difficulty": 3,
+      "duration": "2周",
+      "summary": "使用 LoRA/QLoRA 在消费级 GPU 上微调大语言模型",
+      "prerequisites": ["Python 基础", "PyTorch 基础", "Transformer 基础"],
+      "relatedNodes": ["llm-finetune", "nlp-transformer"],
+      "objectives": [
+        "理解 LoRA 低秩适配的原理",
+        "掌握 QLoRA 4-bit 量化微调",
+        "学会准备指令微调数据集",
+        "实现大模型微调与部署"
+      ],
+      "projectStructure": [
+        { "path": "data/", "description": "训练数据", "isRequired": true },
+        { "path": "scripts/", "description": "训练脚本", "isRequired": true },
+        { "path": "outputs/", "description": "模型输出", "isRequired": false },
+        { "path": "README.md", "description": "项目说明", "isRequired": true }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "title": "LLM 生态与 LoRA 原理",
+          "content": {
+            "objective": "理解大语言模型生态和 LoRA 低秩适配原理",
+            "api_checklist": [
+              "LoRA 核心思想：W = W_pretrained + B×A",
+              "低秩分解减少可训练参数",
+              "QLoRA：4-bit 量化 + LoRA",
+              "pip install transformers peft bitsandbytes accelerate"
+            ],
+            "practice": "阅读 LoRA 论文核心部分，理解低秩适配的数学原理。安装 HuggingFace 生态库：transformers、peft、bitsandbytes、accelerate。查看 HuggingFace 模型排行榜，选择合适的基座模型。",
+            "answer": "LoRA 原理：不直接微调 W，而是学习低秩更新 ΔW = BA，其中 B∈R^(d×r), A∈R^(r×d), r<<d。可训练参数从 d×d 减少到 2×d×r"
+          },
+          "duration": "2小时",
+          "resources": [
+            { "title": "LoRA 论文", "url": "https://arxiv.org/abs/2106.09685", "type": "article" },
+            { "title": "HuggingFace PEFT 文档", "url": "https://huggingface.co/docs/peft/", "type": "documentation" }
+          ],
+          "checkpoint": "能解释 LoRA 的核心思想和优势"
+        },
+        {
+          "order": 2,
+          "title": "4-bit 量化加载模型",
+          "content": {
+            "objective": "使用 QLoRA 以 4-bit 量化方式加载大模型",
+            "api_checklist": [
+              "BitsAndBytesConfig 量化配置",
+              "load_in_4bit=True 启用 4-bit",
+              "bnb_4bit_compute_dtype 计算精度",
+              "bnb_4bit_use_double_quant 双重量化",
+              "AutoModelForCausalLM.from_pretrained() 加载"
+            ],
+            "practice": "配置 4-bit 量化参数，加载 TinyLlama-1.1B 或 Qwen-1.8B 模型。检查显存占用，对比 fp16 和 4-bit 的差异。验证模型能正常生成文本。",
+            "answer": "量化加载：from transformers import BitsAndBytesConfig; bnb_config = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_compute_dtype=torch.float16, bnb_4bit_use_double_quant=True); model = AutoModelForCausalLM.from_pretrained(model_id, quantization_config=bnb_config)"
+          },
+          "duration": "2小时",
+          "resources": [
+            { "title": "QLoRA 论文", "url": "https://arxiv.org/abs/2305.14314", "type": "article" },
+            { "title": "bitsandbytes 文档", "url": "https://huggingface.co/docs/bitsandbytes/", "type": "documentation" }
+          ],
+          "checkpoint": "4-bit 模型加载成功，显存占用 < 3GB"
+        },
+        {
+          "order": 3,
+          "title": "配置 LoRA 适配器",
+          "content": {
+            "objective": "配置 LoRA 参数并注入到模型中",
+            "api_checklist": [
+              "LoraConfig 配置参数",
+              "r 秩参数（通常 8-64）",
+              "lora_alpha 缩放因子",
+              "target_modules 目标模块",
+              "get_peft_model() 注入 LoRA",
+              "print_trainable_parameters() 查看可训练参数"
+            ],
+            "practice": "配置 LoRA 参数：r=16, lora_alpha=32, target_modules=['q_proj', 'v_proj']。注入 LoRA 到模型中，查看可训练参数占比（通常 < 1%）。",
+            "answer": "LoRA 配置：from peft import LoraConfig, get_peft_model, TaskType; config = LoraConfig(task_type=TaskType.CAUSAL_LM, r=16, lora_alpha=32, target_modules=['q_proj', 'v_proj'], lora_dropout=0.05); model = get_peft_model(model, config); model.print_trainable_parameters()"
+          },
+          "duration": "1.5小时",
+          "resources": [
+            { "title": "PEFT LoRA 配置", "url": "https://huggingface.co/docs/peft/conceptual_guides/lora", "type": "documentation" },
+            { "title": "LoRA 超参调优", "url": "https://magazine.sebastianraschka.com/p/lora-and-dora-from-scratch", "type": "article" }
+          ],
+          "checkpoint": "可训练参数占比 < 1%"
+        },
+        {
+          "order": 4,
+          "title": "准备指令微调数据",
+          "content": {
+            "objective": "准备 ChatML 格式的指令微调数据集",
+            "api_checklist": [
+              "ChatML 对话格式",
+              "system/user/assistant 角色",
+              "apply_chat_template() 应用模板",
+              "数据清洗和格式化",
+              "训练集/验证集划分"
+            ],
+            "practice": "准备 100-500 条指令-回答对，格式化为 ChatML 对话格式。使用 tokenizer 的 apply_chat_template 方法转换格式。划分训练集和验证集。",
+            "answer": "数据格式：messages = [{'role': 'system', 'content': '你是一个有用的助手'}, {'role': 'user', 'content': '请解释什么是机器学习'}, {'role': 'assistant', 'content': '机器学习是...'}]; text = tokenizer.apply_chat_template(messages, tokenize=False)"
+          },
+          "duration": "2.5小时",
+          "resources": [
+            { "title": "ChatML 格式说明", "url": "https://github.com/openai/openai-python/blob/main/chatml.md", "type": "documentation" },
+            { "title": "HuggingFace Chat 模板", "url": "https://huggingface.co/docs/transformers/chat_templating", "type": "documentation" }
+          ],
+          "checkpoint": "数据集准备完成，格式正确"
+        },
+        {
+          "order": 5,
+          "title": "SFTTrainer 训练与评估",
+          "content": {
+            "objective": "使用 SFTTrainer 进行监督微调",
+            "api_checklist": [
+              "SFTTrainer 创建训练器",
+              "TrainingArguments 配置参数",
+              "learning_rate 学习率（通常 2e-4）",
+              "gradient_accumulation_steps 梯度累积",
+              "fp16 混合精度训练",
+              "trainer.train() 开始训练"
+            ],
+            "practice": "配置训练参数，使用 SFTTrainer 进行微调。观察 loss 曲线，保存最佳模型。合并 LoRA 权重到基座模型，测试生成效果。",
+            "answer": "训练配置：from trl import SFTTrainer; trainer = SFTTrainer(model=model, args=TrainingArguments(output_dir='./output', learning_rate=2e-4, num_train_epochs=3, gradient_accumulation_steps=4, fp16=True), train_dataset=train_dataset, tokenizer=tokenizer); trainer.train()"
+          },
+          "duration": "4小时",
+          "resources": [
+            { "title": "SFTTrainer 文档", "url": "https://huggingface.co/docs/trl/sft_trainer", "type": "documentation" },
+            { "title": "PEFT 模型合并", "url": "https://huggingface.co/docs/peft/tutorial/peft_model_config", "type": "documentation" }
+          ],
+          "checkpoint": "训练完成，loss 下降，生成效果有改善"
+        }
+      ],
+      "resources": [
+        { "title": "HuggingFace PEFT 文档", "url": "https://huggingface.co/docs/peft/", "type": "documentation" },
+        { "title": "LoRA 论文", "url": "https://arxiv.org/abs/2106.09685", "type": "article" },
+        { "title": "QLoRA 论文", "url": "https://arxiv.org/abs/2305.14314", "type": "article" }
+      ],
+      "relatedIntel": ["003-lora-qlora", "041-lora-finetuning"],
+      "relatedTerms": ["lora", "fine-tuning", "qlora"],
+      "relatedTools": ["huggingface", "pytorch"],
+      "templateRepo": "https://github.com/example/lora-finetune-template",
+      "solutionRepo": "https://github.com/example/lora-finetune-solution"
+    },
+    {
+      "slug": "llm-rag-application",
+      "title": "RAG 检索增强生成实战",
+      "category": "llm",
+      "difficulty": 4,
+      "duration": "2周",
+      "summary": "构建基于 RAG 的文档问答系统",
+      "prerequisites": ["Python 基础", "LLM 基础", "Embedding 概念"],
+      "relatedNodes": ["llm-finetune"],
+      "objectives": [
+        "理解 RAG 的工作原理",
+        "掌握向量数据库使用",
+        "学会文档切分与 Embedding",
+        "构建端到端 RAG 应用"
+      ],
+      "projectStructure": [
+        { "path": "data/", "description": "文档数据", "isRequired": true },
+        { "path": "vectorstore/", "description": "向量数据库", "isRequired": false },
+        { "path": "app.py", "description": "主应用", "isRequired": true },
+        { "path": "README.md", "description": "项目说明", "isRequired": true }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "title": "RAG 原理与环境配置",
+          "content": {
+            "objective": "理解 RAG 工作原理，配置开发环境",
+            "api_checklist": [
+              "RAG 核心流程：检索 + 生成",
+              "向量数据库的作用",
+              "Embedding 模型的选择",
+              "pip install langchain chromadb sentence-transformers"
+            ],
+            "practice": "阅读 RAG 论文，理解检索增强生成的核心思想。安装 LangChain、ChromaDB、sentence-transformers 库。了解 RAG 与微调的区别和适用场景。",
+            "answer": "RAG 原理：1. 将文档切分并向量化存储；2. 用户提问时检索相关文档；3. 将检索结果和问题一起输入 LLM 生成答案。优势：无需微调，知识可动态更新"
+          },
+          "duration": "1.5小时",
+          "resources": [
+            { "title": "RAG 论文", "url": "https://arxiv.org/abs/2005.11401", "type": "article" },
+            { "title": "LangChain RAG 教程", "url": "https://python.langchain.com/docs/tutorials/rag/", "type": "documentation" }
+          ],
+          "checkpoint": "能解释 RAG 的核心流程和优势"
+        },
+        {
+          "order": 2,
+          "title": "文档加载与切分",
+          "content": {
+            "objective": "加载文档并进行智能切分",
+            "api_checklist": [
+              "PyPDFLoader / TextLoader 加载文档",
+              "RecursiveCharacterTextSplitter 递归切分",
+              "chunk_size 切片大小",
+              "chunk_overlap 重叠区域",
+              "metadata 元数据保留"
+            ],
+            "practice": "加载 PDF 或 Markdown 文档，使用 RecursiveCharacterTextSplitter 进行切分。设置 chunk_size=500, chunk_overlap=50。查看切分结果，确保语义完整。",
+            "answer": "文档切分：from langchain.document_loaders import PyPDFLoader; from langchain.text_splitter import RecursiveCharacterTextSplitter; loader = PyPDFLoader('docs/example.pdf'); documents = loader.load(); splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50); chunks = splitter.split_documents(documents)"
+          },
+          "duration": "2小时",
+          "resources": [
+            { "title": "LangChain 文档加载", "url": "https://python.langchain.com/docs/integrations/document_loaders/", "type": "documentation" },
+            { "title": "文本切分策略", "url": "https://python.langchain.com/docs/how_to/recursive_text_splitter/", "type": "documentation" }
+          ],
+          "checkpoint": "文档切分完成，切片大小合理"
+        },
+        {
+          "order": 3,
+          "title": "向量化与存储",
+          "content": {
+            "objective": "使用 Embedding 模型将文档向量化并存储到向量数据库",
+            "api_checklist": [
+              "HuggingFaceEmbeddings 加载 Embedding 模型",
+              "sentence-transformers 模型选择",
+              "Chroma 向量数据库",
+              "from_documents() 创建向量存储",
+              "persist() 持久化存储"
+            ],
+            "practice": "使用 sentence-transformers 模型（如 all-MiniLM-L6-v2）将文档切片向量化。存储到 ChromaDB 向量数据库。测试相似度搜索功能。",
+            "answer": "向量化存储：from langchain.embeddings import HuggingFaceEmbeddings; from langchain.vectorstores import Chroma; embeddings = HuggingFaceEmbeddings(model_name='all-MiniLM-L6-v2'); vectorstore = Chroma.from_documents(chunks, embeddings, persist_directory='./chroma_db')"
+          },
+          "duration": "2小时",
+          "resources": [
+            { "title": "sentence-transformers 模型", "url": "https://www.sbert.net/", "type": "documentation" },
+            { "title": "ChromaDB 文档", "url": "https://docs.trychromity.com/", "type": "documentation" }
+          ],
+          "checkpoint": "向量数据库创建成功，相似度搜索正常"
+        },
+        {
+          "order": 4,
+          "title": "检索链构建",
+          "content": {
+            "objective": "构建检索与生成的完整链路",
+            "api_checklist": [
+              "RetrievalQA 检索问答链",
+              "retriever 检索器配置",
+              "search_kwargs 检索参数",
+              "LLM 大语言模型接入",
+              "Prompt 模板设计"
+            ],
+            "practice": "创建检索器，配置 top_k=3。设计 Prompt 模板，将检索结果和用户问题组合。使用 RetrievalQA 链实现端到端问答。",
+            "answer": "检索链构建：from langchain.chains import RetrievalQA; from langchain.llms import HuggingFacePipeline; retriever = vectorstore.as_retriever(search_kwargs={'k': 3}); qa_chain = RetrievalQA.from_chain_type(llm=llm, retriever=retriever, return_source_documents=True)"
+          },
+          "duration": "2.5小时",
+          "resources": [
+            { "title": "LangChain 检索链", "url": "https://python.langchain.com/docs/how_to/rag_chroma/", "type": "documentation" },
+            { "title": "Prompt 工程指南", "url": "https://www.promptingguide.ai/", "type": "documentation" }
+          ],
+          "checkpoint": "问答链能正确回答文档相关问题"
+        },
+        {
+          "order": 5,
+          "title": "部署与优化",
+          "content": {
+            "objective": "部署 RAG 应用，优化检索效果",
+            "api_checklist": [
+              "Streamlit Web UI 构建",
+              "对话历史管理",
+              "检索结果展示",
+              "相似度阈值调优",
+              "混合检索策略"
+            ],
+            "practice": "使用 Streamlit 构建 Web UI，支持用户输入问题并展示答案和来源文档。添加对话历史功能。测试不同类型问题的检索效果。",
+            "answer": "Streamlit UI：import streamlit as st; st.title('RAG 文档问答'); question = st.text_input('请输入问题'); if question: result = qa_chain(question); st.write('答案:', result['result']); st.write('来源:', [doc.metadata['source'] for doc in result['source_documents']])"
+          },
+          "duration": "2.5小时",
+          "resources": [
+            { "title": "Streamlit 文档", "url": "https://docs.streamlit.io/", "type": "documentation" },
+            { "title": "RAG 优化技巧", "url": "https://docs.trychromity.com/docs/guides/rag", "type": "documentation" }
+          ],
+          "checkpoint": "Web UI 可用，问答效果良好"
+        }
+      ],
+      "resources": [
+        { "title": "LangChain 文档", "url": "https://python.langchain.com/docs/", "type": "documentation" },
+        { "title": "RAG 原理详解", "url": "https://arxiv.org/abs/2005.11401", "type": "article" },
+        { "title": "ChromaDB 文档", "url": "https://docs.trychromity.com/", "type": "documentation" }
+      ],
+      "relatedIntel": ["005-rag", "035-advanced-rag", "042-vector-database"],
+      "relatedTerms": ["rag", "vector-database", "embedding"],
+      "relatedTools": ["langchain", "chromadb"],
+      "templateRepo": "https://github.com/example/rag-application-template",
+      "solutionRepo": "https://github.com/example/rag-application-solution"
     }
   ]
 }
