@@ -20,6 +20,7 @@ import { ROADMAP_TRACKS } from "./types";
 import { FULL_ROADMAP } from "@/lib/roadmap-data";
 import { getNodeProgressPercent } from "@/lib/progress";
 import { autoLayout, getTrackBounds, TRACK_ORDER } from "@/lib/layout";
+import { TRACK_COLORS, getSwimlaneLabelColor } from "@/lib/constants";
 
 const STORAGE_KEY = "techradar-roadmap-progress";
 
@@ -52,51 +53,6 @@ function generateEdges(nodes: RoadmapNodeType[]): Edge[] {
 }
 
 const nodeTypes = { roadmap: RoadmapNode };
-
-// 泳道背景颜色（每个 track 的半透明背景）
-const TRACK_SWIMLANE_COLORS: Record<TrackId, string> = {
-  devops: "rgba(56, 189, 248, 0.06)",    // sky-400
-  math: "rgba(52, 211, 153, 0.06)",      // emerald-400
-  cv: "rgba(251, 146, 60, 0.06)",        // orange-400
-  nlp: "rgba(167, 139, 250, 0.06)",      // violet-400
-  project: "rgba(244, 114, 182, 0.06)",  // pink-400
-  cs: "rgba(59, 130, 246, 0.06)",        // blue-500
-  embedded: "rgba(34, 197, 94, 0.06)",   // green-500
-  electronics: "rgba(234, 179, 8, 0.06)", // yellow-500
-  signals: "rgba(239, 68, 68, 0.06)",    // red-500
-  control: "rgba(168, 85, 247, 0.06)",   // purple-500
-  electrical: "rgba(6, 182, 212, 0.06)", // cyan-500
-};
-
-// 泳道边框颜色
-const TRACK_SWIMLANE_BORDERS: Record<TrackId, string> = {
-  devops: "rgba(56, 189, 248, 0.15)",
-  math: "rgba(52, 211, 153, 0.15)",
-  cv: "rgba(251, 146, 60, 0.15)",
-  nlp: "rgba(167, 139, 250, 0.15)",
-  project: "rgba(244, 114, 182, 0.15)",
-  cs: "rgba(59, 130, 246, 0.15)",
-  embedded: "rgba(34, 197, 94, 0.15)",
-  electronics: "rgba(234, 179, 8, 0.15)",
-  signals: "rgba(239, 68, 68, 0.15)",
-  control: "rgba(168, 85, 247, 0.15)",
-  electrical: "rgba(6, 182, 212, 0.15)",
-};
-
-// Track 名称映射
-const TRACK_NAMES: Record<TrackId, string> = {
-  devops: "DevOps",
-  math: "数学",
-  cv: "CV",
-  nlp: "NLP",
-  project: "项目",
-  cs: "CS",
-  embedded: "嵌入式",
-  electronics: "电子",
-  signals: "通信",
-  control: "控制",
-  electrical: "电气",
-};
 
 interface RoadmapGraphProps {
   initialNodes?: RoadmapNodeType[];
@@ -240,28 +196,32 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
       <div className="flex flex-wrap gap-2 mb-4">
         <button
           onClick={() => setActiveTrack("all")}
-          className={`px-2 sm:px-3 py-1.5 rounded-lg font-mono text-xs border transition-colors ${
+          className={`px-3 py-1.5 rounded-lg font-mono text-xs border transition-all ${
             activeTrack === "all"
-              ? "bg-neutral-200 text-neutral-900 border-neutral-300"
+              ? "bg-neutral-200 text-neutral-900 border-neutral-300 shadow-sm"
               : "bg-neutral-900 text-neutral-400 border-neutral-700 hover:border-neutral-500"
           }`}
         >
           全部
         </button>
-        {ROADMAP_TRACKS.map((t) => (
-          <button
-            key={t.id}
-            onClick={() => setActiveTrack(t.id)}
-            className={`px-2 sm:px-3 py-1.5 rounded-lg font-mono text-xs border transition-colors ${
-              activeTrack === t.id
-                ? `bg-neutral-900 ${t.color.replace("text-", "border-")} ${t.color.replace("text-", "bg-opacity-10 ")}`
-                : "bg-neutral-900 text-neutral-400 border-neutral-700 hover:border-neutral-500"
-            } ${activeTrack === t.id ? `border-current ${t.color}` : "border-neutral-700"}`}
-          >
-            <span className={`inline-block w-2 h-2 rounded-full mr-1.5 ${t.color.replace("text-", "bg-")}`} />
-            {t.name}
-          </button>
-        ))}
+        {ROADMAP_TRACKS.map((t) => {
+          const isActive = activeTrack === t.id;
+          const trackColor = TRACK_COLORS[t.id];
+          return (
+            <button
+              key={t.id}
+              onClick={() => setActiveTrack(t.id)}
+              className={`px-3 py-1.5 rounded-lg font-mono text-xs border transition-all ${
+                isActive
+                  ? `${trackColor.text} ${trackColor.border} ${trackColor.bg}`
+                  : "bg-neutral-900 text-neutral-400 border-neutral-700 hover:border-neutral-500"
+              }`}
+            >
+              <span className={`inline-block w-2 h-2 rounded-full mr-1.5 ${trackColor.solid}`} />
+              {t.name}
+            </button>
+          );
+        })}
       </div>
 
       {/* 节点点击提示 */}
@@ -301,6 +261,7 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
           {activeTrack === "all" && trackBounds && TRACK_ORDER.map((track) => {
             const bounds = trackBounds.get(track);
             if (!bounds) return null;
+            const trackColor = TRACK_COLORS[track];
             return (
               <div
                 key={track}
@@ -310,19 +271,19 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
                   top: bounds.y,
                   width: bounds.width,
                   height: bounds.height,
-                  backgroundColor: TRACK_SWIMLANE_COLORS[track],
-                  borderColor: TRACK_SWIMLANE_BORDERS[track],
+                  backgroundColor: trackColor.swimlane,
+                  borderColor: trackColor.swimlaneBorder,
                 }}
               >
                 {/* Track 标签 */}
                 <div
                   className="absolute -top-3 left-4 px-2 py-0.5 rounded text-[10px] font-mono font-bold"
                   style={{
-                    backgroundColor: TRACK_SWIMLANE_BORDERS[track],
-                    color: TRACK_SWIMLANE_BORDERS[track].replace('0.15', '0.8'),
+                    backgroundColor: trackColor.swimlaneBorder,
+                    color: getSwimlaneLabelColor(track),
                   }}
                 >
-                  {TRACK_NAMES[track]}
+                  {trackColor.label}
                 </div>
               </div>
             );

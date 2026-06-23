@@ -23,35 +23,6 @@ interface RoadmapNodeProps {
   selected?: boolean;
 }
 
-// 从统一的 TRACK_COLORS 派生边框色和点颜色
-const trackBorders: Record<TrackId, string> = {
-  cv: TRACK_COLORS.cv.border.replace("border-", "border-"),
-  nlp: TRACK_COLORS.nlp.border.replace("border-", "border-"),
-  devops: TRACK_COLORS.devops.border.replace("border-", "border-"),
-  math: TRACK_COLORS.math.border.replace("border-", "border-"),
-  project: TRACK_COLORS.project.border.replace("border-", "border-"),
-  cs: TRACK_COLORS.cs.border.replace("border-", "border-"),
-  embedded: TRACK_COLORS.embedded.border.replace("border-", "border-"),
-  electronics: TRACK_COLORS.electronics.border.replace("border-", "border-"),
-  signals: TRACK_COLORS.signals.border.replace("border-", "border-"),
-  control: TRACK_COLORS.control.border.replace("border-", "border-"),
-  electrical: TRACK_COLORS.electrical.border.replace("border-", "border-"),
-};
-
-const trackDots: Record<TrackId, string> = {
-  cv: TRACK_COLORS.cv.text.replace("text-", "bg-"),
-  nlp: TRACK_COLORS.nlp.text.replace("text-", "bg-"),
-  devops: TRACK_COLORS.devops.text.replace("text-", "bg-"),
-  math: TRACK_COLORS.math.text.replace("text-", "bg-"),
-  project: TRACK_COLORS.project.text.replace("text-", "bg-"),
-  cs: TRACK_COLORS.cs.text.replace("text-", "bg-"),
-  embedded: TRACK_COLORS.embedded.text.replace("text-", "bg-"),
-  electronics: TRACK_COLORS.electronics.text.replace("text-", "bg-"),
-  signals: TRACK_COLORS.signals.text.replace("text-", "bg-"),
-  control: TRACK_COLORS.control.text.replace("text-", "bg-"),
-  electrical: TRACK_COLORS.electrical.text.replace("text-", "bg-"),
-};
-
 const statusStyles: Record<NodeStatus, {
   border: string;
   bg: string;
@@ -130,8 +101,7 @@ function ProgressRing({ percent, size = 20 }: { percent: number; size?: number }
 function RoadmapNodeComponent({ data, selected }: RoadmapNodeProps) {
   const style = statusStyles[data.status];
   const isLocked = data.status === "locked";
-  const trackBorder = trackBorders[data.track] || "border-neutral-500";
-  const trackDot = trackDots[data.track] || "bg-neutral-500";
+  const trackColor = TRACK_COLORS[data.track];
   const progress = data.progressPercent || 0;
 
   return (
@@ -149,7 +119,7 @@ function RoadmapNodeComponent({ data, selected }: RoadmapNodeProps) {
       <div className={`absolute top-0 left-0 right-0 h-1 rounded-t-lg ${style.statusBar}`} />
 
       {/* Left track indicator stripe */}
-      <div className={`absolute left-0 top-0 bottom-0 w-1 rounded-l-lg ${trackBorder}`} />
+      <div className={`absolute left-0 top-0 bottom-0 w-1 rounded-l-lg ${trackColor.border}`} />
 
       {/* Click hint icon */}
       <div className="absolute top-2 right-2">
@@ -186,7 +156,7 @@ function RoadmapNodeComponent({ data, selected }: RoadmapNodeProps) {
       <div className="space-y-2 pr-4">
         {/* Track dot + name */}
         <div className="flex items-center gap-2">
-          <span className={`w-2 h-2 rounded-full flex-shrink-0 ${trackDot}`} />
+          <span className={`w-2 h-2 rounded-full flex-shrink-0 ${trackColor.solid}`} />
           <h4 className={`font-bold text-sm leading-tight ${style.text}`}>
             {data.name}
           </h4>

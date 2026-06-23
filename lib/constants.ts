@@ -5,29 +5,128 @@
 export type TrackId = "cv" | "nlp" | "devops" | "math" | "project" | "cs" | "embedded" | "electronics" | "signals" | "control" | "electrical";
 
 export interface TrackColors {
-  text: string;
-  bg: string;
-  border: string;
+  text: string;           // 文本颜色类 e.g. "text-sky-400"
+  bg: string;             // 背景颜色类 e.g. "bg-sky-400/10"
+  border: string;         // 边框颜色类 e.g. "border-sky-400/30"
+  solid: string;          // 实心背景类 e.g. "bg-sky-400"
+  swimlane: string;       // 泳道背景 rgba e.g. "rgba(56, 189, 248, 0.06)"
+  swimlaneBorder: string; // 泳道边框 rgba e.g. "rgba(56, 189, 248, 0.15)"
+  label: string;          // 显示名称 e.g. "DevOps"
 }
 
 export const TRACK_COLORS: Record<TrackId, TrackColors> = {
-  cv: { text: "text-orange-400", bg: "bg-orange-400/10", border: "border-orange-400/30" },
-  nlp: { text: "text-violet-400", bg: "bg-violet-400/10", border: "border-violet-400/30" },
-  devops: { text: "text-sky-400", bg: "bg-sky-400/10", border: "border-sky-400/30" },
-  math: { text: "text-emerald-400", bg: "bg-emerald-400/10", border: "border-emerald-400/30" },
-  project: { text: "text-pink-400", bg: "bg-pink-400/10", border: "border-pink-400/30" },
-  cs: { text: "text-blue-500", bg: "bg-blue-500/10", border: "border-blue-500/30" },
-  embedded: { text: "text-green-500", bg: "bg-green-500/10", border: "border-green-500/30" },
-  electronics: { text: "text-yellow-500", bg: "bg-yellow-500/10", border: "border-yellow-500/30" },
-  signals: { text: "text-red-500", bg: "bg-red-500/10", border: "border-red-500/30" },
-  control: { text: "text-purple-500", bg: "bg-purple-500/10", border: "border-purple-500/30" },
-  electrical: { text: "text-cyan-500", bg: "bg-cyan-500/10", border: "border-cyan-500/30" },
+  cv: {
+    text: "text-orange-400",
+    bg: "bg-orange-400/10",
+    border: "border-orange-400/30",
+    solid: "bg-orange-400",
+    swimlane: "rgba(251, 146, 60, 0.06)",
+    swimlaneBorder: "rgba(251, 146, 60, 0.15)",
+    label: "CV",
+  },
+  nlp: {
+    text: "text-violet-400",
+    bg: "bg-violet-400/10",
+    border: "border-violet-400/30",
+    solid: "bg-violet-400",
+    swimlane: "rgba(167, 139, 250, 0.06)",
+    swimlaneBorder: "rgba(167, 139, 250, 0.15)",
+    label: "NLP",
+  },
+  devops: {
+    text: "text-sky-400",
+    bg: "bg-sky-400/10",
+    border: "border-sky-400/30",
+    solid: "bg-sky-400",
+    swimlane: "rgba(56, 189, 248, 0.06)",
+    swimlaneBorder: "rgba(56, 189, 248, 0.15)",
+    label: "DevOps",
+  },
+  math: {
+    text: "text-emerald-400",
+    bg: "bg-emerald-400/10",
+    border: "border-emerald-400/30",
+    solid: "bg-emerald-400",
+    swimlane: "rgba(52, 211, 153, 0.06)",
+    swimlaneBorder: "rgba(52, 211, 153, 0.15)",
+    label: "数学",
+  },
+  project: {
+    text: "text-pink-400",
+    bg: "bg-pink-400/10",
+    border: "border-pink-400/30",
+    solid: "bg-pink-400",
+    swimlane: "rgba(244, 114, 182, 0.06)",
+    swimlaneBorder: "rgba(244, 114, 182, 0.15)",
+    label: "项目",
+  },
+  cs: {
+    text: "text-blue-500",
+    bg: "bg-blue-500/10",
+    border: "border-blue-500/30",
+    solid: "bg-blue-500",
+    swimlane: "rgba(59, 130, 246, 0.06)",
+    swimlaneBorder: "rgba(59, 130, 246, 0.15)",
+    label: "CS",
+  },
+  embedded: {
+    text: "text-green-500",
+    bg: "bg-green-500/10",
+    border: "border-green-500/30",
+    solid: "bg-green-500",
+    swimlane: "rgba(34, 197, 94, 0.06)",
+    swimlaneBorder: "rgba(34, 197, 94, 0.15)",
+    label: "嵌入式",
+  },
+  electronics: {
+    text: "text-yellow-500",
+    bg: "bg-yellow-500/10",
+    border: "border-yellow-500/30",
+    solid: "bg-yellow-500",
+    swimlane: "rgba(234, 179, 8, 0.06)",
+    swimlaneBorder: "rgba(234, 179, 8, 0.15)",
+    label: "电子",
+  },
+  signals: {
+    text: "text-red-500",
+    bg: "bg-red-500/10",
+    border: "border-red-500/30",
+    solid: "bg-red-500",
+    swimlane: "rgba(239, 68, 68, 0.06)",
+    swimlaneBorder: "rgba(239, 68, 68, 0.15)",
+    label: "通信",
+  },
+  control: {
+    text: "text-purple-500",
+    bg: "bg-purple-500/10",
+    border: "border-purple-500/30",
+    solid: "bg-purple-500",
+    swimlane: "rgba(168, 85, 247, 0.06)",
+    swimlaneBorder: "rgba(168, 85, 247, 0.15)",
+    label: "控制",
+  },
+  electrical: {
+    text: "text-cyan-500",
+    bg: "bg-cyan-500/10",
+    border: "border-cyan-500/30",
+    solid: "bg-cyan-500",
+    swimlane: "rgba(6, 182, 212, 0.06)",
+    swimlaneBorder: "rgba(6, 182, 212, 0.15)",
+    label: "电气",
+  },
 };
 
 // 便捷函数：获取 track 的完整样式字符串
 export function getTrackColorClasses(track: TrackId): string {
   const colors = TRACK_COLORS[track];
   return `${colors.text} ${colors.bg} ${colors.border}`;
+}
+
+// 便捷函数：获取泳道标签颜色（从边框颜色派生）
+export function getSwimlaneLabelColor(track: TrackId): string {
+  const border = TRACK_COLORS[track].swimlaneBorder;
+  // 将边框颜色的 alpha 从 0.15 改为 0.8 用于标签
+  return border.replace(/[\d.]+\)$/, "0.8)");
 }
 
 // ============ 情报链接映射 ============

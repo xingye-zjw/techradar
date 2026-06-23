@@ -15,10 +15,18 @@ const RoadmapGraph = dynamic(
   }
 );
 
+// 状态图例颜色（与 RoadmapNode 的 statusStyles 保持一致）
+const STATUS_LEGEND = [
+  { color: "bg-green-500", label: "已完成", description: "已完成学习" },
+  { color: "bg-cyan-500", label: "可学习", description: "前置已满足" },
+  { color: "bg-neutral-600", label: "需前置", description: "需要先完成前置节点" },
+] as const;
+
 export default function RoadmapPage() {
   return (
     <main className="min-h-screen bg-neutral-950 text-neutral-200">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12">
+        {/* 页面标题 */}
         <div className="mb-6">
           <span className="font-mono text-xs tracking-[0.15em] text-green-400 uppercase">
             01 / 路线图
@@ -29,27 +37,40 @@ export default function RoadmapPage() {
           </p>
         </div>
 
-        <div className="flex flex-wrap gap-2 sm:gap-4 mb-8 font-mono text-xs">
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-neutral-900 border border-neutral-700 rounded-md">
-            <span className="w-2 h-2 rounded-full bg-green-400"></span>
-            <span className="text-neutral-400">已完成</span>
-          </div>
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-neutral-900 border border-neutral-700 rounded-md">
-            <span className="w-2 h-2 rounded-full bg-cyan-400"></span>
-            <span className="text-neutral-400">可学习</span>
-          </div>
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-neutral-900 border border-neutral-700 rounded-md">
-            <span className="w-2 h-2 rounded-full bg-neutral-600"></span>
-            <span className="text-neutral-400">需前置</span>
-          </div>
+        {/* 状态图例 */}
+        <div className="flex flex-wrap gap-2 sm:gap-4 mb-6 font-mono text-xs">
+          {STATUS_LEGEND.map((item) => (
+            <div
+              key={item.label}
+              className="flex items-center gap-2 px-3 py-1.5 bg-neutral-900 border border-neutral-700 rounded-md"
+              title={item.description}
+            >
+              <span className={`w-2 h-2 rounded-full ${item.color}`} />
+              <span className="text-neutral-400">{item.label}</span>
+            </div>
+          ))}
         </div>
 
+        {/* 操作提示 */}
+        <div className="mb-4 flex flex-wrap gap-4 font-mono text-[10px] text-neutral-500">
+          <span className="flex items-center gap-1">
+            <span className="text-neutral-400">💡</span>
+            单击：查看详情 | 双击：切换完成
+          </span>
+          <span className="flex items-center gap-1">
+            <span className="text-neutral-400">🔍</span>
+            滚轮缩放 | 拖拽平移
+          </span>
+        </div>
+
+        {/* 路线图 */}
         <div className="rounded-lg border border-neutral-700 overflow-hidden">
           <RoadmapGraph />
         </div>
 
-        <div className="mt-8 text-center font-mono text-xs text-neutral-500">
-          // 点击节点切换完成状态 · 依赖链自动解锁下游节点
+        {/* 底部提示 */}
+        <div className="mt-6 text-center font-mono text-xs text-neutral-600">
+          // 依赖链自动解锁下游节点 · 进度数据存储在浏览器本地
         </div>
       </div>
     </main>
