@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
 import { FULL_ROADMAP } from "./roadmap-data";
+import { getAllProjects } from "./practice";
 
 /**
  * 统一搜索索引项
@@ -11,7 +12,7 @@ export interface UnifiedSearchItem {
   id: string;
   title: string;
   content: string;
-  type: "node" | "intel" | "tool" | "pitfall";
+  type: "node" | "intel" | "tool" | "pitfall" | "project";
   typeLabel: string;
   url: string;
   tags?: string[];
@@ -139,6 +140,22 @@ function getPitfallSearchItems(): UnifiedSearchItem[] {
 }
 
 // ============================================================
+// 实战项目数据提取
+// ============================================================
+function getProjectSearchItems(): UnifiedSearchItem[] {
+  return getAllProjects().map((project) => ({
+    id: `project-${project.slug}`,
+    title: project.title,
+    content: `${project.summary} ${project.prerequisites.join(" ")}`,
+    type: "project" as const,
+    typeLabel: "项目",
+    url: `/practice/${project.slug}`,
+    tags: project.prerequisites,
+    category: project.category,
+  }));
+}
+
+// ============================================================
 // 统一搜索索引（带缓存）
 // ============================================================
 let cachedIndex: UnifiedSearchItem[] | null = null;
@@ -151,6 +168,7 @@ export function getUnifiedSearchIndex(): UnifiedSearchItem[] {
     ...getIntelSearchItems(),
     ...getToolSearchItems(),
     ...getPitfallSearchItems(),
+    ...getProjectSearchItems(),
   ];
 
   return cachedIndex;

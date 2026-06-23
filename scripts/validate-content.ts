@@ -6,6 +6,7 @@
  * - 术语（Glossary）
  * - 工具（Toolbox）
  * - 踩坑（Pitfall）
+ * - 实战项目（Practice）
  *
  * 使用方式：npm run validate-content
  */
@@ -14,7 +15,8 @@ import { getAllIntelCards } from '../lib/intel';
 import { getAllTerms } from '../lib/glossary';
 import { getToolboxData } from '../lib/toolbox';
 import { getAllPitfalls } from '../lib/pitfall';
-import { validateIntel, validateTerm, validateTool, validatePitfall } from '../lib/content-validator';
+import { getAllProjects } from '../lib/practice';
+import { validateIntel, validateTerm, validateTool, validatePitfall, validateProject } from '../lib/content-validator';
 
 async function validateAll() {
   console.log('🔍 开始验证所有内容...\n');
@@ -111,6 +113,29 @@ async function validateAll() {
     }
   } catch (error) {
     console.error('   ❌ 踩坑加载失败:', error);
+    totalErrors++;
+  }
+
+  // 验证实战项目
+  console.log('🚀 实战项目验证:');
+  try {
+    const projects = getAllProjects();
+    console.log(`   数量: ${projects.length}`);
+    totalItems += projects.length;
+
+    projects.forEach(item => {
+      const errors = validateProject(item);
+      if (errors.length > 0) {
+        console.error(`   ❌ ${item.title}:`, errors);
+        totalErrors += errors.length;
+      }
+    });
+
+    if (projects.every(item => validateProject(item).length === 0)) {
+      console.log('   ✅ 所有实战项目验证通过\n');
+    }
+  } catch (error) {
+    console.error('   ❌ 实战项目加载失败:', error);
     totalErrors++;
   }
 

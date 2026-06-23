@@ -1,9 +1,22 @@
 import Link from "next/link";
 import { RecentList } from "@/components/RecentList";
 import { getAllTerms } from "@/lib/glossary";
+import { getAllProjects } from "@/lib/practice";
+import { getAllIntelCards } from "@/lib/intel";
 
 // 首页展示的热门术语（精选 6 个）
 const FEATURED_TERMS = ["transformer", "docker", "lora", "cnn", "pytorch", "git"];
+
+// 首页展示的精选实战项目（难度 2-3，适合入门）
+const FEATURED_PROJECTS = getAllProjects()
+  .filter(p => p.difficulty >= 2 && p.difficulty <= 3)
+  .slice(0, 3);
+
+// 首页展示的热门技术情报（精选 6 个热门主题）
+const FEATURED_INTEL = [
+  "001-transformer", "002-yolo", "003-lora-qlora",
+  "008-huggingface", "015-cnn-architecture", "025-rag"
+].map(slug => getAllIntelCards().find(c => c.slug === slug)).filter(Boolean);
 
 export default function Home() {
   return (
@@ -30,7 +43,7 @@ export default function Home() {
               <span className="font-mono text-[10px] text-neutral-600 hidden sm:inline">⌘K</span>
             </Link>
             <p className="mt-3 font-mono text-[10px] text-neutral-500">
-              全站搜索 · 路线图 / 情报 / 工具 / 踩坑 / 术语
+              全站搜索 · 路线图 / 情报 / 工具 / 踩坑 / 术语 / 项目
             </p>
           </div>
         </div>
@@ -115,6 +128,87 @@ export default function Home() {
               AI/ML、工程部署、数学基础等领域的专业术语详解
             </p>
           </Link>
+
+          <Link
+            href="/practice"
+            className="group block bg-neutral-900 border border-neutral-700 rounded-lg p-6 hover:border-emerald-400/50 transition-colors"
+          >
+            <div className="flex items-center gap-4 mb-3">
+              <span className="font-mono text-sm font-bold text-emerald-400 bg-emerald-400/10 w-10 h-10 rounded-lg flex items-center justify-center">
+                06
+              </span>
+              <h2 className="text-xl font-bold">实战项目</h2>
+              <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-medium">
+                NEW
+              </span>
+            </div>
+            <p className="text-neutral-400 text-sm">
+              通过实际项目巩固学习成果，建立完整的项目经验
+            </p>
+          </Link>
+        </div>
+
+        {/* 热门技术情报 */}
+        <div className="mt-12">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="h-px flex-1 bg-gradient-to-r from-cyan-400/0 via-cyan-400/40 to-transparent"></div>
+            <div className="flex items-center gap-2 shrink-0">
+              <span className="font-mono text-[11px] text-cyan-400 uppercase tracking-widest">
+                热门情报
+              </span>
+            </div>
+            <div className="h-px flex-1 bg-gradient-to-l from-cyan-400/0 via-cyan-400/40 to-transparent"></div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {FEATURED_INTEL.map((intel) => {
+              if (!intel) return null;
+              return (
+                <Link
+                  key={intel.slug}
+                  href={`/intel/${intel.slug}`}
+                  className="group block bg-neutral-900 border border-neutral-800 rounded-lg p-5 hover:border-cyan-400/30 hover:bg-cyan-400/5 transition-all"
+                >
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className={`text-[10px] px-1.5 py-0.5 rounded font-mono ${
+                      intel.difficulty === 'beginner' ? 'bg-green-500/20 text-green-400' :
+                      intel.difficulty === 'advanced' ? 'bg-red-500/20 text-red-400' :
+                      'bg-yellow-500/20 text-yellow-400'
+                    }`}>
+                      {intel.difficulty === 'beginner' ? '入门' : intel.difficulty === 'advanced' ? '进阶' : '中级'}
+                    </span>
+                    <span className="text-[10px] text-neutral-500 font-mono">
+                      {intel.readingTime} min
+                    </span>
+                  </div>
+                  <h3 className="font-bold text-neutral-100 group-hover:text-cyan-400 transition-colors text-sm mb-2 line-clamp-2">
+                    {intel.title}
+                  </h3>
+                  <p className="text-xs text-neutral-400 line-clamp-2 leading-relaxed mb-3">
+                    {intel.summary}
+                  </p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {intel.keywords.slice(0, 3).map((keyword, i) => (
+                      <span
+                        key={i}
+                        className="text-[10px] px-1.5 py-0.5 bg-neutral-800 text-neutral-500 rounded"
+                      >
+                        {keyword}
+                      </span>
+                    ))}
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+          <div className="mt-4 text-center">
+            <Link
+              href="/intel"
+              className="inline-flex items-center gap-2 text-sm text-cyan-400 hover:text-cyan-300 transition-colors"
+            >
+              查看全部情报
+              <span aria-hidden="true">→</span>
+            </Link>
+          </div>
         </div>
 
         {/* 热门术语 */}
@@ -161,6 +255,60 @@ export default function Home() {
               className="inline-flex items-center gap-2 text-sm text-purple-400 hover:text-purple-300 transition-colors"
             >
               查看全部术语
+              <span aria-hidden="true">→</span>
+            </Link>
+          </div>
+        </div>
+
+        {/* 精选实战项目 */}
+        <div className="mt-12">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="h-px flex-1 bg-gradient-to-r from-emerald-400/0 via-emerald-400/40 to-transparent"></div>
+            <div className="flex items-center gap-2 shrink-0">
+              <span className="font-mono text-[11px] text-emerald-400 uppercase tracking-widest">
+                精选项目
+              </span>
+            </div>
+            <div className="h-px flex-1 bg-gradient-to-l from-emerald-400/0 via-emerald-400/40 to-transparent"></div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {FEATURED_PROJECTS.map((project) => (
+              <Link
+                key={project.slug}
+                href={`/practice/${project.slug}`}
+                className="group block bg-neutral-900 border border-neutral-800 rounded-lg p-5 hover:border-emerald-400/30 hover:bg-emerald-400/5 transition-all"
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="font-bold text-neutral-100 group-hover:text-emerald-400 transition-colors text-sm">
+                    {project.title}
+                  </h3>
+                  <span className="text-xs px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-mono">
+                    {'⭐'.repeat(project.difficulty)}
+                  </span>
+                </div>
+                <p className="text-xs text-neutral-400 line-clamp-2 leading-relaxed mb-3">
+                  {project.summary}
+                </p>
+                <div className="flex items-center gap-3 text-xs text-neutral-500">
+                  <span className="flex items-center gap-1">
+                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    {project.duration}
+                  </span>
+                  {project.relatedNodes && project.relatedNodes.length > 0 && (
+                    <span>{project.relatedNodes.length} 个关联节点</span>
+                  )}
+                </div>
+              </Link>
+            ))}
+          </div>
+          <div className="mt-4 text-center">
+            <Link
+              href="/practice"
+              className="inline-flex items-center gap-2 text-sm text-emerald-400 hover:text-emerald-300 transition-colors"
+            >
+              查看全部项目
               <span aria-hidden="true">→</span>
             </Link>
           </div>

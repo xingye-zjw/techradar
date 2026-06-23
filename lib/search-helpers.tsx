@@ -73,6 +73,13 @@ export const MODULE_CONFIG: Record<string, ModuleConfig> = {
     bgColor: "bg-purple-400/10",
     borderColor: "border-purple-400/30",
   },
+  project: {
+    label: "项目",
+    icon: "🚀",
+    color: "text-emerald-400",
+    bgColor: "bg-emerald-400/10",
+    borderColor: "border-emerald-400/30",
+  },
 } as const;
 
 // ============ 统一高亮函数 ============

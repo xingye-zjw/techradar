@@ -113,8 +113,9 @@ export function SearchPageClient({ items }: SearchPageClientProps) {
             跨模块搜索<span className="text-neutral-200 font-medium">路线图</span>、
             <span className="text-neutral-200 font-medium">情报</span>、
             <span className="text-neutral-200 font-medium">工具</span>、
-            <span className="text-neutral-200 font-medium">踩坑指南</span>和
-            <span className="text-neutral-200 font-medium">专业术语</span>。
+            <span className="text-neutral-200 font-medium">踩坑指南</span>、
+            <span className="text-neutral-200 font-medium">专业术语</span>和
+            <span className="text-neutral-200 font-medium">实战项目</span>。
             共索引 <span className="text-neutral-200 font-medium">{items.length}</span> 条内容。
           </p>
         </div>
