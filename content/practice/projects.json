@@ -28,113 +28,159 @@
           "title": "环境准备与 GPU 验证",
           "content": {
             "objective": "配置 PyTorch 深度学习环境，确保 GPU 可用",
-            "api_checklist": [
-              "torch.cuda.is_available() 检查 GPU 是否可用",
-              "torch.version.cuda 查看 CUDA 版本",
-              "torch.cuda.get_device_name(0) 获取 GPU 型号",
-              "torch.backends.cudnn.enabled 确认 cuDNN 已启用"
+            "tasks": [
+              "1.1 创建 conda 环境：`conda create -n cv-project python=3.9 && conda activate cv-project`",
+              "1.2 安装 PyTorch（GPU 版本）：访问 https://pytorch.org/get-started/locally/ 选择对应的 CUDA 版本，运行 `pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118`",
+              "1.3 验证安装：运行 `python -c \"import torch; print(torch.__version__)\"`",
+              "1.4 运行 GPU 验证脚本（见下方代码）",
+              "1.5 记录 GPU 型号和可用显存大小"
             ],
-            "practice": "创建一个虚拟环境，安装 PyTorch（匹配 CUDA 版本）和 torchvision。运行验证脚本确认 GPU 可用，并打印 GPU 型号和显存大小。",
-            "answer": "核心验证代码：import torch; print(f'CUDA available: {torch.cuda.is_available()}'); print(f'GPU: {torch.cuda.get_device_name(0)}'); print(f'Memory: {torch.cuda.get_device_properties(0).total_mem / 1024**3:.1f} GB')"
+            "gpu_verification": "```python\nimport torch\n\n# 检查 GPU 是否可用\nprint(f\"CUDA available: {torch.cuda.is_available()}\")\n\n# 获取 CUDA 版本\nprint(f\"CUDA version: {torch.version.cuda}\")\n\n# 获取 GPU 数量\nprint(f\"GPU count: {torch.cuda.device_count()}\")\n\n# 获取当前 GPU 型号\nif torch.cuda.is_available():\n    print(f\"GPU: {torch.cuda.get_device_name(0)}\")\n    # 获取显存大小（GB）\n    mem = torch.cuda.get_device_properties(0).total_mem / 1024**3\n    print(f\"Total memory: {mem:.1f} GB\")\n    # 检查 cuDNN 是否启用\n    print(f\"cuDNN enabled: {torch.backends.cudnn.enabled}\")\n    print(f\"cuDNN version: {torch.backends.cudnn.version()}\")\n```",
+            "common_errors": [
+              {"error": "CUDA not available", "solution": "1. 确认 NVIDIA 驱动已安装：运行 `nvidia-smi` 查看驱动版本 2. 确认 CUDA 版本匹配：torch 版本需要与系统 CUDA 版本兼容 3. 如果是笔记本（双显卡），需要在 BIOS 中启用独显"},
+              {"error": "ImportError: DLL load failed", "solution": "Windows 用户需要安装 Visual C++ Redistributable。或者尝试使用 conda 安装：`conda install pytorch torchvision pytorch-cuda=11.8 -c pytorch -c nvidia`"},
+              {"error": "No module named 'torch'", "solution": "确认已激活正确的 conda 环境，运行 `which python` 确认路径正确，然后重新安装 `pip install torch torchvision`"}
+            ],
+            "checkpoint": "运行 gpu_verification.py 能打印出 GPU 型号和显存大小，且 CUDA available 显示 True"
           },
           "duration": "1.5小时",
           "resources": [
             { "title": "PyTorch 安装指南", "url": "https://pytorch.org/get-started/locally/", "type": "documentation" },
-            { "title": "CUDA 兼容性检查", "url": "https://developer.nvidia.com/cuda-gpus", "type": "documentation" }
+            { "title": "CUDA 兼容性检查", "url": "https://developer.nvidia.com/cuda-gpus", "type": "documentation" },
+            { "title": "NVIDIA 驱动下载", "url": "https://www.nvidia.com/Download/index.aspx", "type": "documentation" }
           ],
-          "checkpoint": "能打印出 GPU 型号和显存大小"
+          "relatedTerms": ["cuda", "cudnn", "gpu-computing"],
+          "relatedTools": ["pytorch", "conda", "jupyter"]
         },
         {
           "order": 2,
           "title": "数据加载与增强",
           "content": {
             "objective": "使用 torchvision 加载 CIFAR-10 数据集，实现数据增强 pipeline",
-            "api_checklist": [
-              "torchvision.datasets.CIFAR10() 加载数据集",
-              "transforms.Compose() 组合多个变换",
-              "transforms.RandomHorizontalFlip() 随机水平翻转",
-              "transforms.RandomCrop(32, padding=4) 随机裁剪",
-              "transforms.Normalize() 归一化处理",
-              "torch.utils.data.DataLoader() 创建数据加载器"
+            "tasks": [
+              "2.1 创建项目目录结构：`mkdir -p data models utils scripts`",
+              "2.2 下载 CIFAR-10 数据集到 data 目录",
+              "2.3 定义训练集数据增强 pipeline（随机翻转、裁剪、归一化）",
+              "2.4 定义测试集预处理（仅归一化）",
+              "2.5 使用 DataLoader 创建训练集和测试集加载器",
+              "2.6 可视化一个 batch 的图片，确认增强效果"
             ],
-            "practice": "实现完整的数据 pipeline：加载 CIFAR-10 训练集和测试集，对训练集应用数据增强（随机翻转、裁剪、颜色抖动），对测试集只做归一化。用 DataLoader 创建 batch，设置 num_workers=4 加速加载。",
-            "answer": "训练集增强：transform_train = transforms.Compose([transforms.RandomCrop(32, padding=4), transforms.RandomHorizontalFlip(), transforms.ColorJitter(brightness=0.2, contrast=0.2), transforms.ToTensor(), transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))])"
+            "data_pipeline": "```python\nimport torch\nfrom torchvision import datasets, transforms\nfrom torch.utils.data import DataLoader\n\n# 训练集数据增强\ntransform_train = transforms.Compose([\n    transforms.RandomCrop(32, padding=4),      # 随机裁剪，周围补零\n    transforms.RandomHorizontalFlip(),          # 随机水平翻转\n    transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2),  # 颜色抖动\n    transforms.ToTensor(),                      # 转换为张量\n    transforms.Normalize(                      # ImageNet 统计值归一化\n        mean=[0.4914, 0.4822, 0.4465],\n        std=[0.2023, 0.1994, 0.2010]\n    )\n])\n\n# 测试集预处理（不增强）\ntransform_test = transforms.Compose([\n    transforms.ToTensor(),\n    transforms.Normalize(\n        mean=[0.4914, 0.4822, 0.4465],\n        std=[0.2023, 0.1994, 0.2010]\n    )\n])\n\n# 加载数据集\ntrain_dataset = datasets.CIFAR10(\n    root='./data', train=True, download=True, transform=transform_train\n)\ntest_dataset = datasets.CIFAR10(\n    root='./data', train=False, download=True, transform=transform_test\n)\n\n# 创建 DataLoader\ntrain_loader = DataLoader(train_dataset, batch_size=128, shuffle=True, num_workers=4, pin_memory=True)\ntest_loader = DataLoader(test_dataset, batch_size=128, shuffle=False, num_workers=4, pin_memory=True)\n\n# CIFAR-10 类别名称\nclasses = ['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck']\n\nprint(f\"训练集样本数: {len(train_dataset)}\")\nprint(f\"测试集样本数: {len(test_dataset)}\")\n```",
+            "visualization": "```python\nimport matplotlib.pyplot as plt\nimport numpy as np\n\n# 获取一个 batch\nimages, labels = next(iter(train_loader))\n\n# 反归一化以便显示\ndef imshow(img):\n    img = img / 2 + 0.5     # unnormalize\n    npimg = img.numpy()\n    plt.imshow(np.transpose(npimg, (1, 2, 0)))\n    plt.axis('off')\n\n# 显示 16 张图片\nfig, axes = plt.subplots(4, 4, figsize=(10, 10))\nfor i, ax in enumerate(axes.flat):\n    imshow(images[i])\n    ax.set_title(classes[labels[i]])\nplt.tight_layout()\nplt.savefig('data_sample.png', dpi=150)\nplt.show()\n```",
+            "common_errors": [
+              {"error": "下载数据集很慢或超时", "solution": "1. 使用国内镜像：`wget https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz` 手动下载 2. 或者使用 `download=True` 时设置 timeout"},
+              {"error": "num_workers 设置后报错", "solution": "Windows 系统建议 num_workers=0，Linux 系统可以使用 4-8"},
+              {"error": "图片显示出来是黑的或纯色", "solution": "归一化后需要反归一化才能正常显示，使用上面的 imshow 函数"}
+            ],
+            "checkpoint": "能成功加载 CIFAR-10 数据集，可视化图片正常显示，且每张图片的增强效果不同（因为随机增强）"
           },
           "duration": "2小时",
           "resources": [
             { "title": "torchvision transforms 文档", "url": "https://pytorch.org/vision/stable/transforms.html", "type": "documentation" },
-            { "title": "CIFAR-10 数据集说明", "url": "https://www.cs.toronto.edu/~kriz/cifar.html", "type": "documentation" }
+            { "title": "CIFAR-10 数据集说明", "url": "https://www.cs.toronto.edu/~kriz/cifar.html", "type": "documentation" },
+            { "title": "数据增强技巧", "url": "https://journal.aiac.io/the-tricks-i-learned-from-data-augmentation/", "type": "article" }
           ],
-          "checkpoint": "能可视化一个 batch 的图片，确认增强效果正常"
+          "relatedTerms": ["data-augmentation", "normalization", "convolutional-neural-network"],
+          "relatedTools": ["pytorch", "matplotlib", "numpy"]
         },
         {
           "order": 3,
           "title": "CNN 模型构建",
           "content": {
             "objective": "构建一个包含残差连接的 CNN 模型，理解网络设计原则",
-            "api_checklist": [
-              "nn.Module 自定义网络模块",
-              "nn.Conv2d() 卷积层定义",
-              "nn.BatchNorm2d() 批归一化",
-              "nn.ReLU() 激活函数",
-              "nn.MaxPool2d() 池化层",
-              "nn.Linear() 全连接层",
-              "残差连接实现"
+            "tasks": [
+              "3.1 在 models/ 目录下创建 `__init__.py` 和 `resnet.py`",
+              "3.2 实现 BasicBlock 残差块（两个 3x3 卷积层 + skip connection）",
+              "3.3 实现 ResNet 网络结构（3 个残差层 + 全局平均池化 + 全连接层）",
+              "3.4 在 main.py 中实例化模型并打印结构",
+              "3.5 验证模型前向传播，输出 shape 正确",
+              "3.6 统计模型参数量和可训练参数数量"
             ],
-            "practice": "实现一个简化版 ResNet：包含 3 个残差块，每个块有 2 个 3x3 卷积层 + BN + ReLU，使用 skip connection。最后接全局平均池化和全连接分类层。",
-            "answer": "残差块核心：class ResBlock(nn.Module): def __init__(self, in_ch, out_ch): self.conv1 = nn.Conv2d(in_ch, out_ch, 3, padding=1); self.bn1 = nn.BatchNorm2d(out_ch); self.conv2 = nn.Conv2d(out_ch, out_ch, 3, padding=1); self.bn2 = nn.BatchNorm2d(out_ch); self.shortcut = nn.Conv2d(in_ch, out_ch, 1) if in_ch != out_ch else nn.Identity()"
+            "resnet_model": "```python\nimport torch\nimport torch.nn as nn\nimport torch.nn.functional as F\n\nclass BasicBlock(nn.Module):\n    \"\"\"基础残差块\"\"\"\n    expansion = 1\n    \n    def __init__(self, in_channels, out_channels, stride=1):\n        super(BasicBlock, self).__init__()\n        # 第一个卷积层\n        self.conv1 = nn.Conv2d(in_channels, out_channels, kernel_size=3, \n                               stride=stride, padding=1, bias=False)\n        self.bn1 = nn.BatchNorm2d(out_channels)\n        # 第二个卷积层\n        self.conv2 = nn.Conv2d(out_channels, out_channels, kernel_size=3, \n                               stride=1, padding=1, bias=False)\n        self.bn2 = nn.BatchNorm2d(out_channels)\n        \n        # Skip connection：如果形状不同，用 1x1 卷积调整\n        self.shortcut = nn.Sequential()\n        if stride != 1 or in_channels != out_channels * self.expansion:\n            self.shortcut = nn.Sequential(\n                nn.Conv2d(in_channels, out_channels * self.expansion, \n                         kernel_size=1, stride=stride, bias=False),\n                nn.BatchNorm2d(out_channels * self.expansion)\n            )\n    \n    def forward(self, x):\n        out = F.relu(self.bn1(self.conv1(x)))\n        out = self.bn2(self.conv2(out))\n        out += self.shortcut(x)  # 残差连接\n        out = F.relu(out)\n        return out\n\n\nclass ResNet(nn.Module):\n    \"\"\"ResNet 网络\"\"\"\n    \n    def __init__(self, block, num_blocks, num_classes=10):\n        super(ResNet, self).__init__()\n        self.in_channels = 64\n        \n        # 初始卷积层\n        self.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1, bias=False)\n        self.bn1 = nn.BatchNorm2d(64)\n        \n        # 三个残差层\n        self.layer1 = self._make_layer(block, 64, num_blocks[0], stride=1)\n        self.layer2 = self._make_layer(block, 128, num_blocks[1], stride=2)\n        self.layer3 = self._make_layer(block, 256, num_blocks[2], stride=2)\n        self.layer4 = self._make_layer(block, 512, num_blocks[3], stride=2)\n        \n        # 全局平均池化 + 全连接层\n        self.avgpool = nn.AdaptiveAvgPool2d((1, 1))\n        self.fc = nn.Linear(512 * block.expansion, num_classes)\n    \n    def _make_layer(self, block, out_channels, num_blocks, stride):\n        strides = [stride] + [1] * (num_blocks - 1)\n        layers = []\n        for s in strides:\n            layers.append(block(self.in_channels, out_channels, s))\n            self.in_channels = out_channels * block.expansion\n        return nn.Sequential(*layers)\n    \n    def forward(self, x):\n        out = F.relu(self.bn1(self.conv1(x)))\n        out = self.layer1(out)\n        out = self.layer2(out)\n        out = self.layer3(out)\n        out = self.layer4(out)\n        out = self.avgpool(out)\n        out = torch.flatten(out, 1)\n        out = self.fc(out)\n        return out\n\n\ndef resnet18():\n    return ResNet(BasicBlock, [2, 2, 2, 2])\n\ndef resnet34():\n    return ResNet(BasicBlock, [3, 4, 6, 3])\n```",
+            "model_usage": "```python\n# 创建模型\nmodel = resnet18()\nmodel = model.cuda()  # 移到 GPU\n\n# 打印模型结构\nprint(model)\n\n# 统计参数量\ntotal_params = sum(p.numel() for p in model.parameters())\ntrainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)\nprint(f\"总参数量: {total_params:,}\")\nprint(f\"可训练参数: {trainable_params:,}\")\n\n# 测试前向传播\nx = torch.randn(1, 3, 32, 32).cuda()\noutput = model(x)\nprint(f\"输入 shape: {x.shape}\")\nprint(f\"输出 shape: {output.shape}\")  # 应该是 [1, 10]\n```",
+            "common_errors": [
+              {"error": "RuntimeError: Expected 4D tensor", "solution": "确认输入是 4D tensor [batch, channels, height, width]，可以用 `x.unsqueeze(0)` 添加 batch 维度"},
+              {"error": "模型输出准确率很低", "solution": "1. 检查数据归一化是否正确 2. 学习率是否太大 3. 模型是否正确初始化 4. 残差连接是否正确实现"},
+              {"error": "显存不足 (CUDA out of memory)", "solution": "1. 减小 batch_size（从 128 降到 64 或 32）2. 清理不需要的变量：`del x, output` 3. 在训练循环中添加 `torch.cuda.empty_cache()`"}
+            ],
+            "checkpoint": "模型能正常前向传播，输出 shape 为 [batch, 10]，参数量约 1100 万"
           },
           "duration": "3小时",
           "resources": [
             { "title": "ResNet 论文", "url": "https://arxiv.org/abs/1512.03385", "type": "article" },
-            { "title": "PyTorch nn.Module 教程", "url": "https://pytorch.org/tutorials/beginner/nn_tutorial.html", "type": "documentation" }
+            { "title": "PyTorch nn.Module 教程", "url": "https://pytorch.org/tutorials/beginner/nn_tutorial.html", "type": "documentation" },
+            { "title": "CNN 网络结构设计原则", "url": "https://d2l.ai/chapter_convolutional-modern/index.html", "type": "documentation" }
           ],
-          "checkpoint": "模型能正常前向传播，输出 shape 正确"
+          "relatedIntel": ["006-cnn-basics"],
+          "relatedTerms": ["resnet", "residual-connection", "batch-normalization", "convolutional-neural-network"],
+          "relatedTools": ["pytorch"]
         },
         {
           "order": 4,
           "title": "训练循环与优化",
           "content": {
             "objective": "实现完整的训练循环，掌握学习率调度和梯度裁剪",
-            "api_checklist": [
-              "nn.CrossEntropyLoss() 交叉熵损失",
-              "optim.AdamW() AdamW 优化器",
-              "optim.lr_scheduler.CosineAnnealingLR() 余弦退火",
-              "torch.nn.utils.clip_grad_norm_() 梯度裁剪",
-              "model.train() / model.eval() 模式切换",
-              "torch.no_grad() 禁用梯度计算"
+            "tasks": [
+              "4.1 在 scripts/ 目录下创建 train.py",
+              "4.2 定义训练函数：前向传播、计算 loss、反向传播、更新参数",
+              "4.3 定义验证函数：在测试集上评估模型准确率",
+              "4.4 配置优化器（AdamW）和学习率调度器（CosineAnnealing）",
+              "4.5 实现梯度裁剪防止梯度爆炸",
+              "4.6 添加 TensorBoard 或 wandb 记录训练曲线",
+              "4.7 保存最佳模型权重",
+              "4.8 开始训练 50 个 epoch，观察 loss 和 accuracy 曲线"
             ],
-            "practice": "实现完整训练循环：定义损失函数和优化器，使用 CosineAnnealing 学习率调度，每个 epoch 训练后在验证集上评估，保存最佳模型权重。训练 50 个 epoch，观察 loss 和 accuracy 曲线。",
-            "answer": "训练循环核心：for epoch in range(50): model.train(); for images, labels in train_loader: images, labels = images.cuda(), labels.cuda(); outputs = model(images); loss = criterion(outputs, labels); optimizer.zero_grad(); loss.backward(); torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0); optimizer.step(); scheduler.step()"
+            "train_script": "```python\nimport torch\nimport torch.nn as nn\nimport torch.optim as optim\nfrom torch.utils.data import DataLoader\nimport matplotlib.pyplot as plt\n\ndef train_epoch(model, train_loader, criterion, optimizer, device):\n    model.train()\n    running_loss = 0.0\n    correct = 0\n    total = 0\n    \n    for images, labels in train_loader:\n        images, labels = images.to(device), labels.to(device)\n        \n        # 前向传播\n        outputs = model(images)\n        loss = criterion(outputs, labels)\n        \n        # 反向传播\n        optimizer.zero_grad()\n        loss.backward()\n        \n        # 梯度裁剪：防止梯度爆炸\n        torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)\n        \n        optimizer.step()\n        \n        running_loss += loss.item()\n        _, predicted = outputs.max(1)\n        total += labels.size(0)\n        correct += predicted.eq(labels).sum().item()\n    \n    return running_loss / len(train_loader), 100. * correct / total\n\n\ndef validate(model, val_loader, criterion, device):\n    model.eval()\n    running_loss = 0.0\n    correct = 0\n    total = 0\n    \n    with torch.no_grad():\n        for images, labels in val_loader:\n            images, labels = images.to(device), labels.to(device)\n            outputs = model(images)\n            loss = criterion(outputs, labels)\n            \n            running_loss += loss.item()\n            _, predicted = outputs.max(1)\n            total += labels.size(0)\n            correct += predicted.eq(labels).sum().item()\n    \n    return running_loss / len(val_loader), 100. * correct / total\n\n\ndef plot_training_history(train_losses, val_losses, train_accs, val_accs):\n    \"\"\"绘制训练曲线\"\"\"\n    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4))\n    \n    # Loss 曲线\n    ax1.plot(train_losses, label='Train Loss')\n    ax1.plot(val_losses, label='Val Loss')\n    ax1.set_xlabel('Epoch')\n    ax1.set_ylabel('Loss')\n    ax1.set_title('Training and Validation Loss')\n    ax1.legend()\n    ax1.grid(True)\n    \n    # Accuracy 曲线\n    ax2.plot(train_accs, label='Train Acc')\n    ax2.plot(val_accs, label='Val Acc')\n    ax2.set_xlabel('Epoch')\n    ax2.set_ylabel('Accuracy (%)')\n    ax2.set_title('Training and Validation Accuracy')\n    ax2.legend()\n    ax2.grid(True)\n    \n    plt.tight_layout()\n    plt.savefig('training_curve.png', dpi=150)\n    plt.show()\n\n\ndef main():\n    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')\n    \n    # 模型、优化器、损失函数\n    model = resnet18().to(device)\n    criterion = nn.CrossEntropyLoss()\n    optimizer = optim.AdamW(model.parameters(), lr=0.001, weight_decay=0.01)\n    \n    # 学习率调度：余弦退火\n    scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=50)\n    \n    # 训练\n    best_acc = 0.0\n    train_losses, val_losses = [], []\n    train_accs, val_accs = [], []\n    \n    for epoch in range(50):\n        train_loss, train_acc = train_epoch(model, train_loader, criterion, optimizer, device)\n        val_loss, val_acc = validate(model, test_loader, criterion, device)\n        \n        # 更新学习率\n        scheduler.step()\n        \n        # 记录曲线\n        train_losses.append(train_loss)\n        val_losses.append(val_loss)\n        train_accs.append(train_acc)\n        val_accs.append(val_acc)\n        \n        # 打印信息\n        print(f\"Epoch [{epoch+1}/50] \"\n              f\"Train Loss: {train_loss:.4f}, Train Acc: {train_acc:.2f}% | \"\n              f\"Val Loss: {val_loss:.4f}, Val Acc: {val_acc:.2f}% | \"\n              f\"LR: {scheduler.get_last_lr()[0]:.6f}\")\n        \n        # 保存最佳模型\n        if val_acc > best_acc:\n            best_acc = val_acc\n            torch.save(model.state_dict(), 'best_model.pth')\n            print(f\"  -> Saved best model with acc: {best_acc:.2f}%\")\n    \n    # 绘制训练曲线\n    plot_training_history(train_losses, val_losses, train_accs, val_accs)\n    print(f\"Best validation accuracy: {best_acc:.2f}%\")\n\n\nif __name__ == '__main__':\n    main()\n```",
+            "common_errors": [
+              {"error": "loss 不下降或变成 NaN", "solution": "1. 检查学习率是否太大，尝试降到 0.0001 2. 检查数据归一化是否正确 3. 梯度裁剪阈值可以调小（从 1.0 降到 0.5）"},
+              {"error": "训练准确率高但验证准确率很低", "solution": "过拟合信号。可以：1. 增加数据增强强度 2. 增加 Dropout 3. 使用更强的正则化 4. 减少模型层数"},
+              {"error": "学习率调度不起作用", "solution": "确认 `scheduler.step()` 在每个 epoch 结束后调用，且 `optimizer.step()` 在 `scheduler.step()` 之前调用"},
+              {"error": "模型不收敛，准确率一直 10%", "solution": "模型输出是随机的。可能原因：1. 损失函数错误 2. 学习率太小 3. 模型结构有问题 4. 数据标签错误"}
+            ],
+            "checkpoint": "训练 50 个 epoch 后，验证集准确率 > 85%，能绘制出 loss 和 accuracy 曲线图"
           },
           "duration": "3小时",
           "resources": [
             { "title": "PyTorch 训练教程", "url": "https://pytorch.org/tutorials/beginner/introyt/trainingyt.html", "type": "documentation" },
-            { "title": "学习率调度策略", "url": "https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate", "type": "documentation" }
+            { "title": "学习率调度策略", "url": "https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate", "type": "documentation" },
+            { "title": "AdamW vs Adam", "url": "https://fastai.cn/2019/11/04/adamw/", "type": "article" }
           ],
-          "checkpoint": "loss 稳定下降，验证集 accuracy > 85%"
+          "relatedIntel": ["011-pytorch"],
+          "relatedTerms": ["cross-entropy", "adam", "learning-rate-scheduler", "gradient-clipping"],
+          "relatedTools": ["pytorch", "matplotlib", "tensorboard"]
         },
         {
           "order": 5,
           "title": "模型评估与可视化",
           "content": {
             "objective": "全面评估模型性能，分析错误样本，可视化学习成果",
-            "api_checklist": [
-              "sklearn.metrics.classification_report() 分类报告",
-              "sklearn.metrics.confusion_matrix() 混淆矩阵",
-              "matplotlib 绘制混淆矩阵热力图",
-              "Grad-CAM 可视化注意力区域",
-              "t-SNE 特征可视化"
+            "tasks": [
+              "5.1 加载最佳模型权重进行评估",
+              "5.2 在测试集上计算分类报告（precision、recall、F1）",
+              "5.3 绘制混淆矩阵热力图",
+              "5.4 找出混淆最严重的类别对并分析原因",
+              "5.5 实现 Grad-CAM 可视化，检查模型关注区域",
+              "5.6 使用 t-SNE 可视化特征空间",
+              "5.7 整理项目报告，包含所有可视化结果"
             ],
-            "practice": "在测试集上评估模型，生成分类报告（precision、recall、F1），绘制混淆矩阵热力图，找出混淆最严重的类别对。使用 Grad-CAM 可视化模型关注的图像区域，验证模型是否学到了正确的特征。",
-            "answer": "评估代码：from sklearn.metrics import classification_report, confusion_matrix; print(classification_report(all_preds, all_labels, target_names=classes)); sns.heatmap(confusion_matrix(all_labels, all_preds), annot=True, xticklabels=classes, yticklabels=classes)"
+            "evaluation_script": "```python\nimport torch\nimport numpy as np\nimport matplotlib.pyplot as plt\nimport seaborn as sns\nfrom sklearn.metrics import classification_report, confusion_matrix\nfrom sklearn.manifold import TSNE\n\n# 加载最佳模型\nmodel = resnet18()\nmodel.load_state_dict(torch.load('best_model.pth'))\nmodel = model.cuda()\nmodel.eval()\n\n# 收集预测结果\nall_preds = []\nall_labels = []\nall_features = []\n\nwith torch.no_grad():\n    for images, labels in test_loader:\n        images, labels = images.cuda(), labels.cuda()\n        outputs = model(images)\n        _, predicted = outputs.max(1)\n        \n        # 获取特征（全局平均池化前的特征图）\n        features = model.avgpool(model.layer4(model.layer3(model.layer2(model.layer1(model.bn1(model.conv1(images))))))))\n        \n        all_preds.extend(predicted.cpu().numpy())\n        all_labels.extend(labels.cpu().numpy())\n        all_features.append(features.cpu().numpy())\n\nall_preds = np.array(all_preds)\nall_labels = np.array(all_labels)\nall_features = np.concatenate(all_features, axis=0)\n\n# 分类报告\nprint(\"=\" * 60)\nprint(\"分类报告\")\nprint(\"=\" * 60)\nprint(classification_report(all_labels, all_preds, target_names=classes))\n\n# 混淆矩阵\ncm = confusion_matrix(all_labels, all_preds)\nplt.figure(figsize=(12, 10))\nsns.heatmap(cm, annot=True, fmt='d', cmap='Blues', \n            xticklabels=classes, yticklabels=classes)\nplt.xlabel('Predicted')\nplt.ylabel('True')\nplt.title('Confusion Matrix')\nplt.tight_layout()\nplt.savefig('confusion_matrix.png', dpi=150)\nplt.show()\n\n# 找出最容易混淆的类别对\nprint(\"\\n\" + \"=\" * 60)\nprint(\"最容易混淆的类别对\")\nprint(\"=\" * 60)\nfor i in range(len(classes)):\n    for j in range(len(classes)):\n        if i != j and cm[i, j] > 50:\n            print(f\"{classes[i]} -> {classes[j]}: {cm[i, j]} 次\")\n```",
+            "grad_cam": "```python\n# Grad-CAM 可视化\n# 需要安装：pip install grad-cam\n\nfrom gradcam import GradCAM, GradCAMpp\nfrom torchvision.transforms import functional as F\nimport cv2\n\ndef visualize_gradcam(model, image, label, target_layer):\n    \"\"\"可视化 Grad-CAM\"\"\"\n    model.eval()\n    \n    # 创建 GradCAM\n    gradcam = GradCAM(model, target_layer)\n    \n    # 获取 CAM\n    image = image.unsqueeze(0).cuda()\n    pred = model(image).argmax().item()\n    \n    # 生成 mask\n    mask = gradcam(image, class_idx=pred)\n    \n    # 反归一化图片\n    img = image.squeeze().cpu().permute(1, 2, 0).numpy()\n    img = img * np.array([0.2023, 0.1994, 0.2010]) + np.array([0.4914, 0.4822, 0.4465])\n    img = np.clip(img, 0, 1)\n    \n    # 叠加\n    heatmap = cv2.applyColorMap(cv2.resize(mask[0], (img.shape[1], img.shape[0])), cv2.COLORMAP_JET)\n    heatmap = np.float32(heatmap) / 255\n    cam = heatmap + np.float32(img)\n    cam = cam / np.max(cam)\n    \n    plt.figure(figsize=(10, 5))\n    plt.subplot(1, 2, 1)\n    plt.imshow(img)\n    plt.title(f'Original: {classes[label]}')\n    plt.axis('off')\n    \n    plt.subplot(1, 2, 2)\n    plt.imshow(cam)\n    plt.title(f'Grad-CAM: Pred={classes[pred]}')\n    plt.axis('off')\n    plt.tight_layout()\n    plt.savefig('gradcam_example.png')\n    plt.show()\n\n# 使用示例\nimages, labels = next(iter(test_loader))\nvisualize_gradcam(model, images[0], labels[0], model.layer4)\n```",
+            "tsne_visualization": "```python\n# t-SNE 特征可视化\nprint(\"正在进行 t-SNE 降维...\")\ntsne = TSNE(n_components=2, random_state=42, perplexity=30)\nfeatures_2d = tsne.fit_transform(all_features[:2000])  # 使用子集加速\n\nplt.figure(figsize=(12, 10))\nscatter = plt.scatter(features_2d[:, 0], features_2d[:, 1], \n                      c=all_labels[:2000], cmap='tab10', \n                      alpha=0.6, s=5)\nplt.colorbar(scatter, ticks=range(10))\nplt.title('t-SNE Visualization of Feature Space')\nplt.xlabel('t-SNE Dimension 1')\nplt.ylabel('t-SNE Dimension 2')\nplt.savefig('tsne_visualization.png', dpi=150)\nplt.show()\n```",
+            "common_errors": [
+              {"error": "Grad-CAM 报错 No module named 'gradcam'", "solution": "安装：`pip install grad-cam` 或者使用 PyTorch 实现自己的 Grad-CAM"},
+              {"error": "混淆矩阵显示效果很差", "solution": "正常，CIFAR-10 本身是一个有挑战的数据集。重点关注对角线是否明显强于其他位置。"},
+              {"error": "t-SNE 运行很慢", "solution": "1. 减少样本数量（从 10000 降到 2000）2. 降低 perplexity 3. 减少 iterations"}
+            ],
+            "checkpoint": "能生成分类报告、混淆矩阵图、Grad-CAM 可视化图、t-SNE 特征图各一张，并写出简要分析"
           },
           "duration": "2.5小时",
           "resources": [
             { "title": "sklearn 评估指标", "url": "https://scikit-learn.org/stable/modules/model_evaluation.html", "type": "documentation" },
-            { "title": "Grad-CAM 论文", "url": "https://arxiv.org/abs/1610.02391", "type": "article" }
+            { "title": "Grad-CAM 论文", "url": "https://arxiv.org/abs/1610.02391", "type": "article" },
+            { "title": "t-SNE 可视化教程", "url": "https://distill.pub/2016/misread-tsne/", "type": "article" }
           ],
-          "checkpoint": "能输出分类报告，混淆矩阵可视化清晰"
+          "relatedTerms": ["confusion-matrix", "classification-metrics", "grad-cam", "tsne"],
+          "relatedTools": ["pytorch", "scikit-learn", "matplotlib", "seaborn"]
         }
       ],
       "resources": [
@@ -175,117 +221,170 @@
           "title": "环境配置与依赖安装",
           "content": {
             "objective": "配置 HuggingFace Transformers 开发环境",
-            "api_checklist": [
-              "pip install transformers datasets evaluate",
-              "pip install torch --index-url https://download.pytorch.org/whl/cu118",
-              "from datasets import load_dataset",
-              "from transformers import AutoTokenizer, AutoModelForSequenceClassification"
+            "tasks": [
+              "1.1 创建 conda 环境：`conda create -n nlp-project python=3.10 && conda activate nlp-project`",
+              "1.2 安装 PyTorch（GPU 版本）：`pip install torch --index-url https://download.pytorch.org/whl/cu118`",
+              "1.3 安装 HuggingFace 生态：`pip install transformers datasets evaluate accelerate`",
+              "1.4 验证安装：运行 Python 交互式验证",
+              "1.5 安装 Jupyter 支持：`pip install jupyter ipykernel && ipython kernel install --name=nlp-project`"
             ],
-            "practice": "创建虚拟环境，安装 transformers、datasets、evaluate 库。验证安装：from transformers import pipeline; classifier = pipeline('sentiment-analysis'); print(classifier('I love this movie!'))",
-            "answer": "安装命令：pip install transformers datasets evaluate accelerate; 验证：pipeline('sentiment-analysis')('Great!') 应返回 positive 标签"
+            "installation_verification": "```python\n# 验证 Python 版本\nimport sys\nprint(f\"Python version: {sys.version}\")\n\n# 验证 PyTorch 和 CUDA\nimport torch\nprint(f\"PyTorch version: {torch.__version__}\")\nprint(f\"CUDA available: {torch.cuda.is_available()}\")\nif torch.cuda.is_available():\n    print(f\"CUDA version: {torch.version.cuda}\")\n    print(f\"GPU: {torch.cuda.get_device_name(0)}\")\n\n# 验证 Transformers\nfrom transformers import pipeline\nprint(f\"Transformers version: {transformers.__version__}\")\n\n# 测试 pipeline\nclassifier = pipeline('sentiment-analysis')\nresult = classifier('I love this movie!')\nprint(f\"Pipeline test: {result}\")\n```",
+            "common_errors": [
+              {"error": "CUDA out of memory when loading model", "solution": "1. 确认 GPU 显存至少 4GB 2. 使用更小的模型如 distilbert-base-uncased 3. 减小 batch_size"},
+              {"error": "OSError: Unable to load weights", "solution": "网络问题导致模型下载不完整。删除缓存目录 `rm -rf ~/.cache/huggingface/`，重新运行代码让它自动下载"},
+              {"error": "AttributeError: module 'transformers' has no attribute 'pipeline'", "solution": "transformers 库版本太旧，升级：`pip install transformers --upgrade`"}
+            ],
+            "checkpoint": "能成功运行 sentiment-analysis pipeline，输出正确的情感标签"
           },
           "duration": "1.5小时",
           "resources": [
             { "title": "HuggingFace 安装指南", "url": "https://huggingface.co/docs/transformers/installation", "type": "documentation" },
-            { "title": "PyTorch CUDA 版本选择", "url": "https://pytorch.org/get-started/locally/", "type": "documentation" }
+            { "title": "PyTorch CUDA 版本选择", "url": "https://pytorch.org/get-started/locally/", "type": "documentation" },
+            { "title": "Transformers pipeline 介绍", "url": "https://huggingface.co/docs/transformers/main_classes/pipelines", "type": "documentation" }
           ],
-          "checkpoint": "能成功运行 sentiment-analysis pipeline"
+          "relatedTerms": ["transformer", "bert", "sentiment-analysis", "huggingface"],
+          "relatedTools": ["huggingface", "pytorch", "jupyter"]
         },
         {
           "order": 2,
           "title": "数据加载与预处理",
           "content": {
             "objective": "加载 IMDB 情感分析数据集，理解数据格式和预处理流程",
-            "api_checklist": [
-              "load_dataset('imdb') 加载 IMDB 数据集",
-              "dataset['train'].shuffle().select(range(1000)) 采样子集",
-              "AutoTokenizer.from_pretrained('bert-base-uncased') 加载分词器",
-              "tokenizer(text, padding='max_length', truncation=True) 编码文本",
-              "dataset.map(tokenize_function, batched=True) 批量处理"
+            "tasks": [
+              "2.1 创建项目目录：`mkdir -p data models scripts output`",
+              "2.2 加载 IMDB 数据集并查看数据结构",
+              "2.3 采样训练集 2000 条、测试集 500 条（加速实验）",
+              "2.4 查看数据样例：打印 text 和 label，理解 0/1 标签含义",
+              "2.5 加载 BERT 分词器并进行编码",
+              "2.6 统计正负样本比例，检查类别是否平衡",
+              "2.7 将处理后的数据保存为 Arrow 格式加速后续加载"
             ],
-            "practice": "加载 IMDB 数据集，采样 2000 条训练集和 500 条测试集。查看数据结构：打印一条样本的 text 和 label，统计正负样本比例。使用 BERT tokenizer 对文本进行编码，理解 input_ids、attention_mask、token_type_ids 的含义。",
-            "answer": "数据加载：from datasets import load_dataset; dataset = load_dataset('imdb'); small_train = dataset['train'].shuffle(seed=42).select(range(2000)); tokenizer = AutoTokenizer.from_pretrained('bert-base-uncased'); def tokenize(ex): return tokenizer(ex['text'], padding='max_length', truncation=True, max_length=256)"
+            "data_loading": "```python\nfrom datasets import load_dataset, DatasetDict\n\n# 加载完整 IMDB 数据集\nraw_dataset = load_dataset('imdb')\nprint(raw_dataset)\n# DatasetDict({\n#     train: Dataset({\n#         features: ['text', 'label'],\n#         num_rows: 25000\n#     })\n#     test: Dataset({\n#         features: ['text', 'label'],\n#         num_rows: 25000\n#     })\n# })\n\n# 查看数据样例\nprint(raw_dataset['train'][0])\n# {'text': 'Bromwell High is a cartoon comedy...', 'label': 0}\n# label=0 表示负面，label=1 表示正面\n\n# 采样加速实验（可选）\ndef sample_dataset(dataset, num_samples=2000, seed=42):\n    return dataset.shuffle(seed=seed).select(range(num_samples))\n\ntrain_dataset = sample_dataset(raw_dataset['train'], 2000)\ntest_dataset = sample_dataset(raw_dataset['test'], 500)\n\n# 统计正负样本比例\nfrom collections import Counter\nlabel_counts = Counter(train_dataset['label'])\nprint(f\"正样本: {label_counts[1]}, 负样本: {label_counts[0]}\")\nprint(f\"正负比例: {label_counts[1]/label_counts[0]:.2f}\")\n```",
+            "tokenization": "```python\nfrom transformers import AutoTokenizer\n\n# 加载 BERT 分词器\ntokenizer = AutoTokenizer.from_pretrained('bert-base-uncased')\nprint(f\"词表大小: {tokenizer.vocab_size}\")\nprint(f\"特殊 token: [PAD]={tokenizer.pad_token_id}, [UNK]={tokenizer.unk_token_id}\")\n\n# 对单条文本进行编码\nsample_text = \"This movie is amazing! I really enjoyed it.\"\nencoded = tokenizer(sample_text, \n                    padding='max_length',  \n                    truncation=True, \n                    max_length=256,\n                    return_tensors='pt')\n\nprint(f\"输入文本: {sample_text}\")\nprint(f\"input_ids shape: {encoded['input_ids'].shape}\")\nprint(f\"attention_mask shape: {encoded['attention_mask'].shape}\")\nprint(f\"token_type_ids shape: {encoded.get('token_type_ids', 'None').shape if 'token_type_ids' in encoded else '不存在'}\")\n\n# 解码查看\ndecoded = tokenizer.decode(encoded['input_ids'][0])\nprint(f\"解码结果: {decoded}\")\n```",
+            "full_preprocessing": "```python\nfrom transformers import AutoTokenizer\n\ntokenizer = AutoTokenizer.from_pretrained('bert-base-uncased')\n\ndef tokenize_function(examples):\n    \"\"\"批量tokenize\"\"\"\n    result = tokenizer(\n        examples['text'],\n        padding='max_length',\n        truncation=True,\n        max_length=256\n    )\n    result['labels'] = examples['label']\n    return result\n\n# 批量处理（batched=True 加速）\ntokenized_dataset = raw_dataset.map(\n    tokenize_function, \n    batched=True,\n    remove_columns=['text'],  # 删除原始文本列节省内存\n    num_proc=4  # 多进程加速\n)\n\nprint(tokenized_dataset)\n# DatasetDict({\n#     train: Dataset(features: ['input_ids', 'token_type_ids', 'attention_mask', 'labels'], num_rows: 25000)\n#     test: Dataset(features: ['input_ids', 'token_type_ids', 'attention_mask', 'labels'], num_rows: 25000)\n# })\n\n# 转换为 PyTorch 格式\ntokenized_dataset.set_format('torch')\n\n# 保存处理后的数据\ntokenized_dataset.save_to_disk('./data/imdb_tokenized')\nprint(\"数据预处理完成并保存!\")\n```",
+            "common_errors": [
+              {"error": "ValueError: Text contains newline character", "solution": "数据集的 text 字段可能包含换行符。在 map 时设置 `batched=False` 或使用 `remove_columns` 删除 text 列后手动处理"},
+              {"error": "CUDA error: out of memory during tokenization", "solution": "减少 batch_size 或在 map 时设置 `batched=False`"},
+              {"error": "Tokenizer pad token not found", "solution": "使用 `AutoTokenizer.from_pretrained('bert-base-uncased', use_fast=False)` 或手动设置 `tokenizer.pad_token = tokenizer.eos_token`"}
+            ],
+            "checkpoint": "数据集加载成功，tokenize 后的数据格式正确，能看到 input_ids、attention_mask 等字段"
           },
           "duration": "2小时",
           "resources": [
             { "title": "HuggingFace Datasets 文档", "url": "https://huggingface.co/docs/datasets/", "type": "documentation" },
-            { "title": "IMDB 数据集说明", "url": "https://huggingface.co/datasets/imdb", "type": "documentation" }
+            { "title": "IMDB 数据集说明", "url": "https://huggingface.co/datasets/imdb", "type": "documentation" },
+            { "title": "BERT Tokenizer 使用", "url": "https://huggingface.co/docs/transformers/tokenizer_summary", "type": "documentation" }
           ],
-          "checkpoint": "数据集加载成功，tokenize 后的 input_ids shape 正确"
+          "relatedTerms": ["tokenizer", "attention-mask", "bert", "imdb-dataset"],
+          "relatedTools": ["huggingface", "datasets"]
         },
         {
           "order": 3,
           "title": "模型加载与配置",
           "content": {
             "objective": "加载预训练 BERT 模型，配置分类头",
-            "api_checklist": [
-              "AutoModelForSequenceClassification.from_pretrained() 加载分类模型",
-              "model.config.num_labels 设置分类数",
-              "model.parameters() 查看模型参数",
-              "sum(p.numel() for p in model.parameters()) 统计参数量"
+            "tasks": [
+              "3.1 在 models/ 目录下创建模型加载脚本 `load_model.py`",
+              "3.2 加载 bert-base-uncased 预训练模型（2 分类）",
+              "3.3 打印模型结构，了解各层名称",
+              "3.4 统计模型参数量（总参数、可训练参数）",
+              "3.5 理解分类头的结构（Dropout + Linear）",
+              "3.6 测试模型前向传播，确认输出维度正确"
             ],
-            "practice": "加载 bert-base-uncased 预训练模型，设置 num_labels=2（正面/负面）。打印模型结构，统计总参数量和可训练参数量。理解模型最后一层分类头的结构。",
-            "answer": "模型加载：from transformers import AutoModelForSequenceClassification; model = AutoModelForSequenceClassification.from_pretrained('bert-base-uncased', num_labels=2); print(f'总参数量: {sum(p.numel() for p in model.parameters()) / 1e6:.1f}M')"
+            "model_loading": "```python\nfrom transformers import AutoModelForSequenceClassification, AutoConfig\n\n# 加载预训练模型（自动包含分类头）\nmodel_name = 'bert-base-uncased'\nnum_labels = 2  # 二分类：正面/负面\n\nmodel = AutoModelForSequenceClassification.from_pretrained(\n    model_name,\n    num_labels=num_labels,\n    problem_type=\"single_label_classification\"\n)\n\nprint(f\"模型: {model_name}\")\nprint(f\"分类数: {num_labels}\")\n\n# 统计参数量\ntotal_params = sum(p.numel() for p in model.parameters())\ntrainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)\n\nprint(f\"总参数量: {total_params:,} ({total_params/1e6:.1f}M)\")\nprint(f\"可训练参数: {trainable_params:,} ({trainable_params/1e6:.1f}M)\")\nprint(f\"可训练参数占比: {100*trainable_params/total_params:.1f}%\")\n```",
+            "model_structure": "```python\n# 查看模型结构\nprint(model)\n# BERTForSequenceClassification(\n#   (bert): BertModel(\n#     (embeddings): BertEmbeddings(...)\n#     (encoder): BertEncoder(...)\n#     (pooler): BertPooler(...)\n#   )\n#   (dropout): Dropout(p=0.1, inplace=False)\n#   (classifier): Linear(in_features=768, out_features=2, bias=True)\n# )\n\n# 查看分类头\nprint(f\"分类头: {model.classifier}\")\n# Linear(in_features=768, out_features=2, bias=True)\n\n# 查看所有层名称\nprint(\"\\n所有模块名称:\")\nfor name, module in model.named_modules():\n    if 'classifier' in name or 'pooler' in name:\n        print(f\"  {name}: {module}\")\n```",
+            "forward_test": "```python\nimport torch\n\n# 测试前向传播\ndevice = torch.device('cuda' if torch.cuda.is_available() else 'cpu')\nmodel = model.to(device)\nmodel.eval()\n\n# 准备输入\ninput_ids = torch.randint(0, 1000, (2, 32)).to(device)  # batch=2, seq_len=32\nattention_mask = torch.ones(2, 32).to(device)\n\n# 前向传播\nwith torch.no_grad():\n    outputs = model(input_ids=input_ids, attention_mask=attention_mask)\n    \nprint(f\"输出类型: {type(outputs)}\")\nprint(f\" logits shape: {outputs.logits.shape}\")  # 应该是 [2, 2]\n\n# 转换为预测标签\npredictions = torch.argmax(outputs.logits, dim=-1)\nprint(f\"预测标签: {predictions}\")  # tensor([0, 1], device='cuda:0')\n```",
+            "common_errors": [
+              {"error": "OSError: Can't load weights", "solution": "网络问题或缓存损坏。删除缓存：`rm -rf ~/.cache/huggingface/` 然后重新运行"},
+              {"error": "ValueError: num_labels does not match", "solution": "模型配置文件中的 num_labels 与传入的不一致。加载模型时指定 `config=AutoConfig.from_pretrained(..., num_labels=2)`"},
+              {"error": "CUDA out of memory", "solution": "BERT-base 模型需要约 3GB 显存。减小 batch_size，或使用 DistilBERT 等更小的模型"}
+            ],
+            "checkpoint": "模型加载成功，能打印参数量（110M），前向传播输出 shape 正确 [batch, 2]"
           },
           "duration": "1.5小时",
           "resources": [
             { "title": "BERT 模型文档", "url": "https://huggingface.co/docs/transformers/model_doc/bert", "type": "documentation" },
-            { "title": "预训练模型列表", "url": "https://huggingface.co/models", "type": "documentation" }
+            { "title": "预训练模型列表", "url": "https://huggingface.co/models", "type": "documentation" },
+            { "title": "模型参数量计算", "url": "https://aliveinwww.github.io/2022/12/28/bert-parameter-count/", "type": "article" }
           ],
-          "checkpoint": "模型加载成功，能打印参数量"
+          "relatedIntel": ["001-transformer"],
+          "relatedTerms": ["bert", "pretrained-model", "fine-tuning", "transformer"],
+          "relatedTools": ["huggingface", "pytorch"]
         },
         {
           "order": 4,
           "title": "微调训练",
           "content": {
             "objective": "使用 Trainer API 进行模型微调，掌握训练参数配置",
-            "api_checklist": [
-              "TrainingArguments() 配置训练参数",
-              "Trainer() 创建训练器",
-              "trainer.train() 开始训练",
-              "trainer.evaluate() 评估模型",
-              "trainer.save_model() 保存模型"
+            "tasks": [
+              "4.1 在 scripts/ 目录下创建 `train.py`",
+              "4.2 配置 TrainingArguments（输出目录、学习率、batch size、epoch 数）",
+              "4.3 创建 Trainer 实例",
+              "4.4 添加 callbacks 记录训练过程",
+              "4.5 开始训练，观察 loss 下降",
+              "4.6 训练完成后查看日志，评估最佳模型",
+              "4.7 保存模型和 tokenizer 到指定目录"
             ],
-            "practice": "配置训练参数：learning_rate=2e-5、batch_size=16、epochs=3、warmup_steps=100。使用 Trainer 进行训练，观察 loss 曲线。训练完成后在测试集上评估 accuracy 和 F1 分数。",
-            "answer": "训练配置：from transformers import TrainingArguments, Trainer; args = TrainingArguments(output_dir='./results', learning_rate=2e-5, per_device_train_batch_size=16, num_train_epochs=3, warmup_steps=100, evaluation_strategy='epoch'); trainer = Trainer(model=model, args=args, train_dataset=train_dataset, eval_dataset=test_dataset); trainer.train()"
+            "train_script": "```python\nimport torch\nfrom transformers import TrainingArguments, Trainer, EarlyStoppingCallback\nfrom sklearn.metrics import accuracy_score, f1_score\nimport numpy as np\n\n# 定义评估指标\ndef compute_metrics(eval_pred):\n    logits, labels = eval_pred\n    predictions = np.argmax(logits, axis=-1)\n    return {\n        'accuracy': accuracy_score(labels, predictions),\n        'f1': f1_score(labels, predictions, average='weighted')\n    }\n\n# 训练参数配置\ntraining_args = TrainingArguments(\n    output_dir='./output/checkpoints',\n    num_train_epochs=3,\n    per_device_train_batch_size=16,\n    per_device_eval_batch_size=32,\n    learning_rate=2e-5,\n    weight_decay=0.01,\n    warmup_ratio=0.1,  # 前 10% 步预热\n    \n    # 评估配置\n    evaluation_strategy='epoch',\n    save_strategy='epoch',\n    load_best_model_at_end=True,\n    metric_for_best_model='f1',\n    \n    # 日志和保存\n    logging_dir='./output/logs',\n    logging_steps=50,\n    save_total_limit=2,\n    \n    # 混合精度（加速+省显存）\n    fp16=True,\n    \n    # 其他\n    report_to='tensorboard',\n    seed=42\n)\n\n# 创建 Trainer\ntrainer = Trainer(\n    model=model,\n    args=training_args,\n    train_dataset=train_dataset,\n    eval_dataset=test_dataset,\n    compute_metrics=compute_metrics,\n    callbacks=[EarlyStoppingCallback(early_stopping_patience=2)]\n)\n\n# 开始训练\nprint(\"开始训练...\")\ntrainer.train()\n\n# 查看训练结果\nprint(\"\\n训练完成! 最佳模型的评估结果:\")\nbest_result = trainer.evaluate()\nprint(best_result)\n\n# 保存模型\ntrainer.save_model('./output/best_model')\ntokenizer.save_pretrained('./output/best_model')\nprint(\"模型已保存到 ./output/best_model\")\n```",
+            "common_errors": [
+              {"error": "Loss doesn't decrease", "solution": "1. 学习率太高或太低，尝试 1e-5 或 3e-5 2. 数据预处理有问题 3. 模型结构有问题 4. 检查 label 是否正确"},
+              {"error": "CUDA out of memory during training", "solution": "1. 减小 per_device_train_batch_size（从 16 降到 8）2. 启用梯度累积：gradient_accumulation_steps=2 3. 启用 fp16=True 4. 使用更小的模型 DistilBERT"},
+              {"error": "Early stopping triggered too early", "solution": "增加 early_stopping_patience 值（从 2 增到 3），或者降低 early_stopping_threshold"},
+              {"error": "Training stuck at first epoch", "solution": "检查数据是否正确加载，可能是数据全是同一标签导致 loss 一直是 log(2)"}
+            ],
+            "checkpoint": "训练 3 个 epoch 后，验证集 F1 > 85%，能保存模型到指定目录"
           },
           "duration": "3小时",
           "resources": [
             { "title": "Trainer API 文档", "url": "https://huggingface.co/docs/transformers/main_classes/trainer", "type": "documentation" },
-            { "title": "训练参数详解", "url": "https://huggingface.co/docs/transformers/main_classes/trainer#transformers.TrainingArguments", "type": "documentation" }
+            { "title": "训练参数详解", "url": "https://huggingface.co/docs/transformers/main_classes/trainer#transformers.TrainingArguments", "type": "documentation" },
+            { "title": "Fine-tuning BERT 教程", "url": "https://huggingface.co/docs/transformers/training", "type": "documentation" }
           ],
-          "checkpoint": "训练完成，loss 下降，accuracy > 85%"
+          "relatedTerms": ["fine-tuning", "trainer", "learning-rate", "early-stopping"],
+          "relatedTools": ["huggingface", "pytorch", "tensorboard"]
         },
         {
           "order": 5,
           "title": "模型评估与推理",
           "content": {
             "objective": "全面评估模型性能，实现推理接口",
-            "api_checklist": [
-              "evaluate.load('accuracy') 加载评估指标",
-              "sklearn.metrics.classification_report() 分类报告",
-              "pipeline('sentiment-analysis', model=model) 创建推理管道",
-              "model.save_pretrained() 保存模型",
-              "tokenizer.save_pretrained() 保存分词器"
+            "tasks": [
+              "5.1 加载训练好的最佳模型",
+              "5.2 在测试集上计算完整分类报告",
+              "5.3 绘制混淆矩阵",
+              "5.4 分析错误样本，找出模型弱点",
+              "5.5 创建推理 pipeline 并测试自定义文本",
+              "5.6 封装成简单的预测函数",
+              "5.7 整理项目报告"
             ],
-            "practice": "在测试集上评估模型，生成分类报告（precision、recall、F1）。创建推理 pipeline，测试几条自定义文本。保存模型和分词器到本地目录。",
-            "answer": "评估代码：import evaluate; accuracy = evaluate.load('accuracy'); preds = trainer.predict(test_dataset); print(classification_report(preds.label_ids, preds.predictions.argmax(-1), target_names=['negative', 'positive'])); pipe = pipeline('sentiment-analysis', model=model, tokenizer=tokenizer); print(pipe('This movie is great!'))"
+            "evaluation": "```python\nfrom sklearn.metrics import classification_report, confusion_matrix\nimport seaborn as sns\nimport matplotlib.pyplot as plt\nimport numpy as np\n\n# 加载模型\nfrom transformers import pipeline\nclassifier = pipeline('sentiment-analysis', \n                     model='./output/best_model',\n                     tokenizer='./output/best_model')\n\n# 在测试集上预测\npredictions = []\ntrue_labels = []\n\nfor i in range(len(test_dataset)):\n    item = test_dataset[i]\n    text = raw_dataset['test'][item['idx']]['text'][:512]  # 截断过长文本\n    pred = classifier(text)[0]\n    predictions.append(1 if pred['label'] == 'POSITIVE' else 0)\n    true_labels.append(item['label'])\n\n# 分类报告\nprint(\"=\" * 60)\nprint(\"分类报告\")\nprint(\"=\" * 60)\nprint(classification_report(true_labels, predictions, \n                           target_names=['Negative', 'Positive']))\n\n# 混淆矩阵\ncm = confusion_matrix(true_labels, predictions)\nplt.figure(figsize=(8, 6))\nsns.heatmap(cm, annot=True, fmt='d', cmap='Blues',\n           xticklabels=['Negative', 'Positive'],\n           yticklabels=['Negative', 'Positive'])\nplt.xlabel('Predicted')\nplt.ylabel('True')\nplt.title('Confusion Matrix')\nplt.savefig('confusion_matrix.png', dpi=150)\nplt.show()\n```",
+            "inference_examples": "```python\n# 测试自定义文本\ntest_texts = [\n    \"This movie is absolutely fantastic! I loved every minute of it.\",\n    \"What a waste of time. The plot was boring and the acting was terrible.\",\n    \"It's okay, nothing special. Worth watching once but not twice.\",\n    \"Best movie I've seen this year! Highly recommend it to everyone.\",\n    \"I can't believe how bad this film was. Complete disaster.\"\n]\n\nprint(\"=\" * 60)\nprint(\"情感分析测试结果\")\nprint(\"=\" * 60)\n\nfor text in test_texts:\n    result = classifier(text)\n    label = result[0]['label']\n    score = result[0]['score']\n    print(f\"\\n文本: {text[:60]}...\")\n    print(f\"结果: {label} (置信度: {score:.4f})\")\n```",
+            "simple_predict_function": "```python\ndef predict_sentiment(text, max_length=512):\n    \"\"\"\n    情感预测函数\n    \n    Args:\n        text: 输入文本\n        max_length: 最大文本长度\n    Returns:\n        dict: {'label': 'POSITIVE/NEGATIVE', 'score': float}\n    \"\"\"\n    # 截断过长文本\n    text = text[:max_length]\n    \n    # 预测\n    result = classifier(text)[0]\n    \n    return {\n        'text': text[:100] + '...' if len(text) > 100 else text,\n        'sentiment': 'positive' if result['label'] == 'POSITIVE' else 'negative',\n        'confidence': round(result['score'], 4)\n    }\n\n# 使用示例\nresult = predict_sentiment(\"I really enjoyed this movie, it was amazing!\")\nprint(result)\n# {'text': 'I really enjoyed this movie, it was amazing!',\n#  'sentiment': 'positive', 'confidence': 0.99}\n```",
+            "common_errors": [
+              {"error": "ValueError: Expected input_ids length", "solution": "模型和 tokenizer 不匹配。确保使用同一个模型目录的 tokenizer：`tokenizer = AutoTokenizer.from_pretrained('./output/best_model')`"},
+              {"error": "Prediction is always the same label", "solution": "模型可能没有训练好，或者所有输入都触发了相同的截断行为。检查训练日志确认 loss 确实在下降"},
+              {"error": "CUDA out of memory during inference", "solution": "推理时 batch_size 太大，减小或设置为 1。也可以先 `model.cpu()` 移到 CPU 再推理"}
+            ],
+            "checkpoint": "能生成分类报告、混淆矩阵图，能对自定义文本进行情感预测"
           },
           "duration": "2小时",
           "resources": [
             { "title": "evaluate 库文档", "url": "https://huggingface.co/docs/evaluate/", "type": "documentation" },
-            { "title": "sklearn 评估指标", "url": "https://scikit-learn.org/stable/modules/model_evaluation.html", "type": "documentation" }
+            { "title": "sklearn 评估指标", "url": "https://scikit-learn.org/stable/modules/model_evaluation.html", "type": "documentation" },
+            { "title": "HuggingFace pipeline 教程", "url": "https://huggingface.co/docs/transformers/main_classes/pipelines", "type": "documentation" }
           ],
-          "checkpoint": "输出分类报告，推理 pipeline 正常工作"
+          "relatedTerms": ["confusion-matrix", "classification-metrics", "inference", "pipeline"],
+          "relatedTools": ["huggingface", "scikit-learn", "matplotlib"]
         }
       ],
       "resources": [
         { "title": "HuggingFace 教程", "url": "https://huggingface.co/docs/transformers/training", "type": "documentation" },
-        { "title": "IMDB 数据集", "url": "https://huggingface.co/datasets/imdb", "type": "documentation" }
+        { "title": "IMDB 数据集", "url": "https://huggingface.co/datasets/imdb", "type": "documentation" },
+        { "title": "BERT 论文", "url": "https://arxiv.org/abs/1810.04805", "type": "article" }
       ],
-      "relatedIntel": ["002-rag", "008-huggingface"],
-      "relatedTerms": ["transformer", "bert", "sentiment-analysis"],
-      "relatedTools": ["huggingface", "jupyter"],
+      "relatedIntel": ["001-transformer"],
+      "relatedTerms": ["transformer", "bert", "sentiment-analysis", "fine-tuning"],
+      "relatedTools": ["huggingface", "jupyter", "pytorch"],
       "templateRepo": "https://github.com/example/nlp-sentiment-template",
       "solutionRepo": "https://github.com/example/nlp-sentiment-solution"
     },
@@ -316,123 +415,178 @@
           "order": 1,
           "title": "项目初始化与结构搭建",
           "content": {
-            "objective": "创建 GitHub 仓库，搭建标准项目结构",
-            "api_checklist": [
-              "git init 初始化本地仓库",
-              "git remote add origin 关联远程仓库",
-              "创建 .gitignore 文件",
-              "创建 requirements.txt 依赖文件",
-              "创建 app.py 主应用文件"
+            "objective": "创建 GitHub 仓库，搭建标准 Python Web 项目结构",
+            "tasks": [
+              "1.1 在 GitHub 上创建新仓库，获取仓库 URL",
+              "1.2 本地初始化 Git 仓库并关联远程",
+              "1.3 创建项目目录结构",
+              "1.4 创建 requirements.txt 依赖文件",
+              "1.5 创建 .gitignore 文件排除不需要跟踪的文件",
+              "1.6 编写 Flask 应用主文件 app.py",
+              "1.7 创建 README.md 项目说明文件",
+              "1.8 本地测试应用运行正常",
+              "1.9 首次提交并推送到 GitHub"
             ],
-            "practice": "创建一个简单的 Flask/FastAPI Web 应用，包含一个健康检查接口 GET /health 返回 {'status': 'ok'}。创建 requirements.txt 列出依赖，创建 .gitignore 排除 __pycache__、.env、venv 等目录。",
-            "answer": "项目结构：app.py（Flask 应用）、requirements.txt（flask, pytest）、.gitignore、README.md。app.py: from flask import Flask, jsonify; app = Flask(__name__); @app.route('/health'); def health(): return jsonify(status='ok')"
+            "project_setup": "```bash\n# 克隆仓库（替换为你的仓库 URL）\ngit clone https://github.com/yourusername/devops-cicd-project.git\ncd devops-cicd-project\n\n# 创建目录结构\nmkdir -p app tests .github/workflows\n\n# 创建虚拟环境\npython -m venv venv\nsource venv/bin/activate  # Linux/Mac\n# venv\\Scripts\\activate  # Windows\n\n# 安装依赖\npip install flask pytest pytest-cov gunicorn\npip freeze > requirements.txt\n```",
+            "flask_app": "```python\n# app.py\nfrom flask import Flask, jsonify\nimport os\n\napp = Flask(__name__)\n\n@app.route('/health')\ndef health():\n    \"\"\"健康检查接口\"\"\"\n    return jsonify({\n        'status': 'healthy',\n        'service': 'devops-demo',\n        'version': '1.0.0'\n    })\n\n@app.route('/')\ndef index():\n    return jsonify({\n        'message': 'Hello from DevOps Demo!',\n        'endpoints': ['/health', '/api/info']\n    })\n\n@app.route('/api/info')\ndef info():\n    return jsonify({\n        'python_version': os.sys.version,\n        'environment': os.environ.get('ENV', 'development')\n    })\n\nif __name__ == '__main__':\n    app.run(host='0.0.0.0', port=5000, debug=True)\n```",
+            "gitignore": "```\n# Python\n__pycache__/\n*.py[cod]\n*$py.class\n*.so\n.Python\nvenv/\nENV/\n.venv\n\n# Testing\n.pytest_cache/\n.coverage\nhtmlcov/\n\n# IDE\n.vscode/\n.idea/\n*.swp\n*.swo\n\n# Environment\n.env\n.env.local\n\n# OS\n.DS_Store\nThumbs.db\n```",
+            "common_errors": [
+              {"error": "git remote add 报错 'already exists'", "solution": "远程 origin 已存在。先用 `git remote -v` 查看已添加的远程仓库，如果 URL 相同可以忽略，不同则用 `git remote set-url origin <new_url>` 更新"},
+              {"error": "Flask app 无法启动，端口被占用", "solution": "1. 用 `lsof -i :5000` 查找占用端口的进程 2. 用 `kill -9 <PID>` 终止进程 3. 或者修改 app.py 中的端口号"},
+              {"error": "requirements.txt 为空或不完整", "solution": "确认虚拟环境已激活，然后运行 `pip freeze > requirements.txt`。确保只包含项目依赖，不包含系统包"}
+            ],
+            "checkpoint": "能访问 http://localhost:5000/health 返回 JSON，GitHub 仓库有初始提交"
           },
           "duration": "1.5小时",
           "resources": [
             { "title": "GitHub 创建仓库指南", "url": "https://docs.github.com/en/repositories/creating-and-managing-repositories/quickstart-for-repositories", "type": "documentation" },
-            { "title": "Python .gitignore 模板", "url": "https://github.com/github/gitignore/blob/main/Python.gitignore", "type": "documentation" }
+            { "title": "Python .gitignore 模板", "url": "https://github.com/github/gitignore/blob/main/Python.gitignore", "type": "documentation" },
+            { "title": "Flask 官方文档", "url": "https://flask.palletsprojects.com/", "type": "documentation" }
           ],
-          "checkpoint": "本地项目能运行，/health 接口返回正常"
+          "relatedTerms": ["git", "flask", "python-virtual-environment"],
+          "relatedTools": ["github", "flask", "pytest"]
         },
         {
           "order": 2,
           "title": "编写 Dockerfile",
           "content": {
-            "objective": "编写生产级 Dockerfile，理解镜像构建最佳实践",
-            "api_checklist": [
-              "FROM python:3.9-slim 选择精简基础镜像",
-              "WORKDIR /app 设置工作目录",
-              "COPY requirements.txt . 单独复制依赖文件",
-              "RUN pip install --no-cache-dir -r requirements.txt 安装依赖",
-              "COPY . . 复制应用代码",
-              "EXPOSE 5000 声明端口",
-              "CMD [\"python\", \"app.py\"] 启动命令"
+            "objective": "编写生产级 Dockerfile，理解多阶段构建和镜像优化",
+            "tasks": [
+              "2.1 分析应用依赖，创建 requirements.txt",
+              "2.2 编写基础 Dockerfile 实现应用容器化",
+              "2.3 使用多阶段构建减小镜像体积",
+              "2.4 配置非 root 用户运行应用",
+              "2.5 添加 HEALTHCHECK 健康检查",
+              "2.6 创建 .dockerignore 排除不必要的文件",
+              "2.7 构建镜像并测试容器运行"
             ],
-            "practice": "编写多阶段构建的 Dockerfile：第一阶段安装依赖并运行测试，第二阶段只复制运行时必需文件。使用非 root 用户运行应用，配置 HEALTHCHECK 指令。",
-            "answer": "Dockerfile 示例：FROM python:3.9-slim AS builder; WORKDIR /app; COPY requirements.txt .; RUN pip install --user -r requirements.txt; FROM python:3.9-slim; WORKDIR /app; COPY --from=builder /root/.local /root/.local; COPY . .; RUN useradd -m appuser; USER appuser; HEALTHCHECK CMD curl -f http://localhost:5000/health || exit 1; CMD [\"python\", \"app.py\"]"
+            "dockerfile": "```dockerfile\n# 第一阶段：构建\nFROM python:3.11-slim AS builder\n\nWORKDIR /app\n\n# 安装构建依赖\nRUN apt-get update && apt-get install -y --no-install-recommends \\\n    build-essential \\\n    && rm -rf /var/lib/apt/lists/*\n\n# 复制依赖文件并安装\nCOPY requirements.txt .\nRUN pip install --user --no-cache-dir -r requirements.txt\n\n# 第二阶段：运行\nFROM python:3.11-slim\n\nWORKDIR /app\n\n# 从构建阶段复制已安装的包\nCOPY --from=builder /root/.local /root/.local\nENV PATH=/root/.local/bin:$PATH\n\n# 创建非 root 用户\nRUN adduser --disabled-password --gecos '' appuser && \\\n    chown -R appuser:appuser /app\n\n# 复制应用代码\nCOPY --chown=appuser . .\n\n# 切换到非 root 用户\nUSER appuser\n\n# 暴露端口\nEXPOSE 5000\n\n# 健康检查\nHEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \\\n    CMD curl -f http://localhost:5000/health || exit 1\n\n# 启动命令\nCMD [\"gunicorn\", \"--bind\", \"0.0.0.0:5000\", \"--workers\", \"2\", \"app:app\"]\n```",
+            "dockerignore": "```\n__pycache__\n*.pyc\n.git\n.gitignore\nvenv\n.env\n*.md\ntests\n.pytest_cache\n.coverage\nhtmlcov\n.vscode\n.idea\n```",
+            "docker_commands": "```bash\n# 构建镜像\ndocker build -t devops-demo:latest .\n\n# 查看镜像大小\ndocker images devops-demo\n\n# 运行容器\ndocker run -d -p 5000:5000 --name devops-app devops-demo:latest\n\n# 查看容器状态\ndocker ps\n\n# 测试健康检查\ncurl http://localhost:5000/health\n\n# 查看容器日志\ndocker logs devops-app\n\n# 停止并删除容器\ndocker rm -f devops-app\n```",
+            "common_errors": [
+              {"error": "docker build 失败，提示 'no such file or directory'", "solution": "检查 Dockerfile 中的 COPY 命令，确保源文件路径相对于构建上下文（.）正确。检查 .dockerignore 是否意外排除了文件"},
+              {"error": "容器启动后立即退出 (exited with code 0)", "solution": "1. 检查 CMD/ENTRYPOINT 命令是否正确 2. 查看日志 `docker logs <container>` 3. 可能是应用启动失败，尝试交互模式运行 `docker run -it devops-demo bash`"},
+              {"error": "HEALTHCHECK 一直失败", "solution": "1. 确认容器内 curl 可用，或使用 wget --spider 2. 检查端口映射是否正确 (-p 5000:5000) 3. 检查健康检查路径是否返回 200 状态码"}
+            ],
+            "checkpoint": "docker build 成功，镜像体积 < 200MB，docker run 能正常启动并通过健康检查"
           },
           "duration": "2小时",
           "resources": [
             { "title": "Dockerfile 最佳实践", "url": "https://docs.docker.com/develop/develop-images/dockerfile_best-practices/", "type": "documentation" },
-            { "title": "多阶段构建详解", "url": "https://docs.docker.com/build/building/multi-stage/", "type": "documentation" }
+            { "title": "多阶段构建详解", "url": "https://docs.docker.com/build/building/multi-stage/", "type": "documentation" },
+            { "title": " HEALTHCHECK 指令", "url": "https://docs.docker.com/engine/reference/builder/#healthcheck", "type": "documentation" }
           ],
-          "checkpoint": "docker build 成功，docker run 能访问 /health"
+          "relatedTerms": ["dockerfile", "multi-stage-build", "healthcheck", "non-root-user"],
+          "relatedTools": ["docker", "gunicorn"]
         },
         {
           "order": 3,
           "title": "编写单元测试",
           "content": {
-            "objective": "使用 pytest 编写单元测试和集成测试",
-            "api_checklist": [
-              "pytest.fixture() 定义测试夹具",
-              "test_client() 获取测试客户端",
-              "assert 断言验证",
-              "pytest.mark.parametrize() 参数化测试",
-              "coverage 代码覆盖率"
+            "objective": "使用 pytest 编写单元测试和集成测试，确保代码质量",
+            "tasks": [
+              "3.1 创建 tests/ 目录并编写 __init__.py",
+              "3.2 编写 test_app.py 测试 Flask 应用",
+              "3.3 使用 pytest fixture 创建测试客户端",
+              "3.4 编写参数化测试覆盖多种场景",
+              "3.5 运行测试确保所有用例通过",
+              "3.6 生成代码覆盖率报告",
+              "3.7 确保测试在 CI 中能正常运行"
             ],
-            "practice": "为 /health 接口编写单元测试，验证返回状态码和 JSON 结构。使用 pytest fixture 创建测试客户端，使用参数化测试验证不同场景。运行 pytest --cov 查看代码覆盖率。",
-            "answer": "测试代码：import pytest; from app import app; @pytest.fixture; def client(): app.config['TESTING'] = True; with app.test_client() as client: yield client; def test_health(client): response = client.get('/health'); assert response.status_code == 200; assert response.json['status'] == 'ok'"
+            "test_app": "```python\n# tests/test_app.py\nimport pytest\nfrom app import app\n\n\n@pytest.fixture\ndef client():\n    \"\"\"创建测试客户端\"\"\"\n    app.config['TESTING'] = True\n    with app.test_client() as client:\n        yield client\n\n\n@pytest.fixture\ndef runner():\n    \"\"\"创建 CLI 测试运行器\"\"\"\n    app.config['TESTING'] = True\n    with app.test_cli_runner() as runner:\n        yield runner\n\n\nclass TestHealthEndpoint:\n    \"\"\"测试健康检查端点\"\"\"\n    \n    def test_health_returns_200(self, client):\n        response = client.get('/health')\n        assert response.status_code == 200\n    \n    def test_health_returns_json(self, client):\n        response = client.get('/health')\n        assert response.is_json\n    \n    def test_health_contains_status(self, client):\n        response = client.get('/health')\n        data = response.get_json()\n        assert data['status'] == 'healthy'\n    \n    def test_health_contains_service_name(self, client):\n        response = client.get('/health')\n        data = response.get_json()\n        assert 'service' in data\n        assert 'version' in data\n\n\nclass TestIndexEndpoint:\n    \"\"\"测试首页端点\"\"\"\n    \n    def test_index_returns_200(self, client):\n        response = client.get('/')\n        assert response.status_code == 200\n    \n    def test_index_returns_json(self, client):\n        response = client.get('/')\n        assert response.is_json\n    \n    def test_index_contains_message(self, client):\n        response = client.get('/')\n        data = response.get_json()\n        assert 'message' in data\n        assert 'endpoints' in data\n\n\nclass TestInfoEndpoint:\n    \"\"\"测试信息端点\"\"\"\n    \n    def test_info_returns_200(self, client):\n        response = client.get('/api/info')\n        assert response.status_code == 200\n    \n    def test_info_contains_python_version(self, client):\n        response = client.get('/api/info')\n        data = response.get_json()\n        assert 'python_version' in data\n```",
+            "conftest": "```python\n# tests/conftest.py\nimport pytest\nimport sys\nimport os\n\n# 将项目根目录添加到 Python 路径\nsys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))\n\nfrom app import app\n\n@pytest.fixture\ndef client():\n    app.config['TESTING'] = True\n    with app.test_client() as client:\n        yield client\n```",
+            "run_tests": "```bash\n# 运行所有测试\npytest -v\n\n# 运行测试并生成覆盖率报告\npytest --cov=app --cov-report=html --cov-report=term\n\n# 运行测试并生成 XML 格式（用于 CI）\npytest --cov=app --cov-report=xml\n\n# 只运行特定目录\npytest tests/\n\n# 只运行特定标记的测试\npytest -m \"not slow\"\n```",
+            "common_errors": [
+              {"error": "ImportError: No module named 'app'", "solution": "确保在项目根目录运行 pytest，或设置 PYTHONPATH 环境变量：`export PYTHONPATH=\"$(pwd)\"`。也可以在 conftest.py 中添加路径"},
+              {"error": "pytest 找不到测试文件", "solution": "1. 确保测试文件以 test_ 开头 2. 确保测试类以 Test 开头 3. 确保测试函数以 test_ 开头 4. 检查 pytest.ini 或 pyproject.toml 配置"},
+              {"error": "测试通过但覆盖率很低", "solution": "正常，初始覆盖率可能很低。目标是逐步提高覆盖率到 80%+。使用 `pytest --cov=app --cov-report=term-missing` 查看哪些行未被覆盖"}
+            ],
+            "checkpoint": "pytest -v 显示所有测试通过，代码覆盖率 > 80%"
           },
           "duration": "2小时",
           "resources": [
             { "title": "pytest 官方文档", "url": "https://docs.pytest.org/en/stable/", "type": "documentation" },
-            { "title": "Flask 测试指南", "url": "https://flask.palletsprojects.com/en/2.3.x/testing/", "type": "documentation" }
+            { "title": "Flask 测试指南", "url": "https://flask.palletsprojects.com/en/2.3.x/testing/", "type": "documentation" },
+            { "title": "pytest-cov 插件", "url": "https://pytest-cov.readthedocs.io/", "type": "documentation" }
           ],
-          "checkpoint": "pytest 通过，代码覆盖率 > 80%"
+          "relatedTerms": ["pytest", "unit-test", "coverage", "test-fixture"],
+          "relatedTools": ["pytest", "flask"]
         },
         {
           "order": 4,
-          "title": "配置 GitHub Actions",
+          "title": "配置 GitHub Actions CI/CD",
           "content": {
             "objective": "创建 CI/CD 流水线，实现自动化测试和构建",
-            "api_checklist": [
-              "on: [push, pull_request] 触发条件",
-              "jobs: define 定义作业",
-              "steps: checkout, setup-python, install, test",
-              "actions/checkout@v3 检出代码",
-              "actions/setup-python@v4 配置 Python",
-              "docker/build-push-action@v4 构建镜像"
+            "tasks": [
+              "4.1 创建 .github/workflows 目录",
+              "4.2 编写 ci.yml 工作流文件",
+              "4.3 配置触发条件（push/PR）",
+              "4.4 配置 Python 环境安装",
+              "4.5 配置依赖缓存加速",
+              "4.6 配置测试运行和覆盖率",
+              "4.7 配置 Docker 构建和推送",
+              "4.8 推送代码触发 CI，观察运行结果"
             ],
-            "practice": "创建 .github/workflows/ci.yml 配置文件：在 push 和 PR 时触发，运行测试、构建 Docker 镜像。配置缓存加速依赖安装，添加代码覆盖率报告。",
-            "answer": "CI 配置：name: CI; on: [push, pull_request]; jobs: test: runs-on: ubuntu-latest; steps: - uses: actions/checkout@v3; - uses: actions/setup-python@v4; with: python-version: '3.9'; - run: pip install -r requirements.txt; - run: pytest --cov; build: needs: test; steps: - uses: docker/build-push-action@v4"
+            "ci_workflow": "```yaml\n# .github/workflows/ci.yml\nname: CI/CD Pipeline\n\non:\n  push:\n    branches: [main, develop]\n  pull_request:\n    branches: [main]\n\nenv:\n  REGISTRY: ghcr.io\n  IMAGE_NAME: ${{ github.repository_owner }}/devops-demo\n\njobs:\n  # Job 1: 测试\n  test:\n    runs-on: ubuntu-latest\n    \n    steps:\n    - name: Checkout code\n      uses: actions/checkout@v4\n    \n    - name: Set up Python\n      uses: actions/setup-python@v5\n      with:\n        python-version: '3.11'\n        cache: 'pip'\n    \n    - name: Install dependencies\n      run: |\n        python -m venv venv\n        source venv/bin/activate\n        pip install -r requirements.txt\n        pip install pytest pytest-cov\n    \n    - name: Run tests\n      run: |\n        source venv/bin/activate\n        pytest --cov=app --cov-report=xml --cov-report=term\n    \n    - name: Upload coverage reports\n      uses: codecov/codecov-action@v4\n      with:\n        file: ./coverage.xml\n        fail_ci_if_error: false\n\n  # Job 2: 构建 Docker 镜像\n  build:\n    needs: test\n    runs-on: ubuntu-latest\n    if: github.event_name == 'push' && github.ref == 'refs/heads/main'\n    \n    steps:\n    - name: Checkout code\n      uses: actions/checkout@v4\n    \n    - name: Set up Docker Buildx\n      uses: docker/setup-buildx-action@v3\n    \n    - name: Log in to Container Registry\n      uses: docker/login-action@v3\n      with:\n        registry: ${{ env.REGISTRY }}\n        username: ${{ github.actor }}\n        password: ${{ secrets.GITHUB_TOKEN }}\n    \n    - name: Extract metadata\n      id: meta\n      uses: docker/metadata-action@v5\n      with:\n        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}\n        tags: |\n          type=ref,event=branch\n          type=sha,event=branch\n          type=raw,value=latest\n    \n    - name: Build and push Docker image\n      uses: docker/build-push-action@v5\n      with:\n        context: .\n        push: true\n        tags: ${{ steps.meta.outputs.tags }}\n        cache-from: type=gha\n        cache-to: type=gha,mode=max\n```",
+            "common_errors": [
+              {"error": "CI 运行失败但本地测试通过", "solution": "1. 检查 CI 日志中的具体错误 2. 确认 Python 版本一致 3. 检查环境变量差异 4. CI 可能使用不同的依赖解析策略"},
+              {"error": "Docker build 缓存未生效", "solution": "1. 检查 cache-from/cache-to 配置是否正确 2. 确保使用 BuildKit (`DOCKER_BUILDKIT=1`) 3. GitHub Actions 使用 gha 缓存类型"},
+              {"error": "Secrets 访问失败", "solution": "1. GITHUB_TOKEN 是自动提供的，不需要手动创建 2. 如果需要其他 secret，在 Settings > Secrets 中添加 3. 检查 secret 名称是否正确引用"}
+            ],
+            "checkpoint": "Push 代码后 GitHub Actions 显示所有 job 通过，Docker 镜像成功推送到 ghcr.io"
           },
           "duration": "2.5小时",
           "resources": [
             { "title": "GitHub Actions 入门", "url": "https://docs.github.com/en/actions/quickstart", "type": "documentation" },
-            { "title": "Actions 市场", "url": "https://github.com/marketplace?type=actions", "type": "documentation" }
+            { "title": "Docker Buildx Action", "url": "https://github.com/marketplace/actions/docker-build-push-action", "type": "documentation" },
+            { "title": "Codecov Action", "url": "https://github.com/marketplace/actions/codecov", "type": "documentation" }
           ],
-          "checkpoint": "GitHub Actions 绿勾，测试和构建都通过"
+          "relatedTerms": ["github-actions", "ci-cd", "docker-build", "codecov"],
+          "relatedTools": ["github", "docker"]
         },
         {
           "order": 5,
-          "title": "部署与监控",
+          "title": "部署与监控配置",
           "content": {
-            "objective": "实现自动化部署，配置监控和告警",
-            "api_checklist": [
-              "docker compose up -d 部署服务",
-              "nginx 反向代理配置",
-              "prometheus 监控指标",
-              "grafana 可视化面板",
-              "alertmanager 告警配置"
+            "objective": "使用 Docker Compose 部署应用，配置基本监控",
+            "tasks": [
+              "5.1 创建 docker-compose.yml 开发环境配置",
+              "5.2 配置 Nginx 反向代理",
+              "5.3 创建 Nginx 配置文件",
+              "5.4 配置 Prometheus 指标端点",
+              "5.5 创建 Prometheus 配置文件",
+              "5.6 使用 Docker Compose 启动所有服务",
+              "5.7 编写部署文档",
+              "5.8 测试端到端流程"
             ],
-            "practice": "使用 Docker Compose 编排应用和 Nginx 反向代理。配置 /metrics 端点暴露 Prometheus 格式指标。编写部署文档说明如何在服务器上一键部署。",
-            "answer": "docker-compose.yml: version: '3.8'; services: app: build: .; ports: ['5000:5000']; nginx: image: nginx; ports: ['80:80']; volumes: ['./nginx.conf:/etc/nginx/nginx.conf']; depends_on: [app]"
+            "docker_compose": "```yaml\n# docker-compose.yml\nversion: '3.8'\n\nservices:\n  app:\n    build: .\n    container_name: devops-app\n    ports:\n      - \"5000:5000\"\n    environment:\n      - ENV=production\n    restart: unless-stopped\n    networks:\n      - backend\n    healthcheck:\n      test: [\"CMD\", \"curl\", \"-f\", \"http://localhost:5000/health\"]\n      interval: 30s\n      timeout: 3s\n      retries: 3\n\n  nginx:\n    image: nginx:alpine\n    container_name: devops-nginx\n    ports:\n      - \"80:80\"\n      - \"443:443\"\n    volumes:\n      - ./nginx.conf:/etc/nginx/nginx.conf:ro\n    depends_on:\n      app:\n        condition: service_healthy\n    networks:\n      - backend\n\n  prometheus:\n    image: prom/prometheus:latest\n    container_name: devops-prometheus\n    ports:\n      - \"9090:9090\"\n    volumes:\n      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro\n      - prometheus-data:/prometheus\n    command:\n      - '--config.file=/etc/prometheus/prometheus.yml'\n      - '--storage.tsdb.path=/prometheus'\n    networks:\n      - backend\n\nnetworks:\n  backend:\n    driver: bridge\n\nvolumes:\n  prometheus-data:\n```",
+            "nginx_config": "```nginx\n# nginx.conf\nworker_processes auto;\nerror_log /var/log/nginx/error.log warn;\npid /var/run/nginx.pid;\n\nevents {\n    worker_connections 1024;\n}\n\nhttp {\n    include /etc/nginx/mime.types;\n    default_type application/octet-stream;\n    \n    log_format main '$remote_addr - $remote_user [$time_local] \"$request\" '\n                    '$status $body_bytes_sent \"$http_referer\" '\n                    '\"$http_user_agent\" \"$http_x_forwarded_for\"';\n    \n    access_log /var/log/nginx/access.log main;\n    \n    sendfile on;\n    tcp_nopush on;\n    tcp_nodelay on;\n    keepalive_timeout 65;\n    \n    # Gzip 压缩\n    gzip on;\n    gzip_vary on;\n    gzip_proxied any;\n    gzip_comp_level 6;\n    gzip_types text/plain text/css text/xml application/json application/javascript;\n    \n    upstream app {\n        server app:5000;\n    }\n    \n    server {\n        listen 80;\n        server_name localhost;\n        \n        location / {\n            proxy_pass http://app;\n            proxy_set_header Host $host;\n            proxy_set_header X-Real-IP $remote_addr;\n            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n            proxy_set_header X-Forwarded-Proto $scheme;\n        }\n        \n        # Prometheus 指标端点（内部访问）\n        location /metrics {\n            proxy_pass http://app:5000/metrics;\n            access_log off;\n        }\n    }\n}\n```",
+            "prometheus_config": "```yaml\n# prometheus.yml\nglobal:\n  scrape_interval: 15s\n  evaluation_interval: 15s\n\nscrape_configs:\n  - job_name: 'devops-app'\n    static_configs:\n      - targets: ['app:5000']\n    metrics_path: '/metrics'\n```",
+            "common_errors": [
+              {"error": "docker-compose up 失败，提示 'network not found'", "solution": "运行 `docker network ls` 查看网络。执行 `docker-compose down --volumes` 清理，然后重新 `docker-compose up`"},
+              {"error": "Nginx 返回 502 Bad Gateway", "solution": "1. 检查 app 容器是否正常运行 `docker ps` 2. 检查 app 容器的健康状态 3. 检查 Nginx 日志 `docker logs devops-nginx` 4. 确认 upstream 配置正确"},
+              {"error": "Prometheus 无法抓取指标", "solution": "1. 确认 app 暴露了 /metrics 端点 2. 检查 Prometheus 日志 3. 在 Prometheus UI (http://localhost:9090) 中检查 Targets 状态"}
+            ],
+            "checkpoint": "docker-compose up -d 成功，所有服务运行正常，通过 http://localhost:80 访问应用"
           },
           "duration": "2小时",
           "resources": [
             { "title": "Docker Compose 文档", "url": "https://docs.docker.com/compose/", "type": "documentation" },
-            { "title": "Nginx 反向代理", "url": "https://nginx.org/en/docs/http/ngx_http_proxy_module.html", "type": "documentation" }
+            { "title": "Nginx 反向代理配置", "url": "https://nginx.org/en/docs/http/ngx_http_proxy_module.html", "type": "documentation" },
+            { "title": "Prometheus 入门", "url": "https://prometheus.io/docs/introduction/first_steps/", "type": "documentation" }
           ],
-          "checkpoint": "服务可通过 Nginx 访问，/metrics 端点正常"
+          "relatedTerms": ["docker-compose", "nginx", "prometheus", "reverse-proxy"],
+          "relatedTools": ["docker", "nginx", "prometheus"]
         }
       ],
       "resources": [
         { "title": "GitHub Actions 文档", "url": "https://docs.github.com/en/actions", "type": "documentation" },
-        { "title": "Docker 官方文档", "url": "https://docs.docker.com/", "type": "documentation" }
+        { "title": "Docker 官方文档", "url": "https://docs.docker.com/", "type": "documentation" },
+        { "title": "CI/CD 最佳实践", "url": "https://docs.github.com/en/actions/learn-github-actions/introduction-to-github-actions", "type": "documentation" }
       ],
-      "relatedIntel": ["005-docker", "010-git"],
-      "relatedTerms": ["ci-cd", "docker", "github-actions"],
-      "relatedTools": ["docker", "github"],
+      "relatedIntel": ["007-docker", "008-git"],
+      "relatedTerms": ["ci-cd", "docker", "github-actions", "nginx"],
+      "relatedTools": ["docker", "github", "pytest"],
       "templateRepo": "https://github.com/example/cicd-template",
       "solutionRepo": "https://github.com/example/cicd-solution"
     },
@@ -463,112 +617,160 @@
           "title": "NumPy 基础与向量运算",
           "content": {
             "objective": "掌握 NumPy 数组创建和向量基本运算",
-            "api_checklist": [
-              "np.array() 创建数组",
-              "np.zeros(), np.ones(), np.arange() 特殊数组",
-              "np.dot() 向量点积",
-              "np.linalg.norm() 向量范数",
-              "np.cross() 向量叉积",
-              "向量夹角计算公式"
+            "tasks": [
+              "1.1 安装 NumPy 并验证版本",
+              "1.2 创建不同类型的数组（零向量、单位矩阵、等差数组）",
+              "1.3 实现向量点积计算并验证公式",
+              "1.4 实现向量叉积和 L2 范数计算",
+              "1.5 计算向量夹角并可视化",
+              "1.6 验证向量运算的数学性质"
             ],
-            "practice": "创建两个 3 维向量，计算它们的点积、叉积、L2 范数和夹角。验证点积公式：a·b = |a||b|cosθ。可视化两个向量及其夹角。",
-            "answer": "向量运算：a = np.array([1, 2, 3]); b = np.array([4, 5, 6]); dot = np.dot(a, b); norm_a = np.linalg.norm(a); norm_b = np.linalg.norm(b); cos_theta = dot / (norm_a * norm_b); theta = np.arccos(cos_theta)"
+            "numpy_basics": "```python\nimport numpy as np\n\n# 创建数组的基本方法\na = np.array([1, 2, 3])                    # 从列表创建\nb = np.zeros(5)                           # 零向量\nc = np.ones((3, 3))                       # 全 1 矩阵\nd = np.arange(0, 10, 2)                    # 等差数组 [0, 2, 4, 6, 8]\ne = np.linspace(0, 1, 5)                   # 等分数组 [0, 0.25, 0.5, 0.75, 1]\nf = np.eye(3)                              # 单位矩阵\n\n# 数组属性\nprint(f\"形状: {a.shape}\")       # (3,)\nprint(f\"维度: {a.ndim}\")         # 1\nprint(f\"数据类型: {a.dtype}\")    # int64\n```",
+            "vector_operations": "```python\nimport numpy as np\n\n# 创建两个 3D 向量\na = np.array([1, 2, 3])\nb = np.array([4, 5, 6])\n\n# 点积 dot product\ndot_product = np.dot(a, b)                # 1*4 + 2*5 + 3*6 = 32\ndot_product = a @ b                       # 也可以用 @ 运算符\n\n# L2 范数（向量的长度）\nnorm_a = np.linalg.norm(a)               # sqrt(1+4+9) = sqrt(14)\n\n# 向量夹角\ncos_theta = dot_product / (norm_a * np.linalg.norm(b))\ntheta = np.arccos(cos_theta)              # 弧度\ntheta_deg = np.degrees(theta)             # 转换为角度\n\n# 叉积 cross product（仅适用于 3D 向量）\ncross = np.cross(a, b)                    # [-3, 6, -3]\n\nprint(f\"点积: {dot_product}\")\nprint(f\"a 的长度: {norm_a:.4f}\")\nprint(f\"夹角: {theta_deg:.2f} 度\")\nprint(f\"叉积: {cross}\")\n\n# 验证点积公式: a·b = |a||b|cos(θ)\nprint(f\"验证公式: {norm_a * np.linalg.norm(b) * cos_theta:.4f} ≈ {dot_product}\")\n```",
+            "visualization": "```python\nimport matplotlib.pyplot as plt\nimport numpy as np\n\n# 可视化 2D 向量\na = np.array([2, 3])\nb = np.array([4, 1])\n\n# 绘制向量\nfig, ax = plt.subplots(figsize=(8, 8))\n\n# 使用 arrow 绘制向量\nax.annotate('', xy=a, xytext=(0, 0),\n            arrowprops=dict(arrowstyle='->', color='blue', lw=2))\nax.annotate('', xy=b, xytext=(0, 0),\n            arrowprops=dict(arrowstyle='->', color='red', lw=2))\n\n# 绘制点积投影\ndot = np.dot(a, b)\nproj = (dot / np.dot(b, b)) * b           # b 方向上的投影\nax.annotate('', xy=proj, xytext=(0, 0),\n            arrowprops=dict(arrowstyle='->', color='green', lw=2, ls='--'))\n\n# 添加标签\nax.text(a[0]/2, a[1]/2, f'a={a}', fontsize=12)\nax.text(b[0]/2, b[1]/2, f'b={b}', fontsize=12)\n\n# 设置坐标轴\nax.set_xlim(-1, 6)\nax.set_ylim(-1, 5)\nax.axhline(y=0, color='k', linewidth=0.5)\nax.axvline(x=0, color='k', linewidth=0.5)\nax.grid(True, alpha=0.3)\nax.set_aspect('equal')\n\nplt.title(f'向量点积: a·b = {dot}')\nplt.savefig('vector_dot_product.png', dpi=150)\nplt.show()\n```",
+            "common_errors": [
+              {"error": "np.dot vs np.cross 维度不匹配", "solution": "np.cross 只适用于 3D 向量对。检查向量维度：`print(a.shape)`，如果是一维向量用 `a.reshape(3)` 或 `a[:, None]` 转换"},
+              {"error": "arccos 值域错误", "solution": "np.arccos 只接受 [-1, 1] 范围的值。由于浮点数精度，计算结果可能略微超出范围。先用 `np.clip(cos_theta, -1, 1)` 裁剪"},
+              {"error": "可视化显示为空", "solution": "1. 确保在 Jupyter 中使用 `%matplotlib inline` 2. 检查向量坐标是否在显示范围内 3. 使用 `plt.savefig` 保存而不是 `plt.show`"}
+            ],
+            "checkpoint": "能正确计算向量点积、叉积、范数和夹角，能可视化向量及其夹角"
           },
           "duration": "2小时",
           "resources": [
             { "title": "NumPy 快速入门", "url": "https://numpy.org/doc/stable/user/quickstart.html", "type": "documentation" },
-            { "title": "3Blue1Brown: 向量介绍", "url": "https://www.3blue1brown.com/lessons/vectors", "type": "video" }
+            { "title": "3Blue1Brown: 向量介绍", "url": "https://www.3blue1brown.com/lessons/vectors", "type": "video" },
+            { "title": "NumPy 数组操作", "url": "https://numpy.org/doc/stable/reference/routines/array-creation.html", "type": "documentation" }
           ],
-          "checkpoint": "能正确计算向量点积和夹角"
+          "relatedTerms": ["vector", "dot-product", "norm", "numpy-array"],
+          "relatedTools": ["numpy", "matplotlib"]
         },
         {
           "order": 2,
           "title": "矩阵运算与性质",
           "content": {
             "objective": "掌握矩阵乘法、转置、逆矩阵等核心运算",
-            "api_checklist": [
-              "np.matmul() 或 @ 运算符矩阵乘法",
-              ".T 矩阵转置",
-              "np.linalg.inv() 矩阵求逆",
-              "np.linalg.det() 行列式计算",
-              "np.linalg.matrix_rank() 矩阵秩",
-              "np.linalg.solve() 解线性方程组"
+            "tasks": [
+              "2.1 创建矩阵并验证基本运算",
+              "2.2 实现矩阵乘法并验证维度规则",
+              "2.3 计算矩阵的转置、行列式、秩",
+              "2.4 计算矩阵的逆并验证 A @ A_inv = I",
+              "2.5 解线性方程组 Ax = b",
+              "2.6 理解矩阵运算的几何意义"
             ],
-            "practice": "创建 3x3 矩阵，计算其转置、逆矩阵、行列式和秩。验证 A @ A_inv = I（单位矩阵）。解一个 3 元线性方程组 Ax = b。",
-            "answer": "矩阵运算：A = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 10]]); A_inv = np.linalg.inv(A); det = np.linalg.det(A); rank = np.linalg.matrix_rank(A); b = np.array([1, 2, 3]); x = np.linalg.solve(A, b)"
+            "matrix_operations": "```python\nimport numpy as np\n\n# 创建矩阵\nA = np.array([[1, 2], [3, 4]])\nB = np.array([[5, 6], [7, 8]])\n\n# 基本运算\nprint(f\"A + B:\\n{A + B}\")\nprint(f\"A - B:\\n{A - B}\")\n\n# 矩阵乘法 @ 运算符\nC = A @ B\nprint(f\"A @ B:\\n{C}\")\n\n# 逐元素乘法\nD = A * B\nprint(f\"A * B (逐元素):\\n{D}\")\n\n# 转置\nprint(f\"A.T:\\n{A.T}\")\n```",
+            "matrix_properties": "```python\nimport numpy as np\n\nA = np.array([[1, 2, 3], \n              [4, 5, 6], \n              [7, 8, 10]])  # 注意：行列式不为 0\n\n# 行列式\ndet_A = np.linalg.det(A)\nprint(f\"行列式: {det_A:.4f}\")\n\n# 矩阵的秩\nrank_A = np.linalg.matrix_rank(A)\nprint(f\"矩阵的秩: {rank_A}\")\n\n# 矩阵的逆\nA_inv = np.linalg.inv(A)\nprint(f\"A 的逆:\\n{A_inv}\")\n\n# 验证 A @ A_inv = I\nidentity = A @ A_inv\nprint(f\"A @ A_inv (应该接近单位矩阵):\\n{identity}\")\n\n# 验证结果\nprint(f\"验证: {np.allclose(A @ A_inv, np.eye(3))}\")  # True\n```",
+            "solve_linear_system": "```python\nimport numpy as np\n\n# 解线性方程组 Ax = b\n# 2x + y = 5\n# x + 3y = 6\n\nA = np.array([[2, 1], [1, 3]])\nb = np.array([5, 6])\n\n# 方法 1: 使用 solve\nx = np.linalg.solve(A, b)\nprint(f\"解: x = {x[0]:.2f}, y = {x[1]:.2f}\")\n\n# 验证\nprint(f\"验证: 2*{x[0]:.2f} + {x[1]:.2f} = {2*x[0] + x[1]:.2f} (应为 5)\")\nprint(f\"验证: {x[0]:.2f} + 3*{x[1]:.2f} = {x[0] + 3*x[1]:.2f} (应为 6)\")\n\n# 方法 2: 使用逆矩阵\nx_inv = np.linalg.inv(A) @ b\nprint(f\"用逆矩阵验证: {x_inv}\")\n\n# 方法 3: 当矩阵奇异时使用最小二乘\n# A @ x = b 的最小二乘解\nx_lstsq, residuals, rank, s = np.linalg.lstsq(A, b, rcond=None)\nprint(f\"最小二乘解: {x_lstsq}\")\n```",
+            "common_errors": [
+              {"error": "np.linalg.inv 报错 'Singular matrix'", "solution": "矩阵是奇异的（行列式为 0），不可逆。检查矩阵的秩：`np.linalg.matrix_rank(A)`。如果矩阵接近奇异，考虑使用 `np.linalg.lstsq` 求最小二乘解"},
+              {"error": "维度不匹配错误", "solution": "检查矩阵乘法维度规则：(m,n) @ (n,k) = (m,k)。确保第一个矩阵的列数等于第二个矩阵的行数。用 `A.shape` 检查维度"},
+              {"error": "解线性方程组结果不对", "solution": "1. 检查系数矩阵 A 是否正确 2. 检查常数向量 b 的维度 3. 对于病态矩阵，使用 `np.linalg.solve` 可能不稳定，考虑使用 QR 分解"}
+            ],
+            "checkpoint": "能计算矩阵的逆、行列式、秩，能解线性方程组"
           },
           "duration": "2小时",
           "resources": [
+            { "title": "NumPy 线性代数", "url": "https://numpy.org/doc/stable/reference/routines.linalg.html", "type": "documentation" },
             { "title": "Khan Academy: 矩阵乘法", "url": "https://www.khanacademy.org/math/precalculus/x9e81a4f98389efdf:matrices", "type": "course" },
-            { "title": "NumPy 线性代数", "url": "https://numpy.org/doc/stable/reference/routines.linalg.html", "type": "documentation" }
+            { "title": "矩阵的几何意义", "url": "https://www.3blue1brown.com/lessons/matrices", "type": "video" }
           ],
-          "checkpoint": "能解线性方程组并验证逆矩阵"
+          "relatedTerms": ["matrix", "determinant", "rank", "inverse-matrix", "linear-system"],
+          "relatedTools": ["numpy", "matplotlib"]
         },
         {
           "order": 3,
           "title": "特征值与特征向量",
           "content": {
             "objective": "理解特征值分解的几何意义和计算方法",
-            "api_checklist": [
-              "np.linalg.eig() 特征值分解",
-              "np.linalg.eigh() 对称矩阵特征分解",
-              "特征值和特征向量的几何解释",
-              "谱定理：对称矩阵的特征分解",
-              "特征值在 PCA 中的应用"
+            "tasks": [
+              "3.1 计算矩阵的特征值和特征向量",
+              "3.2 验证 Av = λv",
+              "3.3 理解特征值的几何意义",
+              "3.4 可视化特征向量方向上的变换",
+              "3.5 对比普通矩阵 vs 对称矩阵的特征分解",
+              "3.6 理解特征值在 PCA 中的应用"
             ],
-            "practice": "对一个对称矩阵做特征分解，验证 A @ v = λ * v。理解特征值的几何意义：矩阵在特征向量方向上的缩放因子。可视化特征向量方向。",
-            "answer": "特征分解：A = np.array([[2, 1], [1, 2]]); eigenvalues, eigenvectors = np.linalg.eigh(A); # 验证 A @ v = λ * v; for i in range(len(eigenvalues)): print(np.allclose(A @ eigenvectors[:, i], eigenvalues[i] * eigenvectors[:, i]))"
+            "eigen_decomposition": "```python\nimport numpy as np\n\n# 对称矩阵的特征分解（A @ v = λ * v）\nA = np.array([[2, 1], [1, 2]])\n\neigenvalues, eigenvectors = np.linalg.eigh(A)\n\nprint(f\"特征值: {eigenvalues}\")\nprint(f\"特征向量 (每列是一个特征向量):\\n{eigenvectors}\")\n\n# 验证 Av = λv\nfor i in range(len(eigenvalues)):\n    v = eigenvectors[:, i]\n    lam = eigenvalues[i]\n    Av = A @ v\n    lam_v = lam * v\n    print(f\"验证 λ={lam:.2f}: A@v = {Av}, λ*v = {lam_v}\")\n    print(f\"  相等: {np.allclose(Av, lam_v)}\")\n```",
+            "geometric_interpretation": "```python\nimport numpy as np\nimport matplotlib.pyplot as plt\n\n# 可视化特征值的几何意义\nA = np.array([[2, 0], [0, 1]])  # 对角矩阵，特征值 2, 1\n\n# 创建单位圆上的点\ntheta = np.linspace(0, 2*np.pi, 50)\ncircle = np.array([np.cos(theta), np.sin(theta)])\n\n# 应用矩阵变换\ntransformed = A @ circle\n\nfig, axes = plt.subplots(1, 2, figsize=(12, 6))\n\n# 原始圆\naxes[0].plot(circle[0], circle[1], 'b-', linewidth=2)\naxes[0].set_xlim(-3, 3)\naxes[0].set_ylim(-3, 3)\naxes[0].set_aspect('equal')\naxes[0].set_title('Original Circle')\naxes[0].grid(True)\n\n# 变换后的椭圆\naxes[1].plot(transformed[0], transformed[1], 'r-', linewidth=2)\naxes[1].set_xlim(-3, 3)\naxes[1].set_ylim(-3, 3)\naxes[1].set_aspect('equal')\naxes[1].set_title('After Transformation (A @ x)')\naxes[1].grid(True)\n\nplt.tight_layout()\nplt.savefig('eigenvalue_geometry.png', dpi=150)\nplt.show()\n\n# 解释：特征值表示在特征向量方向上的缩放因子\n```",
+            "pca_connection": "```python\nimport numpy as np\n\n# 特征值与 PCA 的关系\n# 对于协方差矩阵，特征值表示主成分方向上的方差\n\n# 创建示例数据\nnp.random.seed(42)\ndata = np.random.randn(100, 2) @ np.array([[1.5, 1], [0, 0.5]])  # 拉伸的数据\ndata = data + np.array([2, 1])  # 平移\n\n# 计算协方差矩阵\ncov = np.cov(data.T)\nprint(f\"协方差矩阵:\\n{cov}\")\n\n# 特征分解\neigenvalues, eigenvectors = np.linalg.eigh(cov)\n\n# 按特征值降序排序\nidx = np.argsort(eigenvalues)[::-1]\neigenvalues = eigenvalues[idx]\neigenvectors = eigenvectors[:, idx]\n\nprint(f\"特征值 (方差): {eigenvalues}\")\nprint(f\"解释的方差比例: {eigenvalues / eigenvalues.sum()}\")\nprint(f\"累计解释方差: {np.cumsum(eigenvalues) / eigenvalues.sum()}\")\n\n# 第一个主成分（最大特征值对应的特征向量）\npc1 = eigenvectors[:, 0]\nprint(f\"第一主成分方向: {pc1}\")\n```",
+            "common_errors": [
+              {"error": "np.linalg.eig vs np.linalg.eigh 的区别", "solution": "np.linalg.eigh 专门用于对称矩阵，更快更稳定。普通矩阵用 np.linalg.eig。确保矩阵是实对称的再用 eigh，否则用 eig"},
+              {"error": "特征向量符号不一致", "solution": "特征向量可以同时乘以 -1，数学上是等价的。使用 `np.allclose(A @ v, λ * v)` 验证，而不是直接比较是否相等"},
+              {"error": "复数特征值", "solution": "非对称矩阵可能有复数特征值。使用 `np.linalg.eig`（不是 eigh）可以返回复数特征值。或者检查矩阵是否应该是对称的"}
+            ],
+            "checkpoint": "能计算特征值和特征向量，能解释特征值的几何意义"
           },
           "duration": "2小时",
           "resources": [
             { "title": "3Blue1Brown: 特征值与特征向量", "url": "https://www.3blue1brown.com/lessons/eigenvalues", "type": "video" },
-            { "title": "MIT OCW: 特征值讲解", "url": "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/", "type": "course" }
+            { "title": "MIT OCW: 特征值讲解", "url": "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/", "type": "course" },
+            { "title": "NumPy 特征分解", "url": "https://numpy.org/doc/stable/reference/generated/numpy.linalg.eig.html", "type": "documentation" }
           ],
-          "checkpoint": "能解释特征值的几何意义"
+          "relatedTerms": ["eigenvalue", "eigenvector", "matrix-decomposition", "pca"],
+          "relatedTools": ["numpy", "matplotlib"]
         },
         {
           "order": 4,
           "title": "矩阵分解：SVD 奇异值分解",
           "content": {
-            "objective": "掌握 SVD 分解的原理和应用",
-            "api_checklist": [
-              "np.linalg.svd() 奇异值分解",
-              "U, S, Vt = svd(A) 分解结果",
-              "低秩近似：A ≈ U[:, :k] @ diag(S[:k]) @ Vt[:k, :]",
-              "图像压缩应用",
-              "SVD 与 PCA 的关系"
+            "objective": "掌握 SVD 分解的原理和图像压缩应用",
+            "tasks": [
+              "4.1 理解 SVD 分解的数学原理 A = UΣV^T",
+              "4.2 对矩阵进行 SVD 分解",
+              "4.3 使用不同数量的奇异值重建矩阵",
+              "4.4 实现图像压缩并计算压缩比",
+              "4.5 对比不同 k 值的重建效果",
+              "4.6 理解 SVD 与 PCA 的关系"
             ],
-            "practice": "对一个图像矩阵做 SVD 分解，使用前 k 个奇异值重建图像，比较不同 k 值的重建效果和压缩比。理解 SVD 的几何意义：旋转-缩放-旋转。",
-            "answer": "SVD 图像压缩：U, S, Vt = np.linalg.svd(image, full_matrices=False); for k in [10, 50, 100]: compressed = U[:, :k] @ np.diag(S[:k]) @ Vt[:k, :]; compression_ratio = k * (m + n + 1) / (m * n)"
+            "svd_decomposition": "```python\nimport numpy as np\n\n# SVD 分解：A = U @ Σ @ V^T\nA = np.array([[1, 2], [3, 4], [5, 6]])\n\nU, S, Vt = np.linalg.svd(A, full_matrices=False)\n\nprint(f\"U shape: {U.shape}\")      # (3, 2)\nprint(f\"S shape: {S.shape}\")      # (2,) - 奇异值\nprint(f\"Vt shape: {Vt.shape}\")     # (2, 2)\n\n# 重构原始矩阵\nA_reconstructed = U @ np.diag(S) @ Vt\nprint(f\"重构误差: {np.linalg.norm(A - A_reconstructed)}\")\n\n# 使用前 k 个奇异值近似\nk = 1\nA_k = U[:, :k] @ np.diag(S[:k]) @ Vt[:k, :]\nprint(f\"k=1 近似误差: {np.linalg.norm(A - A_k)}\")\n```",
+            "image_compression": "```python\nimport numpy as np\nimport matplotlib.pyplot as plt\nfrom skimage import data\n\n# 加载图像\nimage = data.camera()  # 灰度图像 512x512\nprint(f\"原始图像形状: {image.shape}\")\nprint(f\"原始图像大小: {image.nbytes / 1024:.1f} KB\")\n\n# SVD 分解\nU, S, Vt = np.linalg.svd(image, full_matrices=False)\n\n# 不同 k 值的压缩效果\nk_values = [10, 30, 50, 100]\nfig, axes = plt.subplots(2, 2, figsize=(12, 12))\n\nfor ax, k in zip(axes.flat, k_values):\n    # 使用前 k 个奇异值重建\n    compressed = U[:, :k] @ np.diag(S[:k]) @ Vt[:k, :]\n    compressed = np.clip(compressed, 0, 255).astype(np.uint8)\n    \n    # 计算压缩比\n    original_size = image.shape[0] * image.shape[1]\n    compressed_size = k * (image.shape[0] + image.shape[1] + 1)\n    ratio = compressed_size / original_size\n    \n    ax.imshow(compressed, cmap='gray')\n    ax.set_title(f'k={k}, 压缩比={ratio:.2%}')\n    ax.axis('off')\n\nplt.tight_layout()\nplt.savefig('svd_compression.png', dpi=150)\nplt.show()\n```",
+            "svd_vs_pca": "```python\nimport numpy as np\n\n# SVD 与 PCA 的关系\n# 对于中心化的矩阵，SVD 的 V 等于 PCA 的主成分\n\n# 创建示例数据\nnp.random.seed(42)\nX = np.random.randn(100, 3) @ np.array([[2, 0, 0], [0, 1, 0], [0, 0, 0.5]])\nX = X + np.array([5, 3, 2])\n\n# 方法 1: 使用 SVD\nX_centered = X - X.mean(axis=0)\nU, S, Vt = np.linalg.svd(X_centered, full_matrices=False)\npc_svd = Vt.T  # 主成分\n\n# 方法 2: 使用 PCA\ncov = np.cov(X_centered.T)\neigenvalues, eigenvectors = np.linalg.eigh(cov)\npc_pca = eigenvectors[:, np.argsort(eigenvalues)[::-1]]\n\n# 验证：两者应该只差一个符号\nprint(f\"SVD 主成分:\\n{pc_svd}\")\nprint(f\"PCA 主成分:\\n{pc_pca}\")\nprint(f\"相等性: {np.allclose(np.abs(pc_svd), np.abs(pc_pca))}\")\n```",
+            "common_errors": [
+              {"error": "SVD 分解结果不直观", "solution": "U, Σ, V^T 的维度规则：A(m,n) → U(m,m), Σ(m,n 对角), V^T(n,n)。使用 `full_matrices=False` 得到精简版本：U(m,k), Σ(k,), V^T(k,n)，其中 k=min(m,n)"},
+              {"error": "图像压缩后颜色失真", "solution": "1. 确保归一化到 [0, 255] 2. 使用 `np.clip` 裁剪到有效范围 3. 转换为 uint8 类型：`compressed.astype(np.uint8)`"},
+              {"error": "重建图像有负数", "solution": "由于数值精度，重建图像可能略有超出 [0, 255] 范围。使用 `np.clip(compressed, 0, 255)` 裁剪"}
+            ],
+            "checkpoint": "能用 SVD 压缩图像，k=50 时压缩比 < 20% 且保持较好视觉效果"
           },
           "duration": "2.5小时",
           "resources": [
             { "title": "SVD 图像压缩教程", "url": "https://www.geeksforgeeks.org/image-compression-using-singular-value-decomposition/", "type": "article" },
-            { "title": "MIT OCW: SVD 讲解", "url": "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/", "type": "course" }
+            { "title": "MIT OCW: SVD 讲解", "url": "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/", "type": "course" },
+            { "title": "SVD 与 PCA 的关系", "url": "https://towardsdatascience.com/svd-5c2c0692d2f1", "type": "article" }
           ],
-          "checkpoint": "能用 SVD 压缩图像并可视化对比"
+          "relatedTerms": ["svd", "singular-value", "matrix-decomposition", "image-compression"],
+          "relatedTools": ["numpy", "matplotlib", "scikit-image"]
         },
         {
           "order": 5,
           "title": "PCA 主成分分析实战",
           "content": {
             "objective": "从零实现 PCA 算法，理解降维原理",
-            "api_checklist": [
-              "数据中心化：X - X.mean(axis=0)",
-              "协方差矩阵：np.cov(X_centered.T)",
-              "特征分解：np.linalg.eigh(cov_matrix)",
-              "投影：X_centered @ eigenvectors[:, :k]",
-              "sklearn.decomposition.PCA 验证"
+            "tasks": [
+              "5.1 加载 Iris 数据集并理解数据结构",
+              "5.2 从零实现 PCA：数据中心化 → 协方差矩阵 → 特征分解",
+              "5.3 投影数据到主成分方向",
+              "5.4 可视化 2D 降维结果",
+              "5.5 使用 sklearn PCA 验证结果",
+              "5.6 分析主成分的解释方差比例"
             ],
-            "practice": "从零实现 PCA：对 Iris 数据集做降维，将 4 维特征降到 2 维。绘制降维后的散点图，观察不同类别的分离情况。与 sklearn PCA 结果对比验证。",
-            "answer": "PCA 实现：X_centered = X - X.mean(axis=0); cov = np.cov(X_centered.T); eigenvalues, eigenvectors = np.linalg.eigh(cov); idx = np.argsort(eigenvalues)[::-1]; principal_components = eigenvectors[:, idx[:2]]; X_pca = X_centered @ principal_components"
+            "pca_from_scratch": "```python\nimport numpy as np\nimport matplotlib.pyplot as plt\nfrom sklearn.datasets import load_iris\n\n# 加载数据\niris = load_iris()\nX = iris.data  # 150 samples, 4 features\ny = iris.target\nfeature_names = iris.feature_names\ntarget_names = iris.target_names\n\nprint(f\"数据形状: {X.shape}\")\nprint(f\"特征: {feature_names}\")\n\n# PCA 步骤\n# Step 1: 中心化（每个特征减去均值）\nX_centered = X - X.mean(axis=0)\nprint(f\"\\n中心化后均值（应接近 0）: {X_centered.mean(axis=0)}\")\n\n# Step 2: 计算协方差矩阵\ncov_matrix = np.cov(X_centered.T)\nprint(f\"\\n协方差矩阵形状: {cov_matrix.shape}\")\n\n# Step 3: 特征分解\neigenvalues, eigenvectors = np.linalg.eigh(cov_matrix)\n\n# Step 4: 按特征值降序排序\nidx = np.argsort(eigenvalues)[::-1]\neigenvalues = eigenvalues[idx]\neigenvectors = eigenvectors[:, idx]\n\n# 前两个主成分\npc1 = eigenvectors[:, 0]\npc2 = eigenvectors[:, 1]\nprint(f\"\\nPC1 (解释 {eigenvalues[0]/eigenvalues.sum()*100:.1f}% 方差): {pc1}\")\nprint(f\"PC2 (解释 {eigenvalues[1]/eigenvalues.sum()*100:.1f}% 方差): {pc2}\")\n\n# Step 5: 投影到 2D\nX_pca = X_centered @ np.column_stack([pc1, pc2])\nprint(f\"\\n降维后形状: {X_pca.shape}\")\n```",
+            "visualization": "```python\nimport matplotlib.pyplot as plt\n\n# 可视化 2D 降维结果\nfig, axes = plt.subplots(1, 2, figsize=(14, 6))\n\n# PCA 降维后的散点图\ncolors = ['#1f77b4', '#ff7f0e', '#2ca02c']\nfor i, (c, name) in enumerate(zip(colors, target_names)):\n    mask = y == i\n    axes[0].scatter(X_pca[mask, 0], X_pca[mask, 1], \n                    c=c, label=name, alpha=0.7, s=50)\naxes[0].set_xlabel('PC1')\naxes[0].set_ylabel('PC2')\naxes[0].set_title('PCA: 2D Projection of Iris Dataset')\naxes[0].legend()\naxes[0].grid(True, alpha=0.3)\n\n# 解释方差比例图\nexplained_variance_ratio = eigenvalues / eigenvalues.sum()\ncumsum = np.cumsum(explained_variance_ratio)\n\naxes[1].bar(range(1, 5), explained_variance_ratio, alpha=0.7, label='单个主成分')\naxes[1].plot(range(1, 5), cumsum, 'r-o', label='累计解释方差')\naxes[1].axhline(y=0.95, color='g', linestyle='--', label='95% 方差阈值')\naxes[1].set_xlabel('主成分')\naxes[1].set_ylabel('解释方差比例')\naxes[1].set_title('Explained Variance by Principal Components')\naxes[1].legend()\naxes[1].grid(True, alpha=0.3)\naxes[1].set_xticks(range(1, 5))\n\nplt.tight_layout()\nplt.savefig('pca_iris.png', dpi=150)\nplt.show()\n```",
+            "verify_with_sklearn": "```python\nfrom sklearn.decomposition import PCA\nfrom sklearn.preprocessing import StandardScaler\n\n# 使用 sklearn 实现 PCA\npca = PCA(n_components=2)\nX_sklearn = pca.fit_transform(X)\n\n# 比较结果（可能差一个符号）\nprint(\"Sklearn PC1:\", pca.components_[0])\nprint(\"手动 PC1:\", pc1)\nprint(\"\\n绝对值相等:\", np.allclose(np.abs(pca.components_[0]), np.abs(pc1)))\n\n# 检查投影结果是否一致\nprint(\"\\n投影结果差异:\", np.max(np.abs(X_pca - X_sklearn)))\n\n# 解释方差\nprint(\"\\nSklearn 解释方差比例:\", pca.explained_variance_ratio_)\nprint(\"手动计算:\", eigenvalues / eigenvalues.sum())\n```",
+            "common_errors": [
+              {"error": "PCA 降维后数据点集中在一条线上", "solution": "正常！PCA 就是找到最大方差方向，数据投影到主成分后可能看起来是线性的。这表示前两个主成分已经捕获了大部分方差"},
+              {"error": "sklearn PCA 结果与手动实现不一致", "solution": "差异可能来自：1. sklearn 自动中心化 2. 特征向量符号可能相反（数学上等价）3. 使用 `np.allclose` 比较并允许符号差异"},
+              {"error": "选择多少个主成分合适？", "solution": "1. 累计解释方差 > 95% 2. scree plot 拐点法 3. 领域知识决定。通常选择 2-3 个主成分用于可视化"}
+            ],
+            "checkpoint": "PCA 降维结果与 sklearn 一致，能解释 > 95% 的方差，可视化清晰"
           },
           "duration": "2.5小时",
           "resources": [
             { "title": "sklearn PCA 文档", "url": "https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html", "type": "documentation" },
-            { "title": "StatQuest: PCA 讲解", "url": "https://www.youtube.com/watch?v=FgakZw6K1QQ", "type": "video" }
+            { "title": "StatQuest: PCA 讲解", "url": "https://www.youtube.com/watch?v=FgakZw6K1QQ", "type": "video" },
+            { "title": "PCA 教程", "url": "https://towardsdatascience.com/pca-clearly-explained-f3pm1pnuxf", "type": "article" }
           ],
-          "checkpoint": "PCA 降维结果与 sklearn 一致，可视化清晰"
+          "relatedTerms": ["pca", "dimensionality-reduction", "principal-component", "variance"],
+          "relatedTools": ["numpy", "matplotlib", "scikit-learn"]
         }
       ],
       "resources": [
@@ -577,8 +779,8 @@
         { "title": "Khan Academy: 线性代数", "url": "https://www.khanacademy.org/math/linear-algebra", "type": "course" }
       ],
       "relatedIntel": ["010-numpy-pandas"],
-      "relatedTerms": ["matrix", "vector", "eigenvalue", "tensor"],
-      "relatedTools": ["numpy", "jupyter"],
+      "relatedTerms": ["matrix", "vector", "eigenvalue", "svd", "pca", "numpy"],
+      "relatedTools": ["numpy", "matplotlib", "scikit-learn"],
       "templateRepo": "https://github.com/example/numpy-linear-algebra-template",
       "solutionRepo": "https://github.com/example/numpy-linear-algebra-solution"
     },
@@ -610,15 +812,25 @@
           "title": "Docker 环境搭建与基础操作",
           "content": {
             "objective": "安装 Docker 并掌握基础命令",
-            "api_checklist": [
-              "docker run hello-world 验证安装",
-              "docker images 查看镜像列表",
-              "docker ps 查看运行中的容器",
-              "docker pull 拉取镜像",
-              "docker exec -it 进入容器"
+            "tasks": [
+              "1.1 在 Windows 上安装 Docker Desktop 并启动 Docker 服务",
+              "1.2 运行 docker run hello-world 验证 Docker 安装是否成功",
+              "1.3 执行 docker images 查看本地已有的镜像列表",
+              "1.4 执行 docker pull nginx 拉取最新的 nginx 镜像",
+              "1.5 运行 docker run -d -p 8080:80 --name mynginx nginx 启动 nginx 容器并映射端口",
+              "1.6 使用 docker ps 查看运行中的容器状态",
+              "1.7 执行 docker exec -it mynginx bash 进入 nginx 容器内部",
+              "1.8 在容器内执行 ls /usr/share/nginx/html 查看 nginx 文件结构"
             ],
-            "practice": "安装 Docker Desktop，运行 hello-world 验证安装。拉取 nginx 镜像，运行一个容器并映射端口 8080:80。使用 docker exec 进入容器查看文件系统。",
-            "answer": "基础操作：docker pull nginx; docker run -d -p 8080:80 --name mynginx nginx; docker exec -it mynginx bash; curl http://localhost:8080"
+            "关键代码块": "```bash\n# 完整的基础操作流程\ndocker pull nginx:latest\ndocker run -d -p 8080:80 --name mynginx nginx:latest\ndocker ps\ndocker exec -it mynginx bash\n# 容器内执行\nls /usr/share/nginx/html\ncat /etc/os-release\nexit\n```",
+            "docker-compose示例": "```yaml\n# 本地开发环境 docker-compose.yml\nversion: '3.8'\nservices:\n  nginx:\n    image: nginx:latest\n    ports:\n      - \"8080:80\"\n    volumes:\n      - ./html:/usr/share/nginx/html:ro\n    restart: unless-stopped\n```",
+            "common_errors": [
+              {"error": "docker: command not found", "solution": "确保 Docker Desktop 已安装并启动，在 Windows 上需要重启电脑使 PATH 生效"},
+              {"error": "Docker daemon is not running", "solution": "启动 Docker Desktop，等待托盘图标显示绿色鲸鱼标志表示运行正常"},
+              {"error": "port 8080 is already in use", "solution": "使用 docker ps 查找占用端口的容器，或更改端口映射为 -p 8081:80"},
+              {"error": "docker exec failed: unable to start container process", "solution": "容器可能已停止，使用 docker start mynginx 启动容器后再 exec"},
+              {"error": "Error response from daemon: Conflict. Container name is already in use", "solution": "使用 docker rm -f mynginx 删除已存在的同名容器，或使用随机容器名"}
+            ]
           },
           "duration": "1.5小时",
           "resources": [
@@ -632,17 +844,25 @@
           "title": "编写 Dockerfile",
           "content": {
             "objective": "掌握 Dockerfile 编写规范和最佳实践",
-            "api_checklist": [
-              "FROM 选择基础镜像",
-              "WORKDIR 设置工作目录",
-              "COPY 复制文件",
-              "RUN 执行命令",
-              "EXPOSE 声明端口",
-              "CMD 设置启动命令",
-              "多阶段构建优化"
+            "tasks": [
+              "2.1 创建项目目录结构：app/、requirements.txt、Dockerfile",
+              "2.2 编写 Flask 应用代码 app.py，实现基本的 HTTP 服务",
+              "2.3 编写 requirements.txt 指定依赖：flask、redis",
+              "2.4 编写基础 Dockerfile，使用 python:3.9-slim 镜像",
+              "2.5 配置 WORKDIR、COPY、RUN、EXPOSE、CMD 指令",
+              "2.6 使用多阶段构建优化镜像，最终镜像仅包含运行时依赖",
+              "2.7 执行 docker build -t myapp:latest . 构建镜像",
+              "2.8 运行容器验证应用正常工作"
             ],
-            "practice": "为 Python Flask 应用编写 Dockerfile：使用 python:3.9-slim 基础镜像，安装依赖，复制代码，暴露端口。使用多阶段构建减小镜像体积。",
-            "answer": "Dockerfile: FROM python:3.9-slim AS builder; WORKDIR /app; COPY requirements.txt .; RUN pip install --user -r requirements.txt; FROM python:3.9-slim; WORKDIR /app; COPY --from=builder /root/.local /root/.local; COPY . .; EXPOSE 5000; CMD [\"python\", \"app.py\"]"
+            "Dockerfile多阶段构建": "```dockerfile\n# 构建阶段\nFROM python:3.9-slim AS builder\nWORKDIR /app\n\n# 安装构建工具\nRUN apt-get update && apt-get install -y --no-install-recommends \\\n    gcc \\\n    libffi-dev \\\n    && rm -rf /var/lib/apt/lists/*\n\nCOPY requirements.txt .\nRUN pip install --user --no-cache-dir -r requirements.txt\n\n# 运行阶段\nFROM python:3.9-slim\nWORKDIR /app\n\n# 复制已安装的包\nCOPY --from=builder /root/.local /root/.local\nENV PATH=/root/.local/bin:$PATH\n\n# 复制应用代码\nCOPY app.py .\n\n# 创建非 root 用户\nRUN adduser --disabled-password --gecos '' appuser \\\n    && chown -R appuser:appuser /app\nUSER appuser\n\nEXPOSE 5000\nENV FLASK_APP=app.py\nCMD [\"python\", \"app.py\"]\n```",
+            "Flask应用代码": "```python\n# app.py\nfrom flask import Flask\nimport os\n\napp = Flask(__name__)\n\n@app.route('/')\ndef index():\n    return {'status': 'ok', 'message': 'Hello from Docker!'}\n\n@app.route('/health')\ndef health():\n    return {'status': 'healthy'}\n\nif __name__ == '__main__':\n    app.run(host='0.0.0.0', port=5000)\n```",
+            "common_errors": [
+              {"error": "pip install 失败：Microsoft Visual C++ 14.0 is required", "solution": "使用预编译的 wheel 包或切换到 python:3.9-slim 基础镜像，避免编译原生扩展"},
+              {"error": "COPY failed: file not found in build context", "solution": "确保 Dockerfile 和 requirements.txt 在构建上下文根目录，或使用 docker build -f path/to/Dockerfile ."},
+              {"error": "Expose/Port is not recognized", "solution": "EXPOSE 只是文档声明，实际端口映射通过 docker run -p 指定，CMD 中的端口需与代码一致"},
+              {"error": "ModuleNotFoundError: No module named 'flask'", "solution": "确保 requirements.txt 包含 flask 并正确复制，或在 Dockerfile 中先 COPY 再 RUN pip install"},
+              {"error": "docker build 成功但容器启动即退出", "solution": "检查 CMD 格式是否为数组形式且使用绝对路径，Flask 应用需设置 FLASK_APP 环境变量"}
+            ]
           },
           "duration": "2小时",
           "resources": [
@@ -656,15 +876,25 @@
           "title": "数据卷与持久化",
           "content": {
             "objective": "理解 Docker 数据卷和绑定挂载，实现数据持久化",
-            "api_checklist": [
-              "docker volume create 创建数据卷",
-              "-v 参数绑定挂载",
-              "docker volume ls 查看卷列表",
-              "docker volume rm 删除卷",
-              "tmpfs 挂载临时文件系统"
+            "tasks": [
+              "3.1 创建命名数据卷：docker volume create mydata",
+              "3.2 启动容器并挂载数据卷：docker run -v mydata:/data alpine",
+              "3.3 在容器中创建测试文件验证数据卷挂载成功",
+              "3.4 停止并删除容器：docker rm -f <container_id>",
+              "3.5 重新创建容器挂载同一数据卷，验证数据持久化",
+              "3.6 使用 docker volume ls 查看所有数据卷",
+              "3.7 配置绑定挂载：docker run -v /host/path:/container/path nginx",
+              "3.8 清理不再使用的数据卷：docker volume prune"
             ],
-            "practice": "创建一个数据卷，挂载到容器的 /data 目录。在容器中创建文件，验证数据持久化：停止并删除容器后，重新创建容器并挂载同一卷，数据仍然存在。",
-            "answer": "数据卷操作：docker volume create mydata; docker run -v mydata:/data alpine sh -c 'echo hello > /data/test.txt'; docker rm -f $(docker ps -aq); docker run -v mydata:/data alpine cat /data/test.txt"
+            "数据卷操作": "```bash\n# 创建并使用命名数据卷\ndocker volume create mydata\n\n# 启动容器挂载数据卷并写入数据\ndocker run -d --name test-container -v mydata:/data alpine \\\n    sh -c 'echo \"Hello from Docker\" > /data/test.txt && sleep 3600'\n\n# 验证数据写入\ndocker exec test-container cat /data/test.txt\n\n# 删除容器\ndocker rm -f test-container\n\n# 重新创建容器挂载同一数据卷，数据仍然存在\ndocker run -d --name new-container -v mydata:/data alpine \\\n    sh -c 'cat /data/test.txt && sleep 3600'\n\n# 查看结果：应输出 Hello from Docker\ndocker logs new-container\n```",
+            "绑定挂载": "```bash\n# 绑定挂载本地目录到容器\ndocker run -d -p 8080:80 \\\n    --name nginx-web \\\n    -v /Users/you/html:/usr/share/nginx/html:ro \\\n    nginx:latest\n\n# Windows 路径格式\ndocker run -d -p 8080:80 \\\n    -v C:\\Users\\you\\html:/usr/share/nginx/html:ro \\\n    nginx:latest\n```",
+            "common_errors": [
+              {"error": "docker: Error response from daemon: invalid mount config for type volume", "solution": "数据卷名称不能包含特殊字符，使用 docker volume create mydata 创建命名卷而非直接使用匿名卷"},
+              {"error": "Permission denied in container when binding mount", "solution": "Windows/Linux 文件权限不同，确保宿主机目录有读权限，或在容器内使用 root 用户测试"},
+              {"error": "Volume driver not found", "solution": "默认使用 local 驱动，创建卷时指定 docker volume create --driver local mydata"},
+              {"error": "数据在容器删除后丢失", "solution": "确认使用了命名数据卷 (-v mydata:/data) 而非匿名卷，匿名卷随容器删除而清除"},
+              {"error": "绑定挂载路径无效：file not found", "solution": "Windows 上确保使用正确路径格式如 C:\\path\\to\\dir，路径需存在且为绝对路径"}
+            ]
           },
           "duration": "1.5小时",
           "resources": [
@@ -678,16 +908,25 @@
           "title": "Docker Compose 多容器编排",
           "content": {
             "objective": "使用 Docker Compose 编排多容器应用",
-            "api_checklist": [
-              "docker-compose.yml 配置文件",
-              "services 定义服务",
-              "networks 配置网络",
-              "volumes 定义卷",
-              "depends_on 服务依赖",
-              "docker compose up -d 启动服务"
+            "tasks": [
+              "4.1 创建 docker-compose.yml 基础结构，定义 version、services、networks、volumes",
+              "4.2 配置 web 服务：指定 build 上下文、Dockerfile 路径、端口映射",
+              "4.3 配置 redis 服务：使用 redis:alpine 官方镜像",
+              "4.4 配置 depends_on 确保 web 在 redis 之后启动",
+              "4.5 定义 named volume 实现 Redis 数据持久化",
+              "4.6 配置 networks 实现服务间通信",
+              "4.7 执行 docker compose up -d 后台启动所有服务",
+              "4.8 使用 docker compose logs -f web 查看应用日志"
             ],
-            "practice": "创建一个 Web 应用 + Redis 缓存的 compose 配置。Web 应用从 Redis 读取数据。配置网络让服务间可以通信，使用数据卷持久化 Redis 数据。",
-            "answer": "docker-compose.yml: version: '3.8'; services: web: build: .; ports: ['5000:5000']; depends_on: [redis]; redis: image: redis:alpine; volumes: ['redis-data:/data']; volumes: redis-data:"
+            "docker-compose配置": "```yaml\nversion: '3.8'\n\nservices:\n  web:\n    build:\n      context: .\n      dockerfile: Dockerfile\n    ports:\n      - \"5000:5000\"\n    environment:\n      - REDIS_HOST=redis\n      - REDIS_PORT=6379\n    depends_on:\n      redis:\n        condition: service_healthy\n    restart: unless-stopped\n\n  redis:\n    image: redis:alpine\n    ports:\n      - \"6379:6379\"\n    volumes:\n      - redis-data:/data\n    healthcheck:\n      test: [\"CMD\", \"redis-cli\", \"ping\"]\n      interval: 5s\n      timeout: 3s\n      retries: 5\n    restart: unless-stopped\n\nnetworks:\n  app-network:\n    driver: bridge\n\nvolumes:\n  redis-data:\n```",
+            "Flask+Redis应用": "```python\n# app.py - 带 Redis 连接的 Flask 应用\nfrom flask import Flask, jsonify\nimport redis\nimport os\n\napp = Flask(__name__)\n\nredis_client = redis.Redis(\n    host=os.environ.get('REDIS_HOST', 'localhost'),\n    port=int(os.environ.get('REDIS_PORT', 6379)),\n    decode_responses=True\n)\n\n@app.route('/')\ndef index():\n    count = redis_client.incr('hits')\n    return jsonify({'message': f'Hello! Visit count: {count}'})\n\n@app.route('/health')\ndef health():\n    try:\n        redis_client.ping()\n        return jsonify({'status': 'healthy', 'redis': 'connected'})\n    except:\n        return jsonify({'status': 'unhealthy', 'redis': 'disconnected'}), 503\n\nif __name__ == '__main__':\n    app.run(host='0.0.0.0', port=5000)\n```",
+            "common_errors": [
+              {"error": "web_1  | Error: Cannot connect to Redis", "solution": "检查 REDIS_HOST=redis 环境变量是否正确，容器间通过服务名而非 localhost 通信"},
+              {"error": "depends_on condition: service 'redis' is missing", "solution": "depends_on 的 condition 字段需要 redis 服务配置 healthcheck，否则使用简单列表形式 depends_on: [redis]"},
+              {"error": "redis volume permission denied", "solution": "Redis Alpine 镜像使用 redis 用户运行，确保 volume 权限正确或使用 root 用户测试"},
+              {"error": "docker compose up 启动失败：network not found", "solution": "删除旧容器和网络后重新执行 docker compose up --remove-orphans"},
+              {"error": "port is already allocated", "solution": "修改 ports 映射为 \"5001:5000\" 或停止占用端口的其他服务"}
+            ]
           },
           "duration": "2小时",
           "resources": [
@@ -701,15 +940,25 @@
           "title": "生产部署与优化",
           "content": {
             "objective": "优化镜像大小，配置健康检查和安全策略",
-            "api_checklist": [
-              "HEALTHCHECK 健康检查指令",
-              "USER 非 root 用户运行",
-              ".dockerignore 排除文件",
-              "docker scan 安全扫描",
-              "镜像标签管理"
+            "tasks": [
+              "5.1 编写 .dockerignore 文件排除不必要文件如 .git、__pycache__、*.pyc",
+              "5.2 在 Dockerfile 中添加 HEALTHCHECK 指令监控应用健康状态",
+              "5.3 创建非 root 用户 appuser，使用 USER 指令切换用户",
+              "5.4 使用多阶段构建分离构建和运行环境，减小镜像体积",
+              "5.5 执行 docker scan 扫描镜像安全漏洞",
+              "5.6 使用 docker tag 为镜像添加版本标签如 :v1.0.0",
+              "5.7 配置日志轮转：docker compose 中设置 logging driver",
+              "5.8 验证所有优化后的容器能正常启动和访问"
             ],
-            "practice": "添加 HEALTHCHECK 指令监控应用健康状态。创建非 root 用户运行应用。编写 .dockerignore 排除 .git、__pycache__ 等文件。使用 docker scan 扫描镜像漏洞。",
-            "answer": "健康检查：HEALTHCHECK --interval=30s --timeout=3s CMD curl -f http://localhost:5000/health || exit 1; 安全：RUN adduser --disabled-password appuser; USER appuser"
+            "Dockerfile安全优化": "```dockerfile\nFROM python:3.9-slim AS builder\nWORKDIR /app\nCOPY requirements.txt .\nRUN pip install --user --no-cache-dir -r requirements.txt\n\nFROM python:3.9-slim\nWORKDIR /app\n\n# 安装 curl 用于健康检查\nRUN apt-get update && apt-get install -y --no-install-recommends \\\n    curl \\\n    && rm -rf /var/lib/apt/lists/*\n\nCOPY --from=builder /root/.local /root/.local\nENV PATH=/root/.local/bin:$PATH\n\n# 创建非 root 用户\nRUN adduser --disabled-password --gecos '' appuser\nCOPY --chown=appuser:appuser . .\nUSER appuser\n\n# 健康检查\nHEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \\\n    CMD curl -f http://localhost:5000/health || exit 1\n\nEXPOSE 5000\nENV FLASK_APP=app.py\nCMD [\"python\", \"app.py\"]\n```",
+            "dockerignore和compose": "```dockerignore\n# .dockerignore\n.git\n.gitignore\n__pycache__\n*.pyc\n*.pyo\n*.pyd\n.Python\n*.log\n.env\n.venv\nvenv/\nENV/\n.pytest_cache\n.coverage\nhtmlcov/\n```\n```yaml\n# docker-compose.prod.yml\nversion: '3.8'\nservices:\n  web:\n    build:\n      context: .\n      dockerfile: Dockerfile\n    ports:\n      - \"5000:5000\"\n    restart: unless-stopped\n    logging:\n      driver: \"json-file\"\n      options:\n        max-size: \"10m\"\n        max-file: \"3\"\n    deploy:\n      resources:\n        limits:\n          cpus: '0.5'\n          memory: 512M\n```",
+            "common_errors": [
+              {"error": "HEALTHCHECK failed: invalid interval/timeout/start-period", "solution": "确保 --interval >= 30s，--timeout < --interval，--start-period 足够应用启动时间"},
+              {"error": "cannot start container as non-root user", "solution": "非 root 用户可能没有权限访问应用目录，使用 COPY --chown=appuser:appuser 复制文件"},
+              {"error": "镜像体积过大 (>500MB)", "solution": "使用 python:3.9-slim 而非完整镜像，分离构建和运行阶段，清理 apt 缓存和不必要的文件"},
+              {"error": "docker scan 报告漏洞但无法修复", "solution": "更新基础镜像到最新小版本，使用 --ignorefile 指定可接受的风险级别，或等待官方修复"},
+              {"error": "容器日志占用大量磁盘空间", "solution": "配置日志轮转 driver: \"json-file\" 并设置 max-size 和 max-file，定期执行 docker system prune"}
+            ]
           },
           "duration": "2小时",
           "resources": [
@@ -758,14 +1007,36 @@
           "title": "Transformer 架构理解与环境配置",
           "content": {
             "objective": "理解 Transformer 自注意力机制，配置开发环境",
-            "api_checklist": [
-              "Self-Attention 计算：Q, K, V 矩阵",
-              "Multi-Head Attention 多头注意力",
-              "Position Encoding 位置编码",
-              "pip install transformers datasets torch"
+            "tasks": [
+              "1.1 阅读 Transformer 论文的 Abstract 和 Introduction 部分，了解提出背景",
+              "1.2 理解 Self-Attention 的核心公式：Attention(Q,K,V) = softmax(QK^T / √d_k)V",
+              "1.3 理解 Multi-Head Attention 的作用：捕获不同子空间的语义信息",
+              "1.4 理解 Position Encoding 的必要性：Transformer 不包含 RNN 结构，需要编码位置信息",
+              "1.5 使用 pip 安装核心依赖库：transformers, datasets, torch, accelerate",
+              "1.6 验证 transformers 库安装是否成功",
+              "1.7 使用 pipeline 加载预训练模型进行推理测试",
+              "1.8 绘制 Self-Attention 计算流程图，加深理解"
             ],
-            "practice": "阅读 Transformer 论文核心部分，理解 Self-Attention 的计算过程。安装 HuggingFace Transformers 库，验证安装：from transformers import pipeline; print(pipeline('sentiment-analysis')('I love AI!'))",
-            "answer": "Self-Attention: Attention(Q,K,V) = softmax(QK^T / √d_k)V; 安装验证：from transformers import pipeline; classifier = pipeline('sentiment-analysis'); print(classifier('Great!'))"
+            "环境安装代码": "```bash\npip install transformers datasets torch accelerate\n```",
+            "验证代码": "```python\nfrom transformers import pipeline\n\n# 加载预训练情感分析模型\nclassifier = pipeline('sentiment-analysis')\n\n# 测试推理\nresult = classifier('I love using HuggingFace Transformers!')\nprint(result)\n\n# 加载中文 BERT 模型测试\nchinese_model = pipeline('fill-mask', model='bert-base-chinese')\nresult = chinese_model('今天天气很[MASK]。')\nprint(result)\n```",
+            "common_errors": [
+              {
+                "error": "ImportError: cannot import name 'Trainer' from 'transformers'",
+                "solution": "确保安装的是最新版本的 transformers 库，运行 pip install --upgrade transformers"
+              },
+              {
+                "error": "CUDA out of memory when loading large model",
+                "solution": "使用 smaller 的预训练模型如 bert-base-uncased，或在训练时设置 lower batch size"
+              },
+              {
+                "error": "RuntimeError: Expected all tensors to be on the same device",
+                "solution": "训练时确保 model 和 data 都在同一个设备上，使用 model.to(device) 和 data.to(device)"
+              },
+              {
+                "error": "AttributeError: 'numpy.float32' object has no attribute 'to'",
+                "solution": "确保数据集返回的是 PyTorch tensor 而不是 numpy array，在 tokenizer 中设置 return_tensors='pt'"
+              }
+            ]
           },
           "duration": "2小时",
           "resources": [
@@ -779,15 +1050,35 @@
           "title": "数据加载与预处理",
           "content": {
             "objective": "加载中文文本分类数据集，理解数据格式",
-            "api_checklist": [
-              "load_dataset() 加载数据集",
-              "dataset['train'].shuffle() 打乱数据",
-              "dataset.train_test_split() 划分数据集",
-              "dataset.map() 批量处理",
-              "数据清洗和格式统一"
+            "tasks": [
+              "2.1 了解常用中文文本分类数据集（THUCNews、ChnSentiCorp 等）",
+              "2.2 使用 load_dataset() 函数加载 CSV 格式的中文新闻数据集",
+              "2.3 查看数据集的结构：dataset.keys(), dataset['train'].shape",
+              "2.4 使用 shuffle() 打乱训练数据，设置 seed 保证可复现性",
+              "2.5 使用 train_test_split() 划分训练集和验证集（80/20）",
+              "2.6 统计各类别的样本数量，识别类别不平衡问题",
+              "2.7 使用 dataset.map() 批量处理数据，添加新的特征列",
+              "2.8 可视化类别分布，分析是否存在长尾问题"
             ],
-            "practice": "加载 THUCNews 或自定义中文新闻数据集，查看数据结构。统计各类别样本数量，处理类别不平衡问题。划分训练集和验证集（80/20）。",
-            "answer": "数据加载：from datasets import load_dataset; dataset = load_dataset('csv', data_files='data/train.csv'); dataset = dataset['train'].train_test_split(test_size=0.2, seed=42)"
+            "数据加载代码": "```python\nfrom datasets import load_dataset, DatasetDict\n\n# 加载本地 CSV 数据集\ndataset = load_dataset('csv', data_files={'train': 'data/train.csv', 'test': 'data/test.csv'})\n\n# 查看数据集结构\nprint(dataset)\n# 输出：DatasetDict({\n#     train: Dataset({\n#         features: ['text', 'label'],\n#         num_rows: 5000\n#     })\n#     test: Dataset({\n#         features: ['text', 'label'],\n#         num_rows: 1000\n#     })\n# })\n\n# 打乱训练数据\ndataset['train'] = dataset['train'].shuffle(seed=42)\n\n# 划分训练集和验证集\ntrain_valid = dataset['train'].train_test_split(test_size=0.2, seed=42)\ndataset = DatasetDict({\n    'train': train_valid['train'],\n    'valid': train_valid['test'],\n    'test': dataset['test']\n})\n\n# 统计类别分布\nfrom collections import Counter\nlabels = [example['label'] for example in dataset['train']]\nlabel_dist = Counter(labels)\nprint(f\"类别分布: {label_dist}\")\n```",
+            "common_errors": [
+              {
+                "error": "ValueError: Found input values with invalid format",
+                "solution": "检查 CSV 文件是否包含表头，或者在 load_dataset 时指定 column names"
+              },
+              {
+                "error": "KeyError: 'train' not found in dataset",
+                "solution": "确认 dataset.keys() 返回的确实是 'train'，可能是 'training' 或其他名称"
+              },
+              {
+                "error": "ValueError: train_test_split does not support > 1 dimensions for feature",
+                "solution": "确保要分割的列是一维数据，多维特征需要单独处理"
+              },
+              {
+                "error": "内存不足 when loading large dataset",
+                "solution": "使用 load_dataset 的 streaming=True 参数，或分块加载数据"
+              }
+            ]
           },
           "duration": "1.5小时",
           "resources": [
@@ -801,16 +1092,39 @@
           "title": "BERT Tokenizer 使用",
           "content": {
             "objective": "掌握 BERT Tokenizer 的使用方法和注意事项",
-            "api_checklist": [
-              "AutoTokenizer.from_pretrained() 加载分词器",
-              "tokenizer() 编码文本",
-              "tokenizer.decode() 解码回文本",
-              "padding='max_length' 填充",
-              "truncation=True 截断",
-              "return_tensors='pt' 返回 PyTorch 张量"
+            "tasks": [
+              "3.1 使用 AutoTokenizer.from_pretrained() 加载 bert-base-chinese 分词器",
+              "3.2 使用 tokenizer() 方法对中文文本进行编码",
+              "3.3 理解编码结果的三个关键字段：input_ids, attention_mask, token_type_ids",
+              "3.4 测试 padding='max_length' 填充和 truncation=True 截断参数",
+              "3.5 理解 max_length 设置对截断的影响（建议中文设置 128-256）",
+              "3.6 使用 tokenizer.decode() 将编码结果还原为文本",
+              "3.7 使用 return_tensors='pt' 返回 PyTorch 张量格式",
+              "3.8 批量处理多条文本，理解 batch encoding"
             ],
-            "practice": "使用 bert-base-chinese 分词器处理中文文本。理解 input_ids、attention_mask、token_type_ids 的含义。测试不同 max_length 对截断的影响。",
-            "answer": "Tokenizer 使用：tokenizer = AutoTokenizer.from_pretrained('bert-base-chinese'); encoded = tokenizer('我喜欢人工智能', padding='max_length', truncation=True, max_length=128, return_tensors='pt'); print(encoded.keys())"
+            "Tokenizer代码": "```python\nfrom transformers import AutoTokenizer\n\n# 加载中文 BERT 分词器\ntokenizer = AutoTokenizer.from_pretrained('bert-base-chinese')\n\n# 单条文本编码\nencoded = tokenizer(\n    '我喜欢使用人工智能技术',\n    padding='max_length',\n    truncation=True,\n    max_length=128,\n    return_tensors='pt'\n)\n\nprint(\"编码结果 keys:\", encoded.keys())\nprint(\"input_ids:\", encoded['input_ids'])\nprint(\"attention_mask:\", encoded['attention_mask'])\n\n# 解码验证\ndecoded = tokenizer.decode(encoded['input_ids'][0])\nprint(\"解码结果:\", decoded)\n\n# 批量编码多条文本\ntexts = ['这是一个正面评论', '这是一个负面评论', '这是一个中性评论']\nbatch_encoded = tokenizer(texts, padding=True, truncation=True, max_length=64, return_tensors='pt')\nprint(\"批量编码 input_ids shape:\", batch_encoded['input_ids'].shape)\n```",
+            "common_errors": [
+              {
+                "error": "ValueError: Unrecognized keyword argument 'padding'",
+                "solution": "检查 tokenizer 版本，使用 pip install --upgrade transformers 更新到最新版本"
+              },
+              {
+                "error": "UnicodeEncodeError: 'ascii' codec can't encode characters",
+                "solution": "确保使用的中文分词器（如 bert-base-chinese）支持中文，默认 UTF-8 编码"
+              },
+              {
+                "error": "Text contains only special characters and is too short",
+                "solution": "检查输入文本是否为空或只包含标点符号，确保文本长度 > 0"
+              },
+              {
+                "error": "ValueError: too many values to unpack",
+                "solution": "当 return_tensors 设置为 'pt' 时，编码结果包含 attention_mask 等多个字段，需要完整解包"
+              },
+              {
+                "error": "Truncation strategy 'only_second' not implemented",
+                "solution": "对于 pair 文本任务（如句子对分类），确保正确设置 truncation_strategy 参数"
+              }
+            ]
           },
           "duration": "1.5小时",
           "resources": [
@@ -824,15 +1138,39 @@
           "title": "模型微调训练",
           "content": {
             "objective": "使用 Trainer API 微调 BERT 模型",
-            "api_checklist": [
-              "AutoModelForSequenceClassification 加载分类模型",
-              "TrainingArguments 配置训练参数",
-              "Trainer 创建训练器",
-              "trainer.train() 开始训练",
-              "学习率 warmup 和调度"
+            "tasks": [
+              "4.1 使用 AutoModelForSequenceClassification 加载预训练 BERT 分类模型",
+              "4.2 设置 num_labels 参数为实际的类别数量",
+              "4.3 创建预处理函数，对数据集进行 tokenize",
+              "4.4 使用 dataset.map() 批量预处理所有数据集",
+              "4.5 配置 TrainingArguments：learning_rate=2e-5, epochs=3, batch_size=16",
+              "4.6 设置 warmup_steps 和 weight_decay 优化训练稳定性",
+              "4.7 使用 Trainer 创建训练器，调用 trainer.train() 开始训练",
+              "4.8 观察训练日志，分析 loss 曲线，保存最佳模型"
             ],
-            "practice": "加载 bert-base-chinese 预训练模型，配置训练参数（lr=2e-5, epochs=3, batch_size=16）。使用 Trainer 进行训练，观察 loss 曲线。",
-            "answer": "训练配置：from transformers import AutoModelForSequenceClassification, TrainingArguments, Trainer; model = AutoModelForSequenceClassification.from_pretrained('bert-base-chinese', num_labels=10); args = TrainingArguments(output_dir='./results', learning_rate=2e-5, num_train_epochs=3, per_device_train_batch_size=16)"
+            "训练代码": "```python\nfrom transformers import AutoModelForSequenceClassification, AutoTokenizer, TrainingArguments, Trainer\nfrom datasets import load_dataset\nimport numpy as np\nimport evaluate\n\n# 加载数据集\ndataset = load_dataset('csv', data_files={'train': 'data/train.csv', 'test': 'data/test.csv'})\n\n# 加载分词器和模型\nmodel_name = 'bert-base-chinese'\ntokenizer = AutoTokenizer.from_pretrained(model_name)\nmodel = AutoModelForSequenceClassification.from_pretrained(model_name, num_labels=10)\n\n# 预处理函数\ndef preprocess_function(examples):\n    return tokenizer(examples['text'], padding='max_length', truncation=True, max_length=128)\n\n# 批量预处理\ndataset = dataset.map(preprocess_function, batched=True)\n\n# 划分数据集\ndataset = dataset['train'].train_test_split(test_size=0.2, seed=42)\n\n# 加载评估指标\naccuracy = evaluate.load('accuracy')\n\ndef compute_metrics(eval_pred):\n    predictions, labels = eval_pred\n    predictions = np.argmax(predictions, axis=-1)\n    return accuracy.compute(predictions=predictions, references=labels)\n\n# 配置训练参数\ntraining_args = TrainingArguments(\n    output_dir='./results',\n    learning_rate=2e-5,\n    per_device_train_batch_size=16,\n    per_device_eval_batch_size=16,\n    num_train_epochs=3,\n    warmup_steps=500,\n    weight_decay=0.01,\n    logging_dir='./logs',\n    logging_steps=100,\n    evaluation_strategy='epoch',\n    save_strategy='epoch',\n    load_best_model_at_end=True\n)\n\n# 创建训练器\ntrainer = Trainer(\n    model=model,\n    args=training_args,\n    train_dataset=dataset['train'],\n    eval_dataset=dataset['test'],\n    compute_metrics=compute_metrics\n)\n\n# 开始训练\ntrainer.train()\n```",
+            "common_errors": [
+              {
+                "error": "RuntimeError: Expected batch_size to be greater than 0, but got 0",
+                "solution": "检查数据集是否为空，或者 batch_size 设置是否大于数据集大小"
+              },
+              {
+                "error": "ValueError: You have to specify either input_ids or inputs_embeds",
+                "solution": "确保预处理后的数据包含 input_ids 列，可能是 map 函数配置错误"
+              },
+              {
+                "error": "CUDA out of memory: HIP out of memory / CUDA out of memory",
+                "solution": "减小 batch_size（从 16 降到 8 或 4），或增加 gradient_accumulation_steps"
+              },
+              {
+                "error": "AttributeError: 'NoneType' object has no attribute 'to'",
+                "solution": "确保 model 在训练开始前已经正确加载到 GPU，使用 trainer.train() 前检查 model.device"
+              },
+              {
+                "error": "ValueError: too many dimensions in labels",
+                "solution": "确保 labels 是一维数组，而不是 one-hot 编码格式"
+              }
+            ]
           },
           "duration": "3小时",
           "resources": [
@@ -846,15 +1184,36 @@
           "title": "模型评估与部署",
           "content": {
             "objective": "评估模型性能，实现推理接口",
-            "api_checklist": [
-              "evaluate.load() 加载评估指标",
-              "classification_report() 分类报告",
-              "confusion_matrix() 混淆矩阵",
-              "pipeline() 创建推理管道",
-              "model.save_pretrained() 保存模型"
+            "tasks": [
+              "5.1 使用 trainer.evaluate() 在验证集上评估模型性能",
+              "5.2 加载 sklearn 的 classification_report 生成分类报告",
+              "5.3 计算混淆矩阵，分析各类别的精确率和召回率",
+              "5.4 使用 trainer.predict() 获取测试集预测结果",
+              "5.5 创建 inference pipeline 进行单条文本推理测试",
+              "5.6 使用 model.save_pretrained() 保存微调后的模型",
+              "5.7 使用 tokenizer.save_pretrained() 保存分词器",
+              "5.8 实现 FastAPI 推理服务，封装预测接口"
             ],
-            "practice": "在测试集上评估模型，生成分类报告和混淆矩阵。创建推理 pipeline，测试自定义文本。保存模型和分词器。",
-            "answer": "评估代码：import evaluate; accuracy = evaluate.load('accuracy'); preds = trainer.predict(test_dataset); from sklearn.metrics import classification_report; print(classification_report(preds.label_ids, preds.predictions.argmax(-1)))"
+            "评估代码": "```python\nimport evaluate\nimport numpy as np\nfrom sklearn.metrics import classification_report, confusion_matrix\nfrom transformers import pipeline, AutoModelForSequenceClassification, AutoTokenizer\n\n# 评估模型\nresults = trainer.evaluate()\nprint(f\"验证集评估结果: {results}\")\n\n# 在测试集上预测\npredictions = trainer.predict(test_dataset)\npred_labels = np.argmax(predictions.predictions, axis=-1)\ntrue_labels = predictions.label_ids\n\n# 生成分类报告\nprint(\"=\" * 60)\nprint(\"Classification Report:\")\nprint(classification_report(true_labels, pred_labels, target_names=['体育', '财经', '房产', '家居', '教育', '科技', '时尚', '时政', '游戏', '娱乐']))\n\n# 混淆矩阵\nprint(\"=\" * 60)\nprint(\"Confusion Matrix:\")\ncm = confusion_matrix(true_labels, pred_labels)\nprint(cm)\n\n# 保存模型\nmodel.save_pretrained('./saved_model')\ntokenizer.save_pretrained('./saved_model')\n\n# 创建推理 pipeline\nclassifier = pipeline('text-classification', model='./saved_model', tokenizer='./saved_model')\nresult = classifier('今天天气真好，适合户外运动')\nprint(f\"推理结果: {result}\")\n```",
+            "部署代码": "```python\n# 保存用于部署的模型\nimport torch\n\nmodel = AutoModelForSequenceClassification.from_pretrained('./saved_model')\ntokenizer = AutoTokenizer.from_pretrained('./saved_model')\n\n# 推理函数\ndef predict(text, max_length=128):\n    inputs = tokenizer(text, return_tensors='pt', padding=True, truncation=True, max_length=max_length)\n    with torch.no_grad():\n        outputs = model(**inputs)\n        probs = torch.nn.functional.softmax(outputs.logits, dim=-1)\n        pred_label = torch.argmax(probs, dim=-1).item()\n        confidence = probs[0][pred_label].item()\n    return {\n        'label': pred_label,\n        'confidence': round(confidence, 4)\n    }\n\n# FastAPI 服务\n# from fastapi import FastAPI\n# app = FastAPI()\n#\n# @app.post('/predict')\n# async def predict_endpoint(text: str):\n#     result = predict(text)\n#     return result\n```",
+            "common_errors": [
+              {
+                "error": "ValueError: Classification report doesn't report on any classes",
+                "solution": "确保测试集包含所有类别的样本，或者 target_names 长度与模型 num_labels 一致"
+              },
+              {
+                "error": "OSError: Unable to load weights from pytorch checkpoint",
+                "solution": "确保保存和加载使用的是相同版本的 transformers 库，检查模型架构是否匹配"
+              },
+              {
+                "error": "RuntimeError: Input contains NaN",
+                "solution": "检查输入数据是否存在空值或无效文本，对数据进行清洗后再推理"
+              },
+              {
+                "error": "ValueError: Expected 2D input, got 1D input",
+                "solution": "在推理时确保输入文本格式正确，单条文本应该是字符串，不是列表"
+              }
+            ]
           },
           "duration": "2小时",
           "resources": [
@@ -903,15 +1262,26 @@
           "title": "目标检测基础与环境配置",
           "content": {
             "objective": "理解目标检测核心概念，配置 Ultralytics 环境",
-            "api_checklist": [
-              "IoU（交并比）计算公式",
-              "NMS（非极大值抑制）算法",
-              "mAP（平均精度均值）评估指标",
-              "pip install ultralytics",
-              "YOLO('yolov8n.pt') 加载预训练模型"
+            "tasks": [
+              "1.1 安装 ultralytics 库：pip install ultralytics",
+              "1.2 理解 IoU（交并比）计算公式：IoU = Intersection / Union",
+              "1.3 理解 NMS（非极大值抑制）算法原理和作用",
+              "1.4 理解 mAP（平均精度均值）评估指标含义",
+              "1.5 加载 YOLOv8n 预训练模型：YOLO('yolov8n.pt')",
+              "1.6 对示例图片进行推理并解析检测结果",
+              "1.7 可视化边界框、置信度和类别标签",
+              "1.8 验证环境配置是否正确，输出检测结果"
             ],
-            "practice": "安装 ultralytics 库，加载 YOLOv8n 预训练模型。对一张示例图片进行推理，查看检测结果（边界框、置信度、类别）。理解 IoU 的计算方法。",
-            "answer": "环境验证：from ultralytics import YOLO; model = YOLO('yolov8n.pt'); results = model('test.jpg'); print(results[0].boxes)"
+            "环境验证代码": "```bash\npip install ultralytics\n```",
+            "模型加载与推理代码": "```python\nfrom ultralytics import YOLO\nimport cv2\n\n# 加载预训练模型\nmodel = YOLO('yolov8n.pt')\n\n# 对图片进行推理\nresults = model('bus.jpg')\n\n# 打印检测结果\nfor r in results:\n    print(f\"检测到 {len(r.boxes)} 个目标\")\n    for box in r.boxes:\n        cls_id = int(box.cls[0])\n        conf = float(box.conf[0])\n        xyxy = box.xyxy[0].cpu().numpy()\n        print(f\"  类别: {model.names[cls_id]}, 置信度: {conf:.2f}, 边界框: {xyxy}\")\n\n# 可视化结果\nannotated = r.plot()\ncv2.imwrite('result.jpg', annotated)\n```",
+            "IoU计算代码": "```python\nimport numpy as np\n\ndef calculate_iou(box1, box2):\n    \"\"\"\n    计算两个边界框的 IoU\n    box格式: [x1, y1, x2, y2] (左上角，右下角)\n    \"\"\"\n    x1 = max(box1[0], box2[0])\n    y1 = max(box1[1], box2[1])\n    x2 = min(box1[2], box2[2])\n    y2 = min(box1[3], box2[3])\n    \n    intersection = max(0, x2 - x1) * max(0, y2 - y1)\n    \n    area1 = (box1[2] - box1[0]) * (box1[3] - box1[1])\n    area2 = (box2[2] - box2[0]) * (box2[3] - box2[1])\n    union = area1 + area2 - intersection\n    \n    return intersection / union if union > 0 else 0\n\n# 测试\nbox_a = [50, 50, 150, 150]\nbox_b = [100, 100, 200, 200]\nprint(f\"IoU: {calculate_iou(box_a, box_b):.3f}\")\n```",
+            "common_errors": [
+              {"error": "ImportError: cannot import name 'YOLO' from 'ultralytics'", "solution": "重新安装 ultralytics：pip install --upgrade ultralytics"},
+              {"error": "CUDA out of memory 显存不足", "solution": "使用更小的模型（如 yolov8n.pt）或减小 batch size；在推理代码中添加 device='cpu' 使用 CPU"},
+              {"error": "FileNotFoundError: 'yolov8n.pt' not found", "solution": "首次加载时模型会自动下载，确保网络连接正常；或手动从 https://github.com/ultralytics/assets/releases 下载模型文件"},
+              {"error": "检测结果为空或漏检严重", "solution": "检查输入图片是否清晰、目标是否在合理尺寸范围内；尝试调整 conf 参数降低置信度阈值"},
+              {"error": "cv2.imwrite 保存图片失败", "solution": "确保输出目录存在；检查文件名是否包含非法字符；使用绝对路径"}
+            ]
           },
           "duration": "2小时",
           "resources": [
@@ -925,15 +1295,27 @@
           "title": "数据集标注与格式转换",
           "content": {
             "objective": "掌握 YOLO 数据集格式，完成数据标注",
-            "api_checklist": [
-              "YOLO 格式：class_id x_center y_center width height",
-              "LabelImg 标注工具使用",
-              "Roboflow 在线标注平台",
-              "data.yaml 配置文件",
-              "train/val 数据集划分"
+            "tasks": [
+              "2.1 了解 YOLO 格式：class_id x_center y_center width height（归一化坐标）",
+              "2.2 安装并使用 LabelImg 标注工具：pip install labelImg",
+              "2.3 使用 LabelImg 标注至少 50 张图片，设置正确的保存格式为 YOLO",
+              "2.4 了解 Roboflow 在线标注平台的使用方法",
+              "2.5 创建 data.yaml 配置文件，指定 train/val 路径、nc 和 names",
+              "2.6 划分训练集和验证集（建议比例 8:2）",
+              "2.7 验证标注文件格式是否正确",
+              "2.8 检查数据集目录结构是否符合 YOLO 规范"
             ],
-            "practice": "使用 LabelImg 标注 50 张图片，导出 YOLO 格式。创建 data.yaml 配置文件，指定训练集和验证集路径、类别名称。验证标注是否正确。",
-            "answer": "data.yaml: train: ./datasets/images/train; val: ./datasets/images/val; nc: 3; names: ['cat', 'dog', 'bird']"
+            "data_yaml配置": "```yaml\n# data.yaml\npath: ./datasets/myproject  # 数据集根目录\ntrain: images/train  # 训练集图片路径（相对于 path）\nval: images/val    # 验证集图片路径\n\n# 类别数量\nnc: 3\n\n# 类别名称\nnames:\n  0: cat\n  1: dog\n  2: bird\n```",
+            "LabelImg启动命令": "```bash\n# 安装 LabelImg\npip install labelImg\n\n# 启动 LabelImg（设置保存格式为 YOLO）\nlabelImg --yolo --output-dir ./labels\n```",
+            "数据集目录结构": "```\ndatasets/\n└── myproject/\n    ├── images/\n    │   ├── train/\n    │   │   ├── img001.jpg\n    │   │   ├── img002.jpg\n    │   │   └── ...\n    │   └── val/\n    │       ├── img051.jpg\n    │       └── ...\n    └── labels/\n        ├── train/\n        │   ├── img001.txt  # YOLO 格式标注\n        │   └── ...\n        └── val/\n            └── ...\n```",
+            "标注验证代码": "```python\nimport os\nfrom pathlib import Path\n\ndef verify_yolo_annotations(dataset_path, class_names):\n    \"\"\"验证 YOLO 标注文件格式\"\"\"\n    errors = []\n    \n    labels_dir = Path(dataset_path) / 'labels'\n    images_dir = Path(dataset_path) / 'images'\n    \n    for split in ['train', 'val']:\n        split_labels = labels_dir / split\n        if not split_labels.exists():\n            continue\n            \n        for label_file in split_labels.glob('*.txt'):\n            img_file = images_dir / split / f\"{label_file.stem}.jpg\"\n            if not img_file.exists():\n                errors.append(f\"图片缺失: {img_file}\")\n                continue\n                \n            with open(label_file, 'r') as f:\n                for line_num, line in enumerate(f, 1):\n                    parts = line.strip().split()\n                    if len(parts) != 5:\n                        errors.append(f\"{label_file}:{line_num} - 格式错误，期望5个值\")\n                        continue\n                    \n                    cls_id, x, y, w, h = map(float, parts)\n                    if not (0 <= cls_id < len(class_names)):\n                        errors.append(f\"{label_file}:{line_num} - 类别ID {int(cls_id)} 超出范围\")\n                    if not (0 <= x <= 1 and 0 <= y <= 1 and 0 <= w <= 1 and 0 <= h <= 1):\n                        errors.append(f\"{label_file}:{line_num} - 坐标值必须在 [0,1] 范围内\")\n    \n    if errors:\n        print(\"发现以下错误:\")\n        for e in errors:\n            print(f\"  - {e}\")\n    else:\n        print(\"所有标注文件格式正确！\")\n    \n    return len(errors) == 0\n\n# 使用示例\nverify_yolo_annotations('./datasets/myproject', ['cat', 'dog', 'bird'])\n```",
+            "common_errors": [
+              {"error": "标注坐标超出 [0,1] 范围", "solution": "LabelImg 中确保使用 'YOLO' 格式而非 'VOC' 格式；坐标必须归一化到 0-1 范围"},
+              {"error": "标注文件与图片不匹配", "solution": "确保图片和对应的标注文件同名（只是扩展名不同）；检查是否有遗漏的标注文件"},
+              {"error": "data.yaml 中路径错误导致训练失败", "solution": "使用相对路径时相对于运行训练命令的当前目录；建议使用绝对路径或相对于 data.yaml 位置的路径"},
+              {"error": "类别 ID 不连续（如只有 0,2 缺少 1）", "solution": "确保 class_names 列表的索引与标注文件中的 class_id 对应；重新标注或修改标注文件中的类别 ID"},
+              {"error": "训练集图片太少导致过拟合", "solution": "每个类别至少 100-200 张图片；使用数据增强技术扩充数据集"}
+            ]
           },
           "duration": "3小时",
           "resources": [
@@ -947,16 +1329,26 @@
           "title": "模型训练与调优",
           "content": {
             "objective": "训练自定义 YOLOv8 模型，掌握训练参数",
-            "api_checklist": [
-              "model.train() 训练参数配置",
-              "epochs 训练轮数",
-              "batch-size 批次大小",
-              "imgsz 输入图像尺寸",
-              "learning_rate 学习率",
-              "数据增强参数"
+            "tasks": [
+              "3.1 准备预训练权重，使用 YOLOv8n.pt 作为初始化权重",
+              "3.2 配置训练参数：epochs=100, batch=16, imgsz=640",
+              "3.3 配置 data.yaml 路径，确保训练能正确读取数据",
+              "3.4 设置模型名称（name 参数），方便后续追踪实验",
+              "3.5 观察训练日志，监控 loss 曲线下降情况",
+              "3.6 了解关键训练参数：learning_rate、weight_decay、optimizer",
+              "3.7 掌握数据增强参数：hsv、flip、scale、degrees 等",
+              "3.8 保存最佳模型权重，理解 best.pt 和 last.pt 的区别"
             ],
-            "practice": "使用 YOLOv8n 预训练权重，在自定义数据集上微调。设置 epochs=100, batch=16, imgsz=640。观察训练 loss 曲线，保存最佳模型。",
-            "answer": "训练代码：from ultralytics import YOLO; model = YOLO('yolov8n.pt'); results = model.train(data='data.yaml', epochs=100, batch=16, imgsz=640, name='my_model')"
+            "训练代码": "```python\nfrom ultralytics import YOLO\n\n# 加载预训练模型\nmodel = YOLO('yolov8n.pt')\n\n# 开始训练\nresults = model.train(\n    data='data.yaml',      # 数据集配置文件\n    epochs=100,             # 训练轮数\n    batch=16,               # 批次大小\n    imgsz=640,              # 输入图像尺寸\n    name='my_model',        # 实验名称\n    \n    # 优化器参数\n    optimizer='SGD',        # 可选: SGD, Adam, AdamW\n    lr0=0.01,               # 初始学习率\n    lrf=0.01,               # 最终学习率 = lr0 * lrf\n    momentum=0.937,         # 动量\n    weight_decay=0.0005,    # 权重衰减\n    \n    # 数据增强\n    hsv_h=0.015,            # 色调增强\n    hsv_s=0.7,              # 饱和度增强\n    hsv_v=0.4,              # 亮度增强\n    degrees=0.0,            # 旋转角度\n    translate=0.1,          # 平移\n    scale=0.5,              # 缩放\n    flipud=0.0,             # 上下翻转\n    fliplr=0.5,             # 左右翻转概率\n    mosaic=1.0,             # 马赛克增强\n    mixup=0.0,              # MixUp 增强\n    \n    # 其他设置\n    patience=50,            # 早停耐心值\n    save=True,              # 保存模型\n    save_period=10,         # 每隔多少轮保存一次\n    device=''               # 空字符串表示自动选择\n)\n\nprint(\"训练完成！\")\nprint(f\"最佳模型: runs/detect/my_model/weights/best.pt\")\n```",
+            "高级训练配置": "```yaml\n# advanced_train.yaml\n# 训练高级配置示例\nepochs: 300\nbatch: 32\nimgsz: 1024  # 更大尺寸提升精度但增加显存需求\n\n# 学习率调度\nlr0: 0.001\nlrf: 0.0001\nwarmup_epochs: 3\nwarmup_momentum: 0.8\nwarmup_bias_lr: 0.1\n\n# 骨干网络冻结（用于迁移学习）\nfreeze: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]  # 冻结前10层\n\n# 多尺度训练\nmulti_scale: True\n\n# 验证设置\nval: True\nplots: True\n```",
+            "恢复中断训练": "```python\nfrom ultralytics import YOLO\n\n# 从中断点恢复训练\nmodel = YOLO('runs/detect/my_model/weights/last.pt')\nresults = model.train(\n    data='data.yaml',\n    epochs=200,  # 继续训练到200轮\n    name='my_model_resume',\n    resume=True  # 关键参数！从 last.pt 恢复\n)\n```",
+            "common_errors": [
+              {"error": "CUDA out of memory 显存不足", "solution": "减小 batch size（从 16 降到 8 或 4）；减小 imgsz（从 640 降到 416 或 320）；使用 yolov8n.pt 而非 yolov8m/yolov8l"},
+              {"error": "训练 loss 不下降或 NaN", "solution": "检查数据标注是否正确；降低学习率（lr0 从 0.01 降到 0.001）；检查数据增强参数是否过大"},
+              {"error": "找不到 data.yaml 或路径错误", "solution": "使用绝对路径；确保 data.yaml 中的路径相对于训练命令执行目录；检查文件是否存在于指定位置"},
+              {"error": "模型不收敛，mAP 很低", "solution": "确保标注数据正确；增加训练轮数；检查类别是否严重不平衡；尝试不同的学习率"},
+              {"error": "训练速度太慢", "solution": "使用多 GPU 并行训练（device=0,1）；启用混合精度训练（amp=True）；使用更小的模型"}
+            ]
           },
           "duration": "4小时",
           "resources": [
@@ -970,15 +1362,26 @@
           "title": "模型评估与错误分析",
           "content": {
             "objective": "全面评估模型性能，分析错误样本",
-            "api_checklist": [
-              "model.val() 验证集评估",
-              "mAP50 和 mAP50-95 指标",
-              "PR 曲线和 F1 曲线",
-              "混淆矩阵分析",
-              "Bad Case 分析"
+            "tasks": [
+              "4.1 使用 model.val() 在验证集上评估模型性能",
+              "4.2 理解 mAP50 和 mAP50-95 指标的含义和区别",
+              "4.3 查看 PR 曲线和 F1 曲线，分析不同类别的 precision/recall",
+              "4.4 分析混淆矩阵，找出容易混淆的类别对",
+              "4.5 收集漏检（FN）和误检（FP）样本",
+              "4.6 分析 Bad Case：错误类型包括遮挡、小目标、类别混淆、运动模糊",
+              "4.7 根据分析结果制定优化策略",
+              "4.8 生成评估报告，记录关键指标"
             ],
-            "practice": "在验证集上评估模型，查看 mAP、PR 曲线。找出漏检和误检的样本，分析错误原因（遮挡、小目标、类别混淆等）。",
-            "answer": "评估代码：model = YOLO('runs/detect/my_model/weights/best.pt'); metrics = model.val(); print(f'mAP50: {metrics.box.map50:.3f}'); print(f'mAP50-95: {metrics.box.map:.3f}')"
+            "评估代码": "```python\nfrom ultralytics import YOLO\n\n# 加载训练好的模型\nmodel = YOLO('runs/detect/my_model/weights/best.pt')\n\n# 在验证集上评估\nmetrics = model.val()\n\n# 打印详细指标\nprint(f\"mAP50: {metrics.box.map50:.4f}\")\nprint(f\"mAP50-95: {metrics.box.map:.4f}\")\nprint(f\"mAP per class: {metrics.box.ap50}\")\nprint(f\"Precision: {metrics.box.mp:.4f}\")\nprint(f\"Recall: {metrics.box.mr:.4f}\")\n\n# 按类别打印 AP\nfor i, name in enumerate(model.names):\n    ap50 = metrics.box.ap50[i]\n    print(f\"  {name}: AP50={ap50:.4f}\" if ap50 > 0 else f\"  {name}: N/A\")\n```",
+            "BadCase分析代码": "```python\nfrom ultralytics import YOLO\nimport cv2\nimport numpy as np\nfrom pathlib import Path\n\ndef analyze_bad_cases(model_path, data_yaml, output_dir='bad_cases'):\n    \"\"\"分析漏检和误检样本\"\"\"\n    model = YOLO(model_path)\n    Path(output_dir).mkdir(exist_ok=True)\n    \n    # 获取验证集图片\n    # 假设图片在 datasets/xxx/images/val/\n    val_images = Path('datasets/myproject/images/val').glob('*.jpg')\n    \n    false_negatives = []  # 漏检\n    false_positives = []  # 误检\n    \n    for img_path in val_images:\n        # 读取图片和真实标签\n        img = cv2.imread(str(img_path))\n        label_path = Path('datasets/myproject/labels/val') / f\"{img_path.stem}.txt\"\n        \n        # 推理\n        results = model(img_path)\n        pred_boxes = results[0].boxes\n        \n        # 读取真实框（简化版，实际需要解析标注文件）\n        gt_boxes = []\n        if label_path.exists():\n            with open(label_path) as f:\n                for line in f:\n                    cls, x, y, w, h = map(float, line.split())\n                    gt_boxes.append((int(cls), x, y, w, h))\n        \n        # 简单分析：检测到的但没有对应 GT 的为 FP\n        # 有 GT 但没检测到的为 FN\n        if len(pred_boxes) == 0 and len(gt_boxes) > 0:\n            false_negatives.append((img_path, gt_boxes))\n        elif len(pred_boxes) > 0 and len(gt_boxes) == 0:\n            false_positives.append((img_path, pred_boxes))\n    \n    print(f\"漏检样本数: {len(false_negatives)}\")\n    print(f\"误检样本数: {len(false_positives)}\")\n    \n    return false_negatives, false_positives\n\n# 执行分析\nfn, fp = analyze_bad_cases('runs/detect/my_model/weights/best.pt', 'data.yaml')\n```",
+            "混淆矩阵分析": "```python\nfrom ultralytics import YOLO\nimport numpy as np\n\n# 加载模型\nmodel = YOLO('runs/detect/my_model/weights/best.pt')\n\n# 获取验证数据源\ndata_source = 'data.yaml'  # 或直接指定图片路径\n\n# 运行验证（会输出混淆矩阵）\nmetrics = model.val()\n\n# 访问混淆矩阵\ncm = metrics.box.confusion_matrix\nprint(\"混淆矩阵:\")\nprint(cm)\n\n# 分析各类别性能\nfor i, name in enumerate(model.names):\n    # 混淆矩阵中每一行代表真实类别，每一列代表预测类别\n    true_positive = cm[i, i]\n    false_positive = cm[:, i].sum() - true_positive\n    false_negative = cm[i, :].sum() - true_positive\n    \n    precision = true_positive / (true_positive + false_positive) if (true_positive + false_positive) > 0 else 0\n    recall = true_positive / (true_positive + false_negative) if (true_positive + false_negative) > 0 else 0\n    \n    print(f\"{name}: Precision={precision:.3f}, Recall={recall:.3f}\")\n```",
+            "common_errors": [
+              {"error": "验证结果与训练结果差异大", "solution": "检查验证集是否与训练集分布一致；验证集数据量是否足够；可能存在数据泄露导致训练指标虚高"},
+              {"error": "某些类别 mAP 很低", "solution": "该类别样本数量是否充足；是否存在与其他类别混淆的情况；检查标注质量；针对性增加数据增强"},
+              {"error": "混淆矩阵为 0 或异常", "solution": "确保验证集存在且格式正确；检查 class_names 与训练时是否一致；查看日志中的警告信息"},
+              {"error": "recall 很高但 precision 很低", "solution": "模型过于敏感，误检多；提高置信度阈值；检查是否需要调整 NMS 的 iou_threshold"},
+              {"error": "无法生成曲线图", "solution": "确保 plots=True；安装 matplotlib：pip install matplotlib；检查保存路径权限"}
+            ]
           },
           "duration": "2.5小时",
           "resources": [
@@ -992,15 +1395,26 @@
           "title": "模型导出与部署",
           "content": {
             "objective": "导出 ONNX 模型，部署推理服务",
-            "api_checklist": [
-              "model.export(format='onnx') 导出 ONNX",
-              "ONNX Runtime 推理",
-              "FastAPI 封装推理接口",
-              "POST /detect 接收图片",
-              "返回检测结果 JSON"
+            "tasks": [
+              "5.1 将 best.pt 导出为 ONNX 格式：model.export(format='onnx')",
+              "5.2 验证 ONNX 模型推理结果与 PyTorch 模型一致",
+              "5.3 使用 FastAPI 创建 HTTP 推理服务",
+              "5.4 实现 /detect 接口接收图片并返回检测结果",
+              "5.5 处理图片上传和预处理（缩放、归一化）",
+              "5.6 后处理检测结果并返回 JSON 格式",
+              "5.7 添加健康检查接口 /health",
+              "5.8 测试部署服务的功能和性能"
             ],
-            "practice": "将训练好的模型导出为 ONNX 格式。使用 FastAPI 创建推理服务，接收图片并返回检测结果（边界框、置信度、类别）。",
-            "answer": "导出与部署：model.export(format='onnx'); # FastAPI: from fastapi import FastAPI, UploadFile; app = FastAPI(); @app.post('/detect'); async def detect(file: UploadFile): results = model(image); return {'boxes': results[0].boxes.xyxy.tolist()}"
+            "导出ONNX代码": "```python\nfrom ultralytics import YOLO\n\n# 加载训练好的模型\nmodel = YOLO('runs/detect/my_model/weights/best.pt')\n\n# 导出为 ONNX 格式\nsuccess = model.export(format='onnx', imgsz=640)\nprint(f\"导出成功: {success}\")\n\n# 导出后会生成: runs/detect/my_model/weights/best.onnx\n```",
+            "FastAPI推理服务": "```python\n# main.py\nfrom fastapi import FastAPI, UploadFile, File\nfrom fastapi.responses import JSONResponse\nfrom ultralytics import YOLO\nimport cv2\nimport numpy as np\nfrom io import BytesIO\nfrom PIL import Image\n\napp = FastAPI(title=\"YOLO Detection API\")\n\n# 加载模型（启动时加载一次）\nmodel = YOLO('runs/detect/my_model/weights/best.onnx')\n# 如果使用 PyTorch 模型而非 ONNX：model = YOLO('runs/detect/my_model/weights/best.pt')\n\n@app.get(\"/health\")\nasync def health_check():\n    \"\"\"健康检查接口\"\"\"\n    return {\"status\": \"healthy\", \"model\": \"loaded\"}\n\n@app.post(\"/detect\")\nasync def detect(file: UploadFile = File(...)):\n    \"\"\"\n    检测接口\n    - 接收图片文件\n    - 返回检测结果（边界框、置信度、类别）\n    \"\"\"\n    # 读取上传的图片\n    contents = await file.read()\n    image = Image.open(BytesIO(contents))\n    image_np = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)\n    \n    # 执行推理\n    results = model(image_np, verbose=False)\n    \n    # 解析结果\n    detections = []\n    for r in results:\n        boxes = r.boxes\n        for box in boxes:\n            xyxy = box.xyxy[0].cpu().numpy().tolist()\n            conf = float(box.conf[0])\n            cls_id = int(box.cls[0])\n            cls_name = model.names[cls_id]\n            \n            detections.append({\n                \"class\": cls_name,\n                \"class_id\": cls_id,\n                \"confidence\": round(conf, 4),\n                \"bbox\": {\n                    \"x1\": round(xyxy[0], 2),\n                    \"y1\": round(xyxy[1], 2),\n                    \"x2\": round(xyxy[2], 2),\n                    \"y2\": round(xyxy[3], 2)\n                }\n            })\n    \n    return JSONResponse({\n        \"image_size\": {\"width\": image.width, \"height\": image.height},\n        \"detections_count\": len(detections),\n        \"detections\": detections\n    })\n\nif __name__ == \"__main__\":\n    import uvicorn\n    uvicorn.run(app, host=\"0.0.0.0\", port=8000)\n```",
+            "ONNX推理验证": "```python\nimport onnxruntime as ort\nfrom ultralytics import YOLO\nimport numpy as np\n\n# 加载 ONNX 模型\nsession = ort.InferenceSession('runs/detect/my_model/weights/best.onnx')\n\n# 获取输入输出名称\ninput_name = session.get_inputs()[0].name\noutput_name = session.get_outputs()[0].name\n\n# 准备输入数据（需要预处理）\n# 这里使用 ultralytics 的预处理\nmodel = YOLO('runs/detect/my_model/weights/best.pt')\nimg = np.random.randint(0, 255, (640, 640, 3), dtype=np.uint8)\n\n# 使用 PyTorch 模型推理获取标准结果\npt_results = model(img, verbose=False)\npt_boxes = pt_results[0].boxes.xyxy.cpu().numpy()\n\n# ONNX 推理（需要手动实现预处理）\n# 1. 缩放到 640x640\n# 2. BGR 转 RGB\n# 3. 归一化到 [0, 1]\n# 4. HWC 转 CHW\nimg_resized = cv2.resize(img, (640, 640))\nimg_rgb = cv2.cvtColor(img_resized, cv2.COLOR_BGR2RGB)\nimg_input = img_rgb.astype(np.float32) / 255.0\nimg_input = img_input.transpose(2, 0, 1).reshape(1, 3, 640, 640)\n\n# 执行推理\nonnx_results = session.run([output_name], {input_name: img_input})\n\nprint(\"PyTorch 模型结果:\", pt_boxes[:3])\nprint(\"ONNX 模型推理成功！\")\n```",
+            "common_errors": [
+              {"error": "ONNX 导出失败或推理结果不正确", "solution": "确保 onnxruntime 已安装：pip install onnxruntime；检查模型是否完全导出；验证导出时的 imgsz 参数"},
+              {"error": "FastAPI 上传图片解析失败", "solution": "使用 PIL Image 而非 cv2.imread 直接读取文件流；处理不同图片格式（jpg、png、webp）；添加错误处理"},
+              {"error": "ONNX 推理结果与 PyTorch 不一致", "solution": "确保预处理完全一致（归一化、通道顺序、尺寸）；检查动态尺寸 vs 固定尺寸导出的区别"},
+              {"error": "API 响应时间过长", "solution": "使用 ONNX 加速推理；启用 GPU 加速（onnxruntime-gpu）；添加异步处理；考虑批处理请求"},
+              {"error": "并发请求时模型加载慢", "solution": "在应用启动时加载模型而非每次请求时加载；使用全局变量或单例模式管理模型"}
+            ]
           },
           "duration": "3小时",
           "resources": [
@@ -1048,20 +1462,31 @@
           "title": "LLM 生态与 LoRA 原理",
           "content": {
             "objective": "理解大语言模型生态和 LoRA 低秩适配原理",
-            "api_checklist": [
-              "LoRA 核心思想：W = W_pretrained + B×A",
-              "低秩分解减少可训练参数",
-              "QLoRA：4-bit 量化 + LoRA",
-              "pip install transformers peft bitsandbytes accelerate"
+            "tasks": [
+              "1.1 阅读 LoRA 论文 (https://arxiv.org/abs/2106.09685) 核心章节，理解 W = W_pretrained + B×A 的核心思想",
+              "1.2 理解低秩分解数学原理：为什么 r<<d 能大幅减少可训练参数（从 d×d 降到 2×d×r）",
+              "1.3 对比 LoRA 与全参数微调的参数量差异，计算参数减少比例",
+              "1.4 理解 QLoRA 的核心思想：4-bit 量化 + LoRA 如何实现高效微调",
+              "1.5 安装 HuggingFace 生态库：transformers、peft、bitsandbytes、accelerate",
+              "1.6 访问 HuggingFace 模型排行榜，选择一个适合微调的基座模型（如 TinyLlama、Qwen-1.8B）",
+              "1.7 了解 PEFT 库支持的各种微调方法，对比 LoRA 与 QLoRA、Prompt Tuning 的适用场景"
             ],
-            "practice": "阅读 LoRA 论文核心部分，理解低秩适配的数学原理。安装 HuggingFace 生态库：transformers、peft、bitsandbytes、accelerate。查看 HuggingFace 模型排行榜，选择合适的基座模型。",
-            "answer": "LoRA 原理：不直接微调 W，而是学习低秩更新 ΔW = BA，其中 B∈R^(d×r), A∈R^(r×d), r<<d。可训练参数从 d×d 减少到 2×d×r"
+            "核心代码示例": "```python\n# 安装依赖\npip install transformers peft bitsandbytes accelerate\n\n# LoRA 核心思想示意\n# 原始全参数微调：可训练参数 = d × d (如 4096 × 4096 = 16M 参数)\n# LoRA 低秩适配：可训练参数 = 2 × d × r (如 2 × 4096 × 8 = 65K 参数)\n# 参数量减少比例：d / (2r) 倍\n\nimport torch\n\n# 模拟 LoRA 的核心公式\nd = 4096  # 隐藏层维度\nr = 8     # LoRA 秩\n\n# W_pretrained: 预训练权重 (冻结)\nW_pretrained = torch.randn(d, d)\n\n# B×A: 低秩更新矩阵 (可训练)\nB = torch.randn(d, r)  # (4096, 8)\nA = torch.randn(r, d)  # (8, 4096)\n\n# 可训练参数对比\noriginal_params = d * d  # 16,777,216\nlora_params = 2 * d * r  # 65,536\nprint(f\"全参数微调参数量: {original_params:,}\")\nprint(f\"LoRA 可训练参数量: {lora_params:,}\")\nprint(f\"参数量减少: {original_params / lora_params:.1f}x\")\n```",
+            "环境验证代码": "```python\n# 验证安装的库版本\nimport transformers\nimport peft\nimport bitsandbytes\nimport torch\n\nprint(f\"transformers: {transformers.__version__}\")\nprint(f\"peft: {peft.__version__}\")\nprint(f\"bitsandbytes: {bitsandbytes.__version__}\")\nprint(f\"PyTorch: {torch.__version__}\")\nprint(f\"CUDA available: {torch.cuda.is_available()}\")\nif torch.cuda.is_available():\n    print(f\"GPU: {torch.cuda.get_device_name(0)}\")\n```",
+            "common_errors": [
+              {"error": "安装 bitsandbytes 失败，报错 'No module named bitsandbytes'", "solution": "Windows 用户建议使用 WSL 或 Docker 环境；Linux 用户确保安装了 CUDA 编译工具链；也可尝试 pip install bitsandbytes -no-build-isolation"},
+              {"error": " transformers 版本与 peft 版本不兼容", "solution": "使用 pip install --upgrade transformers peft 确保版本兼容，或参考 PEFT 文档查看推荐的版本组合"},
+              {"error": "CUDA out of memory 在初始化阶段", "solution": "减小 batch_size 或使用更小的模型；确保没有其他进程占用 GPU 显存"},
+              {"error": "导入 peft 报 'cannot import name 'LoraConfig' from 'peft'', "solution": "peft 版本过旧，执行 pip install --upgrade peft 更新到最新版本"}
+            ]
           },
           "duration": "2小时",
           "resources": [
             { "title": "LoRA 论文", "url": "https://arxiv.org/abs/2106.09685", "type": "article" },
             { "title": "HuggingFace PEFT 文档", "url": "https://huggingface.co/docs/peft/", "type": "documentation" }
           ],
+          "relatedTerms": ["lora", "low-rank adaptation", "qlora", "peft"],
+          "relatedTools": ["huggingface", "pytorch", "bitsandbytes"],
           "checkpoint": "能解释 LoRA 的核心思想和优势"
         },
         {
@@ -1069,21 +1494,32 @@
           "title": "4-bit 量化加载模型",
           "content": {
             "objective": "使用 QLoRA 以 4-bit 量化方式加载大模型",
-            "api_checklist": [
-              "BitsAndBytesConfig 量化配置",
-              "load_in_4bit=True 启用 4-bit",
-              "bnb_4bit_compute_dtype 计算精度",
-              "bnb_4bit_use_double_quant 双重量化",
-              "AutoModelForCausalLM.from_pretrained() 加载"
+            "tasks": [
+              "2.1 理解 BitsAndBytesConfig 的核心参数：load_in_4bit、bnb_4bit_compute_dtype、bnb_4bit_use_double_quant",
+              "2.2 配置 4-bit 量化参数，了解 NF4 量化数据类型的工作原理",
+              "2.3 使用 AutoModelForCausalLM.from_pretrained() 加载 TinyLlama-1.1B 或 Qwen-1.8B 模型",
+              "2.4 监控模型加载时的显存占用，对比 fp16 和 4-bit 量化后的显存差异",
+              "2.5 使用 tokenizer 对测试文本进行分词，验证模型能正常处理输入",
+              "2.6 执行简单的文本生成测试，验证模型输出合理性",
+              "2.7 分析量化对模型精度的影响，理解精度与显存的权衡"
             ],
-            "practice": "配置 4-bit 量化参数，加载 TinyLlama-1.1B 或 Qwen-1.8B 模型。检查显存占用，对比 fp16 和 4-bit 的差异。验证模型能正常生成文本。",
-            "answer": "量化加载：from transformers import BitsAndBytesConfig; bnb_config = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_compute_dtype=torch.float16, bnb_4bit_use_double_quant=True); model = AutoModelForCausalLM.from_pretrained(model_id, quantization_config=bnb_config)"
+            "量化配置代码": "```python\nfrom transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig\nimport torch\n\n# 配置 4-bit 量化\nbnb_config = BitsAndBytesConfig(\n    load_in_4bit=True,                    # 启用 4-bit 量化加载\n    bnb_4bit_compute_dtype=torch.float16,  # 计算时使用 float16\n    bnb_4bit_use_double_quant=True,        # 启用双重量化进一步压缩\n    bnb_4bit_quant_type=\"nf4\"              # NF4 量化类型（Normal Float 4）\n)\n\n# 选择基座模型（建议新手从小型模型开始）\nmodel_id = \"TinyLlama/TinyLlama-1.1B-Chat-v1.0\"\n\nprint(\"正在加载模型...\")\nmodel = AutoModelForCausalLM.from_pretrained(\n    model_id,\n    quantization_config=bnb_config,\n    device_map=\"auto\",\n    trust_remote_code=True\n)\n\nprint(\"正在加载 tokenizer...\")\ntokenizer = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True)\ntokenizer.pad_token = tokenizer.eos_token\n\nprint(f\"模型加载完成\")\nprint(f\"模型参数量: {model.num_parameters() / 1e6:.2f}B\")\n```",
+            "显存验证代码": "```python\nimport torch\n\n# 检查 GPU 显存占用\nif torch.cuda.is_available():\n    allocated = torch.cuda.memory_allocated() / 1024**3\n    reserved = torch.cuda.memory_reserved() / 1024**3\n    print(f\"GPU 显存已占用: {allocated:.2f} GB\")\n    print(f\"GPU 显存已预留: {reserved:.2f} GB\")\n\n# 对比：fp16 加载需要多少显存\n# TinyLlama-1.1B fp16 约需 2.2GB\n# TinyLlama-1.1B 4bit 约需 0.6GB\n```",
+            "文本生成测试": "```python\n# 简单的生成测试\ntest_prompt = \"What is machine learning?\"\n\ninputs = tokenizer(test_prompt, return_tensors=\"pt\").to(model.device)\n\nwith torch.no_grad():\n    outputs = model.generate(\n        **inputs,\n        max_new_tokens=50,\n        temperature=0.7,\n        do_sample=True\n    )\n\nresponse = tokenizer.decode(outputs[0], skip_special_tokens=True)\nprint(f\"生成结果: {response}\")\n```",
+            "common_errors": [
+              {"error": "CUDA out of memory: tried to allocate x.xx GiB", "solution": "模型太大超出显存，先用更小的模型如 TinyLlama-1.1B；确保没有其他程序占用显存；减小 batch_size"},
+              {"error": "ValueError: load_in_4bit requires bitsandbytes to be installed", "solution": "确认 bitsandbytes 已正确安装；Windows 用户需使用 WSL 或 Docker 环境；尝试重新安装：pip uninstall bitsandbytes && pip install bitsandbytes"},
+              {"error": "RuntimeError: cutlass_backend not found", "solution": "bitsandbytes 需要 CUDA kernel 支持；确保 CUDA 版本 >= 11.0；尝试重新编译或使用预编译 wheel"},
+              {"error": "模型生成的内容是乱码或重复", "solution": "检查 model.generation_config；增加 max_new_tokens；调整 temperature 和 top_p 参数；确认是否正确加载了 tokenizer"}
+            ]
           },
           "duration": "2小时",
           "resources": [
             { "title": "QLoRA 论文", "url": "https://arxiv.org/abs/2305.14314", "type": "article" },
             { "title": "bitsandbytes 文档", "url": "https://huggingface.co/docs/bitsandbytes/", "type": "documentation" }
           ],
+          "relatedTerms": ["4bit quantization", "nf4", "double quantization", "bitsandbytes"],
+          "relatedTools": ["bitsandbytes", "transformers", "accelerate"],
           "checkpoint": "4-bit 模型加载成功，显存占用 < 3GB"
         },
         {
@@ -1091,22 +1527,33 @@
           "title": "配置 LoRA 适配器",
           "content": {
             "objective": "配置 LoRA 参数并注入到模型中",
-            "api_checklist": [
-              "LoraConfig 配置参数",
-              "r 秩参数（通常 8-64）",
-              "lora_alpha 缩放因子",
-              "target_modules 目标模块",
-              "get_peft_model() 注入 LoRA",
-              "print_trainable_parameters() 查看可训练参数"
+            "tasks": [
+              "3.1 理解 LoraConfig 的核心参数：r（秩）、lora_alpha（缩放因子）、target_modules（目标模块）",
+              "3.2 选择合适的目标模块，通常是 attention 的 q_proj 和 v_proj（有时包括 k_proj、o_proj）",
+              "3.3 配置 LoRA dropout（通常 0.05）和 bias 设置（通常 'none'）",
+              "3.4 使用 get_peft_model() 将 LoRA 适配器注入到预训练模型中",
+              "3.5 调用 print_trainable_parameters() 查看可训练参数占比",
+              "3.6 理解 lora_alpha 与 r 的比例关系：scaling = lora_alpha / r，影响学习率调节",
+              "3.7 尝试不同的 r 值（8、16、32、64），观察参数量变化",
+              "3.8 保存 LoRA 适配器配置到 config.json，了解其结构"
             ],
-            "practice": "配置 LoRA 参数：r=16, lora_alpha=32, target_modules=['q_proj', 'v_proj']。注入 LoRA 到模型中，查看可训练参数占比（通常 < 1%）。",
-            "answer": "LoRA 配置：from peft import LoraConfig, get_peft_model, TaskType; config = LoraConfig(task_type=TaskType.CAUSAL_LM, r=16, lora_alpha=32, target_modules=['q_proj', 'v_proj'], lora_dropout=0.05); model = get_peft_model(model, config); model.print_trainable_parameters()"
+            "LoraConfig配置代码": "```python\nfrom peft import LoraConfig, get_peft_model, TaskType\n\n# LoRA 配置参数详解\nlora_config = LoraConfig(\n    task_type=TaskType.CAUSAL_LM,      # 任务类型：因果语言模型\n    r=16,                               # 秩：越高越灵活，但参数量增加\n    lora_alpha=32,                      # 缩放因子：通常设为 r 的 2 倍\n    lora_dropout=0.05,                  # Dropout 概率防止过拟合\n    bias=\"none\",                        # 是否训练 bias：\"none\"/\"all\"/\"lora_only\"\n    target_modules=[                   # 目标模块：通常选择 attention 投影层\n        \"q_proj\",                      # Query 投影\n        \"v_proj\",                      # Value 投影\n        # 可选: \"k_proj\", \"o_proj\"\n    ],\n    inference_mode=False,              # 训练模式设为 False\n)\n\n# 将 LoRA 注入模型\nmodel = get_peft_model(model, lora_config)\n\n# 查看可训练参数\nmodel.print_trainable_parameters()\n# 输出示例: \"trainable params: 4,194,304 || all params: 1,100,000,000 || trainable%: 0.3813%\"\n```",
+            "不同秩对比代码": "```python\n# 对比不同 r 值的参数量\nfor r_value in [8, 16, 32, 64]:\n    test_config = LoraConfig(\n        task_type=TaskType.CAUSAL_LM,\n        r=r_value,\n        lora_alpha=r_value * 2,\n        target_modules=[\"q_proj\", \"v_proj\"],\n        inference_mode=True\n    )\n    test_model = get_peft_model(model, test_config)\n    test_model.print_trainable_parameters()\n    print(\"---\")\n\n# 规律：r 增加 2 倍，可训练参数增加 2 倍\n# r=8: ~2M params, r=16: ~4M params, r=32: ~8M params, r=64: ~16M params\n```",
+            "保存配置代码": "```python\n# 保存 LoRA 适配器\nmodel.save_pretrained(\"./lora_adapter\")\n\n# 查看保存的文件\nimport os\nprint(os.listdir(\"./lora_adapter\"))\n# 输出: ['adapter_config.json', 'adapter_model.bin']\n\n# 加载保存的适配器\nfrom peft import PeftModel\nloaded_model = PeftModel.from_pretrained(model, \"./lora_adapter\")\n```",
+            "common_errors": [
+              {"error": "ValueError: Target modules q_proj, v_proj not found in model", "solution": "不同模型的模块名称可能不同，使用 model.state_dict().keys() 查看实际模块名；有些模型使用 'q_attn' 或 'self_attn.q_proj'"},
+              {"error": "可训练参数占比过高（如 > 5%）", "solution": "r 值设置过大；确保 target_modules 正确；检查是否没有正确使用 get_peft_model()"},
+              {"error": "训练 loss 不下降", "solution": "检查 lora_alpha/r 的比例是否合理；学习率可能过低或过高；确认模型确实在训练（print_trainable_parameters() 输出非零）"},
+              {"error": "LoRA 参数随机初始化导致收敛慢", "solution": "对 A 矩阵使用随机初始化，B 矩阵置零；PEFT 库默认已处理；或使用 warmup 学习率策略"}
+            ]
           },
           "duration": "1.5小时",
           "resources": [
             { "title": "PEFT LoRA 配置", "url": "https://huggingface.co/docs/peft/conceptual_guides/lora", "type": "documentation" },
             { "title": "LoRA 超参调优", "url": "https://magazine.sebastianraschka.com/p/lora-and-dora-from-scratch", "type": "article" }
           ],
+          "relatedTerms": ["lora_config", "target_modules", "rank", "trainable parameters"],
+          "relatedTools": ["peft", "transformers"],
           "checkpoint": "可训练参数占比 < 1%"
         },
         {
@@ -1114,21 +1561,33 @@
           "title": "准备指令微调数据",
           "content": {
             "objective": "准备 ChatML 格式的指令微调数据集",
-            "api_checklist": [
-              "ChatML 对话格式",
-              "system/user/assistant 角色",
-              "apply_chat_template() 应用模板",
-              "数据清洗和格式化",
-              "训练集/验证集划分"
+            "tasks": [
+              "4.1 理解 ChatML 对话格式：system/user/assistant 角色的作用和标记方式",
+              "4.2 准备 100-500 条高质量的指令-回答对作为训练数据",
+              "4.3 使用 tokenizer.apply_chat_template() 将对话转换为模型可接受的格式",
+              "4.4 实现数据清洗函数：去除特殊字符、处理多轮对话、截断过长样本",
+              "4.5 使用 train_test_split 划分训练集和验证集（比例通常 9:1）",
+              "4.6 创建自定义 Dataset 类，处理大文件流式读取",
+              "4.7 验证格式化后的数据：解码几个样本确认格式正确",
+              "4.8 了解对话模板的 special tokens（如 <|im_start|>、<|im_end|>）"
             ],
-            "practice": "准备 100-500 条指令-回答对，格式化为 ChatML 对话格式。使用 tokenizer 的 apply_chat_template 方法转换格式。划分训练集和验证集。",
-            "answer": "数据格式：messages = [{'role': 'system', 'content': '你是一个有用的助手'}, {'role': 'user', 'content': '请解释什么是机器学习'}, {'role': 'assistant', 'content': '机器学习是...'}]; text = tokenizer.apply_chat_template(messages, tokenize=False)"
+            "数据格式转换代码": "```python\nfrom transformers import AutoTokenizer\nimport json\n\n# 对话示例\nmessages = [\n    {\"role\": \"system\", \"content\": \"你是一个有用的AI助手\"},\n    {\"role\": \"user\", \"content\": \"请解释什么是机器学习\"},\n    {\"role\": \"assistant\", \"content\": \"机器学习是人工智能的一个分支...\"}\n]\n\n# 加载 tokenizer\nmodel_id = \"TinyLlama/TinyLlama-1.1B-Chat-v1.0\"\ntokenizer = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True)\n\n# 使用 chat template 格式化\nformatted_text = tokenizer.apply_chat_template(\n    messages,\n    tokenize=False,        # 返回字符串而非 token IDs\n    add_generation_prompt=True  # 为生成添加起始标记\n)\n\nprint(\"格式化后的文本:\")\nprint(formatted_text)\nprint(\"\\n\" + \"=\"*50)\n\n# 验证：解码验证格式\ntokens = tokenizer(formatted_text, return_tensors=\"pt\")\nprint(f\"Token 数量: {len(tokens['input_ids'][0])}\")\n```",
+            "数据集处理代码": "```python\nfrom datasets import Dataset\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\n\n# 从 JSON/CSV 加载原始数据\n# 假设数据格式: {\"instruction\": \"...\", \"output\": \"...\"}\ndef load_instruction_data(file_path):\n    with open(file_path, 'r', encoding='utf-8') as f:\n        data = json.load(f)\n    return data\n\n# 转换为 ChatML 格式\ndef format_instruction_dataset(raw_data, tokenizer):\n    formatted_data = []\n    for item in raw_data:\n        messages = [\n            {\"role\": \"system\", \"content\": \"你是一个有用的助手\"},\n            {\"role\": \"user\", \"content\": item[\"instruction\"]},\n            {\"role\": \"assistant\", \"content\": item[\"output\"]}\n        ]\n        text = tokenizer.apply_chat_template(messages, tokenize=False)\n        formatted_data.append({\"text\": text})\n    return formatted_data\n\n# 划分数据集\ntrain_data, val_data = train_test_split(formatted_data, test_size=0.1, random_state=42)\n\n# 创建 HuggingFace Dataset\ntrain_dataset = Dataset.from_list(train_data)\nval_dataset = Dataset.from_list(val_data)\n\nprint(f\"训练集大小: {len(train_dataset)}\")\nprint(f\"验证集大小: {len(val_dataset)}\")\n```",
+            "数据清洗代码": "```python\nimport re\n\ndef clean_text(text):\n    # 去除多余空白\n    text = re.sub(r'\\s+', ' ', text)\n    # 去除特殊控制字符\n    text = re.sub(r'[\\x00-\\x1f\\x7f-\\x9f]', '', text)\n    # 去除 HTML 标签\n    text = re.sub(r'<[^>]+>', '', text)\n    return text.strip()\n\ndef filter_long_samples(sample, max_length=2048):\n    \"\"\"过滤过长的样本\"\"\"\n    if len(sample) > max_length:\n        return False\n    return True\n\n# 应用清洗\ncleaned_data = [clean_text(item) for item in raw_data]\nfiltered_data = [item for item in cleaned_data if filter_long_samples(item)]\n```",
+            "common_errors": [
+              {"error": "ValueError: Unknown role: xxx in chat template", "solution": "确保 role 只能是 'system'、'user'、'assistant' 三种；检查特殊角色名称是否拼写错误"},
+              {"error": "生成的回答包含 system prompt 内容", "solution": "在 apply_chat_template 时，训练时不要加 add_generation_prompt=True；该参数仅用于推理时添加起始标记"},
+              {"error": "Token 数量远超 max_length", "solution": "在 apply_chat_template 之前对文本进行截断；或设置 max_length 参数控制序列长度"},
+              {"error": "特殊字符（如 < | >）导致格式混乱", "solution": "使用 html.unescape() 处理 HTML 实体；确保数据编码为 UTF-8；去除或转义特殊 token"}
+            ]
           },
           "duration": "2.5小时",
           "resources": [
             { "title": "ChatML 格式说明", "url": "https://github.com/openai/openai-python/blob/main/chatml.md", "type": "documentation" },
             { "title": "HuggingFace Chat 模板", "url": "https://huggingface.co/docs/transformers/chat_templating", "type": "documentation" }
           ],
+          "relatedTerms": ["chatml", "instruction dataset", "data formatting", "chat template"],
+          "relatedTools": ["transformers", "datasets"],
           "checkpoint": "数据集准备完成，格式正确"
         },
         {
@@ -1136,22 +1595,34 @@
           "title": "SFTTrainer 训练与评估",
           "content": {
             "objective": "使用 SFTTrainer 进行监督微调",
-            "api_checklist": [
-              "SFTTrainer 创建训练器",
-              "TrainingArguments 配置参数",
-              "learning_rate 学习率（通常 2e-4）",
-              "gradient_accumulation_steps 梯度累积",
-              "fp16 混合精度训练",
-              "trainer.train() 开始训练"
+            "tasks": [
+              "5.1 配置 TrainingArguments：设置 learning_rate、num_train_epochs、batch_size 等核心参数",
+              "5.2 配置 gradient_accumulation_steps 实现有效更大的 batch_size（4×8=32）",
+              "5.3 启用 fp16/BF16 混合精度训练减少显存占用",
+              "5.4 配置 logging_steps 和 eval_steps 定期监控训练状态",
+              "5.5 使用 SFTTrainer 创建训练器，设置 max_seq_length 控制序列长度",
+              "5.6 启动 trainer.train() 开始训练，观察 loss 曲线变化",
+              "5.7 训练完成后使用 trainer.save_model() 保存最佳模型",
+              "5.8 将 LoRA 权重合并到基座模型，实现纯 FP16 的完整模型",
+              "5.9 测试合并后模型的生成效果，对比微调前后的差异"
             ],
-            "practice": "配置训练参数，使用 SFTTrainer 进行微调。观察 loss 曲线，保存最佳模型。合并 LoRA 权重到基座模型，测试生成效果。",
-            "answer": "训练配置：from trl import SFTTrainer; trainer = SFTTrainer(model=model, args=TrainingArguments(output_dir='./output', learning_rate=2e-4, num_train_epochs=3, gradient_accumulation_steps=4, fp16=True), train_dataset=train_dataset, tokenizer=tokenizer); trainer.train()"
+            "训练配置代码": "```python\nfrom transformers import TrainingArguments\nfrom trl import SFTTrainer\n\n# 训练参数配置\ntraining_args = TrainingArguments(\n    output_dir=\"./lora_output\",              # 输出目录\n    num_train_epochs=3,                      # 训练轮数\n    per_device_train_batch_size=4,           # 每个 GPU 的 batch size\n    gradient_accumulation_steps=4,           # 梯度累积（有效 batch = 4×4=16）\n    learning_rate=2e-4,                      # 学习率（LoRA 通常用较大学习率）\n    weight_decay=0.001,                      # 权重衰减\n    fp16=True,                               # 启用 FP16 混合精度\n    logging_steps=10,                        # 每 10 步记录日志\n    save_steps=100,                          # 每 100 步保存模型\n    eval_steps=100,                          # 每 100 步运行评估\n    save_total_limit=3,                      # 最多保存 3 个 checkpoints\n    warmup_ratio=0.03,                       # 预热比例\n    lr_scheduler_type=\"cosine\",              # 学习率调度器\n    report_to=\"tensorboard\",                 # 记录到 TensorBoard\n    gradient_checkpointing=True,             # 梯度检查点节省显存\n)\n\n# 创建 SFTTrainer\ntrainer = SFTTrainer(\n    model=model,\n    args=training_args,\n    train_dataset=train_dataset,\n    eval_dataset=val_dataset,\n    tokenizer=tokenizer,\n    max_seq_length=512,                      # 最大序列长度\n    dataset_text_field=\"text\",               # 数据集中的文本字段名\n)\n\n# 开始训练\ntrainer.train()\n```",
+            "模型合并代码": "```python\n# 保存 LoRA 适配器\ntrainer.save_model(\"./lora_finetuned\")\n\n# 合并 LoRA 权重到基座模型\nfrom peft import PeftModel\n\n# 重新加载原始基座模型（FP16）\nbase_model = AutoModelForCausalLM.from_pretrained(\n    \"TinyLlama/TinyLlama-1.1B-Chat-v1.0\",\n    torch_dtype=torch.float16,\n    device_map=\"auto\",\n)\n\n# 加载 LoRA 适配器并合并\nlora_model = PeftModel.from_pretrained(base_model, \"./lora_finetuned\")\nmerged_model = lora_model.merge_and_unload()\n\n# 保存合并后的完整模型\nmerged_model.save_pretrained(\"./merged_model\")\ntokenizer.save_pretrained(\"./merged_model\")\n\nprint(\"模型合并完成，已保存到 ./merged_model\")\n```",
+            "生成测试代码": "```python\n# 测试微调后的模型\ndef generate_response(prompt, model, tokenizer, max_new_tokens=100):\n    messages = [\n        {\"role\": \"system\", \"content\": \"你是一个有用的助手\"},\n        {\"role\": \"user\", \"content\": prompt}\n    ]\n    \n    text = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)\n    inputs = tokenizer(text, return_tensors=\"pt\").to(model.device)\n    \n    with torch.no_grad():\n        outputs = model.generate(\n            **inputs,\n            max_new_tokens=max_new_tokens,\n            temperature=0.7,\n            top_p=0.9,\n            do_sample=True\n        )\n    \n    response = tokenizer.decode(outputs[0], skip_special_tokens=True)\n    # 只返回 assistant 的回答部分\n    return response.split(\"assistant\\n\")[-1].strip()\n\n# 测试\ntest_prompt = \"解释一下什么是过拟合\"\nresponse = generate_response(test_prompt, merged_model, tokenizer)\nprint(f\"回答: {response}\")\n```",
+            "common_errors": [
+              {"error": "CUDA out of memory during training", "solution": "减小 per_device_train_batch_size 或增加 gradient_accumulation_steps；启用 gradient_checkpointing；使用更小的 max_seq_length；减小模型大小"},
+              {"error": "Loss 不下降或爆炸 (loss=nan)", "solution": "降低学习率（如 1e-4）；检查数据是否存在 NaN 或异常值；降低 max_seq_length；确保使用了合适的 weight_decay"},
+              {"error": "训练时间过长", "solution": "启用 fp16 混合精度；增加 batch_size；启用 gradient_checkpointing；使用更小的模型"},
+              {"error": "合并模型后推理结果与 LoRA 模型不一致", "solution": "确保合并时使用相同的 base_model；检查模型 dtype 是否一致（都应该是 FP16）；确认没有未保存的更改"}
+            ]
           },
           "duration": "4小时",
           "resources": [
             { "title": "SFTTrainer 文档", "url": "https://huggingface.co/docs/trl/sft_trainer", "type": "documentation" },
             { "title": "PEFT 模型合并", "url": "https://huggingface.co/docs/peft/tutorial/peft_model_config", "type": "documentation" }
           ],
+          "relatedTerms": ["sfttrainer", "training arguments", "model merging", "fine-tuning"],
+          "relatedTools": ["trl", "peft", "transformers"],
           "checkpoint": "训练完成，loss 下降，生成效果有改善"
         }
       ],
@@ -1193,14 +1664,25 @@
           "title": "RAG 原理与环境配置",
           "content": {
             "objective": "理解 RAG 工作原理，配置开发环境",
-            "api_checklist": [
-              "RAG 核心流程：检索 + 生成",
-              "向量数据库的作用",
-              "Embedding 模型的选择",
-              "pip install langchain chromadb sentence-transformers"
+            "tasks": [
+              "1.1 阅读 RAG 论文（Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks），理解核心思想",
+              "1.2 安装 Python 环境（推荐 3.9+）并创建虚拟环境",
+              "1.3 安装核心依赖库：langchain、chromadb、sentence-transformers",
+              "1.4 了解 RAG 与 Fine-tuning 的区别，明确 RAG 适用场景",
+              "1.5 理解 RAG 核心流程：文档切分 → 向量化 → 存储 → 检索 → 生成",
+              "1.6 配置 HuggingFace 镜像源以加速模型下载",
+              "1.7 准备测试文档（PDF 或 Markdown 格式）",
+              "1.8 验证环境安装：运行简单的 embedding 测试代码"
             ],
-            "practice": "阅读 RAG 论文，理解检索增强生成的核心思想。安装 LangChain、ChromaDB、sentence-transformers 库。了解 RAG 与微调的区别和适用场景。",
-            "answer": "RAG 原理：1. 将文档切分并向量化存储；2. 用户提问时检索相关文档；3. 将检索结果和问题一起输入 LLM 生成答案。优势：无需微调，知识可动态更新"
+            "环境安装代码": "```bash\n# 创建虚拟环境\npython -m venv rag-env\nsource rag-env/bin/activate  # Windows: rag-env\\Scripts\\activate\n\n# 安装核心依赖\npip install langchain langchain-community chromadb sentence-transformers\npip install pypdf tiktoken transformers accelerate\n\n# 验证安装\npython -c \"from langchain.embeddings import HuggingFaceEmbeddings; print('安装成功')\"\n```",
+            "核心概念代码": "```python\n# RAG 核心流程示意\nfrom langchain.schema import Document\n\n# 1. 文档切分：将长文档分割成小块\ndocuments = [\n    Document(page_content=\"这是第一段内容...\", metadata={\"source\": \"doc1.pdf\"}),\n    Document(page_content=\"这是第二段内容...\", metadata={\"source\": \"doc1.pdf\"}),\n]\n\n# 2. 向量化：使用 Embedding 模型将文本转换为向量\n# embeddings = HuggingFaceEmbeddings(model_name='all-MiniLM-L6-v2')\n\n# 3. 存储到向量数据库\n# vectorstore = Chroma.from_documents(documents, embeddings)\n\n# 4. 检索：用户提问时，检索相关文档\n# results = vectorstore.similarity_search(\"用户问题\")\n\n# 5. 生成：将检索结果和问题一起发送给 LLM\n# answer = llm(f\"上下文：{results}\\n问题：{user_question}\")\n```",
+            "common_errors": [
+              {"error": "ImportError: cannot import name 'HuggingFaceEmbeddings'", "solution": "新版本 LangChain 已移除该类，请使用 from langchain_community.embeddings import HuggingFaceEmbeddings"},
+              {"error": "模型下载超时或速度过慢", "solution": "设置 HuggingFace 镜像源：os.environ['HF_ENDPOINT'] = 'https://hf-mirror.com'"},
+              {"error": "ChromaDB 持久化失败或权限错误", "solution": "确保 persist_directory 路径存在且有写入权限，首次创建前先 mkdir"},
+              {"error": "Python 版本不兼容（3.8 以下）", "solution": "RAG 相关库需要 Python 3.9+，请升级 Python 版本"},
+              {"error": "内存不足导致模型加载失败", "solution": "使用更小的 embedding 模型（如 all-MiniLM-L6-v2），或增加 swap 分区"}
+            ]
           },
           "duration": "1.5小时",
           "resources": [
@@ -1214,15 +1696,26 @@
           "title": "文档加载与切分",
           "content": {
             "objective": "加载文档并进行智能切分",
-            "api_checklist": [
-              "PyPDFLoader / TextLoader 加载文档",
-              "RecursiveCharacterTextSplitter 递归切分",
-              "chunk_size 切片大小",
-              "chunk_overlap 重叠区域",
-              "metadata 元数据保留"
+            "tasks": [
+              "2.1 使用 PyPDFLoader 加载 PDF 文档，处理多页文档",
+              "2.2 使用 TextLoader 加载 Markdown/TXT 文档，设置编码为 utf-8",
+              "2.3 了解 RecursiveCharacterTextSplitter 的切分策略",
+              "2.4 设置 chunk_size=500, chunk_overlap=50 参数并观察效果",
+              "2.5 保留文档的 metadata 信息（source, page 等）",
+              "2.6 实现自定义切分器，按章节或段落边界切分",
+              "2.7 过滤空白字符和过短的内容块",
+              "2.8 统计切分结果：总块数、平均长度、最大最小长度"
             ],
-            "practice": "加载 PDF 或 Markdown 文档，使用 RecursiveCharacterTextSplitter 进行切分。设置 chunk_size=500, chunk_overlap=50。查看切分结果，确保语义完整。",
-            "answer": "文档切分：from langchain.document_loaders import PyPDFLoader; from langchain.text_splitter import RecursiveCharacterTextSplitter; loader = PyPDFLoader('docs/example.pdf'); documents = loader.load(); splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50); chunks = splitter.split_documents(documents)"
+            "文档加载代码": "```python\nfrom langchain_community.document_loaders import PyPDFLoader, TextLoader\nfrom langchain.text_splitter import RecursiveCharacterTextSplitter\nimport os\n\n# PDF 文档加载\npdf_path = \"data/example.pdf\"\nloader = PyPDFLoader(pdf_path)\ndocuments = loader.load()\nprint(f\"加载了 {len(documents)} 页\")\n\n# Markdown 文档加载\nmd_path = \"data/README.md\"\nloader = TextLoader(md_path, encoding=\"utf-8\")\nmd_documents = loader.load()\nprint(f\"Markdown 文档数: {len(md_documents)}\")\n```",
+            "文档切分代码": "```python\n# 使用 RecursiveCharacterTextSplitter 进行智能切分\ntext_splitter = RecursiveCharacterTextSplitter(\n    chunk_size=500,        # 每块的最大字符数\n    chunk_overlap=50,      # 块之间的重叠字符数\n    length_function=len,   # 计算长度的函数\n    add_start_index=True,  # 添加起始索引\n    separators=[\"\\n\\n\", \"\\n\", \"。\", \" \", \"\"]  # 切分优先级\n)\n\n# 切分文档\nchunks = text_splitter.split_documents(documents)\n\n# 打印切分结果统计\nprint(f\"总块数: {len(chunks)}\")\nfor i, chunk in enumerate(chunks[:3]):\n    print(f\"块 {i+1}: {len(chunk.page_content)} 字符\")\n    print(f\"  来源: {chunk.metadata.get('source', 'unknown')}\")\n    print(f\"  内容预览: {chunk.page_content[:100]}...\")\n```",
+            "自定义切分器": "```python\nfrom langchain.text_splitter import CharacterTextSplitter\n\n# 按固定字符数切分（简单粗暴）\nchar_splitter = CharacterTextSplitter(\n    separator=\"\\n\",\n    chunk_size=300,\n    chunk_overlap=0\n)\n\n# 按句子切分（需要分词支持）\ndef split_by_sentence(text: str) -> list[str]:\n    \"\"\"简单按句号和换行切分\"\"\"\n    import re\n    sentences = re.split(r'[。！？\\n]+', text)\n    return [s.strip() for s in sentences if s.strip()]\n\n# 测试自定义切分\ntest_text = \"这是第一句。这是第二句！这是第三句？\\n这是第四句。\"\nprint(split_by_sentence(test_text))\n```",
+            "common_errors": [
+              {"error": "PDF 加载后内容为空或乱码", "solution": "检查 PDF 是否是扫描件（图片），如是则需要 OCR 处理；确认文件路径正确且可读"},
+              {"error": "切分后块语义不完整（句子被截断）", "solution": "调整 separators 参数，增加 '。'、'！'、'？' 等句子边界符号"},
+              {"error": "chunk_overlap 设置过大导致重复内容过多", "solution": "根据文档平均段落长度调整，通常 overlap 为 chunk_size 的 10%-20%"},
+              {"error": "metadata 信息丢失", "solution": "确保切分时使用 split_documents() 而非 split_text()，后者不会保留 metadata"},
+              {"error": "UnicodeDecodeError 读取文本文件失败", "solution": "显式指定 encoding='utf-8' 或尝试 'gbk' 编码"}
+            ]
           },
           "duration": "2小时",
           "resources": [
@@ -1236,15 +1729,26 @@
           "title": "向量化与存储",
           "content": {
             "objective": "使用 Embedding 模型将文档向量化并存储到向量数据库",
-            "api_checklist": [
-              "HuggingFaceEmbeddings 加载 Embedding 模型",
-              "sentence-transformers 模型选择",
-              "Chroma 向量数据库",
-              "from_documents() 创建向量存储",
-              "persist() 持久化存储"
+            "tasks": [
+              "3.1 选择合适的 Embedding 模型（推荐 all-MiniLM-L6-v2）",
+              "3.2 使用 HuggingFaceEmbeddings 加载模型，配置模型参数",
+              "3.3 对文档切片进行向量化，计算嵌入向量",
+              "3.4 初始化 ChromaDB 向量数据库，设置持久化路径",
+              "3.5 使用 from_documents() 创建向量存储",
+              "3.6 调用 persist() 保存向量数据库到磁盘",
+              "3.7 实现向量数据库的加载（load）功能，支持重启后复用",
+              "3.8 测试相似度搜索，验证检索结果的相关性"
             ],
-            "practice": "使用 sentence-transformers 模型（如 all-MiniLM-L6-v2）将文档切片向量化。存储到 ChromaDB 向量数据库。测试相似度搜索功能。",
-            "answer": "向量化存储：from langchain.embeddings import HuggingFaceEmbeddings; from langchain.vectorstores import Chroma; embeddings = HuggingFaceEmbeddings(model_name='all-MiniLM-L6-v2'); vectorstore = Chroma.from_documents(chunks, embeddings, persist_directory='./chroma_db')"
+            "Embedding配置代码": "```python\nfrom langchain_community.embeddings import HuggingFaceEmbeddings\nimport os\n\n# 配置 Embedding 模型\nembeddings = HuggingFaceEmbeddings(\n    model_name=\"all-MiniLM-L6-v2\",  # 384维度，效果好速度快\n    model_kwargs={'device': 'cpu'},  # 指定设备，cuda 或 cpu\n    encode_kwargs={'normalize_embeddings': True}  # 归一化向量\n)\n\n# 测试 embedding\ntest_text = \"这是一个测试句子\"\nembedding_vector = embeddings.embed_query(test_text)\nprint(f\"向量维度: {len(embedding_vector)}\")\nprint(f\"向量前5个值: {embedding_vector[:5]}\")\n```",
+            "向量数据库代码": "```python\nfrom langchain_community.vectorstores import Chroma\n\n# 创建向量数据库\nvectorstore = Chroma.from_documents(\n    documents=chunks,           # 文档切片\n    embedding=embeddings,        # Embedding 模型\n    persist_directory=\"./chroma_db\"  # 持久化路径\n)\n\n# 持久化保存（某些版本需要显式调用）\nvectorstore.persist()\n\n# 相似度搜索测试\nquery = \"RAG 的工作原理是什么？\"\nresults = vectorstore.similarity_search(query, k=3)\n\nprint(f\"\\n查询: {query}\")\nprint(f\"找到 {len(results)} 个相关文档:\")\nfor i, doc in enumerate(results):\n    print(f\"\\n结果 {i+1}:\")\n    print(f\"  内容: {doc.page_content[:150]}...\")\n    print(f\"  来源: {doc.metadata.get('source', 'unknown')}\")\n```",
+            "向量数据库加载代码": "```python\n# 从磁盘加载已保存的向量数据库\nloaded_vectorstore = Chroma(\n    persist_directory=\"./chroma_db\",\n    embedding_function=embeddings\n)\n\n# 验证加载成功\nprint(f\"向量数据库中的文档数: {loaded_vectorstore._collection.count()}\")\n\n# 继续使用加载的向量数据库\nquery = \"如何优化 RAG 效果？\"\nresults = loaded_vectorstore.similarity_search(query, k=2)\n```",
+            "common_errors": [
+              {"error": "Embedding 模型下载失败或超时", "solution": "设置镜像源：os.environ['HF_ENDPOINT'] = 'https://hf-mirror.com'，或预先下载模型到本地"},
+              {"error": "ChromaDB 启动报错：Permission denied", "solution": "检查持久化目录的读写权限，Windows 下避免使用 C:\\Program Files 等受限目录"},
+              {"error": "向量数据库加载后查询结果为空", "solution": "确认 persist_directory 路径正确，且之前确实保存了数据"},
+              {"error": "相似度搜索返回不相关的结果", "solution": "检查 chunk_size 是否合适，过小丢失上下文，过大引入噪声；尝试不同的 k 值"},
+              {"error": "内存占用过高导致 OOM", "solution": "使用 batch_size 分批处理 embedding；选择更小的模型如 all-MiniLM-L6-v2"}
+            ]
           },
           "duration": "2小时",
           "resources": [
@@ -1258,15 +1762,26 @@
           "title": "检索链构建",
           "content": {
             "objective": "构建检索与生成的完整链路",
-            "api_checklist": [
-              "RetrievalQA 检索问答链",
-              "retriever 检索器配置",
-              "search_kwargs 检索参数",
-              "LLM 大语言模型接入",
-              "Prompt 模板设计"
+            "tasks": [
+              "4.1 配置 LLM（大语言模型），可选择 HuggingFacePipeline 或 OpenAI API",
+              "4.2 创建 retriever 检索器，配置 search_kwargs 参数",
+              "4.3 设计 RAG Prompt 模板，明确指令和上下文格式",
+              "4.4 使用 RetrievalQA.from_chain_type() 构建问答链",
+              "4.5 设置 return_source_documents=True 以返回来源文档",
+              "4.6 测试问答链，处理不同类型的问题",
+              "4.7 实现流式输出（可选），提升用户体验",
+              "4.8 评估检索效果：检查返回的 source_documents 是否相关"
             ],
-            "practice": "创建检索器，配置 top_k=3。设计 Prompt 模板，将检索结果和用户问题组合。使用 RetrievalQA 链实现端到端问答。",
-            "answer": "检索链构建：from langchain.chains import RetrievalQA; from langchain.llms import HuggingFacePipeline; retriever = vectorstore.as_retriever(search_kwargs={'k': 3}); qa_chain = RetrievalQA.from_chain_type(llm=llm, retriever=retriever, return_source_documents=True)"
+            "LLM配置代码": "```python\n# 使用 HuggingFace 本地模型\nfrom langchain_community.llms import HuggingFacePipeline\nfrom transformers import AutoTokenizer, AutoModelForCausalLM, pipeline\n\nmodel_name = \"microsoft/Phi-3-mini-4k-instruct\"  # 可根据硬件选择\n\ntokenizer = AutoTokenizer.from_pretrained(model_name)\nmodel = AutoModelForCausalLM.from_pretrained(\n    model_name,\n    torch_dtype=\"auto\",\n    device_map=\"auto\"\n)\n\npipe = pipeline(\n    \"text-generation\",\n    model=model,\n    tokenizer=tokenizer,\n    max_new_tokens=512,\n    temperature=0.7,\n    do_sample=True\n)\n\nllm = HuggingFacePipeline(pipeline=pipe)\nprint(\"LLM 加载成功\")\n```",
+            "检索链构建代码": "```python\nfrom langchain.chains import RetrievalQA\nfrom langchain.prompts import PromptTemplate\n\n# 设计 Prompt 模板\ntemplate = \"\"\"基于以下上下文回答问题。如果上下文中没有相关信息，请说明不知道。\n\n上下文：\n{context}\n\n问题：{question}\n\n回答：\"\"\"\n\nprompt = PromptTemplate(\n    template=template,\n    input_variables=[\"context\", \"question\"]\n)\n\n# 创建检索器\nretriever = vectorstore.as_retriever(\n    search_kwargs={\"k\": 3}  # 返回最相关的 3 个文档\n)\n\n# 构建 RetrievalQA 链\nqa_chain = RetrievalQA.from_chain_type(\n    llm=llm,\n    retriever=retriever,\n    chain_type=\"stuff\",  # 将所有文档内容拼接到一起\n    return_source_documents=True,\n    chain_type_kwargs={\"prompt\": prompt}\n)\n\n# 测试问答\nquery = \"RAG 的主要优势是什么？\"\nresult = qa_chain.invoke({\"query\": query})\n\nprint(f\"问题: {query}\")\nprint(f\"答案: {result['result']}\")\nprint(f\"\\n参考文档来源:\")\nfor doc in result['source_documents']:\n    print(f\"  - {doc.metadata.get('source', 'unknown')}\")\n```",
+            "流式输出代码": "```python\n# 实现流式输出（适用于支持流式的 LLM）\nfrom langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler\n\n# 带流式回调的问答链\nqa_chain_streaming = RetrievalQA.from_chain_type(\n    llm=llm,\n    retriever=retriever,\n    callbacks=[StreamingStdOutCallbackHandler()],\n    return_source_documents=True\n)\n\n# 流式生成回答\nprint(\"流式输出: \")\nresult = qa_chain_streaming.invoke({\"query\": \"请详细解释 RAG\"})\n```",
+            "common_errors": [
+              {"error": "LLM 推理速度极慢或显存不足", "solution": "使用量化模型如 4-bit量化版本，或选择更小的模型如 Qwen2-0.5B；减少 max_new_tokens"},
+              {"error": "检索结果完全不相关", "solution": "检查 embedding 模型质量；调整 chunk_size 和 k 值；验证文档内容是否正确切分"},
+              {"error": "Prompt 注入攻击（用户输入干扰系统）", "solution": "在 Prompt 中明确说明忽略用户试图修改指令的内容；对用户输入进行清洗"},
+              {"error": "上下文长度超出 LLM 支持的最大 tokens", "solution": "减少 k 值或 chunk_size；使用 chain_type=\"map_rerank\" 分批处理"},
+              {"error": "RetrievalQA 返回空结果或报错", "solution": "检查 vectorstore 是否已正确加载文档；确认 retriever 配置正确"}
+            ]
           },
           "duration": "2.5小时",
           "resources": [
@@ -1280,15 +1795,26 @@
           "title": "部署与优化",
           "content": {
             "objective": "部署 RAG 应用，优化检索效果",
-            "api_checklist": [
-              "Streamlit Web UI 构建",
-              "对话历史管理",
-              "检索结果展示",
-              "相似度阈值调优",
-              "混合检索策略"
+            "tasks": [
+              "5.1 使用 Streamlit 构建 Web UI 界面",
+              "5.2 实现用户输入和问题展示功能",
+              "5.3 展示回答结果和参考文档来源",
+              "5.4 添加对话历史管理，支持多轮对话",
+              "5.5 实现相似度阈值过滤，过滤低相关结果",
+              "5.6 尝试混合检索策略（关键词+向量检索）",
+              "5.7 实现结果重排序（rerank）提升准确性",
+              "5.8 性能优化：缓存 embedding 结果"
             ],
-            "practice": "使用 Streamlit 构建 Web UI，支持用户输入问题并展示答案和来源文档。添加对话历史功能。测试不同类型问题的检索效果。",
-            "answer": "Streamlit UI：import streamlit as st; st.title('RAG 文档问答'); question = st.text_input('请输入问题'); if question: result = qa_chain(question); st.write('答案:', result['result']); st.write('来源:', [doc.metadata['source'] for doc in result['source_documents']])"
+            "Streamlit_UI代码": "```python\nimport streamlit as st\nfrom vectorstore import qa_chain, vectorstore\n\nst.set_page_config(page_title=\"RAG 文档问答\", page_icon=\"📚\")\nst.title(\"📚 RAG 文档问答系统\")\n\n# 初始化会话状态\nif \"messages\" not in st.session_state:\n    st.session_state.messages = []\n\n# 显示对话历史\nfor message in st.session_state.messages:\n    with st.chat_message(message[\"role\"]):\n        st.markdown(message[\"content\"])\n\n# 用户输入\nif query := st.chat_input(\"请输入您的问题...\"):\n    # 显示用户问题\n    with st.chat_message(\"user\"):\n        st.markdown(query)\n    st.session_state.messages.append({\"role\": \"user\", \"content\": query})\n    \n    # 生成回答\n    with st.chat_message(\"assistant\"):\n        with st.spinner(\"思考中...\"):\n            result = qa_chain.invoke({\"query\": query})\n            answer = result[\"result\"]\n            st.markdown(answer)\n            \n            # 显示参考文档\n            if result.get(\"source_documents\"):\n                st.markdown(\"**参考文档:**\")\n                sources = [doc.metadata.get(\"source\", \"unknown\") \n                          for doc in result[\"source_documents\"]]\n                for src in set(sources):\n                    st.markdown(f\"- {src}\")\n    \n    st.session_state.messages.append({\"role\": \"assistant\", \"content\": answer})\n\n# 侧边栏配置\nwith st.sidebar:\n    st.header(\"配置\")\n    top_k = st.slider(\"返回文档数量\", 1, 10, 3)\n    temperature = st.slider(\"温度参数\", 0.0, 2.0, 0.7)\n    if st.button(\"清空对话历史\"):\n        st.session_state.messages = []\n```",
+            "混合检索代码": "```python\nfrom langchain.retrievers import EnsembleRetriever\nfrom langchain_community.retrievers import BM25Retriever\n\n# 1. BM25 关键词检索器\nbm25_retriever = BM25Retriever.from_documents(chunks)\nbm25_retriever.k = 3\n\n# 2. 向量检索器\nvector_retriever = vectorstore.as_retriever(\n    search_kwargs={\"k\": 3}\n)\n\n# 3. 混合检索（可调整权重）\nensemble_retriever = EnsembleRetriever(\n    retrievers=[bm25_retriever, vector_retriever],\n    weights=[0.3, 0.7]  # BM25 30%, 向量 70%\n)\n\n# 使用混合检索器\nresults = ensemble_retriever.invoke(\"RAG 优化策略\")\nprint(f\"混合检索结果数: {len(results)}\")\n```",
+            "结果重排序代码": "```python\nfrom langchain_community.cross_encoders import HuggingFaceCrossEncoder\n\n# 使用 Cross-Encoder 进行结果重排序\ncross_encoder = HuggingFaceCrossEncoder(\n    model_name=\"BAAI/bge-reranker-base\"\n)\n\ndef rerank_results(query: str, documents: list, top_n: int = 3):\n    \"\"\"对检索结果进行重排序\"\"\"\n    doc_texts = [doc.page_content for doc in documents]\n    scores = cross_encoder.predict(\n        [(query, doc) for doc in doc_texts]\n    )\n    \n    # 按分数排序\n    scored_docs = list(zip(documents, scores))\n    scored_docs.sort(key=lambda x: x[1], reverse=True)\n    \n    return [doc for doc, score in scored_docs[:top_n]]\n\n# 测试重排序\ninitial_results = vectorstore.similarity_search(query, k=10)\nreranked = rerank_results(query, initial_results, top_n=3)\nprint(f\"重排序后返回 {len(reranked)} 个最相关结果\")\n```",
+            "common_errors": [
+              {"error": "Streamlit 启动报错或页面空白", "solution": "确保所有依赖已安装；检查代码缩进；运行 streamlit run app.py --server.port 8501"},
+              {"error": "对话历史在刷新后丢失", "solution": "Streamlit 的 session_state 仅在当前会话有效，需自行实现持久化存储"},
+              {"error": "相似度阈值过滤后结果为空", "solution": "检查阈值是否设置过高；先观察无阈值时的相似度分数分布再调整"},
+              {"error": "混合检索效果不如纯向量检索", "solution": "调整 EnsembleRetriever 的 weights 参数，增加向量检索权重"},
+              {"error": "部署后加载慢或 OOM", "solution": "使用 embedding 缓存；限制同时加载的文档数量；考虑使用 API 方式调用 LLM"}
+            ]
           },
           "duration": "2.5小时",
           "resources": [
