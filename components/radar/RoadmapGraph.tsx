@@ -137,6 +137,7 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
       setEdges((eds) =>
         eds.map((e) => ({
           ...e,
+          animated: completedNodes.has(e.source),
           style: {
             stroke: completedNodes.has(e.source) ? "#4ade80" : "#3f3f46",
             strokeWidth: 2,

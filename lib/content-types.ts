@@ -26,6 +26,12 @@ export type ContentCategory =
   | 'training'              // 模型训练
   | 'evaluation'            // 模型评估
   | 'math-foundations'      // 数学基础
+  | 'cs'                    // 计算机科学
+  | 'embedded'              // 嵌入式开发
+  | 'electronics'           // 电子工程
+  | 'signals'               // 信号处理
+  | 'control'               // 控制系统
+  | 'electrical'            // 电气工程
   | 'uncategorized';        // 未分类
 
 // 难度级别
@@ -236,7 +242,8 @@ export function isValidCategory(category: string): category is ContentCategory {
     'math', 'devops', 'llm', 'llm-fundamentals', 'llm-application',
     'reinforcement-learning', 'data-processing', 'data-engineering',
     'tools', 'best-practices', 'infrastructure', 'deployment',
-    'training', 'evaluation', 'math-foundations', 'uncategorized'
+    'training', 'evaluation', 'math-foundations', 'uncategorized',
+    'cs', 'embedded', 'electronics', 'signals', 'control', 'electrical'
   ];
   return validCategories.includes(category as ContentCategory);
 }
