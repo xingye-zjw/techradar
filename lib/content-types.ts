@@ -281,11 +281,33 @@ export interface ProjectFile {
   isRequired: boolean;               // 是否必需
 }
 
+// 项目步骤内容（新格式）
+export interface StepContent {
+  objective?: string;           // 步骤目标
+  tasks?: string[];              // 具体任务列表
+  checkpoint?: string;           // 完成标准
+  common_errors?: Array<{        // 常见错误
+    error: string;
+    solution: string;
+  }>;
+  [key: string]: string | string[] | Array<{error: string; solution: string}> | undefined;
+  // 其他动态代码块如 gpu_verification, data_pipeline 等
+}
+
 // 项目实现步骤
 export interface ProjectStep {
   order: number;                     // 步骤顺序
   title: string;                     // 步骤标题
-  description: string;               // 步骤说明
-  code?: string;                     // 代码示例（可选）
-  hint?: string;                     // 提示（可选）
+  content?: StepContent;             // 步骤内容（新格式）
+  // 旧格式字段（兼容）
+  description?: string;
+  code?: string;
+  hint?: string;
+  // 新格式字段
+  duration?: string;
+  resources?: ResourceLink[];
+  relatedTerms?: string[];
+  relatedTools?: string[];
+  checkpoint?: string;
+  common_errors?: Array<{error: string; solution: string}>;
 }
