@@ -138,35 +138,6 @@ export function ProjectDetail({ project }: ProjectDetailProps) {
         </section>
       )}
 
-      {/* 操作按钮 */}
-      <div className="flex flex-wrap gap-4">
-        {project.templateRepo && (
-          <a
-            href={project.templateRepo}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-emerald-500 text-black font-medium rounded-lg hover:bg-emerald-400 transition-colors"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-            </svg>
-            查看模板
-          </a>
-        )}
-        {project.solutionRepo && (
-          <a
-            href={project.solutionRepo}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-zinc-800 text-zinc-300 font-medium rounded-lg border border-zinc-700 hover:bg-zinc-700 transition-colors"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-            </svg>
-            参考实现
-          </a>
-        )}
       </div>
-    </div>
   );
 }
