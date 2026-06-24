@@ -147,6 +147,8 @@ export interface RoadmapNode {
   duration: string;         // 如 "2-3周"
   prerequisites: string[];  // 前置节点 ID 数组
   status: NodeStatus;
+  /** 难度等级 */
+  difficulty?: 'beginner' | 'intermediate' | 'advanced';
   position?: { x: number; y: number };
   description?: string;
   outcomes?: string[];
