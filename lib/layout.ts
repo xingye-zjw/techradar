@@ -14,7 +14,10 @@ const TRACK_GAP = 100;
  * 自动布局：按 track 分组，使用 dagre 计算 DAG 布局
  * 返回每个节点的 position 映射
  */
-export function autoLayout(nodes: RoadmapNodeType[]): Map<string, { x: number; y: number }> {
+export function autoLayout(
+  nodes: RoadmapNodeType[],
+  direction: 'TB' | 'LR' = 'TB'
+): Map<string, { x: number; y: number }> {
   const positions = new Map<string, { x: number; y: number }>();
 
   // 按 track 分组
@@ -35,11 +38,11 @@ export function autoLayout(nodes: RoadmapNodeType[]): Map<string, { x: number; y
     // 使用 dagre 计算单个 track 内部的布局
     const g = new dagre.graphlib.Graph();
     g.setGraph({
-      rankdir: 'TB',      // 从上到下
-      nodesep: 50,        // 同一 rank 内节点间距
-      ranksep: 70,        // rank 之间的间距
-      marginx: 20,
-      marginy: 20,
+      rankdir: direction,  // 使用传入的方向
+      nodesep: 80,        // 同一 rank 内节点间距（从 50 增加到 80）
+      ranksep: 100,       // rank 之间的间距（从 70 增加到 100）
+      marginx: 30,        // 水平边距（从 20 增加到 30）
+      marginy: 30,        // 垂直边距（从 20 增加到 30）
     });
     g.setDefaultEdgeLabel(() => ({}));
 
@@ -60,8 +63,9 @@ export function autoLayout(nodes: RoadmapNodeType[]): Map<string, { x: number; y
     // 执行布局
     dagre.layout(g);
 
-    // 收集位置，加上 track 的水平偏移
+    // 收集位置，加上 track 的偏移
     let trackMaxX = 0;
+    let trackMaxY = 0;
     for (const node of group) {
       const nodeWithPos = g.node(node.id);
       if (nodeWithPos) {
@@ -70,10 +74,16 @@ export function autoLayout(nodes: RoadmapNodeType[]): Map<string, { x: number; y
           y: nodeWithPos.y - NODE_HEIGHT / 2,
         });
         trackMaxX = Math.max(trackMaxX, nodeWithPos.x + NODE_WIDTH / 2);
+        trackMaxY = Math.max(trackMaxY, nodeWithPos.y + NODE_HEIGHT / 2);
       }
     }
 
-    offsetX += trackMaxX + TRACK_GAP;
+    // 根据方向调整偏移
+    if (direction === 'TB') {
+      offsetX += trackMaxX + TRACK_GAP;
+    } else {
+      offsetX += trackMaxY + TRACK_GAP;
+    }
   }
 
   return positions;

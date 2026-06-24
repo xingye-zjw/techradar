@@ -63,6 +63,7 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [completedNodes, setCompletedNodes] = useState<Set<string>>(new Set());
   const [activeTrack, setActiveTrack] = useState<TrackId | "all">("all");
+  const [layoutDirection, setLayoutDirection] = useState<'TB' | 'LR'>('TB');
   const [selectedNode, setSelectedNode] = useState<RoadmapNodeType | null>(null);
   const initializedRef = useRef(false);
 
@@ -85,7 +86,10 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
   );
 
   // 使用 useMemo 缓存布局计算结果，避免每次渲染都重新计算
-  const autoLayoutPositions = useMemo(() => autoLayout(initialNodes), [initialNodes]);
+  const autoLayoutPositions = useMemo(
+    () => autoLayout(initialNodes, layoutDirection),
+    [initialNodes, layoutDirection]
+  );
 
   useEffect(() => {
     if (initializedRef.current) return;
@@ -222,6 +226,31 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
             </button>
           );
         })}
+      </div>
+
+      {/* 布局方向切换 */}
+      <div className="flex items-center gap-2 mb-4">
+        <span className="font-mono text-[10px] text-neutral-500 uppercase">布局方向</span>
+        <button
+          onClick={() => setLayoutDirection('TB')}
+          className={`px-3 py-1.5 rounded-lg font-mono text-xs border transition-all ${
+            layoutDirection === 'TB'
+              ? 'bg-neutral-200 text-neutral-900 border-neutral-300 shadow-sm'
+              : 'bg-neutral-900 text-neutral-400 border-neutral-700 hover:border-neutral-500'
+          }`}
+        >
+          ↓ 从上到下
+        </button>
+        <button
+          onClick={() => setLayoutDirection('LR')}
+          className={`px-3 py-1.5 rounded-lg font-mono text-xs border transition-all ${
+            layoutDirection === 'LR'
+              ? 'bg-neutral-200 text-neutral-900 border-neutral-300 shadow-sm'
+              : 'bg-neutral-900 text-neutral-400 border-neutral-700 hover:border-neutral-500'
+          }`}
+        >
+          → 从左到右
+        </button>
       </div>
 
       {/* 节点点击提示 */}
