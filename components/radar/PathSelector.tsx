@@ -1,6 +1,7 @@
 'use client';
 
 import { cn } from '@/lib/utils';
+import { FULL_ROADMAP } from '@/lib/roadmap-data';
 import type { LearningPath } from '@/lib/learning-paths';
 
 interface PathSelectorProps {
@@ -37,6 +38,12 @@ const categoryColors: Record<string, string> = {
   electrical: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/30',
   project: 'bg-pink-500/10 text-pink-400 border-pink-500/30',
 };
+
+// 获取节点名称
+function getNodeName(nodeId: string): string {
+  const node = FULL_ROADMAP.find(n => n.id === nodeId);
+  return node?.name || nodeId;
+}
 
 export function PathSelector({ paths, selectedPath, onSelectPath, className }: PathSelectorProps) {
   return (
@@ -88,12 +95,25 @@ export function PathSelector({ paths, selectedPath, onSelectPath, className }: P
         <div className="p-4 bg-neutral-900/50 rounded-lg border border-neutral-800">
           <h4 className="text-sm font-semibold text-neutral-200 mb-2">{selectedPath.name}</h4>
           <p className="text-xs text-neutral-400 mb-3">{selectedPath.description}</p>
-          <div className="flex flex-wrap gap-2">
-            {selectedPath.nodes.map((nodeId, idx) => (
-              <span key={nodeId} className="font-mono text-[10px] px-2 py-1 bg-neutral-800 text-neutral-400 rounded border border-neutral-700">
-                {idx + 1}. {nodeId}
-              </span>
-            ))}
+          <div className="mb-3">
+            <span className="font-mono text-[10px] text-neutral-500 uppercase mb-2 block">学习节点</span>
+            <div className="flex flex-wrap gap-2">
+              {selectedPath.nodes.map((nodeId, idx) => (
+                <span
+                  key={nodeId}
+                  className="font-mono text-[11px] px-2.5 py-1.5 bg-purple-500/10 text-purple-400 rounded-md border border-purple-500/30 flex items-center gap-1.5"
+                >
+                  <span className="w-5 h-5 rounded-full bg-purple-500/20 text-purple-300 text-[10px] flex items-center justify-center font-bold">
+                    {idx + 1}
+                  </span>
+                  {getNodeName(nodeId)}
+                </span>
+              ))}
+            </div>
+          </div>
+          <div className="flex items-center gap-4 font-mono text-[10px] text-neutral-500">
+            <span>⏱️ 总时长：{selectedPath.duration}</span>
+            <span>📊 难度：{selectedPath.difficulty === 'beginner' ? '初级' : selectedPath.difficulty === 'intermediate' ? '中级' : '高级'}</span>
           </div>
         </div>
       )}
