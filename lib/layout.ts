@@ -8,8 +8,7 @@ const NODE_HEIGHT = 160;
 export const TRACK_ORDER = ['devops', 'math', 'cs', 'embedded', 'electronics', 'signals', 'control', 'electrical', 'cv', 'nlp', 'project'] as const;
 
 // Track 之间的间距
-const TRACK_GAP_X = 120;  // 水平间距
-const TRACK_GAP_Y = 120;  // 垂直间距
+const TRACK_GAP = 150;
 
 /**
  * 自动布局：按 track 分组，使用 dagre 计算 DAG 布局
@@ -46,7 +45,7 @@ export function autoLayout(
     // 使用 dagre 计算单个 track 内部的布局
     const g = new dagre.graphlib.Graph();
     g.setGraph({
-      rankdir: direction,
+      rankdir: 'TB',  // 始终使用 TB 计算内部布局
       nodesep: 80,
       ranksep: 100,
       marginx: 30,
@@ -102,24 +101,24 @@ export function autoLayout(
   }
 
   // 根据方向排列 track
-  let offsetX = 0;
-  let offsetY = 0;
+  let offset = 0;
 
   if (direction === 'TB') {
-    // TB 模式：track 水平排列（从左到右）
+    // TB 模式：track 水平排列（从左到右），每个 track 内部从上到下
     for (const layout of trackLayouts) {
       layout.positions.forEach((pos, id) => {
-        positions.set(id, { x: pos.x + offsetX, y: pos.y });
+        positions.set(id, { x: pos.x + offset, y: pos.y });
       });
-      offsetX += layout.width + TRACK_GAP_X;
+      offset += layout.width + TRACK_GAP;
     }
   } else {
-    // LR 模式：track 垂直排列（从上到下）
+    // LR 模式：track 垂直排列（从上到下），每个 track 内部节点需要旋转
     for (const layout of trackLayouts) {
+      // 在 LR 模式下，交换 x 和 y 坐标
       layout.positions.forEach((pos, id) => {
-        positions.set(id, { x: pos.x, y: pos.y + offsetY });
+        positions.set(id, { x: pos.y, y: pos.x + offset });
       });
-      offsetY += layout.height + TRACK_GAP_Y;
+      offset += layout.height + TRACK_GAP;
     }
   }
 
@@ -152,10 +151,10 @@ export function getTrackBounds(
 
     if (minX !== Infinity) {
       bounds.set(track, {
-        x: minX - 20,
-        y: minY - 40,  // 额外空间给标签
-        width: maxX - minX + 40,
-        height: maxY - minY + 60,
+        x: minX - 25,
+        y: minY - 45,
+        width: maxX - minX + 50,
+        height: maxY - minY + 70,
       });
     }
   }

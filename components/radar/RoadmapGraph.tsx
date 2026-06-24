@@ -82,7 +82,7 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
   const [layoutDirection, setLayoutDirection] = useState<'TB' | 'LR'>('TB');
   const [selectedNode, setSelectedNode] = useState<RoadmapNodeType | null>(null);
   const [selectedPath, setSelectedPath] = useState<LearningPath | null>(null);
-  const initializedRef = useRef(false);
+  const [isInitialized, setIsInitialized] = useState(false);
   const reactFlowInstanceRef = useRef<ReactFlowInstance<RoadmapFlowNode, Edge> | null>(null);
 
   const loadProgress = useCallback((): Record<string, NodeStatus> => {
@@ -122,13 +122,20 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
     return { total, completed, percent: total > 0 ? Math.round((completed / total) * 100) : 0 };
   }, [initialNodes, completedNodes]);
 
+  // 初始化
   useEffect(() => {
-    if (initializedRef.current) return;
-    initializedRef.current = true;
-
     const saved = loadProgress();
     const completed = new Set(Object.keys(saved).filter((id) => saved[id] === "completed"));
     setCompletedNodes(completed);
+    setIsInitialized(true);
+  }, [loadProgress]);
+
+  // 当布局方向或初始化状态变化时，更新节点位置
+  useEffect(() => {
+    if (!isInitialized) return;
+
+    const saved = loadProgress();
+    const completed = new Set(Object.keys(saved).filter((id) => saved[id] === "completed"));
 
     const initialized = initialNodes.map((node) => ({
       id: node.id,
@@ -150,7 +157,12 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
 
     setNodes(initialized);
     setEdges(generateEdges(initialNodes));
-  }, [initialNodes, loadProgress, calculateNodeStatus, setNodes, setEdges, autoLayoutPositions]);
+
+    // 延迟 fitView
+    setTimeout(() => {
+      reactFlowInstanceRef.current?.fitView({ padding: 0.15, duration: 300 });
+    }, 100);
+  }, [isInitialized, initialNodes, layoutDirection, autoLayoutPositions, calculateNodeStatus, loadProgress, setNodes, setEdges]);
 
   // 路径高亮效果
   useEffect(() => {
@@ -173,12 +185,12 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
       return;
     }
 
-    const pathNodes = new Set(selectedPath.nodes);
+    const pathNodeSet = new Set(selectedPath.nodes);
 
     setNodes((nds) =>
       nds.map((n) => ({
         ...n,
-        style: pathNodes.has(n.id)
+        style: pathNodeSet.has(n.id)
           ? {
               border: "2px solid #8b5cf6",
               boxShadow: "0 0 12px rgba(139, 92, 246, 0.4)",
@@ -208,15 +220,18 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
     );
 
     // 自动跳转到路径节点区域
-    if (reactFlowInstanceRef.current) {
-      setTimeout(() => {
-        reactFlowInstanceRef.current?.fitView({
-          nodes: selectedPath.nodes.map(id => ({ id })),
+    setTimeout(() => {
+      if (reactFlowInstanceRef.current && selectedPath.nodes.length > 0) {
+        // 获取路径中所有节点的 ID
+        const nodeIds = selectedPath.nodes;
+        // 使用 fitView 聚焦到这些节点
+        reactFlowInstanceRef.current.fitView({
+          nodes: nodeIds.map(id => ({ id })),
           padding: 0.3,
           duration: 500,
         });
-      }, 100);
-    }
+      }
+    }, 200);
   }, [selectedPath, completedNodes, setNodes, setEdges]);
 
   const saveProgress = useCallback((completed: Set<string>) => {
@@ -330,7 +345,7 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
           </div>
 
           {/* 各 Track 进度 - 水平滚动 */}
-          <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-neutral-700 scrollbar-track-transparent">
+          <div className="flex gap-2 overflow-x-auto pb-2">
             {ROADMAP_TRACKS.map((track) => {
               const stat = trackStats[track.id];
               if (!stat || stat.total === 0) return null;
@@ -470,23 +485,19 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
             nodeTypes={nodeTypes}
             fitView
             fitViewOptions={{ padding: 0.15 }}
-            minZoom={0.15}
+            minZoom={0.1}
             maxZoom={1.5}
-            onConnect={(conn) => {
-              // Handle edge creation if needed
-            }}
           >
             <Background color="#1a1a1a" gap={20} />
 
             {/* 泳道背景 - 仅在"全部 Track"模式下显示 */}
-            {activeTrack === "all" && trackBounds && TRACK_ORDER.map((track) => {
-              const bounds = trackBounds.get(track);
-              if (!bounds) return null;
-              const trackColor = TRACK_COLORS[track];
+            {activeTrack === "all" && trackBounds && Array.from(trackBounds.entries()).map(([track, bounds]) => {
+              const trackColor = TRACK_COLORS[track as TrackId];
+              if (!trackColor) return null;
               return (
                 <div
                   key={track}
-                  className="absolute rounded-2xl pointer-events-none transition-all duration-300"
+                  className="absolute rounded-2xl pointer-events-none"
                   style={{
                     left: bounds.x,
                     top: bounds.y,
@@ -494,16 +505,15 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
                     height: bounds.height,
                     backgroundColor: trackColor.swimlane,
                     border: `1px solid ${trackColor.swimlaneBorder}`,
-                    boxShadow: `inset 0 0 30px ${trackColor.swimlane}`,
+                    zIndex: 0,
                   }}
                 >
                   {/* Track 标签 */}
                   <div
-                    className="absolute top-3 left-3 px-3 py-1.5 rounded-lg text-[11px] font-mono font-bold shadow-lg backdrop-blur-sm"
+                    className="absolute top-3 left-3 px-3 py-1.5 rounded-lg text-[11px] font-mono font-bold"
                     style={{
                       backgroundColor: trackColor.swimlaneBorder,
-                      color: getSwimlaneLabelColor(track),
-                      border: `1px solid ${trackColor.swimlaneBorder}`,
+                      color: getSwimlaneLabelColor(track as TrackId),
                     }}
                   >
                     {trackColor.label}
