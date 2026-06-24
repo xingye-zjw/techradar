@@ -224,11 +224,12 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
       if (reactFlowInstanceRef.current && selectedPath.nodes.length > 0) {
         // 获取路径中所有节点的 ID
         const nodeIds = selectedPath.nodes;
-        // 使用 fitView 聚焦到这些节点
+        // 使用 fitView 聚焦到这些节点，减小 padding 让节点显示更大
         reactFlowInstanceRef.current.fitView({
           nodes: nodeIds.map(id => ({ id })),
-          padding: 0.3,
+          padding: 0.1,
           duration: 500,
+          maxZoom: 1.2,
         });
       }
     }, 200);
@@ -468,7 +469,7 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
       )}
 
       {/* DAG 图 */}
-      <div className="relative rounded-2xl border border-neutral-700/50 overflow-hidden bg-neutral-950 shadow-2xl">
+      <div className="relative rounded-2xl border border-neutral-700/50 overflow-hidden bg-black shadow-2xl">
         <div className="h-[450px] sm:h-[550px] md:h-[650px] w-full">
           <ReactFlow
             nodes={visibleNodes}
@@ -488,7 +489,7 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
             minZoom={0.1}
             maxZoom={1.5}
           >
-            <Background color="#1a1a1a" gap={20} />
+            <Background color="#000000" gap={20} />
 
             {/* 泳道背景 - 仅在"全部 Track"模式下显示 */}
             {activeTrack === "all" && trackBounds && Array.from(trackBounds.entries()).map(([track, bounds]) => {
