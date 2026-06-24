@@ -519,6 +519,552 @@
       "relatedIntel": [],
       "relatedNodes": [],
       "relatedTerms": ["tensor", "matrix"]
+    },
+    {
+      "name": "TensorFlow",
+      "slug": "tensorflow",
+      "category": "deep-learning",
+      "purpose": "工业界最流行的深度学习框架，生产部署和移动端支持最佳",
+      "description": "TensorFlow 是工业界最流行的深度学习框架，由 Google Brain 团队开发。它采用静态计算图设计，通过 tf.function 装饰器实现 AutoGraph 自动转换，支持 TensorBoard 可视化、TPU 加速训练和 TensorFlow Lite 移动端部署，是生产环境的首选框架。",
+      "install": "pip install tensorflow",
+      "features": [
+        "tf.function AutoGraph 自动转换 Python 代码为计算图",
+        "TensorBoard 内置可视化（训练曲线/计算图/Embedding）",
+        "TPU 加速训练和分布式策略（MirroredStrategy/MultiWorker）",
+        "TensorFlow Lite 移动端部署和 TensorFlow.js 浏览器端推理"
+      ],
+      "tags": ["深度学习", "生产部署", "移动端"],
+      "github": {
+        "stars": "180k",
+        "last_release": "2025-06",
+        "url": "https://github.com/tensorflow/tensorflow"
+      },
+      "difficulty": "intermediate",
+      "official_url": "https://www.tensorflow.org/api_docs",
+      "use_cases": ["模型训练", "生产部署", "移动端推理"],
+      "relatedIntel": [],
+      "relatedNodes": [],
+      "relatedTerms": ["tensorflow", "keras", "tf-lite"]
+    },
+    {
+      "name": "OpenCV",
+      "slug": "opencv",
+      "category": "computer-vision",
+      "purpose": "计算机视觉领域最核心的开源库，支持图像读取/处理/特征提取",
+      "description": "OpenCV（Open Source Computer Vision Library）是计算机视觉领域最核心的开源库，支持图像读取、预处理、特征提取、目标检测等功能。它提供 Python、C++、Java 多语言接口，支持 CUDA GPU 加速，内置 Haar 级联分类器、SIFT/SURF 特征检测、光流法等经典算法，是 CV 项目的必备工具。",
+      "install": "pip install opencv-python",
+      "features": [
+        "图像读取/显示/保存，支持 JPEG/PNG/BMP 等格式",
+        "图像预处理（滤波/边缘检测/形态学操作）",
+        "特征提取（SIFT/SURF/ORB/HOG）",
+        "目标检测（Haar 级联/HOG+SVM）和视频分析"
+      ],
+      "tags": ["计算机视觉", "图像处理", "特征提取"],
+      "github": {
+        "stars": "71k",
+        "last_release": "2025-05",
+        "url": "https://github.com/opencv/opencv"
+      },
+      "difficulty": "beginner",
+      "official_url": "https://docs.opencv.org",
+      "use_cases": ["图像处理", "特征提取", "视频分析"],
+      "relatedIntel": [],
+      "relatedNodes": ["cv-image-classification"],
+      "relatedTerms": ["image-processing", "feature-extraction", "edge-detection"]
+    },
+    {
+      "name": "scikit-learn",
+      "slug": "scikit-learn",
+      "category": "tools",
+      "purpose": "经典机器学习算法的一站式实现，API 设计优雅，文档完善",
+      "description": "scikit-learn 是 Python 中最流行的经典机器学习库，提供了从数据预处理到模型训练的完整工具链。它包含线性回归、决策树、随机森林、SVM、聚类等主流算法，支持 Pipeline 管道化处理和 GridSearchCV 网格搜索，文档丰富且 API 设计优雅一致。",
+      "install": "pip install scikit-learn",
+      "features": [
+        "完整的监督/无监督学习算法实现",
+        "Pipeline 管道化处理（预处理+训练+评估）",
+        "GridSearchCV / RandomizedSearchCV 超参搜索",
+        "内置数据集（iris/digits/boston）和评估指标"
+      ],
+      "tags": ["机器学习", "经典算法", "Python"],
+      "github": {
+        "stars": "56k",
+        "last_release": "2025-04",
+        "url": "https://github.com/scikit-learn/scikit-learn"
+      },
+      "difficulty": "beginner",
+      "official_url": "https://scikit-learn.org/stable",
+      "use_cases": ["数据挖掘", "分类回归", "特征工程"],
+      "relatedIntel": [],
+      "relatedNodes": [],
+      "relatedTerms": ["machine-learning", "classification", "regression"]
+    },
+    {
+      "name": "pandas",
+      "slug": "pandas",
+      "category": "tools",
+      "purpose": "Python 数据分析的核心库，DataFrame 表格操作神器",
+      "description": "pandas 是 Python 数据分析的核心库，提供了强大的 DataFrame 数据结构用于表格数据操作。它支持数据读取（CSV/Excel/JSON/SQL）、清洗、转换、聚合和可视化，内置 groupby、pivot、merge 等 SQL 风格操作，并可与 NumPy、scikit-learn 无缝集成。",
+      "install": "pip install pandas",
+      "features": [
+        "DataFrame 表格数据结构，支持行列索引和切片",
+        "数据读取（CSV/Excel/JSON/SQL/Parquet）",
+        "groupby / pivot / merge / join 等 SQL 风格操作",
+        "内置数据清洗和缺失值处理"
+      ],
+      "tags": ["数据分析", "表格处理", "Python"],
+      "github": {
+        "stars": "33k",
+        "last_release": "2025-05",
+        "url": "https://github.com/pandas-dev/pandas"
+      },
+      "difficulty": "beginner",
+      "official_url": "https://pandas.pydata.org/docs",
+      "use_cases": ["数据清洗", "数据分析", "特征工程"],
+      "relatedIntel": [],
+      "relatedNodes": [],
+      "relatedTerms": ["dataframe", "data-analysis", "csv"]
+    },
+    {
+      "name": "NumPy",
+      "slug": "numpy",
+      "category": "tools",
+      "purpose": "Python 科学计算基础库，矩阵运算和数组操作的核心",
+      "description": "NumPy 是 Python 科学计算的基础库，提供了高性能的多维数组对象 ndarray 和丰富的数学函数。它支持向量/矩阵运算、线性代数、傅里叶变换和随机数生成，是 pandas、scikit-learn、PyTorch 等库的底层依赖，是数据科学和机器学习的必备工具。",
+      "install": "pip install numpy",
+      "features": [
+        "ndarray 多维数组，支持广播机制",
+        "矩阵运算（点积/转置/逆矩阵/特征值）",
+        "线性代数（linalg）和傅里叶变换（fft）",
+        "随机数生成和统计函数"
+      ],
+      "tags": ["科学计算", "矩阵运算", "Python"],
+      "github": {
+        "stars": "26k",
+        "last_release": "2025-05",
+        "url": "https://github.com/numpy/numpy"
+      },
+      "difficulty": "beginner",
+      "official_url": "https://numpy.org/doc",
+      "use_cases": ["数值计算", "矩阵运算", "数据预处理"],
+      "relatedIntel": [],
+      "relatedNodes": ["numpy-basics"],
+      "relatedTerms": ["array", "matrix", "linear-algebra"]
+    },
+    {
+      "name": "FAISS",
+      "slug": "faiss",
+      "category": "llm",
+      "purpose": "Facebook AI 开源的高效向量检索库，支持十亿级向量快速搜索",
+      "description": "FAISS（Facebook AI Similarity Search）是 Facebook AI 研究院开源的高效向量检索库，支持十亿级向量的快速相似度搜索。它提供多种索引类型（Flat/IVF/HNSW），支持 L2 距离和内积相似度计算，通过 GPU 加速可实现毫秒级查询，是 RAG 系统中最常用的向量存储方案之一。",
+      "install": "pip install faiss-cpu",
+      "features": [
+        "多种索引类型：Flat（精确搜索）/ IVF（倒排索引）/ HNSW（图索引）",
+        "支持 L2 距离和内积相似度计算",
+        "GPU 加速版本支持十亿级向量毫秒级查询",
+        "支持向量添加、删除和批量搜索"
+      ],
+      "tags": ["RAG", "向量检索", "GPU"],
+      "github": {
+        "stars": "23k",
+        "last_release": "2025-04",
+        "url": "https://github.com/facebookresearch/faiss"
+      },
+      "difficulty": "intermediate",
+      "official_url": "https://faiss.ai",
+      "use_cases": ["RAG 检索", "相似图片搜索", "推荐系统"],
+      "relatedIntel": ["005-rag"],
+      "relatedNodes": [],
+      "relatedTerms": ["rag", "embedding", "vector-search"]
+    },
+    {
+      "name": "ChromaDB",
+      "slug": "chromadb",
+      "category": "llm",
+      "purpose": "专为 LLM 应用设计的轻量级向量数据库，开箱即用",
+      "description": "ChromaDB 是专为 LLM 应用设计的轻量级向量数据库，开箱即用无需额外部署。它提供 Python 和 JavaScript 客户端，支持内存和持久化存储，内置文本分割和 Embedding 函数，与 LangChain 无缝集成，是构建 RAG 应用的首选工具之一。",
+      "install": "pip install chromadb",
+      "features": [
+        "开箱即用，无需额外部署数据库服务",
+        "支持内存和持久化存储（SQLite/PostgreSQL）",
+        "内置文本分割和 Embedding 函数",
+        "与 LangChain 无缝集成"
+      ],
+      "tags": ["RAG", "向量数据库", "LLM"],
+      "github": {
+        "stars": "14k",
+        "last_release": "2025-06",
+        "url": "https://github.com/chroma-core/chroma"
+      },
+      "difficulty": "beginner",
+      "official_url": "https://docs.trychroma.com",
+      "use_cases": ["RAG 应用", "文档检索", "知识库"],
+      "relatedIntel": ["005-rag"],
+      "relatedNodes": [],
+      "relatedTerms": ["rag", "embedding", "vector-database"]
+    },
+    {
+      "name": "Jupyter Notebook",
+      "slug": "jupyter",
+      "category": "tools",
+      "purpose": "交互式编程和文档写作神器，代码、文本、图表一体化",
+      "description": "Jupyter Notebook 是一个交互式编程环境，支持代码、文本、数学公式、图表和可视化的一体化展示。它支持 Python、R、Julia 等 40 多种编程语言，通过 nbconvert 可导出为 HTML/PDF/Markdown，是数据探索、教学演示和技术文档的理想工具。",
+      "install": "pip install jupyter",
+      "features": [
+        "代码、文本、数学公式、图表一体化展示",
+        "支持 Python/R/Julia 等 40+ 编程语言",
+        "nbconvert 导出为 HTML/PDF/Markdown",
+        "支持交互式小部件（ipywidgets）"
+      ],
+      "tags": ["交互式", "文档", "Python"],
+      "github": {
+        "stars": "16k",
+        "last_release": "2025-05",
+        "url": "https://github.com/jupyter/notebook"
+      },
+      "difficulty": "beginner",
+      "official_url": "https://jupyter.org/documentation",
+      "use_cases": ["数据探索", "教学演示", "技术文档"],
+      "relatedIntel": [],
+      "relatedNodes": [],
+      "relatedTerms": ["notebook", "ipython"]
+    },
+    {
+      "name": "spaCy",
+      "slug": "spacy",
+      "category": "nlp",
+      "purpose": "工业级 NLP 处理库，支持分词/词性标注/NER/依存分析",
+      "description": "spaCy 是一个工业级的自然语言处理库，提供了分词、词性标注、命名实体识别（NER）、依存分析等核心功能。它支持 60+ 种语言，内置预训练模型可直接使用，通过 spaCy Transformers 可集成 BERT 等深度学习模型，是生产环境 NLP 应用的首选工具。",
+      "install": "pip install spacy && python -m spacy download zh_core_web_sm",
+      "features": [
+        "分词、词性标注、命名实体识别（NER）",
+        "依存分析和句法解析",
+        "60+ 种语言支持，内置预训练模型",
+        "spaCy Transformers 集成 BERT 等深度学习模型"
+      ],
+      "tags": ["NLP", "工业级", "实体识别"],
+      "github": {
+        "stars": "27k",
+        "last_release": "2025-06",
+        "url": "https://github.com/explosion/spaCy"
+      },
+      "difficulty": "intermediate",
+      "official_url": "https://spacy.io/docs",
+      "use_cases": ["文本处理", "实体识别", "信息抽取"],
+      "relatedIntel": [],
+      "relatedNodes": ["nlp-basics"],
+      "relatedTerms": ["nlp", "ner", "tokenization"]
+    },
+    {
+      "name": "PyTorch Lightning",
+      "slug": "pytorch-lightning",
+      "category": "deep-learning",
+      "purpose": "PyTorch 的高级封装，专注研究逻辑，自动处理训练循环",
+      "description": "PyTorch Lightning 是 PyTorch 的高级封装框架，将研究代码与工程代码分离。它自动处理训练循环、验证、测试和日志记录，支持分布式训练（多 GPU/TPU）、混合精度训练和梯度累积，并可一键导出为 ONNX、TensorRT 等部署格式。",
+      "install": "pip install pytorch-lightning",
+      "features": [
+        "研究代码与工程代码分离，专注核心逻辑",
+        "自动处理训练/验证/测试循环",
+        "支持分布式训练（多 GPU/TPU）和混合精度",
+        "一键导出 ONNX / TensorRT / CoreML"
+      ],
+      "tags": ["PyTorch", "研究", "分布式"],
+      "github": {
+        "stars": "25k",
+        "last_release": "2025-06",
+        "url": "https://github.com/Lightning-AI/pytorch-lightning"
+      },
+      "difficulty": "intermediate",
+      "official_url": "https://lightning.ai/docs/pytorch",
+      "use_cases": ["模型训练", "研究实验", "分布式训练"],
+      "relatedIntel": [],
+      "relatedNodes": ["pytorch-core"],
+      "relatedTerms": ["pytorch", "distributed-training", "mixed-precision"]
+    },
+    {
+      "name": "Kubernetes",
+      "slug": "kubernetes",
+      "category": "devops",
+      "purpose": "容器编排平台，自动化部署、扩展和管理容器化应用",
+      "description": "Kubernetes（K8s）是容器编排的行业标准，自动化部署、扩展和管理容器化应用。它提供 Pod、Service、Deployment、ConfigMap、Secret 等核心资源对象，支持水平自动伸缩（HPA）、滚动更新和蓝绿部署，是生产环境微服务架构的基础平台。",
+      "install": "minikube start (本地) 或使用云厂商托管服务",
+      "features": [
+        "Pod / Service / Deployment / StatefulSet 核心资源",
+        "水平自动伸缩（HPA）和集群自动伸缩（CA）",
+        "滚动更新和蓝绿部署策略",
+        "Helm Chart 包管理和 Operator 模式"
+      ],
+      "tags": ["DevOps", "容器编排", "微服务"],
+      "github": {
+        "stars": "106k",
+        "last_release": "2025-05",
+        "url": "https://github.com/kubernetes/kubernetes"
+      },
+      "difficulty": "advanced",
+      "official_url": "https://kubernetes.io/docs",
+      "use_cases": ["微服务部署", "容器编排", "生产环境管理"],
+      "relatedIntel": [],
+      "relatedNodes": ["cicd-basic"],
+      "relatedTerms": ["kubernetes", "docker", "microservices"]
+    },
+    {
+      "name": "Prometheus",
+      "slug": "prometheus",
+      "category": "devops",
+      "purpose": "开源监控系统，多维数据模型 + 灵活查询语言 + 告警机制",
+      "description": "Prometheus 是一个开源的监控系统和时序数据库，采用多维数据模型（指标名称 + 标签）和灵活的 PromQL 查询语言。它支持服务发现（Kubernetes/Consul）和自动抓取指标，内置告警管理器 Alertmanager，并与 Grafana 无缝集成实现可视化仪表盘。",
+      "install": "docker run -p 9090:9090 prom/prometheus",
+      "features": [
+        "多维数据模型：指标名称 + 标签",
+        "PromQL 灵活查询语言",
+        "服务发现（Kubernetes/Consul/文件）",
+        "Alertmanager 告警管理和通知路由"
+      ],
+      "tags": ["监控", "时序数据库", "DevOps"],
+      "github": {
+        "stars": "52k",
+        "last_release": "2025-06",
+        "url": "https://github.com/prometheus/prometheus"
+      },
+      "difficulty": "intermediate",
+      "official_url": "https://prometheus.io/docs",
+      "use_cases": ["系统监控", "应用监控", "告警管理"],
+      "relatedIntel": [],
+      "relatedNodes": ["cicd-basic"],
+      "relatedTerms": ["monitoring", "metrics", "alerting"]
+    },
+    {
+      "name": "Grafana",
+      "slug": "grafana",
+      "category": "devops",
+      "purpose": "开源可视化监控平台，连接多种数据源，构建漂亮的仪表盘",
+      "description": "Grafana 是一个开源的可视化监控平台，支持连接 Prometheus、InfluxDB、Elasticsearch、MySQL 等多种数据源。它提供丰富的图表类型（折线图/柱状图/热力图/仪表盘），支持告警规则配置和通知，是构建监控仪表盘的行业标准工具。",
+      "install": "docker run -p 3000:3000 grafana/grafana",
+      "features": [
+        "连接 Prometheus / InfluxDB / Elasticsearch 等数据源",
+        "丰富的图表类型：折线图/柱状图/热力图/Gauge",
+        "告警规则配置和多渠道通知（Email/Slack/Webhook）",
+        "Dashboard 模板市场和插件生态"
+      ],
+      "tags": ["可视化", "监控", "仪表盘"],
+      "github": {
+        "stars": "57k",
+        "last_release": "2025-06",
+        "url": "https://github.com/grafana/grafana"
+      },
+      "difficulty": "beginner",
+      "official_url": "https://grafana.com/docs",
+      "use_cases": ["监控仪表盘", "数据可视化", "告警"],
+      "relatedIntel": [],
+      "relatedNodes": ["cicd-basic"],
+      "relatedTerms": ["monitoring", "dashboard", "visualization"]
+    },
+    {
+      "name": "Git",
+      "slug": "git",
+      "category": "tools",
+      "purpose": "分布式版本控制系统，代码协作和版本管理的标准工具",
+      "description": "Git 是分布式版本控制系统的事实标准，用于跟踪代码变更和团队协作。它支持分支管理（feature/hotfix/release）、代码合并和冲突解决，通过 GitHub/GitLab 等平台实现远程协作，是软件开发的必备工具。",
+      "install": "sudo apt install git (Linux) 或从官网下载",
+      "features": [
+        "分布式版本控制，本地拥有完整历史",
+        "分支管理：feature/hotfix/release",
+        "代码合并和冲突解决",
+        "与 GitHub/GitLab 远程协作"
+      ],
+      "tags": ["版本控制", "协作", "开发工具"],
+      "github": {
+        "stars": "47k",
+        "last_release": "2025-06",
+        "url": "https://github.com/git/git"
+      },
+      "difficulty": "beginner",
+      "official_url": "https://git-scm.com/docs",
+      "use_cases": ["代码管理", "团队协作", "版本控制"],
+      "relatedIntel": [],
+      "relatedNodes": [],
+      "relatedTerms": ["git", "version-control", "branch"]
+    },
+    {
+      "name": "VS Code",
+      "slug": "vscode",
+      "category": "tools",
+      "purpose": "微软开源的轻量级代码编辑器，插件生态丰富，智能补全强大",
+      "description": "VS Code 是微软开源的轻量级代码编辑器，具有强大的智能补全、代码导航和调试功能。它拥有丰富的插件生态（Python/TypeScript/Docker/Kubernetes），支持 Remote Development 在远程服务器开发，内置终端和 Git 集成，是开发者的首选编辑器。",
+      "install": "从官网下载安装",
+      "features": [
+        "IntelliSense 智能补全和代码导航",
+        "丰富的插件生态（Python/TypeScript/Docker）",
+        "Remote Development 在远程服务器开发",
+        "内置终端和 Git 集成"
+      ],
+      "tags": ["编辑器", "开发工具", "插件"],
+      "github": {
+        "stars": "148k",
+        "last_release": "2025-06",
+        "url": "https://github.com/microsoft/vscode"
+      },
+      "difficulty": "beginner",
+      "official_url": "https://code.visualstudio.com/docs",
+      "use_cases": ["代码编辑", "远程开发", "调试"],
+      "relatedIntel": [],
+      "relatedNodes": [],
+      "relatedTerms": ["editor", "ide", "plugins"]
+    },
+    {
+      "name": "Transformers Agent",
+      "slug": "transformers-agent",
+      "category": "llm",
+      "purpose": "Hugging Face 推出的 LLM Agent 框架，支持多模态工具调用",
+      "description": "Transformers Agent 是 Hugging Face 推出的 LLM Agent 框架，允许模型根据用户指令自动选择和调用工具。它支持文本生成、图像生成、语音合成、代码执行等多种工具，通过 AgentExecutor 实现多步推理，并可自定义工具扩展能力。",
+      "install": "pip install transformers agent",
+      "features": [
+        "自动根据指令选择和调用工具",
+        "支持文本/图像/语音/代码等多模态工具",
+        "AgentExecutor 实现多步推理",
+        "自定义工具扩展能力"
+      ],
+      "tags": ["LLM", "Agent", "多模态"],
+      "github": {
+        "stars": "8k",
+        "last_release": "2025-06",
+        "url": "https://github.com/huggingface/transformers"
+      },
+      "difficulty": "intermediate",
+      "official_url": "https://huggingface.co/docs/transformers/agents",
+      "use_cases": ["智能体开发", "多模态应用", "工具调用"],
+      "relatedIntel": [],
+      "relatedNodes": ["llm-finetune"],
+      "relatedTerms": ["llm", "agent", "tool-calling"]
+    },
+    {
+      "name": "Segment Anything",
+      "slug": "segment-anything",
+      "category": "computer-vision",
+      "purpose": "Meta 开源的通用图像分割模型，支持点选/框选/自动分割",
+      "description": "Segment Anything (SAM) 是 Meta 开源的通用图像分割模型，能够对任意图像中的任意对象进行分割。它支持点选分割、框选分割和自动分割三种模式，提供 ViT-B/ViT-L/ViT-H 三种模型尺寸，可导出为 ONNX 格式用于实时推理，是图像分割领域的革命性工具。",
+      "install": "pip install segment-anything",
+      "features": [
+        "点选/框选/自动分割三种模式",
+        "ViT-B/ViT-L/ViT-H 三种模型尺寸",
+        "ONNX 导出支持实时推理",
+        "自动生成分割掩码"
+      ],
+      "tags": ["图像分割", "SAM", "CV"],
+      "github": {
+        "stars": "34k",
+        "last_release": "2025-05",
+        "url": "https://github.com/facebookresearch/segment-anything"
+      },
+      "difficulty": "intermediate",
+      "official_url": "https://segment-anything.com",
+      "use_cases": ["图像分割", "目标检测", "图像编辑"],
+      "relatedIntel": [],
+      "relatedNodes": ["cv-image-classification"],
+      "relatedTerms": ["image-segmentation", "mask", "sam"]
+    },
+    {
+      "name": "ESP-IDF",
+      "slug": "esp-idf",
+      "category": "embedded",
+      "purpose": "Espressif 官方开发框架，用于 ESP32/ESP32-S3/ESP8266 嵌入式开发",
+      "description": "ESP-IDF 是 Espressif 官方推出的物联网开发框架，用于 ESP32、ESP32-S3、ESP8266 等芯片的嵌入式开发。它提供完整的 SDK 支持 WiFi、蓝牙、LoRa 等无线通信，内置 FreeRTOS 实时操作系统和 lwIP 网络协议栈，并支持 Arduino 兼容层。",
+      "install": "按照 ESP-IDF 官方指南安装",
+      "features": [
+        "完整的 WiFi / 蓝牙 / LoRa 无线通信支持",
+        "内置 FreeRTOS 实时操作系统",
+        "lwIP 网络协议栈和 mDNS / HTTP 服务",
+        "Arduino 兼容层，支持 Arduino 生态"
+      ],
+      "tags": ["ESP32", "物联网", "嵌入式"],
+      "github": {
+        "stars": "15k",
+        "last_release": "2025-05",
+        "url": "https://github.com/espressif/esp-idf"
+      },
+      "difficulty": "intermediate",
+      "official_url": "https://docs.espressif.com/projects/esp-idf",
+      "use_cases": ["物联网设备", "WiFi 开发", "ESP32 项目"],
+      "relatedIntel": [],
+      "relatedNodes": ["embedded-c"],
+      "relatedTerms": ["esp32", "iot", "wifi"]
+    },
+    {
+      "name": "PyTorch Geometric",
+      "slug": "pytorch-geometric",
+      "category": "deep-learning",
+      "purpose": "PyTorch 图神经网络库，支持 GCN/GAT/GNN 等图模型",
+      "description": "PyTorch Geometric (PyG) 是 PyTorch 的图神经网络库，支持 GCN、GAT、GraphSAGE 等主流图模型。它提供高效的稀疏矩阵运算和图数据处理工具，支持异构图和动态图，并可与 PyTorch Lightning 集成实现分布式训练，是图机器学习的核心工具。",
+      "install": "pip install torch_geometric",
+      "features": [
+        "GCN / GAT / GraphSAGE / GIN 等主流图模型",
+        "高效的稀疏矩阵运算和图数据处理",
+        "支持异构图和动态图",
+        "与 PyTorch Lightning 集成"
+      ],
+      "tags": ["图神经网络", "GNN", "PyTorch"],
+      "github": {
+        "stars": "15k",
+        "last_release": "2025-06",
+        "url": "https://github.com/pyg-team/pytorch_geometric"
+      },
+      "difficulty": "advanced",
+      "official_url": "https://pytorch-geometric.readthedocs.io",
+      "use_cases": ["图分类", "节点分类", "推荐系统"],
+      "relatedIntel": [],
+      "relatedNodes": [],
+      "relatedTerms": ["gnn", "graph-neural-network", "gcn"]
+    },
+    {
+      "name": "XGBoost",
+      "slug": "xgboost",
+      "category": "tools",
+      "purpose": "梯度提升决策树库，Kaggle 竞赛神器，工业界广泛使用",
+      "description": "XGBoost 是梯度提升决策树（GBDT）的高效实现，以其出色的性能和稳定性在 Kaggle 竞赛中屡获冠军，被工业界广泛使用。它支持并行训练、缺失值自动处理和正则化（L1/L2），提供 Python/R/Java 多语言接口，并可与 scikit-learn 无缝集成。",
+      "install": "pip install xgboost",
+      "features": [
+        "并行训练，速度快于传统 GBDT",
+        "缺失值自动处理，无需预处理",
+        "正则化（L1/L2）防止过拟合",
+        "支持分类/回归/排序任务"
+      ],
+      "tags": ["机器学习", "GBDT", "Kaggle"],
+      "github": {
+        "stars": "24k",
+        "last_release": "2025-05",
+        "url": "https://github.com/dmlc/xgboost"
+      },
+      "difficulty": "intermediate",
+      "official_url": "https://xgboost.readthedocs.io",
+      "use_cases": ["分类回归", "特征重要性分析", "Kaggle竞赛"],
+      "relatedIntel": [],
+      "relatedNodes": [],
+      "relatedTerms": ["gbdt", "gradient-boosting", "decision-tree"]
+    },
+    {
+      "name": "LightGBM",
+      "slug": "lightgbm",
+      "category": "tools",
+      "purpose": "微软开源的轻量级梯度提升框架，速度更快内存占用更低",
+      "description": "LightGBM 是微软开源的轻量级梯度提升框架，采用直方图算法和 Leaf-wise 生长策略，速度比 XGBoost 更快且内存占用更低。它支持并行训练、类别特征自动处理和 GPU 加速，提供 Python/R/Java 多语言接口，是大规模数据场景的理想选择。",
+      "install": "pip install lightgbm",
+      "features": [
+        "直方图算法，内存占用比 XGBoost 低 1/3",
+        "Leaf-wise 生长策略，收敛更快",
+        "类别特征自动处理，无需独热编码",
+        "GPU 加速和并行训练"
+      ],
+      "tags": ["机器学习", "GBDT", "微软"],
+      "github": {
+        "stars": "15k",
+        "last_release": "2025-04",
+        "url": "https://github.com/microsoft/LightGBM"
+      },
+      "difficulty": "intermediate",
+      "official_url": "https://lightgbm.readthedocs.io",
+      "use_cases": ["大规模数据", "分类回归", "推荐系统"],
+      "relatedIntel": [],
+      "relatedNodes": [],
+      "relatedTerms": ["gbdt", "gradient-boosting", "lightgbm"]
     }
   ],
   "scenarios": [
