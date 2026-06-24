@@ -61,6 +61,20 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     relatedIntel: ["009-linux", "016-server-setup"],
     relatedTools: ["Docker"],
     relatedTerms: ["linux", "shell", "ssh", "cli"],
+    suggestions: {
+      prerequisites: [
+        "基本的计算机操作能力",
+        "了解操作系统概念",
+      ],
+      nextSteps: [
+        "Git & GitHub 协作",
+        "Docker 容器化",
+      ],
+      learningPath: [
+        "DevOps 路径",
+        "全栈开发路径",
+      ],
+    },
     dailyTasks: [
       { day: 1, title: "文件系统与常用命令实战", content: ["理解 Linux 目录结构是掌握系统的第一步。根目录 / 下有多个重要子目录：/home 存放用户主目录，/etc 存放系统配置文件，/tmp 是临时文件目录（重启可能清空），/var 存放日志和可变数据，/usr 存放用户安装的软件", "ls 命令用于列出目录内容，-l 参数显示详细信息（权限、所有者、大小、修改时间），-a 参数显示隐藏文件（以 . 开头的文件）", "mkdir 创建目录，-p 参数可以递归创建多级目录；cp 复制文件，mv 移动或重命名文件，rm 删除文件（-r 递归删除目录，-f 强制删除不提示）", "find 命令用于在目录树中搜索文件，可以按名称、类型、大小、时间等条件筛选；df 显示磁盘整体使用情况，du 显示目录或文件的磁盘占用"], duration: "1.5小时", resources: [R_LINUX_JOURNEY, B_LINUX_TUTORIAL, { title: "Bash 初学者指南", url: "https://www.gnu.org/software/bash/manual/bash.html", required: false, type: "doc", source: "official" }, { title: "Linux 文件系统层次标准", url: "https://www.pathname.com/fhs/", required: false, type: "doc", source: "official" }], checkpoint: "能独立用 Linux 完成文件/目录操作，并解释 ls -la 每一列含义" },
       { day: 2, title: "文本查看与管道组合", content: ["深度学习训练日志动辄几 GB，无法用图形编辑器打开，必须掌握命令行文本查看工具。head 查看文件开头（默认前 10 行），tail 查看文件末尾，tail -f 可以实时追踪文件新增内容（非常适合监控训练日志）", "grep 是文本搜索利器：-r 递归搜索目录，-n 显示行号，-i 忽略大小写，-E 支持扩展正则表达式，-C 显示匹配行的上下文", "wc 命令统计文件的行数、单词数和字节数；awk 是强大的文本处理工具，特别适合按列提取数据和格式化输出", "管道符号 | 可以将多个命令串联起来，前一个命令的输出作为后一个命令的输入，实现复杂的数据处理流水线"], duration: "1.5小时", resources: [R_LINUX_JOURNEY, { title: "grep 命令详解", url: "https://www.gnu.org/software/grep/manual/grep.html", required: false, type: "doc", source: "official" }, { title: "awk 入门教程", url: "https://www.gnu.org/software/gawk/manual/gawk.html", required: false, type: "doc", source: "official" }], checkpoint: "能用 grep/awk/wc 对一个文本文件做简单统计和筛选" },

@@ -324,6 +324,57 @@ export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailP
             </section>
           )}
 
+          {/* 学习建议 */}
+          {node.suggestions && (
+            <section>
+              <h3 className="font-mono text-[10px] text-neutral-500 uppercase tracking-wider mb-2">// 💡 学习建议</h3>
+
+              {/* 前置知识 */}
+              {node.suggestions.prerequisites && node.suggestions.prerequisites.length > 0 && (
+                <div className="mb-4">
+                  <h4 className="text-xs font-semibold text-neutral-400 mb-2">📚 前置知识</h4>
+                  <ul className="space-y-1.5">
+                    {node.suggestions.prerequisites.map((prereq, idx) => (
+                      <li key={idx} className="flex items-start gap-2 text-xs text-neutral-300">
+                        <span className="text-cyan-400 mt-0.5">•</span>
+                        <span>{prereq}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* 后续学习 */}
+              {node.suggestions.nextSteps && node.suggestions.nextSteps.length > 0 && (
+                <div className="mb-4">
+                  <h4 className="text-xs font-semibold text-neutral-400 mb-2">🎯 后续学习</h4>
+                  <ul className="space-y-1.5">
+                    {node.suggestions.nextSteps.map((step, idx) => (
+                      <li key={idx} className="flex items-start gap-2 text-xs text-neutral-300">
+                        <span className="text-emerald-400 mt-0.5">→</span>
+                        <span>{step}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* 学习路径 */}
+              {node.suggestions.learningPath && node.suggestions.learningPath.length > 0 && (
+                <div>
+                  <h4 className="text-xs font-semibold text-neutral-400 mb-2">🛤️ 推荐路径</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {node.suggestions.learningPath.map((path, idx) => (
+                      <span key={idx} className="font-mono text-[10px] px-2 py-1 bg-purple-500/10 text-purple-400 rounded border border-purple-500/30">
+                        {path}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </section>
+          )}
+
           {/* 本节术语 */}
           {nodeTerms.length > 0 && (
             <section>

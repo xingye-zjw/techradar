@@ -133,6 +133,13 @@ export const ROADMAP_TRACKS: Track[] = [
   },
 ];
 
+/** 学习建议 */
+export interface LearningSuggestion {
+  prerequisites: string[];  // 前置知识
+  nextSteps: string[];      // 后续学习
+  learningPath: string[];   // 学习路径
+}
+
 export interface RoadmapNode {
   id: string;
   name: string;
@@ -151,6 +158,8 @@ export interface RoadmapNode {
   relatedTools?: string[];
   /** 关联术语 slug 列表 */
   relatedTerms?: string[];
+  /** 学习建议 */
+  suggestions?: LearningSuggestion;
 }
 
 export interface RoadmapData {
