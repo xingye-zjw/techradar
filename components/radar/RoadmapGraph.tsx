@@ -15,9 +15,11 @@ import "@xyflow/react/dist/style.css";
 
 import { RoadmapNode } from "./RoadmapNode";
 import { NodeDetailPanel } from "./NodeDetailPanel";
+import { PathSelector } from "./PathSelector";
 import type { RoadmapNode as RoadmapNodeType, NodeStatus, TrackId } from "./types";
 import { ROADMAP_TRACKS } from "./types";
 import { FULL_ROADMAP } from "@/lib/roadmap-data";
+import { LEARNING_PATHS, type LearningPath } from "@/lib/learning-paths";
 import { getNodeProgressPercent } from "@/lib/progress";
 import { autoLayout, getTrackBounds, TRACK_ORDER } from "@/lib/layout";
 import { TRACK_COLORS, getSwimlaneLabelColor } from "@/lib/constants";
@@ -65,6 +67,7 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
   const [activeTrack, setActiveTrack] = useState<TrackId | "all">("all");
   const [layoutDirection, setLayoutDirection] = useState<'TB' | 'LR'>('TB');
   const [selectedNode, setSelectedNode] = useState<RoadmapNodeType | null>(null);
+  const [selectedPath, setSelectedPath] = useState<LearningPath | null>(null);
   const initializedRef = useRef(false);
 
   const loadProgress = useCallback((): Record<string, NodeStatus> => {
@@ -121,6 +124,68 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
     setEdges(generateEdges(initialNodes));
   }, [initialNodes, loadProgress, calculateNodeStatus, setNodes, setEdges, autoLayoutPositions]);
 
+  // 路径高亮效果：当选中学习路径时，高亮相关节点和边
+  useEffect(() => {
+    if (!selectedPath) {
+      // 清除高亮：恢复默认样式
+      setNodes((nds) =>
+        nds.map((n) => ({
+          ...n,
+          style: undefined,
+        }))
+      );
+      setEdges((eds) =>
+        eds.map((e) => ({
+          ...e,
+          style: {
+            stroke: completedNodes.has(e.source) ? "#4ade80" : "#3f3f46",
+            strokeWidth: 2,
+          },
+          markerEnd: {
+            type: "arrowclosed" as const,
+            color: completedNodes.has(e.source) ? "#4ade80" : "#52525b",
+          },
+        }))
+      );
+      return;
+    }
+
+    const pathNodes = new Set(selectedPath.nodes);
+
+    // 高亮路径中的节点
+    setNodes((nds) =>
+      nds.map((n) => ({
+        ...n,
+        style: pathNodes.has(n.id)
+          ? {
+              border: "2px solid #8b5cf6",
+              boxShadow: "0 0 10px rgba(139, 92, 246, 0.3)",
+            }
+          : undefined,
+      }))
+    );
+
+    // 高亮路径中的边（相邻节点之间的边）
+    setEdges((eds) =>
+      eds.map((e) => {
+        const sourceIdx = selectedPath.nodes.indexOf(e.source);
+        const targetIdx = selectedPath.nodes.indexOf(e.target);
+        const isInPath = sourceIdx !== -1 && targetIdx !== -1 && targetIdx === sourceIdx + 1;
+        return {
+          ...e,
+          style: {
+            stroke: isInPath ? "#8b5cf6" : "#3f3f46",
+            strokeWidth: isInPath ? 3 : 2,
+          },
+          markerEnd: {
+            type: "arrowclosed" as const,
+            color: isInPath ? "#8b5cf6" : "#52525b",
+          },
+        };
+      })
+    );
+  }, [selectedPath, completedNodes, setNodes, setEdges]);
+
   const saveProgress = useCallback((completed: Set<string>) => {
     const progress: Record<string, NodeStatus> = {};
     completed.forEach((id) => { progress[id] = "completed"; });
@@ -159,16 +224,8 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
           },
         }))
       );
-
-      setEdges((currentEdges) =>
-        currentEdges.map((edge) => ({
-          ...edge,
-          animated: newCompleted.has(edge.source),
-          style: { stroke: newCompleted.has(edge.source) ? "#4ade80" : "#3f3f46", strokeWidth: 2 },
-        }))
-      );
     },
-    [completedNodes, calculateNodeStatus, saveProgress, setNodes, setEdges]
+    [completedNodes, calculateNodeStatus, saveProgress, setNodes]
   );
 
   // 过滤显示的节点
@@ -252,6 +309,14 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
           → 从左到右
         </button>
       </div>
+
+      {/* 路径选择器 */}
+      <PathSelector
+        paths={LEARNING_PATHS}
+        selectedPath={selectedPath}
+        onSelectPath={setSelectedPath}
+        className="mb-4"
+      />
 
       {/* 节点点击提示 */}
       {selectedNodeWithStatus && (
