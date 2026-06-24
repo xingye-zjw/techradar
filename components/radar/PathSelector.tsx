@@ -15,6 +15,13 @@ const categoryLabels: Record<string, string> = {
   nlp: '自然语言处理',
   devops: '工程部署',
   math: '数学基础',
+  cs: '计算机基础',
+  embedded: '嵌入式开发',
+  electronics: '电子电路',
+  signals: '通信信号',
+  control: '自动化控制',
+  electrical: '电气工程',
+  project: '综合项目',
 };
 
 const categoryColors: Record<string, string> = {
@@ -22,6 +29,13 @@ const categoryColors: Record<string, string> = {
   nlp: 'bg-purple-500/10 text-purple-400 border-purple-500/30',
   devops: 'bg-green-500/10 text-green-400 border-green-500/30',
   math: 'bg-orange-500/10 text-orange-400 border-orange-500/30',
+  cs: 'bg-sky-500/10 text-sky-400 border-sky-500/30',
+  embedded: 'bg-teal-500/10 text-teal-400 border-teal-500/30',
+  electronics: 'bg-amber-500/10 text-amber-400 border-amber-500/30',
+  signals: 'bg-rose-500/10 text-rose-400 border-rose-500/30',
+  control: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/30',
+  electrical: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/30',
+  project: 'bg-pink-500/10 text-pink-400 border-pink-500/30',
 };
 
 export function PathSelector({ paths, selectedPath, onSelectPath, className }: PathSelectorProps) {

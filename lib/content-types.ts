@@ -289,6 +289,8 @@ export interface ProjectFile {
 }
 
 // 项目步骤内容（新格式）
+// 已知字段使用明确类型，index signature 允许动态代码块（如 gpu_verification, data_pipeline 等）
+// 代码块在 JSON 中以反引号开头的 key 存储，StepCard 组件通过 startsWith('``') 识别并渲染
 export interface StepContent {
   objective?: string;           // 步骤目标
   tasks?: string[];              // 具体任务列表
@@ -298,7 +300,6 @@ export interface StepContent {
     solution: string;
   }>;
   [key: string]: string | string[] | Array<{error: string; solution: string}> | undefined;
-  // 其他动态代码块如 gpu_verification, data_pipeline 等
 }
 
 // 项目实现步骤

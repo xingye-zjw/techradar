@@ -78,7 +78,10 @@ export function autoLayout(
       }
     }
 
-    // 根据方向调整偏移
+    // 根据方向调整 track 之间的偏移
+    // 注意：dagre 在 LR 模式下会内部交换 X/Y 轴，即 nodeWithPos.x 实际表示垂直位置。
+    // 因此 TB 模式用 trackMaxX（水平宽度）做偏移，LR 模式用 trackMaxY（垂直高度）做偏移，
+    // 两者都映射到输出的 X 轴，实现 track 之间的水平排列。
     if (direction === 'TB') {
       offsetX += trackMaxX + TRACK_GAP;
     } else {
