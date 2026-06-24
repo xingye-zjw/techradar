@@ -225,7 +225,22 @@ export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailP
                 </span>
               </div>
               <h2 className="text-xl font-bold text-neutral-100">{node.name}</h2>
-              <p className="text-sm text-neutral-400 mt-1 font-mono">{node.duration}</p>
+              <div className="flex items-center gap-3 mt-2">
+                {node.difficulty && (
+                  <span className={`font-mono text-[10px] px-2 py-0.5 rounded border ${
+                    node.difficulty === 'beginner'
+                      ? 'bg-green-500/10 text-green-400 border-green-500/30'
+                      : node.difficulty === 'intermediate'
+                      ? 'bg-yellow-500/10 text-yellow-400 border-yellow-500/30'
+                      : 'bg-red-500/10 text-red-400 border-red-500/30'
+                  }`}>
+                    {node.difficulty === 'beginner' ? '初级' : node.difficulty === 'intermediate' ? '中级' : '高级'}
+                  </span>
+                )}
+                <span className="font-mono text-[10px] text-neutral-500">
+                  ⏱️ {node.duration}
+                </span>
+              </div>
             </div>
             <button
               onClick={onClose}
