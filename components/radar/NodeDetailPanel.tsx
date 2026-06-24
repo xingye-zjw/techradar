@@ -150,10 +150,8 @@ export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailP
 
   // 获取当前节点的术语
   const nodeTerms = useMemo(() => {
-    if (!node?.relatedIntel) return [];
-    // 通过节点关联的术语 slug 获取
-    const termSlugs = node.relatedIntel || [];
-    return getTermsBySlugs(termSlugs);
+    if (!node?.relatedTerms) return [];
+    return getTermsBySlugs(node.relatedTerms);
   }, [node]);
 
   useEffect(() => {
@@ -375,93 +373,115 @@ export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailP
             </section>
           )}
 
-          {/* 本节术语 */}
-          {nodeTerms.length > 0 && (
+          {/* 关联内容分组显示 */}
+          {(nodeTerms.length > 0 || (node.relatedIntel && node.relatedIntel.length > 0) || (node.relatedTools && node.relatedTools.length > 0) || relatedProjects.length > 0) && (
             <section>
-              <h3 className="font-mono text-[10px] text-neutral-500 uppercase tracking-wider mb-2">// 📖 本节术语</h3>
-              <div className="flex flex-wrap gap-2">
-                {nodeTerms.map((term) => (
-                  <Link
-                    key={term.slug}
-                    href={`/glossary/${term.slug}`}
-                    className="text-xs px-2 py-1 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 hover:bg-cyan-500/20 transition-colors"
-                  >
-                    {term.name}
-                  </Link>
-                ))}
-              </div>
-            </section>
-          )}
+              <h3 className="font-mono text-[10px] text-neutral-500 uppercase tracking-wider mb-3">// 🔗 关联内容</h3>
 
-          {/* 关联情报 */}
-          {node.relatedIntel && node.relatedIntel.length > 0 && (
-            <section>
-              <h3 className="font-mono text-[10px] text-neutral-500 uppercase tracking-wider mb-2">// 📰 关联情报</h3>
-              <div className="space-y-2">
-                {node.relatedIntel.map((slug) => (
-                  <Link
-                    key={slug}
-                    href={`/intel/${slug}`}
-                    className="flex items-center gap-2 p-2 rounded-lg bg-neutral-950 border border-neutral-800 hover:border-cyan-500/30 hover:bg-cyan-500/5 transition-all group hover-lift-subtle"
-                  >
-                    <span className="text-cyan-400 text-sm">📰</span>
-                    <span className="text-xs text-neutral-300 group-hover:text-cyan-400 transition-colors flex-1">
-                      {INTEL_LINKS[slug] || slug}
-                    </span>
-                    <span className="text-[10px] text-neutral-600 group-hover:text-cyan-400 transition-colors">→</span>
-                  </Link>
-                ))}
-              </div>
-            </section>
-          )}
-
-          {/* 关联工具 */}
-          {node.relatedTools && node.relatedTools.length > 0 && (
-            <section>
-              <h3 className="font-mono text-[10px] text-neutral-500 uppercase tracking-wider mb-2">// 🔧 关联工具</h3>
-              <div className="space-y-2">
-                {node.relatedTools.map((toolName) => (
-                  <Link
-                    key={toolName}
-                    href="/toolbox"
-                    className="flex items-center gap-2 p-2 rounded-lg bg-neutral-950 border border-neutral-800 hover:border-purple-500/30 hover:bg-purple-500/5 transition-all group hover-lift-subtle"
-                  >
-                    <span className="text-purple-400 text-sm">🔧</span>
-                    <span className="text-xs text-neutral-300 group-hover:text-purple-400 transition-colors flex-1">
-                      {TOOL_LINKS[toolName] || toolName}
-                    </span>
-                    <span className="text-[10px] text-neutral-600 group-hover:text-purple-400 transition-colors">→</span>
-                  </Link>
-                ))}
-              </div>
-            </section>
-          )}
-
-          {/* 实战项目 */}
-          {relatedProjects.length > 0 && (
-            <section>
-              <h3 className="font-mono text-[10px] text-neutral-500 uppercase tracking-wider mb-2">// 🚀 实战项目</h3>
-              <div className="space-y-2">
-                {relatedProjects.map((project) => (
-                  <Link
-                    key={project.slug}
-                    href={`/practice/${project.slug}`}
-                    className="flex items-center gap-2 p-2 rounded-lg bg-neutral-950 border border-neutral-800 hover:border-emerald-500/30 hover:bg-emerald-500/5 transition-all group hover-lift-subtle"
-                  >
-                    <span className="text-emerald-400 text-sm">🚀</span>
-                    <div className="flex-1 min-w-0">
-                      <span className="text-xs text-neutral-300 group-hover:text-emerald-400 transition-colors block truncate">
-                        {project.title}
-                      </span>
-                      <div className="flex items-center gap-2 mt-0.5">
-                        <span className="text-[10px] text-neutral-500">{getDifficultyStars(project.difficulty)}</span>
-                        <span className="text-[10px] text-neutral-600">|</span>
-                        <span className="text-[10px] text-neutral-500">{project.duration}</span>
-                      </div>
+              <div className="space-y-4">
+                {/* 关联情报 */}
+                {node.relatedIntel && node.relatedIntel.length > 0 && (
+                  <div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-cyan-400 text-sm">📰</span>
+                      <span className="text-xs font-semibold text-neutral-400">情报</span>
+                      <span className="font-mono text-[10px] text-neutral-600">({node.relatedIntel.length})</span>
                     </div>
-                    <span className="text-[10px] text-neutral-600 group-hover:text-emerald-400 transition-colors">→</span>
-                  </Link>
-                ))}
+                    <div className="space-y-2">
+                      {node.relatedIntel.map((slug) => (
+                        <Link
+                          key={slug}
+                          href={`/intel/${slug}`}
+                          className="flex items-center gap-2 p-2 rounded-lg bg-neutral-950 border border-neutral-800 hover:border-cyan-500/30 hover:bg-cyan-500/5 transition-all group hover-lift-subtle"
+                        >
+                          <span className="text-xs text-neutral-300 group-hover:text-cyan-400 transition-colors flex-1">
+                            {INTEL_LINKS[slug] || slug}
+                          </span>
+                          <span className="text-[10px] text-neutral-600 group-hover:text-cyan-400 transition-colors">→</span>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* 关联术语 */}
+                {nodeTerms.length > 0 && (
+                  <div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-blue-400 text-sm">📖</span>
+                      <span className="text-xs font-semibold text-neutral-400">术语</span>
+                      <span className="font-mono text-[10px] text-neutral-600">({nodeTerms.length})</span>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {nodeTerms.map((term) => (
+                        <Link
+                          key={term.slug}
+                          href={`/glossary/${term.slug}`}
+                          className="text-xs px-2 py-1 rounded bg-blue-500/10 text-blue-400 border border-blue-500/30 hover:bg-blue-500/20 transition-colors"
+                        >
+                          {term.name}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* 关联工具 */}
+                {node.relatedTools && node.relatedTools.length > 0 && (
+                  <div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-purple-400 text-sm">🔧</span>
+                      <span className="text-xs font-semibold text-neutral-400">工具</span>
+                      <span className="font-mono text-[10px] text-neutral-600">({node.relatedTools.length})</span>
+                    </div>
+                    <div className="space-y-2">
+                      {node.relatedTools.map((toolName) => (
+                        <Link
+                          key={toolName}
+                          href="/toolbox"
+                          className="flex items-center gap-2 p-2 rounded-lg bg-neutral-950 border border-neutral-800 hover:border-purple-500/30 hover:bg-purple-500/5 transition-all group hover-lift-subtle"
+                        >
+                          <span className="text-xs text-neutral-300 group-hover:text-purple-400 transition-colors flex-1">
+                            {TOOL_LINKS[toolName] || toolName}
+                          </span>
+                          <span className="text-[10px] text-neutral-600 group-hover:text-purple-400 transition-colors">→</span>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* 实战项目 */}
+                {relatedProjects.length > 0 && (
+                  <div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-emerald-400 text-sm">🚀</span>
+                      <span className="text-xs font-semibold text-neutral-400">实战项目</span>
+                      <span className="font-mono text-[10px] text-neutral-600">({relatedProjects.length})</span>
+                    </div>
+                    <div className="space-y-2">
+                      {relatedProjects.map((project) => (
+                        <Link
+                          key={project.slug}
+                          href={`/practice/${project.slug}`}
+                          className="flex items-center gap-2 p-2 rounded-lg bg-neutral-950 border border-neutral-800 hover:border-emerald-500/30 hover:bg-emerald-500/5 transition-all group hover-lift-subtle"
+                        >
+                          <div className="flex-1 min-w-0">
+                            <span className="text-xs text-neutral-300 group-hover:text-emerald-400 transition-colors block truncate">
+                              {project.title}
+                            </span>
+                            <div className="flex items-center gap-2 mt-0.5">
+                              <span className="text-[10px] text-neutral-500">{getDifficultyStars(project.difficulty)}</span>
+                              <span className="text-[10px] text-neutral-600">|</span>
+                              <span className="text-[10px] text-neutral-500">{project.duration}</span>
+                            </div>
+                          </div>
+                          <span className="text-[10px] text-neutral-600 group-hover:text-emerald-400 transition-colors">→</span>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </section>
           )}
