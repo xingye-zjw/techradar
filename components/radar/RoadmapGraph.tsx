@@ -63,12 +63,12 @@ interface RoadmapGraphProps {
 
 // 计算各 Track 的进度统计
 function getTrackStats(nodes: RoadmapNodeType[], completedNodes: Set<string>) {
-  const stats: Record<TrackId, { total: number; completed: number }> = {} as any;
+  const stats: Record<string, { total: number; completed: number }> = {};
 
-  ROADMAP_TRACKS.forEach(track => {
-    const trackNodes = nodes.filter(n => n.track === track.id);
+  TRACK_ORDER.forEach(trackId => {
+    const trackNodes = nodes.filter(n => n.track === trackId);
     const completed = trackNodes.filter(n => completedNodes.has(n.id)).length;
-    stats[track.id] = { total: trackNodes.length, completed };
+    stats[trackId] = { total: trackNodes.length, completed };
   });
 
   return stats;
@@ -183,7 +183,7 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
               border: "2px solid #8b5cf6",
               boxShadow: "0 0 12px rgba(139, 92, 246, 0.4)",
             }
-          : { opacity: 0.4 },
+          : { opacity: 0.3 },
       }))
     );
 
@@ -197,7 +197,7 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
           style: {
             stroke: isInPath ? "#8b5cf6" : "#3f3f46",
             strokeWidth: isInPath ? 3 : 1,
-            opacity: isInPath ? 1 : 0.3,
+            opacity: isInPath ? 1 : 0.2,
           },
           markerEnd: {
             type: "arrowclosed" as const,
@@ -300,32 +300,41 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
     <div className="relative">
       {/* 总体进度概览 - 仅在"全部"模式下显示 */}
       {activeTrack === "all" && (
-        <div className="mb-6 p-4 bg-gradient-to-r from-neutral-900/80 to-neutral-900/40 rounded-xl border border-neutral-800">
-          <div className="flex items-center justify-between mb-3">
+        <div className="mb-6 p-4 bg-gradient-to-br from-neutral-900 via-neutral-900/95 to-neutral-800/50 rounded-2xl border border-neutral-700/50 backdrop-blur-sm">
+          <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-sm font-semibold text-neutral-200">学习进度总览</h3>
-              <p className="text-xs text-neutral-500 mt-0.5">
-                已完成 {totalProgress.completed} / {totalProgress.total} 个节点
+              <h3 className="text-base font-semibold text-neutral-100 flex items-center gap-2">
+                <svg className="w-5 h-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+                学习进度总览
+              </h3>
+              <p className="text-xs text-neutral-400 mt-1">
+                已完成 <span className="text-green-400 font-medium">{totalProgress.completed}</span> / {totalProgress.total} 个节点
               </p>
             </div>
             <div className="text-right">
-              <span className="text-2xl font-bold text-green-400">{totalProgress.percent}%</span>
+              <div className="text-3xl font-bold bg-gradient-to-r from-green-400 to-emerald-300 bg-clip-text text-transparent">
+                {totalProgress.percent}%
+              </div>
+              <div className="text-[10px] text-neutral-500 font-mono">完成率</div>
             </div>
           </div>
 
           {/* 总进度条 */}
-          <div className="w-full h-2 bg-neutral-800 rounded-full overflow-hidden mb-4">
+          <div className="w-full h-2.5 bg-neutral-800 rounded-full overflow-hidden mb-5 shadow-inner">
             <div
-              className="h-full bg-gradient-to-r from-green-500 to-emerald-400 rounded-full transition-all duration-500"
+              className="h-full bg-gradient-to-r from-green-500 via-emerald-400 to-green-300 rounded-full transition-all duration-700 ease-out"
               style={{ width: `${totalProgress.percent}%` }}
             />
           </div>
 
-          {/* 各 Track 进度 */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-11 gap-2">
+          {/* 各 Track 进度 - 水平滚动 */}
+          <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-neutral-700 scrollbar-track-transparent">
             {ROADMAP_TRACKS.map((track) => {
               const stat = trackStats[track.id];
-              const percent = stat.total > 0 ? Math.round((stat.completed / stat.total) * 100) : 0;
+              if (!stat || stat.total === 0) return null;
+              const percent = Math.round((stat.completed / stat.total) * 100);
               const trackColor = TRACK_COLORS[track.id];
               const isActive = activeTrack !== "all" && activeTrack === track.id;
 
@@ -333,20 +342,24 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
                 <button
                   key={track.id}
                   onClick={() => setActiveTrack(isActive ? "all" : track.id)}
-                  className={`p-2 rounded-lg border transition-all ${
+                  className={`flex-shrink-0 w-[100px] p-3 rounded-xl border transition-all duration-200 ${
                     isActive
-                      ? `${trackColor.bg} ${trackColor.border} ${trackColor.text}`
-                      : "bg-neutral-900/50 border-neutral-800 hover:border-neutral-600"
+                      ? `${trackColor.bg} ${trackColor.border} shadow-lg scale-[1.02]`
+                      : stat.completed > 0
+                        ? "bg-neutral-800/50 border-neutral-700/50 hover:border-neutral-600 hover:bg-neutral-800"
+                        : "bg-neutral-900/50 border-neutral-800/50 hover:border-neutral-700"
                   }`}
                 >
-                  <div className="flex items-center justify-between mb-1">
-                    <span className={`w-2 h-2 rounded-full ${trackColor.solid}`} />
-                    <span className="font-mono text-[10px] text-neutral-500">{stat.completed}/{stat.total}</span>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className={`w-2.5 h-2.5 rounded-full ${trackColor.solid} ${stat.completed > 0 ? 'shadow-sm' : 'opacity-50'}`} />
+                    <span className="font-mono text-[10px] text-neutral-400">{stat.completed}/{stat.total}</span>
                   </div>
-                  <div className="text-[11px] font-medium text-neutral-300 mb-1">{trackColor.label}</div>
-                  <div className="w-full h-1 bg-neutral-800 rounded-full overflow-hidden">
+                  <div className={`text-xs font-medium mb-2 ${isActive ? trackColor.text : 'text-neutral-300'}`}>
+                    {trackColor.label}
+                  </div>
+                  <div className="w-full h-1.5 bg-neutral-800 rounded-full overflow-hidden">
                     <div
-                      className={`h-full rounded-full ${trackColor.solid}`}
+                      className={`h-full rounded-full transition-all duration-500 ${trackColor.solid}`}
                       style={{ width: `${percent}%` }}
                     />
                   </div>
@@ -357,80 +370,68 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
         </div>
       )}
 
-      {/* Track 切换标签栏 */}
-      <div className="flex flex-wrap items-center gap-2 mb-4">
-        <button
-          onClick={() => setActiveTrack("all")}
-          className={`px-4 py-2 rounded-lg font-mono text-xs border transition-all ${
-            activeTrack === "all"
-              ? "bg-white text-neutral-900 border-white shadow-lg shadow-white/10"
-              : "bg-neutral-900 text-neutral-400 border-neutral-700 hover:border-neutral-500 hover:text-neutral-300"
-          }`}
-        >
-          <span className="flex items-center gap-1.5">
-            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-            </svg>
+      {/* 控制栏 */}
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+        {/* Track 切换标签栏 */}
+        <div className="flex flex-wrap items-center gap-1.5">
+          <button
+            onClick={() => setActiveTrack("all")}
+            className={`px-3 py-1.5 rounded-lg font-mono text-xs transition-all duration-200 ${
+              activeTrack === "all"
+                ? "bg-white text-neutral-900 shadow-md shadow-white/10 font-medium"
+                : "bg-neutral-800/50 text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800"
+            }`}
+          >
             全部
-          </span>
-        </button>
+          </button>
 
-        <div className="w-px h-6 bg-neutral-700 mx-1" />
+          {ROADMAP_TRACKS.map((t) => {
+            const isActive = activeTrack === t.id;
+            const trackColor = TRACK_COLORS[t.id];
+            return (
+              <button
+                key={t.id}
+                onClick={() => setActiveTrack(t.id)}
+                className={`px-3 py-1.5 rounded-lg font-mono text-xs transition-all duration-200 ${
+                  isActive
+                    ? `${trackColor.text} ${trackColor.bg} font-medium shadow-md`
+                    : "bg-neutral-800/50 text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800"
+                }`}
+              >
+                <span className="flex items-center gap-1.5">
+                  <span className={`w-2 h-2 rounded-full ${isActive ? trackColor.solid : 'bg-neutral-600'}`} />
+                  {t.name}
+                </span>
+              </button>
+            );
+          })}
+        </div>
 
-        {ROADMAP_TRACKS.map((t) => {
-          const isActive = activeTrack === t.id;
-          const trackColor = TRACK_COLORS[t.id];
-          const stat = trackStats[t.id];
-          return (
+        {/* 布局方向切换 */}
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] text-neutral-500 font-mono">布局</span>
+          <div className="flex rounded-lg bg-neutral-800/50 p-0.5">
             <button
-              key={t.id}
-              onClick={() => setActiveTrack(t.id)}
-              className={`px-3 py-2 rounded-lg font-mono text-xs border transition-all ${
-                isActive
-                  ? `${trackColor.text} ${trackColor.border} ${trackColor.bg} shadow-lg`
-                  : "bg-neutral-900 text-neutral-400 border-neutral-700 hover:border-neutral-500 hover:text-neutral-300"
+              onClick={() => setLayoutDirection('TB')}
+              className={`px-3 py-1.5 rounded-md text-xs font-mono transition-all duration-200 ${
+                layoutDirection === 'TB'
+                  ? 'bg-neutral-200 text-neutral-900 shadow-sm'
+                  : 'text-neutral-400 hover:text-neutral-200'
               }`}
             >
-              <span className="flex items-center gap-1.5">
-                <span className={`w-2 h-2 rounded-full ${isActive ? trackColor.solid : 'bg-neutral-600'}`} />
-                {t.name}
-                {stat.completed > 0 && (
-                  <span className={`ml-1 px-1.5 py-0.5 rounded text-[10px] ${
-                    isActive ? 'bg-white/10' : 'bg-neutral-800'
-                  }`}>
-                    {stat.completed}
-                  </span>
-                )}
-              </span>
+              ↓ 纵向
             </button>
-          );
-        })}
-      </div>
-
-      {/* 布局方向切换 */}
-      <div className="flex items-center gap-2 mb-4">
-        <span className="font-mono text-[10px] text-neutral-500 uppercase">布局方向</span>
-        <div className="flex rounded-lg border border-neutral-700 overflow-hidden">
-          <button
-            onClick={() => setLayoutDirection('TB')}
-            className={`px-3 py-1.5 font-mono text-xs transition-all ${
-              layoutDirection === 'TB'
-                ? 'bg-neutral-200 text-neutral-900'
-                : 'bg-neutral-900 text-neutral-400 hover:text-neutral-300'
-            }`}
-          >
-            ↓ 纵向
-          </button>
-          <button
-            onClick={() => setLayoutDirection('LR')}
-            className={`px-3 py-1.5 font-mono text-xs transition-all ${
-              layoutDirection === 'LR'
-                ? 'bg-neutral-200 text-neutral-900'
-                : 'bg-neutral-900 text-neutral-400 hover:text-neutral-300'
-            }`}
-          >
-            → 横向
-          </button>
+            <button
+              onClick={() => setLayoutDirection('LR')}
+              className={`px-3 py-1.5 rounded-md text-xs font-mono transition-all duration-200 ${
+                layoutDirection === 'LR'
+                  ? 'bg-neutral-200 text-neutral-900 shadow-sm'
+                  : 'text-neutral-400 hover:text-neutral-200'
+              }`}
+            >
+              → 横向
+            </button>
+          </div>
         </div>
       </div>
 
@@ -452,84 +453,100 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
       )}
 
       {/* DAG 图 */}
-      <div className="h-[400px] sm:h-[500px] md:h-[600px] w-full rounded-xl border border-neutral-700 overflow-hidden bg-neutral-950 shadow-2xl shadow-neutral-900/50">
-        <ReactFlow
-          nodes={visibleNodes}
-          edges={visibleEdges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onInit={onInit}
-          onNodeClick={(evt, node) => {
-            onNodeClick(evt, node);
-          }}
-          onNodeDoubleClick={(evt, node) => {
-            onNodeToggleComplete(node.id);
-          }}
-          nodeTypes={nodeTypes}
-          fitView
-          fitViewOptions={{ padding: 0.15 }}
-          minZoom={0.2}
-          maxZoom={1.5}
-          onConnect={(conn) => {
-            // Handle edge creation if needed
-          }}
-        >
-          <Background color="#1a1a1a" gap={20} />
+      <div className="relative rounded-2xl border border-neutral-700/50 overflow-hidden bg-neutral-950 shadow-2xl">
+        <div className="h-[450px] sm:h-[550px] md:h-[650px] w-full">
+          <ReactFlow
+            nodes={visibleNodes}
+            edges={visibleEdges}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            onInit={onInit}
+            onNodeClick={(evt, node) => {
+              onNodeClick(evt, node);
+            }}
+            onNodeDoubleClick={(evt, node) => {
+              onNodeToggleComplete(node.id);
+            }}
+            nodeTypes={nodeTypes}
+            fitView
+            fitViewOptions={{ padding: 0.15 }}
+            minZoom={0.15}
+            maxZoom={1.5}
+            onConnect={(conn) => {
+              // Handle edge creation if needed
+            }}
+          >
+            <Background color="#1a1a1a" gap={20} />
 
-          {/* 泳道背景 - 仅在"全部 Track"模式下显示 */}
-          {activeTrack === "all" && trackBounds && TRACK_ORDER.map((track) => {
-            const bounds = trackBounds.get(track);
-            if (!bounds) return null;
-            const trackColor = TRACK_COLORS[track];
-            return (
-              <div
-                key={track}
-                className="absolute rounded-2xl border-2 pointer-events-none transition-all duration-300"
-                style={{
-                  left: bounds.x - 10,
-                  top: bounds.y - 10,
-                  width: bounds.width + 20,
-                  height: bounds.height + 20,
-                  backgroundColor: trackColor.swimlane,
-                  borderColor: trackColor.swimlaneBorder,
-                }}
-              >
-                {/* Track 标签 */}
+            {/* 泳道背景 - 仅在"全部 Track"模式下显示 */}
+            {activeTrack === "all" && trackBounds && TRACK_ORDER.map((track) => {
+              const bounds = trackBounds.get(track);
+              if (!bounds) return null;
+              const trackColor = TRACK_COLORS[track];
+              return (
                 <div
-                  className="absolute -top-4 left-4 px-3 py-1 rounded-full text-[11px] font-mono font-bold shadow-lg"
+                  key={track}
+                  className="absolute rounded-2xl pointer-events-none transition-all duration-300"
                   style={{
-                    backgroundColor: trackColor.swimlaneBorder,
-                    color: getSwimlaneLabelColor(track),
+                    left: bounds.x,
+                    top: bounds.y,
+                    width: bounds.width,
+                    height: bounds.height,
+                    backgroundColor: trackColor.swimlane,
+                    border: `1px solid ${trackColor.swimlaneBorder}`,
+                    boxShadow: `inset 0 0 30px ${trackColor.swimlane}`,
                   }}
                 >
-                  {trackColor.label}
+                  {/* Track 标签 */}
+                  <div
+                    className="absolute top-3 left-3 px-3 py-1.5 rounded-lg text-[11px] font-mono font-bold shadow-lg backdrop-blur-sm"
+                    style={{
+                      backgroundColor: trackColor.swimlaneBorder,
+                      color: getSwimlaneLabelColor(track),
+                      border: `1px solid ${trackColor.swimlaneBorder}`,
+                    }}
+                  >
+                    {trackColor.label}
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
 
-          <Controls className="!bg-neutral-900 !border-neutral-700 !rounded-lg hidden md:block" />
-        </ReactFlow>
+            <Controls className="!bg-neutral-900 !border-neutral-700 !rounded-xl !shadow-xl hidden md:block" />
+          </ReactFlow>
+        </div>
       </div>
 
       {/* 操作说明 */}
-      <div className="mt-4 flex flex-wrap gap-4 justify-center font-mono text-[10px] text-neutral-500">
-        <span className="flex items-center gap-1">
-          <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
-          单击：查看详情
-        </span>
-        <span className="flex items-center gap-1">
-          <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
-          双击：切换完成
-        </span>
-        <span className="flex items-center gap-1">
-          <span className="w-1.5 h-1.5 rounded-full bg-purple-400" />
-          选择路径：自动聚焦
-        </span>
-        <span className="flex items-center gap-1">
-          <span className="w-1.5 h-1.5 rounded-full bg-neutral-400" />
-          滚轮缩放 | 拖拽平移
-        </span>
+      <div className="mt-4 flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+        <div className="flex items-center gap-2 text-neutral-500">
+          <div className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-neutral-900/50 border border-neutral-800">
+            <span className="w-3 h-3 rounded-full bg-green-500/20 border border-green-500/40" />
+            <span className="text-[10px] font-mono">单击</span>
+          </div>
+          <span className="text-[11px]">查看详情</span>
+        </div>
+        <div className="flex items-center gap-2 text-neutral-500">
+          <div className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-neutral-900/50 border border-neutral-800">
+            <span className="w-3 h-3 rounded-full bg-blue-500/20 border border-blue-500/40" />
+            <span className="text-[10px] font-mono">双击</span>
+          </div>
+          <span className="text-[11px]">切换完成</span>
+        </div>
+        <div className="flex items-center gap-2 text-neutral-500">
+          <div className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-neutral-900/50 border border-neutral-800">
+            <span className="w-3 h-3 rounded-full bg-purple-500/20 border border-purple-500/40" />
+            <span className="text-[10px] font-mono">滚轮</span>
+          </div>
+          <span className="text-[11px]">缩放</span>
+        </div>
+        <div className="flex items-center gap-2 text-neutral-500">
+          <div className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-neutral-900/50 border border-neutral-800">
+            <span className="w-3 h-3 rounded-full bg-amber-500/20 border border-amber-500/40" />
+            <span className="text-[10px] font-mono">拖拽</span>
+          </div>
+          <span className="text-[11px]">平移</span>
+        </div>
       </div>
     </div>
   );

@@ -993,4 +993,268 @@ class ServoSystem:
         p = self.params
         
         # 位置环
-        vel_ref = self.pos_contr
+        vel_ref = self.pos_controller.update(pos_ref, self.theta, dt)
+        
+        # 速度环
+        iq_ref = self.vel_controller.update(vel_ref, self.omega, dt)
+        
+        # 电流环（id=0控制）
+        vd, vq = self.cur_controller.update(0, iq_ref, self.id, self.iq, self.omega, dt)
+        
+        # 电机模型
+        Te, omega, theta = self.motor_model(vd, vq, TL, dt)
+        
+        return theta, omega, Te
+    
+    def motor_model(self, vd: float, vq: float, TL: float, dt: float) -> Tuple[float, float, float]:
+        """电机模型"""
+        p = self.params
+        
+        # 电磁转矩
+        Te = 1.5 * p.pole_pairs * p.psi_f * self.iq
+        
+        # 电流动态
+        omega_e = self.omega * p.pole_pairs
+        did_dt = (vd - p.Rs * self.id + omega_e * p.Lq * self.iq) / p.Ld
+        diq_dt = (vq - p.Rs * self.iq - omega_e * (p.Ld * self.id + p.psi_f)) / p.Lq
+        
+        # 机械动态
+        domega_dt = (Te - p.B * self.omega - TL) / p.J
+        
+        # 更新状态
+        self.id += did_dt * dt
+        self.iq += diq_dt * dt
+        self.omega += domega_dt * dt
+        self.theta += self.omega * dt
+        
+        return Te, self.omega, self.theta
+
+class PositionController:
+    """位置控制器"""
+    def __init__(self, Kp=100, Ki=0, Kd=5):
+        self.Kp = Kp
+        self.Ki = Ki
+        self.Kd = Kd
+        self.integral = 0
+        self.prev_error = 0
+        
+    def update(self, ref, fb, dt):
+        error = ref - fb
+        self.integral += error * dt
+        derivative = (error - self.prev_error) / dt
+        self.prev_error = error
+        return self.Kp * error + self.Ki * self.integral + self.Kd * derivative
+
+class VelocityController:
+    """速度控制器"""
+    def __init__(self, Kp=2, Ki=10):
+        self.Kp = Kp
+        self.Ki = Ki
+        self.integral = 0
+        
+    def update(self, ref, fb, dt):
+        error = ref - fb
+        self.integral += error * dt
+        self.integral = np.clip(self.integral, -10, 10)  # 抗饱和
+        return self.Kp * error + self.Ki * self.integral
+
+class CurrentController:
+    """电流控制器"""
+    def __init__(self, Kp=10, Ki=100):
+        self.Kp = Kp
+        self.Ki = Ki
+        self.integral_d = 0
+        self.integral_q = 0
+        
+    def update(self, id_ref, iq_ref, id_fb, iq_fb, omega, dt):
+        # d轴
+        error_d = id_ref - id_fb
+        self.integral_d += error_d * dt
+        vd = self.Kp * error_d + self.Ki * self.integral_d
+        
+        # q轴
+        error_q = iq_ref - iq_fb
+        self.integral_q += error_q * dt
+        vq = self.Kp * error_q + self.Ki * self.integral_q
+        
+        return vd, vq
+
+# 运行完整仿真
+params = ServoParams()
+servo = ServoSystem(params)
+
+dt = 0.0001
+t = np.arange(0, 2, dt)
+
+# 位置给定：阶跃
+pos_ref = np.zeros_like(t)
+pos_ref[t > 0.5] = np.pi * 2  # 0.5秒后转到360度
+pos_ref[t > 1.2] = np.pi      # 1.2秒后转到180度
+
+# 记录数据
+pos_fb = np.zeros_like(t)
+vel_fb = np.zeros_like(t)
+torque = np.zeros_like(t)
+
+# 负载转矩
+TL = 0.5  # 恒定负载
+
+for i in range(len(t)):
+    theta, omega, Te = servo.update(pos_ref[i], TL, dt)
+    pos_fb[i] = theta
+    vel_fb[i] = omega
+    torque[i] = Te
+
+# 绘制结果
+plt.figure(figsize=(12, 10))
+
+plt.subplot(3, 1, 1)
+plt.plot(t, pos_ref * 180 / np.pi, 'r--', label='Reference')
+plt.plot(t, pos_fb * 180 / np.pi, 'b-', label='Actual')
+plt.ylabel('Position (deg)')
+plt.title('Servo System Response')
+plt.legend()
+plt.grid(True)
+
+plt.subplot(3, 1, 2)
+plt.plot(t, vel_fb * 60 / (2 * np.pi), 'b-')
+plt.ylabel('Speed (RPM)')
+plt.grid(True)
+
+plt.subplot(3, 1, 3)
+plt.plot(t, torque, 'b-')
+plt.ylabel('Torque (N·m)')
+plt.xlabel('Time (s)')
+plt.grid(True)
+
+plt.tight_layout()
+plt.savefig('servo_system_complete.png')
+print("完整伺服系统仿真完成")
+```
+
+**第二步：实际应用示例**
+
+```python
+# 实际应用：点对点定位控制
+def point_to_point_motion(servo, points, dt=0.0001):
+    """
+    点对点运动控制
+    points: [(位置1, 停留时间1), (位置2, 停留时间2), ...]
+    """
+    results = {'t': [], 'pos': [], 'vel': [], 'torque': []}
+    t_total = 0
+    
+    for target_pos, dwell_time in points:
+        # 运动规划
+        t_profile, pos_profile, vel_profile, _ = servo.planner.trapezoidal_profile(
+            servo.theta, target_pos, dt
+        )
+        
+        # 执行运动
+        for i, t in enumerate(t_profile):
+            theta, omega, Te = servo.update(pos_profile[i], 0.5, dt)
+            results['t'].append(t_total + t)
+            results['pos'].append(theta)
+            results['vel'].append(omega)
+            results['torque'].append(Te)
+            
+        t_total += t_profile[-1]
+        
+        # 停留
+        for t in np.arange(0, dwell_time, dt):
+            theta, omega, Te = servo.update(target_pos, 0.5, dt)
+            results['t'].append(t_total + t)
+            results['pos'].append(theta)
+            results['vel'].append(omega)
+            results['torque'].append(Te)
+            
+        t_total += dwell_time
+        
+    return results
+
+# 执行点对点运动
+params = ServoParams()
+servo = ServoSystem(params)
+
+points = [
+    (np.pi, 0.5),      # 转到180度，停留0.5秒
+    (2 * np.pi, 0.5),  # 转到360度，停留0.5秒
+    (0, 0.5),          # 回到0度，停留0.5秒
+    (np.pi / 2, 0.5),  # 转到90度，停留0.5秒
+]
+
+results = point_to_point_motion(servo, points)
+
+plt.figure(figsize=(12, 8))
+
+plt.subplot(3, 1, 1)
+plt.plot(results['t'], np.array(results['pos']) * 180 / np.pi)
+plt.ylabel('Position (deg)')
+plt.title('Point-to-Point Motion')
+plt.grid(True)
+
+plt.subplot(3, 1, 2)
+plt.plot(results['t'], np.array(results['vel']) * 60 / (2 * np.pi))
+plt.ylabel('Speed (RPM)')
+plt.grid(True)
+
+plt.subplot(3, 1, 3)
+plt.plot(results['t'], results['torque'])
+plt.ylabel('Torque (N·m)')
+plt.xlabel('Time (s)')
+plt.grid(True)
+
+plt.tight_layout()
+plt.savefig('point_to_point_motion.png')
+print("点对点运动控制完成")
+```
+
+## 常见误区
+
+**误区 1：忽视刚性匹配 → 系统振荡**
+
+解释：伺服系统的刚性由位置环增益决定。增益过高会导致机械共振，增益过低会导致定位精度下降。应根据机械系统的固有频率调整刚性。
+
+**误区 2：忽视惯量匹配 → 响应变差**
+
+解释：负载惯量与电机惯量应匹配（通常比例在1:1到10:1之间）。惯量比过大导致响应变慢、控制困难，需要增大电机或添加减速机。
+
+**误区 3：忽视编码器精度 → 定位误差**
+
+解释：编码器分辨率直接影响定位精度。对于高精度应用，应选择高分辨率编码器（如17位绝对值编码器）或使用细分技术。
+
+**误区 4：忽视机械共振 → 系统不稳定**
+
+解释：机械系统存在固有频率，伺服控制带宽接近固有频率时会产生共振。应使用陷波滤波器或降低控制带宽。
+
+**误区 5：忽视零点标定 → 位置偏差**
+
+解释：绝对值编码器需要正确标定零点位置，增量式编码器需要回零操作。零点错误会导致位置控制偏差。
+
+## 学习资源推荐
+
+### 书籍
+- 《伺服控制系统》- 陈伯时
+- 《运动控制系统》- 尔桂花
+- 《电力拖动自动控制系统》- 阮毅
+- 《Modern Control Engineering》- Katsuhiko Ogata
+
+### 在线课程
+- Coursera: Control of Mobile Robots
+- YouTube: MATLAB Simulink 伺服控制教程
+- B站: 伺服电机控制技术
+
+### 实践平台
+- Arduino + 步进电机（入门）
+- STM32 + FOC电机驱动（进阶）
+- 工业伺服驱动器（专业）
+
+### 开源项目
+- ODrive - 高性能开源伺服驱动
+- SimpleFOC - 简易FOC库
+- LinuxCNC - 开源数控系统
+
+### 技术文档
+- 安川伺服技术手册
+- 三菱伺服编程指南
+- 西门子运动控制手册
