@@ -19,7 +19,7 @@ docker run -e TZ=Asia/Shanghai 或 -v /etc/localtime:/etc/localtime:ro
 - 03 确认日志框架（如Python logging、Java Log4j）的时区配置是否与容器系统时区一致
 - 04 检查 Dockerfile 是否正确配置了时区链接
 
-\#Docker#时区#日志
+#Docker#时区#日志
 
 ---
 
@@ -46,7 +46,7 @@ docker run -e TZ=Asia/Shanghai 或 -v /etc/localtime:/etc/localtime:ro
 - 05 使用官方 nvidia/cuda 基础镜像而非普通基础镜像
 - 06 启动容器时添加 --gpus all 参数
 
-\#Docker#GPU#CUDA#容器
+#Docker#GPU#CUDA#容器
 
 ---
 
@@ -72,7 +72,7 @@ docker run -e TZ=Asia/Shanghai 或 -v /etc/localtime:/etc/localtime:ro
 - 04 检查 RUN 指令是否在同一条命令中清理了缓存（apt-get clean、pip install --no-cache-dir）
 - 05 确认是否需要多阶段构建分离编译环境和运行环境
 
-\#Docker#容器#性能优化
+#Docker#容器#性能优化
 
 ---
 
@@ -99,7 +99,7 @@ docker run -e TZ=Asia/Shanghai 或 -v /etc/localtime:/etc/localtime:ro
 - 05 在 docker run 时添加 --memory 参数限制容器可用内存
 - 06 查看宿主机 dmesg | grep -i oom 确认内核层面的内存压力
 
-\#Docker#OOM#内存安全
+#Docker#OOM#内存安全
 
 ---
 
@@ -126,4 +126,4 @@ docker run -e TZ=Asia/Shanghai 或 -v /etc/localtime:/etc/localtime:ro
 - 05 启动容器时指定网络：docker run --network <network_name>
 - 06 使用 docker-compose 统一管理网络配置
 
-\#Docker#网络#容器
+#Docker#网络#容器

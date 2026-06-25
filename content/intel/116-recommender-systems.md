@@ -169,9 +169,11 @@ def funk_svd(ratings, k=20, lr=0.005, reg=0.02, epochs=20):
             error = ratings[i, j] - pred
             total_loss += error ** 2
             
-            # 梯度下降更新
-            U[i] += lr * (error * V[j] - reg * U[i])
-            V[j] += lr * (error * U[i] - reg * V[j])
+            # 梯度下降更新（先保存原始值，确保梯度计算正确）
+            u_i_old = U[i].copy()
+            v_j_old = V[j].copy()
+            U[i] += lr * (error * v_j_old - reg * U[i])
+            V[j] += lr * (error * u_i_old - reg * V[j])
         
         if epoch % 5 == 0:
             rmse = np.sqrt(total_loss / len(rows))

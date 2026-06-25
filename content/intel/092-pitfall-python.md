@@ -122,5 +122,3 @@ conda create 独立环境 → pip install 分批安装 → freeze 导出依赖
 - 04 避免用 is 比较整数、字符串、列表等可变对象的值
 
 #Python#语言特性#数值稳定性
-
----

@@ -123,5 +123,3 @@ docker run -e TZ=Asia/Shanghai 或 -v /etc/localtime:/etc/localtime:ro
 - 04 确认日志框架时区配置
 
 #Docker#时区#日志
-
----

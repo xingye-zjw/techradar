@@ -60,6 +60,7 @@ def clip_loss(image_features, text_features):
     logits = image_features @ text_features.T  # (batch, batch)
     
     # 对角线是匹配的，其他是不匹配的
+    batch_size = image_features.shape[0]
     labels = torch.arange(batch_size)
     
     # 双向对比损失（图像→文本 + 文本→图像）

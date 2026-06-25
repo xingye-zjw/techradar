@@ -988,8 +988,8 @@ int main(void)
 
     printf("Device opened successfully\n");
 
-    // 写入数据
-    strcpy(write_buf, "Hello from user space!");
+    // 写入数据（使用 snprintf 避免缓冲区溢出）
+    snprintf(write_buf, sizeof(write_buf), "Hello from user space!");
     ret = write(fd, write_buf, strlen(write_buf));
     if (ret < 0) {
         perror("Write failed");

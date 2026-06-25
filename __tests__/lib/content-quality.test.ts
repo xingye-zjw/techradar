@@ -8,7 +8,7 @@ function readIntelFiles(): { name: string; content: string; frontmatter: Record<
   const intelDir = path.join(process.cwd(), 'content', 'intel');
   if (!fs.existsSync(intelDir)) return [];
 
-  const files = fs.readdirSync(intelDir).filter(f => f.endsWith('.md'));
+  const files = fs.readdirSync(intelDir).filter(f => f.endsWith('.md') && !f.includes('pitfall'));
   return files.map(name => {
     const raw = fs.readFileSync(path.join(intelDir, name), 'utf8');
     const { data: frontmatter, content } = matter(raw);

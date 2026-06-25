@@ -396,8 +396,10 @@ print(f"各类别概率: {[(i, f'{probs[i]:.3f}') for i in range(10)]}")
 ```python
 def calc_receptive_field(kernel_sizes, strides, paddings):
     rf = 1
+    stride_product = 1
     for k, s, p in zip(kernel_sizes, strides, paddings):
-        rf = rf + (k - 1) * 1  # stride=1 的简化情形
+        rf = rf + (k - 1) * stride_product
+        stride_product *= s
     return rf
 
 # SimpleCNN 的第一层卷积链（不考虑 pool 时）

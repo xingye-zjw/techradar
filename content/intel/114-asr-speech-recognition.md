@@ -60,7 +60,7 @@ takeaways:
 
 **1. 预加重（Pre-emphasis）**
 - 目的：提升高频部分能量，因为人声高频能量本来就低
-- 公式：`y[n] = x[n] - 0.97 * x[n-1]
+- 公式：`y[n] = x[n] - 0.97 * x[n-1]`
 
 **2. 分帧（Framing）**
 - 语音是短时平稳信号（~25ms 内近似不变）
@@ -70,10 +70,10 @@ takeaways:
 **3. 加窗（Windowing）**
 - 用汉明窗（Hamming Window）乘每一帧，减少帧两端平滑过渡
 - 目的：减少 FFT 后的频谱泄漏
-- 汉明窗：`w[n] = 0.54 - 0.46 * cos(2πn/N)
+- 汉明窗：`w[n] = 0.54 - 0.46 * cos(2πn/N)`
 
 **4. MFCC 提取**：
-- **FFT**：每一帧做快速傅里叶变换，得到频谱**
+- **FFT**：每一帧做快速傅里叶变换，得到频谱
 - **Mel 滤波组**：用 40 个 Mel 滤波器组模拟人耳对频率的非线性感知（低频分辨力强，高频弱）
 - **对数**：取对数，模拟人耳对响度的感知也是对数的
 - **DCT**：离散余弦变换，去除相关性，得到 13 维 MFCC 系数（通常取前 13 维）
@@ -159,7 +159,7 @@ takeaways:
 
 **关键区别**：
 - CTC：每个声学帧只能输出一个字符或 blank
-- Transducer：每个声学帧可以输出 0 个或多个字符（通过 Prediction Network 循环生成
+- Transducer：每个声学帧可以输出 0 个或多个字符（通过 Prediction Network 循环生成）
 
 **优点**：
 - 可以流式识别
@@ -241,7 +241,7 @@ OpenAI 在 2022 年发布的 Whisper，彻底改变了 ASR 行业格局。
 - 必须依赖上下文才能分辨
 
 **中文 ASR 的特殊技巧**：
-- 用字模型：字为单位建模（而不是音素
+- 用字模型：字为单位建模（而不是音素）
 - 声调建模：把声调当额外特征加进去
 - 大语料：中文文本语料比英文多，语言模型更重要
 
@@ -260,7 +260,7 @@ pip install jiwer  # 算 WER
 ```python
 import whisper
 
-# 加载模型（第一次会自动下载
+# 加载模型（第一次会自动下载）
 model = whisper.load_model("base")
 
 # 加载音频并识别
@@ -384,7 +384,7 @@ with open("transcript.txt", "w", encoding="utf-8") as f:
    - WhisperX：带说话人分离 + Whisper
 
 4. **课程**：
-   - 斯坦福 CS224S：Speech Processing（语音处理
+   - 斯坦福 CS224S：Speech Processing（语音处理）
    - 李宏毅机器学习：语音识别部分讲得很清楚
 
 5. **实践建议**：

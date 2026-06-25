@@ -87,7 +87,7 @@ def moe_forward(x, experts, router, top_k=2):
 
 ```python
 # 负载均衡辅助损失
-def auxiliary_loss(gates, expert_indices):
+def auxiliary_loss(gates, expert_indices, num_experts):
     # gates: (batch, num_experts) - 每个专家被选中的概率
     # expert_indices: (batch, top_k) - 实际选中的专家
     
