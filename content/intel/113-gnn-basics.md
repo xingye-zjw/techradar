@@ -82,7 +82,7 @@ GCN 是最经典的 GNN 变体，它的层定义为：
 GCN 对所有邻居一视同仁（权重只由度数决定），而 GAT 引入了**注意力机制**，让模型自动学习每个邻居的重要程度。
 
 GAT 的核心步骤：
-1. 对每个节点对 (i, j)，计算注意力系数 e_ij = a(W h_i || W h_j)
+1. 对每个节点对 (i, j)，计算注意力系数 e_ij = LeakyReLU(a^T [W h_i || W h_j])
 2. 用 softmax 归一化：α_ij = softmax_j(e_ij)
 3. 聚合邻居：h_i' = σ(Σ_j α_ij W h_j)
 

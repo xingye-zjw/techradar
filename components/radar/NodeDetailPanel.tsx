@@ -587,16 +587,16 @@ export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailP
                                 <div>
                                   <h4 className="text-xs font-bold text-emerald-400 mb-1 uppercase tracking-wider">核心目标</h4>
                                   <p className={`text-xs text-neutral-400 leading-relaxed ${taskProgress[task.day] ? "line-through opacity-50" : ""}`}>
-                                    {renderTextWithTerms(task.content.objective, allTerms, node.id)}
+                                    {renderTextWithTerms(task.content.objective ?? "", allTerms, node.id)}
                                   </p>
                                 </div>
 
-                                {/* 核心 API */}
-                                {task.content.api_checklist && task.content.api_checklist.length > 0 && (
+                                {/* 核心要点 */}
+                                {task.content.key_points && task.content.key_points.length > 0 && (
                                   <div>
-                                    <h4 className="text-xs font-bold text-emerald-400 mb-1 uppercase tracking-wider">核心 API</h4>
+                                    <h4 className="text-xs font-bold text-emerald-400 mb-1 uppercase tracking-wider">核心要点</h4>
                                     <ul className="space-y-1">
-                                      {task.content.api_checklist.map((api, idx) => (
+                                      {task.content.key_points.map((api, idx) => (
                                         <li key={idx} className={`flex items-start gap-2 text-xs text-neutral-400 ${taskProgress[task.day] ? "line-through opacity-50" : ""}`}>
                                           <span className="text-neutral-600 font-mono mt-0.5 flex-shrink-0">·</span>
                                           <span>{renderApiItem(api)}</span>
@@ -613,22 +613,22 @@ export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailP
                                       <span className="text-base">🎯</span>
                                       <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider">场景实操</span>
                                     </div>
-                                    <p className="text-sm text-zinc-200 leading-relaxed">{renderTextWithTerms(task.content.practice, allTerms, node.id)}</p>
+                                    <p className="text-sm text-zinc-200 leading-relaxed">{renderTextWithTerms(task.content.practice ?? "", allTerms, node.id)}</p>
 
                                     {/* 查看答案折叠面板 */}
-                                    {task.content.answer && (
+                                    {task.content.deep_dive && (
                                       <div className="mt-3 pt-3 border-t border-emerald-500/20">
                                         <button
                                           onClick={() => setExpandedAnswers(prev => ({ ...prev, [task.day]: !prev[task.day] }))}
                                           className="flex items-center gap-2 text-xs text-emerald-400 hover:text-emerald-300 transition-colors"
                                         >
                                           <span>{expandedAnswers[task.day] ? "🔽" : "▶️"}</span>
-                                          <span className="font-medium">{expandedAnswers[task.day] ? "收起答案" : "查看参考答案"}</span>
+                                          <span className="font-medium">{expandedAnswers[task.day] ? "收起拓展" : "查看深入拓展"}</span>
                                         </button>
                                         {expandedAnswers[task.day] && (
                                           <div className="mt-2 p-3 bg-zinc-900/80 rounded-lg border border-zinc-700/50">
                                             <pre className="text-xs text-zinc-300 whitespace-pre-wrap font-mono leading-relaxed">
-                                              {task.content.answer}
+                                              {task.content.deep_dive}
                                             </pre>
                                           </div>
                                         )}

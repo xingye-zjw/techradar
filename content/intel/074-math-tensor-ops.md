@@ -526,7 +526,7 @@ def decompose_conv_layer(conv_layer, rank):
 # 示例：压缩 ResNet 的卷积层
 # original_conv = nn.Conv2d(256, 512, kernel_size=3, padding=1)
 # compressed = decompose_conv_layer(original_conv, rank=128)
-# 参数量从 256*512*3*3 = 1,179,648 降到 256*128*3*3 + 512*128 = 344,064
+# 参数量从 256*512*3*3 = 1,179,648 降到 256*128*3*3 + 512*128 = 360,448
 ```
 
 ## 完整跑通方案

@@ -21,19 +21,25 @@ export interface ResourceLink {
 
 /** 结构化任务内容 */
 export interface TaskContent {
-  /** 核心目标：一两句话概括本节重点 */
-  objective: string;
-  /** 核心 API / 知识点：必须掌握的具体函数或操作 */
-  api_checklist: string[];
-  /** 场景实操：一个非常具体的微型任务 */
-  practice: string;
-  /** 参考答案：可选，用于折叠显示 */
+  /** 核心学习目标：1段话，80-120字（新格式） */
+  objective?: string;
+  /** 核心知识点/概念：4-6个要点（新格式，替代api_checklist） */
+  key_points?: string[];
+  /** 动手练习：1段话，60-100字（新格式） */
+  practice?: string;
+  /** 深入拓展知识点介绍：1段，50-80字（新格式，替代answer） */
+  deep_dive?: string;
+  /** 核心API清单（旧格式，已废弃，用key_points替代） */
+  api_checklist?: string[];
+  /** 参考答案/拓展内容（旧格式，已废弃，用deep_dive替代） */
   answer?: string;
 }
 
 export interface DailyTask {
   day: number;
   title: string;
+  /** 任务摘要：1-2句话概括当天学习内容（30-50字） */
+  summary?: string;
   /** 内容：支持结构化对象、字符串或数组形式 */
   content: TaskContent | string | string[];
   duration: string;      // 如 "2小时"

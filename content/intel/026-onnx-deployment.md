@@ -122,9 +122,11 @@ import numpy as np
 model = torch.load("resnet18.pt")
 model.eval()
 dummy = torch.randn(1, 3, 224, 224)
-torch.onnx.export(model, dummy, "resnet18.onnx", opset_version=14)
+torch.onnx.export(model, dummy, "resnet18.onnx", opset_version=14,
+                  input_names=["input"], output_names=["output"])
 
 # 2. 简化
+import onnx
 import onnxsim
 model_onnx = onnx.load("resnet18.onnx")
 model_sim, ok = onnxsim.simplify(model_onnx)
@@ -132,8 +134,9 @@ onnx.save(model_sim, "resnet18_sim.onnx")
 
 # 3. 推理验证
 session = ort.InferenceSession("resnet18_sim.onnx", providers=["CPUExecutionProvider"])
+input_name = session.get_inputs()[0].name
 input_np = np.random.randn(1, 3, 224, 224).astype(np.float32)
-output = session.run(None, {"input.1": input_np})
+output = session.run(None, {input_name: input_np})
 
 # 4. 对比 PyTorch 输出
 with torch.no_grad():

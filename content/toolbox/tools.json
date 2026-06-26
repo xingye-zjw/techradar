@@ -4,8 +4,8 @@
       "name": "Ultralytics YOLO",
       "slug": "ultralytics-yolo",
       "category": "computer-vision",
-      "purpose": "工业界首选的端到端目标检测框架，YOLOv8/v11/v13 统一维护",
-      "description": "Ultralytics YOLO 是工业界最受欢迎的实时目标检测框架，支持 YOLOv8/v11/v13 多版本统一维护。它提供一行命令训练自定义数据集的能力，内置目标检测、实例分割、姿态估计和旋转边界框检测等多种任务支持，并可一键导出到 ONNX、TensorRT、CoreML 等多种部署格式。",
+      "purpose": "工业界首选的端到端目标检测框架，YOLOv8 官方统一维护",
+      "description": "Ultralytics YOLO 是工业界最受欢迎的实时目标检测框架，以 YOLOv8 为核心版本统一维护。它提供一行命令训练自定义数据集的能力，内置目标检测、实例分割、姿态估计和旋转边界框检测等多种任务支持，并可一键导出到 ONNX、TensorRT、CoreML 等多种部署格式。",
       "install": "pip install ultralytics",
       "features": [
         "一行命令训练自定义数据集",
@@ -13,7 +13,11 @@
         "ONNX / TensorRT / CoreML 一键导出",
         "Python / CLI / Docker 多运行方式"
       ],
-      "tags": ["Python", "PyTorch", "实时检测"],
+      "tags": [
+        "Python",
+        "PyTorch",
+        "实时检测"
+      ],
       "github": {
         "stars": "32k",
         "last_release": "2025-06",
@@ -21,10 +25,23 @@
       },
       "difficulty": "beginner",
       "official_url": "https://docs.ultralytics.com",
-      "use_cases": ["目标检测", "实例分割", "关键点检测"],
-      "relatedIntel": ["002-yolo"],
-      "relatedNodes": ["cv-detection"],
-      "relatedTerms": ["yolo", "cnn", "object-detection", "bounding-box"]
+      "use_cases": [
+        "目标检测",
+        "实例分割",
+        "关键点检测"
+      ],
+      "relatedIntel": [
+        "002-yolo"
+      ],
+      "relatedNodes": [
+        "cv-detection"
+      ],
+      "relatedTerms": [
+        "yolo",
+        "cnn",
+        "object-detection",
+        "bounding-box"
+      ]
     },
     {
       "name": "Hugging Face Transformers",
@@ -39,7 +56,11 @@
         "配合 PEFT 支持 LoRA / QLoRA 微调",
         "Tokenizers Rust 底层加速，tokenize 极快"
       ],
-      "tags": ["LLM", "微调", "NLP"],
+      "tags": [
+        "LLM",
+        "微调",
+        "NLP"
+      ],
       "github": {
         "stars": "135k",
         "last_release": "2025-06",
@@ -47,10 +68,27 @@
       },
       "difficulty": "intermediate",
       "official_url": "https://huggingface.co/docs/transformers",
-      "use_cases": ["文本生成", "文本分类", "LLM 推理", "模型微调"],
-      "relatedIntel": ["001-transformer", "013-huggingface-datasets"],
-      "relatedNodes": ["nlp-transformer", "llm-finetune"],
-      "relatedTerms": ["transformer", "lora", "fine-tuning", "tokenizer", "embedding"]
+      "use_cases": [
+        "文本生成",
+        "文本分类",
+        "LLM 推理",
+        "模型微调"
+      ],
+      "relatedIntel": [
+        "001-transformer",
+        "013-huggingface-datasets"
+      ],
+      "relatedNodes": [
+        "nlp-transformer",
+        "llm-finetune"
+      ],
+      "relatedTerms": [
+        "transformer",
+        "lora",
+        "fine-tuning",
+        "tokenizer",
+        "embedding"
+      ]
     },
     {
       "name": "PyTorch",
@@ -65,7 +103,11 @@
         "torch.distributed 封装多卡 / 多机分布式训练",
         "torch.jit 脚本化导出 TorchScript"
       ],
-      "tags": ["深度学习", "研究", "动态图"],
+      "tags": [
+        "深度学习",
+        "研究",
+        "动态图"
+      ],
       "github": {
         "stars": "82k",
         "last_release": "2025-05",
@@ -73,10 +115,24 @@
       },
       "difficulty": "intermediate",
       "official_url": "https://pytorch.org/docs",
-      "use_cases": ["模型训练", "研究实验", "自定义算子"],
-      "relatedIntel": ["011-pytorch"],
-      "relatedNodes": ["pytorch-core"],
-      "relatedTerms": ["pytorch", "tensor", "cuda", "gradient-descent", "backpropagation"]
+      "use_cases": [
+        "模型训练",
+        "研究实验",
+        "自定义算子"
+      ],
+      "relatedIntel": [
+        "011-pytorch"
+      ],
+      "relatedNodes": [
+        "pytorch-core"
+      ],
+      "relatedTerms": [
+        "pytorch",
+        "tensor",
+        "cuda",
+        "gradient-descent",
+        "backpropagation"
+      ]
     },
     {
       "name": "LangChain",
@@ -91,7 +147,11 @@
         "LangSmith 可观测性与调试面板",
         "LangServe 一键将 Chain 部署为 REST API"
       ],
-      "tags": ["RAG", "Agent", "应用层"],
+      "tags": [
+        "RAG",
+        "Agent",
+        "应用层"
+      ],
       "github": {
         "stars": "95k",
         "last_release": "2025-06",
@@ -99,10 +159,22 @@
       },
       "difficulty": "intermediate",
       "official_url": "https://python.langchain.com",
-      "use_cases": ["RAG 检索增强", "Agent 智能体", "对话系统"],
-      "relatedIntel": ["005-rag"],
-      "relatedNodes": ["llm-finetune"],
-      "relatedTerms": ["rag", "transformer", "embedding"]
+      "use_cases": [
+        "RAG 检索增强",
+        "Agent 智能体",
+        "对话系统"
+      ],
+      "relatedIntel": [
+        "005-rag"
+      ],
+      "relatedNodes": [
+        "llm-finetune"
+      ],
+      "relatedTerms": [
+        "rag",
+        "transformer",
+        "embedding"
+      ]
     },
     {
       "name": "Streamlit",
@@ -117,7 +189,11 @@
         "Session State 保持页面状态",
         "部署到 Streamlit Cloud 免费公开访问"
       ],
-      "tags": ["Web", "Demo", "Python"],
+      "tags": [
+        "Web",
+        "Demo",
+        "Python"
+      ],
       "github": {
         "stars": "38k",
         "last_release": "2025-06",
@@ -125,9 +201,17 @@
       },
       "difficulty": "beginner",
       "official_url": "https://docs.streamlit.io",
-      "use_cases": ["快速 Demo", "数据看板", "原型展示"],
-      "relatedIntel": ["012-streamlit"],
-      "relatedNodes": ["project-capstone"],
+      "use_cases": [
+        "快速 Demo",
+        "数据看板",
+        "原型展示"
+      ],
+      "relatedIntel": [
+        "012-streamlit"
+      ],
+      "relatedNodes": [
+        "project-capstone"
+      ],
       "relatedTerms": []
     },
     {
@@ -143,7 +227,10 @@
         "Model Registry 版本化管理，支持 Stage（Staging/Production）",
         "可对接 PostgreSQL / S3 等生产级存储后端"
       ],
-      "tags": ["实验管理", "MLOps"],
+      "tags": [
+        "实验管理",
+        "MLOps"
+      ],
       "github": {
         "stars": "22k",
         "last_release": "2025-05",
@@ -151,9 +238,17 @@
       },
       "difficulty": "intermediate",
       "official_url": "https://mlflow.org/docs/latest",
-      "use_cases": ["实验追踪", "模型版本管理", "团队协作"],
-      "relatedIntel": ["018-mlflow"],
-      "relatedNodes": ["project-capstone"],
+      "use_cases": [
+        "实验追踪",
+        "模型版本管理",
+        "团队协作"
+      ],
+      "relatedIntel": [
+        "018-mlflow"
+      ],
+      "relatedNodes": [
+        "project-capstone"
+      ],
       "relatedTerms": []
     },
     {
@@ -169,7 +264,10 @@
         "Artifacts 管理数据集与模型版本",
         "视频/音频/表格等多种数据类型可视化"
       ],
-      "tags": ["实验追踪", "团队协作"],
+      "tags": [
+        "实验追踪",
+        "团队协作"
+      ],
       "github": {
         "stars": "9k",
         "last_release": "2025-06",
@@ -177,9 +275,15 @@
       },
       "difficulty": "beginner",
       "official_url": "https://docs.wandb.ai",
-      "use_cases": ["实验可视化", "超参搜索", "团队协作"],
+      "use_cases": [
+        "实验可视化",
+        "超参搜索",
+        "团队协作"
+      ],
       "relatedIntel": [],
-      "relatedNodes": ["project-capstone"],
+      "relatedNodes": [
+        "project-capstone"
+      ],
       "relatedTerms": []
     },
     {
@@ -195,7 +299,11 @@
         "支持 S3/GCS/Azure/HDFS 等远程存储后端",
         "与 Git 完全兼容，可同仓库管理代码和数据"
       ],
-      "tags": ["数据管理", "MLOps", "Git"],
+      "tags": [
+        "数据管理",
+        "MLOps",
+        "Git"
+      ],
       "github": {
         "stars": "15k",
         "last_release": "2025-05",
@@ -203,10 +311,18 @@
       },
       "difficulty": "intermediate",
       "official_url": "https://dvc.org/doc",
-      "use_cases": ["数据版本控制", "流水线复现", "大文件管理"],
+      "use_cases": [
+        "数据版本控制",
+        "流水线复现",
+        "大文件管理"
+      ],
       "relatedIntel": [],
-      "relatedNodes": ["project-capstone"],
-      "relatedTerms": ["git"]
+      "relatedNodes": [
+        "project-capstone"
+      ],
+      "relatedTerms": [
+        "git"
+      ]
     },
     {
       "name": "Docker",
@@ -221,7 +337,11 @@
         "Docker Compose 编排多容器（API + Redis + 模型）",
         "多阶段构建大幅减小镜像体积"
       ],
-      "tags": ["DevOps", "部署", "容器化"],
+      "tags": [
+        "DevOps",
+        "部署",
+        "容器化"
+      ],
       "github": {
         "stars": "69k",
         "last_release": "2025-06",
@@ -229,10 +349,22 @@
       },
       "difficulty": "intermediate",
       "official_url": "https://docs.docker.com",
-      "use_cases": ["模型部署", "环境隔离", "服务编排"],
-      "relatedIntel": ["007-docker"],
-      "relatedNodes": ["docker-basic"],
-      "relatedTerms": ["docker", "container", "image"]
+      "use_cases": [
+        "模型部署",
+        "环境隔离",
+        "服务编排"
+      ],
+      "relatedIntel": [
+        "007-docker"
+      ],
+      "relatedNodes": [
+        "docker-basic"
+      ],
+      "relatedTerms": [
+        "docker",
+        "container",
+        "image"
+      ]
     },
     {
       "name": "Gradio",
@@ -247,7 +379,11 @@
         "支持加载 Hugging Face Space 直接嵌入",
         "Blocks API 支持自定义复杂布局与交互"
       ],
-      "tags": ["AI界面", "Demo", "Python"],
+      "tags": [
+        "AI界面",
+        "Demo",
+        "Python"
+      ],
       "github": {
         "stars": "32k",
         "last_release": "2025-06",
@@ -255,9 +391,16 @@
       },
       "difficulty": "beginner",
       "official_url": "https://gradio.app/docs",
-      "use_cases": ["AI Demo", "对话系统 Demo", "多模态交互"],
+      "use_cases": [
+        "AI Demo",
+        "对话系统 Demo",
+        "多模态交互"
+      ],
       "relatedIntel": [],
-      "relatedNodes": ["llm-finetune", "project-capstone"],
+      "relatedNodes": [
+        "llm-finetune",
+        "project-capstone"
+      ],
       "relatedTerms": []
     },
     {
@@ -273,7 +416,11 @@
         "可接入 ML 模型做预标注（主动学习）",
         "支持多人协作标注，质量控制工作流"
       ],
-      "tags": ["标注", "自托管", "多模态"],
+      "tags": [
+        "标注",
+        "自托管",
+        "多模态"
+      ],
       "github": {
         "stars": "16k",
         "last_release": "2025-05",
@@ -281,10 +428,19 @@
       },
       "difficulty": "intermediate",
       "official_url": "https://labelstud.io/guide",
-      "use_cases": ["数据标注", "主动学习", "标注质量控制"],
+      "use_cases": [
+        "数据标注",
+        "主动学习",
+        "标注质量控制"
+      ],
       "relatedIntel": [],
-      "relatedNodes": ["cv-detection"],
-      "relatedTerms": ["bounding-box", "object-detection"]
+      "relatedNodes": [
+        "cv-detection"
+      ],
+      "relatedTerms": [
+        "bounding-box",
+        "object-detection"
+      ]
     },
     {
       "name": "pgvector + PostgreSQL",
@@ -297,9 +453,13 @@
         "与现有 PostgreSQL 无缝融合，零额外运维",
         "支持 HNSW / ivfflat 索引，查询速度可达到毫秒级",
         "Hybrid Search 实现 metadata filter + vector",
-        "支持 1536 / 3072 / 3072 等任意维度向量"
+        "支持多种维度（HNSW 索引建议 ≤2000 维，IVF 索引支持更高维度）向量（HNSW 索引有维度上限）"
       ],
-      "tags": ["RAG", "SQL", "HNSW"],
+      "tags": [
+        "RAG",
+        "SQL",
+        "HNSW"
+      ],
       "github": {
         "stars": "9k",
         "last_release": "2025-04",
@@ -307,10 +467,19 @@
       },
       "difficulty": "intermediate",
       "official_url": "https://github.com/pgvector/pgvector",
-      "use_cases": ["RAG 检索", "向量检索", "混合搜索"],
-      "relatedIntel": ["005-rag"],
+      "use_cases": [
+        "RAG 检索",
+        "向量检索",
+        "混合搜索"
+      ],
+      "relatedIntel": [
+        "005-rag"
+      ],
       "relatedNodes": [],
-      "relatedTerms": ["rag", "embedding"]
+      "relatedTerms": [
+        "rag",
+        "embedding"
+      ]
     },
     {
       "name": "ONNX Runtime",
@@ -325,7 +494,11 @@
         "图优化（常量折叠 / 算子融合 / 内存规划）",
         "支持 CPU / GPU / Mobile / WebAssembly 多平台部署"
       ],
-      "tags": ["推理", "部署", "ONNX"],
+      "tags": [
+        "推理",
+        "部署",
+        "ONNX"
+      ],
       "github": {
         "stars": "14k",
         "last_release": "2025-05",
@@ -333,10 +506,21 @@
       },
       "difficulty": "advanced",
       "official_url": "https://onnxruntime.ai/docs",
-      "use_cases": ["模型推理加速", "跨平台部署", "生产环境推理"],
-      "relatedIntel": ["014-onnx"],
-      "relatedNodes": ["cv-detection"],
-      "relatedTerms": ["cuda", "gpu"]
+      "use_cases": [
+        "模型推理加速",
+        "跨平台部署",
+        "生产环境推理"
+      ],
+      "relatedIntel": [
+        "014-onnx"
+      ],
+      "relatedNodes": [
+        "cv-detection"
+      ],
+      "relatedTerms": [
+        "cuda",
+        "gpu"
+      ]
     },
     {
       "name": "GCC",
@@ -351,7 +535,11 @@
         "丰富的优化选项控制代码大小和性能",
         "支持交叉编译，在x86上编译ARM程序"
       ],
-      "tags": ["编译器", "C语言", "嵌入式"],
+      "tags": [
+        "编译器",
+        "C语言",
+        "嵌入式"
+      ],
       "github": {
         "stars": "8k",
         "last_release": "2025-05",
@@ -359,10 +547,20 @@
       },
       "difficulty": "intermediate",
       "official_url": "https://gcc.gnu.org",
-      "use_cases": ["C程序编译", "嵌入式固件编译", "交叉编译"],
+      "use_cases": [
+        "C程序编译",
+        "嵌入式固件编译",
+        "交叉编译"
+      ],
       "relatedIntel": [],
-      "relatedNodes": ["embedded-c"],
-      "relatedTerms": ["c-language", "compiler", "linker"]
+      "relatedNodes": [
+        "embedded-c"
+      ],
+      "relatedTerms": [
+        "c-language",
+        "compiler",
+        "linker"
+      ]
     },
     {
       "name": "FreeRTOS",
@@ -377,7 +575,11 @@
         "软件定时器和中断管理",
         "内存管理五种堆分配策略可选"
       ],
-      "tags": ["RTOS", "嵌入式", "实时系统"],
+      "tags": [
+        "RTOS",
+        "嵌入式",
+        "实时系统"
+      ],
       "github": {
         "stars": "5k",
         "last_release": "2025-06",
@@ -385,10 +587,20 @@
       },
       "difficulty": "advanced",
       "official_url": "https://www.freertos.org",
-      "use_cases": ["传感器数据采集", "工业控制", "物联网设备"],
+      "use_cases": [
+        "传感器数据采集",
+        "工业控制",
+        "物联网设备"
+      ],
       "relatedIntel": [],
-      "relatedNodes": ["embedded-rtos"],
-      "relatedTerms": ["rtos", "task-scheduling", "semaphore"]
+      "relatedNodes": [
+        "embedded-rtos"
+      ],
+      "relatedTerms": [
+        "rtos",
+        "task-scheduling",
+        "semaphore"
+      ]
     },
     {
       "name": "LTspice",
@@ -403,7 +615,11 @@
         "强大的波形查看器和FFT分析",
         "完全免费，无功能限制"
       ],
-      "tags": ["电路仿真", "模拟电路", "EDA"],
+      "tags": [
+        "电路仿真",
+        "模拟电路",
+        "EDA"
+      ],
       "github": {
         "stars": "N/A",
         "last_release": "2024-10",
@@ -411,10 +627,20 @@
       },
       "difficulty": "intermediate",
       "official_url": "https://www.analog.com/en/design-center/design-tools-and-calculators/ltspice-simulator.html",
-      "use_cases": ["模拟电路设计", "电源电路验证", "滤波器设计"],
+      "use_cases": [
+        "模拟电路设计",
+        "电源电路验证",
+        "滤波器设计"
+      ],
       "relatedIntel": [],
-      "relatedNodes": ["elec-circuit"],
-      "relatedTerms": ["circuit", "op-amp", "simulation"]
+      "relatedNodes": [
+        "elec-circuit"
+      ],
+      "relatedTerms": [
+        "circuit",
+        "op-amp",
+        "simulation"
+      ]
     },
     {
       "name": "MATLAB",
@@ -429,7 +655,11 @@
         "Communications Toolbox通信系统仿真",
         "Simulink图形化建模和仿真"
       ],
-      "tags": ["科学计算", "信号处理", "仿真"],
+      "tags": [
+        "科学计算",
+        "信号处理",
+        "仿真"
+      ],
       "github": {
         "stars": "N/A",
         "last_release": "2025-03",
@@ -437,10 +667,22 @@
       },
       "difficulty": "intermediate",
       "official_url": "https://www.mathworks.com",
-      "use_cases": ["信号处理算法验证", "通信系统仿真", "控制系统设计"],
+      "use_cases": [
+        "信号处理算法验证",
+        "通信系统仿真",
+        "控制系统设计"
+      ],
       "relatedIntel": [],
-      "relatedNodes": ["elec-signals", "signals-comm", "ctrl-pid"],
-      "relatedTerms": ["fourier-transform", "filter", "modulation"]
+      "relatedNodes": [
+        "elec-signals",
+        "signals-comm",
+        "ctrl-pid"
+      ],
+      "relatedTerms": [
+        "fourier-transform",
+        "filter",
+        "modulation"
+      ]
     },
     {
       "name": "ROS2",
@@ -455,7 +697,11 @@
         "MoveIt2机械臂运动规划",
         "Gazebo仿真环境集成"
       ],
-      "tags": ["机器人", "ROS", "导航"],
+      "tags": [
+        "机器人",
+        "ROS",
+        "导航"
+      ],
       "github": {
         "stars": "6k",
         "last_release": "2025-05",
@@ -463,10 +709,20 @@
       },
       "difficulty": "advanced",
       "official_url": "https://docs.ros.org/en/humble/",
-      "use_cases": ["移动机器人导航", "机械臂控制", "多机器人协调"],
+      "use_cases": [
+        "移动机器人导航",
+        "机械臂控制",
+        "多机器人协调"
+      ],
       "relatedIntel": [],
-      "relatedNodes": ["ctrl-ros"],
-      "relatedTerms": ["slam", "navigation", "robot"]
+      "relatedNodes": [
+        "ctrl-ros"
+      ],
+      "relatedTerms": [
+        "slam",
+        "navigation",
+        "robot"
+      ]
     },
     {
       "name": "STM32CubeMX",
@@ -481,7 +737,11 @@
         "支持FreeRTOS和Middleware配置",
         "功耗计算器辅助低功耗设计"
       ],
-      "tags": ["STM32", "嵌入式", "代码生成"],
+      "tags": [
+        "STM32",
+        "嵌入式",
+        "代码生成"
+      ],
       "github": {
         "stars": "N/A",
         "last_release": "2025-05",
@@ -489,10 +749,21 @@
       },
       "difficulty": "beginner",
       "official_url": "https://www.st.com/en/development-tools/stm32cubemx.html",
-      "use_cases": ["STM32项目初始化", "引脚配置", "时钟配置"],
+      "use_cases": [
+        "STM32项目初始化",
+        "引脚配置",
+        "时钟配置"
+      ],
       "relatedIntel": [],
-      "relatedNodes": ["embedded-c", "embedded-rtos"],
-      "relatedTerms": ["stm32", "hal", "gpio"]
+      "relatedNodes": [
+        "embedded-c",
+        "embedded-rtos"
+      ],
+      "relatedTerms": [
+        "stm32",
+        "hal",
+        "gpio"
+      ]
     },
     {
       "name": "Dask",
@@ -507,7 +778,11 @@
         "与现有 pandas / numpy API 几乎完全兼容",
         "可对接 Kubernetes / HPC / Yarn 集群"
       ],
-      "tags": ["大数据", "并行计算", "Python"],
+      "tags": [
+        "大数据",
+        "并行计算",
+        "Python"
+      ],
       "github": {
         "stars": "12k",
         "last_release": "2025-04",
@@ -515,10 +790,17 @@
       },
       "difficulty": "advanced",
       "official_url": "https://docs.dask.org",
-      "use_cases": ["大数据处理", "分布式计算", "集群调度"],
+      "use_cases": [
+        "大数据处理",
+        "分布式计算",
+        "集群调度"
+      ],
       "relatedIntel": [],
       "relatedNodes": [],
-      "relatedTerms": ["tensor", "matrix"]
+      "relatedTerms": [
+        "tensor",
+        "matrix"
+      ]
     },
     {
       "name": "TensorFlow",
@@ -533,7 +815,11 @@
         "TPU 加速训练和分布式策略（MirroredStrategy/MultiWorker）",
         "TensorFlow Lite 移动端部署和 TensorFlow.js 浏览器端推理"
       ],
-      "tags": ["深度学习", "生产部署", "移动端"],
+      "tags": [
+        "深度学习",
+        "生产部署",
+        "移动端"
+      ],
       "github": {
         "stars": "180k",
         "last_release": "2025-06",
@@ -541,10 +827,18 @@
       },
       "difficulty": "intermediate",
       "official_url": "https://www.tensorflow.org/api_docs",
-      "use_cases": ["模型训练", "生产部署", "移动端推理"],
+      "use_cases": [
+        "模型训练",
+        "生产部署",
+        "移动端推理"
+      ],
       "relatedIntel": [],
       "relatedNodes": [],
-      "relatedTerms": ["tensorflow", "keras", "tf-lite"]
+      "relatedTerms": [
+        "tensorflow",
+        "keras",
+        "tf-lite"
+      ]
     },
     {
       "name": "OpenCV",
@@ -559,7 +853,11 @@
         "特征提取（SIFT/SURF/ORB/HOG）",
         "目标检测（Haar 级联/HOG+SVM）和视频分析"
       ],
-      "tags": ["计算机视觉", "图像处理", "特征提取"],
+      "tags": [
+        "计算机视觉",
+        "图像处理",
+        "特征提取"
+      ],
       "github": {
         "stars": "71k",
         "last_release": "2025-05",
@@ -567,10 +865,20 @@
       },
       "difficulty": "beginner",
       "official_url": "https://docs.opencv.org",
-      "use_cases": ["图像处理", "特征提取", "视频分析"],
+      "use_cases": [
+        "图像处理",
+        "特征提取",
+        "视频分析"
+      ],
       "relatedIntel": [],
-      "relatedNodes": ["cv-image-classification"],
-      "relatedTerms": ["image-processing", "feature-extraction", "edge-detection"]
+      "relatedNodes": [
+        "cv-image-classification"
+      ],
+      "relatedTerms": [
+        "image-processing",
+        "feature-extraction",
+        "edge-detection"
+      ]
     },
     {
       "name": "scikit-learn",
@@ -583,9 +891,13 @@
         "完整的监督/无监督学习算法实现",
         "Pipeline 管道化处理（预处理+训练+评估）",
         "GridSearchCV / RandomizedSearchCV 超参搜索",
-        "内置数据集（iris/digits/boston）和评估指标"
+        "内置数据集（iris/digits/wine/breast_cancer）和评估指标"
       ],
-      "tags": ["机器学习", "经典算法", "Python"],
+      "tags": [
+        "机器学习",
+        "经典算法",
+        "Python"
+      ],
       "github": {
         "stars": "56k",
         "last_release": "2025-04",
@@ -593,10 +905,18 @@
       },
       "difficulty": "beginner",
       "official_url": "https://scikit-learn.org/stable",
-      "use_cases": ["数据挖掘", "分类回归", "特征工程"],
+      "use_cases": [
+        "数据挖掘",
+        "分类回归",
+        "特征工程"
+      ],
       "relatedIntel": [],
       "relatedNodes": [],
-      "relatedTerms": ["machine-learning", "classification", "regression"]
+      "relatedTerms": [
+        "machine-learning",
+        "classification",
+        "regression"
+      ]
     },
     {
       "name": "pandas",
@@ -611,7 +931,11 @@
         "groupby / pivot / merge / join 等 SQL 风格操作",
         "内置数据清洗和缺失值处理"
       ],
-      "tags": ["数据分析", "表格处理", "Python"],
+      "tags": [
+        "数据分析",
+        "表格处理",
+        "Python"
+      ],
       "github": {
         "stars": "33k",
         "last_release": "2025-05",
@@ -619,10 +943,18 @@
       },
       "difficulty": "beginner",
       "official_url": "https://pandas.pydata.org/docs",
-      "use_cases": ["数据清洗", "数据分析", "特征工程"],
+      "use_cases": [
+        "数据清洗",
+        "数据分析",
+        "特征工程"
+      ],
       "relatedIntel": [],
       "relatedNodes": [],
-      "relatedTerms": ["dataframe", "data-analysis", "csv"]
+      "relatedTerms": [
+        "dataframe",
+        "data-analysis",
+        "csv"
+      ]
     },
     {
       "name": "NumPy",
@@ -637,7 +969,11 @@
         "线性代数（linalg）和傅里叶变换（fft）",
         "随机数生成和统计函数"
       ],
-      "tags": ["科学计算", "矩阵运算", "Python"],
+      "tags": [
+        "科学计算",
+        "矩阵运算",
+        "Python"
+      ],
       "github": {
         "stars": "26k",
         "last_release": "2025-05",
@@ -645,10 +981,20 @@
       },
       "difficulty": "beginner",
       "official_url": "https://numpy.org/doc",
-      "use_cases": ["数值计算", "矩阵运算", "数据预处理"],
+      "use_cases": [
+        "数值计算",
+        "矩阵运算",
+        "数据预处理"
+      ],
       "relatedIntel": [],
-      "relatedNodes": ["numpy-basics"],
-      "relatedTerms": ["array", "matrix", "linear-algebra"]
+      "relatedNodes": [
+        "numpy-basics"
+      ],
+      "relatedTerms": [
+        "array",
+        "matrix",
+        "linear-algebra"
+      ]
     },
     {
       "name": "FAISS",
@@ -663,7 +1009,11 @@
         "GPU 加速版本支持十亿级向量毫秒级查询",
         "支持向量添加、删除和批量搜索"
       ],
-      "tags": ["RAG", "向量检索", "GPU"],
+      "tags": [
+        "RAG",
+        "向量检索",
+        "GPU"
+      ],
       "github": {
         "stars": "23k",
         "last_release": "2025-04",
@@ -671,10 +1021,20 @@
       },
       "difficulty": "intermediate",
       "official_url": "https://faiss.ai",
-      "use_cases": ["RAG 检索", "相似图片搜索", "推荐系统"],
-      "relatedIntel": ["005-rag"],
+      "use_cases": [
+        "RAG 检索",
+        "相似图片搜索",
+        "推荐系统"
+      ],
+      "relatedIntel": [
+        "005-rag"
+      ],
       "relatedNodes": [],
-      "relatedTerms": ["rag", "embedding", "vector-search"]
+      "relatedTerms": [
+        "rag",
+        "embedding",
+        "vector-search"
+      ]
     },
     {
       "name": "ChromaDB",
@@ -689,7 +1049,11 @@
         "内置文本分割和 Embedding 函数",
         "与 LangChain 无缝集成"
       ],
-      "tags": ["RAG", "向量数据库", "LLM"],
+      "tags": [
+        "RAG",
+        "向量数据库",
+        "LLM"
+      ],
       "github": {
         "stars": "14k",
         "last_release": "2025-06",
@@ -697,10 +1061,20 @@
       },
       "difficulty": "beginner",
       "official_url": "https://docs.trychroma.com",
-      "use_cases": ["RAG 应用", "文档检索", "知识库"],
-      "relatedIntel": ["005-rag"],
+      "use_cases": [
+        "RAG 应用",
+        "文档检索",
+        "知识库"
+      ],
+      "relatedIntel": [
+        "005-rag"
+      ],
       "relatedNodes": [],
-      "relatedTerms": ["rag", "embedding", "vector-database"]
+      "relatedTerms": [
+        "rag",
+        "embedding",
+        "vector-database"
+      ]
     },
     {
       "name": "Jupyter Notebook",
@@ -715,7 +1089,11 @@
         "nbconvert 导出为 HTML/PDF/Markdown",
         "支持交互式小部件（ipywidgets）"
       ],
-      "tags": ["交互式", "文档", "Python"],
+      "tags": [
+        "交互式",
+        "文档",
+        "Python"
+      ],
       "github": {
         "stars": "16k",
         "last_release": "2025-05",
@@ -723,10 +1101,17 @@
       },
       "difficulty": "beginner",
       "official_url": "https://jupyter.org/documentation",
-      "use_cases": ["数据探索", "教学演示", "技术文档"],
+      "use_cases": [
+        "数据探索",
+        "教学演示",
+        "技术文档"
+      ],
       "relatedIntel": [],
       "relatedNodes": [],
-      "relatedTerms": ["notebook", "ipython"]
+      "relatedTerms": [
+        "notebook",
+        "ipython"
+      ]
     },
     {
       "name": "spaCy",
@@ -741,7 +1126,11 @@
         "60+ 种语言支持，内置预训练模型",
         "spaCy Transformers 集成 BERT 等深度学习模型"
       ],
-      "tags": ["NLP", "工业级", "实体识别"],
+      "tags": [
+        "NLP",
+        "工业级",
+        "实体识别"
+      ],
       "github": {
         "stars": "27k",
         "last_release": "2025-06",
@@ -749,10 +1138,20 @@
       },
       "difficulty": "intermediate",
       "official_url": "https://spacy.io/docs",
-      "use_cases": ["文本处理", "实体识别", "信息抽取"],
+      "use_cases": [
+        "文本处理",
+        "实体识别",
+        "信息抽取"
+      ],
       "relatedIntel": [],
-      "relatedNodes": ["nlp-basics"],
-      "relatedTerms": ["nlp", "ner", "tokenization"]
+      "relatedNodes": [
+        "nlp-basics"
+      ],
+      "relatedTerms": [
+        "nlp",
+        "ner",
+        "tokenization"
+      ]
     },
     {
       "name": "PyTorch Lightning",
@@ -767,7 +1166,11 @@
         "支持分布式训练（多 GPU/TPU）和混合精度",
         "一键导出 ONNX / TensorRT / CoreML"
       ],
-      "tags": ["PyTorch", "研究", "分布式"],
+      "tags": [
+        "PyTorch",
+        "研究",
+        "分布式"
+      ],
       "github": {
         "stars": "25k",
         "last_release": "2025-06",
@@ -775,10 +1178,20 @@
       },
       "difficulty": "intermediate",
       "official_url": "https://lightning.ai/docs/pytorch",
-      "use_cases": ["模型训练", "研究实验", "分布式训练"],
+      "use_cases": [
+        "模型训练",
+        "研究实验",
+        "分布式训练"
+      ],
       "relatedIntel": [],
-      "relatedNodes": ["pytorch-core"],
-      "relatedTerms": ["pytorch", "distributed-training", "mixed-precision"]
+      "relatedNodes": [
+        "pytorch-core"
+      ],
+      "relatedTerms": [
+        "pytorch",
+        "distributed-training",
+        "mixed-precision"
+      ]
     },
     {
       "name": "Kubernetes",
@@ -793,7 +1206,11 @@
         "滚动更新和蓝绿部署策略",
         "Helm Chart 包管理和 Operator 模式"
       ],
-      "tags": ["DevOps", "容器编排", "微服务"],
+      "tags": [
+        "DevOps",
+        "容器编排",
+        "微服务"
+      ],
       "github": {
         "stars": "106k",
         "last_release": "2025-05",
@@ -801,10 +1218,20 @@
       },
       "difficulty": "advanced",
       "official_url": "https://kubernetes.io/docs",
-      "use_cases": ["微服务部署", "容器编排", "生产环境管理"],
+      "use_cases": [
+        "微服务部署",
+        "容器编排",
+        "生产环境管理"
+      ],
       "relatedIntel": [],
-      "relatedNodes": ["cicd-basic"],
-      "relatedTerms": ["kubernetes", "docker", "microservices"]
+      "relatedNodes": [
+        "cicd-basic"
+      ],
+      "relatedTerms": [
+        "kubernetes",
+        "docker",
+        "microservices"
+      ]
     },
     {
       "name": "Prometheus",
@@ -819,7 +1246,11 @@
         "服务发现（Kubernetes/Consul/文件）",
         "Alertmanager 告警管理和通知路由"
       ],
-      "tags": ["监控", "时序数据库", "DevOps"],
+      "tags": [
+        "监控",
+        "时序数据库",
+        "DevOps"
+      ],
       "github": {
         "stars": "52k",
         "last_release": "2025-06",
@@ -827,10 +1258,20 @@
       },
       "difficulty": "intermediate",
       "official_url": "https://prometheus.io/docs",
-      "use_cases": ["系统监控", "应用监控", "告警管理"],
+      "use_cases": [
+        "系统监控",
+        "应用监控",
+        "告警管理"
+      ],
       "relatedIntel": [],
-      "relatedNodes": ["cicd-basic"],
-      "relatedTerms": ["monitoring", "metrics", "alerting"]
+      "relatedNodes": [
+        "cicd-basic"
+      ],
+      "relatedTerms": [
+        "monitoring",
+        "metrics",
+        "alerting"
+      ]
     },
     {
       "name": "Grafana",
@@ -845,7 +1286,11 @@
         "告警规则配置和多渠道通知（Email/Slack/Webhook）",
         "Dashboard 模板市场和插件生态"
       ],
-      "tags": ["可视化", "监控", "仪表盘"],
+      "tags": [
+        "可视化",
+        "监控",
+        "仪表盘"
+      ],
       "github": {
         "stars": "57k",
         "last_release": "2025-06",
@@ -853,10 +1298,20 @@
       },
       "difficulty": "beginner",
       "official_url": "https://grafana.com/docs",
-      "use_cases": ["监控仪表盘", "数据可视化", "告警"],
+      "use_cases": [
+        "监控仪表盘",
+        "数据可视化",
+        "告警"
+      ],
       "relatedIntel": [],
-      "relatedNodes": ["cicd-basic"],
-      "relatedTerms": ["monitoring", "dashboard", "visualization"]
+      "relatedNodes": [
+        "cicd-basic"
+      ],
+      "relatedTerms": [
+        "monitoring",
+        "dashboard",
+        "visualization"
+      ]
     },
     {
       "name": "Git",
@@ -871,7 +1326,11 @@
         "代码合并和冲突解决",
         "与 GitHub/GitLab 远程协作"
       ],
-      "tags": ["版本控制", "协作", "开发工具"],
+      "tags": [
+        "版本控制",
+        "协作",
+        "开发工具"
+      ],
       "github": {
         "stars": "47k",
         "last_release": "2025-06",
@@ -879,10 +1338,18 @@
       },
       "difficulty": "beginner",
       "official_url": "https://git-scm.com/docs",
-      "use_cases": ["代码管理", "团队协作", "版本控制"],
+      "use_cases": [
+        "代码管理",
+        "团队协作",
+        "版本控制"
+      ],
       "relatedIntel": [],
       "relatedNodes": [],
-      "relatedTerms": ["git", "version-control", "branch"]
+      "relatedTerms": [
+        "git",
+        "version-control",
+        "branch"
+      ]
     },
     {
       "name": "VS Code",
@@ -897,7 +1364,11 @@
         "Remote Development 在远程服务器开发",
         "内置终端和 Git 集成"
       ],
-      "tags": ["编辑器", "开发工具", "插件"],
+      "tags": [
+        "编辑器",
+        "开发工具",
+        "插件"
+      ],
       "github": {
         "stars": "148k",
         "last_release": "2025-06",
@@ -905,25 +1376,37 @@
       },
       "difficulty": "beginner",
       "official_url": "https://code.visualstudio.com/docs",
-      "use_cases": ["代码编辑", "远程开发", "调试"],
+      "use_cases": [
+        "代码编辑",
+        "远程开发",
+        "调试"
+      ],
       "relatedIntel": [],
       "relatedNodes": [],
-      "relatedTerms": ["editor", "ide", "plugins"]
+      "relatedTerms": [
+        "editor",
+        "ide",
+        "plugins"
+      ]
     },
     {
       "name": "Transformers Agent",
       "slug": "transformers-agent",
       "category": "llm",
-      "purpose": "Hugging Face 推出的 LLM Agent 框架，支持多模态工具调用",
-      "description": "Transformers Agent 是 Hugging Face 推出的 LLM Agent 框架，允许模型根据用户指令自动选择和调用工具。它支持文本生成、图像生成、语音合成、代码执行等多种工具，通过 AgentExecutor 实现多步推理，并可自定义工具扩展能力。",
-      "install": "pip install transformers agent",
+      "purpose": "Hugging Face Transformers 内置的 Agent 模块，支持多模态工具调用",
+      "description": "Transformers Agent 是 Hugging Face Transformers 库内置的 Agent 模块，允许模型根据用户指令自动选择和调用 Hugging Face 上的模型工具。它支持文本生成、图像生成、语音合成、代码执行等多种工具，通过 AgentExecutor 实现多步推理，并可自定义工具扩展能力。",
+      "install": "pip install transformers",
       "features": [
         "自动根据指令选择和调用工具",
         "支持文本/图像/语音/代码等多模态工具",
         "AgentExecutor 实现多步推理",
         "自定义工具扩展能力"
       ],
-      "tags": ["LLM", "Agent", "多模态"],
+      "tags": [
+        "LLM",
+        "Agent",
+        "多模态"
+      ],
       "github": {
         "stars": "8k",
         "last_release": "2025-06",
@@ -931,10 +1414,20 @@
       },
       "difficulty": "intermediate",
       "official_url": "https://huggingface.co/docs/transformers/agents",
-      "use_cases": ["智能体开发", "多模态应用", "工具调用"],
+      "use_cases": [
+        "智能体开发",
+        "多模态应用",
+        "工具调用"
+      ],
       "relatedIntel": [],
-      "relatedNodes": ["llm-finetune"],
-      "relatedTerms": ["llm", "agent", "tool-calling"]
+      "relatedNodes": [
+        "llm-finetune"
+      ],
+      "relatedTerms": [
+        "llm",
+        "agent",
+        "tool-calling"
+      ]
     },
     {
       "name": "Segment Anything",
@@ -949,7 +1442,11 @@
         "ONNX 导出支持实时推理",
         "自动生成分割掩码"
       ],
-      "tags": ["图像分割", "SAM", "CV"],
+      "tags": [
+        "图像分割",
+        "SAM",
+        "CV"
+      ],
       "github": {
         "stars": "34k",
         "last_release": "2025-05",
@@ -957,25 +1454,39 @@
       },
       "difficulty": "intermediate",
       "official_url": "https://segment-anything.com",
-      "use_cases": ["图像分割", "目标检测", "图像编辑"],
+      "use_cases": [
+        "图像分割",
+        "目标检测",
+        "图像编辑"
+      ],
       "relatedIntel": [],
-      "relatedNodes": ["cv-image-classification"],
-      "relatedTerms": ["image-segmentation", "mask", "sam"]
+      "relatedNodes": [
+        "cv-image-classification"
+      ],
+      "relatedTerms": [
+        "image-segmentation",
+        "mask",
+        "sam"
+      ]
     },
     {
       "name": "ESP-IDF",
       "slug": "esp-idf",
       "category": "embedded",
       "purpose": "Espressif 官方开发框架，用于 ESP32/ESP32-S3/ESP8266 嵌入式开发",
-      "description": "ESP-IDF 是 Espressif 官方推出的物联网开发框架，用于 ESP32、ESP32-S3、ESP8266 等芯片的嵌入式开发。它提供完整的 SDK 支持 WiFi、蓝牙、LoRa 等无线通信，内置 FreeRTOS 实时操作系统和 lwIP 网络协议栈，并支持 Arduino 兼容层。",
+      "description": "ESP-IDF 是 Espressif 官方推出的物联网开发框架，用于 ESP32、ESP32-S3、ESP8266 等芯片的嵌入式开发。它提供完整的 SDK 支持 WiFi、蓝牙等无线通信（LoRa 需额外硬件和第三方库），内置 FreeRTOS 实时操作系统和 lwIP 网络协议栈，并支持 Arduino 兼容层。",
       "install": "按照 ESP-IDF 官方指南安装",
       "features": [
-        "完整的 WiFi / 蓝牙 / LoRa 无线通信支持",
+        "完整的 WiFi / 蓝牙无线通信支持",
         "内置 FreeRTOS 实时操作系统",
         "lwIP 网络协议栈和 mDNS / HTTP 服务",
         "Arduino 兼容层，支持 Arduino 生态"
       ],
-      "tags": ["ESP32", "物联网", "嵌入式"],
+      "tags": [
+        "ESP32",
+        "物联网",
+        "嵌入式"
+      ],
       "github": {
         "stars": "15k",
         "last_release": "2025-05",
@@ -983,10 +1494,20 @@
       },
       "difficulty": "intermediate",
       "official_url": "https://docs.espressif.com/projects/esp-idf",
-      "use_cases": ["物联网设备", "WiFi 开发", "ESP32 项目"],
+      "use_cases": [
+        "物联网设备",
+        "WiFi 开发",
+        "ESP32 项目"
+      ],
       "relatedIntel": [],
-      "relatedNodes": ["embedded-c"],
-      "relatedTerms": ["esp32", "iot", "wifi"]
+      "relatedNodes": [
+        "embedded-c"
+      ],
+      "relatedTerms": [
+        "esp32",
+        "iot",
+        "wifi"
+      ]
     },
     {
       "name": "PyTorch Geometric",
@@ -1001,7 +1522,11 @@
         "支持异构图和动态图",
         "与 PyTorch Lightning 集成"
       ],
-      "tags": ["图神经网络", "GNN", "PyTorch"],
+      "tags": [
+        "图神经网络",
+        "GNN",
+        "PyTorch"
+      ],
       "github": {
         "stars": "15k",
         "last_release": "2025-06",
@@ -1009,10 +1534,18 @@
       },
       "difficulty": "advanced",
       "official_url": "https://pytorch-geometric.readthedocs.io",
-      "use_cases": ["图分类", "节点分类", "推荐系统"],
+      "use_cases": [
+        "图分类",
+        "节点分类",
+        "推荐系统"
+      ],
       "relatedIntel": [],
       "relatedNodes": [],
-      "relatedTerms": ["gnn", "graph-neural-network", "gcn"]
+      "relatedTerms": [
+        "gnn",
+        "graph-neural-network",
+        "gcn"
+      ]
     },
     {
       "name": "XGBoost",
@@ -1027,7 +1560,11 @@
         "正则化（L1/L2）防止过拟合",
         "支持分类/回归/排序任务"
       ],
-      "tags": ["机器学习", "GBDT", "Kaggle"],
+      "tags": [
+        "机器学习",
+        "GBDT",
+        "Kaggle"
+      ],
       "github": {
         "stars": "24k",
         "last_release": "2025-05",
@@ -1035,10 +1572,18 @@
       },
       "difficulty": "intermediate",
       "official_url": "https://xgboost.readthedocs.io",
-      "use_cases": ["分类回归", "特征重要性分析", "Kaggle竞赛"],
+      "use_cases": [
+        "分类回归",
+        "特征重要性分析",
+        "Kaggle竞赛"
+      ],
       "relatedIntel": [],
       "relatedNodes": [],
-      "relatedTerms": ["gbdt", "gradient-boosting", "decision-tree"]
+      "relatedTerms": [
+        "gbdt",
+        "gradient-boosting",
+        "decision-tree"
+      ]
     },
     {
       "name": "LightGBM",
@@ -1053,7 +1598,11 @@
         "类别特征自动处理，无需独热编码",
         "GPU 加速和并行训练"
       ],
-      "tags": ["机器学习", "GBDT", "微软"],
+      "tags": [
+        "机器学习",
+        "GBDT",
+        "微软"
+      ],
       "github": {
         "stars": "15k",
         "last_release": "2025-04",
@@ -1061,10 +1610,18 @@
       },
       "difficulty": "intermediate",
       "official_url": "https://lightgbm.readthedocs.io",
-      "use_cases": ["大规模数据", "分类回归", "推荐系统"],
+      "use_cases": [
+        "大规模数据",
+        "分类回归",
+        "推荐系统"
+      ],
       "relatedIntel": [],
       "relatedNodes": [],
-      "relatedTerms": ["gbdt", "gradient-boosting", "lightgbm"]
+      "relatedTerms": [
+        "gbdt",
+        "gradient-boosting",
+        "lightgbm"
+      ]
     }
   ],
   "scenarios": [
@@ -1072,43 +1629,68 @@
       "key": "detection",
       "label": "做目标检测",
       "description": "从标注到训练到部署的完整目标检测链路",
-      "tool_names": ["Ultralytics YOLO", "Label Studio", "ONNX Runtime"]
+      "tool_names": [
+        "Ultralytics YOLO",
+        "Label Studio",
+        "ONNX Runtime"
+      ]
     },
     {
       "key": "rag",
       "label": "做 RAG 应用",
       "description": "检索增强生成的典型技术组合：模型 + 框架 + 向量库",
-      "tool_names": ["Hugging Face Transformers", "LangChain", "pgvector + PostgreSQL"]
+      "tool_names": [
+        "Hugging Face Transformers",
+        "LangChain",
+        "pgvector + PostgreSQL"
+      ]
     },
     {
       "key": "mlops",
       "label": "做 MLOps 实验管理",
       "description": "参数记录 / 指标对比 / 数据版本的团队协作工具集",
-      "tool_names": ["MLflow", "Weights & Biases", "DVC (Data Version Control)"]
+      "tool_names": [
+        "MLflow",
+        "Weights & Biases",
+        "DVC (Data Version Control)"
+      ]
     },
     {
       "key": "demo",
       "label": "快速 Demo 展示",
       "description": "纯 Python 构建交互式 Web 界面，快速把模型展示给他人",
-      "tool_names": ["Streamlit", "Gradio"]
+      "tool_names": [
+        "Streamlit",
+        "Gradio"
+      ]
     },
     {
       "key": "deploy",
       "label": "模型部署上线",
       "description": "推理加速 + 容器化封装，让模型在生产环境稳定运行",
-      "tool_names": ["Docker", "ONNX Runtime"]
+      "tool_names": [
+        "Docker",
+        "ONNX Runtime"
+      ]
     },
     {
       "key": "research",
       "label": "深度学习研究",
       "description": "灵活的框架 + 强大的可视化，支持前沿研究探索",
-      "tool_names": ["PyTorch", "Hugging Face Transformers", "Weights & Biases"]
+      "tool_names": [
+        "PyTorch",
+        "Hugging Face Transformers",
+        "Weights & Biases"
+      ]
     },
     {
       "key": "bigdata",
       "label": "大规模数据处理",
       "description": "TB 级数据集的版本化与并行处理",
-      "tool_names": ["Dask", "DVC (Data Version Control)"]
+      "tool_names": [
+        "Dask",
+        "DVC (Data Version Control)"
+      ]
     }
   ]
 }

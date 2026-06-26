@@ -131,7 +131,7 @@ async def metrics():
 groups:
 - name: ai-service
   rules:
-  - alert: HighGPPUtilization
+  - alert: HighGPUUtilization
     expr: avg(gpu_utilization) > 90
     for: 5m
     labels:
@@ -139,7 +139,7 @@ groups:
     annotations:
       summary: "GPU 利用率超过 90%"
   - alert: HighErrorRate
-    expr: rate(http_requests_total{status=~"5.."}[2m]) / rate(http_requests_total[2m]) > 0.05
+    expr: sum(rate(http_requests_total{status=~"5.."}[2m])) / sum(rate(http_requests_total[2m])) > 0.05
     for: 2m
     labels:
       severity: critical

@@ -247,6 +247,6 @@ loss = criterion(log_probs, targets, input_lengths, target_lengths)
 
 1. 先用 EasyOCR 在自己场景的图片上跑通，感受整个 pipeline
 2. 读 CRNN 论文《An End-to-End Trainable Neural Network for Image-based Sequence Recognition》
-3. 用上面的代码手写一个 CRNN，在简单数据集（如 SNNW）上验证
+3. 用上面的代码手写一个 CRNN，在简单数据集（如 IIIT5K 或 Synth90k 子集）上验证
 4. 了解 DBNet 文本检测原理，理解如何检测任意形状的文字
 5. 看 PaddleOCR 源码，理解 PP-OCR 系列如何工程化落地

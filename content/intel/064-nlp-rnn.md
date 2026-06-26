@@ -150,7 +150,7 @@ class VanillaRNN(nn.Module):
         # x: (batch, seq_len)
         embeddings = self.embedding(x)  # (batch, seq_len, embed_dim)
         outputs = []
-        self.h = torch.zeros(embed_dim.shape[0], self.W_hh.out_features)
+        self.h = torch.zeros(embeddings.size(0), self.W_hh.out_features).to(x.device)
 
         for t in range(embeddings.size(1)):
             x_t = embeddings[:, t, :]  # (batch, embed_dim)

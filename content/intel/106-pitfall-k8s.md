@@ -17,7 +17,7 @@
 - 01 执行 `kubectl describe pod <pod-name>` 查看 Events 字段中的调度失败原因
 - 02 执行 `kubectl describe node` 检查各节点资源使用情况和 allocatable 资源
 - 03 检查 Pod 的 resource requests 和 limits 配置，确保请求资源不超过集群总资源
-- 04 如资源不足，考虑扩容节点、降低 requests 值、或使用 pod disruption budget 分散调度
+- 04 如资源不足，考虑扩容节点、降低 requests 值、或使用 pod 反亲和性 / 拓扑分布约束分散调度
 
 #Kubernetes#容器#资源管理
 

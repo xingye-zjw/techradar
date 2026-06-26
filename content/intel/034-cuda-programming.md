@@ -125,6 +125,8 @@ from torch.utils.cpp_extension import load_inline
 
 # 定义 CUDA Kernel
 cuda_source = """
+#include <torch/extension.h>
+
 __global__ void my_kernel(const float* input, float* output, int n) {
     int i = blockIdx.x * blockDim.x + threadIdx.x;
     if (i < n) {

@@ -79,7 +79,7 @@ CFG 是一种无需单独训练分类器即可引导生成方向的技术。
 
 核心公式：
 ```
-ε_θ(x_t, y) = ε_θ(x_t, ∅) + w · (ε_θ(x_t, y) - ε_θ(x_t, ∅))
+ε̂(x_t, y) = ε_θ(x_t, ∅) + w · (ε_θ(x_t, y) - ε_θ(x_t, ∅))
 ```
 其中 y 是条件（文本），∅ 是无条件，w 是 guidance scale（通常 7-12）。
 
@@ -152,8 +152,15 @@ image.save("output_img2img.png")
 **第三步：使用 LoRA 微调**
 
 ```python
-from diffusers import StableDiffusionLoRATraining
+import torch
+from diffusers import StableDiffusionPipeline
 from peft import LoraConfig, get_peft_model
+
+# 加载基础模型
+pipe = StableDiffusionPipeline.from_pretrained(
+    "runwayml/stable-diffusion-v1-5",
+    torch_dtype=torch.float16
+).to("cuda")
 
 # 定义 LoRA 配置
 lora_config = LoraConfig(
@@ -164,8 +171,9 @@ lora_config = LoraConfig(
 )
 
 # 将 LoRA 注入 UNet
-unet = get_peft_model(unet, lora_config)
-# 然后用你的数据集微调 UNet
+unet = get_peft_model(pipe.unet, lora_config)
+pipe.unet = unet
+# 然后用你的数据集微调（训练时用 pipe.unet 或直接用 unet 均可）
 ```
 
 **第四步：Inpainting（局部重绘）**
@@ -216,7 +224,7 @@ RuntimeError: expected scalar type Float but found Half
 ## 推荐学习顺序
 
 1. 先读 Lilian Weng 的博客"What are Diffusion Models?"（数学推导清晰）
-2. 看 CVPR 2022 Denoising Diffusion Probabilistic Models 论文
+2. 看 NeurIPS 2020 Denoising Diffusion Probabilistic Models 论文
 3. 阅读 Stable Diffusion 论文（High-Resolution Image Synthesis with Latent Diffusion Models）
 4. 学习 diffusers 库官方文档和示例代码
 5. 尝试在本地部署 ComfyUI，通过可视化工作流理解 Diffusion 全流程

@@ -414,11 +414,12 @@ class QuadratureDecoder:
         """
         # 状态转换表
         # A B  prev_A prev_B  direction
-        # 0 0    0     1       +1
+        # 0 0    0     1       -1
         # 0 1    1     1       +1
-        # 1 1    1     0       +1
+        # 1 1    1     0       -1
         # 1 0    0     0       +1
-        # 反向则减
+        # 正转序列：00→01→11→10→00（+1）
+        # 反转序列：00→10→11→01→00（-1）
         
         state = (A << 1) | B
         prev_state = (self.prev_A << 1) | self.prev_B

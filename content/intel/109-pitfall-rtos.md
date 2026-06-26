@@ -16,7 +16,7 @@
 
 - 01 检查所有任务的优先级配置，确保高优先级任务确实具有最高优先级
 - 02 使用二进制信号量替代直接调用 vTaskDelay 或阻塞操作
-- 03 配置优先级继承，在使用互斥量时启用 `configUSE_MUTEXES` 和 `configPRIORITY_INHERITANCE`
+- 03 配置优先级继承，在使用互斥量时启用 `configUSE_MUTEXES`（互斥量内置优先级继承）
 
 #FreeRTOS#RTOS#嵌入式
 

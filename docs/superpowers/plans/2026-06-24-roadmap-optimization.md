@@ -289,29 +289,24 @@ export interface RoadmapNode {
 
 - [ ] **Step 3: 为现有节点添加学习建议数据**
 
-在 `lib/roadmap-data.ts` 中为节点添加 `suggestions` 字段：
+在 `lib/roadmap-data.ts` 中为 `linux-basic` 节点添加 `suggestions` 字段：
 
 ```typescript
-// 示例：为 linux-basic 节点添加学习建议
-{
-  id: "linux-basic",
-  name: "Linux 系统基础",
-  // ... 现有字段
-  suggestions: {
-    prerequisites: [
-      "基本的计算机操作能力",
-      "了解操作系统概念",
-    ],
-    nextSteps: [
-      "Git & GitHub 协作",
-      "Docker 容器化",
-    ],
-    learningPath: [
-      "DevOps 路径",
-      "全栈开发路径",
-    ],
-  },
-}
+// 在 linux-basic 节点对象中添加
+suggestions: {
+  prerequisites: [
+    "基本的计算机操作能力",
+    "了解操作系统概念",
+  ],
+  nextSteps: [
+    "Git & GitHub 协作",
+    "Docker 容器化",
+  ],
+  learningPath: [
+    "DevOps 路径",
+    "全栈开发路径",
+  ],
+},
 ```
 
 - [ ] **Step 4: 验证学习建议区块**
@@ -319,9 +314,10 @@ export interface RoadmapNode {
 Run: `npm run dev`
 Expected:
 - 访问 `/roadmap` 页面
-- 点击节点打开详情面板
-- 显示学习建议区块（前置知识、后续学习、推荐路径）
-- 样式与现有设计一致
+- 点击 `linux-basic` 节点打开详情面板
+- 在"前置节点"区块后面显示"💡 学习建议"区块
+- 显示前置知识列表（2 项）、后续学习列表（2 项）、推荐路径标签（2 个）
+- 样式与现有设计一致（暗色背景、绿色/青色点缀色）
 
 - [ ] **Step 5: Commit**
 
@@ -467,10 +463,11 @@ git commit -m "feat(roadmap): add learning suggestions to node detail panel"
 Run: `npm run dev`
 Expected:
 - 访问 `/roadmap` 页面
-- 点击节点打开详情面板
-- 关联内容分组显示（情报、术语、工具、实战项目）
-- 每组显示数量统计
-- 样式与现有设计一致
+- 点击 `linux-basic` 节点打开详情面板
+- 关联内容分组显示为 4 个独立区块：情报(2)、术语(4)、工具(1)、实战项目
+- 每组标题旁显示数量统计，如 `📰 情报 (2)`
+- 各组之间有清晰的间距分隔
+- 样式与现有设计一致（暗色背景、各组使用对应颜色点缀）
 
 - [ ] **Step 4: Commit**
 

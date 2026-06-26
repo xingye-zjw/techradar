@@ -58,6 +58,7 @@ AllReduce(grad_0, grad_1, ..., grad_N) → avg → optimizer.step() × N
 import torch.nn.parallel as parallel
 from torch.nn.parallel import DistributedDataParallel as DDP
 import torch.distributed as dist
+import os
 
 # 每个进程初始化
 dist.init_process_group(backend="nccl")
@@ -142,11 +143,11 @@ Pipeline: GPU0-M1 → GPU1-M1 → GPU2-M1 → GPU3-M1 → GPU0-M2 → ...
 
 ```
 Data Parallel 通信量（每 iteration）：
-  - AllReduce 梯度: 2 × (N-1)/N × model_size × FP16 = ~2 × model_size (bytes)
-  - 假设 model=7B params, FP16=2bytes → ~14GB/iteration
+  - AllReduce 梯度: ~2 × model_params × bytes_per_param（Ring AllReduce）
+  - 假设 model=7B params, FP16=2bytes → ~28GB/iteration
 
 Tensor Parallel 通信量：
-  - AllReduce 激活值: model_size × seq_len × batch / TP_size (bytes)
+  - AllReduce 激活值: 与序列长度、batch 大小、TP 度数相关
 
 Pipeline Parallel 通信量：
   - P2P 通信（activation pass）: 远小于 DP（只传激活值，不传梯度）

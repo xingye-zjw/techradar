@@ -81,11 +81,11 @@ takeaways:
 > **Mel 谱图 vs MFCC**：
 - Mel 谱图：Mel 滤波 + 对数，保留了频谱的整体形状（40 维）
 - MFCC：再多一步 DCT，压缩到 13 维，去相关性，传统 HMM 时代常用
-- 今天深度学习时代，**直接用 Mel 谱图当输入更常见（保留信息更多）
+- 今天深度学习时代，**直接用 Mel 谱图当输入更常见**（保留信息更多）
 
 ### 🔑 传统 ASR 架构（HMM-GMM）
 
-在深度学习之前，ASR 的标准架构是 **HMM-GMM 混合模型：
+在深度学习之前，ASR 的标准架构是 **HMM-GMM 混合模型**：
 
 ```
 声学模型（HMM-GMM） + 语言模型（N-gram） + 词典（发音词典）
@@ -114,7 +114,7 @@ takeaways:
 2. 去掉所有 blank
 3. 剩下的就是最终文字
 
-**例子：
+**例子**：
 ```
 模型输出：h h e l l l o → hello
 模型输出：h - e l - l o → hello  （- 表示 blank）
@@ -302,7 +302,7 @@ result = whisper.decode(model, mel, options)
 print(result.text)
 ```
 
-**第四步：计算 WER（词错误率）
+**第四步：计算 WER（词错误率）**
 
 ```python
 from jiwer import wer
@@ -343,7 +343,7 @@ with open("transcript.txt", "w", encoding="utf-8") as f:
         f.write(f"[{segment['start']:.1f} - {segment['end']:.1f}] {segment['text']}\n")
 ```
 
-**第六步：微调 Whisper（用 LoRA 高效微调）
+**第六步：微调 Whisper（用 LoRA 高效微调）**
 
 ```python
 # 使用 peft + bitsandbytes 做 LoRA 微调

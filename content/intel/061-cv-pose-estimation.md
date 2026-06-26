@@ -43,7 +43,7 @@ takeaways:
 
 1. **姿态估计 = 检测人体关键点（Keypoint）的位置**（如头、肩膀、肘、腕、髋、膝、踝等）
 2. **两大路线：Top-down（先找人再检测关节点）vs Bottom-up（先检测关节点再组合成人）**
-3. **HRNet 以保持高分辨表示为核心，OpenPose/AlphaPose 是 Bottom-up 代表方案**
+3. **HRNet 以保持高分辨表示为核心，OpenPose 是 Bottom-up 代表，AlphaPose 是 Top-down 代表方案**
 
 ## 核心拆解
 
@@ -114,7 +114,7 @@ mmpose 是 OpenMMLab 生态的一员，支持多种姿态估计算法。
 
 **第一步：安装**
 ```bash
-pip install mmpose mmpose人头攒动
+pip install mmpose
 # 或完整安装
 pip install mmcv-full mmdet mmpose
 ```
@@ -247,7 +247,7 @@ python scripts/demo_inference.py \
 原因：每个人都要过一次网络，人数多时计算量线性增长
 解决：
   1. 先用轻量级检测器（如 YOLOv5s）
-  2. 切换到 Bottom-up 方案（AlphaPose）
+  2. 切换到 Bottom-up 方案（如 OpenPose）
   3. 使用 Batch-NMS 等后处理优化
 ```
 

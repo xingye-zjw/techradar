@@ -116,19 +116,25 @@ FlashAttention-2 的优化：
 ### 使用长上下文模型
 
 ```python
-from transformers import AutoModelForCausalLM
+from transformers import AutoModelForCausalLM, AutoConfig
 
+# 方式一：直接加载原生支持长上下文的模型
 model = AutoModelForCausalLM.from_pretrained(
-    "Qwen/Qwen2.5-7B-Instruct",
+    "Qwen/Qwen2.5-7B-Instruct",  # 原生支持 128k
     device_map="auto"
 )
 
-# 设置长上下文
-model.config.max_position_embeddings = 32768  # 扩展到 32k
-
-# 推理
-long_text = "..." * 30000  # 30k token 的长文本
-output = model.generate(long_text, max_new_tokens=100)
+# 方式二：通过 RoPE scaling 扩展已有模型的上下文
+config = AutoConfig.from_pretrained("meta-llama/Llama-2-7b-hf")
+config.rope_scaling = {
+    "type": "linear",      # 或 "dynamic" / "yarn"
+    "factor": 4.0          # 从 4k 扩展到 16k
+}
+model = AutoModelForCausalLM.from_pretrained(
+    "meta-llama/Llama-2-7b-hf",
+    config=config,
+    device_map="auto"
+)
 ```
 
 ### 用 FlashAttention-2

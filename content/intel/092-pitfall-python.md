@@ -109,7 +109,7 @@ conda create 独立环境 → pip install 分批安装 → freeze 导出依赖
 
 // 现象表现
 
-- × a == 256 返回 True 但 a is 256 返回 False
+- × a == 257 返回 True 但 a is 257 返回 False
 - × 小整数（-5~256）在不同变量间 is 比较为 True
 - × 大整数 is 比较结果不确定
 - × 依赖 is 比较进行条件判断出现异常

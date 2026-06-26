@@ -350,8 +350,9 @@ CREATE TABLE orders (
 -- 慢查询日志
 SET GLOBAL slow_query_log = ON;
 SET GLOBAL long_query_time = 2;  -- 超过2秒记录
+SET GLOBAL log_output = 'TABLE';  -- 将慢查询输出到表（默认是 FILE）
 
--- 查看慢查询
+-- 查看慢查询（需先设置 log_output=TABLE）
 SELECT * FROM mysql.slow_log ORDER BY query_time DESC LIMIT 10;
 
 -- 性能分析

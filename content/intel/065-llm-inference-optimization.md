@@ -213,7 +213,7 @@ pip install vllm
 
 ```python
 # server.py
-from vllm import LLM, SamplingParam
+from vllm import LLM, SamplingParams
 
 # 加载模型（自动处理 Tensor Parallelism）
 llm = LLM(
@@ -224,7 +224,7 @@ llm = LLM(
 )
 
 # 定义采样参数
-sampling_params = SamplingParam(
+sampling_params = SamplingParams(
     temperature=0.7,
     top_p=0.95,
     max_tokens=512,
@@ -240,13 +240,13 @@ for output in outputs:
 **第三步：批量推理 + Continuous Batching**
 
 ```python
-from vllm import LLM, SamplingParam
+from vllm import LLM, SamplingParams
 import asyncio
 
 llm = LLM(model="meta-llama/Llama-2-7b-chat-hf")
 
 async def generate_stream(prompts):
-    sampling_params = SamplingParam(temperature=0.7, max_tokens=256)
+    sampling_params = SamplingParams(temperature=0.7, max_tokens=256)
     # vLLM 自动处理 batching、continuous batching 和 PagedAttention
     async for output in llm.generate_async(prompts, sampling_params):
         yield output

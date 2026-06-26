@@ -185,8 +185,8 @@ def knn_anomaly_score(X, k=5):
 KNN 的升级版，核心改进：**不只看点到邻居的距离，还要看邻居们的密度——相对密度低的才是异常。**
 
 LOF 定义：
-- 点 p 的可达距离 = max(k距离(p), 距离(p, o))
-- 局部可达密度 lrd = k / 所有可达距离之和
+- 点 p 到 o 的第 k 可达距离：reach-dist_k(p, o) = max(k-distance(o), d(p, o))
+- 局部可达密度 lrd(p) = k / 所有邻居的可达距离之和
 - LOF(p) = 邻居的平均lrd / p的lrd
 
 **LOF > 1 → 异常（密度低于邻居 → 可能是异常）

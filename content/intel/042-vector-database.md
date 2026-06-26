@@ -100,16 +100,16 @@ results = collection.query(
 ### 🔑 Milvus：生产级向量数据库
 
 ```python
-from pymilvus import connections, Collection, FieldSchema, CollectionSchema
+from pymilvus import connections, Collection, FieldSchema, CollectionSchema, DataType
 
 # 连接
 connections.connect("default", host="localhost", port="19530")
 
 # 定义 schema
 fields = [
-    FieldSchema(name="id", dtype=INT64, is_primary=True),
-    FieldSchema(name="embedding", dtype=FLOAT_VECTOR, dim=768),
-    FieldSchema(name="text", dtype=VARCHAR, max_length=512)
+    FieldSchema(name="id", dtype=DataType.INT64, is_primary=True),
+    FieldSchema(name="embedding", dtype=DataType.FLOAT_VECTOR, dim=768),
+    FieldSchema(name="text", dtype=DataType.VARCHAR, max_length=512)
 ]
 schema = CollectionSchema(fields, "document collection")
 
@@ -153,20 +153,17 @@ D, I = index.search(query_embedding, k=5)
 
 ## 实战指南
 
-### RAG 向量检索 Pipeline
+### RAG 向量检索 Pipeline（以 ChromaDB 为例）
 
 ```python
 class VectorRetriever:
-    def __init__(self, db_type="chroma"):
-        if db_type == "chroma":
-            self.db = chromadb.Client()
-        elif db_type == "milvus":
-            connections.connect("default", host="localhost", port="19530")
-            self.db = Collection("documents")
+    def __init__(self):
+        self.db = chromadb.Client()
+        self.collection = self.db.create_collection("documents")
     
     def add_documents(self, documents):
         embeddings = [embed(doc) for doc in documents]
-        self.db.add(
+        self.collection.add(
             documents=documents,
             embeddings=embeddings,
             ids=[str(i) for i in range(len(documents))]
@@ -174,7 +171,7 @@ class VectorRetriever:
     
     def search(self, query, top_k=5):
         query_embedding = embed(query)
-        results = self.db.query(
+        results = self.collection.query(
             query_embeddings=[query_embedding],
             n_results=top_k
         )

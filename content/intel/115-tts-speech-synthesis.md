@@ -235,7 +235,7 @@ pip install TTS
 tts --list_models
 ```
 
-**第二步：用预训练 VITS 模型合成中文语音**
+**第二步：用预训练 Tacotron 2 模型合成中文语音**
 
 ```python
 from TTS.api import TTS

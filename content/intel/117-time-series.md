@@ -382,8 +382,9 @@ train_size = 120
 train, test = series[:train_size], series[train_size:]
 print(f'\n训练集: {len(train)} 条, 测试集: {len(test)} 条')
 
-# 6. 训练 ARIMA 模型
-model = ARIMA(train, order=(2, 1, 2), seasonal_order=(1, 1, 1, 12))
+# 6. 训练 SARIMAX 模型（含季节性）
+from statsmodels.tsa.statespace.sarimax import SARIMAX
+model = SARIMAX(train, order=(2, 1, 2), seasonal_order=(1, 1, 1, 12))
 results = model.fit()
 print(results.summary())
 

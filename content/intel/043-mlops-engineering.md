@@ -128,7 +128,13 @@ jobs:
       - name: Evaluate
         run: python evaluate.py
       - name: Register model
-        run: mlflow models promote -m models:/resnet/latest
+        run: |
+          MLFLOW_TRACKING_URI=$MLFLOW_TRACKING_URI python -c "
+          from mlflow.tracking import MlflowClient
+          client = MlflowClient()
+          mv = client.create_model_version('resnet', 'runs:/<run_id>/model', '<run_id>')
+          client.transition_model_version_stage('resnet', mv.version, 'Staging')
+          "
 ```
 
 ## 实战指南
@@ -151,7 +157,7 @@ with mlflow.start_run(run_name="production_run") as run:
     
     # 注册模型
     model_uri = mlflow.pytorch.log_model(model, "model")
-    client.create_model_version(
+    mv = client.create_model_version(
         name="resnet-cifar10",
         source=model_uri,
         run_id=run.info.run_id
@@ -161,7 +167,7 @@ with mlflow.start_run(run_name="production_run") as run:
     if metrics["val_acc"] > 0.93:
         client.transition_model_version_stage(
             name="resnet-cifar10",
-            version=latest_version,
+            version=mv.version,
             stage="Production"
         )
 ```

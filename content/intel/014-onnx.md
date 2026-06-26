@@ -176,7 +176,8 @@ import onnxruntime as ort
 
 sess = ort.InferenceSession("yolo11n.onnx", providers=["CPUExecutionProvider"])
 input_name = sess.get_inputs()[0].name
-input_hw = sess.get_inputs()[0].shape[2:]  # [640, 640]
+# 动态 shape 时从外部指定输入尺寸（640x640 是 YOLO 默认尺寸）
+input_hw = (640, 640)
 
 img = cv2.imread("test.jpg")
 orig_h, orig_w = img.shape[:2]

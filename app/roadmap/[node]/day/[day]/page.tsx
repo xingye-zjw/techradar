@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { notFound } from "next/navigation";
 import { FULL_ROADMAP } from "@/lib/roadmap-data";
 import { INTEL_LINKS, TOOL_LINKS, TRACK_COLORS } from "@/lib/constants";
@@ -73,18 +73,18 @@ function renderTaskContent(content: TaskContent | string | string[], isCompleted
             核心目标
           </h4>
           <p className={`text-sm text-neutral-300 leading-relaxed ${isCompleted ? "opacity-50 line-through" : ""}`}>
-            {taskContent.objective}
+            {taskContent.objective ?? ""}
           </p>
         </div>
 
-        {/* 核心 API */}
-        {taskContent.api_checklist && taskContent.api_checklist.length > 0 && (
+        {/* 核心要点 */}
+        {taskContent.key_points && taskContent.key_points.length > 0 && (
           <div>
             <h4 className="text-xs font-bold text-cyan-400 mb-2 uppercase tracking-wider">
-              核心 API
+              核心要点
             </h4>
             <ul className="space-y-1">
-              {taskContent.api_checklist.map((api, idx) => (
+              {taskContent.key_points.map((api, idx) => (
                 <li key={idx} className={`flex items-start gap-2 text-xs text-neutral-400 ${isCompleted ? "opacity-50 line-through" : ""}`}>
                   <span className="text-neutral-600 font-mono mt-0.5 flex-shrink-0">·</span>
                   <code className="bg-zinc-800 text-cyan-300 px-1.5 py-0.5 rounded font-mono">
@@ -103,18 +103,18 @@ function renderTaskContent(content: TaskContent | string | string[], isCompleted
               <span className="text-base">🎯</span>
               <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider">场景实操</span>
             </div>
-            <p className="text-sm text-zinc-200 leading-relaxed">{taskContent.practice}</p>
+            <p className="text-sm text-zinc-200 leading-relaxed">{taskContent.practice ?? ""}</p>
 
-            {/* 参考答案 */}
-            {taskContent.answer && (
+            {/* 深入拓展 */}
+            {taskContent.deep_dive && (
               <div className="mt-3 pt-3 border-t border-emerald-500/20">
                 <details className="group">
                   <summary className="flex items-center gap-2 text-xs text-emerald-400 hover:text-emerald-300 cursor-pointer list-none">
                     <span className="transition-transform group-open:rotate-90">▶</span>
-                    <span className="font-medium">查看参考答案</span>
+                    <span className="font-medium">查看深入拓展</span>
                   </summary>
                   <pre className="mt-2 p-3 bg-zinc-900/80 rounded-lg border border-zinc-700/50 text-xs text-zinc-300 whitespace-pre-wrap font-mono leading-relaxed">
-                    {taskContent.answer}
+                    {taskContent.deep_dive}
                   </pre>
                 </details>
               </div>
@@ -174,6 +174,9 @@ export default async function DailyTaskPage({ params }: PageProps) {
             Day {task.day} / {sortedTasks.length}
           </h1>
           <p className="text-lg text-neutral-300 font-medium">{task.title}</p>
+            {task.summary && (
+              <p className="text-sm text-neutral-400 mt-1">{task.summary}</p>
+            )}
           <div className="flex items-center gap-2 mt-2 font-mono text-xs text-neutral-500">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
