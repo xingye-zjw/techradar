@@ -289,7 +289,7 @@ export interface ProjectFile {
 }
 
 // 项目步骤内容（新格式）
-// 已知字段使用明确类型，index signature 允许动态代码块（如 gpu_verification, data_pipeline 等）
+// 已知字段使用明确类型，动态代码块使用 Record 限制为字符串类型
 // 代码块在 JSON 中以反引号开头的 key 存储，StepCard 组件通过 startsWith('``') 识别并渲染
 export interface StepContent {
   objective?: string;           // 步骤目标
@@ -299,7 +299,9 @@ export interface StepContent {
     error: string;
     solution: string;
   }>;
-  [key: string]: string | string[] | Array<{error: string; solution: string}> | undefined;
+  /** 动态代码块，key 以反引号开头，value 为代码字符串 */
+  codeBlocks?: Record<string, string>;
+  [key: string]: string | string[] | Array<{error: string; solution: string}> | Record<string, string> | undefined;
 }
 
 // 项目实现步骤

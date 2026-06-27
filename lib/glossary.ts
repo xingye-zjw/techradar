@@ -1,16 +1,21 @@
 import glossaryData from "@/content/glossary/terms.json";
-import { type ContentCategory, type TermIndex, type TermDetail } from "./content-types";
+import { isValidCategory, type ContentCategory, type TermDetail } from "./content-types";
 
 // 条件导入 fs 和 path（仅在服务端可用）
-let fs: typeof import("fs") | null = null;
-let path: typeof import("path") | null = null;
-let matter: typeof import("gray-matter") | null = null;
+// 使用函数延迟加载，避免 ES6 import 在客户端报错
+function getFs() {
+  if (typeof window !== "undefined") return null;
+  return require("fs");
+}
 
-if (typeof window === "undefined") {
-  // 服务端环境
-  fs = require("fs");
-  path = require("path");
-  matter = require("gray-matter");
+function getPath() {
+  if (typeof window !== "undefined") return null;
+  return require("path");
+}
+
+function getMatter() {
+  if (typeof window !== "undefined") return null;
+  return require("gray-matter");
 }
 
 // ============ 类型定义 ============
@@ -75,6 +80,10 @@ let cachedTermDetails: TermDetail[] | null = null;
 // 读取术语的 MD 详情文件
 export function readTermDetail(slug: string): TermDetail | null {
   // 客户端环境下无法读取文件，返回 null
+  const fs = getFs();
+  const path = getPath();
+  const matter = getMatter();
+
   if (!fs || !path || !matter) {
     return null;
   }
@@ -100,12 +109,13 @@ export function readTermDetail(slug: string): TermDetail | null {
 
     // 解析 frontmatter
     const fm = frontmatter as TermFrontmatter;
+    const categoryValue = fm.category || indexItem.category;
 
     return {
       term: indexItem.term,
       slug: indexItem.slug,
       nameZh: fm.title,
-      category: (fm.category || indexItem.category) as ContentCategory,
+      category: isValidCategory(categoryValue) ? categoryValue as ContentCategory : 'uncategorized',
       summary: indexItem.definition,
       content: content,
       relatedTerms: fm.relatedTerms || indexItem.relatedTerms || [],
@@ -115,7 +125,16 @@ export function readTermDetail(slug: string): TermDetail | null {
       tags: fm.tags || [],
     };
   } catch (error) {
-    console.error(`Error reading term detail for ${slug}:`, error);
+    // 区分错误类型并记录详细信息
+    if (error instanceof Error) {
+      if ('code' in error && error.code === 'ENOENT') {
+        console.error(`Term detail file not found: ${slug}.md`);
+      } else {
+        console.error(`Error reading term detail for ${slug}:`, error.message);
+      }
+    } else {
+      console.error(`Unknown error reading term detail for ${slug}`);
+    }
     return null;
   }
 }

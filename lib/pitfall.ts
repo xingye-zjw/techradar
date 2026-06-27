@@ -1,9 +1,36 @@
 import fs from "node:fs";
 import path from "node:path";
-import type { Pitfall, ContentCategory } from "./content-types";
+import { isValidCategory, type Pitfall, type ContentCategory } from "./content-types";
 
 // 重新导出 Pitfall 类型，保持向后兼容
-export type { Pitfall } from "./content-types";
+export type { Pitfall, ContentCategory } from "./content-types";
+
+// JSON 原始数据结构接口
+interface RawPitfall {
+  title?: string;
+  slug?: string;
+  category?: string;
+  description?: string;
+  root_cause?: string;
+  symptoms?: unknown;
+  solution?: unknown;
+  quickFix?: string;
+  tags?: unknown;
+  prevention?: unknown;
+  relatedIntel?: unknown;
+  relatedNodes?: unknown;
+  relatedTerms?: unknown;
+  relatedTools?: unknown;
+}
+
+/**
+ * 验证 raw pitfall 对象的类型
+ */
+function isRawPitfall(data: unknown): data is RawPitfall {
+  if (typeof data !== 'object' || data === null) return false;
+  const obj = data as Record<string, unknown>;
+  return typeof obj.title === 'string';
+}
 
 /**
  * 从标题生成 URL 友好的 slug
@@ -37,25 +64,27 @@ export function getAllPitfalls(): Pitfall[] {
   }
 
   const raw = fs.readFileSync(dataPath, "utf8");
-  const rawData = JSON.parse(raw) as Record<string, unknown>[];
+  const rawData = JSON.parse(raw) as unknown[];
 
   // 补全缺失字段，保持向后兼容
-  cachedPitfalls = rawData.map((item) => ({
-    title: (item.title as string) || '',
-    slug: (item.slug as string) || generateSlug((item.title as string) || ''),
-    category: (item.category as ContentCategory) || 'devops',
-    description: (item.description as string) || (item.title as string) || '',
-    root_cause: (item.root_cause as string) || '',
-    symptoms: Array.isArray(item.symptoms) ? (item.symptoms as string[]) : [],
-    solution: Array.isArray(item.solution) ? (item.solution as string[]) : [],
-    quickFix: (item.quickFix as string) || '',
-    tags: Array.isArray(item.tags) ? (item.tags as string[]) : [],
-    prevention: Array.isArray(item.prevention) ? (item.prevention as string[]) : undefined,
-    relatedIntel: Array.isArray(item.relatedIntel) ? (item.relatedIntel as string[]) : undefined,
-    relatedNodes: Array.isArray(item.relatedNodes) ? (item.relatedNodes as string[]) : undefined,
-    relatedTerms: Array.isArray(item.relatedTerms) ? (item.relatedTerms as string[]) : undefined,
-    relatedTools: Array.isArray(item.relatedTools) ? (item.relatedTools as string[]) : undefined,
-  })) as Pitfall[];
+  cachedPitfalls = (rawData as RawPitfall[])
+    .filter((item): item is RawPitfall => isRawPitfall(item))
+    .map((item) => ({
+      title: item.title || '',
+      slug: item.slug || generateSlug(item.title || ''),
+      category: isValidCategory(item.category || '') ? item.category as ContentCategory : 'devops',
+      description: item.description || item.title || '',
+      root_cause: item.root_cause || '',
+      symptoms: Array.isArray(item.symptoms) ? (item.symptoms as string[]) : [],
+      solution: Array.isArray(item.solution) ? (item.solution as string[]) : [],
+      quickFix: item.quickFix || '',
+      tags: Array.isArray(item.tags) ? (item.tags as string[]) : [],
+      prevention: Array.isArray(item.prevention) ? (item.prevention as string[]) : undefined,
+      relatedIntel: Array.isArray(item.relatedIntel) ? (item.relatedIntel as string[]) : undefined,
+      relatedNodes: Array.isArray(item.relatedNodes) ? (item.relatedNodes as string[]) : undefined,
+      relatedTerms: Array.isArray(item.relatedTerms) ? (item.relatedTerms as string[]) : undefined,
+      relatedTools: Array.isArray(item.relatedTools) ? (item.relatedTools as string[]) : undefined,
+    })) as Pitfall[];
 
   return cachedPitfalls;
 }

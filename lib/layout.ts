@@ -1,5 +1,6 @@
 import dagre from 'dagre';
 import type { RoadmapNode as RoadmapNodeType } from '@/components/radar/types';
+import type { TrackId } from './constants';
 
 const NODE_WIDTH = 220;
 const NODE_HEIGHT = 160;
@@ -131,8 +132,8 @@ export function autoLayout(
 export function getTrackBounds(
   nodes: RoadmapNodeType[],
   positions: Map<string, { x: number; y: number }>
-): Map<string, { x: number; y: number; width: number; height: number }> {
-  const bounds = new Map<string, { x: number; y: number; width: number; height: number }>();
+): Map<TrackId, { x: number; y: number; width: number; height: number }> {
+  const bounds = new Map<TrackId, { x: number; y: number; width: number; height: number }>();
 
   for (const track of TRACK_ORDER) {
     const trackNodes = nodes.filter(n => n.track === track);

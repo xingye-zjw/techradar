@@ -5,23 +5,92 @@
  */
 
 import projectsData from '../content/practice/projects.json';
-import { PracticeProject, ContentCategory } from './content-types';
+import { PracticeProject, ContentCategory, isValidCategory } from './content-types';
+
+// JSON 原始数据结构接口
+interface RawProject {
+  slug: string;
+  title: string;
+  category: string;
+  difficulty: number;
+  duration: string;
+  summary: string;
+  prerequisites: string[];
+  relatedNodes?: string[];
+  objectives?: string[];
+  projectStructure?: unknown[];
+  steps?: unknown[];
+  resources?: unknown[];
+  relatedIntel?: string[];
+  relatedTerms?: string[];
+  relatedTools?: string[];
+  templateRepo?: string;
+  solutionRepo?: string;
+}
+
+/**
+ * 验证 raw project 对象的类型
+ */
+function isRawProject(data: unknown): data is RawProject {
+  if (typeof data !== 'object' || data === null) return false;
+  const obj = data as Record<string, unknown>;
+  return (
+    typeof obj.slug === 'string' &&
+    typeof obj.title === 'string' &&
+    typeof obj.category === 'string' &&
+    typeof obj.difficulty === 'number' &&
+    typeof obj.summary === 'string' &&
+    Array.isArray(obj.prerequisites)
+  );
+}
 
 /**
  * 将 JSON 数据转换为 PracticeProject 数组
  */
-function normalizeProjects(data: any[]): PracticeProject[] {
-  return data.map(p => ({
-    ...p,
-    category: p.category as ContentCategory,
-  }));
+function normalizeProjects(data: unknown[]): PracticeProject[] {
+  return data
+    .filter((p): p is RawProject => isRawProject(p))
+    .map(p => {
+      // 验证 difficulty 是有效的 1-5 范围
+      const validDifficulty = (d: number): 1 | 2 | 3 | 4 | 5 => {
+        if (d >= 1 && d <= 5 && Number.isInteger(d)) {
+          return d as 1 | 2 | 3 | 4 | 5;
+        }
+        return 3; // 默认中等难度
+      };
+
+      return {
+        slug: p.slug,
+        title: p.title,
+        category: isValidCategory(p.category) ? p.category as ContentCategory : 'uncategorized',
+        difficulty: validDifficulty(p.difficulty),
+        duration: p.duration,
+        summary: p.summary,
+        prerequisites: p.prerequisites || [],
+        relatedNodes: p.relatedNodes,
+        objectives: p.objectives || [],
+        projectStructure: (p.projectStructure || []) as PracticeProject['projectStructure'],
+        steps: (p.steps || []) as PracticeProject['steps'],
+        resources: (p.resources || []) as PracticeProject['resources'],
+        relatedIntel: p.relatedIntel,
+        relatedTerms: p.relatedTerms,
+        relatedTools: p.relatedTools,
+        templateRepo: p.templateRepo,
+        solutionRepo: p.solutionRepo,
+      };
+    });
 }
 
+// 模块级缓存
+let cachedProjects: PracticeProject[] | null = null;
+
 /**
- * 获取所有实战项目
+ * 获取所有实战项目（带缓存）
  */
 export function getAllProjects(): PracticeProject[] {
-  return normalizeProjects(projectsData.projects);
+  if (cachedProjects) return cachedProjects;
+  cachedProjects = normalizeProjects(projectsData.projects);
+  return cachedProjects;
 }
 
 /**
@@ -30,7 +99,7 @@ export function getAllProjects(): PracticeProject[] {
  * @returns 项目对象或 undefined
  */
 export function getProjectBySlug(slug: string): PracticeProject | undefined {
-  return normalizeProjects(projectsData.projects).find(p => p.slug === slug);
+  return getAllProjects().find(p => p.slug === slug);
 }
 
 /**
@@ -39,7 +108,7 @@ export function getProjectBySlug(slug: string): PracticeProject | undefined {
  * @returns 符合条件的项目数组
  */
 export function getProjectsByDifficulty(difficulty: number): PracticeProject[] {
-  return normalizeProjects(projectsData.projects).filter(p => p.difficulty === difficulty);
+  return getAllProjects().filter(p => p.difficulty === difficulty);
 }
 
 /**
@@ -48,7 +117,7 @@ export function getProjectsByDifficulty(difficulty: number): PracticeProject[] {
  * @returns 符合条件的项目数组
  */
 export function getProjectsByCategory(category: ContentCategory): PracticeProject[] {
-  return normalizeProjects(projectsData.projects).filter(p => p.category === category);
+  return getAllProjects().filter(p => p.category === category);
 }
 
 /**
@@ -57,7 +126,7 @@ export function getProjectsByCategory(category: ContentCategory): PracticeProjec
  * @returns 关联的项目数组
  */
 export function getProjectsByNode(nodeId: string): PracticeProject[] {
-  return normalizeProjects(projectsData.projects).filter(p => p.relatedNodes?.includes(nodeId));
+  return getAllProjects().filter(p => p.relatedNodes?.includes(nodeId));
 }
 
 /**
@@ -92,7 +161,7 @@ export function getDifficultyLabel(difficulty: number): string {
  */
 export function searchProjects(query: string): PracticeProject[] {
   const lowerQuery = query.toLowerCase();
-  return normalizeProjects(projectsData.projects).filter(p =>
+  return getAllProjects().filter(p =>
     p.title.toLowerCase().includes(lowerQuery) ||
     p.summary.toLowerCase().includes(lowerQuery) ||
     p.prerequisites.some(pr => pr.toLowerCase().includes(lowerQuery))

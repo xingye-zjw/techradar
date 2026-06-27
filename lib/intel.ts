@@ -1,33 +1,10 @@
 import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
+import { isValidCategory, type IntelCard } from "./content-types";
 
-/**
- * 单条技术情报卡片的结构化数据
- * 对应 content/intel/*.md 中的 YAML Frontmatter + 正文摘要
- */
-export interface IntelCard {
-  slug: string;
-  title: string;
-  category: string;
-  keywords: string[];
-  difficulty: "beginner" | "intermediate" | "advanced";
-  duration: string;
-  summary: string;
-  /** 人工编写的"你将学到什么"，1-4 条完整短句 */
-  takeaways?: string[];
-  content: string;
-  /** 标签列表 */
-  tags: string[];
-  /** 预计阅读时间（分钟） */
-  readingTime: number;
-  /** 前置知识要求 */
-  prerequisites?: string[];
-  /** 关联术语 slug 列表 */
-  relatedTerms?: string[];
-  /** 关联路线图节点 ID 列表 */
-  relatedNodes?: string[];
-}
+// 重新导出 IntelCard，保持向后兼容
+export type { IntelCard } from "./content-types";
 
 // 模块级缓存，避免每次请求都读取文件系统
 let cachedCards: IntelCard[] | null = null;
@@ -76,7 +53,7 @@ function parseIntelCard(file: string, contentDir: string): IntelCard {
   return {
     slug,
     title: String(data.title ?? slug),
-    category: String(data.category ?? "uncategorized"),
+    category: (isValidCategory(String(data.category ?? "")) ? String(data.category) : "uncategorized") as IntelCard["category"],
     keywords: Array.isArray(data.keywords) ? data.keywords.map(String) : [],
     difficulty: (data.difficulty ?? "intermediate") as IntelCard["difficulty"],
     duration: String(data.duration ?? ""),

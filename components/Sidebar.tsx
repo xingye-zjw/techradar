@@ -69,6 +69,10 @@ function isRoadmapSectionArray(directory: PageDirectory): directory is RoadmapSe
   return Array.isArray(directory) && directory.length > 0 && typeof directory[0] === "object";
 }
 
+function isStringArray(directory: PageDirectory): directory is string[] {
+  return Array.isArray(directory) && directory.length > 0 && typeof directory[0] === "string";
+}
+
 export function Sidebar() {
   const pathname = usePathname();
   const [state, setState] = useState<SidebarState>("expanded");
@@ -219,7 +223,7 @@ export function Sidebar() {
                   当前页面
                 </div>
                 <div className="space-y-3">
-                  {isRoadmapSectionArray(pageDirectory) ? (
+                  {isRoadmapSectionArray(pageDirectory) && (
                     // 分组形式（如路线图）
                     pageDirectory.map((section, idx) => (
                       <div key={idx}>
@@ -239,10 +243,11 @@ export function Sidebar() {
                         </div>
                       </div>
                     ))
-                  ) : (
+                  )}
+                  {isStringArray(pageDirectory) && (
                     // 标签形式（如情报）
                     <div className="flex flex-wrap gap-1">
-                      {(pageDirectory as string[]).map((tag) => (
+                      {pageDirectory.map((tag) => (
                         <button
                           key={tag}
                           className="text-xs px-2 py-1 rounded bg-neutral-800 text-neutral-400 hover:text-cyan-400 hover:bg-cyan-500/10 transition-colors"

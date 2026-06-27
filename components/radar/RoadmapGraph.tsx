@@ -493,7 +493,7 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
 
             {/* 泳道背景 - 仅在"全部 Track"模式下显示 */}
             {activeTrack === "all" && trackBounds && Array.from(trackBounds.entries()).map(([track, bounds]) => {
-              const trackColor = TRACK_COLORS[track as TrackId];
+              const trackColor = TRACK_COLORS[track];
               if (!trackColor) return null;
               return (
                 <div
@@ -514,7 +514,7 @@ export function RoadmapGraph({ initialNodes = FULL_ROADMAP }: RoadmapGraphProps)
                     className="absolute top-3 left-3 px-3 py-1.5 rounded-lg text-[11px] font-mono font-bold"
                     style={{
                       backgroundColor: trackColor.swimlaneBorder,
-                      color: getSwimlaneLabelColor(track as TrackId),
+                      color: getSwimlaneLabelColor(track),
                     }}
                   >
                     {trackColor.label}
