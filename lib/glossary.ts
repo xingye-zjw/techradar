@@ -1,22 +1,4 @@
 import glossaryData from "@/content/glossary/terms.json";
-import { isValidCategory, type ContentCategory, type TermDetail } from "./content-types";
-
-// 条件导入 fs 和 path（仅在服务端可用）
-// 使用函数延迟加载，避免 ES6 import 在客户端报错
-function getFs() {
-  if (typeof window !== "undefined") return null;
-  return require("fs");
-}
-
-function getPath() {
-  if (typeof window !== "undefined") return null;
-  return require("path");
-}
-
-function getMatter() {
-  if (typeof window !== "undefined") return null;
-  return require("gray-matter");
-}
 
 // ============ 类型定义 ============
 
@@ -59,115 +41,9 @@ interface RawGlossaryTerm {
 // JSON 文件是数组格式
 type GlossaryData = RawGlossaryTerm[];
 
-// MD 详情文件的 frontmatter 结构
-interface TermFrontmatter {
-  title?: string;
-  category?: string;
-  relatedTerms?: string[];
-  relatedNodes?: string[];
-  relatedIntel?: string[];
-  relatedTools?: string[];
-  tags?: string[];
-}
-
 // ============ 模块级缓存 ============
 
 let cachedTerms: GlossaryTerm[] | null = null;
-let cachedTermDetails: TermDetail[] | null = null;
-
-// ============ MD 详情读取 ============
-
-// 读取术语的 MD 详情文件
-export function readTermDetail(slug: string): TermDetail | null {
-  // 客户端环境下无法读取文件，返回 null
-  const fs = getFs();
-  const path = getPath();
-  const matter = getMatter();
-
-  if (!fs || !path || !matter) {
-    return null;
-  }
-
-  const mdPath = path.join(process.cwd(), "content", "glossary", "terms", `${slug}.md`);
-
-  // 检查文件是否存在
-  if (!fs.existsSync(mdPath)) {
-    return null;
-  }
-
-  try {
-    const fileContent = fs.readFileSync(mdPath, "utf-8");
-    const { data: frontmatter, content } = matter(fileContent);
-
-    // 从 JSON 索引中查找对应数据
-    const data = glossaryData as unknown as GlossaryData;
-    const indexItem = data.find((item) => item.slug === slug);
-
-    if (!indexItem) {
-      return null;
-    }
-
-    // 解析 frontmatter
-    const fm = frontmatter as TermFrontmatter;
-    const categoryValue = fm.category || indexItem.category;
-
-    return {
-      term: indexItem.term,
-      slug: indexItem.slug,
-      nameZh: fm.title,
-      category: isValidCategory(categoryValue) ? categoryValue as ContentCategory : 'uncategorized',
-      summary: indexItem.definition,
-      content: content,
-      relatedTerms: fm.relatedTerms || indexItem.relatedTerms || [],
-      relatedNodes: fm.relatedNodes || [],
-      relatedIntel: fm.relatedIntel || [],
-      relatedTools: fm.relatedTools || [],
-      tags: fm.tags || [],
-    };
-  } catch (error) {
-    // 区分错误类型并记录详细信息
-    if (error instanceof Error) {
-      if ('code' in error && error.code === 'ENOENT') {
-        console.error(`Term detail file not found: ${slug}.md`);
-      } else {
-        console.error(`Error reading term detail for ${slug}:`, error.message);
-      }
-    } else {
-      console.error(`Unknown error reading term detail for ${slug}`);
-    }
-    return null;
-  }
-}
-
-// 获取所有术语详情（带 MD 内容）
-export function getAllTermDetails(): TermDetail[] {
-  if (cachedTermDetails) return cachedTermDetails;
-
-  const data = glossaryData as unknown as GlossaryData;
-  cachedTermDetails = data
-    .map((item) => readTermDetail(item.slug))
-    .filter((detail): detail is TermDetail => detail !== null);
-
-  return cachedTermDetails;
-}
-
-// 将 TermDetail 转换为 GlossaryTerm（向后兼容）
-export function toGlossaryTerm(detail: TermDetail): GlossaryTerm {
-  return {
-    slug: detail.slug,
-    name: detail.term,
-    nameEn: undefined,
-    category: detail.category,
-    tags: detail.tags || [],
-    summary: detail.summary,
-    description: detail.content || detail.summary,
-    relatedTerms: detail.relatedTerms || [],
-    relatedNodes: detail.relatedNodes || [],
-    relatedIntel: detail.relatedIntel || [],
-    relatedTools: detail.relatedTools || [],
-    resources: [],
-  };
-}
 
 // ============ 数据读取 ============
 
@@ -200,11 +76,6 @@ export function getTermBySlug(slug: string): GlossaryTerm | undefined {
   return terms.find((t) => t.slug === slug);
 }
 
-// 根据 slug 获取术语详情（带 MD 内容）
-export function getTermDetailBySlug(slug: string): TermDetail | null {
-  return readTermDetail(slug);
-}
-
 // 根据分类获取术语
 export function getTermsByCategory(category: string): GlossaryTerm[] {
   return getAllTerms().filter((term) => term.category === category);
@@ -212,7 +83,6 @@ export function getTermsByCategory(category: string): GlossaryTerm[] {
 
 // 获取所有分类
 export function getAllCategories(): GlossaryCategory[] {
-  // 从术语中动态提取分类
   const terms = getAllTerms();
   const categoryMap = new Map<string, GlossaryCategory>();
 
