@@ -1,13 +1,6 @@
 ---
 title: Prompt Engineering 提示工程与 Agent 设计
 category: llm
-keywords:
-  - prompt engineering
-  - chain-of-thought
-  - function calling
-  - react agent
-  - structured output
-  - agentic
 difficulty: intermediate
 duration: 1周
 summary: 不是调模型参数，而是调问题表述——用更好的 Prompt 让同一个模型产生质的飞跃
@@ -22,8 +15,15 @@ relatedIntel:
   - 015-rlhf
 relatedNodes:
   - llm-finetune
-  - nlp-llm-inference
-  - nlp-prompt-engineering
+  - llm-inference
+  - llm-prompt-engineering
+tags:
+  - prompt engineering
+  - chain-of-thought
+  - function calling
+  - react agent
+  - structured output
+  - agentic
 ---
 
 ## 为什么你要学它

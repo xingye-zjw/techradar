@@ -1,13 +1,6 @@
 ---
 title: 数据库原理与实践
 category: cs
-keywords:
-  - 数据库
-  - SQL
-  - 索引
-  - 事务
-  - MySQL
-  - PostgreSQL
 difficulty: beginner
 duration: 2-3周
 summary: 理解数据库的设计原理和优化方法。掌握SQL查询、索引优化、事务处理等核心技能。
@@ -20,6 +13,13 @@ relatedIntel:
   - 050-cs-algo
   - 051-cs-os
   - 075-cs-network
+tags:
+  - 数据库
+  - sql
+  - 索引
+  - 事务
+  - mysql
+  - postgresql
 ---
 
 ## 为什么你要学它

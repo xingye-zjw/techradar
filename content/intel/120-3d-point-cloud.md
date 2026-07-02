@@ -1,15 +1,6 @@
 ---
 title: 3D视觉与点云处理
 category: computer-vision
-keywords:
-  - point cloud
-  - 3d vision
-  - pointnet
-  - icp
-  - ransac
-  - nerf
-  - open3d
-  - 3d detection
 difficulty: intermediate
 duration: 2-3周
 summary: 从点云表示到深度学习处理，掌握3D视觉核心技术栈，涵盖PointNet、ICP配准、NeRF重建等关键算法。
@@ -22,6 +13,15 @@ relatedIntel:
   - 002-yolo
   - 004-resnet
   - 006-cnn-basics
+tags:
+  - point cloud
+  - 3d vision
+  - pointnet
+  - icp
+  - ransac
+  - nerf
+  - open3d
+  - 3d detection
 ---
 
 ## 为什么你要学它

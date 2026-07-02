@@ -1,14 +1,6 @@
 ---
 title: NumPy / Pandas 数据处理
 category: data-processing
-keywords:
-  - numpy
-  - pandas
-  - data preprocessing
-  - array
-  - dataframe
-  - csv
-  - missing data
 difficulty: beginner
 duration: 1-2周
 summary: 深度学习 80% 的时间花在数据上，NumPy 和 Pandas 帮你把原始 CSV/Excel 变成模型能吃的张量
@@ -24,6 +16,14 @@ relatedIntel:
   - 013-huggingface-datasets
   - 023-data-pipeline-etl
   - 040-data-annotation
+tags:
+  - numpy
+  - pandas
+  - data preprocessing
+  - array
+  - dataframe
+  - csv
+  - missing data
 ---
 
 ## 为什么你要学它

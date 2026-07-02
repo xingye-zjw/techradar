@@ -1,11 +1,6 @@
 ---
 title: RTOS任务栈溢出
 category: embedded
-keywords:
-  - FreeRTOS
-  - 栈溢出
-  - 嵌入式
-  - HardFault
 difficulty: intermediate
 duration: 30分钟
 summary: FreeRTOS等RTOS中任务栈空间不足导致栈溢出，表现为 HardFault 或任务异常行为。这是嵌入式多任务开发中最隐蔽的错误之一。
@@ -17,6 +12,10 @@ takeaways:
 tags:
   - 踩坑
   - 避坑指南
+  - freertos
+  - 栈溢出
+  - 嵌入式
+  - hardfault
 ---
 
 ## 为什么你要学它

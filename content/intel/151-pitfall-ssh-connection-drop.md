@@ -1,10 +1,6 @@
 ---
 title: SSH 连接远程服务器频繁掉线
 category: devops
-keywords:
-  - SSH
-  - Linux
-  - 远程服务器
 difficulty: intermediate
 duration: 30分钟
 summary: SSH 连接远程服务器后几分钟无操作就自动断开，导致正在运行的训练任务中断。这是远程开发环境的常见问题。
@@ -16,6 +12,9 @@ takeaways:
 tags:
   - 踩坑
   - 避坑指南
+  - ssh
+  - linux
+  - 远程服务器
 ---
 
 ## 为什么你要学它

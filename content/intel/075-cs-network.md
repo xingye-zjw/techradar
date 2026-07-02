@@ -1,13 +1,6 @@
 ---
 title: 计算机网络基础
 category: cs
-keywords:
-  - computer-network
-  - tcp-ip
-  - http
-  - dns
-  - network-security
-  - osi-model
 difficulty: beginner
 duration: 2-3周
 summary: 理解网络通信的底层原理，掌握TCP/IP协议栈、HTTP协议、DNS解析、网络安全等核心知识，为分布式系统和网络编程打下基础
@@ -20,8 +13,14 @@ relatedIntel:
   - 050-cs-algo
   - 051-cs-os
   - 076-cs-database
-relatedNodes:
-  - cs-network
+relatedNodes: cs-network
+tags:
+  - computer-network
+  - tcp-ip
+  - http
+  - dns
+  - network-security
+  - osi-model
 ---
 
 ## 为什么你要学它

@@ -1,10 +1,6 @@
 ---
 title: CUDA 隐式同步导致推理速度异常慢
 category: deep-learning
-keywords:
-  - CUDA
-  - 推理加速
-  - 性能优化
 difficulty: intermediate
 duration: 30分钟
 summary: GPU 推理速度远低于预期，profiler 显示大量时间花在 CPU 等待 GPU。这是 CUDA 编程中一个隐蔽但影响巨大的性能陷阱。
@@ -16,6 +12,9 @@ takeaways:
 tags:
   - 踩坑
   - 避坑指南
+  - cuda
+  - 推理加速
+  - 性能优化
 ---
 
 ## 为什么你要学它

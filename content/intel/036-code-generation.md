@@ -1,12 +1,6 @@
 ---
 title: 代码生成：Code LLM 与自动化编程
 category: llm
-keywords:
-  - code generation
-  - copilot
-  - code interpreter
-  - unit test generation
-  - code review
 difficulty: intermediate
 duration: 1周
 summary: 从 GitHub Copilot 到 Devin——AI 代码生成正在重新定义软件开发
@@ -21,7 +15,13 @@ relatedIntel:
   - 015-rlhf
 relatedNodes:
   - llm-finetune
-  - nlp-llm-inference
+  - llm-inference
+tags:
+  - code generation
+  - copilot
+  - code interpreter
+  - unit test generation
+  - code review
 ---
 
 ## 为什么你要学它

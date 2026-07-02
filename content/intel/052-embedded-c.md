@@ -1,14 +1,6 @@
 ---
 title: C语言与指针
 category: embedded
-keywords:
-  - c-language
-  - pointer
-  - memory-management
-  - embedded
-  - gcc
-  - makefile
-  - bit-operation
 difficulty: beginner
 duration: 3周
 summary: C语言是嵌入式开发的基石，指针是C语言的核心。深入理解指针、内存管理和底层操作，是开发嵌入式系统和性能优化代码的必备技能
@@ -23,8 +15,15 @@ relatedIntel:
   - 053-embedded-rtos
   - 054-elec-circuit
   - 055-elec-signals
-relatedNodes:
-  - embedded-c
+relatedNodes: embedded-c
+tags:
+  - c-language
+  - pointer
+  - memory-management
+  - embedded
+  - gcc
+  - makefile
+  - bit-operation
 ---
 
 ## 为什么你要学它

@@ -1,12 +1,6 @@
 ---
 title: 伺服控制系统
 category: embedded
-keywords:
-  - 伺服电机
-  - 伺服控制
-  - 运动控制
-  - 编码器
-  - PID控制
 difficulty: intermediate
 duration: 2-3周
 summary: 理解伺服控制系统的原理与应用。掌握伺服电机控制、编码器反馈、运动规划等核心技能。
@@ -19,8 +13,13 @@ relatedIntel:
   - 052-embedded-c
   - 053-embedded-rtos
   - 054-elec-circuit
-relatedNodes:
-  - ctrl-servo
+relatedNodes: ctrl-servo
+tags:
+  - 伺服电机
+  - 伺服控制
+  - 运动控制
+  - 编码器
+  - PID控制
 ---
 
 ## 为什么你要学它

@@ -1,15 +1,6 @@
 ---
 title: 知识图谱
 category: nlp
-keywords:
-  - knowledge graph
-  - 知识图谱
-  - 知识表示
-  - TransE
-  - 实体识别
-  - 关系抽取
-  - 知识推理
-  - 知识融合
 difficulty: intermediate
 duration: 2-3周
 summary: 用结构化方式表示现实世界中的实体、关系和属性，是智能问答、推荐系统、语义搜索的核心基础设施。
@@ -22,8 +13,16 @@ takeaways:
 relatedIntel:
   - 064-nlp-rnn
   - 115-tts-speech-synthesis
-relatedNodes:
-  - nlp-rnn
+relatedNodes: nlp-rnn
+tags:
+  - knowledge graph
+  - 知识图谱
+  - 知识表示
+  - transe
+  - 实体识别
+  - 关系抽取
+  - 知识推理
+  - 知识融合
 ---
 
 ## 为什么你要学它

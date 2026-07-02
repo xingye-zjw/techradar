@@ -1,14 +1,6 @@
 ---
 title: 图神经网络（GNN）基础
 category: deep-learning
-keywords:
-  - gnn
-  - graph neural network
-  - gcn
-  - gat
-  - graphsage
-  - message passing
-  - pytorch geometric
 difficulty: intermediate
 duration: 1-2周
 summary: 处理图结构数据的深度学习方法，在社交网络、分子预测、推荐系统等领域广泛应用。
@@ -21,6 +13,14 @@ relatedTools: pytorch-geometric
 relatedIntel:
   - 001-transformer
   - 011-pytorch
+tags:
+  - gnn
+  - graph neural network
+  - gcn
+  - gat
+  - graphsage
+  - message passing
+  - pytorch geometric
 ---
 
 ## 为什么你要学它

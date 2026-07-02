@@ -1,15 +1,6 @@
 ---
 title: LLM 推理优化
 category: llm
-keywords:
-  - llm-inference
-  - kv-cache
-  - batching
-  - continuous-batching
-  - speculative-decoding
-  - tensor-parallel
-  - vllm
-  - pagedattention
 difficulty: advanced
 duration: 2-3周
 summary: 让大模型推理从"烧钱机器"变成"可持续服务"的核心技术。覆盖 KV Cache、Batching、Speculative Decoding、Tensor Parallelism 等关键优化手段。
@@ -26,9 +17,17 @@ relatedIntel:
   - 015-rlhf
 relatedNodes:
   - llm-finetune
-  - nlp-llm-inference
-relatedTools:
+  - llm-inference
+relatedTools: vllm
+tags:
+  - llm-inference
+  - kv-cache
+  - batching
+  - continuous-batching
+  - speculative-decoding
+  - tensor-parallel
   - vllm
+  - pagedattention
 ---
 
 ## 为什么你要学它

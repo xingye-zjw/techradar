@@ -1,19 +1,6 @@
 ---
 title: 滤波器设计
 category: embedded
-keywords:
-  - filter-design
-  - iir
-  - fir
-  - lowpass
-  - highpass
-  - bandpass
-  - butterworth
-  - chebyshev
-  - elliptic
-  - window-function
-  - scipy.signal
-  - frequency-response
 difficulty: intermediate
 duration: 3-5天
 summary: 滤波器是从噪声中提取信号的核心工具。理解 IIR 和 FIR 的本质区别，以及如何用 scipy.signal 快速设计出符合规格的滤波器，是你做信号处理的必备技能。
@@ -27,6 +14,19 @@ relatedIntel:
   - 052-embedded-c
   - 053-embedded-rtos
   - 054-elec-circuit
+tags:
+  - filter-design
+  - iir
+  - fir
+  - lowpass
+  - highpass
+  - bandpass
+  - butterworth
+  - chebyshev
+  - elliptic
+  - window-function
+  - scipy.signal
+  - frequency-response
 ---
 
 ## 为什么你要学它

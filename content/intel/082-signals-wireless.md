@@ -1,15 +1,6 @@
 ---
 title: 无线通信原理
 category: embedded
-keywords:
-  - 无线通信
-  - 调制解调
-  - 天线
-  - 无线协议
-  - WiFi
-  - 蓝牙
-  - 电磁波
-  - 链路预算
 difficulty: intermediate
 duration: 3-4周
 summary: 理解无线通信的核心原理。掌握调制解调、天线原理、无线协议等关键知识。
@@ -22,8 +13,16 @@ relatedIntel:
   - 052-embedded-c
   - 053-embedded-rtos
   - 054-elec-circuit
-relatedNodes:
-  - signals-comm
+relatedNodes: signals-comm
+tags:
+  - 无线通信
+  - 调制解调
+  - 天线
+  - 无线协议
+  - wifi
+  - 蓝牙
+  - 电磁波
+  - 链路预算
 ---
 
 ## 为什么你要学它

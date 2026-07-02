@@ -1,13 +1,6 @@
 ---
 title: ONNX 模型部署与推理优化
 category: devops
-keywords:
-  - onnx
-  - onnxruntime
-  - model export
-  - inference optimization
-  - tensorrt
-  - quantization
 difficulty: intermediate
 duration: 1周
 summary: 把 PyTorch 模型导出为跨平台的 ONNX 格式，用 ONNXRuntime 加速推理，或进一步转为 TensorRT
@@ -21,8 +14,14 @@ relatedIntel:
   - 007-docker
   - 008-git
   - 009-linux
-relatedNodes:
-  - electrical-safety
+relatedNodes: electrical-safety
+tags:
+  - onnx
+  - onnxruntime
+  - model export
+  - inference optimization
+  - tensorrt
+  - quantization
 ---
 
 ## 为什么你要学它

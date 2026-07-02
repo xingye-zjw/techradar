@@ -1,11 +1,6 @@
 ---
 title: PID参数整定不当导致系统振荡
 category: embedded
-keywords:
-  - PID
-  - 控制
-  - 振荡
-  - 参数整定
 difficulty: intermediate
 duration: 30分钟
 summary: PID控制器参数设置不当导致系统输出剧烈振荡或响应迟缓，是自动化控制中最常见的问题。
@@ -17,6 +12,10 @@ takeaways:
 tags:
   - 踩坑
   - 避坑指南
+  - pid
+  - 控制
+  - 振荡
+  - 参数整定
 ---
 
 ## 为什么你要学它

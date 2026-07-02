@@ -1,10 +1,6 @@
 ---
 title: pandas inplace=True 链式赋值警告
 category: data-processing
-keywords:
-  - Pandas
-  - Python
-  - 数据处理
 difficulty: intermediate
 duration: 30分钟
 summary: 使用 pandas 进行数据清洗时出现 SettingWithCopyWarning 警告，数据修改未按预期生效。这是 pandas 版本升级后最常见的兼容性问题。
@@ -16,6 +12,9 @@ takeaways:
 tags:
   - 踩坑
   - 避坑指南
+  - pandas
+  - python
+  - 数据处理
 ---
 
 ## 为什么你要学它

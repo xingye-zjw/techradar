@@ -1,11 +1,6 @@
 ---
 title: Docker 容器中无法使用 GPU (nvidia-smi 报错)
 category: devops
-keywords:
-  - Docker
-  - GPU
-  - CUDA
-  - 容器
 difficulty: intermediate
 duration: 30分钟
 summary: Docker 容器内无法访问 GPU，nvidia-smi 报 No devices were found。这是容器化部署 GPU 任务时的必经之路，需要正确配置 NVIDIA Container Toolkit。
@@ -17,6 +12,10 @@ takeaways:
 tags:
   - 踩坑
   - 避坑指南
+  - docker
+  - gpu
+  - cuda
+  - 容器
 ---
 
 ## 为什么你要学它

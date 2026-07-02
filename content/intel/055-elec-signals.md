@@ -1,14 +1,6 @@
 ---
 title: 信号与系统
 category: embedded
-keywords:
-  - signal
-  - fourier
-  - laplace
-  - filter
-  - sampling
-  - z-transform
-  - dsp
 difficulty: intermediate
 duration: 3周
 summary: 掌握信号分析与系统响应的核心概念，理解傅里叶变换、拉普拉斯变换在信号处理中的应用
@@ -21,8 +13,15 @@ relatedIntel:
   - 052-embedded-c
   - 053-embedded-rtos
   - 054-elec-circuit
-relatedNodes:
-  - elec-signals
+relatedNodes: elec-signals
+tags:
+  - signal
+  - fourier
+  - laplace
+  - filter
+  - sampling
+  - z-transform
+  - dsp
 ---
 
 ## 为什么你要学它

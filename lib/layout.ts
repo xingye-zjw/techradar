@@ -6,7 +6,7 @@ const NODE_WIDTH = 220;
 const NODE_HEIGHT = 160;
 
 // Track 的显示顺序
-export const TRACK_ORDER = ['devops', 'math', 'cs', 'embedded', 'electronics', 'signals', 'control', 'electrical', 'cv', 'nlp', 'project'] as const;
+export const TRACK_ORDER = ['devops', 'math', 'cs', 'embedded', 'electronics', 'signals', 'control', 'electrical', 'cv', 'nlp', 'llm', 'project'] as const;
 
 // Track 之间的间距
 const TRACK_GAP = 150;

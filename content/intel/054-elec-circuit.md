@@ -1,14 +1,6 @@
 ---
 title: 电路基础与模拟电子技术
 category: embedded
-keywords:
-  - circuit
-  - analog
-  - op-amp
-  - transistor
-  - diode
-  - mosfet
-  - power-supply
 difficulty: beginner
 duration: 3周
 summary: 从电路基本定律到模拟电子技术核心器件，掌握看懂原理图、设计电路、分析信号的能力
@@ -22,8 +14,15 @@ relatedIntel:
   - 052-embedded-c
   - 053-embedded-rtos
   - 055-elec-signals
-relatedNodes:
-  - elec-circuit
+relatedNodes: elec-circuit
+tags:
+  - circuit
+  - analog
+  - op-amp
+  - transistor
+  - diode
+  - mosfet
+  - power-supply
 ---
 
 ## 为什么你要学它

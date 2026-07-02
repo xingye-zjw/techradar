@@ -1,14 +1,6 @@
 ---
 title: 数据管道与 ETL 实战
 category: data-processing
-keywords:
-  - etl
-  - data pipeline
-  - dvc
-  - airflow
-  - web scraping
-  - data quality
-  - great expectations
 difficulty: intermediate
 duration: 1-2周
 summary: 训练数据决定模型上限——用工程化手段把脏数据挡在门外，让数据管道可持续运转
@@ -21,8 +13,15 @@ relatedIntel:
   - 010-numpy-pandas
   - 013-huggingface-datasets
   - 040-data-annotation
-relatedNodes:
-  - project-data-pipeline
+relatedNodes: project-data-pipeline
+tags:
+  - etl
+  - data pipeline
+  - dvc
+  - airflow
+  - web scraping
+  - data quality
+  - great expectations
 ---
 
 ## 为什么你要学它

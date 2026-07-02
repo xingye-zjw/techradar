@@ -1,13 +1,6 @@
 ---
 title: CV Diffusion（扩散模型）
 category: computer-vision
-keywords:
-  - diffusion-model
-  - ddpm
-  - stable-diffusion
-  - gan-comparison
-  - image-generation
-  - score-based-model
 difficulty: intermediate
 duration: 1-2周
 summary: Diffusion Model 通过逐步添加噪声再逐步去噪来生成图像，是 AIGC 时代图像生成的主流架构。
@@ -22,6 +15,13 @@ relatedIntel:
   - 002-yolo
   - 004-resnet
   - 006-cnn-basics
+tags:
+  - diffusion-model
+  - ddpm
+  - stable-diffusion
+  - gan-comparison
+  - image-generation
+  - score-based-model
 ---
 
 ## 为什么你要学它

@@ -2083,11 +2083,167 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
   // =====================================================
   // Node 11: llm-finetune
   // =====================================================
+  
+  // =====================================================
+  // Node: nlp-word-embeddings
+  // =====================================================
   {
+    id: "nlp-word-embeddings",
+    name: "词向量与语义表示",
+    difficulty: "beginner",
+    track: "nlp",
+    duration: "1周",
+    prerequisites: ["pytorch-core"],
+    status: "available",
+    position: { x: 50, y: 0 },
+    description: "Word2Vec / GloVe / FastText 词向量原理与训练，理解语义空间表示",
+    outcomes: ["理解词向量的核心思想", "能用 Gensim 训练和使用词向量", "理解语义相似度计算"],
+    relatedIntel: ["001-transformer"],
+    relatedTools: ["HuggingFace"],
+    relatedTerms: ["word-embedding", "word2vec", "glove", "cosine-similarity"],
+    suggestions: {
+      prerequisites: ["Python 编程基础", "线性代数基础"],
+      nextSteps: ["RNN 与序列模型", "Transformer 与预训练模型"],
+      learningPath: ["NLP 路径"],
+    },
+    dailyTasks: [
+      { day: 1, title: "词向量基础与 One-Hot",
+        summary: "理解从 One-Hot 到分布式表示的演进，掌握词向量的核心思想", content: {
+          objective: "今天你将学习词向量的基本概念，理解为什么需要词向量以及它解决了什么问题。学完后能解释 One-Hot 编码的局限性、分布式表示的核心思想、词向量的语义空间概念。词向量是现代 NLP 的基础，理解它能帮你更好地掌握后续的深度学习模型。",
+          key_points: [
+            "One-Hot 编码：每个词是独立向量，维度=词汇表大小，无法表达语义相似度",
+            "分布式假设：上下文相似的词，其语义也相似——词的含义由它的上下文决定",
+            "分布式表示：将词映射到低维稠密向量，向量距离反映语义相似度",
+            "词向量的性质：向量加减法能表达语义关系（如 国王-男人+女人≈女王）",
+            "语义空间：词向量构成的高维空间中，相似语义的词聚类在一起"
+          ],
+          practice: "从零理解词向量：1）One-Hot 编码实验：构造一个小词汇表（10个词），为每个词生成 One-Hot 向量，用 numpy 计算任意两个词的余弦相似度——结果应该都是0，因为向量正交。2）语义相似度思考：列出10个词（猫、狗、汽车、火车、国王、女王、男人、女人、苹果、香蕉），按语义分组，思考如果用词向量表示，哪些词应该距离近。3）词向量可视化：下载一个预训练的小词向量（如 Gensim 自带的或 50维的 GloVe），用 PCA 或 t-SNE 将词向量降到2维，绘制散点图，观察语义相近的词是否聚在一起。4）向量加减法实验：选择3组词对（如 国王-男人+女人、巴黎-法国+中国），计算结果向量，找最接近的词，看是否符合预期。5）思考：词向量的维度应该选多大？维度太高或太低各有什么优缺点？",
+          deep_dive: "词向量的背后有深刻的语言学和数学原理：1）分布语义学（Distributional Semantics）：这是词向量的理论基础，核心是「一个词的含义由它的上下文决定」。这个思想可以追溯到1950年代的语言学家 Harris。2）语义空间的几何解释：在词向量空间中，语义关系可以用几何操作来表达——同义词距离近，反义词距离也可能近（因为上下文相似），类比关系可以用向量平移来表达。3）从共现矩阵到词向量：最早的分布式表示是词-词共现矩阵（每个元素表示两个词共同出现的次数），然后用 SVD 降维得到低维向量（这就是 LSA/潜在语义分析）。Word2Vec 等方法则是用神经网络来学习低维向量，更高效、效果更好。4）词向量的局限性：a）无法处理多义词——一个词只有一个向量，但 polysemy 是普遍现象；b）无法表达短语和句子的含义；c）依赖训练数据，数据中的偏见会被编码进词向量；d）是静态的，不随上下文变化。这些局限性正是后续的 ELMo、BERT 等模型要解决的问题。5）评价词向量的质量：常用词类比任务（Word Analogy）、词相似度任务（Word Similarity）、下游任务性能来评估词向量的好坏。理解词向量的原理和局限，能帮你更好地使用它们，也能为学习更高级的模型打下基础。"
+        }, duration: "2小时", resources: [B_NLP_TUTORIAL, R_HF_COURSE, { title: "Gensim 官方文档", url: "https://radimrehurek.com/gensim/", required: false }, { title: "Word2Vec 论文", url: "https://arxiv.org/abs/1301.3781", required: false }], checkpoint: "能解释分布式表示的核心思想，并用预训练词向量完成词类比实验" },
+    ],
+  },
+
+  // =====================================================
+  // Node: nlp-sentiment-analysis
+  // =====================================================
+  {
+    id: "nlp-sentiment-analysis",
+    name: "情感分析与文本分类",
+    difficulty: "beginner",
+    track: "nlp",
+    duration: "1周",
+    prerequisites: ["nlp-word-embeddings"],
+    status: "available",
+    position: { x: 220, y: 0 },
+    description: "情感分析 / 文本分类 / 传统机器学习 + 深度学习方法",
+    outcomes: ["掌握情感分析的核心方法", "能构建文本分类系统", "理解不同方法的优缺点"],
+    relatedIntel: ["020-prompt-engineering"],
+    relatedTools: ["HuggingFace"],
+    relatedTerms: ["sentiment-analysis", "text-classification", "naive-bayes", "svm", "bert"],
+    suggestions: {
+      prerequisites: ["词向量基础", "Python 编程基础"],
+      nextSteps: ["序列标注与信息抽取", "Transformer 与预训练模型"],
+      learningPath: ["NLP 路径"],
+    },
+    dailyTasks: [
+      { day: 1, title: "文本分类与情感分析概述",
+        summary: "理解文本分类任务的定义、类型、应用场景和评估方法", content: {
+          objective: "今天你将学习文本分类和情感分析的基本概念。学完后能解释什么是文本分类、有哪些常见类型、情感分析的任务定义、应用场景、评估指标。文本分类是 NLP 最基础也是应用最广泛的任务之一。",
+          key_points: [
+            "文本分类：给文本分配预定义的类别，是 NLP 最经典的任务之一",
+            "常见类型：二分类（正/负情感）、多分类、多标签分类",
+            "情感分析：判断文本的情感倾向（正面/负面/中性）",
+            "应用场景：舆情分析、商品评论分析、客服工单分类、垃圾邮件检测",
+            "评估指标：准确率、精确率、召回率、F1 值、混淆矩阵"
+          ],
+          practice: "文本分类入门与数据探索：1）列出5个生活中的文本分类应用场景。2）选择一个情感分析数据集（IMDB 或 ChnSentiCorp）。3）做数据分析：类别分布、文本长度分布、高频词统计。4）实现简单的关键词基线系统。5）分析关键词方法的错误原因。",
+          deep_dive: "文本分类是 NLP 中历史最悠久、应用最广泛的任务之一。它的发展历程反映了 NLP 技术的演进：从规则方法到传统机器学习（朴素贝叶斯、SVM），再到深度学习（TextCNN、BiLSTM），再到预训练模型（BERT）。每一代方法都在效果上有所提升，但代价是更复杂、更慢、需要更多数据。实际项目中，建议从简单到复杂逐步尝试，找到效果和成本的平衡点。"
+        }, duration: "2小时", resources: [B_NLP_TUTORIAL, R_HF_COURSE], checkpoint: "能解释文本分类的核心概念，建立规则基线，并做数据分析" },
+    ],
+  },
+
+  // =====================================================
+  // Node: nlp-sequence-labeling
+  // =====================================================
+  {
+    id: "nlp-sequence-labeling",
+    name: "序列标注与信息抽取",
+    difficulty: "intermediate",
+    track: "nlp",
+    duration: "2周",
+    prerequisites: ["nlp-rnn"],
+    status: "locked",
+    position: { x: 340, y: 220 },
+    description: "命名实体识别 / 词性标注 / CRF / BiLSTM-CRF / 信息抽取",
+    outcomes: ["掌握 NER 等序列标注任务", "实现 BiLSTM-CRF 模型", "能从非结构化文本中抽取结构化信息"],
+    relatedIntel: ["001-transformer"],
+    relatedTools: ["HuggingFace"],
+    relatedTerms: ["named-entity-recognition", "crf", "sequence-labeling", "part-of-speech", "information-extraction"],
+    suggestions: {
+      prerequisites: ["RNN 与序列模型", "词向量基础"],
+      nextSteps: ["Transformer 与预训练模型", "机器翻译与文本生成"],
+      learningPath: ["NLP 路径"],
+    },
+    dailyTasks: [
+      { day: 1, title: "序列标注任务概述",
+        summary: "理解序列标注的核心任务、标注体系和评估指标", content: {
+          objective: "今天你将学习序列标注任务的基本概念和常见类型。学完后能解释什么是序列标注、NER 和 POS 任务的定义、BIO/BIOES 标注体系、序列标注的评估指标。序列标注是 NLP 中最基础也最重要的任务之一。",
+          key_points: [
+            "序列标注：给输入序列的每个元素打标签，输出和输入等长的标签序列",
+            "常见任务：命名实体识别（NER）、词性标注（POS）、组块分析、分词",
+            "标注体系：BIO（Begin/Inside/Outside）、BIOES（增加 End 和 Single）",
+            "评估指标：精确匹配、Token 级准确率、实体级 P/R/F1（更常用）",
+            "数据集：CoNLL-2003（英文 NER）、MSRA（中文 NER）、OntoNotes"
+          ],
+          practice: "序列标注数据探索与理解：1）下载 CoNLL-2003 和 MSRA NER 数据集，理解数据格式。2）实现 BIO 到 BIOES 的转换函数。3）做数据分析：实体类型分布、实体长度分布、句子长度分布。4）实现一个基于规则和词典的简单 NER 基线系统。5）分析规则系统的错误原因。",
+          deep_dive: "序列标注是 NLP 中历史最悠久、研究最充分的任务之一。很多 NLP 问题都可以转化为序列标注问题——分词、词性标注、命名实体识别、组块分析、语义角色标注等。掌握序列标注，就掌握了解决一大类 NLP 问题的通用方法。标注质量对模型效果影响极大，专业标注人员的 NER 标注一致性通常只有 80-90%，这也是模型效果的上限。"
+        }, duration: "2小时", resources: [B_NLP_TUTORIAL, R_CS224N], checkpoint: "能解释序列标注的核心概念，实现标注格式转换，并建立规则基线" },
+    ],
+  },
+
+  // =====================================================
+  // Node: nlp-machine-translation
+  // =====================================================
+  {
+    id: "nlp-machine-translation",
+    name: "机器翻译与文本生成",
+    difficulty: "advanced",
+    track: "nlp",
+    duration: "2周",
+    prerequisites: ["nlp-transformer"],
+    status: "locked",
+    position: { x: 560, y: 220 },
+    description: "神经机器翻译 / Seq2Seq / Attention / Beam Search / 文本生成",
+    outcomes: ["实现基于 Transformer 的机器翻译", "掌握文本生成的解码策略", "理解 NMT 的评估方法"],
+    relatedIntel: ["001-transformer", "020-prompt-engineering"],
+    relatedTools: ["HuggingFace"],
+    relatedTerms: ["machine-translation", "seq2seq", "beam-search", "text-generation", "bleu"],
+    suggestions: {
+      prerequisites: ["Transformer 与预训练模型", "深度学习基础"],
+      nextSteps: ["大语言模型", "对话系统"],
+      learningPath: ["NLP 路径"],
+    },
+    dailyTasks: [
+      { day: 1, title: "神经机器翻译基础",
+        summary: "理解机器翻译的发展历程、Seq2Seq 架构和 Attention 机制", content: {
+          objective: "今天你将学习神经机器翻译（NMT）的基本概念和核心架构。学完后能解释机器翻译的发展历程、Seq2Seq 架构的原理、Attention 机制在 NMT 中的作用、机器翻译的评估指标。机器翻译是 NLP 中最重要的任务之一。",
+          key_points: [
+            "机器翻译发展：规则方法 → 统计机器翻译（SMT） → 神经机器翻译（NMT）",
+            "Seq2Seq 架构：Encoder-Decoder 框架，编码器处理源语言，解码器生成目标语言",
+            "Attention 机制：解决长序列信息丢失问题，让解码器每一步都能关注源语言的不同位置",
+            "评估指标：BLEU、chrF、COMET 等，BLEU 是最常用的自动评估指标",
+            "数据集：WMT（国际机器翻译大赛）、IWSLT、OPUS 等平行语料库"
+          ],
+          practice: "NMT 入门与数据准备：1）了解机器翻译的发展历程。2）下载一个小型平行语料库（如 IWSLT）。3）做数据分析：句子长度分布、词频分布、词汇表大小。4）实现数据预处理 pipeline。5）计算基线 BLEU 分数。",
+          deep_dive: "机器翻译是 NLP 领域的「圣杯」级任务，它的发展推动了整个 NLP 领域的进步。从 SMT 到 NMT 到大模型，每一次翻译质量的飞跃都伴随着技术的重大突破。Seq2Seq + Attention 的组合是深度学习对 NLP 的第一次重大胜利，也为后来的 Transformer 和自注意力机制铺平了道路。"
+        }, duration: "2小时", resources: [R_CS224N, B_NLP_TUTORIAL], checkpoint: "能解释 NMT 的核心架构（Seq2Seq + Attention），理解 BLEU 指标的计算" },
+    ],
+  },
+{
     id: "llm-finetune",
     name: "LLM 微调与对齐",
     difficulty: "advanced",
-    track: "nlp",
+    track: "llm",
     duration: "2周",
     prerequisites: ["nlp-transformer"],
     status: "locked",
@@ -2802,12 +2958,12 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
   },
 
   // =====================================================
-  // Node: nlp-local-rag
+  // Node: llm-local-rag
   // =====================================================
   {
-    id: "nlp-local-rag",
+    id: "llm-local-rag",
     name: "本地知识库 RAG 系统",
-    track: "nlp",
+    track: "llm",
     difficulty: "intermediate",
     duration: "2周",
     prerequisites: ["linux-basic"],
@@ -3778,12 +3934,12 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
   },
 
   // =====================================================
-  // Node: nlp-llm-inference
+  // Node: llm-inference
   // =====================================================
   {
-    id: "nlp-llm-inference",
+    id: "llm-inference",
     name: "LLM 推理加速与部署",
-    track: "nlp",
+    track: "llm",
     duration: "2周",
     difficulty: "advanced",
     prerequisites: ["nlp-transformer"],
@@ -3952,12 +4108,12 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
   },
 
   // =====================================================
-  // Node: nlp-prompt-engineering
+  // Node: llm-prompt-engineering
   // =====================================================
   {
-    id: "nlp-prompt-engineering",
+    id: "llm-prompt-engineering",
     name: "提示工程与 Agent 设计",
-    track: "nlp",
+    track: "llm",
     duration: "1周",
     difficulty: "advanced",
     prerequisites: ["llm-finetune"],
@@ -4253,7 +4409,85 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
   // =====================================================
   // Node: devops-monitoring
   // =====================================================
+  
+  // =====================================================
+  // Node: devops-cicd
+  // =====================================================
   {
+    id: "devops-cicd",
+    name: "CI/CD 与自动化部署",
+    difficulty: "intermediate",
+    track: "devops",
+    duration: "2周",
+    prerequisites: ["docker-basic"],
+    status: "locked",
+    position: { x: 450, y: 0 },
+    description: "GitHub Actions / Jenkins / 持续集成 / 持续部署 / 自动化测试流水线",
+    outcomes: ["掌握 CI/CD 核心概念和流水线设计", "能用 GitHub Actions 构建完整的 CI/CD 流水线", "理解自动化测试和部署策略"],
+    relatedIntel: ["008-git", "043-mlops-engineering"],
+    relatedTools: ["Docker"],
+    relatedTerms: ["ci-cd", "github-actions", "jenkins", "continuous-integration", "devops"],
+    suggestions: {
+      prerequisites: ["Git & GitHub", "Docker 基础"],
+      nextSteps: ["Kubernetes 容器编排", "云服务与部署"],
+      learningPath: ["DevOps 路径"],
+    },
+    dailyTasks: [
+      { day: 1, title: "CI/CD 基础概念",
+        summary: "理解持续集成、持续交付、持续部署的核心概念和价值", content: {
+          objective: "今天你将学习 CI/CD 的基本概念和价值。学完后能解释什么是 CI、CD（持续交付/持续部署）、CI/CD 解决了什么问题、常见的 CI/CD 工具有哪些。CI/CD 是现代软件工程的核心实践之一。",
+          key_points: [
+            "持续集成（CI）：频繁地将代码合并到主干，自动构建和测试，尽早发现问题",
+            "持续交付（CD）：代码随时可以部署到生产环境，部署是人工决策的",
+            "持续部署（CD）：代码自动部署到生产环境，无需人工干预",
+            "CI/CD 的价值：减少集成风险、加快交付速度、提高代码质量、降低部署风险",
+            "常见工具：GitHub Actions、GitLab CI、Jenkins、CircleCI、Travis CI"
+          ],
+          practice: "CI/CD 概念理解与工具探索：1）思考你之前的项目中，集成和部署是怎么做的？有哪些痛点？2）列出 3-5 个你知道的 CI/CD 工具，对比它们的优缺点。3）设计一个理想的 CI/CD 流水线应该包含哪些阶段？4）了解 GitHub Actions 的基本概念：Workflow、Job、Step、Action、Runner。5）找一个开源项目，看看它的 CI/CD 配置是怎样的。",
+          deep_dive: "CI/CD 不仅仅是工具，它是一种文化和实践。它的核心思想是：小步快跑、频繁集成、自动化一切。在传统的开发模式中，开发人员各自在分支上工作很长时间，最后合并时会遇到大量的集成问题——「集成地狱」。CI 通过频繁集成（每天多次）来解决这个问题，让问题尽早暴露。CD 则进一步将部署自动化，让软件可以随时安全地发布。对于 AI 项目，CI/CD 同样重要，但也有特殊性——除了代码，还要考虑数据、模型、实验的版本管理和自动化测试。"
+        }, duration: "2小时", resources: [B_DOCKER_TUTORIAL, { title: "GitHub Actions 文档", url: "https://docs.github.com/en/actions", required: false }], checkpoint: "能解释 CI/CD 的核心概念和价值，并描述一个典型的 CI/CD 流水线" },
+    ],
+  },
+
+  // =====================================================
+  // Node: devops-mlops
+  // =====================================================
+  {
+    id: "devops-mlops",
+    name: "MLOps 与模型运维",
+    difficulty: "advanced",
+    track: "devops",
+    duration: "2周",
+    prerequisites: ["devops-cicd", "devops-kubernetes"],
+    status: "locked",
+    position: { x: 680, y: 0 },
+    description: "MLflow / 模型注册 / 实验管理 / 模型监控 / A/B 测试",
+    outcomes: ["掌握 MLOps 核心概念", "能用 MLflow 管理实验和模型", "理解模型监控和持续训练"],
+    relatedIntel: ["018-mlflow", "043-mlops-engineering", "028-server-ops"],
+    relatedTools: ["Docker", "Kubernetes"],
+    relatedTerms: ["mlops", "mlflow", "model-registry", "experiment-tracking", "model-monitoring"],
+    suggestions: {
+      prerequisites: ["CI/CD 基础", "Kubernetes 基础"],
+      nextSteps: ["综合实战项目"],
+      learningPath: ["DevOps 路径", "MLOps 路径"],
+    },
+    dailyTasks: [
+      { day: 1, title: "MLOps 概述与实验管理",
+        summary: "理解 MLOps 的核心概念，掌握 MLflow 实验管理", content: {
+          objective: "今天你将学习 MLOps 的基本概念和实验管理。学完后能解释什么是 MLOps、它和 DevOps 的区别、实验管理的重要性、能用 MLflow 跟踪实验。MLOps 是 AI 工程化的关键。",
+          key_points: [
+            "MLOps：Machine Learning Operations，将 DevOps 思想应用到机器学习项目",
+            "MLOps vs DevOps：除了代码，还有数据、模型、实验的版本管理和自动化",
+            "实验管理：跟踪超参数、指标、模型版本、代码版本，可复现实验",
+            "MLflow：开源的 ML 生命周期管理平台，支持实验跟踪、模型注册、项目打包",
+            "实验可复现性：记录所有影响结果的因素，确保实验可以重复"
+          ],
+          practice: "MLOps 入门与 MLflow 实验：1）理解 MLOps 的三大支柱：数据版本管理、模型版本管理、实验可复现。2）安装 MLflow。3）实现一个简单的训练脚本（如 sklearn 的分类模型），用 mlflow.log_param() 记录超参数，用 mlflow.log_metric() 记录指标，用 mlflow.sklearn.log_model() 保存模型。4）运行多次实验，使用不同的超参数。5）启动 mlflow ui，查看实验对比界面，比较不同实验的结果。6）思考：为什么实验可复现性很重要？你之前做实验时遇到过不可复现的问题吗？",
+          deep_dive: "MLOps 是近年来快速发展的领域，它解决的是机器学习项目从实验室到生产的「最后一公里」问题。传统的软件项目有成熟的 DevOps 方法论，但机器学习项目更复杂——除了代码，还有数据、模型、超参数、实验等更多需要管理的东西。MLOps 的目标是让机器学习系统的开发、部署、监控、迭代更加高效和可靠。一个成熟的 MLOps 体系应该包括：数据版本管理（DVC、LakeFS）、实验跟踪（MLflow、Weights & Biases）、模型注册（MLflow Model Registry）、特征存储（Feast）、模型服务（TorchServe、TFServing）、模型监控（Prometheus + Grafana、Evidently AI）、CI/CD for ML（GitHub Actions、Kubeflow Pipelines）等。"
+        }, duration: "2小时", resources: [B_DOCKER_TUTORIAL, { title: "MLflow 官方文档", url: "https://mlflow.org/docs/latest/index.html", required: false }], checkpoint: "能用 MLflow 跟踪实验，并在 UI 中对比不同实验的结果" },
+    ],
+  },
+{
     id: "devops-monitoring",
     name: "监控体系：Prometheus + Grafana",
     track: "devops",
@@ -4633,7 +4867,124 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
   // =====================================================
   // Node: project-data-pipeline
   // =====================================================
+  
+  // =====================================================
+  // Node: project-rag-app
+  // =====================================================
   {
+    id: "project-rag-app",
+    name: "RAG 知识库问答系统",
+    difficulty: "intermediate",
+    track: "project",
+    duration: "2周",
+    prerequisites: ["llm-prompt", "python-basic"],
+    status: "available",
+    position: { x: 120, y: 620 },
+    description: "基于大语言模型的检索增强生成系统，从文档理解到问答应用",
+    outcomes: ["掌握 RAG 核心原理与实现", "能构建完整的知识库问答系统", "理解向量检索与 Prompt 工程"],
+    relatedIntel: ["020-prompt-engineering", "021-rag-intro"],
+    relatedTools: ["LangChain", "HuggingFace", "Streamlit"],
+    relatedTerms: ["rag", "vector-database", "embedding", "retrieval", "langchain"],
+    suggestions: {
+      prerequisites: ["Python 编程基础", "LLM 基础"],
+      nextSteps: ["LLM Agent 应用开发", "综合实战项目"],
+      learningPath: ["LLM 路径", "项目实战路径"],
+    },
+    dailyTasks: [
+      { day: 1, title: "RAG 原理与项目架构设计",
+        summary: "理解 RAG 核心原理，设计整体项目架构与技术选型", content: {
+          objective: "今天你将学习 RAG 的核心原理并完成项目架构设计。学完后能解释什么是 RAG、为什么需要 RAG、RAG 的核心流程、选择合适的技术栈。RAG 是目前企业级 LLM 应用最主流的方案。",
+          key_points: [
+            "RAG（Retrieval-Augmented Generation）：检索增强生成，结合检索和生成的优势",
+            "为什么需要 RAG：解决大模型知识过时、幻觉、私有数据无法使用的问题",
+            "核心流程：数据处理 → 向量化 → 向量存储 → 检索 → 生成",
+            "技术栈选型：Embedding 模型、向量数据库、LLM、应用框架、前端",
+            "评估指标：检索准确率、生成质量、响应速度、用户满意度"
+          ],
+          practice: "RAG 项目设计与技术选型：1）深入理解 RAG 的核心思想——为什么检索 + 生成比单纯生成效果好？2）设计一个完整的 RAG 系统架构，画出数据流向图。3）技术选型调研：a）Embedding 模型：OpenAI text-embedding、BGE、M3E、GTE 等，对比效果和速度；b）向量数据库：Chroma、FAISS、Pinecone、Milvus、Qdrant 等，对比优缺点和适用场景；c）LLM：选择一个适合的模型（如 GPT-3.5/4、Claude、Qwen、Llama 等）；d）应用框架：LangChain、LlamaIndex，或者自己实现。4）确定你的项目主题：比如「个人笔记问答」「技术文档助手」「书籍内容问答」「客服知识库」等。5）准备数据集：收集你要用来构建知识库的文档（PDF、Markdown、网页等）。6）搭建项目仓库结构，初始化 Git 和虚拟环境。",
+          deep_dive: "RAG 是目前 LLM 落地最成功的技术方向之一，几乎所有企业级 LLM 应用都用到了 RAG 或其变体。理解 RAG 的本质很重要——它不是简单的「搜索 + 拼接」，而是一个系统工程。好的 RAG 系统需要在多个环节做优化：1）数据处理环节：文档解析质量、分块策略（Chunking）直接影响检索效果。分块太大包含噪音，太小缺少上下文。常见策略：按固定长度分块、按语义分块、按结构分块（标题/段落）、递归分块等。2）检索环节：不仅仅是向量相似度检索，还可以结合关键词检索（混合检索）、重排序（Rerank）、查询改写（Query Rewriting）、多查询（Multi-Query）等技术来提升召回率。3）生成环节：Prompt 设计很重要——如何组织检索到的上下文、如何引导模型基于上下文回答、如何处理上下文不足的情况（避免幻觉）。4）评估环节：RAG 的评估比传统模型更复杂，需要评估检索质量（Recall@k、MRR）和生成质量（准确性、相关性、完整性），常用工具有 Ragas、TruLens 等。5）进阶方向：图 RAG（GraphRAG）、多模态 RAG、Agentic RAG、自适应 RAG 等是当前研究热点。做 RAG 项目，重点不是把各个组件拼起来，而是深入理解每个环节的优化空间，做出真正好用的系统。"
+        }, duration: "3小时", resources: [{ title: "LangChain 官方文档", url: "https://python.langchain.com/", required: false }, { title: "RAG Survey 论文", url: "https://arxiv.org/abs/2312.10997", required: false }], checkpoint: "完成项目架构设计和技术选型，搭建好项目框架" },
+    ],
+  },
+
+  // =====================================================
+  // Node: project-cv-classification
+  // =====================================================
+  {
+    id: "project-cv-classification",
+    name: "图像分类与模型部署",
+    difficulty: "intermediate",
+    track: "project",
+    duration: "2周",
+    prerequisites: ["cv-classification", "pytorch-core"],
+    status: "locked",
+    position: { x: 560, y: 620 },
+    description: "从数据准备到模型训练再到部署的完整 CV 项目",
+    outcomes: ["掌握图像分类完整流程", "能训练并优化分类模型", "实现模型部署与 Demo 展示"],
+    relatedIntel: ["002-yolo", "015-cv-tricks"],
+    relatedTools: ["PyTorch", "Streamlit", "Docker"],
+    relatedTerms: ["image-classification", "transfer-learning", "data-augmentation", "model-deployment", "grad-cam"],
+    suggestions: {
+      prerequisites: ["PyTorch 基础", "计算机视觉基础"],
+      nextSteps: ["目标检测项目", "综合实战项目"],
+      learningPath: ["CV 路径", "项目实战路径"],
+    },
+    dailyTasks: [
+      { day: 1, title: "项目立项与数据分析",
+        summary: "确定项目选题，完成数据集分析与预处理 pipeline", content: {
+          objective: "今天你将完成 CV 项目的第一步——选题与数据分析。学完后能选择合适的图像分类项目、进行深入的数据分析、构建数据预处理 pipeline。好的数据是好模型的基础。",
+          key_points: [
+            "图像分类项目选题：结合兴趣和数据可得性，选择有实用价值的场景",
+            "数据分析维度：类别分布、图像尺寸、颜色分布、质量问题、数据不平衡",
+            "数据增强：随机裁剪、翻转、旋转、色彩抖动、Mixup、CutMix、Random Erasing",
+            "数据预处理：标准化、归一化、Resize、数据格式转换",
+            "数据集划分：训练/验证/测试集的划分策略，保证分布一致性"
+          ],
+          practice: "CV 项目选题与数据探索：1）项目选题：选择一个图像分类场景——可以是垃圾分类、花卉识别、宠物品种分类、医学影像分类、工业缺陷检测等。2）数据集准备：收集或下载对应数据集——可以使用 Kaggle 数据集、Roboflow 公开数据集、或自己爬取/标注。目标：至少 5 个类别，每类至少 200 张图。3）深入数据分析：a）类别分布统计（是否不平衡？）；b）图像尺寸分布（需要统一 resize 吗？）；c）图像质量检查（有没有模糊、过曝、损坏的图片？）；d）颜色分布统计（各通道均值方差，用于标准化）；e）可视化每个类别的样本图片，观察类间差异和类内变化。4）数据增强设计：设计一套适合你的数据的增强方案——翻转、旋转、裁剪、色彩变化等各用什么参数？为什么？5）构建数据 pipeline：用 PyTorch 的 Dataset 和 DataLoader 实现完整的数据加载流程，包括预处理、增强、批处理。6）验证 pipeline：写一个脚本，从 DataLoader 中取一批数据，可视化增强后的图片，确认 pipeline 正确。",
+          deep_dive: "做 CV 项目，很多人一上来就想跑模型，但实际上数据和数据处理的重要性远大于模型。「Garbage in, garbage out」在 CV 领域同样适用。1）数据比模型更重要：在实际项目中，数据质量和数据量对效果的影响往往比模型架构大得多。同样的 ResNet50，用高质量数据和用低质量数据，效果可能差 20% 以上。2）数据不平衡处理：实际项目中数据几乎都是不平衡的。处理方法：a）重采样：过采样少数类、欠采样多数类；b）加权损失：给少数类更高的权重；c）数据增强：对少数类做更多增强；d）合成数据：用 GAN 或其他方法生成少数类样本。没有最好的方法，需要结合具体情况尝试。3）数据增强是免费的性能提升：数据增强不仅能防止过拟合，还能提升模型的泛化能力。而且它是「免费」的——不需要额外收集数据。高级的数据增强技术：Mixup（两张图混合）、CutMix（裁剪一块区域替换）、AutoAugment（自动搜索增强策略）、RandAugment（随机增强组合）、TrivialAugment 等。4）数据泄漏陷阱：做 CV 项目时很容易踩数据泄漏的坑——比如先做了全局标准化再划分数据集、数据增强用了验证集的信息、测试集数据混入训练等。一定要先划分数据集，再各自做预处理。5）小样本分类：如果数据很少（每类只有几十张），可以用迁移学习——在大数据集上预训练的模型上微调。但要注意：a）冻结哪些层？b）学习率怎么设？c）要不要训整个模型？这些都需要实验。6）项目的完整性：一个好的 CV 项目不只是训个模型就完了——还包括：错误分析（模型在哪些样本上错了？为什么？）、模型可解释性（Grad-CAM 看看模型关注哪里）、模型优化（剪枝、量化、蒸馏）、模型部署（转 ONNX/TensorRT、做 API 服务）、前端 Demo 展示。把这些都做了，项目才完整，放在简历上才有说服力。"
+        }, duration: "3小时", resources: [{ title: "Kaggle 数据集", url: "https://www.kaggle.com/datasets", required: false }, { title: "Roboflow Universe", url: "https://universe.roboflow.com/", required: false }], checkpoint: "完成项目选题、数据集准备和数据分析，构建好数据加载 pipeline" },
+    ],
+  },
+
+  // =====================================================
+  // Node: project-llm-agent
+  // =====================================================
+  {
+    id: "project-llm-agent",
+    name: "LLM Agent 智能助手",
+    difficulty: "advanced",
+    track: "project",
+    duration: "2周",
+    prerequisites: ["llm-agent", "project-rag-app"],
+    status: "locked",
+    position: { x: 780, y: 620 },
+    description: "构建具备工具调用、规划推理能力的 LLM Agent 应用",
+    outcomes: ["掌握 Agent 核心原理", "能构建多工具 Agent 系统", "理解 ReAct/规划等高级模式"],
+    relatedIntel: ["022-agent-intro", "021-rag-intro"],
+    relatedTools: ["LangChain", "HuggingFace", "Streamlit"],
+    relatedTerms: ["agent", "tool-calling", "react", "function-calling", "auto-gpt"],
+    suggestions: {
+      prerequisites: ["RAG 应用开发", "LLM 基础"],
+      nextSteps: ["综合实战项目"],
+      learningPath: ["LLM 路径", "项目实战路径"],
+    },
+    dailyTasks: [
+      { day: 1, title: "Agent 原理与架构设计",
+        summary: "理解 Agent 核心思想，设计整体架构与工具集", content: {
+          objective: "今天你将学习 LLM Agent 的核心原理并完成架构设计。学完后能解释什么是 Agent、Agent 的核心组件、ReAct 等推理模式、设计一个多工具 Agent 系统。Agent 是 LLM 应用的下一个前沿。",
+          key_points: [
+            "Agent 核心思想：让 LLM 具备「思考-行动-观察」的循环能力，自主完成复杂任务",
+            "核心组件：LLM 大脑、工具集、记忆系统、规划模块、执行器",
+            "推理模式：ReAct（Reasoning + Acting）、Plan-and-Execute、Self-Ask、Tree of Thoughts",
+            "工具调用：Function Calling、Tool Use、结构化输出",
+            "记忆系统：短期记忆（对话历史）、长期记忆（向量数据库）、工作记忆"
+          ],
+          practice: "Agent 项目设计与工具开发：1）深入理解 Agent 与普通 LLM 应用的区别——为什么需要 Agent？Agent 能解决什么普通 RAG 解决不了的问题？2）项目选题：确定你的 Agent 要做什么——比如「研究助手」（能搜索、读论文、写报告）、「数据分析助手」（能写代码、跑分析、画图）、「多模态助手」（能处理文字和图片）、「个人助理」（能管理日程、发邮件、查资料）。3）架构设计：设计你的 Agent 架构图——包含哪些模块？它们之间如何交互？4）工具设计：设计 3-5 个你的 Agent 会用到的工具——比如：a）网页搜索工具（调用 SerpAPI / Tavily / 自己实现）；b）代码执行工具（Python REPL）；c）知识库检索工具（基于 RAG）；d）文件读写工具；e）数学计算工具。5）工具实现：用 LangChain 的 Tool 接口（或自己实现）实现这些工具，每个工具都要有清晰的描述和输入输出 schema。6）基础 Agent 搭建：用 ReAct 模式实现一个最简单的 Agent，能根据用户问题选择调用工具、观察结果、继续推理，直到给出最终答案。7）测试：准备几个测试用例，验证你的 Agent 能否正确选择工具并完成任务。",
+          deep_dive: "Agent 被认为是 LLM 应用的下一个重要方向，它让大模型从「问答机器」变成「能做事的智能体」。但做好 Agent 并不容易，有很多挑战：1）Agent 的本质：Agent 的核心是「LLM + 工具 + 反馈循环」。LLM 作为大脑，负责推理和决策；工具扩展了 LLM 的能力边界（获取实时信息、执行操作、与外部世界交互）；反馈循环让 Agent 能从结果中学习和调整。这个「思考-行动-观察」的循环是人解决问题的基本模式。2）推理模式的演进：从最简单的 Chain-of-Thought（让模型一步步想），到 ReAct（边想边做），到 Plan-and-Execute（先规划再执行），到更复杂的 Multi-Agent（多个 Agent 协作）。没有最好的模式，只有最适合场景的模式。简单任务用 ReAct，复杂任务用 Plan-and-Execute 或多 Agent。3）工具调用的可靠性：Agent 最大的痛点之一是工具调用不可靠——模型可能选择错误的工具、传入错误的参数、不会修正错误。提升可靠性的方法：a）好的工具描述（清晰说明工具用途、输入输出、使用场景）；b）提供示例（Few-shot）；c）错误处理机制（调用失败后给模型反馈，让它重试）；d）结构化输出（让模型输出 JSON，减少解析错误）；e）使用专门微调过的模型（如 GPT-4、Claude 3 等工具调用能力强的模型）。4）记忆的重要性：高级的 Agent 需要多种记忆：a）短期记忆：当前对话的上下文，通常就是 Prompt 里的对话历史；b）长期记忆：用户的偏好、历史对话摘要等，存在向量数据库里；c）工作记忆：Agent 在完成当前任务过程中产生的中间结果。记忆的组织和检索对 Agent 的表现影响很大。5）评估 Agent：Agent 的评估比普通 LLM 应用更难，因为任务是开放的、步骤是动态的。评估维度包括：任务成功率、步骤效率（有没有绕弯路）、工具使用准确率、错误恢复能力等。常用方法：构建 benchmark 任务集、人工评估、轨迹分析。6）当前的局限：现在的 Agent 还很初级——容易陷入死循环、容易跑偏、复杂任务完不成、速度慢、成本高。但发展很快，新的架构和技术层出不穷。做 Agent 项目，重点是理解它的能力边界，在合适的场景用合适的复杂度。"
+        }, duration: "3小时", resources: [{ title: "LangChain Agents 文档", url: "https://python.langchain.com/docs/modules/agents/", required: false }, { title: "ReAct 论文", url: "https://arxiv.org/abs/2210.03629", required: false }], checkpoint: "完成 Agent 架构设计，实现基础工具集和 ReAct Agent" },
+    ],
+  },
+{
     id: "project-data-pipeline",
     name: "数据管道与 ETL",
     track: "project",
@@ -8113,6 +8464,181 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           deep_dive: "深入理解电气设备安全管理与智能运维：电气设备安全管理正向数字化、智能化发展。在线监测技术实时采集设备运行参数、绝缘状态、温度变化等数据。AI算法分析设备健康状态、预测故障风险、优化维护计划，实现预测性维护。数字孪生技术虚拟仿真设备运行，支持远程诊断和决策辅助。"
         }, duration: "2小时", resources: [{ title: "设备安全", url: "https://www.osha.gov/electrical", required: true, type: "doc", source: "official" }, { title: "IP防护等级", url: "https://www.iec.ch/homepage", required: false, type: "doc", source: "official" }], checkpoint: "能解释电气设备的安全要求和防护等级" }
     ]
-  }
+  },
+  // =====================================================
+  // Node: llm-fundamentals
+  // =====================================================
+  {
+    id: "llm-fundamentals",
+    name: "LLM 基础原理",
+    track: "llm",
+    duration: "2周",
+    difficulty: "intermediate",
+    prerequisites: ["nlp-transformer"],
+    status: "available",
+    position: { x: 50, y: 0 },
+    description: "深入理解 Transformer 架构、注意力机制、预训练范式（GPT/BERT/T5），掌握 LLM 的核心原理",
+    outcomes: ["理解 Self-Attention 和 Multi-Head Attention", "掌握 GPT/BERT/T5 三大预训练范式", "理解 Scaling Law 和涌现能力"],
+    relatedIntel: ["001-transformer", "029-moe-mixture-of-experts", "033-long-context-rope"],
+    relatedTools: ["HuggingFace"],
+    relatedTerms: ["transformer", "attention", "pre-training"],
+    suggestions: {
+      prerequisites: ["Transformer 架构理解", "深度学习基础"],
+      nextSteps: ["LLM 预训练与数据配比", "LLM 微调与对齐"],
+      learningPath: ["LLM 全栈路径"],
+    },
+    dailyTasks: [
+      { day: 1, title: "Self-Attention 机制精讲", summary: "理解 Q/K/V 矩阵运算，手写 Self-Attention 的前向传播", content: "理解 Q/K/V 矩阵运算，手写 Self-Attention 的前向传播", duration: "2小时", resources: [R_JALAMMAR, R_HF_COURSE], checkpoint: "能手写 Self-Attention 的前向传播" },
+      { day: 2, title: "Multi-Head Attention 实现", summary: "使用 PyTorch 从零实现 Multi-Head Attention，理解多头的作用", content: "使用 PyTorch 从零实现 Multi-Head Attention，理解多头的作用", duration: "2小时", resources: [R_PYTORCH_TUT, R_HF_TRANSFORMERS], checkpoint: "能用 PyTorch 从零实现 Multi-Head Attention" },
+      { day: 3, title: "Position Encoding 详解", summary: "理解 Sinusoidal、RoPE、ALiBi 等位置编码方案", content: "理解 Sinusoidal、RoPE、ALiBi 等位置编码方案", duration: "2小时", resources: [R_HF_TRANSFORMERS], checkpoint: "能解释不同位置编码方案的原理" },
+      { day: 4, title: "GPT 范式：自回归语言模型", summary: "理解 GPT 的 Decoder-only 架构和自回归生成过程", content: "理解 GPT 的 Decoder-only 架构和自回归生成过程", duration: "2小时", resources: [R_HF_COURSE], checkpoint: "能解释 GPT 的自回归生成过程" },
+      { day: 5, title: "BERT 范式：掩码语言模型", summary: "理解 BERT 的 Encoder 架构和 MLM/NSP 预训练任务", content: "理解 BERT 的 Encoder 架构和 MLM/NSP 预训练任务", duration: "2小时", resources: [R_HF_COURSE], checkpoint: "能解释 BERT 的 MLM/NSP 预训练任务" },
+      { day: 6, title: "T5 范式：Encoder-Decoder 统一", summary: "理解 T5 的 Text-to-Text 统一框架", content: "理解 T5 的 Text-to-Text 统一框架", duration: "2小时", resources: [R_HF_TRANSFORMERS], checkpoint: "能解释 T5 的 Text-to-Text 框架" },
+      { day: 7, title: "Scaling Law 与涌现能力", summary: "理解模型规模、数据量、计算量的关系，阅读 Scaling Law 论文", content: "理解模型规模、数据量、计算量的关系，阅读 Scaling Law 论文", duration: "2小时", resources: [R_HF_COURSE], checkpoint: "能解释 Scaling Law 的核心结论" },
+      { day: 8, title: "MoE 混合专家架构", summary: "理解 Mixture of Experts 的路由机制和稀疏激活", content: "理解 Mixture of Experts 的路由机制和稀疏激活", duration: "2小时", resources: [R_HF_TRANSFORMERS], checkpoint: "能解释 MoE 的路由机制" },
+      { day: 9, title: "长上下文技术", summary: "理解 RoPE 扩展、滑动窗口注意力等长上下文方案", content: "理解 RoPE 扩展、滑动窗口注意力等长上下文方案", duration: "2小时", resources: [R_HF_TRANSFORMERS], checkpoint: "能解释长上下文技术的原理" },
+      { day: 10, title: "实战：加载并分析开源 LLM", summary: "使用 HuggingFace 加载一个开源模型（如 Qwen/Llama），分析其架构和参数量", content: "使用 HuggingFace 加载一个开源模型（如 Qwen/Llama），分析其架构和参数量", duration: "3小时", resources: [R_HF_TRANSFORMERS, R_PYTORCH_TUT], checkpoint: "能加载开源 LLM 并分析其架构" },
+    ],
+  },
+  // =====================================================
+  // Node: llm-pretraining
+  // =====================================================
+  {
+    id: "llm-pretraining",
+    name: "预训练与数据工程",
+    track: "llm",
+    duration: "2周",
+    difficulty: "advanced",
+    prerequisites: ["llm-fundamentals"],
+    status: "available",
+    position: { x: 50, y: 0 },
+    description: "掌握 LLM 预训练流程、数据清洗与配比、分布式训练策略",
+    outcomes: ["理解预训练数据流水线", "掌握数据清洗和配比策略", "了解分布式训练（DDP/FSDP/DeepSpeed）"],
+    relatedIntel: ["037-distributed-training", "040-data-annotation", "034-cuda-programming"],
+    relatedTools: ["HuggingFace", "PyTorch"],
+    relatedTerms: ["pre-training", "tokenization", "distributed-training"],
+    suggestions: {
+      prerequisites: ["LLM 基础原理", "PyTorch 框架"],
+      nextSteps: ["LLM 微调与对齐", "LLM 推理加速与部署"],
+      learningPath: ["LLM 全栈路径"],
+    },
+    dailyTasks: [
+      { day: 1, title: "Tokenizer 原理与选择", summary: "理解 BPE/SentencePiece/WordPiece 分词算法，选择合适的 Tokenizer", content: "理解 BPE/SentencePiece/WordPiece 分词算法，选择合适的 Tokenizer", duration: "2小时", resources: [R_HF_TRANSFORMERS], checkpoint: "能解释不同分词算法的原理" },
+      { day: 2, title: "预训练数据清洗", summary: "学习数据去重、质量过滤、有害内容移除等数据清洗技术", content: "学习数据去重、质量过滤、有害内容移除等数据清洗技术", duration: "2小时", resources: [R_HF_COURSE], checkpoint: "能描述数据清洗的主要技术" },
+      { day: 3, title: "数据配比策略", summary: "理解不同数据源（网页/代码/论文）的配比对模型能力的影响", content: "理解不同数据源（网页/代码/论文）的配比对模型能力的影响", duration: "2小时", resources: [R_HF_COURSE], checkpoint: "能解释数据配比对模型的影响" },
+      { day: 4, title: "分布式训练概述", summary: "理解数据并行（DDP）、模型并行、流水线并行的区别", content: "理解数据并行（DDP）、模型并行、流水线并行的区别", duration: "2小时", resources: [R_PYTORCH_DOC], checkpoint: "能区分不同并行策略的适用场景" },
+      { day: 5, title: "FSDP 全分片数据并行", summary: "使用 PyTorch FSDP 进行大模型分布式训练", content: "使用 PyTorch FSDP 进行大模型分布式训练", duration: "2小时", resources: [R_PYTORCH_DOC], checkpoint: "能配置 FSDP 训练流程" },
+      { day: 6, title: "DeepSpeed ZeRO 策略", summary: "理解 ZeRO-1/2/3 的显存优化原理", content: "理解 ZeRO-1/2/3 的显存优化原理", duration: "2小时", resources: [R_PYTORCH_DOC], checkpoint: "能解释 ZeRO 各阶段的优化原理" },
+      { day: 7, title: "混合精度训练", summary: "理解 BF16/FP16 混合精度训练的原理和注意事项", content: "理解 BF16/FP16 混合精度训练的原理和注意事项", duration: "2小时", resources: [R_PYTORCH_TUT], checkpoint: "能配置混合精度训练" },
+      { day: 8, title: "梯度累积与检查点", summary: "使用梯度累积突破显存限制，使用梯度检查点节省显存", content: "使用梯度累积突破显存限制，使用梯度检查点节省显存", duration: "2小时", resources: [R_PYTORCH_DOC], checkpoint: "能实现梯度累积和梯度检查点" },
+      { day: 9, title: "预训练监控与调优", summary: "监控训练 loss、学习率调度、梯度范数等关键指标", content: "监控训练 loss、学习率调度、梯度范数等关键指标", duration: "2小时", resources: [R_PYTORCH_TUT], checkpoint: "能解读训练监控指标" },
+      { day: 10, title: "实战：小规模预训练实验", summary: "在小数据集上完成一次小规模预训练实验，观察 loss 曲线", content: "在小数据集上完成一次小规模预训练实验，观察 loss 曲线", duration: "3小时", resources: [R_HF_COURSE, R_PYTORCH_TUT], checkpoint: "能完成一次小规模预训练实验" },
+    ],
+  },
+  // =====================================================
+  // Node: llm-rag
+  // =====================================================
+  {
+    id: "llm-rag",
+    name: "RAG 检索增强生成",
+    track: "llm",
+    duration: "2周",
+    difficulty: "intermediate",
+    prerequisites: ["llm-fundamentals"],
+    status: "available",
+    position: { x: 50, y: 0 },
+    description: "掌握 RAG 系统构建：文档处理、向量检索、生成增强，构建企业级知识库",
+    outcomes: ["理解 RAG 架构和流程", "掌握向量数据库和检索策略", "能独立构建 RAG 知识库系统"],
+    relatedIntel: ["005-rag", "035-advanced-rag", "042-vector-database"],
+    relatedTools: ["LangChain", "HuggingFace"],
+    relatedTerms: ["rag", "embedding", "vector-database"],
+    suggestions: {
+      prerequisites: ["LLM 基础原理", "Python 编程基础"],
+      nextSteps: ["Agent 与工具调用", "LLM 评估与安全"],
+      learningPath: ["LLM 全栈路径"],
+    },
+    dailyTasks: [
+      { day: 1, title: "RAG 架构概述", summary: "理解 RAG 的基本流程：索引→检索→生成，对比 Naive RAG / Advanced RAG / Modular RAG", content: "理解 RAG 的基本流程：索引→检索→生成，对比 Naive RAG / Advanced RAG / Modular RAG", duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能解释 RAG 的基本流程" },
+      { day: 2, title: "文档加载与分块", summary: "学习 PDF/Word/HTML 等文档的加载和分块策略（固定长度/语义分块）", content: "学习 PDF/Word/HTML 等文档的加载和分块策略（固定长度/语义分块）", duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能实现文档加载和分块" },
+      { day: 3, title: "Embedding 模型选择", summary: "理解 Embedding 原理，选择合适的中文/英文 Embedding 模型", content: "理解 Embedding 原理，选择合适的中文/英文 Embedding 模型", duration: "2小时", resources: [R_HF_TRANSFORMERS], checkpoint: "能选择合适的 Embedding 模型" },
+      { day: 4, title: "向量数据库实战", summary: "使用 ChromaDB/Milvus/FAISS 存储和检索向量", content: "使用 ChromaDB/Milvus/FAISS 存储和检索向量", duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能用向量数据库存储和检索向量" },
+      { day: 5, title: "检索策略优化", summary: "学习混合检索（BM25+向量）、重排序（Reranker）等高级检索技术", content: "学习混合检索（BM25+向量）、重排序（Reranker）等高级检索技术", duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能实现混合检索和重排序" },
+      { day: 6, title: "Prompt 模板设计", summary: "设计高效的 RAG Prompt 模板，包含上下文和引用来源", content: "设计高效的 RAG Prompt 模板，包含上下文和引用来源", duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能设计 RAG Prompt 模板" },
+      { day: 7, title: "RAG 评估指标", summary: "学习 RAGAS 等评估框架，衡量检索准确率和生成质量", content: "学习 RAGAS 等评估框架，衡量检索准确率和生成质量", duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能使用 RAGAS 评估 RAG 系统" },
+      { day: 8, title: "多轮对话 RAG", summary: "实现支持多轮对话的 RAG 系统，处理上下文指代消解", content: "实现支持多轮对话的 RAG 系统，处理上下文指代消解", duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能实现多轮对话 RAG" },
+      { day: 9, title: "RAG 常见问题排查", summary: "解决幻觉、检索不到、上下文超长等常见问题", content: "解决幻觉、检索不到、上下文超长等常见问题", duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能排查 RAG 常见问题" },
+      { day: 10, title: "实战：构建企业知识库", summary: "完成一个完整的 RAG 知识库系统，支持文档上传和问答", content: "完成一个完整的 RAG 知识库系统，支持文档上传和问答", duration: "3小时", resources: [R_LANGCHAIN, R_GRADIO], checkpoint: "能构建完整的 RAG 知识库系统" },
+    ],
+  },
+  // =====================================================
+  // Node: llm-agent
+  // =====================================================
+  {
+    id: "llm-agent",
+    name: "Agent 与工具调用",
+    track: "llm",
+    duration: "2周",
+    difficulty: "advanced",
+    prerequisites: ["llm-rag"],
+    status: "available",
+    position: { x: 50, y: 0 },
+    description: "掌握 LLM Agent 开发：Function Calling、ReAct 框架、多 Agent 协作",
+    outcomes: ["理解 Agent 架构和 ReAct 范式", "掌握 Function Calling 和工具调用", "能构建多 Agent 协作系统"],
+    relatedIntel: ["031-agentic-ai", "036-code-generation", "020-prompt-engineering"],
+    relatedTools: ["LangChain", "HuggingFace"],
+    relatedTerms: ["agent", "function-calling", "react"],
+    suggestions: {
+      prerequisites: ["RAG 检索增强生成", "提示工程基础"],
+      nextSteps: ["LLM 评估与安全", "综合实战项目"],
+      learningPath: ["LLM 全栈路径"],
+    },
+    dailyTasks: [
+      { day: 1, title: "Agent 概念与架构", summary: "理解 LLM Agent 的核心组件：规划、记忆、工具、执行", content: "理解 LLM Agent 的核心组件：规划、记忆、工具、执行", duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能解释 Agent 的核心组件" },
+      { day: 2, title: "Function Calling 实战", summary: "使用 OpenAI/Anthropic 的 Function Calling 接口实现工具调用", content: "使用 OpenAI/Anthropic 的 Function Calling 接口实现工具调用", duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能实现 Function Calling 工具调用" },
+      { day: 3, title: "ReAct 框架精讲", summary: "理解 Reasoning + Acting 循环，手写 ReAct Agent", content: "理解 Reasoning + Acting 循环，手写 ReAct Agent", duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能手写 ReAct Agent" },
+      { day: 4, title: "工具定义与注册", summary: "学习如何定义自定义工具（搜索/计算/数据库查询），注册到 Agent", content: "学习如何定义自定义工具（搜索/计算/数据库查询），注册到 Agent", duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能定义并注册自定义工具" },
+      { day: 5, title: "Agent 记忆系统", summary: "实现短期记忆（对话历史）和长期记忆（向量存储）", content: "实现短期记忆（对话历史）和长期记忆（向量存储）", duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能实现 Agent 记忆系统" },
+      { day: 6, title: "多 Agent 协作", summary: "使用 LangGraph/CrewAI 构建多 Agent 协作系统", content: "使用 LangGraph/CrewAI 构建多 Agent 协作系统", duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能构建多 Agent 协作系统" },
+      { day: 7, title: "Agent 规划与分解", summary: "学习任务分解（Task Decomposition）和规划策略（CoT/ToT）", content: "学习任务分解（Task Decomposition）和规划策略（CoT/ToT）", duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能解释任务分解和规划策略" },
+      { day: 8, title: "代码生成 Agent", summary: "构建能编写和执行代码的 Agent，实现数据分析自动化", content: "构建能编写和执行代码的 Agent，实现数据分析自动化", duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能构建代码生成 Agent" },
+      { day: 9, title: "Agent 安全与护栏", summary: "实现 Agent 输出验证、循环检测、资源限制等安全措施", content: "实现 Agent 输出验证、循环检测、资源限制等安全措施", duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能实现 Agent 安全护栏" },
+      { day: 10, title: "实战：构建智能助手", summary: "完成一个多工具 Agent 系统，支持搜索、代码执行和文件操作", content: "完成一个多工具 Agent 系统，支持搜索、代码执行和文件操作", duration: "3小时", resources: [R_LANGCHAIN, R_GRADIO], checkpoint: "能构建多工具 Agent 系统" },
+    ],
+  },
+  // =====================================================
+  // Node: llm-evaluation
+  // =====================================================
+  {
+    id: "llm-evaluation",
+    name: "LLM 评估与安全",
+    track: "llm",
+    duration: "2周",
+    difficulty: "intermediate",
+    prerequisites: ["llm-finetune"],
+    status: "available",
+    position: { x: 50, y: 0 },
+    description: "掌握 LLM 评估方法（自动/人工评估）、安全对齐（幻觉/偏见/越狱）和部署最佳实践",
+    outcomes: ["掌握 LLM 评估指标和方法", "理解幻觉检测和缓解策略", "了解 LLM 安全防护和对齐技术"],
+    relatedIntel: ["038-llm-security", "039-model-evaluation", "027-rlhf-alignment"],
+    relatedTools: ["HuggingFace", "MLflow"],
+    relatedTerms: ["evaluation", "hallucination", "alignment"],
+    suggestions: {
+      prerequisites: ["LLM 微调与对齐", "LLM 基础原理"],
+      nextSteps: ["综合实战项目"],
+      learningPath: ["LLM 全栈路径"],
+    },
+    dailyTasks: [
+      { day: 1, title: "LLM 评估概述", summary: "理解 LLM 评估的挑战：开放式生成、多维度能力、主观性", content: "理解 LLM 评估的挑战：开放式生成、多维度能力、主观性", duration: "2小时", resources: [R_HF_COURSE], checkpoint: "能解释 LLM 评估的挑战" },
+      { day: 2, title: "自动评估指标", summary: "学习 BLEU/ROUGE/METEOR 等传统指标和 BERTScore/LLM-as-Judge 等新方法", content: "学习 BLEU/ROUGE/METEOR 等传统指标和 BERTScore/LLM-as-Judge 等新方法", duration: "2小时", resources: [R_HF_COURSE], checkpoint: "能解释各类自动评估指标" },
+      { day: 3, title: "基准测试集", summary: "了解 MMLU/HumanEval/GSM8K/MT-Bench 等主流评测基准", content: "了解 MMLU/HumanEval/GSM8K/MT-Bench 等主流评测基准", duration: "2小时", resources: [R_HF_COURSE], checkpoint: "能描述主流评测基准的用途" },
+      { day: 4, title: "人工评估方法", summary: "学习人类偏好评估、A/B 测试、Elo 评分等方法", content: "学习人类偏好评估、A/B 测试、Elo 评分等方法", duration: "2小时", resources: [R_HF_COURSE], checkpoint: "能解释人工评估方法" },
+      { day: 5, title: "幻觉检测与缓解", summary: "理解幻觉成因，学习事实一致性检测和幻觉缓解策略", content: "理解幻觉成因，学习事实一致性检测和幻觉缓解策略", duration: "2小时", resources: [R_HF_TRANSFORMERS], checkpoint: "能解释幻觉检测和缓解策略" },
+      { day: 6, title: "偏见与公平性", summary: "检测 LLM 中的性别/种族/文化偏见，学习去偏方法", content: "检测 LLM 中的性别/种族/文化偏见，学习去偏方法", duration: "2小时", resources: [R_HF_TRANSFORMERS], checkpoint: "能描述偏见检测和去偏方法" },
+      { day: 7, title: "越狱攻击与防御", summary: "理解 Prompt Injection、Jailbreak 等攻击方式及防御策略", content: "理解 Prompt Injection、Jailbreak 等攻击方式及防御策略", duration: "2小时", resources: [R_HF_TRANSFORMERS], checkpoint: "能解释越狱攻击和防御策略" },
+      { day: 8, title: "安全对齐技术", summary: "深入学习 RLHF/DPO/Constitutional AI 等对齐方法", content: "深入学习 RLHF/DPO/Constitutional AI 等对齐方法", duration: "2小时", resources: [R_HF_PEFT], checkpoint: "能解释各类对齐方法" },
+      { day: 9, title: "模型卡片与透明度", summary: "学习编写 Model Card，披露模型能力和局限性", content: "学习编写 Model Card，披露模型能力和局限性", duration: "2小时", resources: [R_HF_TRANSFORMERS], checkpoint: "能编写 Model Card" },
+      { day: 10, title: "实战：评估一个开源 LLM", summary: "选择一个开源模型，使用多个基准进行评估并生成报告", content: "选择一个开源模型，使用多个基准进行评估并生成报告", duration: "3小时", resources: [R_HF_COURSE, R_HF_TRANSFORMERS], checkpoint: "能完成 LLM 评估并生成报告" },
+    ],
+  },
 ];
 

@@ -1,10 +1,6 @@
 ---
 title: Docker 容器时间与宿主机不一致
 category: devops
-keywords:
-  - Docker
-  - 时区
-  - 日志
 difficulty: intermediate
 duration: 30分钟
 summary: Docker 容器默认使用 UTC 时区，导致日志时间戳、定时任务、数据库记录与实际时间差 8 小时（中国时区）。
@@ -16,6 +12,9 @@ takeaways:
 tags:
   - 踩坑
   - 避坑指南
+  - docker
+  - 时区
+  - 日志
 ---
 
 ## 为什么你要学它

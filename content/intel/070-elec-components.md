@@ -1,15 +1,6 @@
 ---
 title: 电子元件基础
 category: embedded
-keywords:
-  - resistor
-  - capacitor
-  - inductor
-  - diode
-  - transistor
-  - op-amp
-  - pcb
-  - schematic
 difficulty: beginner
 duration: 2-3周
 summary: 所有电子电路的原子级基础。理解电阻、电容、电感、二极管、三极管、运放，你就能看懂任何原理图并搭建自己的电路。
@@ -22,6 +13,15 @@ relatedIntel:
   - 052-embedded-c
   - 053-embedded-rtos
   - 054-elec-circuit
+tags:
+  - resistor
+  - capacitor
+  - inductor
+  - diode
+  - transistor
+  - op-amp
+  - pcb
+  - schematic
 ---
 
 ## 为什么你要学它

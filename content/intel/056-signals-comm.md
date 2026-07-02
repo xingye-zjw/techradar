@@ -1,14 +1,6 @@
 ---
 title: 通信原理
 category: embedded
-keywords:
-  - modulation
-  - demodulation
-  - ofdm
-  - channel-coding
-  - 5g
-  - wireless
-  - communication
 difficulty: intermediate
 duration: 3周
 summary: 理解通信系统的基本组成和调制解调原理，掌握数字通信中的编解码技术
@@ -21,8 +13,15 @@ relatedIntel:
   - 052-embedded-c
   - 053-embedded-rtos
   - 054-elec-circuit
-relatedNodes:
-  - signals-comm
+relatedNodes: signals-comm
+tags:
+  - modulation
+  - demodulation
+  - ofdm
+  - channel-coding
+  - 5g
+  - wireless
+  - communication
 ---
 
 ## 为什么你要学它

@@ -1,10 +1,6 @@
 ---
 title: SSH 端口被防火墙拦截 / 服务器无法访问
 category: devops
-keywords:
-  - SSH
-  - 服务器
-  - 网络安全
 difficulty: intermediate
 duration: 30分钟
 summary: SSH 无法连接远程服务器，即使服务正常运行。通常是云服务器安全组配置错误或网络防火墙拦截所致。
@@ -16,6 +12,9 @@ takeaways:
 tags:
   - 踩坑
   - 避坑指南
+  - ssh
+  - 服务器
+  - 网络安全
 ---
 
 ## 为什么你要学它

@@ -1,12 +1,6 @@
 ---
 title: 概率论与数理统计
 category: math
-keywords:
-  - 概率论
-  - 统计
-  - 贝叶斯
-  - 概率分布
-  - 假设检验
 difficulty: beginner
 duration: 2-3周
 summary: 机器学习模型的理论基础。理解概率分布、贝叶斯定理、假设检验等核心概念。
@@ -19,6 +13,12 @@ relatedIntel:
   - 024-information-theory
   - 025-convex-optimization
   - 072-math-linear-algebra
+tags:
+  - 概率论
+  - 统计
+  - 贝叶斯
+  - 概率分布
+  - 假设检验
 ---
 
 ## 为什么你要学它

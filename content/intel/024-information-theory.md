@@ -1,13 +1,6 @@
 ---
 title: 信息论基础：熵、交叉熵与 KL 散度
 category: math
-keywords:
-  - entropy
-  - cross-entropy
-  - kl-divergence
-  - mutual information
-  - mle
-  - map
 difficulty: intermediate
 duration: 1周
 summary: 熵告诉我们「知道结果前还有多少不确定性」，交叉熵是损失函数的数学根源，KL 散度是模型逼近真相的代价
@@ -20,8 +13,14 @@ relatedIntel:
   - 025-convex-optimization
   - 072-math-linear-algebra
   - 073-math-probability
-relatedNodes:
-  - math-information-theory
+relatedNodes: math-information-theory
+tags:
+  - entropy
+  - cross-entropy
+  - kl-divergence
+  - mutual information
+  - mle
+  - map
 ---
 
 ## 为什么你要学它

@@ -14,8 +14,8 @@
         "Python / CLI / Docker 多运行方式"
       ],
       "tags": [
-        "Python",
-        "PyTorch",
+        "python",
+        "pytorch",
         "实时检测"
       ],
       "github": {
@@ -57,9 +57,9 @@
         "Tokenizers Rust 底层加速，tokenize 极快"
       ],
       "tags": [
-        "LLM",
+        "llm",
         "微调",
-        "NLP"
+        "nlp"
       ],
       "github": {
         "stars": "135k",
@@ -149,8 +149,8 @@
         "LangServe 一键将 Chain 部署为 REST API"
       ],
       "tags": [
-        "RAG",
-        "Agent",
+        "rag",
+        "agent",
         "应用层"
       ],
       "github": {
@@ -191,9 +191,9 @@
         "部署到 Streamlit Cloud 免费公开访问"
       ],
       "tags": [
-        "Web",
-        "Demo",
-        "Python"
+        "web",
+        "demo",
+        "python"
       ],
       "github": {
         "stars": "38k",
@@ -230,7 +230,7 @@
       ],
       "tags": [
         "实验管理",
-        "MLOps"
+        "mlops"
       ],
       "github": {
         "stars": "22k",
@@ -302,8 +302,8 @@
       ],
       "tags": [
         "数据管理",
-        "MLOps",
-        "Git"
+        "mlops",
+        "git"
       ],
       "github": {
         "stars": "15k",
@@ -339,7 +339,7 @@
         "多阶段构建大幅减小镜像体积"
       ],
       "tags": [
-        "DevOps",
+        "devops",
         "部署",
         "容器化"
       ],
@@ -382,8 +382,8 @@
       ],
       "tags": [
         "AI界面",
-        "Demo",
-        "Python"
+        "demo",
+        "python"
       ],
       "github": {
         "stars": "32k",
@@ -459,9 +459,9 @@
         "支持多种维度（HNSW 索引建议 ≤2000 维，IVF 索引支持更高维度）向量（HNSW 索引有维度上限）"
       ],
       "tags": [
-        "RAG",
-        "SQL",
-        "HNSW"
+        "rag",
+        "sql",
+        "hnsw"
       ],
       "github": {
         "stars": "9k",
@@ -500,7 +500,7 @@
       "tags": [
         "推理",
         "部署",
-        "ONNX"
+        "onnx"
       ],
       "github": {
         "stars": "14k",
@@ -581,7 +581,7 @@
         "内存管理五种堆分配策略可选"
       ],
       "tags": [
-        "RTOS",
+        "rtos",
         "嵌入式",
         "实时系统"
       ],
@@ -625,7 +625,7 @@
       "tags": [
         "电路仿真",
         "模拟电路",
-        "EDA"
+        "eda"
       ],
       "github": {
         "stars": "N/A",
@@ -706,7 +706,7 @@
       ],
       "tags": [
         "机器人",
-        "ROS",
+        "ros",
         "导航"
       ],
       "github": {
@@ -747,7 +747,7 @@
         "功耗计算器辅助低功耗设计"
       ],
       "tags": [
-        "STM32",
+        "stm32",
         "嵌入式",
         "代码生成"
       ],
@@ -790,7 +790,7 @@
       "tags": [
         "大数据",
         "并行计算",
-        "Python"
+        "python"
       ],
       "github": {
         "stars": "12k",
@@ -905,7 +905,7 @@
       "tags": [
         "机器学习",
         "经典算法",
-        "Python"
+        "python"
       ],
       "github": {
         "stars": "56k",
@@ -943,7 +943,7 @@
       "tags": [
         "数据分析",
         "表格处理",
-        "Python"
+        "python"
       ],
       "github": {
         "stars": "33k",
@@ -983,7 +983,7 @@
       "tags": [
         "科学计算",
         "矩阵运算",
-        "Python"
+        "python"
       ],
       "github": {
         "stars": "26k",
@@ -1023,9 +1023,9 @@
         "支持向量添加、删除和批量搜索"
       ],
       "tags": [
-        "RAG",
+        "rag",
         "向量检索",
-        "GPU"
+        "gpu"
       ],
       "github": {
         "stars": "23k",
@@ -1064,9 +1064,9 @@
         "与 LangChain 无缝集成"
       ],
       "tags": [
-        "RAG",
+        "rag",
         "向量数据库",
-        "LLM"
+        "llm"
       ],
       "github": {
         "stars": "14k",
@@ -1107,7 +1107,7 @@
       "tags": [
         "交互式",
         "文档",
-        "Python"
+        "python"
       ],
       "github": {
         "stars": "16k",
@@ -1142,7 +1142,7 @@
         "spaCy Transformers 集成 BERT 等深度学习模型"
       ],
       "tags": [
-        "NLP",
+        "nlp",
         "工业级",
         "实体识别"
       ],
@@ -1182,7 +1182,7 @@
         "一键导出 ONNX / TensorRT / CoreML"
       ],
       "tags": [
-        "PyTorch",
+        "pytorch",
         "研究",
         "分布式"
       ],
@@ -1222,7 +1222,7 @@
         "Helm Chart 包管理和 Operator 模式"
       ],
       "tags": [
-        "DevOps",
+        "devops",
         "容器编排",
         "微服务"
       ],
@@ -1266,7 +1266,7 @@
       "tags": [
         "监控",
         "时序数据库",
-        "DevOps"
+        "devops"
       ],
       "github": {
         "stars": "52k",
@@ -1426,8 +1426,8 @@
         "自定义工具扩展能力"
       ],
       "tags": [
-        "LLM",
-        "Agent",
+        "llm",
+        "agent",
         "多模态"
       ],
       "github": {
@@ -1467,8 +1467,8 @@
       ],
       "tags": [
         "图像分割",
-        "SAM",
-        "CV"
+        "sam",
+        "cv"
       ],
       "github": {
         "stars": "34k",
@@ -1506,7 +1506,7 @@
         "Arduino 兼容层，支持 Arduino 生态"
       ],
       "tags": [
-        "ESP32",
+        "esp32",
         "物联网",
         "嵌入式"
       ],
@@ -1547,8 +1547,8 @@
       ],
       "tags": [
         "图神经网络",
-        "GNN",
-        "PyTorch"
+        "gnn",
+        "pytorch"
       ],
       "github": {
         "stars": "15k",
@@ -1587,8 +1587,8 @@
       ],
       "tags": [
         "机器学习",
-        "GBDT",
-        "Kaggle"
+        "gbdt",
+        "kaggle"
       ],
       "github": {
         "stars": "24k",
@@ -1625,7 +1625,7 @@
       ],
       "tags": [
         "机器学习",
-        "GBDT",
+        "gbdt",
         "微软"
       ],
       "github": {
@@ -1664,7 +1664,7 @@
       "tags": [
         "可视化",
         "图表",
-        "Python"
+        "python"
       ],
       "github": {
         "stars": "19k",
@@ -1702,7 +1702,7 @@
       "tags": [
         "交互式",
         "可视化",
-        "Dashboard"
+        "dashboard"
       ],
       "github": {
         "stars": "16k",
@@ -1738,7 +1738,7 @@
         "OpenAI 兼容的 API 接口"
       ],
       "tags": [
-        "LLM",
+        "llm",
         "推理",
         "高吞吐"
       ],
@@ -1781,7 +1781,7 @@
       "tags": [
         "推理",
         "部署",
-        "NVIDIA"
+        "nvidia"
       ],
       "github": {
         "stars": "8k",
@@ -1817,8 +1817,8 @@
         "依赖注入和中间件支持"
       ],
       "tags": [
-        "API",
-        "Web",
+        "api",
+        "web",
         "异步"
       ],
       "github": {
@@ -1857,7 +1857,7 @@
       "tags": [
         "工作流",
         "编排",
-        "DAG"
+        "dag"
       ],
       "github": {
         "stars": "37k",
@@ -1893,8 +1893,8 @@
         "Katib 超参数自动调优"
       ],
       "tags": [
-        "MLOps",
-        "Kubernetes",
+        "mlops",
+        "kubernetes",
         "云原生"
       ],
       "github": {
@@ -1932,7 +1932,7 @@
       ],
       "tags": [
         "语音识别",
-        "ASR",
+        "asr",
         "多语言"
       ],
       "github": {
@@ -1972,7 +1972,7 @@
       ],
       "tags": [
         "强化学习",
-        "RL",
+        "rl",
         "算法库"
       ],
       "github": {
@@ -2011,9 +2011,9 @@
         "内存占用比 pandas 低 10 倍"
       ],
       "tags": [
-        "DataFrame",
+        "dataframe",
         "高性能",
-        "Rust"
+        "rust"
       ],
       "github": {
         "stars": "30k",

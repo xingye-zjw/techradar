@@ -1,14 +1,6 @@
 ---
 title: TTS 语音合成
 category: nlp
-keywords:
-  - tts
-  - speech synthesis
-  - tacotron
-  - vits
-  - vocoder
-  - voice cloning
-  - hifi-gan
 difficulty: intermediate
 duration: 2-3周
 summary: 让机器像人一样说话的技术。从 Tacotron 到 VITS，掌握端到端语音合成的核心原理与实战。
@@ -21,8 +13,15 @@ takeaways:
 relatedIntel:
   - 064-nlp-rnn
   - 119-knowledge-graph
-relatedNodes:
-  - nlp-rnn
+relatedNodes: nlp-rnn
+tags:
+  - tts
+  - speech synthesis
+  - tacotron
+  - vits
+  - vocoder
+  - voice cloning
+  - hifi-gan
 ---
 
 ## 为什么你要学它

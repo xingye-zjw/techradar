@@ -1,14 +1,6 @@
 ---
 title: 电机控制与电力电子
 category: embedded
-keywords:
-  - motor
-  - foc
-  - inverter
-  - pwm
-  - pmsm
-  - bldc
-  - power-electronics
 difficulty: advanced
 duration: 3周
 summary: 掌握直流电机和交流电机的控制原理，理解FOC矢量控制和电力电子变换技术
@@ -21,8 +13,15 @@ relatedIntel:
   - 052-embedded-c
   - 053-embedded-rtos
   - 054-elec-circuit
-relatedNodes:
-  - elec-motor
+relatedNodes: elec-motor
+tags:
+  - motor
+  - foc
+  - inverter
+  - pwm
+  - pmsm
+  - bldc
+  - power-electronics
 ---
 
 ## 为什么你要学它

@@ -1,10 +1,6 @@
 ---
 title: Loss NaN / 梯度爆炸
 category: deep-learning
-keywords:
-  - Loss
-  - 梯度
-  - 数值稳定性
 difficulty: intermediate
 duration: 30分钟
 summary: 训练过程中 Loss 突然变为 NaN 或 inf，通常是学习率过大或数据中存在异常值导致的。梯度爆炸会导致参数更新过大，最终数值溢出。
@@ -16,6 +12,9 @@ takeaways:
 tags:
   - 踩坑
   - 避坑指南
+  - loss
+  - 梯度
+  - 数值稳定性
 ---
 
 ## 为什么你要学它

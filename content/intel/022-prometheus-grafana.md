@@ -1,13 +1,6 @@
 ---
 title: Prometheus + Grafana 监控体系
 category: devops
-keywords:
-  - prometheus
-  - grafana
-  - metrics
-  - alerting
-  - observability
-  - monitoring
 difficulty: intermediate
 duration: 1周
 summary: 服务上线后不知道它死活，就像飞机没有仪表盘——监控是工程化的最后一道防线
@@ -24,8 +17,14 @@ relatedIntel:
   - 007-docker
   - 008-git
   - 009-linux
-relatedNodes:
-  - electrical-safety
+relatedNodes: electrical-safety
+tags:
+  - prometheus
+  - grafana
+  - metrics
+  - alerting
+  - observability
+  - monitoring
 ---
 
 ## 为什么你要学它

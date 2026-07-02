@@ -1,12 +1,6 @@
 ---
 title: 数字电路基础
 category: embedded
-keywords:
-  - 数字电路
-  - 逻辑门
-  - 组合逻辑
-  - 时序逻辑
-  - FPGA
 difficulty: beginner
 duration: 2-3周
 summary: 理解数字电路的设计原理。掌握逻辑门、组合逻辑、时序逻辑等核心概念。
@@ -20,6 +14,12 @@ relatedIntel:
   - 052-embedded-c
   - 053-embedded-rtos
   - 054-elec-circuit
+tags:
+  - 数字电路
+  - 逻辑门
+  - 组合逻辑
+  - 时序逻辑
+  - fpga
 ---
 
 ## 为什么你要学它

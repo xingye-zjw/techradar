@@ -1,15 +1,6 @@
 ---
 title: 状态空间控制理论
 category: embedded
-keywords:
-  - state-space
-  - controllability
-  - observability
-  - pole-placement
-  - lqr
-  - kalman-filter
-  - state-feedback
-  - observer-design
 difficulty: advanced
 duration: 2-3周
 summary: 现代控制理论的核心数学框架。比 PID 更强大——不仅能处理单输入单输出，还能用状态反馈、极点配置、LQR 最优控制和卡尔曼滤波，对多输入多输出系统进行精确分析和设计。
@@ -22,6 +13,15 @@ relatedIntel:
   - 052-embedded-c
   - 053-embedded-rtos
   - 054-elec-circuit
+tags:
+  - state-space
+  - controllability
+  - observability
+  - pole-placement
+  - lqr
+  - kalman-filter
+  - state-feedback
+  - observer-design
 ---
 
 ## 为什么你要学它

@@ -1,13 +1,6 @@
 ---
 title: 线性代数基础
 category: math
-keywords:
-  - 线性代数
-  - 矩阵
-  - 向量
-  - 特征值
-  - 特征向量
-  - 矩阵分解
 difficulty: beginner
 duration: 2-3周
 summary: 机器学习和深度学习的数学基础。理解矩阵运算、特征值分解、奇异值分解等核心概念。
@@ -20,8 +13,14 @@ relatedIntel:
   - 024-information-theory
   - 025-convex-optimization
   - 073-math-probability
-relatedNodes:
-  - math-linear-algebra
+relatedNodes: math-linear-algebra
+tags:
+  - 线性代数
+  - 矩阵
+  - 向量
+  - 特征值
+  - 特征向量
+  - 矩阵分解
 ---
 
 ## 为什么你要学它

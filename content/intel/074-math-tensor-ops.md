@@ -1,12 +1,6 @@
 ---
 title: 张量运算与自动微分
 category: math
-keywords:
-  - 张量
-  - 自动微分
-  - 反向传播
-  - 广播机制
-  - 张量分解
 difficulty: intermediate
 duration: 1-2周
 summary: 深度学习框架的核心数学基础。理解张量运算、广播机制、自动微分原理。
@@ -19,6 +13,12 @@ relatedIntel:
   - 024-information-theory
   - 025-convex-optimization
   - 072-math-linear-algebra
+tags:
+  - 张量
+  - 自动微分
+  - 反向传播
+  - 广播机制
+  - 张量分解
 ---
 
 ## 为什么你要学它

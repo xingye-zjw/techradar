@@ -1,11 +1,6 @@
 ---
 title: RAG 检索到了但回答不对 / 幻觉严重
 category: llm
-keywords:
-  - RAG
-  - LLM
-  - 检索
-  - Prompt
 difficulty: intermediate
 duration: 30分钟
 summary: RAG 系统检索到了相关文档，但 LLM 生成的回答与检索内容不符，甚至凭空捏造事实。这是 RAG 项目中最常见的质量问题，直接影响系统可用性。
@@ -17,6 +12,10 @@ takeaways:
 tags:
   - 踩坑
   - 避坑指南
+  - rag
+  - llm
+  - 检索
+  - prompt
 ---
 
 ## 为什么你要学它

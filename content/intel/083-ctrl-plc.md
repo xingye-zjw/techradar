@@ -1,13 +1,6 @@
 ---
 title: PLC可编程控制器
 category: embedded
-keywords:
-  - PLC
-  - 可编程控制器
-  - 梯形图
-  - 工业自动化
-  - 西门子
-  - IEC 61131-3
 difficulty: beginner
 duration: 2-3周
 summary: 理解PLC在工业自动化中的应用。掌握梯形图编程、I/O配置、通信协议等核心技能。
@@ -20,6 +13,13 @@ relatedIntel:
   - 052-embedded-c
   - 053-embedded-rtos
   - 054-elec-circuit
+tags:
+  - plc
+  - 可编程控制器
+  - 梯形图
+  - 工业自动化
+  - 西门子
+  - IEC 61131-3
 ---
 
 ## 为什么你要学它

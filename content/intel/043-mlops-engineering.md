@@ -1,12 +1,6 @@
 ---
 title: MLOps：从实验到生产的完整工程化
 category: data-processing
-keywords:
-  - mlops
-  - experiment tracking
-  - model registry
-  - feature store
-  - continuous training
 difficulty: intermediate
 duration: 1-2周
 summary: 训练只是 MLOps 的 10%——那 90% 是版本管理、监控、自动重训练、模型部署的完整工程化体系
@@ -19,6 +13,12 @@ relatedIntel:
   - 010-numpy-pandas
   - 013-huggingface-datasets
   - 023-data-pipeline-etl
+tags:
+  - mlops
+  - experiment tracking
+  - model registry
+  - feature store
+  - continuous training
 ---
 
 ## 为什么你要学它

@@ -1,10 +1,6 @@
 ---
 title: 训练用 GPU 卡与推理用卡架构不一致
 category: deep-learning
-keywords:
-  - GPU
-  - CUDA
-  - 模型迁移
 difficulty: intermediate
 duration: 30分钟
 summary: 在一种 GPU 架构上训练的模型，部署到不同架构的 GPU 上出现兼容性问题或性能下降。这是模型部署到生产环境时的常见挑战。
@@ -16,6 +12,9 @@ takeaways:
 tags:
   - 踩坑
   - 避坑指南
+  - gpu
+  - cuda
+  - 模型迁移
 ---
 
 ## 为什么你要学它

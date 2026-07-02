@@ -1,13 +1,6 @@
 ---
 title: 模型评估与基准测试
 category: devops
-keywords:
-  - model evaluation
-  - benchmark
-  - mmlu
-  - hellaswag
-  - perplexity
-  - human evaluation
 difficulty: intermediate
 duration: 1周
 summary: 训练完模型，怎么知道它好不好？基准测试是模型能力的「体检报告」
@@ -20,8 +13,14 @@ relatedIntel:
   - 007-docker
   - 008-git
   - 009-linux
-relatedNodes:
-  - electrical-safety
+relatedNodes: electrical-safety
+tags:
+  - model evaluation
+  - benchmark
+  - mmlu
+  - hellaswag
+  - perplexity
+  - human evaluation
 ---
 
 ## 为什么你要学它

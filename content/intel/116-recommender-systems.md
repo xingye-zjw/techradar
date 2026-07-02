@@ -1,16 +1,6 @@
 ---
 title: 推荐系统
 category: machine-learning
-keywords:
-  - recommender systems
-  - collaborative filtering
-  - matrix factorization
-  - ALS
-  - Wide&Deep
-  - DeepFM
-  - DIN
-  - 多目标推荐
-  - 冷启动
 difficulty: intermediate
 duration: 2-3周
 summary: 互联网产品的核心驱动力。从协同过滤到深度学习推荐，掌握排序、召回、多目标优化的完整技术栈。
@@ -24,6 +14,16 @@ relatedIntel:
   - 112-rl-basics
   - 118-anomaly-detection
   - 122-federated-learning
+tags:
+  - recommender systems
+  - collaborative filtering
+  - matrix factorization
+  - als
+  - Wide&Deep
+  - deepfm
+  - din
+  - 多目标推荐
+  - 冷启动
 ---
 
 ## 为什么你要学它

@@ -1,12 +1,6 @@
 ---
 title: 安全与隐私：LLM 应用的红线
 category: llm
-keywords:
-  - llm security
-  - prompt injection
-  - data leakage
-  - pii protection
-  - model extraction
 difficulty: intermediate
 duration: 1周
 summary: LLM 能回答问题，也能泄露数据、被注入恶意指令、被逆向提取模型——安全是应用落地的第一道防线
@@ -21,7 +15,13 @@ relatedIntel:
   - 015-rlhf
 relatedNodes:
   - llm-finetune
-  - nlp-llm-inference
+  - llm-inference
+tags:
+  - llm security
+  - prompt injection
+  - data leakage
+  - pii protection
+  - model extraction
 ---
 
 ## 为什么你要学它

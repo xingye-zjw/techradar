@@ -1,13 +1,6 @@
 ---
 title: 多模态大模型：从 CLIP 到 GPT-4V
 category: llm
-keywords:
-  - multimodal
-  - clip
-  - vision encoder
-  - gpt-4v
-  - llava
-  - image understanding
 difficulty: advanced
 duration: 1-2周
 summary: 文本和图像不再是两个世界——多模态大模型让 LLM「看懂」图片，实现图文混合推理
@@ -22,7 +15,14 @@ relatedIntel:
   - 015-rlhf
 relatedNodes:
   - llm-finetune
-  - nlp-llm-inference
+  - llm-inference
+tags:
+  - multimodal
+  - clip
+  - vision encoder
+  - gpt-4v
+  - llava
+  - image understanding
 ---
 
 ## 为什么你要学它

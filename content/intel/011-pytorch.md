@@ -1,14 +1,6 @@
 ---
 title: PyTorch 深度学习框架
 category: deep-learning
-keywords:
-  - pytorch
-  - tensor
-  - autograd
-  - nn.module
-  - dataloader
-  - optimizer
-  - gpu
 difficulty: intermediate
 duration: 2-3周
 summary: 学术界最主流的动态图框架，以清晰直观的方式定义模型，Debug 友好，是深度学习入门与论文复现的首选
@@ -21,6 +13,14 @@ relatedTools: pytorch
 relatedIntel:
   - 001-transformer
   - 113-gnn-basics
+tags:
+  - pytorch
+  - tensor
+  - autograd
+  - nn.module
+  - dataloader
+  - optimizer
+  - gpu
 ---
 
 ## 为什么你要学它

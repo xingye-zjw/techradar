@@ -1,15 +1,6 @@
 ---
 title: 模型评估指标详解
 category: devops
-keywords:
-  - map
-  - iou
-  - f1 score
-  - precision
-  - recall
-  - auc
-  - bleu
-  - perplexity
 difficulty: intermediate
 duration: 1周
 summary: 分类 / 检测 / 生成任务该用什么指标打分，才能不被一个看起来漂亮的数字骗到
@@ -22,8 +13,16 @@ relatedIntel:
   - 007-docker
   - 008-git
   - 009-linux
-relatedNodes:
-  - electrical-safety
+relatedNodes: electrical-safety
+tags:
+  - map
+  - iou
+  - f1 score
+  - precision
+  - recall
+  - auc
+  - bleu
+  - perplexity
 ---
 
 ## 为什么你要学它

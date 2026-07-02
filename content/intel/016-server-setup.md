@@ -1,14 +1,6 @@
 ---
 title: Linux 服务器深度学习环境配置
 category: devops
-keywords:
-  - ubuntu
-  - server setup
-  - nvidia
-  - cuda
-  - conda
-  - ssh
-  - tmux
 difficulty: intermediate
 duration: 1-2周
 summary: 从零搭起一台能跑 PyTorch 的 GPU 服务器：驱动、CUDA、Conda、SSH 与远程训练全都能自己搞定
@@ -21,8 +13,15 @@ relatedIntel:
   - 007-docker
   - 008-git
   - 009-linux
-relatedNodes:
-  - electrical-safety
+relatedNodes: electrical-safety
+tags:
+  - ubuntu
+  - server setup
+  - nvidia
+  - cuda
+  - conda
+  - ssh
+  - tmux
 ---
 
 ## 为什么你要学它

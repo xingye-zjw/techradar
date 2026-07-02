@@ -1,13 +1,6 @@
 ---
 title: Transformer 架构
 category: deep-learning
-keywords:
-  - transformer
-  - attention
-  - self-attention
-  - multi-head
-  - positional encoding
-  - encoder decoder
 difficulty: intermediate
 duration: 1-2周
 summary: 所有大模型（GPT、BERT、LLaMA）的底层架构。理解它就能理解现代 AI 是怎样工作的。
@@ -19,6 +12,13 @@ takeaways:
 relatedIntel:
   - 011-pytorch
   - 113-gnn-basics
+tags:
+  - transformer
+  - attention
+  - self-attention
+  - multi-head
+  - positional encoding
+  - encoder decoder
 ---
 
 ## 为什么你要学它

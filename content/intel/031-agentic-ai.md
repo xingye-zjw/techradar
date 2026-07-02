@@ -1,13 +1,6 @@
 ---
 title: Agentic AI：从 Chatbot 到 Agent
 category: llm
-keywords:
-  - agent
-  - agentic ai
-  - tool use
-  - planning
-  - reflection
-  - multi-agent
 difficulty: advanced
 duration: 1-2周
 summary: Chatbot 只能「说话」，Agent 能「做事」——规划、执行、反思、协作，让 LLM 从对话者变成工作者
@@ -22,7 +15,14 @@ relatedIntel:
   - 015-rlhf
 relatedNodes:
   - llm-finetune
-  - nlp-llm-inference
+  - llm-inference
+tags:
+  - agent
+  - agentic ai
+  - tool use
+  - planning
+  - reflection
+  - multi-agent
 ---
 
 ## 为什么你要学它

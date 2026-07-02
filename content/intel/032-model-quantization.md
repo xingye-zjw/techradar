@@ -1,13 +1,6 @@
 ---
 title: 模型量化：从 FP16 到 INT4
 category: devops
-keywords:
-  - quantization
-  - int4
-  - int8
-  - gptq
-  - awq
-  - bitsandbytes
 difficulty: intermediate
 duration: 1周
 summary: 把 7B 模型从 14GB 压到 4GB，让它在消费级 GPU 上也能跑——量化是模型部署的必修课
@@ -20,8 +13,14 @@ relatedIntel:
   - 007-docker
   - 008-git
   - 009-linux
-relatedNodes:
-  - electrical-safety
+relatedNodes: electrical-safety
+tags:
+  - quantization
+  - int4
+  - int8
+  - gptq
+  - awq
+  - bitsandbytes
 ---
 
 ## 为什么你要学它

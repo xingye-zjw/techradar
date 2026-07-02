@@ -1,11 +1,6 @@
 ---
 title: CUDA 版本与 PyTorch 不匹配
 category: devops
-keywords:
-  - CUDA
-  - PyTorch
-  - Windows
-  - 环境配置
 difficulty: intermediate
 duration: 30分钟
 summary: 安装 PyTorch 时未根据本机 CUDA 版本选择对应的 wheel 包，导致 CUDA 无法正常工作。这是新手最容易踩的第一个环境坑，常见于 Windows 和 Ubuntu 系统。
@@ -17,6 +12,10 @@ takeaways:
 tags:
   - 踩坑
   - 避坑指南
+  - cuda
+  - pytorch
+  - windows
+  - 环境配置
 ---
 
 ## 为什么你要学它

@@ -1,14 +1,6 @@
 ---
 title: 自动控制原理
 category: embedded
-keywords:
-  - control
-  - pid
-  - feedback
-  - stability
-  - system-response
-  - root-locus
-  - bode-plot
 difficulty: intermediate
 duration: 3周
 summary: 掌握自动控制的核心概念，理解反馈控制原理和控制器设计方法
@@ -21,8 +13,15 @@ relatedIntel:
   - 052-embedded-c
   - 053-embedded-rtos
   - 054-elec-circuit
-relatedNodes:
-  - ctrl-pid
+relatedNodes: ctrl-pid
+tags:
+  - control
+  - pid
+  - feedback
+  - stability
+  - system-response
+  - root-locus
+  - bode-plot
 ---
 
 ## 为什么你要学它

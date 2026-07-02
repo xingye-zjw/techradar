@@ -1,12 +1,6 @@
 ---
 title: 数据标注与主动学习
 category: data-processing
-keywords:
-  - data annotation
-  - active learning
-  - label studio
-  - annotation quality
-  - inter-annotator agreement
 difficulty: intermediate
 duration: 1周
 summary: 标注数据是 AI 项目的最大成本——主动学习让模型告诉你「哪些数据最值得标注」
@@ -20,6 +14,12 @@ relatedIntel:
   - 010-numpy-pandas
   - 013-huggingface-datasets
   - 023-data-pipeline-etl
+tags:
+  - data annotation
+  - active learning
+  - label studio
+  - annotation quality
+  - inter-annotator agreement
 ---
 
 ## 为什么你要学它

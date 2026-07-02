@@ -1,14 +1,6 @@
 ---
 title: 时间序列分析与预测
 category: data-processing
-keywords:
-  - time series
-  - arima
-  - prophet
-  - lstm
-  - tcn
-  - tft
-  - anomaly detection
 difficulty: intermediate
 duration: 2-3周
 summary: 从经典统计到深度学习，系统掌握时间序列分解、预测、异常检测的核心方法与实战技能。
@@ -22,6 +14,14 @@ relatedIntel:
   - 010-numpy-pandas
   - 013-huggingface-datasets
   - 023-data-pipeline-etl
+tags:
+  - time series
+  - arima
+  - prophet
+  - lstm
+  - tcn
+  - tft
+  - anomaly detection
 ---
 
 ## 为什么你要学它

@@ -1,13 +1,6 @@
 ---
 title: RLHF 与大模型对齐
 category: llm
-keywords:
-  - rlhf
-  - reward model
-  - ppo
-  - dpo
-  - alignment
-  - sft
 difficulty: advanced
 duration: 3-4周
 summary: 用人类偏好数据把"只会预测下一个 token"的模型拉回正轨，让它输出有用、无害、符合指令的答案
@@ -23,7 +16,14 @@ relatedIntel:
   - 020-prompt-engineering
 relatedNodes:
   - llm-finetune
-  - nlp-llm-inference
+  - llm-inference
+tags:
+  - rlhf
+  - reward model
+  - ppo
+  - dpo
+  - alignment
+  - sft
 ---
 
 ## 为什么你要学它

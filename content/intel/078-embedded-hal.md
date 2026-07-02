@@ -1,12 +1,6 @@
 ---
 title: 嵌入式硬件抽象层
 category: embedded
-keywords:
-  - HAL
-  - 硬件抽象层
-  - STM32 HAL
-  - 寄存器操作
-  - 外设驱动
 difficulty: intermediate
 duration: 2-3周
 summary: 理解硬件抽象层的设计原理。掌握STM32 HAL库、寄存器操作、外设配置等核心技能。
@@ -19,8 +13,13 @@ relatedIntel:
   - 052-embedded-c
   - 053-embedded-rtos
   - 054-elec-circuit
-relatedNodes:
-  - embedded-hal
+relatedNodes: embedded-hal
+tags:
+  - hal
+  - 硬件抽象层
+  - STM32 HAL
+  - 寄存器操作
+  - 外设驱动
 ---
 
 ## 为什么你要学它

@@ -1,13 +1,6 @@
 ---
 title: LLM 微调 - LoRA / QLoRA
 category: llm
-keywords:
-  - lora
-  - qlora
-  - fine-tuning
-  - peft
-  - large language model
-  - llm factory
 difficulty: advanced
 duration: 3-4周
 summary: 仅训练大模型极小一部分参数就能让它适配你的领域任务，4-bit 量化把 7B 模型微调显存压缩到 6GB 级
@@ -22,7 +15,14 @@ relatedIntel:
   - 020-prompt-engineering
 relatedNodes:
   - llm-finetune
-  - nlp-llm-inference
+  - llm-inference
+tags:
+  - lora
+  - qlora
+  - fine-tuning
+  - peft
+  - large language model
+  - llm factory
 ---
 
 ## 为什么你要学它

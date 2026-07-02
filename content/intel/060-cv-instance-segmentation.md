@@ -1,13 +1,6 @@
 ---
 title: CV 实例分割
 category: computer-vision
-keywords:
-  - instance-segmentation
-  - mask-rcnn
-  - semantic-vs-instance
-  - panoptic-segmentation
-  - yolact
-  - panoptic-segformer
 difficulty: intermediate
 duration: 1-2周
 summary: 实例分割同时完成目标检测和语义分割，为图像中每个独立物体生成独立的前景掩码，是自动驾驶、医疗影像、AR/VR 等场景的核心技术。
@@ -21,6 +14,13 @@ relatedIntel:
   - 002-yolo
   - 004-resnet
   - 006-cnn-basics
+tags:
+  - instance-segmentation
+  - mask-rcnn
+  - semantic-vs-instance
+  - panoptic-segmentation
+  - yolact
+  - panoptic-segformer
 ---
 
 ## 为什么你要学它

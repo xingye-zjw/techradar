@@ -1,16 +1,6 @@
 ---
 title: 卷积神经网络 CNN 基础
 category: computer-vision
-keywords:
-  - cnn
-  - convolution
-  - pooling
-  - feature map
-  - lenet
-  - alexnet
-  - vgg
-  - receptive field
-  - batch normalization
 difficulty: beginner
 duration: 1-2周
 summary: 从原始像素中自动提取层次化视觉特征，是 ResNet、ViT 等所有现代视觉模型的共同祖先
@@ -23,6 +13,16 @@ relatedIntel:
   - 002-yolo
   - 004-resnet
   - 060-cv-instance-segmentation
+tags:
+  - cnn
+  - convolution
+  - pooling
+  - feature map
+  - lenet
+  - alexnet
+  - vgg
+  - receptive field
+  - batch normalization
 ---
 
 ## 为什么你要学它

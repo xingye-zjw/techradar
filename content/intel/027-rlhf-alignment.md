@@ -1,13 +1,6 @@
 ---
 title: RLHF：人类反馈强化学习
 category: llm
-keywords:
-  - rlhf
-  - reinforcement learning
-  - reward model
-  - ppo
-  - alignment
-  - instructgpt
 difficulty: advanced
 duration: 1-2周
 summary: ChatGPT 为什么「对齐」了？RLHF 是如何让模型学会遵循人类意图而不是简单预测下一个 token
@@ -23,7 +16,14 @@ relatedIntel:
   - 015-rlhf
 relatedNodes:
   - llm-finetune
-  - nlp-llm-inference
+  - llm-inference
+tags:
+  - rlhf
+  - reinforcement learning
+  - reward model
+  - ppo
+  - alignment
+  - instructgpt
 ---
 
 ## 为什么你要学它

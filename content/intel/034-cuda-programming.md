@@ -1,13 +1,6 @@
 ---
 title: CUDA 编程入门：让 GPU 为你加速
 category: devops
-keywords:
-  - cuda
-  - gpu programming
-  - kernel
-  - thread
-  - memory coalescing
-  - shared memory
 difficulty: advanced
 duration: 1-2周
 summary: 深度学习框架帮你封装了一切，但你真的了解 GPU 是怎么工作的吗——理解 CUDA 编程才能真正优化 GPU 利用率
@@ -20,8 +13,14 @@ relatedIntel:
   - 007-docker
   - 008-git
   - 009-linux
-relatedNodes:
-  - electrical-safety
+relatedNodes: electrical-safety
+tags:
+  - cuda
+  - gpu programming
+  - kernel
+  - thread
+  - memory coalescing
+  - shared memory
 ---
 
 ## 为什么你要学它

@@ -1,14 +1,6 @@
 ---
 title: 机器人技术与ROS2
 category: embedded
-keywords:
-  - ros
-  - robot
-  - navigation
-  - slam
-  - moveit
-  - gazebo
-  - sensor
 difficulty: advanced
 duration: 3周
 summary: 学习机器人操作系统ROS2的核心概念，掌握导航、定位和控制的实践技能
@@ -22,8 +14,15 @@ relatedIntel:
   - 052-embedded-c
   - 053-embedded-rtos
   - 054-elec-circuit
-relatedNodes:
-  - ctrl-ros
+relatedNodes: ctrl-ros
+tags:
+  - ros
+  - robot
+  - navigation
+  - slam
+  - moveit
+  - gazebo
+  - sensor
 ---
 
 ## 为什么你要学它

@@ -1,13 +1,6 @@
 ---
 title: 嵌入式驱动开发
 category: embedded
-keywords:
-  - 嵌入式驱动
-  - Linux驱动
-  - 字符设备
-  - 设备树
-  - 中断处理
-  - 内核模块
 difficulty: intermediate
 duration: 3-4周
 summary: 理解Linux驱动开发的核心原理。掌握字符设备驱动、设备树、中断处理等关键技能。
@@ -20,8 +13,14 @@ relatedIntel:
   - 052-embedded-c
   - 053-embedded-rtos
   - 054-elec-circuit
-relatedNodes:
-  - embedded-driver
+relatedNodes: embedded-driver
+tags:
+  - 嵌入式驱动
+  - Linux驱动
+  - 字符设备
+  - 设备树
+  - 中断处理
+  - 内核模块
 ---
 
 ## 为什么你要学它

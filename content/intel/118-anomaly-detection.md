@@ -1,16 +1,6 @@
 ---
 title: 异常检测
 category: machine-learning
-keywords:
-  - anomaly detection
-  - outlier detection
-  - isolation forest
-  - LOF
-  - one-class SVM
-  - autoencoder
-  - VAE
-  - GAN
-  - 离群点检测
 difficulty: intermediate
 duration: 1-2周
 summary: 从数据中识别"不正常"的样本，广泛应用于欺诈检测、工业质检、运维监控、医疗诊断等场景。
@@ -24,6 +14,16 @@ relatedIntel:
   - 112-rl-basics
   - 116-recommender-systems
   - 122-federated-learning
+tags:
+  - anomaly detection
+  - outlier detection
+  - isolation forest
+  - lof
+  - one-class SVM
+  - autoencoder
+  - vae
+  - gan
+  - 离群点检测
 ---
 
 ## 为什么你要学它

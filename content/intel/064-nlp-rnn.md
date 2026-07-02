@@ -1,13 +1,6 @@
 ---
 title: RNN 循环神经网络
 category: nlp
-keywords:
-  - rnn
-  - lstm
-  - gru
-  - sequence-modeling
-  - backpropagation-through-time
-  - vanishing-gradient
 difficulty: intermediate
 duration: 1-2周
 summary: RNN 是处理序列数据的基石，通过隐藏状态在时间步之间传递信息。理解它能帮你搞懂为什么需要 LSTM/GRU，以及它们如何解决梯度消失问题。
@@ -19,8 +12,14 @@ takeaways:
 relatedIntel:
   - 115-tts-speech-synthesis
   - 119-knowledge-graph
-relatedNodes:
-  - nlp-rnn
+relatedNodes: nlp-rnn
+tags:
+  - rnn
+  - lstm
+  - gru
+  - sequence-modeling
+  - backpropagation-through-time
+  - vanishing-gradient
 ---
 
 ## 为什么你要学它

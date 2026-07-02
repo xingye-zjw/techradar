@@ -1,14 +1,6 @@
 ---
 title: 操作系统原理
 category: cs
-keywords:
-  - operating-system
-  - process
-  - thread
-  - memory-management
-  - filesystem
-  - scheduling
-  - synchronization
 difficulty: intermediate
 duration: 3周
 summary: 理解操作系统如何管理硬件资源：进程线程、内存管理、文件系统、IO调度，为系统级编程和性能优化打下基础
@@ -22,8 +14,15 @@ relatedIntel:
   - 050-cs-algo
   - 075-cs-network
   - 076-cs-database
-relatedNodes:
-  - cs-os
+relatedNodes: cs-os
+tags:
+  - operating-system
+  - process
+  - thread
+  - memory-management
+  - filesystem
+  - scheduling
+  - synchronization
 ---
 
 ## 为什么你要学它

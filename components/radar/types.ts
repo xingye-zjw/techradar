@@ -49,7 +49,7 @@ export interface DailyTask {
 }
 
 /** 技术方向 */
-export type TrackId = "cv" | "nlp" | "devops" | "math" | "project" | "cs" | "embedded" | "electronics" | "signals" | "control" | "electrical";
+export type TrackId = "cv" | "nlp" | "llm" | "devops" | "math" | "project" | "cs" | "embedded" | "electronics" | "signals" | "control" | "electrical";
 
 export interface Track {
   id: TrackId;
@@ -114,7 +114,14 @@ export const ROADMAP_TRACKS: Track[] = [
     name: "自然语言处理",
     color: "text-violet-400",
     borderColor: "border-violet-400",
-    description: "从 RNN 到 Transformer / LLM，掌握文本生成与理解",
+    description: "从 RNN 到 Transformer，掌握文本分类、序列标注等 NLP 基础",
+  },
+  {
+    id: "llm",
+    name: "大语言模型",
+    color: "text-fuchsia-400",
+    borderColor: "border-fuchsia-400",
+    description: "从预训练到 RAG / Agent，掌握 LLM 全栈应用与部署",
   },
   {
     id: "devops",

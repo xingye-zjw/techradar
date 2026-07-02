@@ -1,15 +1,6 @@
 ---
 title: AutoML 自动机器学习
 category: machine-learning
-keywords:
-  - automl
-  - 超参数优化
-  - 神经架构搜索
-  - nas
-  - 贝叶斯优化
-  - autogluon
-  - optuna
-  - 特征工程
 difficulty: intermediate
 duration: 1-2周
 summary: 用自动化方法替代人工调参和模型选择，让机器学习从"手艺活"变成"流水线"。掌握AutoML能让你用1/10的时间得到更好的模型。
@@ -22,6 +13,15 @@ relatedIntel:
   - 112-rl-basics
   - 116-recommender-systems
   - 118-anomaly-detection
+tags:
+  - automl
+  - 超参数优化
+  - 神经架构搜索
+  - nas
+  - 贝叶斯优化
+  - autogluon
+  - optuna
+  - 特征工程
 ---
 
 ## 为什么你要学它

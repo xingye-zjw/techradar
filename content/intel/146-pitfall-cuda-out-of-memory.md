@@ -1,11 +1,6 @@
 ---
 title: 显存不足 (CUDA out of memory)
 category: deep-learning
-keywords:
-  - OOM
-  - 显存
-  - 训练
-  - LLM
 difficulty: intermediate
 duration: 30分钟
 summary: 训练或推理时 GPU 显存不足导致程序崩溃，是深度学习开发中最常见的运行时错误。通常发生在 batch_size 过大、模型参数量超过显卡容量、或显存未正确释放时。
@@ -17,6 +12,10 @@ takeaways:
 tags:
   - 踩坑
   - 避坑指南
+  - oom
+  - 显存
+  - 训练
+  - llm
 ---
 
 ## 为什么你要学它

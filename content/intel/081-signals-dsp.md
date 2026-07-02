@@ -1,17 +1,6 @@
 ---
 title: 数字信号处理
 category: embedded
-keywords:
-  - DSP
-  - 数字信号处理
-  - FFT
-  - 数字滤波器
-  - 采样定理
-  - DFT
-  - IIR
-  - FIR
-  - 多采样率
-  - 量化
 difficulty: intermediate
 duration: 3-4周
 summary: 理解数字信号处理的核心原理。掌握FFT、数字滤波器设计、采样定理等关键技能。
@@ -24,6 +13,17 @@ relatedIntel:
   - 052-embedded-c
   - 053-embedded-rtos
   - 054-elec-circuit
+tags:
+  - dsp
+  - 数字信号处理
+  - fft
+  - 数字滤波器
+  - 采样定理
+  - dft
+  - iir
+  - fir
+  - 多采样率
+  - 量化
 ---
 
 ## 为什么你要学它

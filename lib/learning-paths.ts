@@ -5,7 +5,7 @@ export interface LearningPath {
   nodes: string[];          // 节点 ID 列表
   duration: string;         // 总时长
   difficulty: 'beginner' | 'intermediate' | 'advanced';
-  category: 'cv' | 'nlp' | 'devops' | 'math';
+  category: 'cv' | 'nlp' | 'llm' | 'devops' | 'math';
 }
 
 export const LEARNING_PATHS: LearningPath[] = [
@@ -21,19 +21,19 @@ export const LEARNING_PATHS: LearningPath[] = [
   {
     id: 'nlp-path',
     name: '自然语言处理路径',
-    description: '从零开始学习自然语言处理，掌握 Transformer、BERT 等核心技术',
-    nodes: ['linux-basic', 'git-github', 'docker-basic', 'math-linear-algebra', 'math-probability', 'pytorch-core', 'nlp-transformer'],
-    duration: '10 周',
+    description: '从零开始学习自然语言处理，掌握词向量、序列模型、Transformer、机器翻译等核心技术',
+    nodes: ['linux-basic', 'git-github', 'docker-basic', 'math-linear-algebra', 'math-probability', 'pytorch-core', 'nlp-word-embeddings', 'nlp-sentiment-analysis', 'nlp-rnn', 'nlp-sequence-labeling', 'nlp-transformer', 'nlp-machine-translation'],
+    duration: '16 周',
     difficulty: 'intermediate',
     category: 'nlp',
   },
   {
     id: 'devops-path',
-    name: '工程部署路径',
-    description: '从零开始学习工程部署，掌握 Linux、Git、Docker 等核心工具',
-    nodes: ['linux-basic', 'git-github', 'docker-basic'],
-    duration: '6 周',
-    difficulty: 'beginner',
+    name: 'DevOps 路径',
+    description: '从零开始学习 DevOps，掌握 Docker、Kubernetes、CI/CD、监控告警等核心技能',
+    nodes: ['linux-basic', 'git-github', 'docker-basic', 'docker-network', 'docker-advanced', 'devops-cicd', 'devops-kubernetes', 'devops-prometheus', 'devops-monitoring', 'devops-mlops'],
+    duration: '12 周',
+    difficulty: 'intermediate',
     category: 'devops',
   },
   {
@@ -44,6 +44,15 @@ export const LEARNING_PATHS: LearningPath[] = [
     duration: '4 周',
     difficulty: 'beginner',
     category: 'math',
+  },
+  {
+    id: 'llm-path',
+    name: '大语言模型路径',
+    description: '从零开始学习大语言模型，掌握预训练、微调、RAG、Agent 等核心技术',
+    nodes: ['linux-basic', 'git-github', 'docker-basic', 'math-linear-algebra', 'math-probability', 'pytorch-core', 'nlp-transformer', 'llm-fundamentals', 'llm-finetune', 'llm-rag', 'llm-agent', 'llm-inference'],
+    duration: '16 周',
+    difficulty: 'advanced',
+    category: 'llm',
   },
 ];
 

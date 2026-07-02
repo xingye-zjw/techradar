@@ -1,13 +1,6 @@
 ---
 title: MLflow 实验追踪平台
 category: devops
-keywords:
-  - mlflow
-  - experiment tracking
-  - pytorch
-  - autolog
-  - model registry
-  - hyperparameter
 difficulty: intermediate
 duration: 1周
 summary: 一次把参数、metrics、模型都录下来，以后回头看"这次到底改了什么为什么这么好"不再抓瞎
@@ -23,8 +16,14 @@ relatedIntel:
   - 007-docker
   - 008-git
   - 009-linux
-relatedNodes:
-  - electrical-safety
+relatedNodes: electrical-safety
+tags:
+  - mlflow
+  - experiment tracking
+  - pytorch
+  - autolog
+  - model registry
+  - hyperparameter
 ---
 
 ## 为什么你要学它

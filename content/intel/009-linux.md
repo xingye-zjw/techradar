@@ -1,15 +1,6 @@
 ---
 title: Linux 系统基础
 category: devops
-keywords:
-  - linux
-  - bash
-  - shell
-  - terminal
-  - ssh
-  - nvidia
-  - permissions
-  - process
 difficulty: beginner
 duration: 2-3周
 summary: 深度学习训练几乎都在 Linux 服务器上进行，不会 Linux 就没法跑大规模模型、没法做远程开发与部署
@@ -25,6 +16,15 @@ relatedIntel:
 relatedNodes:
   - linux-basic
   - electrical-safety
+tags:
+  - linux
+  - bash
+  - shell
+  - terminal
+  - ssh
+  - nvidia
+  - permissions
+  - process
 ---
 
 ## 为什么你要学它

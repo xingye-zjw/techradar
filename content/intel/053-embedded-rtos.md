@@ -1,14 +1,6 @@
 ---
 title: FreeRTOS实时操作系统
 category: embedded
-keywords:
-  - freertos
-  - rtos
-  - task-scheduling
-  - semaphore
-  - queue
-  - interrupt
-  - real-time
 difficulty: intermediate
 duration: 3周
 summary: FreeRTOS是最流行的开源实时操作系统，学习任务调度、信号量、消息队列、内存管理等核心机制，理解实时系统的确定性要求
@@ -25,8 +17,15 @@ relatedIntel:
   - 052-embedded-c
   - 054-elec-circuit
   - 055-elec-signals
-relatedNodes:
-  - embedded-rtos
+relatedNodes: embedded-rtos
+tags:
+  - freertos
+  - rtos
+  - task-scheduling
+  - semaphore
+  - queue
+  - interrupt
+  - real-time
 ---
 
 ## 为什么你要学它

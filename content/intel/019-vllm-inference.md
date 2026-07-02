@@ -1,13 +1,6 @@
 ---
 title: vLLM 推理引擎与 PagedAttention
 category: devops
-keywords:
-  - vllm
-  - pagedattention
-  - kv cache
-  - inference optimization
-  - batch inference
-  - quantization
 difficulty: advanced
 duration: 1-2周
 summary: 通过 PagedAttention 和连续批处理突破 LLM 推理的显存墙，把 GPU 利用率从 30% 拉到 80%+
@@ -22,8 +15,14 @@ relatedIntel:
   - 008-git
   - 009-linux
 relatedNodes: electrical-safety
-relatedTools:
+relatedTools: vllm
+tags:
   - vllm
+  - pagedattention
+  - kv cache
+  - inference optimization
+  - batch inference
+  - quantization
 ---
 
 ## 为什么你要学它

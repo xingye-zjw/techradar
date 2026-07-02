@@ -1,14 +1,6 @@
 ---
 title: 信号与系统基础
 category: embedded
-keywords:
-  - signal
-  - system
-  - linear-time-invariant
-  - laplace-transform
-  - z-transform
-  - frequency-domain
-  - convolution
 difficulty: beginner
 duration: 2-3周
 summary: 电子、控制、通信的共同基础。理解信号怎么被系统处理、怎么在频域里分析，是所有硬件和通信工程师的必备内功。
@@ -21,8 +13,15 @@ relatedIntel:
   - 052-embedded-c
   - 053-embedded-rtos
   - 054-elec-circuit
-relatedNodes:
-  - elec-signals
+relatedNodes: elec-signals
+tags:
+  - signal
+  - system
+  - linear-time-invariant
+  - laplace-transform
+  - z-transform
+  - frequency-domain
+  - convolution
 ---
 
 ## 为什么你要学它

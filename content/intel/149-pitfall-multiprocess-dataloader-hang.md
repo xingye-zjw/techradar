@@ -1,10 +1,6 @@
 ---
 title: 多进程 DataLoader (num_workers > 0) 卡死
 category: deep-learning
-keywords:
-  - DataLoader
-  - 多进程
-  - Windows
 difficulty: intermediate
 duration: 30分钟
 summary: 设置 num_workers > 0 后程序卡死无响应，这是 Windows 用户的高频问题。根本原因是 Windows 的多进程启动方式与 Linux 不同，需要特殊处理。
@@ -16,6 +12,9 @@ takeaways:
 tags:
   - 踩坑
   - 避坑指南
+  - dataloader
+  - 多进程
+  - windows
 ---
 
 ## 为什么你要学它

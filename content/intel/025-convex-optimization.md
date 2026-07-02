@@ -1,14 +1,6 @@
 ---
 title: 凸优化理论基础
 category: math
-keywords:
-  - convex optimization
-  - gradient descent
-  - adam
-  - sgd
-  - lagrangian
-  - kkt
-  - regularization
 difficulty: advanced
 duration: 1周
 summary: 梯度下降不是玄学——理解它的收敛性证明，才能真正用好学习率调度和优化器选择
@@ -22,8 +14,15 @@ relatedIntel:
   - 024-information-theory
   - 072-math-linear-algebra
   - 073-math-probability
-relatedNodes:
-  - math-optimization
+relatedNodes: math-optimization
+tags:
+  - convex optimization
+  - gradient descent
+  - adam
+  - sgd
+  - lagrangian
+  - kkt
+  - regularization
 ---
 
 ## 为什么你要学它

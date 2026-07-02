@@ -2,7 +2,7 @@
 
 // ============ 路线图 Track 颜色定义 ============
 
-export type TrackId = "cv" | "nlp" | "devops" | "math" | "project" | "cs" | "embedded" | "electronics" | "signals" | "control" | "electrical";
+export type TrackId = "cv" | "nlp" | "llm" | "devops" | "math" | "project" | "cs" | "embedded" | "electronics" | "signals" | "control" | "electrical";
 
 export interface TrackColors {
   text: string;           // 文本颜色类 e.g. "text-sky-400"
@@ -32,6 +32,15 @@ export const TRACK_COLORS: Record<TrackId, TrackColors> = {
     swimlane: "rgba(167, 139, 250, 0.06)",
     swimlaneBorder: "rgba(167, 139, 250, 0.15)",
     label: "NLP",
+  },
+  llm: {
+    text: "text-fuchsia-400",
+    bg: "bg-fuchsia-400/10",
+    border: "border-fuchsia-400/30",
+    solid: "bg-fuchsia-400",
+    swimlane: "rgba(232, 121, 249, 0.06)",
+    swimlaneBorder: "rgba(232, 121, 249, 0.15)",
+    label: "LLM",
   },
   devops: {
     text: "text-sky-400",

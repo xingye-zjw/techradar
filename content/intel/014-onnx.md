@@ -1,13 +1,6 @@
 ---
 title: ONNX 跨框架模型部署
 category: devops
-keywords:
-  - onnx
-  - onnxruntime
-  - model export
-  - inference
-  - deployment
-  - opset
 difficulty: intermediate
 duration: 1-2周
 summary: 把训练好的 PyTorch 模型打包成通用格式，让你在任意设备和语言里都能拿到更快的推理速度
@@ -21,8 +14,14 @@ relatedIntel:
   - 007-docker
   - 008-git
   - 009-linux
-relatedNodes:
-  - electrical-safety
+relatedNodes: electrical-safety
+tags:
+  - onnx
+  - onnxruntime
+  - model export
+  - inference
+  - deployment
+  - opset
 ---
 
 ## 为什么你要学它

@@ -1,17 +1,6 @@
 ---
 title: Arduino 嵌入式开发
 category: embedded
-keywords:
-  - arduino
-  - microcontroller
-  - gpio
-  - pwm
-  - uart
-  - i2c
-  - spi
-  - sensor-interface
-  - embedded
-  - prototyping
 difficulty: beginner
 duration: 1-2周
 summary: 电子创客和快速原型开发的最佳起点，用几行代码就能控制硬件、读取传感器、执行器驱动。
@@ -24,6 +13,17 @@ relatedIntel:
   - 052-embedded-c
   - 053-embedded-rtos
   - 054-elec-circuit
+tags:
+  - arduino
+  - microcontroller
+  - gpio
+  - pwm
+  - uart
+  - i2c
+  - spi
+  - sensor-interface
+  - embedded
+  - prototyping
 ---
 
 ## 为什么你要学它

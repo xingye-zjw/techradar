@@ -1,13 +1,6 @@
 ---
 title: 分布式训练：多 GPU 甚至多机器并行
 category: devops
-keywords:
-  - distributed training
-  - data parallel
-  - model parallel
-  - ddp
-  - deepspeed
-  - zero redundancy optimizer
 difficulty: advanced
 duration: 1-2周
 summary: 单卡不够用？分布式训练把计算和显存分摊到多 GPU，让千亿参数模型在数百张 GPU 上训练
@@ -20,8 +13,14 @@ relatedIntel:
   - 007-docker
   - 008-git
   - 009-linux
-relatedNodes:
-  - electrical-safety
+relatedNodes: electrical-safety
+tags:
+  - distributed training
+  - data parallel
+  - model parallel
+  - ddp
+  - deepspeed
+  - zero redundancy optimizer
 ---
 
 ## 为什么你要学它

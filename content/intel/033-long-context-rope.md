@@ -1,13 +1,6 @@
 ---
 title: 长上下文推理：RoPE 与 YARN
 category: llm
-keywords:
-  - long context
-  - rope
-  - yarn
-  - context window
-  - position encoding
-  - flashattention
 difficulty: advanced
 duration: 1周
 summary: 32k → 128k → 1M token，长上下文不是「加内存」而是「改编码」——RoPE 的缩放与扩展技术
@@ -22,7 +15,14 @@ relatedIntel:
   - 015-rlhf
 relatedNodes:
   - llm-finetune
-  - nlp-llm-inference
+  - llm-inference
+tags:
+  - long context
+  - rope
+  - yarn
+  - context window
+  - position encoding
+  - flashattention
 ---
 
 ## 为什么你要学它

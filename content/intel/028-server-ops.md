@@ -1,14 +1,6 @@
 ---
 title: 服务器运维基础与 Linux 环境管理
 category: devops
-keywords:
-  - linux
-  - systemd
-  - ssh
-  - nginx
-  - bash
-  - cron
-  - firewall
 difficulty: intermediate
 duration: 1-2周
 summary: 模型能训练 ≠ 服务能上线——Linux 系统管理、网络配置、进程守护是工程化的基本功
@@ -21,8 +13,15 @@ relatedIntel:
   - 007-docker
   - 008-git
   - 009-linux
-relatedNodes:
-  - electrical-safety
+relatedNodes: electrical-safety
+tags:
+  - linux
+  - systemd
+  - ssh
+  - nginx
+  - bash
+  - cron
+  - firewall
 ---
 
 ## 为什么你要学它

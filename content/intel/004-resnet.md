@@ -1,13 +1,6 @@
 ---
 title: ResNet 残差网络
 category: computer-vision
-keywords:
-  - resnet
-  - residual connection
-  - skip connection
-  - cnn
-  - deep network
-  - image classification
 difficulty: intermediate
 duration: 1-2周
 summary: 通过 shortcut 让超深网络可训练，把深度从几十层推到上百层，是现代视觉模型的核心构件之一
@@ -20,6 +13,13 @@ relatedIntel:
   - 002-yolo
   - 006-cnn-basics
   - 060-cv-instance-segmentation
+tags:
+  - resnet
+  - residual connection
+  - skip connection
+  - cnn
+  - deep network
+  - image classification
 ---
 
 ## 为什么你要学它

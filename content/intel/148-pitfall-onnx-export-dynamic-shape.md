@@ -1,11 +1,6 @@
 ---
 title: ONNX 导出失败 / 动态 shape
 category: devops
-keywords:
-  - ONNX
-  - 导出
-  - 部署
-  - 推理加速
 difficulty: intermediate
 duration: 30分钟
 summary: 使用 torch.onnx.export 导出模型时遇到 shape 不匹配或算子不支持的错误，导出成功后推理结果与 PyTorch 不一致。动态输入 shape 场景尤其容易出问题。
@@ -17,6 +12,10 @@ takeaways:
 tags:
   - 踩坑
   - 避坑指南
+  - onnx
+  - 导出
+  - 部署
+  - 推理加速
 ---
 
 ## 为什么你要学它

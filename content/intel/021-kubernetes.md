@@ -1,15 +1,6 @@
 ---
 title: Kubernetes 容器编排入门
 category: devops
-keywords:
-  - kubernetes
-  - k8s
-  - pod
-  - deployment
-  - service
-  - helm
-  - hpa
-  - gpu scheduling
 difficulty: intermediate
 duration: 2-3周
 summary: Docker 把应用打包，K8s 把应用运行——服务治理、扩缩容、滚动更新全部自动化
@@ -27,6 +18,15 @@ relatedIntel:
 relatedNodes:
   - electrical-safety
   - devops-kubernetes
+tags:
+  - kubernetes
+  - k8s
+  - pod
+  - deployment
+  - service
+  - helm
+  - hpa
+  - gpu scheduling
 ---
 
 ## 为什么你要学它

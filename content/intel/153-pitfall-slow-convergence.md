@@ -1,11 +1,6 @@
 ---
 title: 模型训练收敛慢 / 几乎不收敛
 category: deep-learning
-keywords:
-  - 收敛
-  - 训练
-  - 学习率
-  - 数据质量
 difficulty: intermediate
 duration: 30分钟
 summary: Loss 下降极慢或完全不下降，训练多个 epoch 后模型仍无明显改善。通常与学习率设置、数据质量、或模型架构选择有关。
@@ -17,6 +12,10 @@ takeaways:
 tags:
   - 踩坑
   - 避坑指南
+  - 收敛
+  - 训练
+  - 学习率
+  - 数据质量
 ---
 
 ## 为什么你要学它

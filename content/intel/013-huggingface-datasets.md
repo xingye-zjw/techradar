@@ -1,12 +1,6 @@
 ---
 title: Hugging Face Datasets 数据集库
 category: data-processing
-keywords:
-  - datasets
-  - huggingface
-  - dataloader
-  - arrow
-  - parquet
 difficulty: beginner
 duration: 1周
 summary: 一行代码加载公开数据集，底层用 Apache Arrow 列式存储，比自己解析 CSV/JSON 快 5~10 倍
@@ -19,6 +13,12 @@ relatedIntel:
   - 010-numpy-pandas
   - 023-data-pipeline-etl
   - 040-data-annotation
+tags:
+  - datasets
+  - huggingface
+  - dataloader
+  - arrow
+  - parquet
 ---
 
 ## 为什么你要学它

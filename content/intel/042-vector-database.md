@@ -1,13 +1,6 @@
 ---
 title: 向量数据库：从原理到实践
 category: devops
-keywords:
-  - vector database
-  - embedding
-  - similarity search
-  - chromadb
-  - milvus
-  - faiss
 difficulty: intermediate
 duration: 1周
 summary: RAG 的核心是向量检索——向量数据库让「语义相似」变成可查询的索引
@@ -23,8 +16,14 @@ relatedIntel:
   - 007-docker
   - 008-git
   - 009-linux
-relatedNodes:
-  - electrical-safety
+relatedNodes: electrical-safety
+tags:
+  - vector database
+  - embedding
+  - similarity search
+  - chromadb
+  - milvus
+  - faiss
 ---
 
 ## 为什么你要学它

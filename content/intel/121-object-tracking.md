@@ -1,20 +1,6 @@
 ---
 title: 目标跟踪技术
 category: computer-vision
-keywords:
-  - object tracking
-  - 目标跟踪
-  - SOT
-  - MOT
-  - SiamFC
-  - SiamRPN
-  - SiamMask
-  - TransT
-  - SORT
-  - DeepSORT
-  - ByteTrack
-  - KCF
-  - MOSSE
 difficulty: intermediate
 duration: 2-3周
 summary: 计算机视觉核心任务之一，在视频中持续定位并跟踪一个或多个目标。是自动驾驶、视频监控、人机交互等应用的关键技术。
@@ -29,6 +15,20 @@ relatedIntel:
   - 002-yolo
   - 004-resnet
   - 006-cnn-basics
+tags:
+  - object tracking
+  - 目标跟踪
+  - sot
+  - mot
+  - siamfc
+  - siamrpn
+  - siammask
+  - transt
+  - sort
+  - deepsort
+  - bytetrack
+  - kcf
+  - mosse
 ---
 
 ## 为什么你要学它

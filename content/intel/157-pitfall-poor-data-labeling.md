@@ -1,10 +1,6 @@
 ---
 title: 数据标注质量差导致模型无法收敛
 category: data-processing
-keywords:
-  - 数据标注
-  - 数据质量
-  - 收敛
 difficulty: intermediate
 duration: 30分钟
 summary: 训练数据标注质量差导致模型无法学习到正确的特征，表现为 Loss 不下降或类别预测偏向错误方向。数据质量是模型性能的天花板。
@@ -16,6 +12,9 @@ takeaways:
 tags:
   - 踩坑
   - 避坑指南
+  - 数据标注
+  - 数据质量
+  - 收敛
 ---
 
 ## 为什么你要学它

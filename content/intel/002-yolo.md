@@ -1,15 +1,6 @@
 ---
 title: YOLO 目标检测
 category: computer-vision
-keywords:
-  - yolo
-  - object detection
-  - cnn
-  - ultralytics
-  - bounding box
-  - mAP
-  - nms
-  - anchor-free
 difficulty: intermediate
 duration: 2-3周
 summary: 单阶段端到端目标检测方案，看一张图一次前向传播就定位所有物体，是工业界实时检测的首选
@@ -22,8 +13,16 @@ relatedIntel:
   - 004-resnet
   - 006-cnn-basics
   - 060-cv-instance-segmentation
-relatedNodes:
-  - cv-detection
+relatedNodes: cv-detection
+tags:
+  - yolo
+  - object detection
+  - cnn
+  - ultralytics
+  - bounding box
+  - map
+  - nms
+  - anchor-free
 ---
 
 ## 为什么你要学它

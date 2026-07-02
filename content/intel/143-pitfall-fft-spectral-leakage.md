@@ -1,11 +1,6 @@
 ---
 title: 傅里叶变换频谱泄漏
 category: embedded
-keywords:
-  - FFT
-  - 频谱分析
-  - 信号处理
-  - 窗函数
 difficulty: intermediate
 duration: 30分钟
 summary: 对非周期信号做FFT时，频谱能量泄漏到相邻频率 bin，导致频谱分析结果不准确。
@@ -17,6 +12,10 @@ takeaways:
 tags:
   - 踩坑
   - 避坑指南
+  - fft
+  - 频谱分析
+  - 信号处理
+  - 窗函数
 ---
 
 ## 为什么你要学它

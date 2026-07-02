@@ -1,13 +1,6 @@
 ---
 title: LLM 微调技术全景：从 SFT 到 LoRA
 category: llm
-keywords:
-  - fine-tuning
-  - sft
-  - lora
-  - qlora
-  - peft
-  - adapter
 difficulty: intermediate
 duration: 1周
 summary: 全量微调太贵？LoRA 用 0.1% 的参数达到 95% 的效果——微调技术的性价比革命
@@ -22,7 +15,14 @@ relatedIntel:
   - 015-rlhf
 relatedNodes:
   - llm-finetune
-  - nlp-llm-inference
+  - llm-inference
+tags:
+  - fine-tuning
+  - sft
+  - lora
+  - qlora
+  - peft
+  - adapter
 ---
 
 ## 为什么你要学它

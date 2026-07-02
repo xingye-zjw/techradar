@@ -1,10 +1,6 @@
 ---
 title: Git 合并冲突处理不当导致代码丢失
 category: best-practices
-keywords:
-  - Git
-  - 协作
-  - 版本控制
 difficulty: intermediate
 duration: 30分钟
 summary: 多人协作开发时，git merge 冲突处理不当导致本地修改被覆盖或代码丢失。这是团队协作中最常见的版本控制问题。
@@ -16,6 +12,9 @@ takeaways:
 tags:
   - 踩坑
   - 避坑指南
+  - git
+  - 协作
+  - 版本控制
 ---
 
 ## 为什么你要学它

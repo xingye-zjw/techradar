@@ -1,15 +1,6 @@
 ---
 title: Electric Power Systems 电力系统基础
 category: embedded
-keywords:
-  - power-system
-  - ac-dc
-  - three-phase
-  - transformer
-  - power-grid
-  - transmission-line
-  - load-flow
-  - fault-analysis
 difficulty: intermediate
 duration: 1-2周
 summary: 电力系统是现代文明的血管。理解它才能搞懂电网调度、新能源并网、电力电子变换器的底层逻辑。
@@ -22,8 +13,16 @@ relatedIntel:
   - 052-embedded-c
   - 053-embedded-rtos
   - 054-elec-circuit
-relatedNodes:
-  - electrical-power
+relatedNodes: electrical-power
+tags:
+  - power-system
+  - ac-dc
+  - three-phase
+  - transformer
+  - power-grid
+  - transmission-line
+  - load-flow
+  - fault-analysis
 ---
 
 ## 为什么你要学它

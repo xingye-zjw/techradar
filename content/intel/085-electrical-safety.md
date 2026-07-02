@@ -1,12 +1,6 @@
 ---
 title: 电气安全规范
 category: embedded
-keywords:
-  - 电气安全
-  - 接地
-  - 漏电保护
-  - 安全规范
-  - 防护措施
 difficulty: beginner
 duration: 1-2周
 summary: 理解电气安全的核心规范。掌握接地保护、漏电保护、安全操作等关键知识。
@@ -19,6 +13,12 @@ relatedIntel:
   - 052-embedded-c
   - 053-embedded-rtos
   - 054-elec-circuit
+tags:
+  - 电气安全
+  - 接地
+  - 漏电保护
+  - 安全规范
+  - 防护措施
 ---
 
 ## 为什么你要学它

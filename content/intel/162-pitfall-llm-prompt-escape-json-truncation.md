@@ -1,11 +1,6 @@
 ---
 title: 大模型 Prompt 转义字符错误导致 JSON 输出截断
 category: llm
-keywords:
-  - LLM
-  - Prompt
-  - JSON
-  - 字符串转义
 difficulty: intermediate
 duration: 30分钟
 summary: 大语言模型输出的 JSON 在中途被截断或解析失败，通常是 Prompt 中的特殊字符未正确转义所致。这在需要结构化输出的 LLM 应用中非常常见。
@@ -17,6 +12,10 @@ takeaways:
 tags:
   - 踩坑
   - 避坑指南
+  - llm
+  - prompt
+  - json
+  - 字符串转义
 ---
 
 ## 为什么你要学它

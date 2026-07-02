@@ -1,11 +1,6 @@
 ---
 title: H桥驱动电机时的直通短路
 category: embedded
-keywords:
-  - H桥
-  - 电机驱动
-  - 短路
-  - MOSFET
 difficulty: intermediate
 duration: 30分钟
 summary: H桥驱动电机时，同一桥臂上下两个开关管同时导通导致电源短路，产生极大电流烧毁器件。
@@ -17,6 +12,10 @@ takeaways:
 tags:
   - 踩坑
   - 避坑指南
+  - H桥
+  - 电机驱动
+  - 短路
+  - mosfet
 ---
 
 ## 为什么你要学它

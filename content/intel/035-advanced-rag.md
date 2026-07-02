@@ -1,13 +1,6 @@
 ---
 title: RAG 系统进阶：从 Naive RAG 到 Advanced RAG
 category: llm
-keywords:
-  - rag
-  - retrieval
-  - reranker
-  - hyde
-  - contextual chunking
-  - knowledge graph rag
 difficulty: intermediate
 duration: 1周
 summary: Naive RAG 的天花板在哪里？Advanced RAG 如何通过 Query 改写、重排序、知识图谱突破它
@@ -22,7 +15,14 @@ relatedIntel:
   - 015-rlhf
 relatedNodes:
   - llm-finetune
-  - nlp-llm-inference
+  - llm-inference
+tags:
+  - rag
+  - retrieval
+  - reranker
+  - hyde
+  - contextual chunking
+  - knowledge graph rag
 ---
 
 ## 为什么你要学它

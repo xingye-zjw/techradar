@@ -1,20 +1,6 @@
 ---
 title: CV OCR（光学字符识别）
 category: computer-vision
-keywords:
-  - ocr
-  - text-recognition
-  - text-detection
-  - crnn
-  - tr
-  - easyocr
-  - paddleocr
-  - 文本检测
-  - 文本识别
-  - ctpn
-  - dbnet
-  - rosetta
-  - tr大眼睛
 difficulty: intermediate
 duration: 1-2周
 summary: OCR 让计算机能"读懂"图像中的文字，是文档数字化、车牌识别、身份证识别的核心技术。
@@ -28,6 +14,20 @@ relatedIntel:
   - 002-yolo
   - 004-resnet
   - 006-cnn-basics
+tags:
+  - ocr
+  - text-recognition
+  - text-detection
+  - crnn
+  - tr
+  - easyocr
+  - paddleocr
+  - 文本检测
+  - 文本识别
+  - ctpn
+  - dbnet
+  - rosetta
+  - tr大眼睛
 ---
 
 ## 为什么你要学它

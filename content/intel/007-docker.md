@@ -1,15 +1,6 @@
 ---
 title: Docker 容器化部署
 category: devops
-keywords:
-  - docker
-  - container
-  - dockerfile
-  - image
-  - volume
-  - compose
-  - gpu
-  - nvidia-docker
 difficulty: beginner
 duration: 1-2周
 summary: 把应用（含 Python 环境、CUDA、系统库）打包成可在任何 Linux/Windows/Mac 上运行的镜像，一次构建，到处运行
@@ -26,6 +17,15 @@ relatedIntel:
 relatedNodes:
   - electrical-safety
   - docker-basic
+tags:
+  - docker
+  - container
+  - dockerfile
+  - image
+  - volume
+  - compose
+  - gpu
+  - nvidia-docker
 ---
 
 ## 为什么你要学它

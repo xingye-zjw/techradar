@@ -1,13 +1,6 @@
 ---
 title: PCB设计基础
 category: embedded
-keywords:
-  - PCB设计
-  - 电路板
-  - 布线
-  - EMI
-  - Altium Designer
-  - 信号完整性
 difficulty: intermediate
 duration: 3-4周
 summary: 理解PCB设计的核心原理。掌握原理图绘制、PCB布局布线、信号完整性等关键技能。
@@ -20,8 +13,14 @@ relatedIntel:
   - 052-embedded-c
   - 053-embedded-rtos
   - 054-elec-circuit
-relatedNodes:
-  - elec-pcb
+relatedNodes: elec-pcb
+tags:
+  - PCB设计
+  - 电路板
+  - 布线
+  - emi
+  - Altium Designer
+  - 信号完整性
 ---
 
 ## 为什么你要学它

@@ -1,13 +1,6 @@
 ---
 title: Mixture of Experts (MoE) 混合专家模型
 category: llm
-keywords:
-  - mixture of experts
-  - moe
-  - sparse activation
-  - expert routing
-  - deepseek
-  - mixtral
 difficulty: advanced
 duration: 1周
 summary: 不是把模型做大，而是把模型「拆开」——每次只激活一小部分专家，参数量翻倍但推理成本几乎不变
@@ -22,7 +15,14 @@ relatedIntel:
   - 015-rlhf
 relatedNodes:
   - llm-finetune
-  - nlp-llm-inference
+  - llm-inference
+tags:
+  - mixture of experts
+  - moe
+  - sparse activation
+  - expert routing
+  - deepseek
+  - mixtral
 ---
 
 ## 为什么你要学它

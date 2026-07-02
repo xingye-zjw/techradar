@@ -1,14 +1,6 @@
 ---
 title: 算法与数据结构
 category: cs
-keywords:
-  - algorithm
-  - data-structure
-  - complexity
-  - big-o
-  - sorting
-  - graph
-  - dynamic-programming
 difficulty: beginner
 duration: 4周
 summary: 计算机科学的核心基础，掌握常用算法设计思路、时间空间复杂度分析、以及各类数据结构的应用场景
@@ -24,8 +16,15 @@ relatedIntel:
   - 051-cs-os
   - 075-cs-network
   - 076-cs-database
-relatedNodes:
-  - cs-algo
+relatedNodes: cs-algo
+tags:
+  - algorithm
+  - data-structure
+  - complexity
+  - big-o
+  - sorting
+  - graph
+  - dynamic-programming
 ---
 
 ## 为什么你要学它

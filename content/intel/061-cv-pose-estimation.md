@@ -1,17 +1,6 @@
 ---
 title: CV 姿态估计
 category: computer-vision
-keywords:
-  - pose-estimation
-  - keypoint-detection
-  - top-down
-  - bottom-up
-  - human-pose
-  - action-recognition
-  - hrnet
-  - openpose
-  - alphapose
-  - mmpose
 difficulty: intermediate
 duration: 1-2周
 summary: 姿态估计是让计算机"看懂人体动作"的基础技术，通过检测人体关键点（头、肩、肘、腕等）来理解人的姿势和动作意图。
@@ -25,6 +14,17 @@ relatedIntel:
   - 002-yolo
   - 004-resnet
   - 006-cnn-basics
+tags:
+  - pose-estimation
+  - keypoint-detection
+  - top-down
+  - bottom-up
+  - human-pose
+  - action-recognition
+  - hrnet
+  - openpose
+  - alphapose
+  - mmpose
 ---
 
 ## 为什么你要学它

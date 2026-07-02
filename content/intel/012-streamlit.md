@@ -1,12 +1,6 @@
 ---
 title: Streamlit 快速构建 AI 可视化界面
 category: devops
-keywords:
-  - streamlit
-  - web ui
-  - demo
-  - visualization
-  - interactive
 difficulty: beginner
 duration: 1周
 summary: 只用 Python 就能把模型变成带滑块/图片/图表的交互式网页，是 AI demo 的第一生产力
@@ -20,8 +14,13 @@ relatedIntel:
   - 007-docker
   - 008-git
   - 009-linux
-relatedNodes:
-  - electrical-safety
+relatedNodes: electrical-safety
+tags:
+  - streamlit
+  - web ui
+  - demo
+  - visualization
+  - interactive
 ---
 
 ## 为什么你要学它

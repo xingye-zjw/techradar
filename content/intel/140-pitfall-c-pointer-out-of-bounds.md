@@ -1,11 +1,6 @@
 ---
 title: C语言指针越界访问导致段错误
 category: embedded
-keywords:
-  - C语言
-  - 指针
-  - 内存安全
-  - 嵌入式
 difficulty: intermediate
 duration: 30分钟
 summary: C语言中指针越界访问是最常见的运行时错误，会导致段错误（Segmentation Fault）或数据损坏。在嵌入式系统中，这类错误可能导致系统崩溃或硬件损坏。
@@ -17,6 +12,10 @@ takeaways:
 tags:
   - 踩坑
   - 避坑指南
+  - C语言
+  - 指针
+  - 内存安全
+  - 嵌入式
 ---
 
 ## 为什么你要学它

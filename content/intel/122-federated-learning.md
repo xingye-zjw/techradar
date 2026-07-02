@@ -1,16 +1,6 @@
 ---
 title: 联邦学习
 category: machine-learning
-keywords:
-  - federated learning
-  - fedavg
-  - 隐私计算
-  - 差分隐私
-  - 同态加密
-  - non-iid
-  - flower
-  - fedml
-  - fate
 difficulty: intermediate
 duration: 2-3周
 summary: 数据不出本地、模型共享的分布式机器学习范式。解决数据孤岛与隐私保护的核心技术，金融、医疗、IoT 等场景刚需。
@@ -23,6 +13,16 @@ relatedIntel:
   - 112-rl-basics
   - 116-recommender-systems
   - 118-anomaly-detection
+tags:
+  - federated learning
+  - fedavg
+  - 隐私计算
+  - 差分隐私
+  - 同态加密
+  - non-iid
+  - flower
+  - fedml
+  - fate
 ---
 
 ## 为什么你要学它

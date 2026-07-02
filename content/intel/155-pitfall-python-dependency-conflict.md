@@ -1,10 +1,6 @@
 ---
 title: Python 环境依赖冲突导致 import 失败
 category: devops
-keywords:
-  - Python
-  - 环境配置
-  - 依赖管理
 difficulty: intermediate
 duration: 30分钟
 summary: Python 项目依赖包版本冲突导致 import 失败或运行时崩溃。不同项目需要不同版本的同一包是常见问题，尤其在 CUDA/cuDNN 相关包上。
@@ -16,6 +12,9 @@ takeaways:
 tags:
   - 踩坑
   - 避坑指南
+  - python
+  - 环境配置
+  - 依赖管理
 ---
 
 ## 为什么你要学它
