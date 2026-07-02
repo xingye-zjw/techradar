@@ -16,6 +16,14 @@ takeaways:
   - 能解释 PPO 中 KL 惩罚项存在的意义，以及 reward hacking 的风险
   - 知道 DPO 为什么比 PPO 更简单，以及两者在数学上的等价关系
   - 能用 TRL / Axolotl 等库跑通一次最小化的对齐实验
+relatedTerms: rlhf
+relatedIntel:
+  - 003-lora-qlora
+  - 005-rag
+  - 020-prompt-engineering
+relatedNodes:
+  - llm-finetune
+  - nlp-llm-inference
 ---
 
 ## 为什么你要学它

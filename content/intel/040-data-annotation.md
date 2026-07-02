@@ -1,6 +1,6 @@
 ---
 title: 数据标注与主动学习
-category: data-engineering
+category: data-processing
 keywords:
   - data annotation
   - active learning
@@ -15,6 +15,11 @@ takeaways:
   - 能用 Label Studio 搭建标注平台
   - 理解主动学习的核心思想：不确定性采样
   - 能设计一个标注-训练-主动学习的闭环 Pipeline
+relatedTools: label-studio
+relatedIntel:
+  - 010-numpy-pandas
+  - 013-huggingface-datasets
+  - 023-data-pipeline-etl
 ---
 
 ## 为什么你要学它

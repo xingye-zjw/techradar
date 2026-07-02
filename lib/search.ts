@@ -3,6 +3,7 @@ import path from "node:path";
 import matter from "gray-matter";
 import { FULL_ROADMAP } from "./roadmap-data";
 import { getAllProjects } from "./practice";
+import { getAllPitfalls } from "./pitfall";
 
 /**
  * 统一搜索索引项
@@ -29,14 +30,7 @@ interface ToolJsonItem {
   category?: string;
 }
 
-/** 踩坑 JSON 数据结构 */
-interface PitfallJsonItem {
-  title: string;
-  symptoms: string[];
-  solution: string[];
-  tags?: string[];
-  category?: string;
-}
+
 
 // ============================================================
 // 路由节点数据提取
@@ -118,22 +112,15 @@ function getToolSearchItems(): UnifiedSearchItem[] {
 // 踩坑数据提取
 // ============================================================
 function getPitfallSearchItems(): UnifiedSearchItem[] {
-  const pitfallsPath = path.join(process.cwd(), "content", "pitfall", "pitfalls.json");
+  const pitfalls = getAllPitfalls();
 
-  if (!fs.existsSync(pitfallsPath)) {
-    return [];
-  }
-
-  const raw = fs.readFileSync(pitfallsPath, "utf8");
-  const data = JSON.parse(raw);
-
-  return (data || []).map((pitfall: PitfallJsonItem, index: number) => ({
-    id: `pitfall-${index}`,
+  return pitfalls.map((pitfall) => ({
+    id: `pitfall-${pitfall.slug}`,
     title: pitfall.title,
-    content: `${pitfall.symptoms.join(" ")} ${pitfall.solution.join(" ")}`,
+    content: `${pitfall.symptoms.join(" ")} ${pitfall.solution.join(" ")} ${pitfall.description}`,
     type: "pitfall" as const,
     typeLabel: "踩坑",
-    url: `/pitfall`,
+    url: `/intel/${pitfall.slug}`,
     tags: pitfall.tags || [],
     category: pitfall.category || "",
   }));

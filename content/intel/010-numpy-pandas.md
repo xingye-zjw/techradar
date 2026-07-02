@@ -1,6 +1,6 @@
 ---
 title: NumPy / Pandas 数据处理
-category: data-engineering
+category: data-processing
 keywords:
   - numpy
   - pandas
@@ -17,6 +17,13 @@ takeaways:
   - 理解广播机制，能正确写出无需显式循环的向量化代码
   - 用 Pandas 读写 CSV/Excel，处理缺失值、去重、分组聚合、合并连接
   - 能把清洗后的数据对接成 PyTorch Dataset/DataLoader 训练管道
+relatedTools:
+  - pandas
+  - numpy
+relatedIntel:
+  - 013-huggingface-datasets
+  - 023-data-pipeline-etl
+  - 040-data-annotation
 ---
 
 ## 为什么你要学它

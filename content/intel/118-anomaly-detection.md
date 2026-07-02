@@ -20,6 +20,10 @@ takeaways:
   - 了解深度学习方法（Autoencoder、VAE、GAN）在异常检测中的应用
   - 能用 sklearn 和 PyOD 在真实数据集上跑通异常检测全流程
   - 明白类别不平衡问题对评估指标的影响，正确选择 Precision/Recall/F1/ROC-AUC/PR-AUC
+relatedIntel:
+  - 112-rl-basics
+  - 116-recommender-systems
+  - 122-federated-learning
 ---
 
 ## 为什么你要学它

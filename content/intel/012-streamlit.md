@@ -1,6 +1,6 @@
 ---
 title: Streamlit 快速构建 AI 可视化界面
-category: tools
+category: devops
 keywords:
   - streamlit
   - web ui
@@ -15,6 +15,13 @@ takeaways:
   - 理解 Session State 原理与写法，能在多次 rerun 之间保存状态
   - 会用 st.sidebar / st.columns / st.expander 做布局，能快速搭建 YOLO 风格检测 Demo
   - 知道 @st.cache_data / @st.cache_resource 的使用场景，避免重复加载大模型
+relatedTools: streamlit
+relatedIntel:
+  - 007-docker
+  - 008-git
+  - 009-linux
+relatedNodes:
+  - electrical-safety
 ---
 
 ## 为什么你要学它

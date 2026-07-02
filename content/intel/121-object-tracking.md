@@ -25,6 +25,10 @@ takeaways:
   - 了解Transformer在目标跟踪中的应用(TransT/MixFormer)及优势
   - 掌握多目标跟踪核心算法(SORT/DeepSORT/ByteTrack)的数据关联逻辑
   - 能用SiamMask和ByteTrack跑通完整的跟踪demo
+relatedIntel:
+  - 002-yolo
+  - 004-resnet
+  - 006-cnn-basics
 ---
 
 ## 为什么你要学它

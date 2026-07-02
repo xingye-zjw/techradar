@@ -19,6 +19,10 @@ takeaways:
   - 理解感受野与层次化特征提取（边缘 → 纹理 → 物体 → 场景）
   - 读懂 LeNet → AlexNet → VGG → GoogLeNet 的演进脉络
   - 能用 PyTorch 手写一个两层 CNN，在 MNIST 上训练到 99%+ 准确率
+relatedIntel:
+  - 002-yolo
+  - 004-resnet
+  - 060-cv-instance-segmentation
 ---
 
 ## 为什么你要学它

@@ -1,6 +1,6 @@
 ---
 title: 多模态大模型：从 CLIP 到 GPT-4V
-category: llm-fundamentals
+category: llm
 keywords:
   - multimodal
   - clip
@@ -16,6 +16,13 @@ takeaways:
   - 理解 LLaVA / GPT-4V 的架构：Vision Encoder + Projector + LLM
   - 能用 LLaVA 或类似模型做图文混合推理
   - 能解释为什么多模态模型需要「对齐训练」
+relatedIntel:
+  - 003-lora-qlora
+  - 005-rag
+  - 015-rlhf
+relatedNodes:
+  - llm-finetune
+  - nlp-llm-inference
 ---
 
 ## 为什么你要学它

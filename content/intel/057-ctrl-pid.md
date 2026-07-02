@@ -1,6 +1,6 @@
 ---
 title: 自动控制原理
-category: control
+category: embedded
 keywords:
   - control
   - pid
@@ -17,6 +17,12 @@ takeaways:
   - 掌握PID控制器原理
   - 能分析系统稳定性
   - 能设计简单的控制器
+relatedIntel:
+  - 052-embedded-c
+  - 053-embedded-rtos
+  - 054-elec-circuit
+relatedNodes:
+  - ctrl-pid
 ---
 
 ## 为什么你要学它

@@ -17,6 +17,10 @@ takeaways:
   - 掌握 GCN 的核心公式 H^(l+1) = σ(D^(-1/2)ÂD^(-1/2)H^(l)W^(l))，理解对称归一化的意义
   - 搞懂消息传递范式：每个节点聚合邻居信息→更新自身表示，这是所有 GNN 的通用框架
   - 能用 PyTorch Geometric 实现节点分类、链路预测、图分类三类典型任务
+relatedTools: pytorch-geometric
+relatedIntel:
+  - 001-transformer
+  - 011-pytorch
 ---
 
 ## 为什么你要学它

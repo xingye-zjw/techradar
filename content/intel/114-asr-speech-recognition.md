@@ -1,6 +1,6 @@
 ---
 title: 语音识别（ASR）
-category: speech-processing
+category: speech
 keywords:
   - asr
   - speech recognition
@@ -19,6 +19,8 @@ takeaways:
   - 理解 Whisper 为什么能成为工业界标配，以及它的架构设计
   - 用 Whisper 跑通一个完整的语音识别 demo，计算 WER 评估效果
   - 知道中文语音识别的特殊挑战（声调、方言、同音字）
+relatedTools:
+  - whisper
 ---
 
 ## 为什么你要学它

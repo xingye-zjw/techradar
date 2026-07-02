@@ -1,6 +1,6 @@
 ---
 title: 模型评估指标详解
-category: evaluation
+category: devops
 keywords:
   - map
   - iou
@@ -18,6 +18,12 @@ takeaways:
   - 会解释 IoU 和 mAP@0.5 / mAP@0.5:0.95 的区别，并手写 IoU 代码
   - 会用 sklearn 计算混淆矩阵、P/R/F1、AUC-ROC
   - 知道 BLEU / ROUGE / Perplexity 的直觉，并能在生成任务里算一遍
+relatedIntel:
+  - 007-docker
+  - 008-git
+  - 009-linux
+relatedNodes:
+  - electrical-safety
 ---
 
 ## 为什么你要学它

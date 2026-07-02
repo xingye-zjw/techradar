@@ -1,6 +1,6 @@
 ---
 title: Prometheus + Grafana 监控体系
-category: infrastructure
+category: devops
 keywords:
   - prometheus
   - grafana
@@ -16,6 +16,16 @@ takeaways:
   - 能为 FastAPI 服务添加 /metrics 端点并用 PromQL 查询
   - 能用 Grafana 构建 AI 推理服务的监控仪表盘
   - 能配置 Prometheus 告警规则并接入 Alertmanager 通知
+relatedTerms: prometheus
+relatedTools:
+  - prometheus
+  - grafana
+relatedIntel:
+  - 007-docker
+  - 008-git
+  - 009-linux
+relatedNodes:
+  - electrical-safety
 ---
 
 ## 为什么你要学它

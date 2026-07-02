@@ -1,6 +1,6 @@
 ---
 title: 通信原理
-category: signals
+category: embedded
 keywords:
   - modulation
   - demodulation
@@ -17,6 +17,12 @@ takeaways:
   - 掌握调制解调原理
   - 理解信道编码技术
   - 理解OFDM和多址接入技术
+relatedIntel:
+  - 052-embedded-c
+  - 053-embedded-rtos
+  - 054-elec-circuit
+relatedNodes:
+  - signals-comm
 ---
 
 ## 为什么你要学它

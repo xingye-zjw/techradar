@@ -17,6 +17,16 @@ takeaways:
   - 理解抢占式调度和优先级反转
   - 能用信号量和队列实现任务间通信
   - 掌握中断管理和内存分配策略
+relatedTerms:
+  - rtos
+  - operating-system
+relatedTools: freertos
+relatedIntel:
+  - 052-embedded-c
+  - 054-elec-circuit
+  - 055-elec-signals
+relatedNodes:
+  - embedded-rtos
 ---
 
 ## 为什么你要学它

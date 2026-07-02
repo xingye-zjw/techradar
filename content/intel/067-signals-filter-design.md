@@ -1,6 +1,6 @@
 ---
 title: 滤波器设计
-category: signals
+category: embedded
 keywords:
   - filter-design
   - iir
@@ -23,6 +23,10 @@ takeaways:
   - 能用 scipy.signal 一行代码设计出满足规格的低通/高通/带通滤波器
   - 理解窗函数法设计 FIR 的原理，知道怎么选窗函数
   - 能画出频率响应图，验证滤波器是否满足规格
+relatedIntel:
+  - 052-embedded-c
+  - 053-embedded-rtos
+  - 054-elec-circuit
 ---
 
 ## 为什么你要学它

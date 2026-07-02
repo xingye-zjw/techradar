@@ -1,6 +1,6 @@
 ---
 title: 代码生成：Code LLM 与自动化编程
-category: llm-application
+category: llm
 keywords:
   - code generation
   - copilot
@@ -15,6 +15,13 @@ takeaways:
   - 能用 Code LLM 自动生成单元测试和代码补全
   - 能用 Code Interpreter（沙盒 Python）做数据分析
   - 能设计 Code Review Agent 自动审查代码质量
+relatedIntel:
+  - 003-lora-qlora
+  - 005-rag
+  - 015-rlhf
+relatedNodes:
+  - llm-finetune
+  - nlp-llm-inference
 ---
 
 ## 为什么你要学它

@@ -20,6 +20,11 @@ takeaways:
   - 掌握 HRNet、OpenPose、AlphaPose 等主流模型的设计思想
   - 能用 mmpose 或 AlphaPose 在真实图像上跑通姿态估计流程
   - 理解姿态估计在动作识别、安防监控、人机交互等场景的实际价值
+relatedTerms: pose-estimation
+relatedIntel:
+  - 002-yolo
+  - 004-resnet
+  - 006-cnn-basics
 ---
 
 ## 为什么你要学它

@@ -1,6 +1,6 @@
 ---
 title: 电子元件基础
-category: electronics
+category: embedded
 keywords:
   - resistor
   - capacitor
@@ -18,6 +18,10 @@ takeaways:
   - 理解二极管的单向导通性及三极管/MOS管的放大与开关原理
   - 能看懂常见原理图符号，并独立搭建分压、滤波、放大电路
   - 用万用表、示波器实测电路波形，验证理论分析
+relatedIntel:
+  - 052-embedded-c
+  - 053-embedded-rtos
+  - 054-elec-circuit
 ---
 
 ## 为什么你要学它

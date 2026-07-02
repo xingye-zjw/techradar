@@ -1,6 +1,6 @@
 ---
 title: 安全与隐私：LLM 应用的红线
-category: llm-application
+category: llm
 keywords:
   - llm security
   - prompt injection
@@ -15,6 +15,13 @@ takeaways:
   - 理解数据泄露风险（训练数据记忆 / 上下文泄露）
   - 能用 PII 检测和脱敏工具保护敏感信息
   - 理解模型提取攻击和防御（API 调用限制）
+relatedIntel:
+  - 003-lora-qlora
+  - 005-rag
+  - 015-rlhf
+relatedNodes:
+  - llm-finetune
+  - nlp-llm-inference
 ---
 
 ## 为什么你要学它

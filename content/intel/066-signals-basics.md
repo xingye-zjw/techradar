@@ -1,6 +1,6 @@
 ---
 title: 信号与系统基础
-category: signals
+category: embedded
 keywords:
   - signal
   - system
@@ -17,6 +17,12 @@ takeaways:
   - 理解 LTI 系统为什么"卷积走天下"——任何 LTI 系统的输出都是输入与冲激响应的卷积
   - 能说出傅里叶、拉普拉斯、Z 变换各自的应用场景和区别
   - 用 Python scipy/numpy 完整实现一个信号-filter-频谱分析的流程
+relatedIntel:
+  - 052-embedded-c
+  - 053-embedded-rtos
+  - 054-elec-circuit
+relatedNodes:
+  - elec-signals
 ---
 
 ## 为什么你要学它

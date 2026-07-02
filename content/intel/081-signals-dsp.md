@@ -1,6 +1,6 @@
 ---
 title: 数字信号处理
-category: signals
+category: embedded
 keywords:
   - DSP
   - 数字信号处理
@@ -20,6 +20,10 @@ takeaways:
   - 掌握DFT和FFT算法
   - 理解IIR和FIR滤波器设计
   - 能用Python实现信号处理
+relatedIntel:
+  - 052-embedded-c
+  - 053-embedded-rtos
+  - 054-elec-circuit
 ---
 
 ## 为什么你要学它

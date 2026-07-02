@@ -1,6 +1,6 @@
 ---
 title: LLM 微调技术全景：从 SFT 到 LoRA
-category: llm-fundamentals
+category: llm
 keywords:
   - fine-tuning
   - sft
@@ -16,6 +16,13 @@ takeaways:
   - 理解 LoRA 的数学原理：低秩分解
   - 能用 PEFT 库实现 LoRA 微调
   - 理解 QLoRA（4-bit + LoRA）的显存优化
+relatedIntel:
+  - 003-lora-qlora
+  - 005-rag
+  - 015-rlhf
+relatedNodes:
+  - llm-finetune
+  - nlp-llm-inference
 ---
 
 ## 为什么你要学它

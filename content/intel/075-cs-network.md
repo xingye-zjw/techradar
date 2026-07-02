@@ -16,6 +16,12 @@ takeaways:
   - 掌握TCP三次握手四次挥手
   - 理解HTTP/HTTPS协议工作原理
   - 能进行网络问题排查和性能优化
+relatedIntel:
+  - 050-cs-algo
+  - 051-cs-os
+  - 076-cs-database
+relatedNodes:
+  - cs-network
 ---
 
 ## 为什么你要学它

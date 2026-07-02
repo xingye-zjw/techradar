@@ -1,6 +1,6 @@
 ---
 title: 状态空间控制理论
-category: control
+category: embedded
 keywords:
   - state-space
   - controllability
@@ -18,6 +18,10 @@ takeaways:
   - 掌握能控性/能观性判据，知道什么情况下状态反馈和观测器设计是可行的
   - 能用极点配置或 LQR 设计状态反馈控制器
   - 理解卡尔曼滤波如何在噪声环境下最优估计不可直接测量的状态
+relatedIntel:
+  - 052-embedded-c
+  - 053-embedded-rtos
+  - 054-elec-circuit
 ---
 
 ## 为什么你要学它

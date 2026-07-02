@@ -1,6 +1,6 @@
 ---
 title: 无线通信原理
-category: signals
+category: embedded
 keywords:
   - 无线通信
   - 调制解调
@@ -18,6 +18,12 @@ takeaways:
   - 掌握调制解调技术
   - 理解天线设计基础
   - 了解WiFi、蓝牙等无线协议
+relatedIntel:
+  - 052-embedded-c
+  - 053-embedded-rtos
+  - 054-elec-circuit
+relatedNodes:
+  - signals-comm
 ---
 
 ## 为什么你要学它

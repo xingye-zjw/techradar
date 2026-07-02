@@ -1,6 +1,6 @@
 ---
 title: Prompt Engineering 提示工程与 Agent 设计
-category: llm-application
+category: llm
 keywords:
   - prompt engineering
   - chain-of-thought
@@ -16,6 +16,14 @@ takeaways:
   - 能用 Chain-of-Thought 显著提升复杂推理任务准确率
   - 能用 Function Calling 让 LLM 调用外部工具
   - 能设计一个基本的 ReAct Agent
+relatedIntel:
+  - 003-lora-qlora
+  - 005-rag
+  - 015-rlhf
+relatedNodes:
+  - llm-finetune
+  - nlp-llm-inference
+  - nlp-prompt-engineering
 ---
 
 ## 为什么你要学它

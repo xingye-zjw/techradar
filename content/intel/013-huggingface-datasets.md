@@ -1,6 +1,6 @@
 ---
 title: Hugging Face Datasets 数据集库
-category: data-engineering
+category: data-processing
 keywords:
   - datasets
   - huggingface
@@ -15,6 +15,10 @@ takeaways:
   - 理解 Arrow 列式存储与内存映射的好处，知道 Dataset / DatasetDict 的区别
   - 能用 dataset.map(batched=True, num_proc=4) 做高效批量预处理与 tokenize
   - 能把 Dataset 对接成 PyTorch DataLoader，跑通 end-to-end 训练 pipeline
+relatedIntel:
+  - 010-numpy-pandas
+  - 023-data-pipeline-etl
+  - 040-data-annotation
 ---
 
 ## 为什么你要学它

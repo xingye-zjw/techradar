@@ -19,6 +19,10 @@ takeaways:
   - 掌握 FedAvg 算法流程：客户端本地训练→上传参数→服务器聚合→下发更新
   - 明白通信效率优化（客户端采样、模型压缩、增量更新）和隐私保护（DP、HE、MPC）的技术思路
   - 用 Flower 框架跑通一个完整的联邦图像分类实验，感受 Non-IID 数据对模型性能的影响
+relatedIntel:
+  - 112-rl-basics
+  - 116-recommender-systems
+  - 118-anomaly-detection
 ---
 
 ## 为什么你要学它

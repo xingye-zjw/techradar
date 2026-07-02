@@ -1,6 +1,6 @@
 ---
 title: 模型评估与基准测试
-category: training
+category: devops
 keywords:
   - model evaluation
   - benchmark
@@ -16,6 +16,12 @@ takeaways:
   - 能用 lm-evaluation-harness 跑标准评测
   - 理解 Perplexity 作为语言模型核心指标的意义
   - 能设计领域特定的评测集
+relatedIntel:
+  - 007-docker
+  - 008-git
+  - 009-linux
+relatedNodes:
+  - electrical-safety
 ---
 
 ## 为什么你要学它

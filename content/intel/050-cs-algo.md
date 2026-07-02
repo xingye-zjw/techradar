@@ -17,6 +17,15 @@ takeaways:
   - 掌握常见算法设计范式：分治、动态规划、贪心、回溯
   - 能用数据结构解决实际问题，选择最优方案
   - 理解算法在AI系统中的应用：搜索、优化、图神经网络
+relatedTerms:
+  - algorithm
+  - data-structure
+relatedIntel:
+  - 051-cs-os
+  - 075-cs-network
+  - 076-cs-database
+relatedNodes:
+  - cs-algo
 ---
 
 ## 为什么你要学它

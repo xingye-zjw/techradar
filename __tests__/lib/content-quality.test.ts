@@ -8,7 +8,12 @@ function readIntelFiles(): { name: string; content: string; frontmatter: Record<
   const intelDir = path.join(process.cwd(), 'content', 'intel');
   if (!fs.existsSync(intelDir)) return [];
 
-  const files = fs.readdirSync(intelDir).filter(f => f.endsWith('.md') && !f.includes('pitfall'));
+  const files = fs.readdirSync(intelDir).filter(f => {
+    if (!f.endsWith('.md')) return false;
+    // 排除所有 pitfall 类文件，它们有专门的踩坑质量测试
+    if (f.includes('pitfall')) return false;
+    return true;
+  });
   return files.map(name => {
     const raw = fs.readFileSync(path.join(intelDir, name), 'utf8');
     const { data: frontmatter, content } = matter(raw);
@@ -184,7 +189,68 @@ describe('踩坑内容质量', () => {
     prevention?: string[];
   }
 
-  const pitfalls = readJsonFile<PitfallEntry>('content/pitfall/pitfalls.json');
+  function readPitfallFromIntel(): PitfallEntry[] {
+    const intelDir = path.join(process.cwd(), 'content', 'intel');
+    if (!fs.existsSync(intelDir)) return [];
+
+    const files = fs.readdirSync(intelDir).filter(f => {
+      if (!f.endsWith('.md') || !f.includes('pitfall')) return false;
+      const match = f.match(/^(\d+)-/);
+      if (!match) return false;
+      const num = parseInt(match[1], 10);
+      return num >= 140;
+    });
+    return files.map(name => {
+      const raw = fs.readFileSync(path.join(intelDir, name), 'utf8');
+      const { data: frontmatter, content } = matter(raw);
+      const slug = name.replace(/\.md$/, '');
+
+      // 提取症状
+      const symptomsMatch = content.match(/###\s*🔑\s*典型症状\s*\n([\s\S]*?)(?=\n###|$)/);
+      const symptoms = symptomsMatch
+        ? symptomsMatch[1].split('\n').filter(l => l.trim().startsWith('-')).map(l => l.replace(/^-\s*[×x]\s*/, '').trim())
+        : [];
+
+      // 提取根因
+      const rootCauseMatch = content.match(/###\s*🔑\s*根本原因\s*\n([\s\S]*?)(?=\n###|$)/);
+      const root_cause = rootCauseMatch ? rootCauseMatch[1].trim() : '';
+
+      // 提取解决方案
+      const solutionMatch = content.match(/##\s*完整排查方案\s*\n([\s\S]*?)(?=\n###|$)/);
+      let solution: string[] = [];
+      if (solutionMatch) {
+        solution = solutionMatch[1]
+          .split('\n')
+          .filter(l => /^\d+\.\s/.test(l.trim()))
+          .map(l => l.replace(/^\d+\.\s*/, '').trim());
+      }
+
+      // 提取快速修复
+      const quickFixMatch = content.match(/>\s*\*\*快速修复：\*\*(.*?)(?:\n|$)/);
+      const quickFix = quickFixMatch ? quickFixMatch[1].trim() : '';
+
+      // 提取预防措施
+      const preventionMatch = content.match(/##\s*预防措施\s*\n([\s\S]*?)(?=\n##|$)/);
+      const prevention = preventionMatch
+        ? preventionMatch[1].split('\n').filter(l => l.trim().startsWith('- ')).map(l => l.replace(/^-\s*/, '').trim())
+        : [];
+
+      return {
+        title: String(frontmatter.title || slug),
+        slug,
+        category: String(frontmatter.category || ''),
+        description: String(frontmatter.summary || ''),
+        root_cause,
+        symptoms,
+        solution,
+        quickFix,
+        tags: Array.isArray(frontmatter.tags) ? frontmatter.tags : [],
+        prevention: prevention.length > 0 ? prevention : undefined,
+      };
+    });
+  }
+
+  const pitfalls = readPitfallFromIntel();
 
   it('应有足够的踩坑数量', () => {
     expect(pitfalls.length).toBeGreaterThanOrEqual(15);

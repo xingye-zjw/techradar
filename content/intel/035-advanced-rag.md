@@ -1,6 +1,6 @@
 ---
 title: RAG 系统进阶：从 Naive RAG 到 Advanced RAG
-category: llm-application
+category: llm
 keywords:
   - rag
   - retrieval
@@ -16,6 +16,13 @@ takeaways:
   - 能实现 Query 改写（HyDE）和上下文扩展
   - 能用 Cross-Encoder Reranker 提升 Top-k 准确率
   - 理解 Knowledge Graph RAG 的架构思路
+relatedIntel:
+  - 003-lora-qlora
+  - 005-rag
+  - 015-rlhf
+relatedNodes:
+  - llm-finetune
+  - nlp-llm-inference
 ---
 
 ## 为什么你要学它

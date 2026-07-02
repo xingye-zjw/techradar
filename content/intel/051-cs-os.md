@@ -17,6 +17,13 @@ takeaways:
   - 掌握内存管理基本原理，理解虚拟内存和页表
   - 理解文件系统与IO模型，掌握异步IO
   - 能分析系统性能瓶颈，优化资源使用
+relatedTerms: operating-system
+relatedIntel:
+  - 050-cs-algo
+  - 075-cs-network
+  - 076-cs-database
+relatedNodes:
+  - cs-os
 ---
 
 ## 为什么你要学它

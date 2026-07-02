@@ -16,6 +16,10 @@ takeaways:
   - 能手写 ResidualBlock，包括投影 shortcut 的维度匹配
   - 理解 Bottleneck 1×1 → 3×3 → 1×1 的参数量压缩思路
   - 能在 CIFAR-10 上训练一个 ResNet-20，对比有无残差的收敛差异
+relatedIntel:
+  - 002-yolo
+  - 006-cnn-basics
+  - 060-cv-instance-segmentation
 ---
 
 ## 为什么你要学它

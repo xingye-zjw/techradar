@@ -1,6 +1,6 @@
 ---
 title: RLHF：人类反馈强化学习
-category: llm-fundamentals
+category: llm
 keywords:
   - rlhf
   - reinforcement learning
@@ -16,6 +16,14 @@ takeaways:
   - 能解释 Reward Model 如何从人类偏好数据中学习
   - 能解释 PPO 算法在 RLHF 中的作用（避免大模型在 RL 阶段崩溃）
   - 理解 RLHF 与 SFT 的本质区别：不是教模型「说什么」，而是教模型「怎么说才算好」
+relatedTerms: rlhf
+relatedIntel:
+  - 003-lora-qlora
+  - 005-rag
+  - 015-rlhf
+relatedNodes:
+  - llm-finetune
+  - nlp-llm-inference
 ---
 
 ## 为什么你要学它

@@ -17,6 +17,10 @@ takeaways:
   - 理解 autograd 自动微分机制，会用 backward() 并在不需要梯度时用 torch.no_grad() / detach()
   - 能独立用 nn.Module 定义网络、组合子模块，写完整训练循环（train/eval/保存/恢复 checkpoint）
   - 会选择优化器、配置学习率调度与梯度裁剪，能排查 NaN loss、梯度消失/爆炸等常见问题
+relatedTools: pytorch
+relatedIntel:
+  - 001-transformer
+  - 113-gnn-basics
 ---
 
 ## 为什么你要学它

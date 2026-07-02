@@ -1,6 +1,6 @@
 ---
 title: CUDA 编程入门：让 GPU 为你加速
-category: infrastructure
+category: devops
 keywords:
   - cuda
   - gpu programming
@@ -16,6 +16,12 @@ takeaways:
   - 能写一个简单的 CUDA Kernel 并用 nvcc 编译
   - 理解 GPU 内存层级：Global / Shared / Register
   - 能用 nvprof / Nsight 定位 GPU 程序瓶颈
+relatedIntel:
+  - 007-docker
+  - 008-git
+  - 009-linux
+relatedNodes:
+  - electrical-safety
 ---
 
 ## 为什么你要学它

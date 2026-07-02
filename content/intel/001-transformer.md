@@ -16,6 +16,9 @@ takeaways:
   - 能在纸上画出 Encoder-Decoder 架构，说出每个模块输入输出长什么样
   - 明白为什么 Attention + 位置编码一起用才能解决序列问题
   - 用 PyTorch 写出一个最小可跑的 Transformer Encoder，在真实数据集上训练
+relatedIntel:
+  - 011-pytorch
+  - 113-gnn-basics
 ---
 
 ## 为什么你要学它

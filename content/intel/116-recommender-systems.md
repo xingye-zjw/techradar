@@ -20,6 +20,10 @@ takeaways:
   - 搞懂 Wide&Deep、DeepFM、DIN 等经典深度推荐模型的设计思想
   - 掌握冷启动、探索与利用（EE）、多目标优化等工业界核心问题
   - 能用 Precision@k、Recall@k、NDCG、MRR 等指标评估推荐效果
+relatedIntel:
+  - 112-rl-basics
+  - 118-anomaly-detection
+  - 122-federated-learning
 ---
 
 ## 为什么你要学它

@@ -23,6 +23,11 @@ takeaways:
   - 搞懂 CRNN + CTC 的原理，为什么适合变长序列识别
   - 能用 EasyOCR 或 PaddleOCR 在真实图片上跑出一个完整 OCR pipeline
   - 明白 Transformer OCR（如 TR、PARSeq）的核心改进点
+relatedTerms: ocr
+relatedIntel:
+  - 002-yolo
+  - 004-resnet
+  - 006-cnn-basics
 ---
 
 ## 为什么你要学它

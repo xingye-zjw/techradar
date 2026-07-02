@@ -121,7 +121,8 @@
         "自定义算子"
       ],
       "relatedIntel": [
-        "011-pytorch"
+        "011-pytorch",
+        "018-mlflow"
       ],
       "relatedNodes": [
         "pytorch-core"
@@ -179,7 +180,7 @@
     {
       "name": "Streamlit",
       "slug": "streamlit",
-      "category": "tools",
+      "category": "devops",
       "purpose": "纯 Python 构建交互式 Web 界面，无需前端知识，快速原型展示",
       "description": "Streamlit 是一个纯 Python 的交互式 Web 界面框架，无需任何前端开发知识即可快速构建数据应用。它提供了丰富的数据可视化图表和交互组件，支持 Session State 保持页面状态，并可一键部署到 Streamlit Cloud 免费公开访问。",
       "install": "pip install streamlit",
@@ -217,7 +218,7 @@
     {
       "name": "MLflow",
       "slug": "mlflow",
-      "category": "tools",
+      "category": "devops",
       "purpose": "开源 ML 生命周期管理平台，自动记录参数/指标/模型，支持超参搜索",
       "description": "MLflow 是一个开源的机器学习生命周期管理平台，能够自动记录 PyTorch、Keras、XGBoost 等框架的训练指标。它提供 Web UI 对比不同实验的参数与 Loss 曲线，支持 Model Registry 版本化管理，并可对接 PostgreSQL、S3 等生产级存储后端。",
       "install": "pip install mlflow",
@@ -254,7 +255,7 @@
     {
       "name": "Weights & Biases",
       "slug": "weights-and-biases",
-      "category": "tools",
+      "category": "devops",
       "purpose": "实验可视化 + 超参数 Sweep + 模型版本管理，团队协作友好",
       "description": "Weights & Biases (W&B) 是一个强大的实验可视化和管理平台，通过一条 wandb.init() 即可自动记录 Loss、指标和产出物。它支持 Sweep 超参数搜索（Bayesian/Grid/Random）、Artifacts 数据集与模型版本管理，以及多种数据类型可视化，是团队协作的理想选择。",
       "install": "pip install wandb",
@@ -289,7 +290,7 @@
     {
       "name": "DVC (Data Version Control)",
       "slug": "dvc",
-      "category": "tools",
+      "category": "devops",
       "purpose": "用 Git 的方式管理数据集和模型文件，支持大规模数据的版本控制与共享",
       "description": "DVC（Data Version Control）是一个用 Git 方式管理数据集和模型文件的工具，解决了大规模数据的版本控制与共享问题。它通过存储指针文件到 Git 而将实际内容存到远程存储，支持 dvc repro 自动检测变化并重新运行训练流程，与 Git 完全兼容。",
       "install": "pip install dvc",
@@ -369,7 +370,7 @@
     {
       "name": "Gradio",
       "slug": "gradio",
-      "category": "tools",
+      "category": "devops",
       "purpose": "专为机器学习设计的快速 Web 界面框架，比 Streamlit 更适合 AI 模型展示",
       "description": "Gradio 是专为机器学习设计的快速 Web 界面框架，比 Streamlit 更适合 AI 模型展示。它提供 chatbot、sketch、image、audio 等 AI 专属组件，内置分享链接生成功能，支持加载 Hugging Face Space，Blocks API 支持自定义复杂布局与交互。",
       "install": "pip install gradio",
@@ -406,7 +407,7 @@
     {
       "name": "Label Studio",
       "slug": "label-studio",
-      "category": "tools",
+      "category": "devops",
       "purpose": "多模态标注平台：图像检测框 / 文本 NER / 音频分段 / 视频",
       "description": "Label Studio 是一个功能强大的多模态数据标注平台，支持图像检测框、文本 NER、音频分段和视频标注等多种任务。它导出格式兼容 COCO、YOLO、Pascal VOC 等主流格式，支持自托管和多人协作，并可接入 ML 模型做预标注实现主动学习。",
       "install": "pip install label-studio && label-studio start",
@@ -433,7 +434,9 @@
         "主动学习",
         "标注质量控制"
       ],
-      "relatedIntel": [],
+      "relatedIntel": [
+        "040-data-annotation"
+      ],
       "relatedNodes": [
         "cv-detection"
       ],
@@ -445,7 +448,7 @@
     {
       "name": "pgvector + PostgreSQL",
       "slug": "pgvector",
-      "category": "tools",
+      "category": "devops",
       "purpose": "PostgreSQL 扩展，在 SQL 中直接做 KNN 向量检索，无需引入新组件",
       "description": "pgvector 是 PostgreSQL 的向量检索扩展，允许在 SQL 中直接执行 KNN 向量检索，无需引入新的数据库组件。它与现有 PostgreSQL 无缝融合，支持 HNSW 和 ivfflat 索引实现毫秒级查询，以及 Hybrid Search 实现 metadata filter + vector 的混合搜索。",
       "install": "CREATE EXTENSION vector;  pip install pgvector",
@@ -484,7 +487,7 @@
     {
       "name": "ONNX Runtime",
       "slug": "onnx-runtime",
-      "category": "tools",
+      "category": "devops",
       "purpose": "跨框架、高性能模型推理引擎，比原生框架快 1.5-3 倍",
       "description": "ONNX Runtime 是一个跨框架、高性能的模型推理引擎，通常比原生框架快 1.5-3 倍。它支持 PyTorch、TensorFlow、ONNX 等多种模型格式输入，提供 GPU 加速（CUDA/TensorRT/ROCm），并通过图优化技术（常量折叠/算子融合/内存规划）大幅提升推理性能。",
       "install": "pip install onnxruntime-gpu",
@@ -552,7 +555,9 @@
         "嵌入式固件编译",
         "交叉编译"
       ],
-      "relatedIntel": [],
+      "relatedIntel": [
+        "052-embedded-c"
+      ],
       "relatedNodes": [
         "embedded-c"
       ],
@@ -592,7 +597,9 @@
         "工业控制",
         "物联网设备"
       ],
-      "relatedIntel": [],
+      "relatedIntel": [
+        "053-embedded-rtos"
+      ],
       "relatedNodes": [
         "embedded-rtos"
       ],
@@ -605,7 +612,7 @@
     {
       "name": "LTspice",
       "slug": "ltspice",
-      "category": "electronics",
+      "category": "embedded",
       "purpose": "Analog Devices推出的免费电路仿真软件，用于模拟电路设计和分析",
       "description": "LTspice是Analog Devices推出的免费高性能电路仿真软件，支持SPICE仿真、瞬态分析、AC分析、DC扫描等。它内置了大量ADI和第三方元件模型，是电子工程师和学生学习模拟电路、验证电路设计的必备工具。LTspice的波形查看器功能强大，支持数学运算和FFT分析。",
       "install": "从Analog Devices官网免费下载",
@@ -645,7 +652,7 @@
     {
       "name": "MATLAB",
       "slug": "matlab",
-      "category": "signals",
+      "category": "embedded",
       "purpose": "MathWorks推出的科学计算和仿真平台，广泛用于信号处理、控制系统和通信仿真",
       "description": "MATLAB是MathWorks推出的高性能科学计算语言和交互式环境，在工程教育和工业研发中广泛使用。它的Signal Processing Toolbox提供滤波器设计、频谱分析等功能，Communications Toolbox支持调制解调、信道编码等通信系统仿真，Control System Toolbox用于控制系统分析和设计。",
       "install": "从MathWorks官网购买或申请学生版",
@@ -687,7 +694,7 @@
     {
       "name": "ROS2",
       "slug": "ros2",
-      "category": "control",
+      "category": "embedded",
       "purpose": "机器人操作系统第二代，提供机器人软件开发的标准框架和中间件",
       "description": "ROS2（Robot Operating System 2）是用于机器人软件开发的开源中间件，基于DDS（Data Distribution Service）实现分布式通信。它提供节点（Node）、话题（Topic）、服务（Service）、动作（Action）等核心概念，以及导航堆栈（Navigation2）、MoveIt2运动规划等高级功能。ROS2支持多种机器人平台，是学术研究和工业应用的标准选择。",
       "install": "sudo apt install ros-humble-desktop",
@@ -714,7 +721,9 @@
         "机械臂控制",
         "多机器人协调"
       ],
-      "relatedIntel": [],
+      "relatedIntel": [
+        "058-ctrl-ros"
+      ],
       "relatedNodes": [
         "ctrl-ros"
       ],
@@ -768,7 +777,7 @@
     {
       "name": "Dask",
       "slug": "dask",
-      "category": "tools",
+      "category": "devops",
       "purpose": "用纯 Python 代码实现 pandas / numpy / scikit-learn 的并行化，处理 TB 级数据",
       "description": "Dask 是一个用纯 Python 代码实现 pandas、numpy、scikit-learn 并行化的分布式计算框架，能够处理比单机内存大几个数量级的数据集。它提供 dask.array、dask.dataframe、dask.delayed 等透明并行化接口，与现有 Python API 几乎完全兼容，并可对接 Kubernetes、HPC、Yarn 集群。",
       "install": "pip install dask",
@@ -883,7 +892,7 @@
     {
       "name": "scikit-learn",
       "slug": "scikit-learn",
-      "category": "tools",
+      "category": "devops",
       "purpose": "经典机器学习算法的一站式实现，API 设计优雅，文档完善",
       "description": "scikit-learn 是 Python 中最流行的经典机器学习库，提供了从数据预处理到模型训练的完整工具链。它包含线性回归、决策树、随机森林、SVM、聚类等主流算法，支持 Pipeline 管道化处理和 GridSearchCV 网格搜索，文档丰富且 API 设计优雅一致。",
       "install": "pip install scikit-learn",
@@ -921,7 +930,7 @@
     {
       "name": "pandas",
       "slug": "pandas",
-      "category": "tools",
+      "category": "devops",
       "purpose": "Python 数据分析的核心库，DataFrame 表格操作神器",
       "description": "pandas 是 Python 数据分析的核心库，提供了强大的 DataFrame 数据结构用于表格数据操作。它支持数据读取（CSV/Excel/JSON/SQL）、清洗、转换、聚合和可视化，内置 groupby、pivot、merge 等 SQL 风格操作，并可与 NumPy、scikit-learn 无缝集成。",
       "install": "pip install pandas",
@@ -948,7 +957,9 @@
         "数据分析",
         "特征工程"
       ],
-      "relatedIntel": [],
+      "relatedIntel": [
+        "010-numpy-pandas"
+      ],
       "relatedNodes": [],
       "relatedTerms": [
         "dataframe",
@@ -959,7 +970,7 @@
     {
       "name": "NumPy",
       "slug": "numpy",
-      "category": "tools",
+      "category": "devops",
       "purpose": "Python 科学计算基础库，矩阵运算和数组操作的核心",
       "description": "NumPy 是 Python 科学计算的基础库，提供了高性能的多维数组对象 ndarray 和丰富的数学函数。它支持向量/矩阵运算、线性代数、傅里叶变换和随机数生成，是 pandas、scikit-learn、PyTorch 等库的底层依赖，是数据科学和机器学习的必备工具。",
       "install": "pip install numpy",
@@ -986,7 +997,9 @@
         "矩阵运算",
         "数据预处理"
       ],
-      "relatedIntel": [],
+      "relatedIntel": [
+        "010-numpy-pandas"
+      ],
       "relatedNodes": [
         "numpy-basics"
       ],
@@ -1027,7 +1040,8 @@
         "推荐系统"
       ],
       "relatedIntel": [
-        "005-rag"
+        "005-rag",
+        "042-vector-database"
       ],
       "relatedNodes": [],
       "relatedTerms": [
@@ -1067,7 +1081,8 @@
         "知识库"
       ],
       "relatedIntel": [
-        "005-rag"
+        "005-rag",
+        "042-vector-database"
       ],
       "relatedNodes": [],
       "relatedTerms": [
@@ -1079,7 +1094,7 @@
     {
       "name": "Jupyter Notebook",
       "slug": "jupyter",
-      "category": "tools",
+      "category": "devops",
       "purpose": "交互式编程和文档写作神器，代码、文本、图表一体化",
       "description": "Jupyter Notebook 是一个交互式编程环境，支持代码、文本、数学公式、图表和可视化的一体化展示。它支持 Python、R、Julia 等 40 多种编程语言，通过 nbconvert 可导出为 HTML/PDF/Markdown，是数据探索、教学演示和技术文档的理想工具。",
       "install": "pip install jupyter",
@@ -1223,7 +1238,9 @@
         "容器编排",
         "生产环境管理"
       ],
-      "relatedIntel": [],
+      "relatedIntel": [
+        "021-kubernetes"
+      ],
       "relatedNodes": [
         "cicd-basic"
       ],
@@ -1263,7 +1280,9 @@
         "应用监控",
         "告警管理"
       ],
-      "relatedIntel": [],
+      "relatedIntel": [
+        "022-prometheus-grafana"
+      ],
       "relatedNodes": [
         "cicd-basic"
       ],
@@ -1303,7 +1322,9 @@
         "数据可视化",
         "告警"
       ],
-      "relatedIntel": [],
+      "relatedIntel": [
+        "022-prometheus-grafana"
+      ],
       "relatedNodes": [
         "cicd-basic"
       ],
@@ -1316,7 +1337,7 @@
     {
       "name": "Git",
       "slug": "git",
-      "category": "tools",
+      "category": "devops",
       "purpose": "分布式版本控制系统，代码协作和版本管理的标准工具",
       "description": "Git 是分布式版本控制系统的事实标准，用于跟踪代码变更和团队协作。它支持分支管理（feature/hotfix/release）、代码合并和冲突解决，通过 GitHub/GitLab 等平台实现远程协作，是软件开发的必备工具。",
       "install": "sudo apt install git (Linux) 或从官网下载",
@@ -1343,7 +1364,9 @@
         "团队协作",
         "版本控制"
       ],
-      "relatedIntel": [],
+      "relatedIntel": [
+        "008-git"
+      ],
       "relatedNodes": [],
       "relatedTerms": [
         "git",
@@ -1354,7 +1377,7 @@
     {
       "name": "VS Code",
       "slug": "vscode",
-      "category": "tools",
+      "category": "devops",
       "purpose": "微软开源的轻量级代码编辑器，插件生态丰富，智能补全强大",
       "description": "VS Code 是微软开源的轻量级代码编辑器，具有强大的智能补全、代码导航和调试功能。它拥有丰富的插件生态（Python/TypeScript/Docker/Kubernetes），支持 Remote Development 在远程服务器开发，内置终端和 Git 集成，是开发者的首选编辑器。",
       "install": "从官网下载安装",
@@ -1539,7 +1562,9 @@
         "节点分类",
         "推荐系统"
       ],
-      "relatedIntel": [],
+      "relatedIntel": [
+        "113-gnn-basics"
+      ],
       "relatedNodes": [],
       "relatedTerms": [
         "gnn",
@@ -1550,7 +1575,7 @@
     {
       "name": "XGBoost",
       "slug": "xgboost",
-      "category": "tools",
+      "category": "devops",
       "purpose": "梯度提升决策树库，Kaggle 竞赛神器，工业界广泛使用",
       "description": "XGBoost 是梯度提升决策树（GBDT）的高效实现，以其出色的性能和稳定性在 Kaggle 竞赛中屡获冠军，被工业界广泛使用。它支持并行训练、缺失值自动处理和正则化（L1/L2），提供 Python/R/Java 多语言接口，并可与 scikit-learn 无缝集成。",
       "install": "pip install xgboost",
@@ -1588,7 +1613,7 @@
     {
       "name": "LightGBM",
       "slug": "lightgbm",
-      "category": "tools",
+      "category": "devops",
       "purpose": "微软开源的轻量级梯度提升框架，速度更快内存占用更低",
       "description": "LightGBM 是微软开源的轻量级梯度提升框架，采用直方图算法和 Leaf-wise 生长策略，速度比 XGBoost 更快且内存占用更低。它支持并行训练、类别特征自动处理和 GPU 加速，提供 Python/R/Java 多语言接口，是大规模数据场景的理想选择。",
       "install": "pip install lightgbm",
@@ -1621,6 +1646,393 @@
         "gbdt",
         "gradient-boosting",
         "lightgbm"
+      ]
+    },
+    {
+      "name": "Matplotlib",
+      "slug": "matplotlib",
+      "category": "data-processing",
+      "purpose": "Python 数据可视化基础库，支持折线图/柱状图/散点图/热力图等",
+      "description": "Matplotlib 是 Python 数据可视化的基础库，提供了丰富的图表类型（折线图/柱状图/散点图/热力图/3D图等）。它与 NumPy、pandas 无缝集成，支持自定义样式和导出多种格式（PNG/PDF/SVG），是数据分析和科学研究的必备工具。",
+      "install": "pip install matplotlib",
+      "features": [
+        "丰富的图表类型：折线/柱状/散点/热力图/3D图",
+        "与 NumPy/pandas 无缝集成",
+        "自定义样式和主题",
+        "导出 PNG/PDF/SVG 等多种格式"
+      ],
+      "tags": [
+        "可视化",
+        "图表",
+        "Python"
+      ],
+      "github": {
+        "stars": "19k",
+        "last_release": "2025-05",
+        "url": "https://github.com/matplotlib/matplotlib"
+      },
+      "difficulty": "beginner",
+      "official_url": "https://matplotlib.org/stable/contents.html",
+      "use_cases": [
+        "数据可视化",
+        "科研绘图",
+        "报表生成"
+      ],
+      "relatedIntel": [],
+      "relatedNodes": [],
+      "relatedTerms": [
+        "visualization",
+        "plot",
+        "chart"
+      ]
+    },
+    {
+      "name": "Plotly",
+      "slug": "plotly",
+      "category": "data-processing",
+      "purpose": "交互式可视化库，支持动态图表和 Dashboard 构建",
+      "description": "Plotly 是一个交互式可视化库，支持动态图表、3D可视化和 Dashboard 构建。它提供 Dash 框架用于构建交互式 Web 应用，支持 Python/R/JavaScript 多语言，可导出 HTML 在浏览器中交互查看，是数据展示和报表的理想工具。",
+      "install": "pip install plotly dash",
+      "features": [
+        "交互式图表：鼠标悬停显示数据、缩放、平移",
+        "Dash 框架构建交互式 Web Dashboard",
+        "支持 Python/R/JavaScript",
+        "导出 HTML 在浏览器中交互查看"
+      ],
+      "tags": [
+        "交互式",
+        "可视化",
+        "Dashboard"
+      ],
+      "github": {
+        "stars": "16k",
+        "last_release": "2025-06",
+        "url": "https://github.com/plotly/plotly.py"
+      },
+      "difficulty": "intermediate",
+      "official_url": "https://plotly.com/python/",
+      "use_cases": [
+        "交互式报表",
+        "Dashboard",
+        "数据探索"
+      ],
+      "relatedIntel": [],
+      "relatedNodes": [],
+      "relatedTerms": [
+        "dashboard",
+        "interactive",
+        "visualization"
+      ]
+    },
+    {
+      "name": "vLLM",
+      "slug": "vllm",
+      "category": "llm",
+      "purpose": "高性能 LLM 推理引擎，PagedAttention 技术实现高吞吐量",
+      "description": "vLLM 是一个高性能的大语言模型推理引擎，采用 PagedAttention 技术管理 KV Cache 内存，实现高吞吐量和低延迟。它支持连续批处理、张量并行和多 GPU 推理，提供 OpenAI 兼容的 API 接口，是 LLM 生产部署的首选引擎之一。",
+      "install": "pip install vllm",
+      "features": [
+        "PagedAttention 高效管理 KV Cache 内存",
+        "连续批处理提高吞吐量",
+        "张量并行和多 GPU 推理",
+        "OpenAI 兼容的 API 接口"
+      ],
+      "tags": [
+        "LLM",
+        "推理",
+        "高吞吐"
+      ],
+      "github": {
+        "stars": "30k",
+        "last_release": "2025-06",
+        "url": "https://github.com/vllm-project/vllm"
+      },
+      "difficulty": "advanced",
+      "official_url": "https://vllm.readthedocs.io",
+      "use_cases": [
+        "LLM 推理",
+        "API 服务",
+        "高并发部署"
+      ],
+      "relatedIntel": [
+        "019-vllm-inference",
+        "065-llm-inference-optimization"
+      ],
+      "relatedNodes": [],
+      "relatedTerms": [
+        "llm",
+        "inference",
+        "paged-attention"
+      ]
+    },
+    {
+      "name": "Triton Inference Server",
+      "slug": "triton-inference-server",
+      "category": "llm",
+      "purpose": "NVIDIA 推出的生产级推理服务器，支持多框架模型部署",
+      "description": "Triton Inference Server 是 NVIDIA 推出的生产级推理服务器，支持 PyTorch、TensorFlow、ONNX、TensorRT 等多种框架模型。它提供动态批处理、模型并发执行和 GPU 内存优化，支持 REST 和 gRPC 协议，是生产环境模型部署的标准选择。",
+      "install": "docker pull nvcr.io/nvidia/tritonserver",
+      "features": [
+        "支持 PyTorch/TensorFlow/ONNX/TensorRT 多框架",
+        "动态批处理和模型并发执行",
+        "GPU 内存优化和多模型共享",
+        "REST 和 gRPC 协议支持"
+      ],
+      "tags": [
+        "推理",
+        "部署",
+        "NVIDIA"
+      ],
+      "github": {
+        "stars": "8k",
+        "last_release": "2025-05",
+        "url": "https://github.com/triton-inference-server/server"
+      },
+      "difficulty": "advanced",
+      "official_url": "https://developer.nvidia.com/nvidia-triton-inference-server",
+      "use_cases": [
+        "模型部署",
+        "推理服务",
+        "生产环境"
+      ],
+      "relatedIntel": [],
+      "relatedNodes": [],
+      "relatedTerms": [
+        "inference",
+        "deployment",
+        "tensorrt"
+      ]
+    },
+    {
+      "name": "FastAPI",
+      "slug": "fastapi",
+      "category": "devops",
+      "purpose": "高性能 Python Web 框架，自动生成 OpenAPI 文档，适合构建模型 API",
+      "description": "FastAPI 是一个高性能的 Python Web 框架，基于 Starlette 和 Pydantic 构建。它自动生成 OpenAPI 文档和交互式文档页面，支持异步请求处理和类型检查，是构建机器学习模型 API 服务的理想选择。",
+      "install": "pip install fastapi uvicorn",
+      "features": [
+        "自动生成 OpenAPI 文档和 Swagger UI",
+        "异步请求处理，性能接近 Go/Node.js",
+        "Pydantic 类型检查和数据验证",
+        "依赖注入和中间件支持"
+      ],
+      "tags": [
+        "API",
+        "Web",
+        "异步"
+      ],
+      "github": {
+        "stars": "72k",
+        "last_release": "2025-06",
+        "url": "https://github.com/fastapi/fastapi"
+      },
+      "difficulty": "intermediate",
+      "official_url": "https://fastapi.tiangolo.com",
+      "use_cases": [
+        "模型 API",
+        "Web 服务",
+        "微服务"
+      ],
+      "relatedIntel": [],
+      "relatedNodes": [],
+      "relatedTerms": [
+        "api",
+        "rest",
+        "openapi"
+      ]
+    },
+    {
+      "name": "Apache Airflow",
+      "slug": "airflow",
+      "category": "devops",
+      "purpose": "工作流编排平台，可视化 DAG 定义和管理数据管道",
+      "description": "Apache Airflow 是一个工作流编排平台，通过 DAG（有向无环图）定义和管理数据管道。它提供可视化界面监控任务执行状态，支持任务依赖、失败重试和定时调度，可与 Kubernetes、AWS、GCP 等平台集成，是 MLOps 数据管道的核心工具。",
+      "install": "pip install apache-airflow",
+      "features": [
+        "DAG 可视化定义和管理数据管道",
+        "任务依赖、失败重试和定时调度",
+        "可视化界面监控任务执行状态",
+        "与 Kubernetes/AWS/GCP 等平台集成"
+      ],
+      "tags": [
+        "工作流",
+        "编排",
+        "DAG"
+      ],
+      "github": {
+        "stars": "37k",
+        "last_release": "2025-05",
+        "url": "https://github.com/apache/airflow"
+      },
+      "difficulty": "advanced",
+      "official_url": "https://airflow.apache.org/docs",
+      "use_cases": [
+        "数据管道",
+        "ETL",
+        "MLOps"
+      ],
+      "relatedIntel": [],
+      "relatedNodes": [],
+      "relatedTerms": [
+        "workflow",
+        "dag",
+        "pipeline"
+      ]
+    },
+    {
+      "name": "Kubeflow",
+      "slug": "kubeflow",
+      "category": "devops",
+      "purpose": "Kubernetes 上的机器学习平台，提供训练/推理/ pipeline 一站式解决方案",
+      "description": "Kubeflow 是基于 Kubernetes 的机器学习平台，提供训练、推理、Pipeline 的一站式解决方案。它包含 Jupyter Notebook 管理、Pipeline 编排、模型服务和超参数调优等组件，是云原生 MLOps 的标准平台。",
+      "install": "通过 Kubernetes 部署",
+      "features": [
+        "Jupyter Notebook 多用户管理",
+        "Pipeline 编排和可视化",
+        "模型服务和推理管理",
+        "Katib 超参数自动调优"
+      ],
+      "tags": [
+        "MLOps",
+        "Kubernetes",
+        "云原生"
+      ],
+      "github": {
+        "stars": "15k",
+        "last_release": "2025-04",
+        "url": "https://github.com/kubeflow/kubeflow"
+      },
+      "difficulty": "advanced",
+      "official_url": "https://www.kubeflow.org/docs",
+      "use_cases": [
+        "ML 平台",
+        "云原生 MLOps",
+        "团队协作"
+      ],
+      "relatedIntel": [],
+      "relatedNodes": [],
+      "relatedTerms": [
+        "kubernetes",
+        "mlops",
+        "pipeline"
+      ]
+    },
+    {
+      "name": "Whisper",
+      "slug": "whisper",
+      "category": "speech",
+      "purpose": "OpenAI 开源的语音识别模型，支持多语言转录和翻译",
+      "description": "Whisper 是 OpenAI 开源的语音识别模型，支持 99 种语言的转录和翻译。它提供多种模型尺寸（tiny/base/small/medium/large），可在 CPU 和 GPU 上运行，并支持批量处理和实时转录，是语音处理领域的革命性工具。",
+      "install": "pip install openai-whisper",
+      "features": [
+        "支持 99 种语言的转录和翻译",
+        "多种模型尺寸（tiny 到 large）",
+        "CPU 和 GPU 运行支持",
+        "批量处理和实时转录"
+      ],
+      "tags": [
+        "语音识别",
+        "ASR",
+        "多语言"
+      ],
+      "github": {
+        "stars": "35k",
+        "last_release": "2025-05",
+        "url": "https://github.com/openai/whisper"
+      },
+      "difficulty": "beginner",
+      "official_url": "https://github.com/openai/whisper",
+      "use_cases": [
+        "语音转录",
+        "会议记录",
+        "字幕生成"
+      ],
+      "relatedIntel": [
+        "114-asr-speech-recognition"
+      ],
+      "relatedNodes": [],
+      "relatedTerms": [
+        "asr",
+        "speech",
+        "transcription"
+      ]
+    },
+    {
+      "name": "Stable Baselines3",
+      "slug": "stable-baselines3",
+      "category": "machine-learning",
+      "purpose": "强化学习算法库，提供 PPO/SAC/DQN 等经典算法的可靠实现",
+      "description": "Stable Baselines3 (SB3) 是强化学习算法的可靠实现库，提供 PPO、SAC、DQN、A2C 等经典算法。它采用一致的 API 设计，支持自定义环境和策略，并与 Gym/Gymnasium 无缝集成，是强化学习研究和应用的标准工具。",
+      "install": "pip install stable-baselines3[extra]",
+      "features": [
+        "PPO/SAC/DQN/A2C 等经典算法实现",
+        "一致的 API 设计，易于使用",
+        "支持自定义环境和策略",
+        "与 Gym/Gymnasium 无缝集成"
+      ],
+      "tags": [
+        "强化学习",
+        "RL",
+        "算法库"
+      ],
+      "github": {
+        "stars": "10k",
+        "last_release": "2025-05",
+        "url": "https://github.com/DLR-RM/stable-baselines3"
+      },
+      "difficulty": "intermediate",
+      "official_url": "https://stable-baselines3.readthedocs.io",
+      "use_cases": [
+        "强化学习",
+        "机器人控制",
+        "游戏 AI"
+      ],
+      "relatedIntel": [
+        "112-rl-basics"
+      ],
+      "relatedNodes": [],
+      "relatedTerms": [
+        "reinforcement-learning",
+        "ppo",
+        "dqn"
+      ]
+    },
+    {
+      "name": "Polars",
+      "slug": "polars",
+      "category": "data-processing",
+      "purpose": "高性能 DataFrame 库，比 pandas 快 10-100 倍，内存占用更低",
+      "description": "Polars 是一个高性能的 DataFrame 库，采用 Apache Arrow 列式存储和 Rust 实现，比 pandas 快 10-100 倍且内存占用更低。它支持懒执行、多线程并行和 SQL 查询，提供 Python 和 Rust 接口，是大规模数据处理的理想替代方案。",
+      "install": "pip install polars",
+      "features": [
+        "Apache Arrow 列式存储，性能极高",
+        "懒执行和多线程并行",
+        "SQL 查询语法支持",
+        "内存占用比 pandas 低 10 倍"
+      ],
+      "tags": [
+        "DataFrame",
+        "高性能",
+        "Rust"
+      ],
+      "github": {
+        "stars": "30k",
+        "last_release": "2025-06",
+        "url": "https://github.com/pola-rs/polars"
+      },
+      "difficulty": "intermediate",
+      "official_url": "https://pola-rs.github.io/polars-book",
+      "use_cases": [
+        "大数据处理",
+        "数据清洗",
+        "特征工程"
+      ],
+      "relatedIntel": [],
+      "relatedNodes": [],
+      "relatedTerms": [
+        "dataframe",
+        "arrow",
+        "performance"
       ]
     }
   ],

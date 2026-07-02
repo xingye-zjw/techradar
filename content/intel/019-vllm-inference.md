@@ -1,6 +1,6 @@
 ---
 title: vLLM 推理引擎与 PagedAttention
-category: infrastructure
+category: devops
 keywords:
   - vllm
   - pagedattention
@@ -16,6 +16,14 @@ takeaways:
   - 理解 PagedAttention 如何将显存碎片降低 60%+
   - 能用 vLLM 部署一个生产级推理服务，支持 OpenAI 兼容 API
   - 能做 INT4/INT8 量化推理，把 7B 模型压到单卡
+relatedTerms: vllm
+relatedIntel:
+  - 007-docker
+  - 008-git
+  - 009-linux
+relatedNodes: electrical-safety
+relatedTools:
+  - vllm
 ---
 
 ## 为什么你要学它

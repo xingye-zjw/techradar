@@ -16,6 +16,13 @@ takeaways:
   - 知道为什么通常只在 Q/V 投影矩阵上插入 LoRA adapter
   - 理解 NF4 量化与双量化的原理，以及 paged optimizer 的作用
   - 能用 LLaMA Factory / PEFT 跑一次 7B 级模型的 LoRA 微调
+relatedIntel:
+  - 005-rag
+  - 015-rlhf
+  - 020-prompt-engineering
+relatedNodes:
+  - llm-finetune
+  - nlp-llm-inference
 ---
 
 ## 为什么你要学它

@@ -1,6 +1,6 @@
 ---
 title: 电机控制与电力电子
-category: electrical
+category: embedded
 keywords:
   - motor
   - foc
@@ -17,6 +17,12 @@ takeaways:
   - 掌握FOC矢量控制
   - 理解电力电子变换技术
   - 能设计电机驱动系统
+relatedIntel:
+  - 052-embedded-c
+  - 053-embedded-rtos
+  - 054-elec-circuit
+relatedNodes:
+  - elec-motor
 ---
 
 ## 为什么你要学它

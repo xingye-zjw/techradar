@@ -1,6 +1,6 @@
 ---
 title: 电路基础与模拟电子技术
-category: electronics
+category: embedded
 keywords:
   - circuit
   - analog
@@ -17,6 +17,13 @@ takeaways:
   - 掌握常用电子器件特性
   - 能看懂和设计基础电路
   - 理解运放、二极管、晶体管的应用
+relatedTerms: circuit
+relatedIntel:
+  - 052-embedded-c
+  - 053-embedded-rtos
+  - 055-elec-signals
+relatedNodes:
+  - elec-circuit
 ---
 
 ## 为什么你要学它

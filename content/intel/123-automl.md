@@ -18,6 +18,10 @@ takeaways:
   - 搞懂贝叶斯优化为什么比网格/随机搜索高效，能说清采集函数(EI/PI/UCB)的作用
   - 掌握NAS三种主流范式：强化学习(ENAS)、可微分(DARTS)、进化算法的核心思想
   - 能用AutoGluon和Optuna在真实数据集上跑通端到端的AutoML流程
+relatedIntel:
+  - 112-rl-basics
+  - 116-recommender-systems
+  - 118-anomaly-detection
 ---
 
 ## 为什么你要学它

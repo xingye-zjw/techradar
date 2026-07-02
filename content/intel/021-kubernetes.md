@@ -1,6 +1,6 @@
 ---
 title: Kubernetes 容器编排入门
-category: infrastructure
+category: devops
 keywords:
   - kubernetes
   - k8s
@@ -18,6 +18,15 @@ takeaways:
   - 能用 kubectl 操作常用资源，理解声明式 vs 命令式配置的区别
   - 能用 Helm 管理复杂应用的模板化部署
   - 能在 K8s 上调度 GPU 资源并配置 HPA 自动扩缩容
+relatedTerms: kubernetes
+relatedTools: kubernetes
+relatedIntel:
+  - 007-docker
+  - 008-git
+  - 009-linux
+relatedNodes:
+  - electrical-safety
+  - devops-kubernetes
 ---
 
 ## 为什么你要学它

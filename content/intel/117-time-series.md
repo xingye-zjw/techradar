@@ -1,6 +1,6 @@
 ---
 title: 时间序列分析与预测
-category: data-science
+category: data-processing
 keywords:
   - time series
   - arima
@@ -18,6 +18,10 @@ takeaways:
   - 能用 Prophet 快速落地业务预测，理解其可解释性和节假日处理机制
   - 掌握 LSTM/TCN/TFT 等深度学习时序方法，知道不同场景下该选什么模型
   - 理解多步预测策略（递归/直接/多输出）的 trade-off，会用 MAE/RMSE/MAPE/SMAPE 评估模型
+relatedIntel:
+  - 010-numpy-pandas
+  - 013-huggingface-datasets
+  - 023-data-pipeline-etl
 ---
 
 ## 为什么你要学它

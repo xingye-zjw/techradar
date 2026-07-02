@@ -1,6 +1,6 @@
 ---
 title: 信号与系统
-category: electronics
+category: embedded
 keywords:
   - signal
   - fourier
@@ -17,6 +17,12 @@ takeaways:
   - 掌握傅里叶分析方法
   - 理解系统频率响应特性
   - 能设计数字滤波器
+relatedIntel:
+  - 052-embedded-c
+  - 053-embedded-rtos
+  - 054-elec-circuit
+relatedNodes:
+  - elec-signals
 ---
 
 ## 为什么你要学它

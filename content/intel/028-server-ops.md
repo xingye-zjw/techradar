@@ -1,6 +1,6 @@
 ---
 title: 服务器运维基础与 Linux 环境管理
-category: infrastructure
+category: devops
 keywords:
   - linux
   - systemd
@@ -17,6 +17,12 @@ takeaways:
   - 能用 Nginx 做反向代理和负载均衡
   - 能用 SSH Key 免密登录，配置 sshd 安全策略
   - 能用 cron 配置定时任务，配合数据管道使用
+relatedIntel:
+  - 007-docker
+  - 008-git
+  - 009-linux
+relatedNodes:
+  - electrical-safety
 ---
 
 ## 为什么你要学它

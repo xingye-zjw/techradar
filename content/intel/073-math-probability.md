@@ -1,6 +1,6 @@
 ---
 title: 概率论与数理统计
-category: mathematics
+category: math
 keywords:
   - 概率论
   - 统计
@@ -15,6 +15,10 @@ takeaways:
   - 理解贝叶斯定理及其在机器学习中的应用
   - 学会假设检验和置信区间
   - 能用Python进行统计分析
+relatedIntel:
+  - 024-information-theory
+  - 025-convex-optimization
+  - 072-math-linear-algebra
 ---
 
 ## 为什么你要学它

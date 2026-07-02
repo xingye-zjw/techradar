@@ -1,6 +1,6 @@
 ---
 title: 信息论基础：熵、交叉熵与 KL 散度
-category: math-foundations
+category: math
 keywords:
   - entropy
   - cross-entropy
@@ -16,6 +16,12 @@ takeaways:
   - 能从 KL 散度推导 Binary Cross-Entropy loss
   - 理解 MLE 和 MAP 的数学框架，以及它们与正则化的联系
   - 能用 AIC/BIC 做模型选择，理解奥卡姆剃刀的信息论解释
+relatedIntel:
+  - 025-convex-optimization
+  - 072-math-linear-algebra
+  - 073-math-probability
+relatedNodes:
+  - math-information-theory
 ---
 
 ## 为什么你要学它

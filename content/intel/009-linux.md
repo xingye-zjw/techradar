@@ -18,6 +18,13 @@ takeaways:
   - 会用 top/nvidia-smi/kill 管理进程与资源，能定位训练卡死问题
   - 配置 SSH 免密登录与密钥认证，能安全远程管理多台服务器
   - 理解文件权限机制，用 chmod/chown 管理文件访问
+relatedIntel:
+  - 007-docker
+  - 008-git
+  - 012-streamlit
+relatedNodes:
+  - linux-basic
+  - electrical-safety
 ---
 
 ## 为什么你要学它

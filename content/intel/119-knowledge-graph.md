@@ -1,6 +1,6 @@
 ---
 title: 知识图谱
-category: knowledge-graph
+category: nlp
 keywords:
   - knowledge graph
   - 知识图谱
@@ -19,6 +19,11 @@ takeaways:
   - 了解知识抽取全流程：命名实体识别（NER）、关系抽取、实体链接
   - 能用 PyKEEN 在标准数据集上训练 TransE 模型，完成链接预测任务
   - 理解知识推理的两类方法：基于规则的推理和基于表示学习的推理
+relatedIntel:
+  - 064-nlp-rnn
+  - 115-tts-speech-synthesis
+relatedNodes:
+  - nlp-rnn
 ---
 
 ## 为什么你要学它

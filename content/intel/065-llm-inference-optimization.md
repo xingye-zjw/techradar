@@ -1,6 +1,6 @@
 ---
 title: LLM 推理优化
-category: llm-application
+category: llm
 keywords:
   - llm-inference
   - kv-cache
@@ -19,6 +19,16 @@ takeaways:
   - 能用 vLLM 部署一个生产级 LLM 服务，支持 PagedAttention 和 Continuous Batching
   - 理解 Speculative Decoding 如何用小模型加速大模型推理
   - 掌握 Tensor Parallelism 的基本原理，能做多卡并行推理
+relatedTerms: vllm
+relatedIntel:
+  - 003-lora-qlora
+  - 005-rag
+  - 015-rlhf
+relatedNodes:
+  - llm-finetune
+  - nlp-llm-inference
+relatedTools:
+  - vllm
 ---
 
 ## 为什么你要学它

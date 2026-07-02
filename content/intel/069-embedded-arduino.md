@@ -20,6 +20,10 @@ takeaways:
   - 理解微控制器基本工作原理，能读懂传感器数据手册并完成接口对接
   - 能独立完成一个从硬件连接到软件实现的完整嵌入式小项目
   - 建立起"用代码控制物理世界"的直觉，为学习 RTOS、Linux 嵌入式打下基础
+relatedIntel:
+  - 052-embedded-c
+  - 053-embedded-rtos
+  - 054-elec-circuit
 ---
 
 ## 为什么你要学它

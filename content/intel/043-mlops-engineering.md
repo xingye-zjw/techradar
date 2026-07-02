@@ -1,6 +1,6 @@
 ---
 title: MLOps：从实验到生产的完整工程化
-category: data-engineering
+category: data-processing
 keywords:
   - mlops
   - experiment tracking
@@ -15,6 +15,10 @@ takeaways:
   - 能用 MLflow 或 WandB 管理实验和模型版本
   - 理解 Feature Store 的设计理念和实践
   - 能设计一个支持 CI/CD 的自动化训练 Pipeline
+relatedIntel:
+  - 010-numpy-pandas
+  - 013-huggingface-datasets
+  - 023-data-pipeline-etl
 ---
 
 ## 为什么你要学它

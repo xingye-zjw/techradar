@@ -17,6 +17,14 @@ takeaways:
   - 深入理解内存管理和位操作
   - 能编写嵌入式级别的高效代码
   - 掌握Makefile和模块化编程
+relatedTerms: pointer
+relatedTools: gcc
+relatedIntel:
+  - 053-embedded-rtos
+  - 054-elec-circuit
+  - 055-elec-signals
+relatedNodes:
+  - embedded-c
 ---
 
 ## 为什么你要学它

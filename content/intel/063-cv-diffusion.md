@@ -17,6 +17,11 @@ takeaways:
   - 理解 Classifier-Free Guidance 的原理——用条件概率的差值来引导生成方向
   - 理解 LoRA 如何适配 Stable Diffusion，实现轻量级微调
   - 用 diffusers 库跑通文生图、图生图完整流程
+relatedTerms: diffusion-model
+relatedIntel:
+  - 002-yolo
+  - 004-resnet
+  - 006-cnn-basics
 ---
 
 ## 为什么你要学它

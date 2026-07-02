@@ -18,6 +18,10 @@ takeaways:
   - 掌握PointNet/PointNet++核心思想，明白最大池化如何解决点云无序性问题
   - 能使用Open3D完成点云读取、可视化、ICP配准等基础操作
   - 了解RANSAC平面拟合、3D目标检测（PointPillars）、NeRF神经辐射场等核心算法原理
+relatedIntel:
+  - 002-yolo
+  - 004-resnet
+  - 006-cnn-basics
 ---
 
 ## 为什么你要学它

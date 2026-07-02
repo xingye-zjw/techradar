@@ -1,6 +1,6 @@
 ---
 title: 数字电路基础
-category: electronics
+category: embedded
 keywords:
   - 数字电路
   - 逻辑门
@@ -15,6 +15,11 @@ takeaways:
   - 掌握逻辑门和布尔代数
   - 理解组合逻辑电路设计
   - 掌握时序逻辑电路设计
+relatedTerms: circuit
+relatedIntel:
+  - 052-embedded-c
+  - 053-embedded-rtos
+  - 054-elec-circuit
 ---
 
 ## 为什么你要学它

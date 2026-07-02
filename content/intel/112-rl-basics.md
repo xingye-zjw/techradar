@@ -1,6 +1,6 @@
 ---
 title: 强化学习基础
-category: reinforcement-learning
+category: machine-learning
 keywords:
   - reinforcement learning
   - MDP
@@ -19,6 +19,10 @@ takeaways:
   - 理解策略梯度方法（REINFORCE）的核心思想：用采样轨迹估计梯度并更新策略
   - 掌握 DQN 的两大创新：经验回放（Experience Replay）与目标网络（Target Network）
   - 理解 PPO 的剪切目标函数，能用 Stable-Baselines3 在 Gym 环境中训练智能体
+relatedIntel:
+  - 116-recommender-systems
+  - 118-anomaly-detection
+  - 122-federated-learning
 ---
 
 ## 为什么你要学它

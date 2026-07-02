@@ -1,6 +1,6 @@
 ---
 title: PLC可编程控制器
-category: control
+category: embedded
 keywords:
   - PLC
   - 可编程控制器
@@ -16,6 +16,10 @@ takeaways:
   - 掌握梯形图编程方法
   - 理解I/O模块配置
   - 了解工业通信协议
+relatedIntel:
+  - 052-embedded-c
+  - 053-embedded-rtos
+  - 054-elec-circuit
 ---
 
 ## 为什么你要学它

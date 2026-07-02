@@ -16,6 +16,11 @@ takeaways:
   - 能画 Vanilla RNN、LSTM、GRU 的结构图，说出每个门的作用
   - 明白为什么 vanilla RNN 有梯度消失问题，以及 LSTM/GRU 是如何用门控机制解决的
   - 用 PyTorch 实现一个能处理文本分类或语言建模的 RNN 模型
+relatedIntel:
+  - 115-tts-speech-synthesis
+  - 119-knowledge-graph
+relatedNodes:
+  - nlp-rnn
 ---
 
 ## 为什么你要学它

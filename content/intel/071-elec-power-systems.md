@@ -1,6 +1,6 @@
 ---
 title: Electric Power Systems 电力系统基础
-category: electrical
+category: embedded
 keywords:
   - power-system
   - ac-dc
@@ -18,6 +18,12 @@ takeaways:
   - 能用等效电路分析变压器，理解阻抗匹配和电压等级选取的工程逻辑
   - 掌握输电线路的 π 型等效模型，能做简单的潮流计算和损耗分析
   - 理解短路故障分析的原理，知道为什么保护继电器能精准切除故障
+relatedIntel:
+  - 052-embedded-c
+  - 053-embedded-rtos
+  - 054-elec-circuit
+relatedNodes:
+  - electrical-power
 ---
 
 ## 为什么你要学它

@@ -1,6 +1,6 @@
 ---
 title: 向量数据库：从原理到实践
-category: infrastructure
+category: devops
 keywords:
   - vector database
   - embedding
@@ -16,6 +16,15 @@ takeaways:
   - 理解 ANN（近似最近邻）算法的原理和 trade-off
   - 能用 ChromaDB / Milvus / FAISS 构建向量索引
   - 能选择合适的索引类型（HNSW / IVF）
+relatedTools:
+  - faiss
+  - chromadb
+relatedIntel:
+  - 007-docker
+  - 008-git
+  - 009-linux
+relatedNodes:
+  - electrical-safety
 ---
 
 ## 为什么你要学它

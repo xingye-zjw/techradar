@@ -18,6 +18,12 @@ takeaways:
   - 能在自己的图片上跑 Ultralytics YOLO 推理
   - 能组织 YOLO 格式数据集并训练自定义目标检测模型
   - 能导出 ONNX 用于部署，读懂 mAP 和 NMS 等核心指标
+relatedIntel:
+  - 004-resnet
+  - 006-cnn-basics
+  - 060-cv-instance-segmentation
+relatedNodes:
+  - cv-detection
 ---
 
 ## 为什么你要学它

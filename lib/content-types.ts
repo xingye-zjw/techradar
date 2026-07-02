@@ -5,34 +5,21 @@
  * 保持向后兼容：现有页面功能不能因格式变更而中断。
  */
 
-// 统一的内容分类枚举
+// 统一的内容分类枚举（12 个大类）
 export type ContentCategory =
-  | 'computer-vision'       // 计算机视觉
-  | 'nlp'                   // 自然语言处理
-  | 'deep-learning'         // 深度学习
-  | 'machine-learning'      // 机器学习
-  | 'math'                  // 数学基础
-  | 'devops'                // 工程部署
-  | 'llm'                   // 大语言模型
-  | 'llm-fundamentals'      // LLM 基础
-  | 'llm-application'       // LLM 应用
-  | 'reinforcement-learning' // 强化学习
-  | 'data-processing'       // 数据处理
-  | 'data-engineering'      // 数据工程
-  | 'tools'                 // 工具相关
-  | 'best-practices'        // 最佳实践
-  | 'infrastructure'        // 基础设施
-  | 'deployment'            // 模型部署
-  | 'training'              // 模型训练
-  | 'evaluation'            // 模型评估
-  | 'math-foundations'      // 数学基础
-  | 'cs'                    // 计算机科学
-  | 'embedded'              // 嵌入式开发
-  | 'electronics'           // 电子工程
-  | 'signals'               // 信号处理
-  | 'control'               // 控制系统
-  | 'electrical'            // 电气工程
-  | 'uncategorized';        // 未分类
+  | 'deep-learning'       // 深度学习
+  | 'machine-learning'    // 机器学习
+  | 'llm'                 // 大语言模型
+  | 'computer-vision'     // 计算机视觉
+  | 'nlp'                 // 自然语言处理
+  | 'math'                // 数学基础
+  | 'devops'              // 工程部署
+  | 'embedded'            // 嵌入式与硬件
+  | 'data-processing'     // 数据处理
+  | 'cs'                  // 计算机基础
+  | 'speech'              // 语音处理
+  | 'best-practices'      // 最佳实践
+  | 'uncategorized'       // 未分类
 
 // 难度级别
 export type Difficulty = 'beginner' | 'intermediate' | 'advanced';
@@ -157,40 +144,8 @@ export interface PitfallCategoryMeta {
 }
 
 export const PITFALL_CATEGORY_META: Record<string, PitfallCategoryMeta> = {
-  embedded: {
-    label: "嵌入式",
-    icon: "🔌",
-    color: "text-orange-400",
-    bgColor: "bg-orange-400/10",
-    borderColor: "border-orange-400/30",
-    desc: "嵌入式开发中的常见问题",
-  },
-  control: {
-    label: "控制系统",
-    icon: "⚙️",
-    color: "text-blue-400",
-    bgColor: "bg-blue-400/10",
-    borderColor: "border-blue-400/30",
-    desc: "控制系统与自动化相关问题",
-  },
-  signals: {
-    label: "信号处理",
-    icon: "📡",
-    color: "text-cyan-400",
-    bgColor: "bg-cyan-400/10",
-    borderColor: "border-cyan-400/30",
-    desc: "信号处理与通信相关问题",
-  },
-  electrical: {
-    label: "电气工程",
-    icon: "⚡",
-    color: "text-yellow-400",
-    bgColor: "bg-yellow-400/10",
-    borderColor: "border-yellow-400/30",
-    desc: "电气工程与硬件相关问题",
-  },
   devops: {
-    label: "环境配置",
+    label: "工程部署",
     icon: "🛠️",
     color: "text-green-400",
     bgColor: "bg-green-400/10",
@@ -213,6 +168,30 @@ export const PITFALL_CATEGORY_META: Record<string, PitfallCategoryMeta> = {
     borderColor: "border-pink-400/30",
     desc: "LLM 微调与部署相关问题",
   },
+  "computer-vision": {
+    label: "计算机视觉",
+    icon: "👁️",
+    color: "text-blue-400",
+    bgColor: "bg-blue-400/10",
+    borderColor: "border-blue-400/30",
+    desc: "CV 与图像处理相关问题",
+  },
+  nlp: {
+    label: "自然语言处理",
+    icon: "📝",
+    color: "text-cyan-400",
+    bgColor: "bg-cyan-400/10",
+    borderColor: "border-cyan-400/30",
+    desc: "NLP 与文本处理相关问题",
+  },
+  embedded: {
+    label: "嵌入式与硬件",
+    icon: "🔌",
+    color: "text-orange-400",
+    bgColor: "bg-orange-400/10",
+    borderColor: "border-orange-400/30",
+    desc: "嵌入式、硬件与控制相关问题",
+  },
   "data-processing": {
     label: "数据处理",
     icon: "📊",
@@ -229,6 +208,38 @@ export const PITFALL_CATEGORY_META: Record<string, PitfallCategoryMeta> = {
     borderColor: "border-emerald-400/30",
     desc: "开发流程与最佳实践",
   },
+  math: {
+    label: "数学基础",
+    icon: "📐",
+    color: "text-indigo-400",
+    bgColor: "bg-indigo-400/10",
+    borderColor: "border-indigo-400/30",
+    desc: "数学与理论相关问题",
+  },
+  "machine-learning": {
+    label: "机器学习",
+    icon: "🤖",
+    color: "text-violet-400",
+    bgColor: "bg-violet-400/10",
+    borderColor: "border-violet-400/30",
+    desc: "传统机器学习相关问题",
+  },
+  cs: {
+    label: "计算机基础",
+    icon: "💻",
+    color: "text-slate-400",
+    bgColor: "bg-slate-400/10",
+    borderColor: "border-slate-400/30",
+    desc: "计算机科学基础问题",
+  },
+  speech: {
+    label: "语音处理",
+    icon: "🎙️",
+    color: "text-rose-400",
+    bgColor: "bg-rose-400/10",
+    borderColor: "border-rose-400/30",
+    desc: "语音识别与合成相关问题",
+  },
 };
 
 /**
@@ -238,12 +249,9 @@ export const PITFALL_CATEGORY_META: Record<string, PitfallCategoryMeta> = {
  */
 export function isValidCategory(category: string): category is ContentCategory {
   const validCategories: ContentCategory[] = [
-    'computer-vision', 'nlp', 'deep-learning', 'machine-learning',
-    'math', 'devops', 'llm', 'llm-fundamentals', 'llm-application',
-    'reinforcement-learning', 'data-processing', 'data-engineering',
-    'tools', 'best-practices', 'infrastructure', 'deployment',
-    'training', 'evaluation', 'math-foundations', 'uncategorized',
-    'cs', 'embedded', 'electronics', 'signals', 'control', 'electrical'
+    'deep-learning', 'machine-learning', 'llm', 'computer-vision', 'nlp',
+    'math', 'devops', 'embedded', 'data-processing', 'cs', 'speech',
+    'best-practices', 'uncategorized'
   ];
   return validCategories.includes(category as ContentCategory);
 }

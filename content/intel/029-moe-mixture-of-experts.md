@@ -1,6 +1,6 @@
 ---
 title: Mixture of Experts (MoE) 混合专家模型
-category: llm-fundamentals
+category: llm
 keywords:
   - mixture of experts
   - moe
@@ -16,6 +16,13 @@ takeaways:
   - 能解释为什么 MoE 模型参数量大但推理快
   - 理解 DeepSeek / Mixtral 等 MoE LLM 的架构设计
   - 能在 PyTorch 中实现一个简单的 MoE Layer
+relatedIntel:
+  - 003-lora-qlora
+  - 005-rag
+  - 015-rlhf
+relatedNodes:
+  - llm-finetune
+  - nlp-llm-inference
 ---
 
 ## 为什么你要学它

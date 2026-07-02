@@ -1,6 +1,6 @@
 ---
 title: MLflow 实验追踪平台
-category: tools
+category: devops
 keywords:
   - mlflow
   - experiment tracking
@@ -16,6 +16,15 @@ takeaways:
   - 会用 mlflow.pytorch.autolog 配合 PyTorch Lightning 一键记录
   - 会启动本地 Tracking Server 并用 Web UI 对比多组超参
   - 理解 Model Registry 基本用法，能注册、生产化一个模型版本
+relatedTools:
+  - pytorch
+  - mlflow
+relatedIntel:
+  - 007-docker
+  - 008-git
+  - 009-linux
+relatedNodes:
+  - electrical-safety
 ---
 
 ## 为什么你要学它

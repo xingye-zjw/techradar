@@ -1,6 +1,6 @@
 ---
 title: 分布式训练：多 GPU 甚至多机器并行
-category: training
+category: devops
 keywords:
   - distributed training
   - data parallel
@@ -16,6 +16,12 @@ takeaways:
   - 能用 PyTorch DDP 做多 GPU 数据并行训练
   - 能用 DeepSpeed ZeRO 做显存优化和混合并行
   - 能估算不同并行策略的通信量和扩展效率
+relatedIntel:
+  - 007-docker
+  - 008-git
+  - 009-linux
+relatedNodes:
+  - electrical-safety
 ---
 
 ## 为什么你要学它

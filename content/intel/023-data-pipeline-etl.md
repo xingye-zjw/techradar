@@ -1,6 +1,6 @@
 ---
 title: 数据管道与 ETL 实战
-category: data-engineering
+category: data-processing
 keywords:
   - etl
   - data pipeline
@@ -17,6 +17,12 @@ takeaways:
   - 能用 Great Expectations 定义数据契约并生成质量报告
   - 能用 DVC 管理数据集版本，实现数据可复现
   - 能用 Airflow 编排定时 ETL 任务，构建自动化数据 Pipeline
+relatedIntel:
+  - 010-numpy-pandas
+  - 013-huggingface-datasets
+  - 040-data-annotation
+relatedNodes:
+  - project-data-pipeline
 ---
 
 ## 为什么你要学它

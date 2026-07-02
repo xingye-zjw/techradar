@@ -1,6 +1,6 @@
 ---
 title: 线性代数基础
-category: mathematics
+category: math
 keywords:
   - 线性代数
   - 矩阵
@@ -16,6 +16,12 @@ takeaways:
   - 理解特征值和特征向量的物理含义
   - 学会奇异值分解(SVD)及其应用
   - 能用NumPy实现矩阵运算
+relatedIntel:
+  - 024-information-theory
+  - 025-convex-optimization
+  - 073-math-probability
+relatedNodes:
+  - math-linear-algebra
 ---
 
 ## 为什么你要学它

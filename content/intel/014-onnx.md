@@ -1,6 +1,6 @@
 ---
 title: ONNX 跨框架模型部署
-category: deployment
+category: devops
 keywords:
   - onnx
   - onnxruntime
@@ -16,6 +16,13 @@ takeaways:
   - 掌握 opset 版本与 dynamic_axes 动态轴配置，搞定变长输入
   - 使用 ONNX Runtime 搭建 CPU/GPU 推理流程，并做数值一致性验证
   - 用 onnxsim 简化模型 + YOLO 完整示例，落地生产部署
+relatedTerms: onnx
+relatedIntel:
+  - 007-docker
+  - 008-git
+  - 009-linux
+relatedNodes:
+  - electrical-safety
 ---
 
 ## 为什么你要学它

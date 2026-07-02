@@ -1,48 +1,73 @@
-import fs from "node:fs";
-import path from "node:path";
-import { isValidCategory, type Pitfall, type ContentCategory } from "./content-types";
+import { isValidCategory, type Pitfall, type ContentCategory, type IntelCard } from "./content-types";
+import { getAllIntelCards } from "./intel";
 
-// 重新导出 Pitfall 类型，保持向后兼容
 export type { Pitfall, ContentCategory } from "./content-types";
 
-// JSON 原始数据结构接口
-interface RawPitfall {
-  title?: string;
-  slug?: string;
-  category?: string;
-  description?: string;
-  root_cause?: string;
-  symptoms?: unknown;
-  solution?: unknown;
-  quickFix?: string;
-  tags?: unknown;
-  prevention?: unknown;
-  relatedIntel?: unknown;
-  relatedNodes?: unknown;
-  relatedTerms?: unknown;
-  relatedTools?: unknown;
+/**
+ * 判断一篇 IntelCard 是否是 pitfall 类型（单条详情型）
+ * 判断条件：slug 包含 "pitfall" 且序号 >= 140（新迁移的结构化单条坑）
+ * 旧版汇总型 pitfall（090-135）不纳入 pitfall 页面
+ */
+function isPitfallCard(card: IntelCard): boolean {
+  if (!card.slug.includes("pitfall")) return false;
+  const match = card.slug.match(/^(\d+)-/);
+  if (!match) return false;
+  const num = parseInt(match[1], 10);
+  return num >= 140;
 }
 
 /**
- * 验证 raw pitfall 对象的类型
+ * 从 IntelCard 正文中提取结构化信息
+ * 解析典型症状、解决方案、快速修复、预防措施等
  */
-function isRawPitfall(data: unknown): data is RawPitfall {
-  if (typeof data !== 'object' || data === null) return false;
-  const obj = data as Record<string, unknown>;
-  return typeof obj.title === 'string';
-}
-
-/**
- * 从标题生成 URL 友好的 slug
- * @param title - 标题字符串
- * @returns URL 友好的 slug
- */
-export function generateSlug(title: string): string {
-  return title
-    .toLowerCase()
-    .replace(/[^\w一-龥]+/g, '-')  // 保留中文字符
-    .replace(/^-+|-+$/g, '')               // 去除首尾连字符
-    .replace(/--+/g, '-');                 // 合并多个连字符
+function extractPitfallFromCard(card: IntelCard): Pitfall {
+  const content = card.content;
+  
+  // 提取症状（在"典型症状"标题后，下一个标题前）
+  const symptomsMatch = content.match(/###\s*🔑\s*典型症状\s*\n([\s\S]*?)(?=\n###|$)/);
+  const symptoms = symptomsMatch
+    ? symptomsMatch[1].split('\n').filter(l => l.trim().startsWith('-')).map(l => l.replace(/^-\s*[×x]\s*/, '').trim())
+    : [];
+  
+  // 提取解决方案（在"完整排查方案"后，下一个标题前）
+  const solutionMatch = content.match(/##\s*完整排查方案\s*\n([\s\S]*?)(?=\n###|$)/);
+  let solution: string[] = [];
+  if (solutionMatch) {
+    solution = solutionMatch[1]
+      .split('\n')
+      .filter(l => /^\d+\.\s/.test(l.trim()))
+      .map(l => l.replace(/^\d+\.\s*/, '').trim());
+  }
+  
+  // 提取快速修复
+  const quickFixMatch = content.match(/>\s*\*\*快速修复：\*\*(.*?)(?:\n|$)/);
+  const quickFix = quickFixMatch ? quickFixMatch[1].trim() : "";
+  
+  // 提取预防措施
+  const preventionMatch = content.match(/##\s*预防措施\s*\n([\s\S]*?)(?=\n##|$)/);
+  const prevention = preventionMatch
+    ? preventionMatch[1].split('\n').filter(l => l.trim().startsWith('- ')).map(l => l.replace(/^-\s*/, '').trim())
+    : [];
+  
+  // 提取根因
+  const rootCauseMatch = content.match(/###\s*🔑\s*根本原因\s*\n([\s\S]*?)(?=\n###|$)/);
+  const root_cause = rootCauseMatch ? rootCauseMatch[1].trim() : "";
+  
+  return {
+    title: card.title,
+    slug: card.slug,
+    category: card.category,
+    description: card.summary,
+    root_cause,
+    symptoms,
+    solution,
+    quickFix,
+    tags: card.tags,
+    prevention: prevention.length > 0 ? prevention : undefined,
+    relatedIntel: card.prerequisites,
+    relatedNodes: card.relatedNodes,
+    relatedTerms: card.relatedTerms,
+  };
 }
 
 // 踩坑数据缓存
@@ -50,42 +75,16 @@ let cachedPitfalls: Pitfall[] | null = null;
 
 /**
  * 获取所有踩坑数据
- * 支持新格式（带 slug/description/root_cause）和旧格式（仅 title/category/symptoms/solution）
+ * 从 Intel 模块中筛选 pitfall 类的卡片并转换为 Pitfall 格式
  * @returns 踩坑数组
  */
 export function getAllPitfalls(): Pitfall[] {
   if (cachedPitfalls) return cachedPitfalls;
 
-  const dataPath = path.join(process.cwd(), "content", "pitfall", "pitfalls.json");
-
-  if (!fs.existsSync(dataPath)) {
-    cachedPitfalls = [];
-    return cachedPitfalls;
-  }
-
-  const raw = fs.readFileSync(dataPath, "utf8");
-  const rawData = JSON.parse(raw) as unknown[];
-
-  // 补全缺失字段，保持向后兼容
-  cachedPitfalls = (rawData as RawPitfall[])
-    .filter((item): item is RawPitfall => isRawPitfall(item))
-    .map((item) => ({
-      title: item.title || '',
-      slug: item.slug || generateSlug(item.title || ''),
-      category: isValidCategory(item.category || '') ? item.category as ContentCategory : 'devops',
-      description: item.description || item.title || '',
-      root_cause: item.root_cause || '',
-      symptoms: Array.isArray(item.symptoms) ? (item.symptoms as string[]) : [],
-      solution: Array.isArray(item.solution) ? (item.solution as string[]) : [],
-      quickFix: item.quickFix || '',
-      tags: Array.isArray(item.tags) ? (item.tags as string[]) : [],
-      prevention: Array.isArray(item.prevention) ? (item.prevention as string[]) : undefined,
-      relatedIntel: Array.isArray(item.relatedIntel) ? (item.relatedIntel as string[]) : undefined,
-      relatedNodes: Array.isArray(item.relatedNodes) ? (item.relatedNodes as string[]) : undefined,
-      relatedTerms: Array.isArray(item.relatedTerms) ? (item.relatedTerms as string[]) : undefined,
-      relatedTools: Array.isArray(item.relatedTools) ? (item.relatedTools as string[]) : undefined,
-    })) as Pitfall[];
-
+  const allCards = getAllIntelCards();
+  const pitfallCards = allCards.filter(isPitfallCard);
+  
+  cachedPitfalls = pitfallCards.map(extractPitfallFromCard);
   return cachedPitfalls;
 }
 

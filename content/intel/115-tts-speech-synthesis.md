@@ -18,6 +18,11 @@ takeaways:
   - 掌握 VITS 的端到端设计思想：变分自编码器 + GAN 一步生成音频
   - 从零跑通 Coqui TTS，用预训练 VITS 模型合成中文语音
   - 了解中文 TTS 的声调、韵律挑战，以及零样本声音克隆的原理
+relatedIntel:
+  - 064-nlp-rnn
+  - 119-knowledge-graph
+relatedNodes:
+  - nlp-rnn
 ---
 
 ## 为什么你要学它

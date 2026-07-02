@@ -1,6 +1,6 @@
 ---
 title: 张量运算与自动微分
-category: mathematics
+category: math
 keywords:
   - 张量
   - 自动微分
@@ -15,6 +15,10 @@ takeaways:
   - 掌握广播机制的工作原理
   - 理解自动微分和计算图
   - 能手动推导简单网络的梯度
+relatedIntel:
+  - 024-information-theory
+  - 025-convex-optimization
+  - 072-math-linear-algebra
 ---
 
 ## 为什么你要学它

@@ -1,6 +1,6 @@
 ---
 title: 数据库原理与实践
-category: computer-science
+category: cs
 keywords:
   - 数据库
   - SQL
@@ -16,6 +16,10 @@ takeaways:
   - 掌握SQL查询优化技巧
   - 理解索引原理和优化方法
   - 掌握事务的ACID特性
+relatedIntel:
+  - 050-cs-algo
+  - 051-cs-os
+  - 075-cs-network
 ---
 
 ## 为什么你要学它

@@ -1188,7 +1188,7 @@
     {
       "slug": "math-numpy-linear-algebra",
       "title": "NumPy 线性代数实战",
-      "category": "math-foundations",
+      "category": "math",
       "difficulty": 1,
       "duration": "1周",
       "summary": "使用 NumPy 实现线性代数核心运算，为深度学习打下数学基础",
@@ -4141,7 +4141,7 @@
     {
       "slug": "gnn-pytorch-geometric-complete",
       "title": "图神经网络实战：从节点分类到图分类",
-      "category": "人工智能",
+      "category": "machine-learning",
       "difficulty": 3,
       "duration": "12小时",
       "summary": "基于 PyTorch Geometric (PyG) 的完整图神经网络实战项目，从基础图数据处理到节点分类、图分类、链路预测等核心任务，涵盖 GCN、GAT、GraphSAGE 等经典模型。",

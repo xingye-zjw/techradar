@@ -1,6 +1,6 @@
 ---
 title: PCB设计基础
-category: electronics
+category: embedded
 keywords:
   - PCB设计
   - 电路板
@@ -16,6 +16,12 @@ takeaways:
   - 掌握原理图绘制方法
   - 理解PCB布局布线规则
   - 掌握信号完整性和EMI处理
+relatedIntel:
+  - 052-embedded-c
+  - 053-embedded-rtos
+  - 054-elec-circuit
+relatedNodes:
+  - elec-pcb
 ---
 
 ## 为什么你要学它

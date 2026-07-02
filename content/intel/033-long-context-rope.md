@@ -1,6 +1,6 @@
 ---
 title: 长上下文推理：RoPE 与 YARN
-category: llm-fundamentals
+category: llm
 keywords:
   - long context
   - rope
@@ -16,6 +16,13 @@ takeaways:
   - 理解为什么直接扩展 context window 会破坏位置编码
   - 能解释 YaRN / LongRoPE 等长上下文扩展方法
   - 能用 FlashAttention-2 加速长上下文推理
+relatedIntel:
+  - 003-lora-qlora
+  - 005-rag
+  - 015-rlhf
+relatedNodes:
+  - llm-finetune
+  - nlp-llm-inference
 ---
 
 ## 为什么你要学它

@@ -17,6 +17,12 @@ takeaways:
   - 能用 Conda 为每个项目创建独立 Python 环境
   - 会配置 SSH 公私钥登录和基本安全加固
   - 会用 tmux 让训练在后台长期跑，断网也不中断
+relatedIntel:
+  - 007-docker
+  - 008-git
+  - 009-linux
+relatedNodes:
+  - electrical-safety
 ---
 
 ## 为什么你要学它

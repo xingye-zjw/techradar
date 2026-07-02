@@ -1,6 +1,6 @@
 ---
 title: 凸优化理论基础
-category: math-foundations
+category: math
 keywords:
   - convex optimization
   - gradient descent
@@ -17,6 +17,13 @@ takeaways:
   - 能用 CVXPY 求解约束优化问题并验证 KKT 条件
   - 能从原理理解 Adam 的一阶/二阶矩估计和偏差校正
   - 能区分 L1/L2 正则化并用几何直觉解释稀疏性
+relatedTerms: convex-optimization
+relatedIntel:
+  - 024-information-theory
+  - 072-math-linear-algebra
+  - 073-math-probability
+relatedNodes:
+  - math-optimization
 ---
 
 ## 为什么你要学它

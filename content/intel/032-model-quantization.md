@@ -1,6 +1,6 @@
 ---
 title: 模型量化：从 FP16 到 INT4
-category: deployment
+category: devops
 keywords:
   - quantization
   - int4
@@ -16,6 +16,12 @@ takeaways:
   - 能区分 GPTQ / AWQ / bitsandbytes 的适用场景
   - 能用 AutoGPTQ 或 bitsandbytes 量化一个模型
   - 能评估量化后的精度损失（< 5% 通常可接受）
+relatedIntel:
+  - 007-docker
+  - 008-git
+  - 009-linux
+relatedNodes:
+  - electrical-safety
 ---
 
 ## 为什么你要学它

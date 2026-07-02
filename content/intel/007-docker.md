@@ -18,6 +18,14 @@ takeaways:
   - 能写一个 PyTorch 推理服务的 Dockerfile（含 .dockerignore、多阶段、非 root 用户）
   - 理解 nvidia-container-toolkit 是让容器看见 GPU 的关键组件
   - 能用 Docker Compose 编排多容器服务（API + Redis），并持久化数据
+relatedTools: docker
+relatedIntel:
+  - 008-git
+  - 009-linux
+  - 012-streamlit
+relatedNodes:
+  - electrical-safety
+  - docker-basic
 ---
 
 ## 为什么你要学它

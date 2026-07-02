@@ -1,6 +1,6 @@
 ---
 title: 机器人技术与ROS2
-category: control
+category: embedded
 keywords:
   - ros
   - robot
@@ -17,6 +17,13 @@ takeaways:
   - 理解机器人导航原理
   - 能实现基本的机器人控制
   - 理解多机器人协调
+relatedTools: ros2
+relatedIntel:
+  - 052-embedded-c
+  - 053-embedded-rtos
+  - 054-elec-circuit
+relatedNodes:
+  - ctrl-ros
 ---
 
 ## 为什么你要学它

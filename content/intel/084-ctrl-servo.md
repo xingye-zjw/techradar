@@ -1,6 +1,6 @@
 ---
 title: 伺服控制系统
-category: control
+category: embedded
 keywords:
   - 伺服电机
   - 伺服控制
@@ -15,6 +15,12 @@ takeaways:
   - 掌握位置、速度、扭矩控制
   - 理解编码器反馈原理
   - 掌握运动控制编程
+relatedIntel:
+  - 052-embedded-c
+  - 053-embedded-rtos
+  - 054-elec-circuit
+relatedNodes:
+  - ctrl-servo
 ---
 
 ## 为什么你要学它

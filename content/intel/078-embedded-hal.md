@@ -15,6 +15,12 @@ takeaways:
   - 掌握GPIO、UART、SPI、I2C配置
   - 理解寄存器级别的操作
   - 能编写跨平台的驱动代码
+relatedIntel:
+  - 052-embedded-c
+  - 053-embedded-rtos
+  - 054-elec-circuit
+relatedNodes:
+  - embedded-hal
 ---
 
 ## 为什么你要学它
