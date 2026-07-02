@@ -2120,6 +2120,58 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           practice: "从零理解词向量：1）One-Hot 编码实验：构造一个小词汇表（10个词），为每个词生成 One-Hot 向量，用 numpy 计算任意两个词的余弦相似度——结果应该都是0，因为向量正交。2）语义相似度思考：列出10个词（猫、狗、汽车、火车、国王、女王、男人、女人、苹果、香蕉），按语义分组，思考如果用词向量表示，哪些词应该距离近。3）词向量可视化：下载一个预训练的小词向量（如 Gensim 自带的或 50维的 GloVe），用 PCA 或 t-SNE 将词向量降到2维，绘制散点图，观察语义相近的词是否聚在一起。4）向量加减法实验：选择3组词对（如 国王-男人+女人、巴黎-法国+中国），计算结果向量，找最接近的词，看是否符合预期。5）思考：词向量的维度应该选多大？维度太高或太低各有什么优缺点？",
           deep_dive: "词向量的背后有深刻的语言学和数学原理：1）分布语义学（Distributional Semantics）：这是词向量的理论基础，核心是「一个词的含义由它的上下文决定」。这个思想可以追溯到1950年代的语言学家 Harris。2）语义空间的几何解释：在词向量空间中，语义关系可以用几何操作来表达——同义词距离近，反义词距离也可能近（因为上下文相似），类比关系可以用向量平移来表达。3）从共现矩阵到词向量：最早的分布式表示是词-词共现矩阵（每个元素表示两个词共同出现的次数），然后用 SVD 降维得到低维向量（这就是 LSA/潜在语义分析）。Word2Vec 等方法则是用神经网络来学习低维向量，更高效、效果更好。4）词向量的局限性：a）无法处理多义词——一个词只有一个向量，但 polysemy 是普遍现象；b）无法表达短语和句子的含义；c）依赖训练数据，数据中的偏见会被编码进词向量；d）是静态的，不随上下文变化。这些局限性正是后续的 ELMo、BERT 等模型要解决的问题。5）评价词向量的质量：常用词类比任务（Word Analogy）、词相似度任务（Word Similarity）、下游任务性能来评估词向量的好坏。理解词向量的原理和局限，能帮你更好地使用它们，也能为学习更高级的模型打下基础。"
         }, duration: "2小时", resources: [B_NLP_TUTORIAL, R_HF_COURSE, { title: "Gensim 官方文档", url: "https://radimrehurek.com/gensim/", required: false }, { title: "Word2Vec 论文", url: "https://arxiv.org/abs/1301.3781", required: false }], checkpoint: "能解释分布式表示的核心思想，并用预训练词向量完成词类比实验" },
+      { day: 2, title: "Word2Vec 原理与 Skip-gram",
+        summary: "深入理解 Word2Vec 的两种模型（CBOW/Skip-gram）和优化技巧", content: {
+          objective: "今天你将学习 Word2Vec 的核心原理。学完后能解释 CBOW 和 Skip-gram 的区别、负采样的原理、层次 Softmax 的思想、Word2Vec 为什么效果好。Word2Vec 是词向量领域的里程碑，理解它能帮你深入理解词表示学习。",
+          key_points: [
+            "Word2Vec 两种模型：CBOW（用上下文预测中心词）、Skip-gram（用中心词预测上下文）",
+            "优化目标：最大化语料的对数似然，本质是学习让上下文词概率更高的词表示",
+            "负采样（Negative Sampling）：不更新整个词汇表，只采样几个负例，大幅加速训练",
+            "层次 Softmax（Hierarchical Softmax）：用 Huffman 树把 Softmax 复杂度从 O(V) 降到 O(logV)",
+            "Skip-gram 通常比 CBOW 效果好，尤其是在小数据集和低频词上"
+          ],
+          practice: "Word2Vec 深入理解与训练：1）原理推导：用自己的话解释 Skip-gram 和 CBOW 的训练目标，画出模型结构图。2）负采样理解：为什么需要负采样？负采样的概率分布为什么取 3/4 次幂？写一段代码模拟负采样过程。3）Gensim 训练：a）准备一个中文语料（如维基百科或小说文本，至少 100MB）；b）用 jieba 分词；c）用 gensim.models.Word2Vec 训练一个 Skip-gram 模型；d）调整几个关键参数：vector_size、window、min_count、negative，对比不同参数的效果。4）词向量评估：a）词相似度任务：准备 20 对词，人工打分，计算词向量余弦相似度和人工评分的相关性；b）词类比任务：准备 10 组类比（如 国王-男人+女人=？），看模型能答对多少；c）找最相似的词：选 5 个词，看模型返回的最相似的 10 个词是否合理。5）可视化：用 t-SNE 把 200 个常用词的向量降到 2 维，画散点图，观察聚类效果。6）思考：Skip-gram 和 CBOW 各自适合什么场景？窗口大小选多大合适？",
+          deep_dive: "Word2Vec 虽然简单，但它的思想非常深刻，对后来的 NLP 发展影响巨大：1）为什么 Word2Vec 这么有效？Word2Vec 不是第一个词向量方法，但它是第一个真正大规模实用的。它成功的关键：a）简单高效的模型结构（只有一个隐藏层的神经网络）；b）聪明的优化技巧（负采样、层次 Softmax），让训练速度提升几个数量级；c）海量的训练数据（Google 用了 10 亿词的语料）；d）发布了预训练的词向量，大家可以直接用。2）Word2Vec 和 SVD 的关系：后来的研究表明，Word2Vec 本质上是在做矩阵分解——Skip-gram with Negative Sampling 等价于对词-上下文点互信息（PMI）矩阵做隐式分解。这把神经网络方法和传统的统计方法联系了起来。3）词向量的语言学特性：Word2Vec 学到的词向量有很多有趣的语言学性质——向量加法能表达语义组合、关系类比（king - man + woman ≈ queen）、语义聚类等。这些性质不是 Word2Vec 特有的，而是分布式表示的普遍性质，但 Word2Vec 让大家清晰地看到了这一点。4）训练技巧：a）窗口大小：小窗口（2-3）学到更多功能/语法相似性，大窗口（5-10）学到更多主题/语义相似性；b）下采样高频词：对高频词做 subsampling，减少它们的影响，相当于给了低频词更多机会；c）负采样的数量：一般取 5-25 个负例，小数据集取多些，大数据集取少些。5）局限性：Word2Vec 是静态词向量，一个词只有一个表示，无法处理多义词。这是后来 ELMo、BERT 等动态上下文表示要解决的问题。但即使在今天，Word2Vec 的思想和方法仍然有参考价值。"
+        }, duration: "2小时", resources: [B_NLP_TUTORIAL, { title: "Word2Vec 论文精读", url: "https://arxiv.org/abs/1301.3781", required: false }, { title: "Gensim Word2Vec 教程", url: "https://radimrehurek.com/gensim/models/word2vec.html", required: false }], checkpoint: "能用 Gensim 训练词向量，并完成词相似度和词类比评估" },
+      { day: 3, title: "GloVe 与 FastText",
+        summary: "学习 GloVe 和 FastText 的原理，对比不同词向量方法的优劣", content: {
+          objective: "今天你将学习另外两种重要的词向量方法：GloVe 和 FastText。学完后能解释 GloVe 的核心思想、FastText 的子词机制、三种方法的对比和适用场景。",
+          key_points: [
+            "GloVe：结合全局矩阵分解和局部上下文窗口的优点，基于共现概率比值学习词向量",
+            "GloVe 核心思想：两个词的共现概率比值能编码它们的语义关系，用词向量的点积来拟合这个比值",
+            "FastText：把词拆成字符 n-gram，用子词信息来学习词表示",
+            "FastText 优势：能处理 OOV（未登录词）、对形态丰富的语言效果好、训练速度快",
+            "三种方法对比：Word2Vec 基于预测、GloVe 基于计数、FastText 基于子词，各有优劣"
+          ],
+          practice: "GloVe 与 FastText 实践对比：1）GloVe 原理学习：理解 GloVe 的损失函数为什么这样设计？为什么用共现概率的比值而不是共现概率本身？2）下载预训练 GloVe 词向量，和 Word2Vec 做对比：a）在相同的词相似度任务上，哪个效果更好？b）词类比任务呢？3）FastText 实践：a）用 gensim 训练一个 FastText 模型；b）测试 OOV 词：找几个不在词汇表里的词，FastText 能给出合理的相似词吗？4）综合对比：在你的测试集上，三种方法的效果排名是怎样的？速度和内存呢？5）思考：什么时候用 Word2Vec？什么时候用 GloVe？什么时候用 FastText？",
+          deep_dive: "词向量方法虽然多，但背后的思想是相通的——都是从词的上下文中学语义。1）预测 vs 计数：Word2Vec 是预测方法，GloVe 是计数方法。很长时间里大家认为这是两种不同的路线，但后来的研究表明它们本质上是相通的——Skip-gram with Negative Sampling 等价于对 PMI 矩阵做加权矩阵分解。两者各有优劣：计数方法利用全局统计信息，但对高频词有利；预测方法更灵活，但可能漏掉全局模式。2）子词表示的意义：FastText 的子词思想很重要。对于英语来说，很多词有共同的前缀后缀，子词能利用这些形态信息。子词思想后来发展到了 BPE 等更高级的分词方法，这也是 GPT、BERT 等大模型用的分词方法。3）中文词向量的特殊性：中文词向量有一些特殊问题：a）分词：中文需要先分词，分词错误会影响词向量质量；b）字 vs 词：中文也可以用字向量，不需要分词；c）成语、典故：中文有很多四字成语，语义不是简单的字组合。"
+        }, duration: "2小时", resources: [B_NLP_TUTORIAL, { title: "GloVe 项目主页", url: "https://nlp.stanford.edu/projects/glove/", required: false }, { title: "FastText 文档", url: "https://fasttext.cc/", required: false }], checkpoint: "能对比 Word2Vec/GloVe/FastText 三种方法的优劣，并完成实践对比" },
+      { day: 4, title: "句向量与文档向量",
+        summary: "从词向量到句向量，掌握文本表示的常用方法", content: {
+          objective: "今天你将学习如何从词向量得到句子和文档的向量表示。学完后掌握平均池化/加权平均、TF-IDF 加权、Doc2Vec、Sentence-BERT 等句向量方法。",
+          key_points: [
+            "从词到句：最简单的方法是词向量平均/加权平均，但丢失了语序和句法信息",
+            "TF-IDF 加权平均：用词的 TF-IDF 值作为权重，重要的词权重更高",
+            "Doc2Vec：在 Word2Vec 基础上增加文档向量，同时学习词向量和文档向量",
+            "Sentence-BERT：用 BERT 等预训练模型微调专门生成句向量，效果远好于传统方法",
+            "句向量应用：文本相似度计算、聚类、检索、分类、信息检索"
+          ],
+          practice: "句向量方法实践与对比：1）简单平均法：a）对数据集中的每个句子，用词向量取平均得到句向量；b）用 cosine 相似度计算句子之间的相似度。2）TF-IDF 加权平均：a）计算每个词的 IDF 值；b）用 TF-IDF 作为权重，计算加权平均的句向量；c）和简单平均对比。3）Doc2Vec：a）用 gensim 的 Doc2Vec 训练一个文档向量模型；b）测试文档相似度检索效果。4）Sentence-BERT（进阶）：a）用 sentence-transformers 库加载预训练模型；b）生成句向量并对比效果。5）应用：用句向量做一个简单的语义搜索系统。",
+          deep_dive: "得到好的句向量比词向量难得多，因为句子有结构、有语序、有复杂的语义组合：1）为什么简单平均效果还不错？很多人会低估简单平均的效果。实际上，在很多任务上，词向量平均的基线并没有那么容易超越。原因是：a）词向量本身已经编码了丰富的语义信息；b）很多任务（如主题分类）主要看有哪些词，语序影响不大。2）预训练模型带来的革命：Sentence-BERT 等基于预训练模型的句向量方法出现后，句向量的质量有了质的飞跃。因为预训练模型在海量数据上学到了丰富的语言知识，能更好地理解句子的语义。3）语义相似度的不同维度：「句子相似」是个模糊的概念——是主题相似？还是语义等价？还是情感相似？不同的应用需要不同的相似度。"
+        }, duration: "2小时", resources: [B_NLP_TUTORIAL, { title: "Sentence-Transformers", url: "https://www.sbert.net/", required: false }], checkpoint: "能用多种方法生成句向量，并完成简单的语义搜索应用" },
+      { day: 5, title: "词向量应用与综合实战",
+        summary: "词向量的综合应用：文本分类、信息检索、可视化", content: {
+          objective: "今天你将综合运用前四天学到的词向量知识，完成几个实战应用。学完后能用词向量做文本分类、信息检索、语义相似度计算。",
+          key_points: [
+            "词向量应用场景：文本分类、信息检索、推荐系统、问答系统、数据增强",
+            "文本分类 pipeline：词向量 + 池化/加权 + 分类器（逻辑回归/SVM/简单神经网络）",
+            "信息检索：查询向量化、文档向量化、余弦相似度排序、倒排索引加速",
+            "词向量的调优：领域微调、OOV 处理、维度选择、相似度计算方式",
+            "常见坑：词向量质量差、分词错误、停用词处理不当、维度灾难"
+          ],
+          practice: "词向量综合实战：1）文本分类实战：a）用情感分析数据集；b）词向量取平均得到句向量；c）用逻辑回归或 SVM 训练分类器；d）在测试集上评估准确率、F1；e）和关键词基线、TF-IDF + 朴素贝叶斯对比。2）信息检索实战：a）准备 500-1000 个文档/段落；b）用句向量为每个文档建立索引；c）写一个简单的搜索函数；d）手动找 10 个查询，评估搜索结果的相关性。3）可视化与分析：a）用 PCA 或 t-SNE 可视化句子向量，不同类别用不同颜色，看是否能分开；b）分析分类错误的样本。4）总结与复盘：写一份总结报告——这一周学到了什么？还有什么疑问？",
+          deep_dive: "词向量虽然是基础，但真正用好并不容易，有很多实践经验和坑：1）预训练 vs 从头训练：大多数情况下，用别人预训练好的词向量比自己从头训效果好。但如果你的领域很特殊，通用词向量可能不够好，这时可以在领域数据上继续微调。2）OOV 问题的处理：实际应用中总会遇到词表外的词。处理方法：a）用 FastText 等子词方法；b）用字向量代替词向量；c）用上下文动态生成词向量（如 ELMo、BERT）。3）词向量的发展脉络：从 One-Hot 到共现矩阵到 SVD 降维，到 Word2Vec、GloVe、FastText 等静态词向量，到 ELMo 等上下文相关的动态词向量，再到 BERT、GPT 等预训练语言模型。这个发展脉络的主线是：表示越来越丰富、越来越动态、越来越上下文相关。"
+        }, duration: "3小时", resources: [B_NLP_TUTORIAL, R_HF_COURSE], checkpoint: "完成文本分类和信息检索两个实战应用，写出一周学习总结" },
     ],
   },
 
@@ -2159,6 +2211,58 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           practice: "文本分类入门与数据探索：1）列出5个生活中的文本分类应用场景。2）选择一个情感分析数据集（IMDB 或 ChnSentiCorp）。3）做数据分析：类别分布、文本长度分布、高频词统计。4）实现简单的关键词基线系统。5）分析关键词方法的错误原因。",
           deep_dive: "文本分类是 NLP 中历史最悠久、应用最广泛的任务之一。它的发展历程反映了 NLP 技术的演进：从规则方法到传统机器学习（朴素贝叶斯、SVM），再到深度学习（TextCNN、BiLSTM），再到预训练模型（BERT）。每一代方法都在效果上有所提升，但代价是更复杂、更慢、需要更多数据。实际项目中，建议从简单到复杂逐步尝试，找到效果和成本的平衡点。"
         }, duration: "2小时", resources: [B_NLP_TUTORIAL, R_HF_COURSE], checkpoint: "能解释文本分类的核心概念，建立规则基线，并做数据分析" },
+      { day: 2, title: "传统机器学习方法：朴素贝叶斯与 SVM",
+        summary: "掌握基于传统机器学习的文本分类方法，理解词袋模型与 TF-IDF", content: {
+          objective: "今天你将学习传统机器学习方法在文本分类中的应用。学完后掌握词袋模型、TF-IDF、朴素贝叶斯、SVM 等方法，能从零实现一个传统机器学习的文本分类系统。",
+          key_points: [
+            "词袋模型（Bag of Words）：忽略语序，只统计词频，简单但有效",
+            "TF-IDF：词频-逆文档频率，衡量一个词在文档中的重要程度",
+            "朴素贝叶斯：基于贝叶斯定理和特征独立假设，简单高效，适合文本分类",
+            "SVM（支持向量机）：找最优分类超平面，在高维空间效果好，是文本分类的经典方法",
+            "特征工程：N-gram、词性特征、句法特征、字数统计、情感词典等"
+          ],
+          practice: "传统机器学习文本分类实战：1）词袋模型实现：a）用 sklearn 的 CountVectorizer 实现词袋表示；b）在情感分析数据集上，用词袋 + 朴素贝叶斯训练分类器；c）在测试集上评估准确率、F1。2）TF-IDF 实现：a）用 TfidfVectorizer 实现 TF-IDF 表示；b）对比词袋模型，哪个效果更好？为什么？3）SVM 分类：a）用 LinearSVC 或 SGDClassifier 训练 SVM 分类器；b）和朴素贝叶斯对比，哪个效果更好？速度呢？4）N-gram 特征：a）尝试加入 bi-gram、tri-gram 特征；b）效果有提升吗？为什么？5）特征分析：a）用模型的特征重要性，找出最能代表正面和负面情感的词；b）分析哪些特征是有意义的，哪些是噪音。6）错误分析：a）找出分错的样本；b）分析为什么分错？是数据问题？特征问题？还是模型问题？",
+          deep_dive: "虽然现在深度学习和预训练模型是主流，但传统机器学习方法仍然有其价值：1）为什么还要学传统方法？a）简单快速，不需要 GPU，在很多场景下已经够用；b）作为基线（baseline），衡量复杂方法的提升是否值得；c）在小数据场景下，传统方法往往比深度学习效果更好；d）可解释性强，能知道哪些特征在起作用。2）TF-IDF 的直觉：TF（词频）高说明这个词在文档中重要，但如果这个词在所有文档中都出现得多（如「的」「是」），说明它没有区分度。IDF（逆文档频率）就是惩罚这些常见词。TF * IDF 综合考虑了词在文档中的重要性和在整个语料中的区分度。3）朴素贝叶斯为什么在文本分类中效果好？朴素贝叶斯的「特征独立」假设在文本中明显不成立（词和词之间是有关联的），但实际效果却不错。原因是：虽然假设不对，但分类的边界往往还是对的——概率值不准，但排序是对的。而且朴素贝叶斯训练极快，参数少，不容易过拟合。4）SVM 的优势：SVM 在文本分类中长期处于统治地位，直到深度学习出现。它的优势：a）在高维空间中效果好（文本特征维度很高）；b）泛化能力强，不容易过拟合；c）只需要支持向量，预测速度快。线性 SVM 是文本分类的首选传统方法。5）特征工程的重要性：在传统方法中，特征工程决定了效果的上限。好的特征能让简单模型也有很好的效果。除了词袋和 TF-IDF，还有很多高级特征：N-gram、词性标注、命名实体、句法依赖、情感词典、字数统计、标点符号统计等。特征组合和特征选择也很重要。6）传统方法 vs 深度学习：一个常见的误解是「深度学习一定比传统方法好」。实际上：a）数据量小的时候，传统方法往往更好；b）简单任务（如主题分类），两者效果差不多；c）复杂任务（如蕴含、推理），深度学习优势明显；d）深度学习需要更多算力和数据。在实际项目中，建议先从简单方法开始，逐步升级。"
+        }, duration: "3小时", resources: [B_NLP_TUTORIAL, { title: "sklearn 文本特征提取", url: "https://scikit-learn.org/stable/modules/feature_extraction.html#text-feature-extraction", required: false }], checkpoint: "能实现 TF-IDF + SVM 的文本分类系统，并完成错误分析" },
+      { day: 3, title: "深度学习方法：TextCNN 与 BiLSTM",
+        summary: "掌握基于深度学习的文本分类方法，理解 CNN 和 RNN 在文本中的应用", content: {
+          objective: "今天你将学习深度学习在文本分类中的应用。学完后掌握 TextCNN、BiLSTM 等经典模型，能用 PyTorch 实现一个深度学习文本分类器，理解深度学习方法和传统方法的区别。",
+          key_points: [
+            "TextCNN：用一维卷积神经网络提取文本特征，不同大小的卷积核捕捉不同长度的 n-gram 信息",
+            "BiLSTM：双向 LSTM，同时利用过去和未来的上下文信息，捕捉长距离依赖",
+            "Attention 机制：让模型关注重要的词，提升效果和可解释性",
+            "深度学习 vs 传统方法：端到端学习，自动提取特征，需要更多数据和算力",
+            "训练技巧：预训练词向量初始化、Dropout、学习率调度、梯度裁剪、早停"
+          ],
+          practice: "深度学习文本分类实战：1）TextCNN 实现：a）用 PyTorch 实现 TextCNN 模型；b）用预训练词向量初始化嵌入层；c）在情感分析数据集上训练；d）和 SVM 对比效果。2）BiLSTM 实现：a）用 PyTorch 实现 BiLSTM + 全连接层的分类模型；b）和 TextCNN 对比效果和速度；c）试不同的层数和隐藏维度。3）Attention 机制（进阶）：a）在 BiLSTM 基础上加入 Attention 层；b）可视化 attention 权重，看模型关注哪些词；c）效果有提升吗？4）训练技巧实验：a）用预训练词向量 vs 随机初始化，效果差多少？b）加 Dropout，观察过拟合是否改善；c）用不同的学习率，对比收敛速度和最终效果。5）模型对比：把你做过的所有方法（关键词、朴素贝叶斯、SVM、TextCNN、BiLSTM）的效果整理成表格，分析：a）哪些方法效果最好？b）哪些方法最快？c）哪些方法最容易调试？d）在你的场景下，你会选哪个方法？",
+          deep_dive: "深度学习给文本分类带来了质的飞跃，但也带来了新的挑战：1）TextCNN 的直觉：很多人觉得 CNN 是做图像的，怎么能用在文本上？其实，文本是一维序列，用一维卷积就可以。每个卷积核可以看作一个「特征探测器」，扫描整个句子，提取特定模式。不同大小的卷积核相当于捕捉不同长度的短语（2-gram、3-gram 等）。Max pooling 则是提取「这个模式有没有出现」，忽略出现的位置。TextCNN 简单、快速、效果也不错，是很好的基线模型。2）RNN vs CNN：RNN 天然适合处理序列，可以建模长距离依赖，但计算慢（不能并行），容易梯度消失。CNN 计算快（可以并行），但建模长距离依赖的能力弱。两者各有优劣，也可以结合用（如 CNN 提取局部特征，RNN 整合全局）。3）预训练词向量的作用：在深度学习的早期，用预训练词向量初始化嵌入层是标准操作，能显著提升效果，尤其是在小数据集上。预训练词向量相当于提供了丰富的先验知识。但自从有了 BERT 等预训练模型后，大家不再单独训练词向量了，直接用预训练模型的表示。4）过拟合与正则化：深度学习模型参数量大，很容易过拟合。常用的正则化方法：a）Dropout：随机失活神经元，强制模型学习冗余表示；b）权重衰减（L2 正则化）：限制权重大小；c）早停（Early Stopping）：验证集效果不再提升就停止训练；d）数据增强：回译、同义词替换、随机删除等；e）预训练+微调：用大规模预训练提供的先验知识。5）可解释性：深度学习模型通常被认为是「黑箱」。但我们可以通过一些方法来理解它：a）Attention 权重可视化：看模型关注哪些词；b）梯度分析：看哪些词对分类结果影响最大；c）遮挡测试：遮住某些词，看预测怎么变；d）LIME / SHAP：通用的可解释性方法。可解释性在很多实际场景中很重要。"
+        }, duration: "3小时", resources: [B_NLP_TUTORIAL, R_D2L, { title: "TextCNN 论文", url: "https://arxiv.org/abs/1408.5882", required: false }], checkpoint: "能用 PyTorch 实现 TextCNN 和 BiLSTM 分类器，并对比效果" },
+      { day: 4, title: "预训练模型：BERT 微调文本分类",
+        summary: "掌握用预训练语言模型（BERT等）微调文本分类的方法", content: {
+          objective: "今天你将学习如何用预训练语言模型做文本分类。学完后能用 HuggingFace Transformers 库加载预训练模型、在自己的数据集上微调、处理长文本、进行模型蒸馏。预训练模型是当前 NLP 的主流方法。",
+          key_points: [
+            "预训练+微调范式：先在大规模通用语料上预训练，再在下游任务上微调",
+            "BERT 分类：用 <[BOS_never_used_51bce0c785ca2f68081bfa7d91973934]> token 的表示做分类，简单高效",
+            "HuggingFace Transformers：统一的 API，支持各种预训练模型",
+            "微调技巧：学习率（AdamW）、学习率预热（warmup）、权重衰减、冻结层数",
+            "模型蒸馏：把大模型的知识迁移到小模型，压缩体积提升速度"
+          ],
+          practice: "BERT 微调文本分类实战：1）环境准备：安装 transformers、datasets、accelerate 库。2）数据准备：a）用 datasets 库加载你之前用的情感分析数据集；b）用 tokenizer 做数据预处理；c）注意 padding 和 truncation 的处理。3）模型加载与训练：a）用 AutoModelForSequenceClassification 加载预训练模型（如 bert-base-chinese 或 distilbert-base-uncased）；b）用 Trainer API 训练；c）配置训练参数：学习率、batch size、epoch 数、warmup steps 等。4）效果评估：a）在测试集上评估效果；b）和之前的传统方法、TextCNN 对比；c）训练速度和推理速度呢？5）长文本处理（进阶）：a）如果文本很长（超过 512 token），怎么处理？b）试试截断、滑动窗口、分层编码等方法。6）模型蒸馏（可选）：a）用 DistilBERT 看看效果和速度的权衡；b）或者自己做简单的知识蒸馏。7）错误分析：a）BERT 还会分错哪些样本？b）这些样本有什么特点？c）是数据问题还是模型能力问题？",
+          deep_dive: "预训练模型彻底改变了 NLP 的格局，现在几乎所有 NLP 任务都用预训练+微调的范式：1）为什么预训练这么有效？预训练相当于在做「通用语言理解」的预训练——模型在海量文本上学到了语法、语义、世界知识。然后在下游任务上微调，只需要少量数据就能达到很好的效果。这是一种「迁移学习」，把通用语料上学到的知识迁移到具体任务上。2）BERT 为什么用 <[BOS_never_used_51bce0c785ca2f68081bfa7d91973934]> 做分类？BERT 是双向的，<[BOS_never_used_51bce0c785ca2f68081bfa7d91973934]> 是一个特殊的 token，放在句子开头。因为 BERT 的自注意力机制让 <[BOS_never_used_51bce0c785ca2f68081bfa7d91973934]> 可以 attend 到所有其他 token，所以 <[BOS_never_used_51bce0c785ca2f68081bfa7d91973934]> 的表示可以看作整个句子的「摘要」。用它做分类很方便。但要注意，<[BOS_never_used_51bce0c785ca2f68081bfa7d91973934]> 的表示可能不是最优的句子表示——有时候用所有 token 的平均或 max pooling 效果更好。3）微调的技巧：微调预训练模型看起来简单，但有很多细节影响效果：a）学习率：比从头训练小得多，通常 2e-5 到 5e-5，太大容易把预训练知识「覆盖」掉；b）学习率预热（warmup）：先线性增加学习率，再线性衰减，有助于稳定训练；c）优化器：通常用 AdamW（Adam + 权重衰减修正）；d）冻结层数：数据少的时候可以冻住底层，只微调顶层，防止过拟合；e）batch size 和 epoch 数：小数据集少训几轮，防止过拟合。4）数据效率：预训练模型最大的优势之一是数据效率高——只需要很少的标注数据就能达到很好的效果。在传统方法需要几万条标注数据的任务上，BERT 可能只需要几百条就够了。这极大地降低了 NLP 应用的门槛。5）模型选择：现在有各种各样的预训练模型，怎么选？考虑因素：a）效果：一般来说模型越大效果越好；b）速度：模型越小越快；c）语言：中文任务用中文预训练模型（如 bert-base-chinese、chinese-roberta-wwm）效果更好；d）部署环境：能不能用 GPU？内存够不够？选最合适的，而不是最大的。6）未来方向：预训练模型还在快速发展，从 BERT 到 GPT 系列，从编码器-only 到解码器-only 到编码器-解码器，从单模态到多模态。但基本范式是一样的：大规模预训练 + 下游微调/提示。理解这个范式，就能跟上 NLP 的发展。"
+        }, duration: "3小时", resources: [R_HF_COURSE, { title: "HuggingFace 教程", url: "https://huggingface.co/learn/nlp-course", required: false }, { title: "BERT 论文", url: "https://arxiv.org/abs/1810.04805", required: false }], checkpoint: "能用 HuggingFace 微调 BERT 做文本分类，并和传统方法对比" },
+      { day: 5, title: "进阶话题与项目实战",
+        summary: "多标签分类、不平衡数据、半监督学习、模型部署，综合实战", content: {
+          objective: "今天你将学习文本分类的进阶话题，并完成一个综合实战项目。学完后能处理多标签分类、类别不平衡、少样本等实际问题，能把模型部署成可用的服务。",
+          key_points: [
+            "多标签分类：每个样本可以属于多个类别，用 sigmoid + BCE loss",
+            "类别不平衡：过采样、欠采样、加权损失、Focal Loss",
+            "少样本/半监督学习：数据不足时怎么办——主动学习、自训练、少样本学习",
+            "模型部署：FastAPI 做 API、Docker 容器化、性能优化",
+            "文本分类的前沿：提示学习（Prompt Learning）、大模型零样本分类"
+          ],
+          practice: "文本分类进阶与综合实战：1）多标签分类实战：a）准备或找一个多标签分类数据集（如新闻主题多标签）；b）修改模型和损失函数（BCEWithLogitsLoss）；c）训练并评估。2）不平衡数据处理：a）人为制造一个不平衡数据集（如 9:1）；b）试试几种处理方法：加权损失、过采样、欠采样、Focal Loss；c）对比效果，注意用 F1 而不是准确率评估。3）模型部署：a）用 FastAPI 写一个分类 API；b）接收文本输入，返回预测结果和置信度；c）用 curl 或 Postman 测试；d）（可选）写一个简单的前端页面或 Gradio Demo。4）少样本学习（可选）：a）只用 100 条标注数据训练；b）试试半监督学习（用未标注数据做自训练）；c）试试少样本提示（用大模型做 zero-shot / few-shot 分类）。5）综合项目：把这一周学的所有内容整理成一个完整的项目——a）完整的 README 文档；b）数据预处理脚本；c）多种模型的训练代码；d）模型评估和对比；e）部署好的 Demo。6）总结复盘：写一份学习总结——文本分类的完整方法论是什么？从数据到模型到部署，每一步的最佳实践是什么？还有什么疑问？",
+          deep_dive: "文本分类是 NLP 最基础的任务，但要做好并不简单，有很多进阶话题：1）多标签 vs 多分类：很多人混淆这两个概念。多分类（Multi-class）是互斥的——每个样本只能属于一个类别。多标签（Multi-label）是不互斥的——每个样本可以属于多个类别，也可以一个都不属于。多标签分类更复杂，评估也更复杂（每个标签算一个二分类，然后算平均）。实际场景中多标签很常见，比如文章可以同时属于「科技」和「财经」。2）类别不平衡是常态：实际项目中，类别几乎都是不平衡的。处理不平衡的方法很多，但没有银弹：a）加权损失：最简单，改改 loss weight 就行；b）过采样：重复少数类样本，但容易过拟合；c）欠采样：丢掉多数类样本，浪费数据；d）Focal Loss：让模型更关注难分的样本，在不平衡数据上效果不错；e）数据增强：给少数类做更多增强；f）收集更多数据：这是最根本的解决办法。建议先从简单的方法（加权损失）开始，然后逐步尝试。3）标注数据太贵怎么办？实际项目中，标注数据往往是瓶颈。解决思路：a）主动学习：让模型选最有价值的样本给人标注，用最少的标注达到最好的效果；b）半监督学习：用大量未标注数据辅助训练，如伪标签、一致性正则化；c）弱监督：用弱标签（如规则、远程监督）代替人工标注，再清洗；d）少样本学习：用大模型的 in-context learning，只需要几个示例；e）提示学习：把任务转化为语言模型能理解的提示。4）部署中的性能优化：模型训好了只是第一步，部署中还要考虑性能：a）模型压缩：蒸馏、量化、剪枝；b）推理优化：ONNX、TensorRT、vLLM 等；c）批量处理：一次处理多个请求，提升吞吐量；d）缓存：对常见查询缓存结果。5）文本分类的「天花板」：文本分类能解决很多问题，但也有局限。需要深度理解、推理、常识的任务，单纯的文本分类很难做好。这时候需要更高级的方法，如问答系统、对话系统、知识图谱等。但文本分类仍然是很多复杂系统的基础组件。"
+        }, duration: "3小时", resources: [B_NLP_TUTORIAL, { title: "FastAPI 文档", url: "https://fastapi.tiangolo.com/", required: false }], checkpoint: "完成一个完整的文本分类项目，包含数据、模型、评估、部署" },
     ],
   },
 
@@ -2198,6 +2302,58 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           practice: "序列标注数据探索与理解：1）下载 CoNLL-2003 和 MSRA NER 数据集，理解数据格式。2）实现 BIO 到 BIOES 的转换函数。3）做数据分析：实体类型分布、实体长度分布、句子长度分布。4）实现一个基于规则和词典的简单 NER 基线系统。5）分析规则系统的错误原因。",
           deep_dive: "序列标注是 NLP 中历史最悠久、研究最充分的任务之一。很多 NLP 问题都可以转化为序列标注问题——分词、词性标注、命名实体识别、组块分析、语义角色标注等。掌握序列标注，就掌握了解决一大类 NLP 问题的通用方法。标注质量对模型效果影响极大，专业标注人员的 NER 标注一致性通常只有 80-90%，这也是模型效果的上限。"
         }, duration: "2小时", resources: [B_NLP_TUTORIAL, R_CS224N], checkpoint: "能解释序列标注的核心概念，实现标注格式转换，并建立规则基线" },
+      { day: 2, title: "HMM 与 CRF 传统方法",
+        summary: "理解隐马尔可夫模型和条件随机场在序列标注中的应用", content: {
+          objective: "今天你将学习序列标注的传统方法——HMM 和 CRF。学完后能解释 HMM 的基本思想、CRF 的原理、两种方法的区别，能用 CRF 实现一个简单的 NER 系统。",
+          key_points: [
+            "HMM（隐马尔可夫模型）：生成式模型，基于马尔可夫假设，用观测序列预测隐藏状态序列",
+            "HMM 三大问题：评估问题（前向算法）、解码问题（Viterbi）、学习问题（Baum-Welch）",
+            "CRF（条件随机场）：判别式模型，直接建模 P(y|x)，考虑整个观测序列",
+            "Linear-chain CRF：最常用的 CRF，每个位置只和相邻位置有关",
+            "CRF vs HMM：CRF 是判别式的、可以任意定义特征、效果通常更好"
+          ],
+          practice: "HMM 与 CRF 实践：1）HMM 原理理解：a）用一个简单的例子（如词性标注）解释 HMM 的三个假设；b）手动计算一个小例子的 Viterbi 解码。2）CRF 原理学习：a）理解为什么 CRF 比 HMM 更适合序列标注；b）CRF 的特征函数是什么意思？c）CRF 的损失函数怎么理解？3）CRF 实现 NER：a）用 sklearn-crfsuite 或 pytorch-crf 库；b）在 CoNLL-2003 或 MSRA NER 数据集上训练；c）提取特征：词本身、词性、前缀后缀、大小写等；d）训练 CRF 模型。4）效果评估：a）计算实体级的 P/R/F1；b）和规则基线对比，提升了多少？c）分析 CRF 还会犯哪些错误。5）错误分析：a）找出 CRF 分错的实体；b）分析错误类型：边界错误？类型错误？完全漏了？c）怎么改进？6）思考：CRF 和 HMM 各自的优缺点是什么？在什么场景下你会选哪个？",
+          deep_dive: "虽然现在深度学习是主流，但理解传统方法能帮你更好地理解序列标注问题的本质：1）生成式 vs 判别式：HMM 是生成式模型，建模 P(x,y) = P(y)P(x|y)——先假设标签序列的分布，再看每个标签生成对应观测的概率。CRF 是判别式模型，直接建模 P(y|x)。判别式模型通常效果更好，因为它不需要建模观测的分布，可以利用任意复杂的特征。2）CRF 的特征工程：在深度学习流行之前，CRF 的效果很大程度上取决于特征工程。常用的特征包括：词本身、词性、词的形状（大小写、数字、标点）、前缀后缀、词典匹配特征、周围的词和词性（上下文特征）等。好的特征工程能带来显著的提升。3）为什么 CRF 比 Softmax 好？在序列标注中，如果每个位置独立预测（如用 BiLSTM + Softmax），就没有考虑标签之间的依赖关系。比如，B-PER 后面应该跟着 I-PER 而不是 I-LOC。CRF 增加了一个转移矩阵来建模标签之间的转移概率，让输出的标签序列更「合理」。这就是 BiLSTM-CRF 比单纯 BiLSTM 效果好的原因。4）序列标注的解码：预测时，我们需要找到概率最大的标签序列。如果每个位置独立，直接取 argmax 就行。但如果有 CRF 层，就需要用 Viterbi 算法来动态规划求解最优路径。Viterbi 算法的时间复杂度是 O(n * k^2)，其中 n 是序列长度，k 是标签数。5）传统方法的价值：虽然现在 BiLSTM-CRF 和 BERT-CRF 效果更好，但 CRF 仍然有其价值：a）小数据场景下，CRF + 好的特征工程可能比深度学习效果好；b）CRF 可解释性强，能知道哪些特征在起作用；c）CRF 训练快、预测快、资源占用少。而且，CRF 的思想（转移矩阵、Viterbi 解码）在深度学习中仍然被广泛使用。6）从 CRF 到深度学习：BiLSTM-CRF 可以理解为：用 BiLSTM 自动学习特征（代替人工特征工程），然后用 CRF 层建模标签依赖。这是传统方法和深度学习结合的经典例子。理解了 CRF，就能更好地理解 BiLSTM-CRF 架构。"
+        }, duration: "3小时", resources: [R_CS224N, B_NLP_TUTORIAL, { title: "sklearn-crfsuite", url: "https://sklearn-crfsuite.readthedocs.io/", required: false }], checkpoint: "能用 CRF 实现 NER，并理解和 HMM 的区别" },
+      { day: 3, title: "BiLSTM-CRF 模型实现",
+        summary: "实现基于 BiLSTM-CRF 的序列标注模型，理解深度学习方法", content: {
+          objective: "今天你将学习 BiLSTM-CRF 模型的原理和实现。学完后能用 PyTorch 实现一个 BiLSTM-CRF 模型，理解每个组件的作用，在 NER 数据集上训练并评估。",
+          key_points: [
+            "BiLSTM-CRF 架构：Embedding 层 → BiLSTM 编码 → Linear 映射到标签空间 → CRF 层",
+            "BiLSTM 的作用：双向编码上下文，自动提取特征，代替人工特征工程",
+            "CRF 层的作用：建模标签之间的依赖关系，输出合法的标签序列",
+            "损失函数：CRF 的负对数似然，考虑所有可能的标签序列",
+            "Viterbi 解码：预测时用动态规划找概率最大的标签序列"
+          ],
+          practice: "BiLSTM-CRF 实现与训练：1）数据预处理：a）构建词表和标签表；b）把文本和标签转换成 ID；c）处理变长序列（padding、mask）。2）BiLSTM 部分实现：a）实现 Embedding 层 + BiLSTM；b）输出每个位置的隐藏状态；c）用 Linear 层映射到标签维度。3）CRF 层实现：a）实现 CRF 的前向算法（计算所有路径的分数和）；b）实现损失函数（真实路径分数 - 所有路径的 log sum exp）；c）实现 Viterbi 解码（找最优路径）。或者直接用 pytorch-crf 等库。4）模型训练：a）在 NER 数据集上训练 BiLSTM-CRF；b）用什么优化器？学习率多少？c）用什么指标监控训练过程？5）效果评估：a）在测试集上评估实体级 P/R/F1；b）和 CRF（传统方法）对比，提升了多少？c）分析哪些类型的实体提升最大，为什么？6）消融实验（可选）：a）去掉 CRF 层，只用 BiLSTM + Softmax，效果差多少？b）只用单向 LSTM，效果差多少？c）用预训练词向量 vs 随机初始化，效果差多少？",
+          deep_dive: "BiLSTM-CRF 是深度学习时代序列标注的经典架构，理解它很重要：1）为什么需要 CRF 层？很多人会问：BiLSTM 已经能捕捉上下文了，为什么还要 CRF？答案是：BiLSTM 捕捉的是输入的上下文，但输出标签之间的依赖关系并没有被显式建模。比如，B-PER 后面应该接 I-PER 而不是 I-LOC，BiLSTM 可能学到这个规律，但 CRF 显式地把它编码进转移矩阵里，效果更稳定。而且，CRF 能保证输出的标签序列是合法的（比如不会出现 I-LOC 在 O 后面的情况）。2）CRF 损失的直觉：CRF 的损失函数是「真实路径的分数」减去「所有可能路径的分数的对数和」（log-sum-exp）。直觉是：我们希望真实路径的分数越高越好，其他路径的分数越低越好。这和多分类的 Softmax + Cross Entropy 本质上是一样的——只是 Softmax 是对单个位置的所有类别，CRF 是对整个序列的所有可能标签路径。3）Viterbi 算法：Viterbi 是动态规划的经典应用。核心思想是：到第 i 个位置、状态为 k 的最优路径分数 = max(到第 i-1 个位置、所有可能状态 j 的最优路径分数 + 从 j 转移到 k 的分数) + 第 i 个位置状态 k 的发射分数。从前往后算一遍，再从后往前回溯，就能得到全局最优路径。4）BiLSTM-CRF 的变体：a）CNN-BiLSTM-CRF：先用 CNN 提取字符级特征，和词向量拼接，再喂给 BiLSTM，对中文和形态丰富的语言效果好；b）Transformer-CRF：用 Transformer 代替 BiLSTM，捕捉更长距离的依赖；c）BERT-CRF：用 BERT 等预训练模型初始化，然后加 CRF 层，这是现在效果最好的方法之一。5）训练技巧：a）学习率：CRF 层的学习率通常可以比 LSTM 层高一些；b）梯度裁剪：RNN 容易梯度爆炸，梯度裁剪很重要；c）学习率调度：用 ReduceLROnPlateau 或 CosineAnnealing；d）正则化：Dropout、权重衰减；e）早停：验证集 F1 不再提升就停止。6）和文本分类的对比：序列标注可以看作「每个 token 的多分类」，但因为有标签依赖，比文本分类更复杂。理解了文本分类，再学序列标注会容易很多——相当于把分类器应用到每个位置，再加上序列约束。"
+        }, duration: "3小时", resources: [R_CS224N, B_NLP_TUTORIAL, { title: "BiLSTM-CRF 论文", url: "https://arxiv.org/abs/1508.01991", required: false }], checkpoint: "能用 PyTorch 实现 BiLSTM-CRF，并在 NER 数据集上达到合理效果" },
+      { day: 4, title: "基于预训练模型的序列标注",
+        summary: "用 BERT 等预训练模型做序列标注，掌握微调方法", content: {
+          objective: "今天你将学习如何用预训练模型做序列标注。学完后能用 HuggingFace Transformers 微调 BERT 做 NER，理解 BERT 做序列标注的要点，处理子词对齐等问题。",
+          key_points: [
+            "BERT 做序列标注：用 BERT 编码每个 token，取第一个子词的表示做分类，加 CRF 效果更好",
+            "子词对齐问题：BERT 用 WordPiece/BPE 分词，一个词可能被拆成多个子词，需要对齐到原始标签",
+            "微调策略：学习率更小（2e-5~5e-5）、epoch 数更少、warmup、权重衰减",
+            "数据效率：预训练模型只需要少量标注数据就能达到很好的效果",
+            "常用模型：BERT、RoBERTa、ALBERT、ELECTRA 等，中文可以用中文预训练模型"
+          ],
+          practice: "BERT 微调 NER 实战：1）环境准备：安装 transformers、datasets、accelerate、seqeval 库。2）数据准备：a）用 datasets 加载 NER 数据集（如 conll2003 或 msra_ner）；b）理解数据格式和标签集。3）子词对齐实现：a）用 tokenizer 分词后，一个词可能被拆成多个子词；b）实现标签对齐——只给第一个子词打标签，其他子词特殊处理（如 -100 忽略）；c）实现 attention mask。4）模型定义：a）用 AutoModelForTokenClassification 加载预训练模型；b）或者手动加载 BERT + 分类头 + CRF。5）训练与评估：a）用 Trainer API 或自定义训练循环；b）训练时用什么评估指标？（seqeval 的 classification_report）；c）调整超参数（学习率、batch size、epoch 数）。6）效果对比：a）和 BiLSTM-CRF 对比，效果提升了多少？b）训练速度和推理速度呢？c）用小数据（如只用 10% 训练数据）对比，两种方法差距更大还是更小？7）错误分析：a）BERT 还会犯哪些错误？b）哪些类型的实体识别不好？c）和 BiLSTM-CRF 的错误类型有什么不同？",
+          deep_dive: "预训练模型给序列标注带来了质的飞跃，但也有一些细节需要注意：1）子词对齐是个坑：BERT 的分词和原始标注的分词粒度不一样——原始数据是按词标注的，但 BERT 是按子词（subword）分词的。这就需要做对齐。常见的对齐策略：a）只给第一个子词打标签，其余子词的 loss 忽略（最常用）；b）给所有子词打相同的标签，然后预测时取第一个子词的预测；c）用特殊的方式聚合子词表示（平均、max）。方法 a 最简单也最有效。2）为什么 BERT 效果这么好？BERT 在大规模语料上做了 Masked Language Modeling 和 Next Sentence Prediction 的预训练，学到了丰富的语言知识——语法、语义、世界知识。这些知识可以迁移到下游任务，所以只需要少量标注数据就能达到很好的效果。对于 NER 来说，BERT 学到的上下文表示能更好地理解实体的上下文，从而更准确地识别实体。3）要不要加 CRF？BERT + Softmax 已经很不错了，加 CRF 通常还能再提升 0.5-1 个点。加不加取决于你的需求：a）差几个点的 F1 对你的业务影响大吗？b）加 CRF 会增加一些复杂度和计算量；c）CRF 能保证输出序列的合法性。大多数情况下，加上 CRF 是值得的。4）数据效率：预训练模型最大的优势之一是数据效率高。在传统方法需要几万条标注的任务上，BERT 可能只需要几百条就够了。这极大地降低了 NLP 应用的门槛。但数据少的时候也要注意过拟合：a）用更小的学习率；b）少训几轮；c）冻住底层，只微调顶层；d）用更多的正则化。5）中文 NER 的特殊性：中文 NER 和英文有一些不同：a）分词：NER 可以基于词做，也可以基于字做。字级 NER 不需要分词，避免了分词错误的传播，现在更常用；b）中文实体特点：中文人名、地名、机构名的规律和英文不一样；c）中文预训练模型：用专门的中文预训练模型（如 BERT-wwm、RoBERTa-zh）效果更好。6）实用技巧：a）用领域数据继续预训练（domain-adaptive pretraining），如果你的领域很特殊；b）远程监督生成弱标签，再人工清洗；c）主动学习，选最有价值的样本标注；d）集成多个模型，投票决定最终结果。"
+        }, duration: "3小时", resources: [R_HF_COURSE, B_NLP_TUTORIAL, { title: "HuggingFace Token Classification", url: "https://huggingface.co/docs/transformers/tasks/token_classification", required: false }], checkpoint: "能用 HuggingFace 微调 BERT 做 NER，并和 BiLSTM-CRF 对比效果" },
+      { day: 5, title: "信息抽取与实战项目",
+        summary: "关系抽取、事件抽取、实体链接，综合实战", content: {
+          objective: "今天你将学习序列标注的进阶应用——信息抽取。学完后理解关系抽取、事件抽取、实体链接等任务，能完成一个端到端的信息抽取系统。",
+          key_points: [
+            "信息抽取（IE）：从非结构化文本中抽取结构化信息，包括实体、关系、事件",
+            "关系抽取：判断两个实体之间的关系（如「张三」和「百度」是「工作于」关系）",
+            "事件抽取：识别事件触发词和事件论元（时间、地点、人物等）",
+            "实体链接（Entity Linking）：把文本中的实体链接到知识库中的对应实体",
+            "工业级 IE 系统：通常是流水线式的——NER → 实体链接 → 关系抽取 → 事件抽取"
+          ],
+          practice: "信息抽取综合实战：1）关系抽取实战：a）准备或找一个关系抽取数据集（如 SemEval-2010 Task 8 或中文关系抽取数据集）；b）用预训练模型实现一个简单的关系分类器（输入两个实体的位置和句子，输出关系类型）；c）训练并评估。2）实体链接入门：a）理解实体链接的任务定义和挑战（同名实体、别名、简称）；b）实现一个简单的实体链接系统——先做 NER，然后用字符串匹配到知识库；c）用相似度排序选择最优候选。3）构建一个简单的 IE 系统：a）输入一段文本；b）输出识别到的实体、实体类型、实体之间的关系；c）用可视化的方式展示（如知识图谱可视化）。4）进阶挑战（可选）：a）试试联合抽取模型（同时抽取实体和关系，避免错误传播）；b）试试事件抽取；c）试试少样本/零样本 IE（用大模型 + Prompt）。5）项目总结：a）整理你这两周学到的序列标注知识；b）写一份总结报告——从传统方法到深度学习到预训练，各代方法的演进和优缺点；c）梳理信息抽取的技术体系和应用场景。6）思考：信息抽取在哪些行业有应用？你能想到什么有趣的应用场景？",
+          deep_dive: "序列标注是信息抽取的基础，但信息抽取比单纯的序列标注更丰富、更有挑战性：1）信息抽取的完整图景：信息抽取是 NLP 的重要分支，目标是把非结构化文本转化为结构化知识。它包括：a）命名实体识别（NER）——序列标注任务；b）关系抽取（Relation Extraction）——判断实体对之间的关系；c）事件抽取（Event Extraction）——识别事件类型和论元；d）实体链接（Entity Linking）——把实体链接到知识库；e）属性抽取——抽取实体的属性。这些任务组合起来，可以构建知识图谱。2）流水线 vs 联合抽取：传统的 IE 系统通常是流水线的——先做 NER，再做关系抽取，再做实体链接。这种方式的优点是模块化、易维护，但缺点是「错误传播」——NER 的错误会传到后续任务。联合抽取试图同时抽取实体和关系，用一个模型端到端训练，理论上效果更好，但实现更复杂、训练更难。两种方式各有优劣，工业界还是流水线用得多，因为简单可控。3）关系抽取的方法：关系抽取有几种常见的范式：a）基于模板/规则：简单直接，但覆盖度低；b）基于分类：把实体对拿出来，分类它们的关系，需要先做 NER；c）基于 span：先枚举所有可能的实体 span，再分类关系，如 TPLinker；d）基于生成：直接用 Seq2Seq 模型生成结构化的关系三元组，如 T5、GPT。大模型时代，基于生成和 Prompt 的方法越来越流行。4）知识图谱：信息抽取的结果通常用来构建知识图谱（Knowledge Graph）。知识图谱是结构化的知识库，由实体、关系、属性组成，可以做问答、推荐、搜索等应用。Google 知识图谱、Wikidata、CN-DBpedia 都是著名的知识图谱。5）低资源 IE：信息抽取最大的瓶颈是标注数据——关系和事件的标注比 NER 更贵。解决方法：a）远程监督（Distant Supervision）：用知识库自动标注文本，噪音大但量大；b）弱监督：用规则、词典等生成弱标签；c）少样本学习：用大模型的 in-context learning；d）主动学习：选最有价值的样本标注。6）大模型时代的 IE：大模型（如 GPT-4）出现后，信息抽取的范式正在改变——不需要专门训练模型了，直接用 Prompt 让大模型抽取结构化信息，零样本或少样本就能工作。这降低了 IE 的门槛，让更多场景能用。但大模型也有问题：稳定性、成本、速度、数据隐私等。未来的方向可能是「大模型 + 小模型 + 规则」的混合系统。"
+        }, duration: "3小时", resources: [B_NLP_TUTORIAL, R_CS224N], checkpoint: "能构建一个端到端的信息抽取系统（NER + 关系抽取 + 实体链接）" },
     ],
   },
 
@@ -2237,6 +2393,58 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           practice: "NMT 入门与数据准备：1）了解机器翻译的发展历程。2）下载一个小型平行语料库（如 IWSLT）。3）做数据分析：句子长度分布、词频分布、词汇表大小。4）实现数据预处理 pipeline。5）计算基线 BLEU 分数。",
           deep_dive: "机器翻译是 NLP 领域的「圣杯」级任务，它的发展推动了整个 NLP 领域的进步。从 SMT 到 NMT 到大模型，每一次翻译质量的飞跃都伴随着技术的重大突破。Seq2Seq + Attention 的组合是深度学习对 NLP 的第一次重大胜利，也为后来的 Transformer 和自注意力机制铺平了道路。"
         }, duration: "2小时", resources: [R_CS224N, B_NLP_TUTORIAL], checkpoint: "能解释 NMT 的核心架构（Seq2Seq + Attention），理解 BLEU 指标的计算" },
+      { day: 2, title: "Seq2Seq 与 Attention 机制",
+        summary: "深入理解 Seq2Seq 架构和 Attention 机制，动手实现", content: {
+          objective: "今天你将深入学习 Seq2Seq 架构和 Attention 机制。学完后能用 PyTorch 实现一个简单的 Seq2Seq + Attention 模型，理解 Attention 的计算过程，掌握 Teacher Forcing 等训练技巧。",
+          key_points: [
+            "Seq2Seq 架构：编码器把源序列编码成上下文向量，解码器逐词生成目标序列",
+            "Attention 机制：解码器每一步都关注源序列的不同位置，动态生成上下文向量",
+            "Additive Attention vs Multiplicative Attention：两种注意力计算方式",
+            "Teacher Forcing：训练时用真实的前一个词作为输入，加速训练和提升效果",
+            "训练技巧：梯度裁剪、学习率调度、Label Smoothing"
+          ],
+          practice: "Seq2Seq + Attention 实现：1）数据准备：a）准备一个小型双语平行语料（如 IWSLT 的英德或中英翻译数据）；b）构建源语言和目标语言词表；c）数值化和批处理。2）编码器实现：a）用 Embedding + LSTM 实现编码器；b）返回所有时间步的隐藏状态和最终隐藏状态。3）解码器实现（无 Attention）：a）用 Embedding + LSTM + Linear 实现解码器；b）训练时用 Teacher Forcing；c）推理时用自回归生成。4）加入 Attention：a）实现 Additive Attention（Bahdanau Attention）或 Multiplicative Attention；b）在解码器中加入 Attention 机制，每一步计算上下文向量；c）和隐藏状态拼接，再输出预测。5）模型训练：a）用交叉熵损失训练；b）用什么优化器？学习率怎么设？c）怎么监控训练过程？6）简单翻译测试：a）写一个翻译函数，输入源句子，输出目标句子；b）找几个简单的句子测试，看翻译结果是否合理；c）和没有 Attention 的版本对比，Attention 版本是不是更好？",
+          deep_dive: "Seq2Seq + Attention 是深度学习 NLP 的里程碑，理解它很重要：1）Seq2Seq 的革命性：在 Seq2Seq 出现之前，机器翻译系统是非常复杂的流水线——语言模型、翻译模型、调序模型、重排序模型，一大堆组件。Seq2Seq 用一个端到端的神经网络就搞定了，大大简化了系统，而且效果更好。这是深度学习在 NLP 领域的第一次重大胜利。2）Attention 的意义：原始 Seq2Seq 有一个致命问题——编码器把整个源句子压缩成一个固定长度的向量，长句子的信息会丢失。Attention 解决了这个问题：解码器在生成每个词的时候，都可以「看」源句子的所有位置，而且知道该看哪里。Attention 不仅大幅提升了翻译质量，更重要的是，它为后来的 Transformer 和自注意力机制铺平了道路。可以说，Attention 是过去十年 NLP 最重要的思想之一。3）Attention 的直觉：人类翻译的时候，不是先把整个句子背下来再翻译，而是一边看源句子一边翻译——生成某个词的时候，主要关注源句子中对应的那几个词。Attention 机制就是模仿这个过程。Attention 权重的可视化也给了模型一定的可解释性——我们可以看到模型在生成某个词的时候在「看」源句子的哪个位置。4）Teacher Forcing 的利弊：Teacher Forcing 是训练 Seq2Seq 的标准技巧——训练时，解码器的输入用真实的前一个词，而不是模型自己预测的前一个词。好处是训练更快、更稳定，因为模型不会被自己的错误带偏。但缺点是「训练-推理不匹配」（Exposure Bias）——训练时总是看到正确的历史，推理时却要基于自己的预测。缓解方法：Scheduled Sampling（逐渐从用真实词过渡到用预测词）、Curriculum Learning 等。5）Beam Search vs Greedy Search：推理时，Greedy Search 每一步选概率最大的词，简单但可能不是全局最优。Beam Search 每一步保留 top-k 个候选，最后选总体概率最高的序列，效果更好但计算量更大。k 是 beam size，越大效果越好但越慢，通常取 2-10。6）从 Seq2Seq 到 Transformer：Seq2Seq + Attention 用的是 RNN，RNN 有两个问题：一是不能并行计算（每个时间步依赖前一个时间步），训练慢；二是长距离依赖还是有问题。Transformer 用纯 Attention 取代了 RNN，解决了这两个问题，成为了现在的主流架构。理解 Seq2Seq + Attention 能帮你更好地理解 Transformer。"
+        }, duration: "3小时", resources: [R_CS224N, B_NLP_TUTORIAL, { title: "Seq2Seq 论文", url: "https://arxiv.org/abs/1409.3215", required: false }, { title: "Attention 论文", url: "https://arxiv.org/abs/1409.0473", required: false }], checkpoint: "能用 PyTorch 实现 Seq2Seq + Attention 模型，并完成简单翻译测试" },
+      { day: 3, title: "Transformer 与机器翻译",
+        summary: "基于 Transformer 的神经机器翻译，用 HuggingFace 微调", content: {
+          objective: "今天你将学习基于 Transformer 的机器翻译。学完后能用 HuggingFace Transformers 加载预训练翻译模型并微调，理解 BPE 分词和数据处理，掌握翻译模型的评估方法。",
+          key_points: [
+            "Transformer 做翻译：Encoder-Decoder 架构，编码器处理源语言，解码器生成目标语言",
+            "BPE（Byte Pair Encoding）：子词分词方法，解决 OOV 问题，平衡词汇表大小和序列长度",
+            "预训练翻译模型：如 MarianMT、mBART、M2M-100 等，可以直接用或微调",
+            "微调翻译模型：在领域数据上微调，提升特定领域的翻译质量",
+            "评估方法：BLEU、chrF、COMET 等，人工评估仍然是金标准"
+          ],
+          practice: "Transformer 翻译模型实战：1）子词分词学习：a）理解 BPE 的原理和算法；b）用 HuggingFace Tokenizers 库在你的数据上训练一个 BPE tokenizer；c）测试分词效果——常见词和罕见词分别怎么分？2）预训练模型推理：a）用 transformers 库加载一个预训练翻译模型（如 Helsinki-NLP/opus-mt-en-zh 或类似的）；b）翻译几个测试句子，看效果；c）试试不同的解码策略（Greedy、Beam Search），对比结果。3）数据准备与微调：a）准备一个小型平行语料（或用 IWSLT 数据）；b）用预训练模型的 tokenizer 处理数据；c）用 Trainer API 微调模型。4）效果评估：a）在测试集上计算 BLEU 分数；b）和微调前的模型对比，提升了多少？c）人工评估：找 20 个句子，对比微调前后的翻译质量。5）解码策略实验：a）对比 Greedy Search 和不同 beam size 的 Beam Search；b）试试长度惩罚（length penalty）；c）试试采样解码（Top-k、Top-p、Temperature），看生成结果有什么不同。6）错误分析：a）找出翻译质量差的句子；b）分析错误类型：漏译？错译？语序不对？术语错误？c）怎么改进？",
+          deep_dive: "Transformer 彻底改变了机器翻译，现在所有的翻译系统都是基于 Transformer 的：1）为什么 Transformer 比 RNN 好？三个主要原因：a）并行计算：RNN 是顺序的，每个时间步依赖前一个，无法并行；Transformer 的 Self-Attention 可以同时计算所有位置的表示，训练速度快很多；b）长距离依赖：RNN 处理长序列时，信息需要一步步传递，容易丢失；Transformer 中任意两个位置的距离都是 1，长距离依赖更容易捕捉；c）注意力可视化：Attention 权重给了模型一定的可解释性。这些优势让 Transformer 很快取代了 RNN，成为 NLP 的主流架构。2）BPE 的重要性：子词分词是神经机器翻译的关键技术之一。它解决了两个问题：a）OOV（未登录词）：罕见词可以拆成子词，不会完全没见过；b）词汇表大小：如果用词级别的话，词汇表会非常大，Embedding 层参数太多。BPE 通过合并频率高的字符对，在词汇表大小和序列长度之间取得平衡。现在几乎所有的预训练模型（BERT、GPT 等）都用 BPE 或类似的子词分词方法。3）翻译模型的选择：现在有很多预训练翻译模型可以选择：a）MarianMT：Helsinki-NLP 训练的，支持 100+ 语言对，每个语言对一个模型，体积小，速度快；b）mBART：Meta 训练的多语言预训练模型，支持 50+ 语言，一个模型搞定所有方向，需要更多资源；c）M2M-100：Meta 训练的多对多翻译模型，支持 100 种语言互译；d）大模型：GPT-4、Claude 等大模型也能做翻译，效果很好，但速度慢、成本高。选哪个取决于你的需求——效果、速度、成本、语言对。4）领域适配：通用翻译模型在特定领域（如医疗、法律、专利）效果往往不好，因为术语和表达方式不一样。领域适配的方法：a）微调：在领域平行数据上继续训练；b）术语表约束：强制某些词按指定方式翻译；c）提示学习：给大模型加领域提示。5）翻译评估的挑战：自动评估指标（如 BLEU）和人工评分的相关性并不高，尤其是在高质量区间。更好的自动评估指标：a）chrF：基于字符 n-gram，对形态变化更鲁棒；b）COMET：基于预训练模型的评估指标，和人工相关性更高；c）BERTScore：用 BERT 的上下文嵌入计算相似度。但人工评估仍然是金标准——尤其是重要的项目，一定要有人工评估。6）机器翻译的现状与未来：现在的神经机器翻译已经在很多语言对上达到或接近人类水平（尤其是高资源语言对），但仍然有挑战：a）低资源语言：数据少，效果不好；b）领域适配：通用模型在专业领域效果下降；c）可解释性：为什么这么翻译？不知道；d）翻译腔：翻译出来的文本不够「地道」。未来的方向：大模型翻译、多语言统一模型、更好的领域适配、更准确的评估指标等。"
+        }, duration: "3小时", resources: [R_HF_COURSE, B_NLP_TUTORIAL, { title: "HuggingFace 翻译教程", url: "https://huggingface.co/docs/transformers/tasks/translation", required: false }, { title: "SacreBLEU", url: "https://github.com/mjpost/sacrebleu", required: false }], checkpoint: "能用 HuggingFace 微调翻译模型，并计算 BLEU 进行评估" },
+      { day: 4, title: "文本生成与解码策略",
+        summary: "深入理解文本生成的各种解码策略，掌握文本生成的评估", content: {
+          objective: "今天你将学习文本生成的核心技术——解码策略。学完后理解 Greedy Search、Beam Search、Top-k/Top-p 采样、Temperature 等方法的区别和适用场景，能调整解码参数控制生成质量。",
+          key_points: [
+            "文本生成本质：自回归地逐词生成，每一步选择下一个词",
+            "确定性解码：Greedy Search（贪心）、Beam Search（集束搜索），输出确定",
+            "随机采样：Top-k 采样、Top-p（Nucleus）采样、Temperature，输出有多样性",
+            "生成质量 vs 多样性的权衡：更确定=更保守但可能重复，更多样=更有趣但可能不通顺",
+            "常见问题：重复生成、逻辑断裂、长度失控、幻觉，以及对应的缓解方法"
+          ],
+          practice: "解码策略实验与对比：1）基础解码方法：a）用一个预训练生成模型（如 GPT-2、Qwen、或翻译模型）；b）实现 Greedy Search 生成；c）实现 Beam Search 生成，试试不同的 beam size（1、2、5、10）；d）对比结果：beam size 越大，效果越好吗？速度呢？2）随机采样方法：a）实现纯随机采样（从整个词表按概率采样）；b）试试不同的 Temperature（0.5、1.0、2.0），观察生成结果的变化；c）实现 Top-k 采样，试试不同的 k 值（10、50、100）；d）实现 Top-p（Nucleus）采样，试试不同的 p 值（0.5、0.9、0.95）。3）对比实验：设计一个评测表，对比各种解码策略的：a）生成质量（通顺度、相关性）；b）多样性（重复度、变化度）；c）速度。4）控制生成：a）怎么让生成更有创造性？b）怎么让生成更保守、更确定？c）怎么减少重复生成？（试试 repetition penalty、no_repeat_ngram_size）d）怎么控制生成长度？5）文本生成评估（可选）：a）理解困惑度（Perplexity）的含义；b）计算测试集上的困惑度；c）思考：困惑度越低，生成质量一定越高吗？为什么？6）应用：用你学到的解码策略，写一个简单的文本生成应用（如故事生成、邮件助手、代码补全等），调整参数直到你满意。",
+          deep_dive: "文本生成是现在大模型时代最核心的技术之一，理解解码策略很重要：1）为什么解码策略这么重要？同样的模型，用不同的解码策略，生成结果可以天差地别。好的解码策略能让模型输出通顺、多样、有创造性的文本，不好的解码策略可能产出重复、不通顺、甚至无意义的内容。理解各种解码策略的原理和权衡，能帮你更好地使用大模型。2）Beam Search 的局限：Beam Search 是机器翻译的标准解码方法，因为它能找到概率较高的序列。但它也有问题：a）生成的文本偏保守、缺乏多样性；b）倾向于生成短句子（因为越长分数乘的概率项越多，总分越低，所以需要长度惩罚）；c）容易重复。对于翻译这种「有标准答案」的任务，Beam Search 很合适；但对于创意写作、对话等需要多样性的任务，就不太合适了。3）采样方法的革命：Top-k 和 Top-p 采样的出现改变了文本生成。它们的核心思想是：不要每次都选概率最大的，从概率高的候选里随机选，这样生成的文本更自然、更多样。Temperature 控制「随机性」——温度越低，分布越尖锐，越倾向于选概率高的；温度越高，分布越平缓，越多样化。Top-k 固定候选数量，Top-p 固定累积概率阈值，Top-p 通常更灵活（因为不同位置的概率分布形状不一样）。4）重复生成问题：自回归生成有一个常见问题——容易陷入重复循环，反复说同样的话。缓解方法：a）repetition penalty：惩罚已经生成过的词的概率；b）no_repeat_ngram_size：不允许生成重复的 n-gram；c）Contrastive Search：对比搜索，在考虑概率的同时考虑和之前生成内容的差异。5）解码和模型能力：很多人把生成质量不好都怪模型，但有时候问题出在解码策略上。比如：a）觉得模型输出太死板？试试调高 Temperature 或用 Top-p 采样；b）觉得模型输出太天马行空？试试调低 Temperature 或用 Beam Search；c）觉得模型总是重复？加 repetition penalty。调整解码参数往往能显著改善生成效果。6）更高级的生成方法：除了这些基础解码方法，还有更高级的生成控制方法：a）引导生成（Constrained Decoding）：强制模型生成包含特定词或遵循特定格式；b）对比解码（Contrastive Decoding）：对比大模型和小模型的预测，减少幻觉；c）Speculative Decoding：用小模型「猜」，大模型「验证」，加速生成；d）链式思维（Chain-of-Thought）：让模型一步步思考，提升复杂推理能力。理解这些基础的解码策略，是理解更高级生成技术的基础。"
+        }, duration: "2.5小时", resources: [B_NLP_TUTORIAL, R_HF_COURSE, { title: "The Art of Decoding", url: "https://huggingface.co/blog/how-to-generate", required: false }], checkpoint: "能对比各种解码策略的优缺点，并能调整参数控制生成质量" },
+      { day: 5, title: "翻译系统构建与实战",
+        summary: "构建完整的翻译系统，后端 API + 前端界面 + 部署", content: {
+          objective: "今天你将构建一个完整的机器翻译系统，从后端 API 到前端界面再到部署。学完后能用 FastAPI 构建翻译服务 API，用 Gradio/Streamlit 做前端，用 Docker 容器化部署。",
+          key_points: [
+            "翻译系统架构：前端界面 → 后端 API → 翻译模型 → 缓存/队列",
+            "后端 API：FastAPI 构建 RESTful API，支持批量翻译、文件翻译",
+            "前端界面：Gradio 或 Streamlit 快速构建交互式界面",
+            "部署与优化：Docker 容器化、模型量化、批量处理、缓存",
+            "生产级考虑：错误处理、日志、监控、性能优化、成本控制"
+          ],
+          practice: "构建完整翻译系统：1）后端 API：a）用 FastAPI 写一个翻译 API；b）提供两个端点：/translate（单句翻译）和 /batch_translate（批量翻译）；c）错误处理和参数验证；d）用 uvicorn 启动服务，用 curl 或 Postman 测试。2）前端界面：a）用 Gradio 或 Streamlit 做一个简单的翻译界面；b）左边输入源文本，右边显示翻译结果；c）可以选择翻译方向、调整解码参数；d）加上历史记录功能。3）优化性能：a）实现批量处理，一次处理多个请求提升吞吐量；b）添加缓存（如 Redis），相同的文本直接返回缓存结果；c）试试模型量化（如 8-bit 量化），看速度和显存的变化；d）（可选）用 vLLM 或 Text Generation Inference 加速推理。4）容器化部署：a）写一个 Dockerfile，把翻译服务打包成 Docker 镜像；b）构建镜像并运行容器；c）测试容器内的服务是否正常工作。5）生产级增强（可选）：a）添加日志（用 logging 或 loguru）；b）添加请求限流（防止滥用）；c）添加健康检查端点；d）添加 Prometheus 监控指标。6）总结与复盘：a）整理你这两周学到的机器翻译知识；b）写一份总结报告——从统计翻译到神经翻译到现在的大模型翻译，技术演进的脉络是什么？c）思考：机器翻译还有哪些挑战？未来会怎么发展？",
+          deep_dive: "做一个 Demo 容易，但做一个生产级的翻译系统有很多工程挑战：1）延迟和吞吐量的权衡：翻译系统有两个关键指标——延迟（单个请求多久返回）和吞吐量（单位时间能处理多少请求）。两者往往是矛盾的：a）要低延迟，就不能等批量，单个请求立即处理，GPU 利用率低；b）要高吞吐量，就攒一批一起处理，延迟高。实际系统中需要根据业务需求找到平衡点。动态批处理（dynamic batching）是常用的优化——在一定时间窗口内攒请求，攒够了或者时间到了就一起处理。2）模型部署的工程化：把模型从「能跑」到「好用」中间有很多工作：a）模型优化：量化（FP16、INT8、INT4）、剪枝、蒸馏，减小模型体积，提升速度；b）推理框架：vLLM、TensorRT-LLM、Text Generation Inference 等专用推理框架，比原生 PyTorch 快很多；c）服务框架：Triton Inference Server、TorchServe、BentoML 等，提供批处理、多模型、弹性伸缩等功能。3）成本控制：大模型时代，推理成本是个大问题。降低成本的方法：a）选合适的模型：能用小模型就不用大模型；b）模型压缩：量化、蒸馏；c）缓存：相同的请求直接返回缓存；d）批处理：提高 GPU 利用率；e）弹性伸缩：流量低的时候减少实例，流量高的时候扩容。4）质量保障：生产系统中，怎么保证翻译质量？a）自动评估：定期计算 BLEU/COMET 等指标，监控质量变化；b）人工抽检：定期抽一些翻译结果人工评估；c）用户反馈：让用户可以举报翻译错误，收集 bad case 持续优化；d）A/B 测试：上新模型时做 A/B 测试，确认效果真的更好再全量。5）翻译系统的更多功能：一个完整的翻译系统通常还有很多高级功能：a）术语库：专业术语按指定方式翻译；b）翻译记忆（TM）：相同或相似的句子直接复用之前的翻译；c）音译：专有名词的音译规则；d）格式保留：翻译时保留原文的格式（如 HTML、Markdown）；e）多语言支持：支持多种语言互译。6）大模型时代的翻译：大模型（GPT-4、Claude、Gemini 等）的翻译效果已经非常好了，尤其是低资源语言和创意类文本。但大模型也有问题：a）成本高：比专门的翻译模型贵很多；b）速度慢：生成速度慢，不适合高吞吐量场景；c）稳定性：有时候会「自由发挥」，加很多原文没有的内容；d）数据隐私：把数据发给第三方大模型有隐私风险。所以实际中往往是「大模型 + 小模型」混合——普通翻译用小模型，复杂翻译用大模型，或者用大模型润色小模型的翻译结果。"
+        }, duration: "3.5小时", resources: [R_FASTAPI, R_STREAMLIT, { title: "vLLM 项目", url: "https://github.com/vllm-project/vllm", required: false }], checkpoint: "完成一个包含 API、前端界面、Docker 部署的完整翻译系统" },
     ],
   },
 {
@@ -4446,6 +4654,58 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           practice: "CI/CD 概念理解与工具探索：1）思考你之前的项目中，集成和部署是怎么做的？有哪些痛点？2）列出 3-5 个你知道的 CI/CD 工具，对比它们的优缺点。3）设计一个理想的 CI/CD 流水线应该包含哪些阶段？4）了解 GitHub Actions 的基本概念：Workflow、Job、Step、Action、Runner。5）找一个开源项目，看看它的 CI/CD 配置是怎样的。",
           deep_dive: "CI/CD 不仅仅是工具，它是一种文化和实践。它的核心思想是：小步快跑、频繁集成、自动化一切。在传统的开发模式中，开发人员各自在分支上工作很长时间，最后合并时会遇到大量的集成问题——「集成地狱」。CI 通过频繁集成（每天多次）来解决这个问题，让问题尽早暴露。CD 则进一步将部署自动化，让软件可以随时安全地发布。对于 AI 项目，CI/CD 同样重要，但也有特殊性——除了代码，还要考虑数据、模型、实验的版本管理和自动化测试。"
         }, duration: "2小时", resources: [B_DOCKER_TUTORIAL, { title: "GitHub Actions 文档", url: "https://docs.github.com/en/actions", required: false }], checkpoint: "能解释 CI/CD 的核心概念和价值，并描述一个典型的 CI/CD 流水线" },
+      { day: 2, title: "GitHub Actions 入门与基础流水线",
+        summary: "掌握 GitHub Actions 的核心概念，构建第一个 CI 流水线", content: {
+          objective: "今天你将学习 GitHub Actions 的核心概念并构建你的第一个 CI 流水线。学完后能解释 Workflow、Job、Step、Action、Runner 等概念，写一个简单的 CI workflow，实现代码提交后自动运行测试。",
+          key_points: [
+            "GitHub Actions 核心概念：Workflow、Job、Step、Action、Runner、Event",
+            "Workflow 文件：YAML 格式，放在 .github/workflows/ 目录下",
+            "触发事件：push、pull_request、schedule、workflow_dispatch 等",
+            "常用 Action：actions/checkout、setup-node、setup-python、cache 等",
+            "Job 依赖：needs 关键字定义 Job 之间的依赖关系"
+          ],
+          practice: "GitHub Actions 入门实战：1）学习 GitHub Actions 核心概念：a）Workflow：一个完整的工作流，对应一个 YAML 文件；b）Job：工作流中的一个任务，可以并行或串行执行；c）Step：Job 中的一个步骤；d）Action：可复用的步骤单元；e）Runner：运行 Job 的机器（GitHub 托管或自托管）。2）创建你的第一个 Workflow：a）在你的项目中创建 .github/workflows/ci.yml；b）配置触发条件：push 到 main 分支和 PR 时触发；c）第一个 Job：运行测试——checkout 代码、设置 Python 环境、安装依赖、运行 pytest。3）测试你的 Workflow：a）提交代码并 push；b）在 GitHub 的 Actions 标签页查看运行结果；c）如果失败了，查看日志，修复问题。4）多 Job 流水线：a）添加一个 lint Job（用 flake8 或 eslint 做代码检查）；b）让 test Job 依赖 lint Job（lint 通过了才跑测试）；c）用 needs 关键字配置依赖。5）缓存优化：a）用 actions/cache 缓存 pip/npm 依赖；b）对比缓存前后的运行时间，看提升了多少。6）矩阵构建（可选）：a）用 strategy.matrix 在多个 Python/Node 版本上测试；b）观察多个 Job 并行执行。",
+          deep_dive: "CI/CD 不只是工具，更是文化和实践。GitHub Actions 是最流行的 CI/CD 工具之一，但理解它的设计哲学很重要：1）为什么选择 GitHub Actions？a）和 GitHub 深度集成：PR、Issue、Release 等都能触发；b）免费额度够用：公开仓库无限免费，私有仓库每月有 2000 分钟免费额度；c）生态丰富：GitHub Marketplace 有上万现成的 Action 可以用；d）灵活强大：支持矩阵构建、并行作业、条件执行、自定义 Runner 等。2）YAML 的陷阱：GitHub Actions 用 YAML 配置，YAML 看起来简单但有很多坑：a）缩进错误：YAML 对缩进敏感，要用空格不要用 Tab；b）特殊字符：冒号、&、* 等特殊字符要加引号；c）多行字符串：用 | 或 > 有不同的换行处理方式；d）变量替换：${{ }} 语法，注意和 shell 变量的区别。3）CI 流水线的最佳实践：a）速度要快：CI 应该在几分钟内跑完，太长了大家就不想等了。可以用缓存、并行、增量构建来加速；b）结果要可靠：CI 应该稳定，不能时好时坏（flaky test）。不稳定的 CI 比没有 CI 还糟——大家会忽略失败；c）反馈要及时：失败了要尽快通知相关人，最好在 PR 里就能看到结果；d）从简单开始：不要一开始就搭一个超级复杂的流水线，先跑通最简单的（安装依赖+跑测试），再逐步加东西。4）CI 流水线的常见阶段：一个典型的 CI 流水线可能包含这些阶段：a）Checkout：拉取代码；b）Setup：配置环境（语言版本、依赖）；c）Lint：代码风格检查；d）Test：单元测试、集成测试、端到端测试；e）Build：构建产物（Docker 镜像、静态文件等）；f）Security：安全扫描（依赖漏洞、代码漏洞）；g）Deploy：部署到测试/生产环境。不一定都要有，根据项目情况来。5）PR 工作流：CI 和 PR 结合是最佳实践——每个 PR 都会自动跑 CI，CI 绿了才能合并。这样可以保证主分支的质量，也让 Code Review 更有信心。配合主分支保护（Branch Protection），可以强制要求 CI 通过才能合并。6）CI 文化：CI/CD 不只是技术，更是文化。它的核心是「小步快跑、持续集成、快速反馈」。团队需要养成习惯：频繁提交、小步提交、写测试、重视 CI 结果。CI 失败了应该立即修复，而不是放着不管。"
+        }, duration: "3小时", resources: [B_DOCKER_TUTORIAL, { title: "GitHub Actions 官方文档", url: "https://docs.github.com/en/actions", required: false }, { title: "GitHub Actions 入门教程", url: "https://docs.github.com/en/actions/quickstart", required: false }], checkpoint: "能写出一个包含 lint 和 test 的 CI 流水线，并成功运行" },
+      { day: 3, title: "持续部署与发布策略",
+        summary: "掌握 CD 持续部署，理解常见的发布策略和最佳实践", content: {
+          objective: "今天你将学习持续部署和发布策略。学完后能配置自动化部署流水线，理解蓝绿部署、金丝雀发布、滚动发布等发布策略，知道如何安全地发布软件。",
+          key_points: [
+            "持续交付 vs 持续部署：交付是「随时可以部署」，部署是「自动部署到生产」",
+            "部署策略：滚动发布、蓝绿部署、金丝雀发布（灰度发布）、功能开关",
+            "环境管理：开发环境、测试环境、预发布环境、生产环境",
+            "发布质量保障：自动化测试、手动检查、回滚机制、监控告警",
+            "GitHub Pages / Vercel / Netlify：前端项目的简单部署方式"
+          ],
+          practice: "持续部署实战：1）部署一个前端项目：a）用 GitHub Pages 部署一个静态网站；b）配置 GitHub Actions，每次 push 到 main 自动构建并部署；c）验证部署结果。2）Docker 镜像构建与推送：a）写一个 Workflow，构建 Docker 镜像；b）推送到 Docker Hub 或 GitHub Container Registry；c）打标签（用 git tag 或 commit hash）。3）部署到服务器（可选）：a）用 SSH Action 部署到一台云服务器；b）或者用 rsync 同步文件；c）部署后重启服务。4）学习发布策略：a）理解滚动发布、蓝绿部署、金丝雀发布的区别；b）各自的优缺点是什么？c）分别适合什么场景？5）回滚机制设计：a）如果发布后出问题了，怎么快速回滚？b）设计你的回滚方案——是回退代码？还是切流量？c）怎么知道需要回滚？（监控告警、用户反馈）6）功能开关（可选）：a）理解什么是 Feature Flag（功能开关）；b）为什么说功能开关和持续部署是绝配？c）尝试在你的项目中加一个简单的功能开关。",
+          deep_dive: "持续部署看起来美好，但真正做好并不容易，有很多需要考虑的问题：1）为什么不是所有团队都做持续部署？持续部署很酷，但不是所有团队都适合：a）监管要求：金融、医疗等行业有严格的发布审批要求，不能随便自动部署；b）业务特性：如果用户对 downtime 零容忍，发布就要非常谨慎；c）团队成熟度：如果测试覆盖不够、监控不完善，盲目上持续部署只会搞出更多线上问题。持续交付（随时可以部署，但发布需要人工点一下）是更务实的选择。2）发布策略详解：a）滚动发布（Rolling Update）：逐个实例更新新版本，老版本逐步退出。优点是不需要额外资源，平滑过渡；缺点是发布过程中两个版本同时存在，可能有兼容性问题，回滚慢。K8s 的默认发布策略就是滚动发布。b）蓝绿部署（Blue/Green）：有两套完全一样的环境，一套跑当前版本（蓝），一套准备新版本（绿）。验证通过后，一次性把流量切到绿环境。优点是切换快、回滚快（切回去就行）；缺点是需要双倍资源。c）金丝雀发布（Canary Release）：先把一小部分流量（如 1%、5%）切到新版本，观察没问题再逐步放量。优点是风险小，有问题只影响少量用户；缺点是发布过程慢，需要流量控制能力，多版本共存有兼容性问题。d）功能开关（Feature Flag）：代码已经部署了，但新功能用开关控制，只有特定用户能看到。优点是发布和功能解耦，可以随时开关，方便做 A/B 测试；缺点是代码里有很多开关逻辑，增加复杂度，要记得清理旧开关。3）环境管理：成熟的团队通常有多个环境：a）开发环境（Dev）：开发人员日常用的，随便折腾；b）测试环境（QA/Test）：测试人员测功能的；c）预发布环境（Staging）：和生产环境配置一样，发布前最后验证的；d）生产环境（Production）：给用户用的，最稳定最重要。不同环境有不同的权限和发布频率。4）发布质量保障：持续部署不等于乱发布，质量保障是前提：a）自动化测试：单元测试、集成测试、端到端测试，测试覆盖度要够；b）灰度发布：先放少量流量验证；c）监控告警：发布后密切关注指标（错误率、延迟、业务指标），有问题立即告警；d）自动回滚：检测到问题自动回滚，减少影响范围；e）发布 Checklist：发布前检查清单，确保该验证的都验证了。5）安全地发布：发布是有风险的，目标是把风险降到最低：a）小步发布：每次发布变更小，风险也小；b）频繁发布：发布越频繁，每次发布的变更越少，风险越低；c）可回滚：任何发布都要能快速回滚；d）可观测：发布后能看到系统状态；e）灰度：先小范围验证再全量。记住：发布不是目的，稳定地交付价值才是目的。"
+        }, duration: "3小时", resources: [B_DOCKER_TUTORIAL, { title: "GitHub Pages 部署", url: "https://pages.github.com/", required: false }], checkpoint: "能配置自动化部署流水线，并理解各种发布策略的优缺点" },
+      { day: 4, title: "CI/CD 进阶与最佳实践",
+        summary: "CI/CD 进阶技巧：缓存、矩阵、并行、安全、可观测", content: {
+          objective: "今天你将学习 CI/CD 的进阶技巧和最佳实践。学完后能优化 CI/CD 流水线的速度和成本，理解 CI/CD 中的安全问题，知道怎么设计高质量的流水线。",
+          key_points: [
+            "流水线优化：缓存依赖、并行执行、矩阵构建、增量构建，提升速度降低成本",
+            "安全左移：在 CI 中加入安全扫描——依赖漏洞、代码质量、密钥检测",
+            "Secrets 管理：怎么安全地管理密码、Token 等敏感信息",
+            "自托管 Runner：什么时候需要自己搭 Runner，怎么搭",
+            "可观测性：流水线的日志、指标、告警，怎么快速定位失败"
+          ],
+          practice: "CI/CD 进阶优化实战：1）流水线性能优化：a）分析你的 CI 每一步花了多少时间；b）找出最慢的步骤，想办法优化；c）试试缓存依赖、并行 Job、优化构建命令等方法；d）记录优化前后的对比数据。2）安全扫描集成：a）在 CI 中加一个依赖漏洞扫描（如 pip-audit、npm audit、Dependabot）；b）加一个代码质量检查（如 SonarQube、CodeQL）；c）加一个密钥检测（如 gitleaks），防止把密钥提交到代码里。3）Secrets 管理实践：a）在 GitHub 仓库中配置 Secrets；b）在 Workflow 中使用 Secrets（${{ secrets.SECRET_NAME }}）；c）注意：不要在日志中打印敏感信息；d）了解什么是 OIDC，为什么它比长期 Token 好。4）矩阵构建实战：a）用 strategy.matrix 在多个 OS（Ubuntu、Windows、macOS）和多个语言版本上测试；b）观察并行执行的效果；c）理解 fail-fast 的含义。5）CI/CD 设计练习：a）为你做过的一个项目设计一套完整的 CI/CD 方案；b）画出流程图，包含哪些阶段、每个阶段做什么、触发条件是什么；c）考虑：怎么保证质量？怎么保证安全？怎么快速回滚？成本大概多少？6）学习资源：a）浏览 GitHub Marketplace，找找有趣的 Action；b）看看知名开源项目的 CI/CD 配置（如 React、Vue、TensorFlow），学习它们的做法。",
+          deep_dive: "初级和高级 DevOps 的区别，往往在于流水线的质量和效率：1）流水线的成本问题：GitHub Actions 虽然有免费额度，但如果用得多了，账单也会很可观。优化成本的方法：a）缓存：缓存依赖、缓存构建产物，减少重复工作；b）并行：把大 Job 拆成小 Job 并行跑，虽然总时长可能更长，但 wall time 更短，用户体验更好；c）取消冗余运行：如果同一个分支连续 push，只跑最新的那个（用 concurrency 配置）；d）按需运行：不是每次 push 都跑全量测试，PR 只跑相关测试，合并后再跑全量；e）自托管 Runner：如果用量大，自己搭 Runner 可能更便宜（但要考虑维护成本）。2）CI/CD 的安全问题：CI/CD 系统有很高的权限（能部署、能访问代码、能访问云资源），是安全防护的重点：a）Secrets 泄露：不要在日志里打印敏感信息，GitHub 会自动屏蔽 secrets，但也要小心；b）第三方 Action 的风险：Marketplace 里的 Action 质量参差不齐，尽量用官方的或知名的，或者固定版本号，不要用 @latest；c）PR 中的安全风险：外部贡献者的 PR 能不能访问 secrets？默认是不能的，但要注意 pull_request_target 事件可能有安全隐患；d）依赖供应链安全：CI 里用的依赖也可能有漏洞，要定期扫描。3）「安全左移」（Shift Left）：这是 DevOps 里的一个重要思想——把安全检查往「左」移，也就是在开发周期的早期就做安全检查。传统的安全检查在上线前才做，发现问题要改已经很晚了。安全左移就是在编码阶段、CI 阶段就做安全检查，问题越早发现，修复成本越低。4）流水线的可观测性：CI/CD 流水线失败了，怎么快速定位原因？a）好的日志：每一步输出清晰的日志，错误信息要明确；b）结构化的结果：哪些步骤失败了？失败原因分类（测试失败、构建失败、超时等）；c）指标和趋势：平均运行时间、失败率、最常失败的步骤，这些数据能帮你发现瓶颈；d）告警：流水线失败了要通知到人，不能没人管。5）CI/CD 不是银弹：很多团队以为上了 CI/CD 就万事大吉了，其实不是——CI/CD 只是工具，关键还是团队的文化和工程能力。如果代码质量差、测试写得烂、没人管 CI 结果，再牛逼的 CI/CD 也没用。CI/CD 要和代码评审、单元测试、监控告警等实践结合起来，才能真正发挥价值。6）持续改进：好的 CI/CD 流水线不是一次设计好就不变的，要持续优化：a）定期回顾：流水线是不是太慢了？失败率是不是太高了？b）收集反馈：开发人员觉得 CI 好用吗？有什么痛点？c）逐步迭代：一点点优化，不要想着一步到位。"
+        }, duration: "3小时", resources: [B_DOCKER_TUTORIAL, { title: "GitHub Actions 安全指南", url: "https://docs.github.com/en/actions/security-guides", required: false }], checkpoint: "能优化 CI/CD 流水线性能，并理解 CI/CD 中的安全最佳实践" },
+      { day: 5, title: "CI/CD 综合实战项目",
+        summary: "从零搭建一个完整项目的 CI/CD 流水线，综合应用所学知识", content: {
+          objective: "今天你将完成一个 CI/CD 综合实战项目——从零为一个项目搭建完整的 CI/CD 流水线。学完后能独立设计和实现一个完整的 CI/CD 方案，包含测试、构建、部署、安全检查等环节。",
+          key_points: [
+            "完整 CI/CD 流水线的组成：代码检查 → 测试 → 构建 → 安全扫描 → 部署 → 通知",
+            "多环境部署：测试环境、预发布环境、生产环境的不同发布策略",
+            "发布管理：版本号管理、变更日志、Release Notes",
+            "问题排查：流水线失败了怎么快速定位和修复",
+            "文档化：把 CI/CD 流程写入文档，让团队成员都理解"
+          ],
+          practice: "CI/CD 综合实战项目：1）项目选择：选择一个你之前做的项目（或新建一个示例项目），可以是前端项目、后端 API、Python 库、Docker 镜像等。2）方案设计：a）为这个项目设计一套完整的 CI/CD 方案；b）画出流程图：哪些阶段？每个阶段做什么？触发条件？c）考虑：测试策略、构建方式、部署目标、回滚方案、安全检查。3）CI 流水线实现：a）配置代码风格检查（lint）；b）配置单元测试；c）配置构建（如果需要）；d）配置安全扫描（至少一种）；e）配置缓存优化速度。4）CD 流水线实现：a）配置部署流程（部署到哪里？怎么部署？）；b）配置多环境（可选，如 dev/staging/prod）；c）配置发布策略（滚动？蓝绿？金丝雀？）；d）配置回滚机制。5）增强功能（可选）：a）配置 PR 模板和 Issue 模板；b）配置自动打标签和生成 Release Notes；c）配置代码覆盖率报告；d）配置 Slack/钉钉/飞书通知，流水线结果推送到群里。6）文档与总结：a）写一份 CI/CD 文档，说明流程、怎么触发、怎么排查问题；b）总结你在这个项目中学到了什么；c）遇到了哪些坑？怎么解决的？d）还有什么可以改进的地方？",
+          deep_dive: "做项目和学知识点是完全不同的体验——只有真正动手做过，才能理解其中的坑和权衡：1）从「能用」到「好用」中间差很远：搭一个能跑的流水线很简单，但搭一个团队愿意天天用的流水线很难。好用的流水线应该：a）快：5-10 分钟内出结果，太慢了大家就不想等了；b）稳：不要时好时坏，flaky CI 比没有 CI 还糟糕；c）准：失败了能明确告诉你哪里错了，怎么修；d）简单：配置不要太复杂，新人也能看懂；e）灵活：能适应不同的需求，不要太僵化。2）常见的坑和反模式：a）巨型 Job：什么都塞在一个 Job 里，失败了不知道是哪部分的问题，也不能并行。应该拆成多个小 Job；b）把所有东西都放 CI 里：CI 应该快，太重的任务（如性能测试、全量 E2E 测试）可以定时跑或者手动触发，不要每次提交都跑；c）忽略 CI 失败：CI 红了没人管，大家都习惯了，那 CI 就失去意义了。CI 失败必须立即修复；d）过度工程化：一开始就搞超级复杂的流水线，结果维护成本很高。应该从简单开始，逐步迭代；e）硬编码配置：把服务器地址、账号密码等直接写在 YAML 里，不安全也不灵活。应该用 Secrets 和变量。3）怎么衡量 CI/CD 的效果？可以关注这些指标：a）部署频率：多久部署一次？越高频说明越成熟；b）变更前置时间（Lead Time）：从代码提交到上线需要多久？越短越好；c）变更失败率：发布后出问题的比例有多高？越低越好；d）平均恢复时间（MTTR）：出问题了多久能恢复？越快越好。这四个是 DevOps 研究（DORA）里的核心指标，被称为「四个关键指标」。4）团队采用的挑战：引入 CI/CD 不只是技术问题，更是人的问题：a）老员工可能习惯了旧方式，不愿意改；b）大家可能觉得写测试、配 CI 是「浪费时间」；c）CI 经常失败会让人有挫败感。怎么推动？a）以身作则，自己先做好；b）从痛点切入：解决大家最痛的点（比如部署麻烦、容易出 bug）；c）小步快跑：先从一个项目、一个功能开始，做出效果了再推广；d）培训和分享：让大家理解为什么要这么做，而不只是怎么做。5）CI/CD 的未来：CI/CD 也在不断演进：a）GitOps：用 Git 来管理基础设施和应用配置，Git 是唯一真相来源；b）Platform Engineering：构建内部开发者平台，让自助式部署更容易；c）AI 辅助：用 AI 来自动生成 CI 配置、自动排查失败原因、自动优化流水线；d）安全集成：DevSecOps，安全深度集成到 CI/CD 流程中。技术在变，但核心思想不变——更快、更稳、更安全地交付价值。"
+        }, duration: "4小时", resources: [B_DOCKER_TUTORIAL, { title: "DORA 四个关键指标", url: "https://cloud.google.com/blog/products/devops-sre/the-2019-accelerate-state-of-devops-elite-performance", required: false }], checkpoint: "完成一个完整项目的 CI/CD 流水线搭建，包含 CI 和 CD 全流程" },
     ],
   },
 
