@@ -10,6 +10,7 @@ const R_GIT_SCM: ResourceLink = { title: "Git 官方文档 Pro Git", url: "https
 const R_GIT_BRANCHING: ResourceLink = { title: "Learn Git Branching（可视化练习）", url: "https://learngitbranching.js.org/", required: true, type: "tool", source: "official" };
 const R_DOCKER_START: ResourceLink = { title: "Docker 官方入门指南", url: "https://docs.docker.com/get-started/", required: true, type: "doc", source: "official" };
 const R_DOCKER_BUILD: ResourceLink = { title: "Dockerfile 最佳实践", url: "https://docs.docker.com/engine/reference/builder/", required: true, type: "doc", source: "official" };
+const R_DOCKER_GETTING_STARTED: ResourceLink = { title: "Docker 入门教程", url: "https://docs.docker.com/get-started/", required: false, type: "doc", source: "official" };
 const R_PYTORCH_TUT: ResourceLink = { title: "PyTorch 官方 Tutorials", url: "https://pytorch.org/tutorials/", required: true, type: "doc", source: "official" };
 const R_PYTORCH_DOC: ResourceLink = { title: "PyTorch 官方 API 文档", url: "https://pytorch.org/docs/stable/", required: true, type: "doc", source: "official" };
 const R_NUMPY: ResourceLink = { title: "NumPy 官方文档", url: "https://numpy.org/doc/stable/", required: true, type: "doc", source: "official" };
@@ -2354,6 +2355,66 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           practice: "信息抽取综合实战：1）关系抽取实战：a）准备或找一个关系抽取数据集（如 SemEval-2010 Task 8 或中文关系抽取数据集）；b）用预训练模型实现一个简单的关系分类器（输入两个实体的位置和句子，输出关系类型）；c）训练并评估。2）实体链接入门：a）理解实体链接的任务定义和挑战（同名实体、别名、简称）；b）实现一个简单的实体链接系统——先做 NER，然后用字符串匹配到知识库；c）用相似度排序选择最优候选。3）构建一个简单的 IE 系统：a）输入一段文本；b）输出识别到的实体、实体类型、实体之间的关系；c）用可视化的方式展示（如知识图谱可视化）。4）进阶挑战（可选）：a）试试联合抽取模型（同时抽取实体和关系，避免错误传播）；b）试试事件抽取；c）试试少样本/零样本 IE（用大模型 + Prompt）。5）项目总结：a）整理你这两周学到的序列标注知识；b）写一份总结报告——从传统方法到深度学习到预训练，各代方法的演进和优缺点；c）梳理信息抽取的技术体系和应用场景。6）思考：信息抽取在哪些行业有应用？你能想到什么有趣的应用场景？",
           deep_dive: "序列标注是信息抽取的基础，但信息抽取比单纯的序列标注更丰富、更有挑战性：1）信息抽取的完整图景：信息抽取是 NLP 的重要分支，目标是把非结构化文本转化为结构化知识。它包括：a）命名实体识别（NER）——序列标注任务；b）关系抽取（Relation Extraction）——判断实体对之间的关系；c）事件抽取（Event Extraction）——识别事件类型和论元；d）实体链接（Entity Linking）——把实体链接到知识库；e）属性抽取——抽取实体的属性。这些任务组合起来，可以构建知识图谱。2）流水线 vs 联合抽取：传统的 IE 系统通常是流水线的——先做 NER，再做关系抽取，再做实体链接。这种方式的优点是模块化、易维护，但缺点是「错误传播」——NER 的错误会传到后续任务。联合抽取试图同时抽取实体和关系，用一个模型端到端训练，理论上效果更好，但实现更复杂、训练更难。两种方式各有优劣，工业界还是流水线用得多，因为简单可控。3）关系抽取的方法：关系抽取有几种常见的范式：a）基于模板/规则：简单直接，但覆盖度低；b）基于分类：把实体对拿出来，分类它们的关系，需要先做 NER；c）基于 span：先枚举所有可能的实体 span，再分类关系，如 TPLinker；d）基于生成：直接用 Seq2Seq 模型生成结构化的关系三元组，如 T5、GPT。大模型时代，基于生成和 Prompt 的方法越来越流行。4）知识图谱：信息抽取的结果通常用来构建知识图谱（Knowledge Graph）。知识图谱是结构化的知识库，由实体、关系、属性组成，可以做问答、推荐、搜索等应用。Google 知识图谱、Wikidata、CN-DBpedia 都是著名的知识图谱。5）低资源 IE：信息抽取最大的瓶颈是标注数据——关系和事件的标注比 NER 更贵。解决方法：a）远程监督（Distant Supervision）：用知识库自动标注文本，噪音大但量大；b）弱监督：用规则、词典等生成弱标签；c）少样本学习：用大模型的 in-context learning；d）主动学习：选最有价值的样本标注。6）大模型时代的 IE：大模型（如 GPT-4）出现后，信息抽取的范式正在改变——不需要专门训练模型了，直接用 Prompt 让大模型抽取结构化信息，零样本或少样本就能工作。这降低了 IE 的门槛，让更多场景能用。但大模型也有问题：稳定性、成本、速度、数据隐私等。未来的方向可能是「大模型 + 小模型 + 规则」的混合系统。"
         }, duration: "3小时", resources: [B_NLP_TUTORIAL, R_CS224N], checkpoint: "能构建一个端到端的信息抽取系统（NER + 关系抽取 + 实体链接）" },
+      { day: 6, title: "实体关系抽取与知识图谱",
+        summary: "从文本中抽取实体关系，构建知识图谱", content: {
+          objective: "学习实体关系抽取和知识图谱基础。能从文本中抽取实体和关系，了解知识图谱的构建和应用。",
+          key_points: [
+            "关系抽取：从文本中识别实体之间的关系（如「张三-毕业于-清华」）",
+            "知识图谱：实体 + 关系构成的网络结构，存储结构化知识",
+            "抽取方法：基于规则、基于模板、基于监督学习、基于大模型",
+            "应用场景：问答系统、搜索引擎、推荐系统、知识管理"
+          ],
+          practice: "1）实体关系抽取：用 spaCy 或 HuggingFace 模型做简单的关系抽取。2）知识图谱构建：从几篇文章中抽取实体关系，用 NetworkX 或 Neo4j 构建小图谱。3）可视化：用可视化工具展示知识图谱。4）大模型抽取（可选）：用 LLM 的 Function Calling 或结构化输出抽取关系。",
+          deep_dive: "信息抽取是 NLP 的核心任务之一——把非结构化文本变成结构化知识。知识图谱是信息抽取的重要应用，让机器理解实体之间的关系。早期是规则和模板，后来用监督学习，现在大模型让零样本/少样本抽取成为可能。知识图谱在搜索、问答、推荐中都有应用。"
+        }, duration: "2.5小时", resources: [B_NLP_TUTORIAL, { title: "spaCy 文档", url: "https://spacy.io/", required: false }], checkpoint: "能实现实体关系抽取，构建简单知识图谱" },
+      { day: 7, title: "信息抽取实战项目",
+        summary: "做一个完整的信息抽取项目", content: {
+          objective: "完成信息抽取实战项目。选择一个垂直领域（医疗、金融、法律等），做实体识别 + 关系抽取 + 可视化。",
+          key_points: [
+            "项目设计：选题、数据准备、方案设计",
+            "模型选择：CRF、BiLSTM-CRF、BERT、大模型对比",
+            "评估方法：Precision/Recall/F1，错误分析",
+            "应用封装：API 服务 + 可视化展示"
+          ],
+          practice: "1）项目选题：选一个感兴趣的垂直领域和任务。2）数据准备：找公开数据集或自己标注少量数据。3）模型训练：训练 NER 和关系抽取模型。4）效果评估：定量评估 + 错误分析。5）封装展示：做一个简单的演示页面。",
+          deep_dive: "序列标注和信息抽取是工业界应用最广的 NLP 技术之一——很多业务场景都需要从文本中提取结构化信息。做项目的关键：a）明确业务目标和评估标准；b）从小处着手，先做 baseline 再迭代；c）错误分析比调参更重要；d）最后要考虑落地——速度、成本、可维护性。"
+        }, duration: "3小时", resources: [B_NLP_TUTORIAL, R_HF_COURSE], checkpoint: "完成信息抽取项目，包含实体识别、关系抽取和可视化" },
+      { day: 8, title: "文本摘要与关键词提取",
+        summary: "学习自动文本摘要和关键词提取技术", content: {
+          objective: "学习文本摘要和关键词提取。了解抽取式和生成式摘要的区别，掌握几种关键词提取方法。",
+          key_points: [
+            "抽取式摘要：从原文中选最重要的句子组成摘要（TextRank、LSA）",
+            "生成式摘要：用大模型生成新的摘要文字（BART、T5、LLM）",
+            "关键词提取：TF-IDF、TextRank、YAKE、基于大模型",
+            "摘要评估：ROUGE 指标、人工评估"
+          ],
+          practice: "1）关键词提取：用 TF-IDF、TextRank、YAKE 等方法提取关键词，对比效果。2）抽取式摘要：用 TextRank 做简单的抽取式摘要。3）生成式摘要：用大模型做摘要，调参（长度、风格）。4）评估：人工对比几种方法的摘要质量。",
+          deep_dive: "文本摘要有两种思路——抽取式（从原文选句子，不会错但可能不连贯）和生成式（生成新文字，流畅但可能有幻觉）。大模型时代生成式摘要成为主流。关键词提取也是实用技术——提取关键词用于索引、分类、推荐。TextRank 是经典算法，基于 PageRank 思想给词或句子排序。"
+        }, duration: "2.5小时", resources: [B_NLP_TUTORIAL], checkpoint: "能实现文本摘要和关键词提取，对比不同方法的效果" },
+      { day: 9, title: "主题模型与文本聚类",
+        summary: "学习 LDA 主题模型和文本聚类分析", content: {
+          objective: "学习主题模型和文本聚类。能用 LDA 发现文本集合中的隐含主题，用聚类算法对文本自动分组。",
+          key_points: [
+            "主题模型：LDA（Latent Dirichlet Allocation），自动发现文档集合的潜在主题",
+            "文本聚类：K-Means、层次聚类、DBSCAN，把相似文本归为一类",
+            "文本表示：TF-IDF、Word2Vec、BERT 等向量表示用于聚类",
+            "评估方法：困惑度（Perplexity）、轮廓系数、人工评估"
+          ],
+          practice: "1）LDA 主题模型：用 Gensim 在新闻/论文数据集上训练 LDA，看每个主题的关键词。2）主题数选择：试不同主题数，用困惑度或一致性选最优。3）文本聚类：用 BERT + K-Means 对文本聚类。4）可视化：用 pyLDAvis 或 t-SNE 可视化主题和聚类。",
+          deep_dive: "主题模型是无监督学习在 NLP 中的经典应用——不需要标注，就能发现大量文档中的主题结构。LDA 是最经典的主题模型，基于概率图模型。词嵌入时代，也常用 Embedding + 聚类的方式做文本分组。这些技术在文档管理、内容分析、用户研究中很有用。"
+        }, duration: "2.5小时", resources: [B_NLP_TUTORIAL, { title: "Gensim 文档", url: "https://radimrehurek.com/gensim/", required: false }], checkpoint: "能用 LDA 做主题建模，用聚类做文本分组" },
+      { day: 10, title: "NLP 综合项目与前沿展望",
+        summary: "完成综合项目，了解 NLP 前沿方向", content: {
+          objective: "完成 NLP 综合项目并了解前沿。把两周学到的 NLP 知识整合到一个项目中，了解大模型时代 NLP 的发展方向。",
+          key_points: [
+            "综合项目：设计并实现一个完整的 NLP 应用",
+            "技术整合：文本处理 + 分类/标注/抽取 + 生成 + 可视化",
+            "前沿方向：大模型、多模态、Agent、低资源语言",
+            "学习路径：NLP 工程师的进阶路线"
+          ],
+          practice: "1）项目设计：选一个 NLP 应用场景（智能客服、舆情分析、简历筛选等）。2）技术选型：哪些用传统方法，哪些用大模型。3）实现与部署：写代码、做界面、部署。4）项目文档：写 README、技术博客、作品集。5）总结：NLP 学习收获，下一步方向。",
+          deep_dive: "大模型时代 NLP 发生了巨大变化——以前每个任务要单独训模型，现在一个大模型 + Prompt 就能搞定很多任务。但传统 NLP 仍然有用——a）小数据/低资源场景；b）成本敏感场景；c）需要可解释性的场景；d）边缘部署场景。NLP 工程师要懂传统方法也懂大模型，知道什么时候用什么。"
+        }, duration: "4小时", resources: [B_NLP_TUTORIAL, R_HF_COURSE], checkpoint: "完成 NLP 综合项目，了解前沿方向和学习路径" },
     ],
   },
 
@@ -2445,6 +2506,66 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           practice: "构建完整翻译系统：1）后端 API：a）用 FastAPI 写一个翻译 API；b）提供两个端点：/translate（单句翻译）和 /batch_translate（批量翻译）；c）错误处理和参数验证；d）用 uvicorn 启动服务，用 curl 或 Postman 测试。2）前端界面：a）用 Gradio 或 Streamlit 做一个简单的翻译界面；b）左边输入源文本，右边显示翻译结果；c）可以选择翻译方向、调整解码参数；d）加上历史记录功能。3）优化性能：a）实现批量处理，一次处理多个请求提升吞吐量；b）添加缓存（如 Redis），相同的文本直接返回缓存结果；c）试试模型量化（如 8-bit 量化），看速度和显存的变化；d）（可选）用 vLLM 或 Text Generation Inference 加速推理。4）容器化部署：a）写一个 Dockerfile，把翻译服务打包成 Docker 镜像；b）构建镜像并运行容器；c）测试容器内的服务是否正常工作。5）生产级增强（可选）：a）添加日志（用 logging 或 loguru）；b）添加请求限流（防止滥用）；c）添加健康检查端点；d）添加 Prometheus 监控指标。6）总结与复盘：a）整理你这两周学到的机器翻译知识；b）写一份总结报告——从统计翻译到神经翻译到现在的大模型翻译，技术演进的脉络是什么？c）思考：机器翻译还有哪些挑战？未来会怎么发展？",
           deep_dive: "做一个 Demo 容易，但做一个生产级的翻译系统有很多工程挑战：1）延迟和吞吐量的权衡：翻译系统有两个关键指标——延迟（单个请求多久返回）和吞吐量（单位时间能处理多少请求）。两者往往是矛盾的：a）要低延迟，就不能等批量，单个请求立即处理，GPU 利用率低；b）要高吞吐量，就攒一批一起处理，延迟高。实际系统中需要根据业务需求找到平衡点。动态批处理（dynamic batching）是常用的优化——在一定时间窗口内攒请求，攒够了或者时间到了就一起处理。2）模型部署的工程化：把模型从「能跑」到「好用」中间有很多工作：a）模型优化：量化（FP16、INT8、INT4）、剪枝、蒸馏，减小模型体积，提升速度；b）推理框架：vLLM、TensorRT-LLM、Text Generation Inference 等专用推理框架，比原生 PyTorch 快很多；c）服务框架：Triton Inference Server、TorchServe、BentoML 等，提供批处理、多模型、弹性伸缩等功能。3）成本控制：大模型时代，推理成本是个大问题。降低成本的方法：a）选合适的模型：能用小模型就不用大模型；b）模型压缩：量化、蒸馏；c）缓存：相同的请求直接返回缓存；d）批处理：提高 GPU 利用率；e）弹性伸缩：流量低的时候减少实例，流量高的时候扩容。4）质量保障：生产系统中，怎么保证翻译质量？a）自动评估：定期计算 BLEU/COMET 等指标，监控质量变化；b）人工抽检：定期抽一些翻译结果人工评估；c）用户反馈：让用户可以举报翻译错误，收集 bad case 持续优化；d）A/B 测试：上新模型时做 A/B 测试，确认效果真的更好再全量。5）翻译系统的更多功能：一个完整的翻译系统通常还有很多高级功能：a）术语库：专业术语按指定方式翻译；b）翻译记忆（TM）：相同或相似的句子直接复用之前的翻译；c）音译：专有名词的音译规则；d）格式保留：翻译时保留原文的格式（如 HTML、Markdown）；e）多语言支持：支持多种语言互译。6）大模型时代的翻译：大模型（GPT-4、Claude、Gemini 等）的翻译效果已经非常好了，尤其是低资源语言和创意类文本。但大模型也有问题：a）成本高：比专门的翻译模型贵很多；b）速度慢：生成速度慢，不适合高吞吐量场景；c）稳定性：有时候会「自由发挥」，加很多原文没有的内容；d）数据隐私：把数据发给第三方大模型有隐私风险。所以实际中往往是「大模型 + 小模型」混合——普通翻译用小模型，复杂翻译用大模型，或者用大模型润色小模型的翻译结果。"
         }, duration: "3.5小时", resources: [R_FASTAPI, R_STREAMLIT, { title: "vLLM 项目", url: "https://github.com/vllm-project/vllm", required: false }], checkpoint: "完成一个包含 API、前端界面、Docker 部署的完整翻译系统" },
+      { day: 6, title: "Subword 分词与 BPE",
+        summary: "学习子词分词算法 BPE/WordPiece/Unigram", content: {
+          objective: "学习子词分词技术。理解 BPE、WordPiece、Unigram 等算法的原理，掌握 SentencePiece 和 HuggingFace Tokenizer 的使用。",
+          key_points: [
+            "为什么需要子词：解决未登录词（OOV）问题，平衡词表大小和序列长度",
+            "BPE：Byte-Pair Encoding，通过合并高频字符对构建词表",
+            "WordPiece：BERT 用的算法，按似然提升选择合并",
+            "SentencePiece：Google 的子词分词工具，支持多种算法"
+          ],
+          practice: "1）BPE 原理理解：手动模拟 BPE 的几次合并过程。2）Tokenizer 使用：用 HuggingFace Tokenizers 库加载预训练 tokenizer。3）自定义训练：用自己的语料训练一个 BPE tokenizer。4）对比：不同分词算法对同一句话的分词结果对比。",
+          deep_dive: "子词分词是 NLP 预训练的基石——它解决了传统词表的 OOV 问题，也让词表大小可控。BERT 用 WordPiece，GPT 用 BPE，T5 用 Unigram，各有优劣。SentencePiece 把分词和解码都封装好了，还支持多种算法，是实际项目中常用的工具。理解分词原理，对理解大模型的行为（为什么会拼错、为什么不理解某些词）很有帮助。"
+        }, duration: "2小时", resources: [B_NLP_TUTORIAL, { title: "SentencePiece", url: "https://github.com/google/sentencepiece", required: false }], checkpoint: "理解子词分词原理，能用 SentencePiece 和 HuggingFace Tokenizer" },
+      { day: 7, title: "预训练模型做翻译与微调",
+        summary: "使用 mBART、M2M-100 等预训练翻译模型做微调", content: {
+          objective: "使用预训练翻译模型并做微调。能用 HuggingFace 加载 mBART、M2M-100 等多语言翻译模型，在自己的数据集上做微调。",
+          key_points: [
+            "预训练翻译模型：mBART、M2M-100、NLLB 等多语言模型",
+            "微调方法：全参数微调、LoRA、前缀微调（Prefix Tuning）",
+            "领域适配：在特定领域数据上微调，提升领域效果",
+            "评测：BLEU、CHRF、COMET 等翻译质量评估指标"
+          ],
+          practice: "1）预训练模型推理：用 HuggingFace 加载 M2M-100 或 mBART，做中英互译。2）数据准备：准备一个小的平行语料（或用公开数据集）。3）微调：用 LoRA 微调翻译模型（数据量小的话）。4）评估：算 BLEU 分数，对比微调前后。",
+          deep_dive: "大模型时代，机器翻译的做法完全变了——以前要自己从零训练 Seq2Seq 模型，现在直接用预训练翻译模型微调就很好。Facebook 的 M2M-100 支持 100 种语言互译，Meta 的 NLLB 支持 200+ 种。微调策略也很重要——数据多用全参数微调，数据少用 LoRA/Adapter。评估除了 BLEU（基于 n-gram 匹配），还有 COMET 等基于预训练模型的指标，更接近人工评价。"
+        }, duration: "3小时", resources: [B_NLP_TUTORIAL, R_HF_COURSE, { title: "M2M-100", url: "https://huggingface.co/facebook/m2m100_418M", required: false }], checkpoint: "能用预训练翻译模型做推理和微调，会用 BLEU 评估" },
+      { day: 8, title: "翻译系统架构与服务化",
+        summary: "构建生产级翻译服务，了解翻译系统架构", content: {
+          objective: "了解生产级翻译系统的架构。能构建一个简单的翻译 API 服务，理解生产环境的考量（性能、成本、质量、缓存）。",
+          key_points: [
+            "翻译服务架构：API 层 + 模型层 + 缓存层 + 监控层",
+            "性能优化：批处理、量化、模型蒸馏、vLLM 推理",
+            "成本优化：缓存、路由（简单句子用小模型）、按需扩缩容",
+            "质量保证：人工抽检、A/B 测试、反馈闭环"
+          ],
+          practice: "1）翻译 API：用 FastAPI 封装一个翻译模型，做 REST 服务。2）缓存层：加一个简单的翻译缓存（相同句子直接返回）。3）批量翻译：支持批量句子翻译，提升吞吐量。4）监控：记录每次翻译的时间、长度、模型，做简单分析。",
+          deep_dive: "做一个翻译 Demo 很容易，但做生产级翻译系统很难——要考虑性能（延迟和吞吐量）、成本（GPU 很贵）、质量（不同领域效果差异大）、稳定性（不能挂）。工业级翻译系统通常有缓存层（缓存常见翻译）、模型路由（简单句子用小模型、复杂的用大模型）、后处理（标点、格式、术语一致性）等多个优化环节。"
+        }, duration: "2.5小时", resources: [B_NLP_TUTORIAL, R_FASTAPI], checkpoint: "能构建翻译 API 服务，理解生产级系统架构" },
+      { day: 9, title: "低资源翻译与前沿方向",
+        summary: "了解低资源语言翻译和 NLP 前沿方向", content: {
+          objective: "了解低资源翻译和 NLP 前沿方向。知道小语种/低资源场景下的翻译方法，了解多语言大模型、翻译新范式等前沿进展。",
+          key_points: [
+            "低资源翻译：数据很少的语言怎么做翻译？",
+            "迁移学习：用高资源语言知识迁移到低资源语言",
+            "多语言大模型：mT5、LLaMA、Qwen 等多语言模型的翻译能力",
+            "前沿方向：Speech-to-Speech、同声传译、多模态翻译"
+          ],
+          practice: "1）低资源调研：查一下有哪些低资源语言的数据集和方法。2）多语言模型实验：用一个多语言大模型（如 Qwen、Llama）做翻译，和专门的翻译模型比。3）前沿论文阅读（可选）：选一篇翻译前沿论文，读摘要和介绍。4）思考：大模型时代，翻译技术会怎么发展？",
+          deep_dive: "机器翻译是 NLP 最经典的任务，也是技术迭代最快的领域之一——从统计机器翻译（SMT）到神经机器翻译（NMT），再到现在的大模型翻译，每一代都有数量级的提升。低资源翻译是重要方向——世界上有 7000 多种语言，大部分没有足够的平行语料。多语言大模型（如 NLLB、mBART）通过在多种语言上联合训练，显著改善了低资源语言的翻译质量。未来，语音到语音的实时翻译、多模态翻译（带图像的翻译）都是值得关注的方向。"
+        }, duration: "2小时", resources: [B_NLP_TUTORIAL], checkpoint: "了解低资源翻译方法和 NLP 前沿方向" },
+      { day: 10, title: "翻译项目实战与总结",
+        summary: "完成翻译项目，总结 NLP 学习路径", content: {
+          objective: "完成翻译实战项目并总结。做一个完整的翻译应用，总结两周学到的机器翻译知识，规划后续 NLP 学习路径。",
+          key_points: [
+            "项目实战：做一个完整的翻译应用",
+            "技术整合：前端 + 后端 + 模型 + 缓存",
+            "效果评估：客观指标 + 主观评估",
+            "学习总结：NLP 工程师的成长路径"
+          ],
+          practice: "1）项目设计：设计一个翻译应用（网页翻译、文档翻译、双语对照阅读等）。2）实现：前后端 + 模型部署。3）优化：加缓存、加术语表、做领域适配。4）总结：写项目文档，总结学到的东西，规划后续学习。",
+          deep_dive: "机器翻译是 NLP 技术的集大成者——它用到了分词、序列模型、Attention、预训练、微调、推理优化等几乎所有 NLP 核心技术。通过做翻译项目，能把这些知识串起来。大模型时代，翻译的门槛降低了（不用从零训模型了），但上限也提高了（可以做更复杂的系统）。NLP 工程师的核心竞争力不是会调用 API，而是理解原理、知道什么时候用什么方法、能解决实际问题。"
+        }, duration: "4小时", resources: [B_NLP_TUTORIAL, R_HF_COURSE], checkpoint: "完成翻译项目，总结 NLP 学习路径" },
     ],
   },
 {
@@ -4137,7 +4258,43 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           { title: "IP-Adapter + diffusers 中文教程", url: "https://huggingface.co/docs/diffusers/using-diffusers/ip_adapter", required: true }
         ],
         checkpoint: "产品图 Pipeline 对 5 张白底图成功生成每种风格各 3 张变体，人工验收：10/15 张以上图可直接用于电商场景"
-      }
+      },
+      { day: 8, title: "Stable Diffusion 实战与 LoRA 微调",
+        summary: "使用 Stable Diffusion 生成图像，学习 LoRA 微调方法", content: {
+          objective: "使用 Stable Diffusion 生成图像，学习 LoRA 微调。能用 Diffusers 库运行 SD，用 LoRA 微调风格，掌握提示词工程和参数调节。",
+          key_points: [
+            "Stable Diffusion 推理：Diffusers 库加载模型，文生图、图生图",
+            "提示词工程：正向/负向提示词、权重调节、风格描述",
+            "参数调节：CFG Scale、采样步数、采样器、种子",
+            "LoRA 微调：用 DreamBooth / LoRA 训练自定义风格或角色"
+          ],
+          practice: "1）Stable Diffusion 推理：用 Diffusers 加载 SD 1.5 或 SDXL，文生图生成图片。2）参数实验：调 CFG scale、步数、采样器，看效果变化。3）提示词实验：试不同风格描述、权重语法，对比结果。4）LoRA 微调（可选）：用小数据集训练一个风格 LoRA。",
+          deep_dive: "Stable Diffusion 是最流行的开源图像生成模型。提示词是控制生成的关键——正向提示词描述想要的，负向提示词排除不想要的。LoRA 微调是定制化的利器——只需要很少的图片就能训练出特定风格或角色，而且 LoRA 文件很小（几十 MB），可以快速切换。"
+        }, duration: "3小时", resources: [{ title: "Diffusers 文档", url: "https://huggingface.co/docs/diffusers/index", required: false }], checkpoint: "能用 Stable Diffusion 生成图像，掌握提示词和参数调节" },
+      { day: 9, title: "扩散模型进阶与应用拓展",
+        summary: "了解 ControlNet、Inpainting 等高级应用，探索更多扩散模型能力", content: {
+          objective: "了解扩散模型的高级应用。知道 ControlNet、Inpainting、Outpainting、图像编辑等能力，理解扩散模型的应用边界。",
+          key_points: [
+            "ControlNet：用深度、边缘、姿态等条件控制生成结构",
+            "Inpainting / Outpainting：局部重绘和扩图",
+            "图像编辑：基于文本或草图的图像编辑",
+            "视频生成：扩散模型在视频领域的应用"
+          ],
+          practice: "1）ControlNet 实验（可选）：试 ControlNet 的 Canny/Depth/Pose 控制生成。2）Inpainting：遮罩部分区域，让模型重绘。3）图像编辑：用 InstructPix2Pix 或 SDXL 编辑图片。4）调研：了解视频生成模型（Sora、Runway 等）。",
+          deep_dive: "扩散模型的能力远超文生图——ControlNet 让生成可控（指定姿势、结构、构图）；Inpainting 让局部修改变得容易；图像编辑让文字描述就能改图。这些技术组合起来，可以做很多产品：AI 绘画、设计辅助、照片编辑、游戏素材生成等。视频生成是下一个前沿，进展很快。"
+        }, duration: "3小时", resources: [{ title: "ControlNet", url: "https://github.com/lllyasviel/ControlNet", required: false }], checkpoint: "了解扩散模型的多种高级应用，能使用 ControlNet 和 Inpainting" },
+      { day: 10, title: "项目实战与前沿展望",
+        summary: "完成一个扩散模型项目，了解前沿方向", content: {
+          objective: "完成扩散模型项目并了解前沿。做一个完整的图像生成应用，了解最新进展（Sora、视频生成、3D 生成等），总结学习收获。",
+          key_points: [
+            "项目实战：做一个图像生成 Web 应用或创意作品",
+            "前沿方向：视频生成、3D 生成、多模态、统一大模型",
+            "伦理与版权：生成式 AI 的版权、造假、伦理问题",
+            "项目总结：整理成果，准备作品集"
+          ],
+          practice: "1）项目实现：做一个完整项目——AI 头像生成、风格迁移工具、海报生成器等。2）部署上线：用 Gradio/Streamlit 做界面，部署可分享。3）效果展示：选 10-20 张生成的好作品，整理成作品集。4）总结：整理学到的扩散模型知识，思考 AI 图像生成的未来。",
+          deep_dive: "扩散模型从图像拓展到视频、3D、音频——多模态生成是趋势。Sora 展示了视频生成的巨大潜力，3D 生成也在快速发展。但同时也有伦理问题：版权争议、深度伪造、内容审核。技术发展很快，保持学习和思考很重要——不仅要会用技术，也要思考它的影响。"
+        }, duration: "4小时", resources: [], checkpoint: "完成扩散模型项目，了解前沿方向和伦理问题" }
     ]
   },
 
@@ -4311,7 +4468,43 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           { title: "Locust 压测工具", url: "https://locust.io/", required: true }
         ],
         checkpoint: "压测 QPS > 30，99% 请求 < 2s，systemd 服务 crash 后自动重启"
-      }
+      },
+      { day: 8, title: "本地推理与边缘部署",
+        summary: "学习本地推理框架 llama.cpp，了解大模型本地化部署", content: {
+          objective: "学习本地推理和边缘部署。能用 llama.cpp 在本地跑大模型，理解量化和模型大小的选择，了解移动端推理现状。",
+          key_points: [
+            "llama.cpp：纯 C++ 推理框架，CPU 也能跑大模型",
+            "GGUF 格式与量化：Q4_K_M 是甜点，平衡质量和速度",
+            "本地推理优势：隐私保护、无网络依赖、无 API 成本",
+            "移动端推理：MLC、Core ML、Qualcomm AI Engine"
+          ],
+          practice: "1）llama.cpp 入门：下载 llama.cpp 编译，下载 GGUF 小模型，命令行推理。2）性能测试：测不同量化（Q4/Q5/Q8）的 tokens/秒和质量。3）本地 API：用 server 模式启动，OpenAI 客户端调用。4）移动端调研：了解手机跑大模型的现状。",
+          deep_dive: "本地推理越来越重要——隐私、成本、可用性是三大驱动力。llama.cpp 让普通人在自己电脑上就能跑大模型。量化是关键：Q4_K_M 通常是甜点——体积只有 FP16 的 1/4，质量损失不大。苹果芯片尤其适合本地推理，统一内存+Metal 加速。"
+        }, duration: "2.5小时", resources: [{ title: "llama.cpp", url: "https://github.com/ggerganov/llama.cpp", required: false }], checkpoint: "能用 llama.cpp 本地运行大模型，理解本地推理适用场景" },
+      { day: 9, title: "推理成本分析与优化实战",
+        summary: "系统化分析推理成本，制定优化策略和方案", content: {
+          objective: "系统化分析推理成本并制定优化策略。能建模推理成本，找出成本瓶颈，设计端到端优化方案，量化评估优化效果。",
+          key_points: [
+            "成本构成：GPU 硬件成本、云服务费用、带宽、人力",
+            "成本指标：每 1000 token 成本、每次请求成本、月成本",
+            "优化 ROI：每个措施的成本节省 vs 实施复杂度",
+            "优化路线图：从易到难的优先级和实施路径"
+          ],
+          practice: "1）成本建模：假设部署 7B 模型服务，月活 1 万，算月成本。2）瓶颈分析：成本大头是什么？哪些因素影响最大？3）方案设计：列出 5-8 个优化措施，按 ROI 排序。4）成本监控：怎么追踪和分析成本，怎么告警。",
+          deep_dive: "推理成本是大模型落地的核心约束。成本优化是高杠杆——优化掉 50% 成本就是真金白银的节省。优化优先级：量化（成本减半，简单）→ vLLM（吞吐量 x10，简单）→ 语义缓存（省 30-50%，中等）→ 智能路由（省 30-70%，中等）→ 模型蒸馏（长期回报大，成本高）。从高 ROI 开始逐步推进。"
+        }, duration: "3小时", resources: [], checkpoint: "能建模推理成本，制定优化路线图，量化优化效果" },
+      { day: 10, title: "推理优化项目实战",
+        summary: "综合运用所学，完成一个推理优化项目", content: {
+          objective: "完成推理优化综合项目。从 0 到 1 部署生产级推理服务，完成多轮优化，产出优化报告和文档。",
+          key_points: [
+            "项目实战：从基线到优化，完整走一遍推理优化流程",
+            "性能基线：建立基准，量化每一步优化的效果",
+            "调优过程：逐步优化，记录每个优化点的收益",
+            "项目文档：架构图、性能数据、成本分析、运维指南"
+          ],
+          practice: "1）项目规划：选目标模型，定义场景，确定指标，制定目标。2）建立基线：HuggingFace 原生推理做基线，测延迟/吞吐量/显存。3）逐步优化：第一步 KV Cache，第二步量化，第三步 vLLM，第四步其他优化。每步都测性能。4）生产化：部署 API 服务，加监控，写运维文档。5）项目报告：对比表格、架构图、成本分析、后续建议。",
+          deep_dive: "推理优化是科学不是玄学——要有方法论：先测量（建基线）→ 再假设（猜最可能的优化方向）→ 后验证（做实验看数据）→ 重复迭代。没有银弹，只有权衡。好的推理工程师要有全栈视角，从模型到框架到服务到应用，多层结合优化才能数量级提升。"
+        }, duration: "4小时", resources: [], checkpoint: "完成完整推理优化项目，产出优化报告和生产级部署" }
     ]
   },
 
@@ -4610,7 +4803,43 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           { title: "KEDA 文档", url: "https://keda.sh/docs/", required: false }
         ],
         checkpoint: "压测时 HPA 自动扩容到 maxReplicas，空载时缩回 minReplicas，扩容延迟 < 2 分钟"
-      }
+      },
+      { day: 8, title: "Helm 包管理与应用部署",
+        summary: "使用 Helm 管理 Kubernetes 应用", content: {
+          objective: "学习 Helm 包管理。理解 Chart 结构，能用 Helm 安装、升级、回滚应用，会写简单的 Helm Chart。",
+          key_points: [
+            "Helm：Kubernetes 的包管理器，类似 apt/yum",
+            "Chart：Helm 包格式，包含模板 + 值 + 元数据",
+            "常用操作：helm install/upgrade/rollback/uninstall",
+            "模板语法：Go template，支持变量、条件、循环"
+          ],
+          practice: "1）Helm 安装：安装 Helm 客户端，配置 repo。2）常用应用安装：用 Helm 安装 Nginx Ingress、Prometheus 等常用组件。3）自定义 Chart：创建一个简单的 Helm Chart（比如你自己的应用）。4）升级回滚：改配置升级，出问题回滚。",
+          deep_dive: "Kubernetes 的 YAML 文件多了之后很难管理——每个环境一套配置，复制粘贴很容易出错。Helm 解决了这个问题——把模板和值分开，不同环境用不同的值文件，模板复用。Helm Hub 上有大量现成的 Chart（MySQL、Redis、Prometheus 等），不用自己从零写。掌握 Helm 是 K8s 运维的必备技能。"
+        }, duration: "2.5小时", resources: [B_DOCKER_TUTORIAL, { title: "Helm 文档", url: "https://helm.sh/docs/", required: false }], checkpoint: "能用 Helm 安装和管理应用，会写简单的 Chart" },
+      { day: 9, title: "Kubernetes 监控与运维",
+        summary: "Prometheus + Grafana 监控 K8s 集群", content: {
+          objective: "学习 Kubernetes 监控和运维。能用 Prometheus + Grafana 监控集群，了解日志收集（ELK/Loki），掌握常见故障排查方法。",
+          key_points: [
+            "监控架构：Prometheus（指标采集 + 存储）+ Grafana（可视化）+ Alertmanager（告警）",
+            "核心指标：CPU、内存、磁盘、网络、Pod 状态、节点状态",
+            "日志系统：ELK Stack（Elasticsearch + Logstash + Kibana）或 Loki",
+            "故障排查：Pod 起不来、CrashLoopBackOff、调度失败等常见问题"
+          ],
+          practice: "1）监控栈部署：用 Helm 安装 kube-prometheus-stack（Prometheus + Grafana + Alertmanager）。2）仪表盘：导入 Node Exporter 和 K8s 仪表盘，看集群状态。3）告警配置：配置几个常用告警（节点宕机、Pod 重启频繁、磁盘空间不足）。4）日志（可选）：部署 Loki + Promtail 做日志收集。5）故障排查练习：故意制造几个问题（镜像不存在、端口冲突、资源不足），练习排查。",
+          deep_dive: "生产环境的 K8s 集群，监控和运维是头等大事——没有监控，出了问题都不知道。Prometheus + Grafana 是 K8s 监控的事实标准。监控的三个支柱：指标（Metrics，Prometheus）、日志（Logs，ELK/Loki）、链路追踪（Tracing，Jaeger/Zipkin）。三者结合才能全面掌握系统状态。故障排查能力是运维工程师的核心——要懂原理，知道从哪入手、看什么日志、用什么命令。"
+        }, duration: "3小时", resources: [B_DOCKER_TUTORIAL, { title: "Prometheus 文档", url: "https://prometheus.io/docs/", required: false }], checkpoint: "能部署监控栈，配置告警，排查常见 K8s 故障" },
+      { day: 10, title: "K8s 生产实践与总结",
+        summary: "生产级 K8s 最佳实践与课程总结", content: {
+          objective: "了解生产级 K8s 最佳实践并总结。知道生产环境要考虑的安全、高可用、成本等问题，完成课程总结。",
+          key_points: [
+            "高可用：多 Master 节点、多副本、跨可用区",
+            "安全：RBAC 权限控制、网络策略、Secret 管理、镜像扫描",
+            "成本优化：资源请求/限制、自动扩缩容、Spot 实例、节点池",
+            "生产级集群：集群生命周期管理、升级、备份、灾备"
+          ],
+          practice: "1）安全配置：配置 RBAC 角色、限制默认权限、用 Secret 存敏感信息。2）资源管理：给 Pod 设 requests 和 limits，用 LimitRange 限制命名空间资源。3）自动扩缩容：配置 HPA（Pod 水平自动扩缩），测试负载变化时的扩缩。4）总结：整理 K8s 知识体系，画思维导图，写学习笔记。5）规划：后续 K8s 学习路径（CKA 认证、GitOps、Service Mesh 等）。",
+          deep_dive: "K8s 入门容易精通难——学会部署应用只是开始，生产环境有大量考量：a）高可用：集群不能有单点故障；b）安全：权限最小化、网络隔离、漏洞扫描；c）成本：K8s 容易资源浪费，要精细化管理；d）可观测性：监控、日志、追踪都要有；e）灾备：数据备份、集群迁移、故障恢复。CKA（Certified Kubernetes Administrator）是行业认可的认证，考一个对求职很有帮助。K8s 生态很大，学完基础后可以往 GitOps、Service Mesh、云原生架构等方向深入。"
+        }, duration: "3小时", resources: [B_DOCKER_TUTORIAL], checkpoint: "了解生产级 K8s 最佳实践，完成学习总结" }
     ]
   },
 
@@ -4706,6 +4935,66 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           practice: "CI/CD 综合实战项目：1）项目选择：选择一个你之前做的项目（或新建一个示例项目），可以是前端项目、后端 API、Python 库、Docker 镜像等。2）方案设计：a）为这个项目设计一套完整的 CI/CD 方案；b）画出流程图：哪些阶段？每个阶段做什么？触发条件？c）考虑：测试策略、构建方式、部署目标、回滚方案、安全检查。3）CI 流水线实现：a）配置代码风格检查（lint）；b）配置单元测试；c）配置构建（如果需要）；d）配置安全扫描（至少一种）；e）配置缓存优化速度。4）CD 流水线实现：a）配置部署流程（部署到哪里？怎么部署？）；b）配置多环境（可选，如 dev/staging/prod）；c）配置发布策略（滚动？蓝绿？金丝雀？）；d）配置回滚机制。5）增强功能（可选）：a）配置 PR 模板和 Issue 模板；b）配置自动打标签和生成 Release Notes；c）配置代码覆盖率报告；d）配置 Slack/钉钉/飞书通知，流水线结果推送到群里。6）文档与总结：a）写一份 CI/CD 文档，说明流程、怎么触发、怎么排查问题；b）总结你在这个项目中学到了什么；c）遇到了哪些坑？怎么解决的？d）还有什么可以改进的地方？",
           deep_dive: "做项目和学知识点是完全不同的体验——只有真正动手做过，才能理解其中的坑和权衡：1）从「能用」到「好用」中间差很远：搭一个能跑的流水线很简单，但搭一个团队愿意天天用的流水线很难。好用的流水线应该：a）快：5-10 分钟内出结果，太慢了大家就不想等了；b）稳：不要时好时坏，flaky CI 比没有 CI 还糟糕；c）准：失败了能明确告诉你哪里错了，怎么修；d）简单：配置不要太复杂，新人也能看懂；e）灵活：能适应不同的需求，不要太僵化。2）常见的坑和反模式：a）巨型 Job：什么都塞在一个 Job 里，失败了不知道是哪部分的问题，也不能并行。应该拆成多个小 Job；b）把所有东西都放 CI 里：CI 应该快，太重的任务（如性能测试、全量 E2E 测试）可以定时跑或者手动触发，不要每次提交都跑；c）忽略 CI 失败：CI 红了没人管，大家都习惯了，那 CI 就失去意义了。CI 失败必须立即修复；d）过度工程化：一开始就搞超级复杂的流水线，结果维护成本很高。应该从简单开始，逐步迭代；e）硬编码配置：把服务器地址、账号密码等直接写在 YAML 里，不安全也不灵活。应该用 Secrets 和变量。3）怎么衡量 CI/CD 的效果？可以关注这些指标：a）部署频率：多久部署一次？越高频说明越成熟；b）变更前置时间（Lead Time）：从代码提交到上线需要多久？越短越好；c）变更失败率：发布后出问题的比例有多高？越低越好；d）平均恢复时间（MTTR）：出问题了多久能恢复？越快越好。这四个是 DevOps 研究（DORA）里的核心指标，被称为「四个关键指标」。4）团队采用的挑战：引入 CI/CD 不只是技术问题，更是人的问题：a）老员工可能习惯了旧方式，不愿意改；b）大家可能觉得写测试、配 CI 是「浪费时间」；c）CI 经常失败会让人有挫败感。怎么推动？a）以身作则，自己先做好；b）从痛点切入：解决大家最痛的点（比如部署麻烦、容易出 bug）；c）小步快跑：先从一个项目、一个功能开始，做出效果了再推广；d）培训和分享：让大家理解为什么要这么做，而不只是怎么做。5）CI/CD 的未来：CI/CD 也在不断演进：a）GitOps：用 Git 来管理基础设施和应用配置，Git 是唯一真相来源；b）Platform Engineering：构建内部开发者平台，让自助式部署更容易；c）AI 辅助：用 AI 来自动生成 CI 配置、自动排查失败原因、自动优化流水线；d）安全集成：DevSecOps，安全深度集成到 CI/CD 流程中。技术在变，但核心思想不变——更快、更稳、更安全地交付价值。"
         }, duration: "4小时", resources: [B_DOCKER_TUTORIAL, { title: "DORA 四个关键指标", url: "https://cloud.google.com/blog/products/devops-sre/the-2019-accelerate-state-of-devops-elite-performance", required: false }], checkpoint: "完成一个完整项目的 CI/CD 流水线搭建，包含 CI 和 CD 全流程" },
+      { day: 6, title: "GitHub Actions 进阶与工作流优化",
+        summary: "深入学习 GitHub Actions 高级功能", content: {
+          objective: "深入学习 GitHub Actions 高级功能。掌握矩阵构建、缓存优化、自定义 Action、环境管理等进阶用法。",
+          key_points: [
+            "矩阵构建：一个 job 跑多个版本（不同 OS/语言版本）",
+            "缓存优化：缓存依赖，加速构建（actions/cache）",
+            "自定义 Action：写自己的 Action，复用逻辑",
+            "环境与密钥：Environment、Secrets、Variable 管理"
+          ],
+          practice: "1）矩阵构建：写一个工作流，在不同 Node/Python 版本下跑测试。2）缓存优化：给 npm/pip 加缓存，看构建时间减少多少。3）自定义 Action（可选）：写一个简单的 JavaScript 或 Docker Action。4）环境管理：配置 dev/staging/prod 环境，不同环境用不同的 secrets。",
+          deep_dive: "CI/CD 不只是跑测试和部署——优化工作流能大幅提升开发效率。矩阵构建让你一次配置，多环境验证。缓存是性价比最高的优化——依赖安装经常占 CI 时间的一半以上，缓存后能省几分钟。自定义 Action 让你把重复逻辑封装起来，团队内共享。好的 CI/CD 应该是：快（反馈及时）、稳（很少挂）、安全（密钥不泄露）。"
+        }, duration: "2.5小时", resources: [{ title: "GitHub Actions 文档", url: "https://docs.github.com/en/actions", required: false }], checkpoint: "掌握 GitHub Actions 进阶用法，能优化工作流" },
+      { day: 7, title: "CI/CD 最佳实践与安全",
+        summary: "CI/CD 最佳实践、流水线安全与质量门禁", content: {
+          objective: "学习 CI/CD 最佳实践和安全。了解流水线设计原则、质量门禁、安全扫描等实践，能设计可靠的 CI/CD 流程。",
+          key_points: [
+            "流水线设计：快速反馈、失败优先、并行化、最小化步骤",
+            "质量门禁：代码检查、测试覆盖率、安全扫描、性能基准",
+            "CI/CD 安全：密钥管理、权限控制、依赖漏洞扫描",
+            "蓝绿部署/金丝雀发布：降低发布风险的部署策略"
+          ],
+          practice: "1）流水线优化：给你的项目流水线优化——并行步骤、缓存、失败快速退出。2）质量门禁：在流水线中加入代码风格检查（ESLint/Black）、测试覆盖率阈值。3）安全扫描：加一个依赖漏洞扫描步骤（如 npm audit、trivy）。4）部署策略：了解蓝绿部署和金丝雀发布的概念，画流程图。",
+          deep_dive: "CI/CD 的价值不只是「自动部署」，更是「质量保证」和「快速反馈」。最佳实践：a）快速反馈：提交后几分钟内出结果，开发者还没切换上下文；b）质量门禁：不让坏代码进生产；c）失败优先：最快失败的步骤放前面；d）并行化：独立步骤并行跑，节省时间；e）安全左移：在流水线早期就做安全检查。发布策略也很重要——蓝绿部署（两套环境，切换流量）、金丝雀发布（逐步放量）、滚动发布，都是为了降低发布风险，出问题能快速回滚。"
+        }, duration: "2.5小时", resources: [], checkpoint: "理解 CI/CD 最佳实践和安全考虑，能设计高质量流水线" },
+      { day: 8, title: "Docker 镜像优化与多阶段构建",
+        summary: "掌握 Docker 镜像优化技巧", content: {
+          objective: "学习 Docker 镜像优化。掌握多阶段构建、减小镜像体积、构建缓存、安全扫描等技巧。",
+          key_points: [
+            "多阶段构建：用多个 FROM，构建阶段和运行阶段分离",
+            "镜像瘦身：用 Alpine/distroless 基础镜像，清理缓存和无用文件",
+            "构建缓存：合理安排 Dockerfile 指令顺序，最大化缓存利用",
+            "镜像安全：漏洞扫描（Trivy）、最小权限原则、不用 root 用户"
+          ],
+          practice: "1）多阶段构建：把一个 Node.js/Python 应用从单阶段改成多阶段，对比镜像大小。2）镜像优化：用 Alpine 基础镜像、清理包缓存、减少层数，看看能把镜像缩到多小。3）安全扫描：用 Trivy 扫描镜像，看看有多少漏洞。4）最佳实践：写一份 Dockerfile 最佳实践清单。",
+          deep_dive: "Docker 镜像质量直接影响部署速度、安全性和成本——镜像小拉得快、占存储少、攻击面也小。多阶段构建是最重要的优化技巧——构建时用带编译器的大镜像，运行时用只有运行时的小镜像。优化原则：a）层数越少越好；b）变化慢的层放前面（利用缓存）；c）不要把密钥构建进镜像；d）用非 root 用户运行；e）定期扫描漏洞。镜像从 1GB 优化到 100MB 是很常见的，收益巨大。"
+        }, duration: "2.5小时", resources: [B_DOCKER_TUTORIAL, { title: "Trivy", url: "https://github.com/aquasecurity/trivy", required: false }], checkpoint: "能写优化的 Dockerfile，掌握多阶段构建和镜像瘦身" },
+      { day: 9, title: "GitOps 与 ArgoCD",
+        summary: "了解 GitOps 理念和 ArgoCD 工具", content: {
+          objective: "了解 GitOps 理念和 ArgoCD。理解 GitOps 的核心思想，能用 ArgoCD 做应用的声明式部署，知道它和传统 CI/CD 的区别。",
+          key_points: [
+            "GitOps：Git 是唯一真相来源，所有基础设施和应用配置都在 Git 里",
+            "ArgoCD：K8s 的 GitOps 工具，持续同步 Git 和集群状态",
+            "声明式部署：描述期望状态，工具自动让实际状态匹配",
+            "优势：可审计、可回滚、一致性高、上手简单"
+          ],
+          practice: "1）概念学习：理解 GitOps 和传统 CI/CD 的区别（推 vs 拉）。2）ArgoCD 部署：在 K3s/Minikube 上安装 ArgoCD。3）应用部署：把一个应用的 K8s 配置放到 Git 仓库，用 ArgoCD 部署。4）同步体验：改 Git 里的配置，看 ArgoCD 自动同步。",
+          deep_dive: "GitOps 是云原生时代的运维理念——核心是「Git 作为唯一真相来源」。传统 CI/CD 是「推」模式：CI 跑完了 kubectl apply 推到集群。GitOps 是「拉」模式：集群里的 Agent（如 ArgoCD）不断拉 Git 上的配置，发现不一致就自动同步。GitOps 的好处：a）所有变更都有 Git 历史，可审计可回滚；b）不需要把集群凭证给 CI 系统，更安全；c）声明式，最终状态一致；d）开发者不用学 K8s 命令，改 Git 就行。ArgoCD 是 GitOps 的事实标准工具。"
+        }, duration: "2.5小时", resources: [B_DOCKER_TUTORIAL, { title: "ArgoCD", url: "https://argo-cd.readthedocs.io/", required: false }], checkpoint: "理解 GitOps 理念，能用 ArgoCD 做简单的应用部署" },
+      { day: 10, title: "CI/CD 综合项目与总结",
+        summary: "完成一个完整的 CI/CD 项目并总结", content: {
+          objective: "完成 CI/CD 综合项目并总结。把两周学到的东西整合到一个完整项目中，包含代码检查、测试、构建镜像、部署、监控全流程。",
+          key_points: [
+            "端到端流水线：从代码提交到生产部署的完整链路",
+            "多环境部署：dev → staging → prod 逐级推进",
+            "质量保障：测试、扫描、门禁、人工审批",
+            "DevOps 总结：理念、工具、最佳实践、职业发展"
+          ],
+          practice: "1）项目设计：选一个应用，设计完整的 CI/CD 流水线。2）实现：代码检查 → 单元测试 → 构建镜像 → 安全扫描 → 部署到 staging → 手动审批 → 部署到 prod。3）验证：故意制造错误（测试失败、漏洞），看流水线会不会拦住。4）文档：写一份 CI/CD 设计文档和运维手册。5）总结：DevOps 学习收获，后续进阶方向（SRE、云原生、平台工程）。",
+          deep_dive: "CI/CD 是 DevOps 的核心实践——它把人从重复的部署工作中解放出来，同时提升了质量和速度。但 CI/CD 不只是工具，更是文化和流程的改变。DevOps 的精髓是「持续」：持续集成、持续交付、持续部署、持续反馈、持续改进。工具在变（从 Jenkins 到 GitHub Actions 到 ArgoCD），但核心理念没变——更快、更稳、更高质量地交付价值。DevOps 工程师的职业路径很广：SRE、云原生工程师、平台工程师、DevSecOps 等等。"
+        }, duration: "4小时", resources: [B_DOCKER_TUTORIAL], checkpoint: "完成端到端 CI/CD 项目，总结 DevOps 学习路径" },
     ],
   },
 
@@ -4797,6 +5086,66 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           practice: "MLOps 综合实战项目：1）项目规划：选择一个 ML 项目（如情感分析、图像分类），设计完整的 MLOps 方案。2）数据管理：a）用 DVC 做数据版本管理；b）设计数据 pipeline（采集 → 清洗 → 特征工程）；c）（可选）用 Feast 搭建简单的 Feature Store。3）实验管理：a）用 MLflow 跟踪所有实验；b）记录超参数、指标、模型；c）对比不同实验，选最优模型。4）CI/CD 流水线：a）用 GitHub Actions 搭建 ML pipeline；b）代码提交 → 数据验证 → 训练 → 评估 → 注册；c）模型注册到 MLflow Model Registry。5）部署与监控：a）用 FastAPI + Docker 部署模型；b）添加 Prometheus 监控；c）实现简单的漂移检测。6）文档与总结：a）写一份 MLOps 架构文档；b）画出完整流程图；c）总结你这两周学到的 MLOps 知识；d）思考：你的团队在 MLOps 的哪个级别？怎么提升？",
           deep_dive: "MLOps 是一个系统工程，不是单个工具或技术，而是一套方法论：1）MLOps 的本质：MLOps 的目标不是用最多的工具，而是用最少的工具解决问题。很多团队一上来就想用 Kubeflow、MLflow、Feast、Seldon 全家桶，结果维护成本太高。正确的做法是：从最痛的点开始，用最简单的工具解决，逐步迭代。2）Feature Store 的价值：Feature Store 解决「训练-服务偏差」问题——训练时用的特征和线上推理时用的特征不一致，导致效果下降。Feature Store 统一管理特征，保证离线训练和在线推理用同一套特征逻辑。知名工具：Feast、Tecton、Hopsworks。3）可复现性是基石：MLOps 的核心是可复现——任何人、任何时候、用同样的代码和数据，应该得到同样的结果。这需要：a）代码版本管理（Git）；b）数据版本管理（DVC）；c）环境版本管理（Docker）；d）实验记录（MLflow）。四者缺一不可。4）自动化是目标：MLOps 的最终目标是自动化——从数据到模型到部署，尽量减少人工干预。但自动化是逐步实现的：a）先自动化训练 pipeline；b）再自动化部署；c）最后自动化监控和重训练。每一步都要验证可靠性。5）团队协作：MLOps 涉及多个角色——a）数据科学家：负责模型和实验；b）ML 工程师：负责 pipeline 和部署；c）DevOps/SRE：负责基础设施；d）数据工程师：负责数据管道。好的 MLOps 让每个角色专注于自己的部分，通过自动化流水线协作。6）MLOps 的未来：a）AutoML：自动选择模型和超参数；b）LLM Ops：大模型的运维（prompt 版本管理、A/B 测试、成本控制）；c）实时 ML：流式数据处理和实时推理；d） Responsible AI：公平性、可解释性、隐私保护的工程化。MLOps 是一个快速发展的领域，保持学习和实践很重要。"
         }, duration: "4小时", resources: [B_DOCKER_TUTORIAL, { title: "Feast Feature Store", url: "https://docs.feast.dev/", required: false }, { title: "DVC 文档", url: "https://dvc.org/doc", required: false }], checkpoint: "完成一个端到端的 MLOps 项目，包含数据管理、实验跟踪、CI/CD、部署和监控" },
+      { day: 6, title: "Feature Store 与特征工程平台",
+        summary: "学习特征存储和特征平台概念", content: {
+          objective: "学习 Feature Store 和特征工程平台。理解特征存储的作用，了解 Feast 等开源工具，知道训练/服务一致性问题。",
+          key_points: [
+            "训练服务偏差：训练时的特征和线上推理时不一致",
+            "Feature Store：统一管理特征，保证离线训练和在线服务一致",
+            "Feast：开源 Feature Store，支持离线和在线存储",
+            "特征复用：不同项目共享特征，避免重复开发"
+          ],
+          practice: "1）概念学习：理解 Feature Store 解决什么问题。2）Feast 入门（可选）：安装 Feast，跑官方示例。3）架构设计：为你的 ML 系统设计特征平台架构。4）思考：你做过的项目中，有没有训练服务不一致的问题？",
+          deep_dive: "Feature Store 是 MLOps 的重要组件——它解决了「训练服务偏差」这个经典问题。训练时用批量数据算特征，推理时用实时数据算特征，两者的计算逻辑如果有差异，模型效果就会下降。Feature Store 统一定义和计算特征，离线训练和在线推理都用同一套，从根源上避免偏差。Feast 是最流行的开源 Feature Store，适合中小团队。大公司通常自研特征平台。"
+        }, duration: "2小时", resources: [B_DOCKER_TUTORIAL, { title: "Feast", url: "https://docs.feast.dev/", required: false }], checkpoint: "理解 Feature Store 的作用和训练服务一致性问题" },
+      { day: 7, title: "ML 流水线与 Kubeflow/Airflow",
+        summary: "学习 ML 流水线编排工具", content: {
+          objective: "学习 ML 流水线编排。了解 Kubeflow 和 Airflow，能设计和实现 ML pipeline，知道数据→训练→评估→部署的全流程自动化。",
+          key_points: [
+            "ML 流水线：数据处理 → 训练 → 评估 → 注册 → 部署，全流程自动化",
+            "Kubeflow：Kubernetes 原生的 ML 工作流平台",
+            "Airflow：通用工作流编排器，也常用于 ML 流水线",
+            "流水线触发：定时触发、数据更新触发、手动触发"
+          ],
+          practice: "1）流水线设计：为一个 ML 项目设计完整的流水线，画出每个步骤和依赖。2）Airflow 入门（可选）：安装 Airflow，写一个简单 DAG。3）Kubeflow 了解（概念）：了解 Kubeflow Pipelines 的组件和架构。4）对比：Airflow 和 Kubeflow 各适合什么场景？",
+          deep_dive: "ML 流水线是 MLOps 的骨架——把数据、训练、评估、部署串起来，实现端到端自动化。流水线编排工具分两类：a）通用编排器：Airflow、Prefect、Dagster，灵活但需要自己封装 ML 逻辑；b）ML 专用编排：Kubeflow Pipelines、MLflow Pipelines，专为 ML 设计，和 ML 工具集成好。选型取决于团队技术栈和 K8s 使用程度。流水线的目标是：任何人、任何时候，一键就能从原始数据得到模型。"
+        }, duration: "2.5小时", resources: [B_DOCKER_TUTORIAL, { title: "Kubeflow", url: "https://www.kubeflow.org/", required: false }], checkpoint: "能设计 ML 流水线，了解 Kubeflow 和 Airflow 的区别" },
+      { day: 8, title: "模型监控与数据漂移检测",
+        summary: "深入学习模型监控和漂移检测", content: {
+          objective: "深入学习模型监控和数据漂移检测。掌握数据漂移、概念漂移的检测方法，能用 Evidently AI 等工具监控模型，设计告警机制。",
+          key_points: [
+            "数据漂移：输入数据分布变化（P(X) 变了）",
+            "概念漂移：输入输出关系变化（P(Y|X) 变了）",
+            "漂移检测：统计检验（KS 检验、PSI）、距离度量、基于模型的方法",
+            "Evidently AI：开源 ML 监控工具，内置多种漂移检测算法"
+          ],
+          practice: "1）漂移检测实验：生成模拟数据，制造数据漂移，用统计方法检测。2）Evidently AI 使用（可选）：安装并跑一个示例，生成漂移报告。3）监控设计：设计一个模型监控方案——监控什么指标？阈值多少？怎么告警？4）应对策略：检测到漂移后怎么办？（重训练、人工检查、降级）",
+          deep_dive: "模型上线不是结束，而是开始——模型效果会随时间下降，这叫「模型腐烂」（Model Decay）。主要原因是数据漂移和概念漂移。数据漂移是输入分布变了（比如用户行为变了），概念漂移是关系变了（比如疫情改变了消费模式）。检测漂移是第一步，更重要的是应对——自动重训练？人工审核？降级到规则？这需要根据业务场景设计。Evidently AI、Arize、WhyLabs 是专门的 ML 监控工具。"
+        }, duration: "2.5小时", resources: [B_DOCKER_TUTORIAL, { title: "Evidently AI", url: "https://www.evidentlyai.com/", required: false }], checkpoint: "理解漂移检测方法，能设计模型监控方案" },
+      { day: 9, title: "AutoML 与超参数优化",
+        summary: "了解 AutoML 和超参数优化技术", content: {
+          objective: "了解 AutoML 和超参数优化。掌握超参数搜索方法（网格搜索、随机搜索、贝叶斯优化），了解 AutoML 工具和适用场景。",
+          key_points: [
+            "超参数优化：网格搜索、随机搜索、贝叶斯优化、遗传算法",
+            "Optuna/Hyperopt：流行的超参优化框架",
+            "AutoML：自动特征工程、模型选择、超参调优的全自动化",
+            "适用场景：什么时候用 AutoML，什么时候需要人工调优"
+          ],
+          practice: "1）超参优化：用 Optuna 或 scikit-learn 的 GridSearchCV/RandomizedSearchCV 优化一个模型。2）对比实验：网格搜索 vs 随机搜索 vs 贝叶斯优化，哪种效率高？3）AutoML 了解（概念）：了解 AutoML 工具（AutoGluon、H2O）。4）思考：AutoML 会取代数据科学家吗？还是辅助工具？",
+          deep_dive: "超参数优化是 ML 工程的重要环节——超参数选得好，模型效果能提升一大截。网格搜索简单但低效（维度灾难），随机搜索 surprisingly 有效，贝叶斯优化更智能（利用历史结果指导下一次尝试）。Optuna 是现在最流行的超参优化框架，支持 pruning（早停差的实验）、多种采样器、可视化。AutoML 更进一步——自动做特征工程、模型选择、超参调优，甚至自动清洗数据。但 AutoML 不是银弹——它能找到「还不错」的解，但很难找到「最优」解，而且计算资源消耗大。人类专家的价值在于理解问题、设计正确的评估指标、做特征工程。"
+        }, duration: "2.5小时", resources: [{ title: "Optuna", url: "https://optuna.org/", required: false }], checkpoint: "能用 Optuna 做超参数优化，了解 AutoML 的能力和局限" },
+      { day: 10, title: "MLOps 综合实战与职业发展",
+        summary: "MLOps 综合项目与职业发展路径", content: {
+          objective: "完成 MLOps 综合项目并规划职业发展。整合两周学到的 MLOps 知识，做一个端到端项目，了解 MLOps 工程师的技能栈和成长路径。",
+          key_points: [
+            "综合项目：从数据到部署监控的完整 MLOps 系统",
+            "MLOps 成熟度：手工 → 流水线化 → CI/CD → CT → 全自动",
+            "技能栈：ML + DevOps + 云计算 + 数据工程",
+            "职业发展：MLOps 工程师、ML 平台工程师、数据科学家"
+          ],
+          practice: "1）项目设计：选一个 ML 项目，设计完整的 MLOps 架构。2）方案文档：写一份 MLOps 方案文档——架构图、技术选型、成本估算、风险分析。3）技能盘点：你现在掌握了哪些 MLOps 技能？缺什么？4）学习路径：制定后续 3-6 个月的学习计划。5）社区：关注 MLOps 社区、博客、开源项目。",
+          deep_dive: "MLOps 是一个交叉领域——需要机器学习、软件工程、DevOps、云计算等多方面的知识。MLOps 工程师的核心价值是「让 ML 项目从 Demo 走到生产」。很多 ML 项目死在「最后一公里」——模型做出来了，但上不了线，或者上线了没人维护。MLOps 就是解决「最后一公里」的。职业路径：a）ML 工程师 → MLOps 工程师：懂模型又懂工程，很稀缺；b）DevOps 工程师 → MLOps 工程师：有工程基础，补 ML 知识；c）数据工程师 → MLOps 工程师：数据背景，补模型和运维。MLOps 是当前 AI 领域最缺人的方向之一。"
+        }, duration: "4小时", resources: [B_DOCKER_TUTORIAL], checkpoint: "设计端到端 MLOps 方案，规划职业发展路径" },
     ],
   },
 {
@@ -5268,6 +5617,66 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           practice: "RAG 项目部署与展示：1）后端 API 完善：a）用 FastAPI 封装 RAG 流程；b）支持流式输出（SSE），让用户看到逐字生成；c）添加会话管理，支持多轮对话；d）错误处理和参数验证。2）前端界面：a）用 Streamlit 或 Gradio 构建聊天界面；b）展示答案来源（点击可跳转到原文档）；c）支持文件上传（构建自己的知识库）；d）显示检索到的上下文（可选，增加透明度）。3）Docker 部署：a）写 Dockerfile 打包 RAG 服务；b）用 docker-compose 编排（API + 向量数据库 + 前端）；c）测试部署。4）项目文档：a）写 README——项目简介、功能、技术栈、安装使用、架构图；b）写设计文档——技术选型理由、架构设计、优化方案；c）准备 Demo 脚本——展示核心功能。5）测试与优化：a）端到端测试，确保各环节正常；b）性能优化（缓存、异步）；c）准备几个好的 Demo 问题和答案。6）总结复盘：a）总结 RAG 的核心技术；b）你做了哪些优化？效果如何？c）还有什么可以改进？d）这个项目能用在什么场景？",
           deep_dive: "一个完整的 RAG 项目不只是技术实现，还需要考虑用户体验和工程化：1）用户体验设计：好的 RAG 应用应该让用户感觉「自然」——a）流式输出：让用户看到逐字生成，不用等；b）答案溯源：展示来源，增加可信度；c）相关推荐：在回答后推荐相关问题；d）反馈机制：让用户可以点赞/点踩，收集数据持续改进。2）知识库管理：实际应用中，知识库需要持续更新——a）支持增量添加文档；b）文档更新时自动重新向量化；c）文档删除时同步删除向量；d）支持多种文档格式。3）多租户和权限：如果是企业应用，需要考虑——a）不同用户看到不同的知识库；b）权限控制（谁能看、谁能编辑）；c）审计日志。4）性能和成本：a）缓存：相同问题直接返回缓存答案；b）异步：检索和生成分开，不阻塞；c）模型选择：简单问题用小模型，复杂问题用大模型；d）批量处理：高并发时批量处理请求。5）RAG 项目的亮点：在简历或展示中，好的 RAG 项目应该突出：a）技术深度：不只是调 API，而是深入理解每个环节并优化；b）工程能力：完整的部署和监控；c）效果评估：有量化的评估指标；d）实际价值：解决真实问题。6）RAG 的未来：RAG 技术在快速发展——a）GraphRAG：用知识图谱增强检索；b）Agentic RAG：用 Agent 做多步检索和推理；c）多模态 RAG：支持图片、视频、音频；d）个性化 RAG：根据用户画像定制答案。保持关注前沿，持续优化你的项目。"
         }, duration: "4小时", resources: [R_FASTAPI, R_STREAMLIT, R_GRADIO], checkpoint: "完成 RAG 项目部署，产出可演示的作品和完整文档" },
+      { day: 6, title: "高级检索优化",
+        summary: "混合检索、重排序、查询改写等高级技术", content: {
+          objective: "学习高级检索优化技术。掌握混合检索（BM25 + 向量）、重排序（Reranker）、查询改写等方法，显著提升检索质量。",
+          key_points: [
+            "混合检索：BM25 关键词检索 + 向量语义检索，取长补短",
+            "重排序：用 Cross-Encoder 对召回结果精排，提升精度",
+            "查询改写：多查询、HyDE、问题分解，提升召回",
+            "分块优化：语义分块、父子分块、重叠策略"
+          ],
+          practice: "1）混合检索：实现 BM25（用 rank_bm25）和向量检索的融合（RRF 或加权）。2）重排序：加一个 BGE-Reranker 精排，对比重排前后 Recall 提升。3）查询改写：实现多查询改写（让 LLM 生成 3 个变体分别检索）或 HyDE。4）消融实验：每个优化点单独测效果，看贡献最大的是哪个。",
+          deep_dive: "基础 RAG 的检索质量往往是瓶颈——检索错了，生成再强也没用。高级检索优化能大幅提升效果：a）混合检索：向量检索擅长语义匹配，BM25 擅长关键词精确匹配，两者结合效果通常比单一路好 10-20%；b）重排序：第一阶段用双塔模型（快）召回 top-20，第二阶段用 Cross-Encoder（慢但准）精排 top-5，兼顾速度和精度；c）查询改写：用户的 query 往往不是最优的，改写一下召回率能提升不少。这些技术组合起来，检索质量可能从 60% 提到 90%+。"
+        }, duration: "3小时", resources: [{ title: "BGE Reranker", url: "https://huggingface.co/BAAI/bge-reranker-large", required: false }], checkpoint: "实现混合检索和重排序，量化检索质量提升" },
+      { day: 7, title: "多轮对话与记忆系统",
+        summary: "实现多轮对话 RAG 和记忆管理", content: {
+          objective: "学习多轮对话 RAG 和记忆系统。能处理多轮对话中的指代消解和上下文传递，设计短期和长期记忆策略。",
+          key_points: [
+            "多轮对话挑战：指代消解、上下文依赖、话题切换",
+            "查询重构：把当前问题 + 对话历史改写成独立的检索 query",
+            "短期记忆：对话历史管理（滑动窗口、摘要）",
+            "长期记忆：用户偏好、历史对话摘要，向量存储"
+          ],
+          practice: "1）查询重构：实现一个独立查询生成器——输入对话历史 + 当前问题，输出重构后的独立查询。2）对话管理：实现滑动窗口（保留最近 N 轮）和摘要式记忆。3）长期记忆：把重要信息存入记忆库，对话时检索相关记忆加入上下文。4）测试：设计多轮对话场景，测试系统是否能正确理解指代和上下文。",
+          deep_dive: "多轮对话 RAG 比单轮问答复杂很多——用户不会每次都把话说完整，会用「他」「这个」「那个」，还会切换话题。核心技术是查询重构（Query Rewriting）——让 LLM 把不完整的问题改写成完整的、独立的查询。记忆系统也是关键：短期记忆（当前对话）保证连贯性，长期记忆（用户画像、历史偏好）让系统更懂用户。记忆的存储和检索本身就是一个 RAG 问题——把记忆当作文档，当前对话当作查询，检索相关的记忆片段。"
+        }, duration: "3小时", resources: [{ title: "LangChain Memory", url: "https://python.langchain.com/docs/modules/memory/", required: false }], checkpoint: "实现多轮对话 RAG，包含查询重构和记忆系统" },
+      { day: 8, title: "RAG 评估体系与质量保证",
+        summary: "建立完整的 RAG 评估和质量保证体系", content: {
+          objective: "建立 RAG 评估体系。掌握检索评估和生成评估的方法，用 Ragas 等工具自动化评估，设计质量监控和告警机制。",
+          key_points: [
+            "检索评估：Recall@k、MRR、NDCG、上下文精度/召回",
+            "生成评估：忠实度（Faithfulness）、答案相关性、完整性",
+            "Ragas：自动化 RAG 评估框架",
+            "质量监控：线上效果监控、bad case 收集、持续改进"
+          ],
+          practice: "1）构建评估集：准备 30-50 个问答对，标注标准答案和相关文档。2）Ragas 评估：用 Ragas 算 faithfulness、answer_relevancy、context_precision、context_recall。3）人工评估：抽样 10 个，人工评分，和自动评估对比。4）监控设计：设计线上质量监控方案——怎么发现 bad case？怎么告警？",
+          deep_dive: "没有评估，就没有优化。RAG 评估分为两部分——检索评估和生成评估。检索评估相对客观，Recall/MRR 就能说明问题。生成评估比较难——答案是开放的，怎么算好？Ragas 提出了几个指标：faithfulness（答案是否基于上下文，有没有幻觉）、answer_relevancy（答案和问题相关吗）、context_precision（检索到的上下文精准吗）、context_recall（相关的上下文检索到了吗）。这些指标都是用 LLM 当评委来算的，虽然不完全准确，但成本低、速度快，适合做自动化监控。再加上定期人工抽检，就能形成比较完整的质量保证体系。"
+        }, duration: "2.5小时", resources: [{ title: "Ragas", url: "https://docs.ragas.io/", required: false }], checkpoint: "建立 RAG 评估体系，能用 Ragas 自动化评估" },
+      { day: 9, title: "性能优化与生产部署",
+        summary: "RAG 系统的性能优化和生产级部署", content: {
+          objective: "学习 RAG 系统的性能优化和生产部署。优化检索和生成速度，构建高可用服务，考虑成本、安全、监控。",
+          key_points: [
+            "性能优化：Embedding 缓存、语义缓存、批处理、异步",
+            "生产架构：API 网关、限流、鉴权、负载均衡",
+            "成本优化：小模型 Embedding、缓存、智能路由、量化",
+            "安全合规：数据隐私、内容安全、访问控制"
+          ],
+          practice: "1）性能优化：a）加语义缓存，相同/相似问题直接返回；b）优化向量检索（选合适的 index 类型）；c）流式输出减少首字延迟。2）生产部署：用 Docker Compose 部署完整的 RAG 服务（API + 向量库 + 前端）。3）安全：加 API Key 鉴权、限流，防止滥用。4）成本估算：算一下 100 日活用户的话，每月成本大概多少？",
+          deep_dive: "RAG 从 Demo 到生产差很多。Demo 只要能跑就行，生产要考虑：a）性能：并发高不高？延迟多少？用户等不及；b）可用性：服务挂了怎么办？多实例 + 负载均衡；c）成本：Embedding 和 LLM 调用都要钱，缓存和路由能省很多；d）安全：数据泄露怎么办？用户输入恶意 prompt 怎么办？e）监控：出问题了怎么发现？性能、错误率、质量都要监控。生产级 RAG 是一个系统工程，不只是调库。"
+        }, duration: "3小时", resources: [R_FASTAPI, R_DOCKER_GETTING_STARTED], checkpoint: "优化 RAG 系统性能，完成生产级部署方案" },
+      { day: 10, title: "项目完善与作品集",
+        summary: "完善项目，准备作品集，总结学习收获", content: {
+          objective: "完善 RAG 项目并准备作品集。打磨项目细节，写好文档和演示，总结两个月的学习收获，为求职和后续学习做准备。",
+          key_points: [
+            "项目打磨：用户体验、错误处理、边界情况、细节优化",
+            "技术文档：README、架构图、技术选型说明、部署指南",
+            "作品集展示：Demo 视频、截图、亮点、博客文章",
+            "面试准备：常见问题、技术深度、项目讲解"
+          ],
+          practice: "1）项目打磨：a）完善 UI/UX，让用户体验更流畅；b）加错误处理和 loading 状态；c）处理边界情况（空查询、超长文档、知识库为空等）。2）文档：a）写高质量 README——项目简介、功能特性、技术栈、架构图、安装使用、Demo 截图；b）写设计文档——为什么这么设计？做了哪些优化？效果如何？3）作品集：a）录一个 Demo 视频或 GIF；b）写一篇技术博客分享你的 RAG 之旅；c）准备 3 分钟和 10 分钟两个版本的项目讲解。4）面试准备：a）RAG 的原理、优化方法、评估指标；b）你做的项目中最大的挑战是什么？怎么解决的？c）如果再做一遍，你会怎么改进？",
+          deep_dive: "一个好的项目作品集比 10 个半成品有价值。面试官看项目看什么？a）技术深度：你是只会调库还是真的理解原理？b）工程能力：代码质量、部署能力、错误处理、性能优化；c）问题解决：遇到了什么问题？怎么分析和解决的？d）结果导向：效果提升了多少？成本降低了多少？用数据说话。建议：把你的 RAG 项目做到极致——不仅功能完成，还要有性能优化、有评估数据、有漂亮的界面、有清晰的文档。这样的项目放在简历上，是很有竞争力的。"
+        }, duration: "4小时", resources: [], checkpoint: "完成高质量 RAG 项目，产出文档和作品集材料" },
     ],
   },
 
@@ -5359,6 +5768,71 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           practice: "项目总结与作品集准备：1）完善 README：a）项目简介——一句话说清楚做什么；b）功能特点——列出 3-5 个亮点；c）技术栈——用了什么模型、框架、工具；d）效果展示——准确率、速度、Demo 截图；e）安装使用——一键运行；f）项目结构——清晰的目录说明。2）技术文档：a）数据处理流程；b）模型训练方案和实验对比；c）模型优化和部署方案；d）架构图（用 draw.io 或 Mermaid）。3）实验报告：a）整理所有实验结果（表格或图表）；b）分析每个优化点的效果；c）写结论和建议。4）Demo 录制：a）准备几个好的 Demo 案例；b）录制演示视频或 GIF；c）放在 README 里。5）简历项目描述：a）用 STAR 法式描述（Situation-Task-Action-Result）；b）突出技术亮点和量化成果；c）准备面试中可能被问的问题。6）总结复盘：a）这两周学到了什么？b）遇到了哪些坑？c）如果重做会怎么改进？d）下一步学习方向？",
           deep_dive: "一个好的项目作品集，比任何证书都有说服力：1）面试官怎么看项目？面试官看项目主要看几点：a）技术深度——你只是调包还是理解原理？b）工程能力——你能不能把模型部署成产品？c）问题解决——遇到问题怎么分析和解决？d）学习能力——你能不能快速学习新技术？好的项目作品集能同时展示这四点。2）README 是第一印象：很多面试官第一眼看 README，如果写得好，会留下好印象。好的 README 应该：a）开头有 GIF/截图，直观展示效果；b）有清晰的项目简介；c）有量化的效果指标；d）有一键运行的说明；e）不要有错别字和格式问题。3）技术亮点的呈现：不要只是列举「用了 ResNet、用了数据增强」，要说明：a）为什么选这个方案？（对比过什么？）b）做了什么优化？（效果提升了多少？）c）解决了什么问题？（遇到了什么坑，怎么解决的？）4）量化成果的重要性：不要说「效果不错」，要说「准确率从 85% 提升到 93%」。不要说「速度很快」，要说「推理延迟从 500ms 降到 50ms」。量化的数据比形容词有说服力得多。5）面试中怎么讲项目：a）先讲背景和目标——为什么做这个？b）再讲方案——怎么做的？c）重点讲难点和创新——有什么亮点？d）最后讲结果——效果如何？e）准备被追问——为什么不用 X？如果数据更多会怎样？6）持续改进：项目不是做完就完了——a）关注新技术，定期更新；b）收集用户反馈，持续优化；c）把项目扩展到更多场景；d）写技术博客分享经验。一个持续维护的项目，比 10 个半成品更有价值。"
         }, duration: "3小时", resources: [{ title: "GitHub README 最佳实践", url: "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes", required: false }], checkpoint: "产出完整的项目文档、Demo 和作品集描述" },
+      { day: 6, title: "高级数据增强与正则化",
+        summary: "深入学习数据增强和正则化技术，进一步提升模型效果", content: {
+          objective: "今天你将深入学习高级数据增强和正则化技术。学完后能使用 AutoAugment、RandAugment 等自动增强策略，掌握 Mixup/CutMix、标签平滑、权重衰减等正则化方法，系统性地防止过拟合。",
+          key_points: [
+            "自动数据增强：AutoAugment、RandAugment、TrivialAugment，自动搜索最优增强策略",
+            "高级增强技术：Mixup、CutMix、CutOut、Random Erasing、Mosaic",
+            "正则化方法：标签平滑、权重衰减、Dropout、Stochastic Depth",
+            "训练技巧：学习率预热、余弦退火、梯度裁剪、EMA（指数移动平均）",
+            "实验设计：对照实验、消融实验、超参数搜索的科学方法"
+          ],
+          practice: "高级增强与正则化实战：1）高级数据增强实验：a）实现 Mixup 和 CutMix；b）实现 Random Erasing；c）用 torchvision 的 AutoAugment/RandAugment；d）对比基础增强 vs 高级增强的效果。2）正则化方法实验：a）标签平滑（Label Smoothing）；b）权重衰减（Weight Decay）调优；c）Dropout 比例实验；d）对比有无正则化的过拟合情况。3）训练技巧：a）学习率预热（Linear Warmup）；b）余弦退火学习率调度（CosineAnnealingLR）；c）梯度裁剪（Gradient Clipping）；d）EMA（Exponential Moving Average）模型权重。4）消融实验：a）设计一个完整的 ablation study；b）每次只改一个变量，看效果变化；c）记录每个组件的贡献；d）找出对你的数据集最有效的组合。5）超参数优化：a）用 Optuna 或 WandB 做超参搜索；b）搜索学习率、batch size、权重衰减、增强强度等；c）找到最优超参数组合。6）模型集成：a）训练多个不同初始化的模型；b）用简单平均或加权平均集成；c）对比单模型和集成的效果差异。",
+          deep_dive: "数据增强和正则化是提升模型泛化能力的核心手段，也是 CV 工程师的基本功：1）为什么数据增强这么有效？数据增强本质上是「免费增加数据」——通过对现有数据做各种变换，生成更多样化的训练样本，让模型学到更鲁棒的特征。好的数据增强能带来 5-10% 的效果提升，比换模型架构还划算。2）自动增强的思想：传统增强策略是人工设计的，AutoAugment 用强化学习自动搜索最优增强策略。RandAugment 简化了这个思路——随机选择 N 个增强操作，每个操作有 M 的强度，虽然简单但效果接近 AutoAugment。3）Mixup / CutMix 的直觉：Mixup 把两张图按比例混合，标签也按比例混合。CutMix 把一张图的一块区域裁剪下来贴到另一张图上，标签按面积比例混合。为什么有效？a）增加样本多样性；b）让模型关注更多区域，而不只是最有区分度的部分；c）正则化效果，防止过拟合。4）正则化的「天下没有免费的午餐」：所有正则化方法都是「以训练准确率换测试准确率」——训练准确率会下降一些，但测试准确率（泛化能力）会提升。关键是找到平衡点——正则化不够会过拟合，正则化太强会欠拟合。5）EMA 的价值：EMA（指数移动平均）维护一份模型权重的滑动平均版本，最终测试时用 EMA 权重而不是最终权重。为什么有效？a）平滑训练过程中的波动；b）相当于一种模型集成（不同时间步的模型）；c）几乎没有额外计算成本，却能稳定提升 1-2%。强烈建议每个项目都用。6）实验设计的科学性：做深度学习实验很容易陷入「瞎调参」的误区。科学的方法：a）控制变量：每次只改一个东西；b）记录完整：所有超参数、代码版本、数据版本都要记录；c）多次运行：随机性存在，至少跑 3 次取平均；d）消融实验：证明每个组件确实有用。7）从 90% 到 95% 比从 80% 到 90% 难得多：越往后提升越难。前期靠换模型、调参就能快速提升，后期需要精细的数据分析、错误分析、集成学习等方法。知道什么时候该停、什么时候该继续投入，也是工程师的重要能力。"
+        }, duration: "3小时", resources: [{ title: "timm 数据增强", url: "https://timm.fast.ai/训练技巧#数据增强", required: false }, { title: "AutoAugment 论文", url: "https://arxiv.org/abs/1805.09501", required: false }], checkpoint: "掌握高级数据增强和正则化技术，完成消融实验并量化各组件效果" },
+      { day: 7, title: "模型可解释性与错误分析深化",
+        summary: "深入模型可解释性，进行系统化的错误分析和改进", content: {
+          objective: "今天你将深入学习模型可解释性和错误分析。学完后能用 Grad-CAM、SHAP 等方法理解模型决策，进行系统化的错误分类和根因分析，制定针对性的改进策略。",
+          key_points: [
+            "可解释性方法：Grad-CAM、Grad-CAM++、Score-CAM，可视化模型注意力",
+            "SHAP 值：基于博弈论的特征重要性分析，更全面的解释",
+            "错误分类学：混淆类、边界样本、标注错误、数据偏差，系统化分类错误",
+            "困难样本挖掘：主动学习、不确定度采样、硬样本挖掘",
+            "改进优先级：ROI 分析，找到投入产出比最高的改进方向"
+          ],
+          practice: "可解释性与错误分析深化：1）可解释性工具包：a）实现 Grad-CAM++ 和 Score-CAM，对比不同 CAM 方法的差异；b）用 SHAP 做图像分类的特征重要性分析；c）可视化多个层的激活，理解不同层学到了什么。2）错误分类系统：a）把所有错误样本分类：i）类间相似（两个类别本身就像）；ii）视角/姿态问题；iii）遮挡/模糊；iv）标注错误；v）数据偏差；b）每类错误占比多少？c）哪类最容易改进？3）深度错误分析：a）选 20 个典型错误样本；b）逐个分析：为什么模型会错？是模型的问题还是数据的问题？c）针对每种错误类型，提出具体的改进方案。4）困难样本挖掘：a）找出模型最不确定的样本（预测概率 0.4-0.6）；b）找出高置信度错误的样本（最危险）；c）分析这些样本的共同点；d）如果可以增加标注，优先标注哪些样本？（主动学习）5）改进实验：a）针对最主要的错误类型，实施一个改进方案；b）比如：混淆类增加数据、相似类增加判别性特征、标注错误修正数据；c）对比改进前后的效果；d）计算 ROI（投入产出比）。6）分析报告：a）写一份完整的错误分析报告；b）包含：错误分布、典型案例、根因分析、改进建议、优先级排序；c）这是你项目文档中最有价值的部分之一。",
+          deep_dive: "错误分析是模型优化的「导航系统」——没有它，你就是在黑暗中摸索：1）可解释性不是花架子：很多人觉得可解释性是「论文里的东西」，实际项目没用。错！可解释性是调试模型的工具：a）模型关注的区域对吗？如果关注背景而不是目标，说明学到了捷径；b）为什么错了？通过可视化看模型在看什么，推断出错原因；c）建立信任：给客户/产品经理看，模型不是黑箱。2）Grad-CAM 的原理和局限：Grad-CAM 通过反向传播梯度，计算每个特征图通道的权重，加权组合得到热力图。优点：不需要修改模型、适用于各种 CNN 架构。局限：a）分辨率低（和最后一层特征图一样大）；b）只能定位大致区域，不够精细；c）有时候会「撒胡椒面」——大片区域都高亮。3）错误分析的方法论：错误分析不是「看看错了哪些图」，而是系统性的分析流程：a）分类：把错误归类，找到主要问题；b）量化：每类错误有多少？占比多少？c）根因：为什么会有这类错误？d）方案：怎么改进？e）优先级：先改哪个？（投入产出比）4）数据问题 vs 模型问题：很多「模型问题」本质是「数据问题」：a）标注错误：数据集中有 5-10% 的标注错误很正常；b）数据偏差：训练数据分布和真实场景不一致；c）类内差异大：同一个类别内部差异太大；d）标注标准不一致：不同标注者的标准不同。发现并解决数据问题，往往比调模型更有效。5）主动学习的思想：标注数据很贵，主动学习就是「让模型告诉你该标注什么」。策略：a）不确定度采样：标模型最不确定的样本；b）多样性采样：标和现有数据最不一样的样本；c）错误驱动：标模型认错的样本。主动学习能用 1/3 的标注成本达到 90% 的效果。6）从错误分析到产品决策：错误分析不只是技术问题，还影响产品决策：a）哪些错误是用户能容忍的？b）哪些错误是致命的？c）为了减少 1% 的错误率，值得增加 50% 的计算成本吗？这些问题需要和产品、业务一起讨论。好的 CV 工程师不只是调模型，还能从业务角度思考问题。"
+        }, duration: "3小时", resources: [{ title: "Grad-CAM 库", url: "https://github.com/jacobgil/pytorch-grad-cam", required: false }, { title: "SHAP", url: "https://shap.readthedocs.io/", required: false }], checkpoint: "完成系统化的错误分析报告，实施至少一个针对性改进并验证效果" },
+      { day: 8, title: "模型压缩与推理加速",
+        summary: "学习模型压缩和推理优化技术，让模型更快更小", content: {
+          objective: "今天你将学习模型压缩和推理加速技术。学完后能进行模型剪枝、量化、知识蒸馏，使用 ONNX Runtime 和 TensorRT 优化推理，在速度和精度之间找到最佳平衡。",
+          key_points: [
+            "模型剪枝：结构化剪枝、非结构化剪枝，移除不重要的权重/通道",
+            "模型量化：INT8 / FP16 量化，减少显存、提升速度",
+            "知识蒸馏：用大模型（教师）指导小模型（学生）训练",
+            "推理优化：ONNX Runtime、TensorRT、算子融合、内存优化",
+            "部署选型：不同部署方案的性能、精度、成本对比"
+          ],
+          practice: "模型压缩与推理加速实战：1）模型量化：a）FP16 半精度推理，对比速度和显存；b）INT8 量化（用 PyTorch 量化或 ONNX 量化）；c）PTQ（训练后量化）vs QAT（量化感知训练）；d）对比量化前后的精度和速度。2）模型剪枝：a）用 torch.nn.utils.prune 做非结构化剪枝；b）用 timm 或 torch-pruning 做结构化剪枝（剪通道）；c）不同剪枝比例（30%、50%、70%）对精度的影响；d）剪枝后微调恢复精度。3）知识蒸馏：a）选一个大模型当教师（如 ViT 或 ResNet101）；b）训练一个小模型当学生（如 MobileNet 或 ResNet18）；c）实现蒸馏损失（KL 散度）；d）对比：直接训小模型 vs 蒸馏训小模型，效果差多少？4）推理引擎对比：a）PyTorch eager mode vs TorchScript vs ONNX Runtime vs TensorRT；b）测量：延迟（单张）、吞吐量（批量）、显存占用；c）哪个方案最适合你的场景？5）部署方案设计：a）如果要部署在手机上，选什么方案？b）如果要部署在服务器 GPU 上，选什么方案？c）如果要部署在边缘设备（如 Jetson），选什么方案？d）精度、速度、成本的权衡。6）性能基准测试：a）写一个完整的 benchmark 脚本；b）测试不同 batch size、不同输入尺寸；c）生成性能报告（延迟、吞吐量、资源占用）；d）找出性能瓶颈。",
+          deep_dive: "模型部署的核心矛盾是「精度 vs 速度 vs 成本」，模型压缩就是在这三者之间找平衡点：1）为什么模型压缩这么重要？训练时你可以用最大的模型、最好的 GPU，但部署时：a）成本：GPU 很贵，推理速度越快，需要的 GPU 越少；b）延迟：用户不想等，实时应用要求 < 100ms；c）资源：边缘设备（手机、IoT）算力和内存有限；d）能耗：数据中心的电费也是成本。2）量化是性价比最高的优化：INT8 量化可以把模型体积减小 4 倍，速度提升 2-4 倍，精度损失通常只有 0.5-2%。为什么有效？a）模型权重通常分布在很小的范围内（如 -1 到 1），用 INT8 表示损失不大；b）很多硬件（GPU、NPU）有专门的 INT8 计算单元；c）实现简单，PTQ 几乎不需要重新训练。3）剪枝的两种思路：a）非结构化剪枝：剪掉单个不重要的权重，稀疏化。优点是压缩率高，缺点是需要特殊的稀疏推理库才能加速，实际加速有限；b）结构化剪枝：剪掉整个通道/层。优点是可以直接在普通硬件上加速，缺点是压缩率低一些，精度损失大一些。实际项目中结构化剪枝更常用。4）知识蒸馏的魅力：知识蒸馏让小模型学到大模型的「暗知识」——不只是标签，还有大模型的概率分布。为什么有效？a）大模型的 soft label 包含更多信息（比如猫和狗的相似性）；b）相当于正则化，让小模型更鲁棒；c）可以用「更深更宽」的教师教「又浅又窄」的学生。5）推理优化的层次：从模型到部署，优化是层层递进的：a）算法层：选更高效的模型架构（MobileNet、EfficientNet）；b）模型层：剪枝、量化、蒸馏；c）框架层：ONNX Runtime、TensorRT 做图优化、算子融合；d）系统层：批处理、多线程、内存优化；e）硬件层：GPU、NPU、ASIC。每一层都能带来一些提升，叠加起来效果显著。6）部署的常见陷阱：a）精度掉点：训练和推理的预处理不一样、量化误差、框架差异；b）结果不一致：不同框架、不同硬件的结果有细微差异；c）冷启动：模型加载时间长；d）内存泄漏：长时间运行内存增长。部署前一定要做充分的验证和测试。7）从 Demo 到生产的差距：很多人以为模型训完就完了，实际上部署和优化才是真正占时间的部分——训练可能花 1 周，部署和优化可能花 1 个月。生产系统需要考虑：稳定性、监控、告警、回滚、扩缩容、灰度发布等工程问题。"
+        }, duration: "3小时", resources: [{ title: "ONNX Runtime", url: "https://onnxruntime.ai/", required: false }, { title: "TensorRT", url: "https://developer.nvidia.com/tensorrt", required: false }], checkpoint: "掌握至少 3 种模型压缩/优化技术，完成性能基准测试报告" },
+      { day: 9, title: "CV 应用拓展与技术选型",
+        summary: "拓展 CV 应用方向，理解不同任务的技术选型和最佳实践", content: {
+          objective: "今天你将拓展 CV 应用视野，理解目标检测、语义分割、OCR、多模态等方向的技术选型，学会根据任务特点选择合适的技术方案。",
+          key_points: [
+            "目标检测：YOLO、Faster R-CNN、DETR，不同检测算法的适用场景",
+            "语义/实例分割：U-Net、Mask R-CNN、SAM，分割任务的技术路线",
+            "OCR 与文档理解：文字检测 + 识别、版面分析、表格识别",
+            "多模态与大模型：CLIP、BLIP、GPT-4V，视觉 + 语言的融合",
+            "技术选型方法论：根据需求、数据、算力选择合适的方案"
+          ],
+          practice: "CV 应用拓展与技术选型：1）目标检测入门：a）用 YOLOv8 跑一个预训练模型，测试检测效果；b）理解目标检测的核心概念：边界框、IoU、NMS、mAP；c）对比：YOLO（一阶段）vs Faster R-CNN（两阶段），速度和精度的权衡。2）图像分割初探：a）用 SAM（Segment Anything）做交互式分割；b）理解语义分割 vs 实例分割 vs 全景分割；c）什么场景需要分割，而不是检测？3）OCR 实践（可选）：a）用 PaddleOCR 或 EasyOCR 测试文字识别；b）理解 OCR 的 pipeline：检测 → 识别 → 后处理；c）什么场景需要 OCR？4）多模态体验：a）用 CLIP 做零样本图像分类（不用训练，直接文字描述类别）；b）用 BLIP 或 GPT-4V 做图像描述（看图说话）；c）思考：多模态大模型会改变 CV 吗？5）技术选型分析：a）选一个你感兴趣的应用场景（如智能监控、自动驾驶、医学影像、电商搜图）；b）分析这个场景的需求：精度要求？速度要求？数据量？算力预算？c）推荐技术方案：用什么模型？什么框架？什么部署方案？d）给出方案对比表。6）行业调研：a）了解 CV 在几个行业的应用现状（医疗、安防、零售、自动驾驶、工业质检）；b）每个行业的核心痛点是什么？c）技术难点在哪里？d）你对哪个方向最感兴趣？",
+          deep_dive: "图像分类是 CV 的基础，但真实世界的 CV 应用要丰富得多：1）CV 任务的全景图：CV 不是只有分类——a）图像分类：这张图是什么？（入门基础）；b）目标检测：图中有什么？在哪里？（最常用）；c）语义分割：每个像素属于什么类别？（自动驾驶、医学影像）；d）实例分割：每个物体的精确轮廓？（更精细的检测）；e）姿态估计：人体/物体的关键点位置？（动作识别、人机交互）；f）OCR：文字检测和识别？（文档理解、金融）；g）视频理解：跟踪、动作识别、视频分类？（监控、短视频）；h）图像生成：GAN、扩散模型？（AIGC、设计）。每个方向都有很深的技术栈。2）目标检测的演进：目标检测是 CV 中最成熟的方向之一，经历了几代演进：a）传统方法：HOG + SVM（2010 年代初）；b）两阶段：Faster R-CNN 系列（2015-2018），精度高但慢；c）一阶段：YOLO、SSD 系列（2016-至今），速度快，逐渐成为主流；d）Transformer 检测：DETR 系列（2020-至今），简化了 pipeline，但速度还在优化。现在工业界大部分场景用 YOLO 系列，追求极致精度用两阶段或大模型检测。3）分割的三种粒度：a）语义分割：只分类别，不分个体（比如「所有的人」）；b）实例分割：既分类又分个体（比如「每个人」）；c）全景分割：语义 + 实例，所有像素都有标签。不同场景需要不同粒度，比如自动驾驶需要全景分割，医疗影像只需要语义分割。SAM（Segment Anything）的出现改变了分割的格局——零样本就能分割任意物体，大大降低了分割的使用门槛。4）多模态是大趋势：CV 不是孤立的，和 NLP 的结合越来越紧密：a）CLIP：图像和文本对齐，零样本分类、图文检索；b）BLIP / Flamingo：视觉问答、图像描述；c）GPT-4V / Gemini：通用多模态大模型，能理解图像并回答复杂问题。未来的 CV 系统可能都是「视觉 + 语言」的多模态系统。5）技术选型的艺术：做项目不是越新越好、越大越好，要根据实际情况选择：a）考虑因素：精度要求、速度要求、数据量、算力预算、开发周期、团队技术栈；b）原则：先用最简单的方案（比如 ResNet + 迁移学习），不够再升级；c）避免过度设计：不要一上来就用大模型，小模型能解决就用小模型；d）快速原型 + 渐进优化：先跑通 baseline，再逐步优化。6）CV 工程师的成长路径：a）入门：掌握分类、检测的基础；b）进阶：理解各种任务的原理，能独立完成项目；c）高级：能做技术选型、方案设计、优化部署；d）专家：在某个细分方向深入（如医学影像、自动驾驶），有创新能力。CV 是一个很广的领域，找到自己感兴趣的方向深入下去，比「什么都会一点」更有价值。"
+        }, duration: "3小时", resources: [{ title: "YOLOv8", url: "https://docs.ultralytics.com/", required: false }, { title: "SAM", url: "https://segment-anything.com/", required: false }], checkpoint: "了解 CV 各主要应用方向，能针对具体场景做技术选型分析" },
+      { day: 10, title: "项目收官与职业发展",
+        summary: "完善项目作品集，总结学习路径，规划 CV 职业发展", content: {
+          objective: "今天你将完成项目收官并规划职业发展。学完后能产出高质量的 CV 项目作品集，掌握面试技巧，了解 CV 工程师的成长路径和行业趋势，为下一步学习明确方向。",
+          key_points: [
+            "项目作品集打磨：README、技术文档、Demo、代码质量全方位优化",
+            "简历项目撰写：STAR 法则、量化成果、突出技术深度",
+            "面试准备：常见 CV 面试题、项目讲解、系统设计",
+            "CV 职业路径：算法工程师、应用工程师、研究科学家的区别",
+            "持续学习：前沿跟踪、社区参与、项目实践的方法"
+          ],
+          practice: "项目收官与职业规划：1）项目最终打磨：a）完善 README：项目简介、功能截图、技术栈、效果指标、安装使用、架构图；b）代码质量：加注释、写 docstring、模块化、类型标注；c）错误处理和边界情况：空输入、异常图片、并发请求；d）性能优化：再检查一遍，还有没有优化空间？2）技术文档：a）写一篇技术博客：你做这个项目的过程、遇到的坑、学到的东西；b）项目演示视频或 GIF；c）FAQ：常见问题解答。3）简历项目描述：a）用 STAR 格式写项目经历；b）用量化数据：准确率从 X 提升到 Y、速度提升 Z 倍、成本降低 W%；c）突出技术亮点：数据增强策略、模型优化方法、部署方案创新；d）准备 3 分钟和 10 分钟两个版本的项目讲解。4）面试模拟：a）基础题：CNN 的原理、ResNet 的创新点、BatchNorm 的作用、过拟合怎么办；b）项目题：为什么选这个模型？遇到的最大挑战？怎么解决的？如果再做一遍会怎么改进？c）场景题：给一个具体场景（如「电商商品图片分类」），怎么设计方案？5）职业规划：a）你对 CV 的哪个方向最感兴趣？（检测、分割、生成、多模态、三维、医疗...）b）你想做算法还是工程？还是都做？c）未来 1-2 年的学习目标是什么？d）怎么达成目标？（项目、课程、论文、比赛）6）社区参与：a）关注 CV 社区：arXiv、Twitter/X、知乎、GitHub；b）尝试读一篇最新的 CV 论文（如 CVPR/ICCV 的 best paper）；c）给开源项目贡献代码或文档；d）写技术博客，输出倒逼输入。",
+          deep_dive: "完成项目只是起点，真正的成长在于持续学习和职业规划：1）作品集的重要性：在 CV 行业，作品集比学历和证书更有说服力。面试官通过你的项目判断：a）技术深度：你是只会调库还是真的理解？b）工程能力：能不能把东西做出来、做好？c）问题解决：遇到困难怎么分析和解决？d）学习能力：能不能快速掌握新技术？一个高质量的项目，比 10 个凑数的项目有用得多。2）简历怎么写才吸引人？a）量化一切：不要说「效果不错」，要说「准确率从 85.3% 提升到 93.7%」；不要说「速度很快」，要说「推理延迟从 450ms 优化到 60ms」。数据比形容词有说服力。b）突出亮点：你的项目有什么不一样的地方？是用了什么创新方法？还是解决了什么难的问题？还是效果特别好？c）技术栈匹配：看岗位要求，简历里突出相关的技能和项目。3）CV 面试考什么？a）基础：深度学习基础 + CV 基础（CNN、ResNet、Transformer、各种损失函数、优化器）；b）项目：你做的项目的每一个细节——为什么这么设计？遇到了什么问题？怎么解决的？效果怎么样？面试官会挖得很深，不要在简历里写你不懂的东西；c）编程：Python 编程、PyTorch/TensorFlow 熟练程度、算法题（LeetCode）；d）场景设计：给一个业务场景，让你设计方案，考察系统性思维。4）算法 vs 工程怎么选？CV 岗位大致分三类：a）算法工程师：偏模型创新、算法优化，需要读论文、做实验，要求高学历（硕士以上常见）；b）应用工程师：偏落地、部署、系统集成，需要工程能力强，懂模型又懂开发；c）研究科学家：偏前沿研究，发论文，博士起步。没有好坏之分，看你的兴趣和背景。如果你喜欢动手做东西、喜欢把技术变成产品，可能应用工程师更适合；如果你喜欢研究、喜欢追前沿，可以往算法或研究方向走。5）持续学习的方法：CV 技术发展很快，不学习就会被淘汰：a）论文：每周读 1-2 篇论文，保持对前沿的敏感度；b）项目：保持做项目的习惯，用实践巩固知识；c）社区：加入技术社区，和同行交流；d）输出：写博客、做分享，输出是最好的学习方式。6）AI 时代的 CV 工程师：大模型时代，CV 工程师的价值在哪里？a）不会被淘汰，但要求变了：只会调模型的人会越来越不值钱；b）更看重系统能力：能端到端解决问题，从数据到部署全链路；c）更看重业务理解：能把技术和业务结合，创造实际价值；d）快速学习能力：技术变化快，能快速掌握新东西最重要。保持好奇心，持续学习，就不会被时代抛弃。"
+        }, duration: "4小时", resources: [{ title: "CS231n 课程", url: "http://cs231n.stanford.edu/", required: false }, { title: "paperswithcode", url: "https://paperswithcode.com/", required: false }], checkpoint: "完成高质量 CV 项目作品集，制定个人学习和职业发展规划" },
     ],
   },
 
@@ -5450,6 +5924,71 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           practice: "Agent 项目总结与前沿探索：1）项目完善：a）完善 README——功能介绍、架构图、使用说明、Demo；b）整理代码——注释、类型标注、错误处理；c）准备 Demo 脚本——3-5 个展示场景。2）Multi-Agent 实验（可选）：a）用 CrewAI 或 AutoGen 搭建一个简单的 Multi-Agent 系统；b）设计不同角色的 Agent（如研究员、写手、审核员）；c）测试协作完成复杂任务。3）前沿方向探索：a）阅读 AutoGPT、BabyAGI、MetaGPT 的文档/代码；b）了解 Agent 操作系统（如 LangGraph）；c）思考这些技术和你的项目有什么关系。4）应用场景拓展：a）你的 Agent 还能用在什么场景？b）怎么从 Demo 变成产品？c）商业化需要考虑什么？5）作品集准备：a）写项目描述（STAR 格式）；b）准备技术亮点（如记忆系统、安全机制、成本优化）；c）准备面试问题。6）总结复盘：a）这两周学到了什么？b）Agent 技术的现状和未来？c）你的项目在什么水平？还有什么可以改进？",
           deep_dive: "Agent 是 AI 应用的最前沿，这个领域正在快速发展：1）为什么 Agent 是下一个大方向？当前的 LLM 应用主要是「问答」——用户问，AI 答。Agent 让 AI 从「回答问题」变成「完成任务」——从「告诉我怎么做」到「帮我做」。这是质的飞跃。想象一下：你说「帮我研究一下竞品，写一份分析报告」，Agent 就自动搜索、整理、分析、写报告。2）Multi-Agent 的愿景：单个 Agent 能力有限，多个 Agent 协作能完成更复杂的任务——a）分工：不同 Agent 负责不同领域；b）讨论：Agent 之间可以讨论和辩论，提升质量；c）监督：防止单个 Agent 犯错。MetaGPT 模拟软件开发团队（产品经理、架构师、程序员、测试），CrewAI 让定义 Agent 团队变得简单。3）Agent 框架的演进：a）LangChain：通用框架，功能全但复杂；b）AutoGPT：最早的自主 Agent，目标导向；c）CrewAI：专注 Multi-Agent，简单易用；d）AutoGen：微软出品，支持复杂对话模式；e）LangGraph：状态机式 Agent，更可控。框架在快速迭代，核心思想是相通的。4）Agent 的应用场景：a）个人助理：管理日程、回复邮件、整理笔记；b）数据分析：自动分析数据、生成报告、画图表；c）代码生成：理解需求、写代码、测试、部署；d）研究助手：搜索文献、总结论文、写综述；e）客服：处理复杂查询、调用后端系统、升级人工。每个场景都有巨大的商业价值。5）Agent 面临的挑战：a）可靠性：LLM 不可靠，Agent 更不可靠；b）成本：多步推理的 Token 消耗很高；c）安全性：Agent 能执行操作，风险更大；d）评估：没有好的自动评估方法；e）法律：Agent 做错了谁负责？这些挑战也是机会——谁能解决这些问题，谁就能做出成功的 Agent 产品。6）给学习者的建议：a）动手做：不要只看论文，自己实现一个 Agent；b）从简单开始：先做单 Agent + 2-3 个工具，再逐步增加复杂度；c）关注可靠性：花时间在错误处理、边界情况上；d）理解局限：知道 Agent 能做什么不能做什么，不要过度承诺；e）保持学习：这个领域每个月都有新进展。Agent 是 AI 应用的未来，现在入局正是时候。"
         }, duration: "4小时", resources: [{ title: "CrewAI", url: "https://docs.crewai.com/", required: false }, { title: "AutoGen", url: "https://microsoft.github.io/autogen/", required: false }, { title: "LangGraph", url: "https://langchain-ai.github.io/langgraph/", required: false }], checkpoint: "完成 Agent 项目，产出可展示的作品和完整文档" },
+      { day: 6, title: "多工具集成与自定义工具开发",
+        summary: "扩展 Agent 工具集，开发自定义工具，增强 Agent 能力边界", content: {
+          objective: "今天你将学习 Agent 的多工具集成和自定义工具开发。学完后能为 Agent 添加更多类型的工具（代码执行、网页浏览、数据库查询等），掌握工具设计的最佳实践，让 Agent 能完成更复杂的任务。",
+          key_points: [
+            "工具类型：信息检索类、计算类、操作类、外部 API 类",
+            "自定义工具开发：Tool schema 设计、参数校验、错误处理、超时控制",
+            "代码执行工具：Python REPL、沙箱环境、安全隔离",
+            "网页浏览与搜索：搜索引擎集成、网页抓取、内容提取",
+            "工具组合：多个工具如何配合完成复杂任务"
+          ],
+          practice: "多工具集成与开发实战：1）代码执行工具：a）实现一个 Python REPL 工具，让 Agent 能执行 Python 代码；b）添加沙箱限制（禁用危险操作、限制执行时间、限制资源使用）；c）测试：让 Agent 用代码解决数学问题、数据分析问题。2）搜索工具集成：a）集成 Tavily 或 SerpAPI 搜索工具；b）实现网页内容抓取和提取（去除导航、广告等噪音）；c）测试：让 Agent 回答需要实时信息的问题（如「今天的天气」「最新新闻」）。3）数据库查询工具：a）实现一个 SQL 查询工具，让 Agent 能用自然语言查询数据库；b）添加安全控制：只允许 SELECT、限制返回行数、防止 SQL 注入；c）测试：让 Agent 查数据、做统计分析。4）文件操作工具：a）实现文件读写、目录浏览工具；b）添加权限控制（只能在指定目录操作）；c）版本管理（修改前备份）。5）工具设计最佳实践：a）给每个工具写清晰的描述和使用场景；b）用 Pydantic 定义严格的参数 schema；c）完善的错误处理和友好的错误信息；d）超时和重试机制。6）复杂任务测试：a）设计一个需要 3+ 个工具配合的任务；b）观察 Agent 如何选择和组合工具；c）分析工具调用的错误类型和改进空间。",
+          deep_dive: "工具是 Agent 的「手和脚」，工具的丰富程度决定了 Agent 的能力边界：1）工具为什么重要？LLM 本身有很多局限——a）知识截止：训练数据有截止日期，不知道最新信息；b）计算能力差：数学计算、逻辑推理容易错；c）无法与外部世界交互：不能查数据库、不能发邮件、不能操作文件；d）容易幻觉：一本正经地胡说八道。工具就是用来弥补这些缺陷的——让 LLM 能搜索、能计算、能操作。2）好工具的设计原则：a）单一职责：一个工具只做一件事，做好它；b）清晰的描述：LLM 是通过读描述来决定要不要用这个工具的，描述不清楚就会用错；c）明确的输入输出：用 schema 定义好参数类型、格式、含义；d）容错性：输入不对时给出清晰的错误提示，让 LLM 知道怎么改；e）安全性：工具能操作外部世界，必须有安全限制。3）代码执行是最强大的工具之一：让 Agent 能执行代码，相当于给了它一个「万能工具」——数学计算、数据处理、图表生成、文件操作、API 调用，都能通过代码实现。但代码执行也是最危险的——a）安全风险：恶意代码可以删除文件、窃取数据；b）资源耗尽：死循环、内存泄漏；c）依赖问题：缺少库、环境不一致。所以代码执行必须在沙箱里跑，限制权限和资源。4）搜索 + 代码的组合威力：搜索提供信息，代码处理信息，两者结合非常强大。比如「分析 2024 年 AI 领域的融资情况」——Agent 可以先搜索找到融资数据，然后用 Python 代码做数据分析和可视化。这是 Agent 相对于普通搜索的优势——不只是给你链接，还能帮你处理和分析信息。5）工具使用的常见错误：a）工具选择错误：该搜索的时候去查知识库；b）参数错误：参数类型不对、必填参数缺失；c）不会重试：工具调用失败了就放弃，不知道调整参数重试；d）过度使用：明明不需要工具，也要调一下；e）结果理解错误：不会正确解读工具返回的结果。减少这些错误的方法：更好的工具描述、更多的示例、更好的错误反馈、Reflection 机制。6）从工具到能力：单个工具是原子操作，多个工具组合起来形成「能力」。比如「研究能力」= 搜索 + 阅读 + 总结 + 写作。高级的 Agent 框架（如 AutoGen、CrewAI）就是在工具之上，通过角色分工和协作，形成更高级的能力。7）Agent 的「工具使用能力」本身也是一种能力：不同的 LLM 工具使用能力差异很大——GPT-4、Claude 3 很强，开源模型相对弱一些。怎么提升？a）好的 Prompt 和工具描述；b）Few-shot 示例；c）Fine-tuning（如果有足够数据）；d）更智能的调度（比如用一个小模型先做工具路由）。"
+        }, duration: "3小时", resources: [{ title: "LangChain Tools", url: "https://python.langchain.com/docs/modules/agents/tools/", required: false }, { title: "Tavily 搜索", url: "https://tavily.com/", required: false }], checkpoint: "为 Agent 添加至少 3 类新工具，完成复杂任务的端到端测试" },
+      { day: 7, title: "多 Agent 系统与协作模式",
+        summary: "学习多 Agent 系统设计，实现多个 Agent 协作完成复杂任务", content: {
+          objective: "今天你将学习多 Agent 系统。学完后能理解多 Agent 的协作模式，用 CrewAI 或 AutoGen 搭建多 Agent 系统，设计角色分工和协作流程，解决单个 Agent 难以完成的复杂任务。",
+          key_points: [
+            "多 Agent 范式：为什么需要多个 Agent？分工、协作、辩论、监督",
+            "角色设计：不同专长的 Agent（研究员、工程师、审核员、项目经理）",
+            "协作模式：顺序执行、并行执行、辩论模式、层级管理",
+            "通信机制：Agent 之间如何传递信息、共享状态、协调进度",
+            "多 Agent 框架：CrewAI、AutoGen、LangGraph、MetaGPT"
+          ],
+          practice: "多 Agent 系统实战：1）多 Agent 框架入门：a）选择一个多 Agent 框架（推荐 CrewAI 或 AutoGen）；b）跟着官方教程跑一个简单例子；c）理解框架的核心概念：Agent、Task、Crew/GroupChat。2）角色分工设计：a）设计一个 3 人 Agent 团队来完成一个复杂任务（如「写一份行业研究报告」）；b）角色 1：研究员——负责搜索信息、整理资料；c）角色 2：分析师——负责数据分析、提炼洞察；d）角色 3：写作者——负责撰写报告、排版润色；e）每个角色的能力、工具、目标是什么？3）协作流程实现：a）定义任务和依赖关系（谁先做、谁后做）；b）实现顺序式协作（研究员 → 分析师 → 写作者）；c）观察每个 Agent 的输出和交接；d）对比：单个 Agent 做 vs 多 Agent 做，质量差多少？4）辩论与评审（可选）：a）增加一个「评审员」Agent，负责审核报告质量；b）实现反馈循环：评审员提出修改意见 → 写作者修改 → 再评审；c）观察多轮修改后的质量提升。5）并行任务处理：a）设计可以并行的子任务（如同时搜索不同来源的信息）；b）实现并行执行，等所有子任务完成后汇总；c）对比串行和并行的时间效率。6）多 Agent 评估：a）多 Agent 系统有什么优势？（质量、速度、复杂度处理）b）有什么挑战？（协调成本、通信开销、一致性、成本）c）什么场景适合用多 Agent？什么场景用单 Agent 就够了？",
+          deep_dive: "多 Agent 是当前 Agent 研究的热点，它借鉴了人类社会的分工协作思想：1）为什么需要多 Agent？单个 Agent 有局限性——a）能力有限：一个 Agent 不可能什么都擅长；b）注意力有限：上下文窗口有限，处理不了太复杂的任务；c）视角单一：容易钻牛角尖，缺乏自我纠错能力；d）效率瓶颈：只能一件一件做。多 Agent 通过分工协作来解决这些问题——就像人类社会，每个人做自己擅长的事，协作完成复杂任务。2）多 Agent 的经典模式：a）流水线模式：A 做完给 B，B 做完给 C。适合有明确步骤的任务；b）团队协作模式：不同角色的 Agent 并行工作，有一个协调者。适合复杂项目；c）辩论模式：两个 Agent 对一个问题展开辩论，第三方仲裁或取共识。适合需要深思熟虑的决策问题；d）层级模式：老板 Agent 分配任务，员工 Agent 执行，汇报结果。适合大型任务。3）角色设计的艺术：好的角色设计是多 Agent 系统成功的关键：a）角色要明确：每个 Agent 有清晰的职责和专长；b）角色要互补：技能不重叠，覆盖任务的各个方面；c）角色要有性格：不同的角色可以有不同的「性格」——谨慎的、创新的、批判性的；d）避免角色过载：一个 Agent 不要承担太多角色。4）多 Agent 的挑战：听起来美好，但做起来难：a）协调成本：Agent 之间的沟通和协调需要时间和 Token；b）一致性：多个 Agent 得出的结论可能矛盾，怎么统一？c）成本：多 Agent = 多倍 LLM 调用，费用更高；d）可靠性：链路更长，出错概率更高；e）可观测性：调试和追踪更复杂。所以不要为了多 Agent 而多 Agent——简单任务用单 Agent，复杂任务才考虑多 Agent。5）主流多 Agent 框架对比：a）CrewAI：角色 + 任务 + Crew 的抽象，简单易用，适合快速上手；b）AutoGen：微软出品，灵活强大，支持复杂对话模式，但学习曲线陡；c）LangGraph：基于状态机的 Agent 编排，可控性好，和 LangChain 生态集成；d）MetaGPT：模拟软件公司，专门做软件开发场景。选择哪个？新手推荐 CrewAI，需要灵活选 AutoGen，用 LangChain 生态选 LangGraph。6）多 Agent 的未来：a）Agent 生态：未来可能有「Agent 市场」，你可以雇佣专门的 Agent 来完成特定任务；b）Agent OS：围绕 Agent 的操作系统，管理 Agent 的生命周期、资源、权限；c）人机协作：不是 Agent 取代人，而是人和 Agent 一起工作，Agent 是助手，人做决策；d）涌现行为：足够多的 Agent 协作，会不会出现更高级的智能？这还是一个开放问题。7）给实践者的建议：a）从单 Agent 开始：先把单 Agent 做好，再考虑多 Agent；b）从小团队开始：2-3 个 Agent 就够了，不是越多越好；c）明确场景：找到真正需要多 Agent 的场景，而不是为了炫技；d）关注成本：多 Agent 很贵，要算清楚 ROI。"
+        }, duration: "3.5小时", resources: [{ title: "CrewAI 文档", url: "https://docs.crewai.com/", required: false }, { title: "AutoGen", url: "https://microsoft.github.io/autogen/", required: false }], checkpoint: "搭建一个 3 Agent 协作系统，完成一个单 Agent 难以完成的复杂任务" },
+      { day: 8, title: "Agent 可靠性与安全性增强",
+        summary: "提升 Agent 的可靠性和安全性，处理各种边界情况和风险", content: {
+          objective: "今天你将学习 Agent 的可靠性和安全性。学完后能实现错误恢复、人机协作、安全防护机制，让你的 Agent 更稳定、更安全、更可控，从 Demo 级走向生产级。",
+          key_points: [
+            "可靠性提升：重试机制、回退策略、人工兜底、健康检查",
+            "Prompt 注入防护：直接注入、间接注入、工具注入的防御方法",
+            "权限与安全：工具权限控制、操作确认、沙箱隔离、审计日志",
+            "人机协作（Human-in-the-loop）：什么时候需要人工介入、如何介入",
+            "可观测性：全面的日志、追踪、监控，方便调试和优化"
+          ],
+          practice: "Agent 可靠性与安全性实战：1）错误恢复机制：a）实现工具调用失败的自动重试（指数退避）；b）实现自我纠错：Agent 调用工具出错后，分析错误原因，调整参数重试；c）实现回退策略：一条路走不通，试试别的方法；d）测试：故意制造一些错误，看 Agent 能不能恢复。2）Prompt 注入防护：a）了解 Prompt 注入的各种类型：直接注入、间接注入（在检索结果中植入指令）、工具注入；b）实现基础防护：输入过滤、指令强化、系统提示优先；c）测试：尝试攻击你的 Agent，看能不能被注入；d）进阶：用 LL Guard 或类似的安全检查层。3）权限与安全控制：a）工具分级：不同工具有不同的安全等级；b）危险操作确认：删除文件、发送邮件等操作需要用户确认；c）沙箱隔离：代码执行在沙箱中，文件操作在指定目录；d）审计日志：记录 Agent 的所有操作，便于追溯。4）人机协作设计：a）设计人工介入机制：Agent 不确定时可以请求人类帮助；b）实现「暂停 - 确认 - 继续」的流程；c）设计 Escalation 策略：什么情况升级给人处理？d）测试：Agent 遇到困难时，能不能正确求助？5）可观测性增强：a）用 LangSmith 或 Langfuse 做完整追踪；b）记录每一步的 Thought、Action、Observation、耗时、Token 消耗；c）添加业务指标：任务成功率、平均步骤数、工具使用分布；d）设置告警：异常情况（如任务失败率升高、成本突增）及时告警。6）压力测试：a）设计各种边界 case：超长输入、恶意输入、模糊需求、矛盾指令；b）测试 Agent 在这些情况下的表现；c）找出脆弱点，进行加固。",
+          deep_dive: "Agent 最大的问题是不可靠——它会犯错、会跑偏、会被攻击。提升可靠性和安全性是 Agent 从 Demo 到生产的必经之路：1）为什么 Agent 这么容易出错？a）LLM 本身就不可靠：幻觉、逻辑错误、遗忘目标；b）多步放大：每一步都有一定概率出错，步骤越多，出错概率越大（误差累积）；c）环境不确定：外部工具可能失败、网络可能断、数据可能变；d）恶意攻击：有人会故意诱导 Agent 做坏事。2）可靠性提升的层次：a）防御式编程：假设每一步都可能出错，做好处理；b）重试与回退：错了就重试，不行就换方法；c）验证与检查：每步做完检查一下对不对（Reflection / Self-Critique）；d）人工兜底：实在不行就找人。提升可靠性的本质是「用工程方法弥补模型的不足」。3）Prompt 注入比你想的更严重：很多人觉得 Prompt 注入是「小问题」，实际上它可能造成严重后果：a）数据泄露：让 Agent 把系统提示、对话历史发给攻击者；b）越权操作：诱导 Agent 执行危险操作；c）身份冒充：让 Agent 假装成别人。更可怕的是「间接注入」——攻击者把恶意指令藏在网页、PDF、邮件里，Agent 读取这些内容时就会被注入。防御方法：a）输入输出过滤；b）指令强化（system prompt 优先级）；c）安全检查层（用另一个模型检查）；d）最小权限原则。4）人机协作是最实用的方案：不要指望 Agent 完全自主完成所有事情，那既不现实也不安全。更好的模式是「Human-in-the-loop」——a）Agent 做简单重复的工作；b）遇到不确定的、高风险的、需要决策的事情，交给人；c）人做决策，Agent 执行。这才是当前技术水平下最靠谱的模式。5）可观测性是调试 Agent 的前提：Agent 是动态的、不确定的，出了问题很难复现。没有好的可观测性，你根本不知道哪里出了问题。要记录：a）每一步的完整状态（Thought、Action、Observation）；b）输入输出、Token 消耗、耗时；c）错误和异常。工具：LangSmith、Langfuse、Phoenix，或者自己实现。6）安全的「最小权限」原则：给 Agent 的权限越少越好——a）文件操作：只能在指定目录读写；b）API 调用：用最小权限的 API Key；c）代码执行：在沙箱里跑，限制网络和资源；d）危险操作：必须用户确认。记住：Agent 可能被攻破，所以不要给它你承受不起失去的权限。7）从 Demo 到 Production 的差距：Demo 级的 Agent 和生产级的 Agent，差距可能是 10 倍的工作量。生产级需要考虑：可靠性、安全性、性能、成本、监控、告警、回滚、灰度发布、多租户、权限管理... 这也是为什么很多 Agent 产品看起来简单，实际上背后有大量的工程工作。"
+        }, duration: "3.5小时", resources: [{ title: "OWASP LLM Top 10", url: "https://owasp.org/www-project-top-10-for-large-language-model-applications/", required: false }, { title: "Langfuse", url: "https://langfuse.com/", required: false }], checkpoint: "为 Agent 添加错误恢复、安全防护、人工介入和可观测性，达到生产级可靠性" },
+      { day: 9, title: "Agent 性能优化与成本控制",
+        summary: "优化 Agent 的性能和成本，让它更快、更便宜、更高效", content: {
+          objective: "今天你将学习 Agent 的性能优化和成本控制。学完后能诊断性能瓶颈，优化延迟和吞吐量，控制 Token 成本，在效果和成本之间找到最佳平衡。",
+          key_points: [
+            "性能分析：定位 Agent 的性能瓶颈（LLM 调用、工具执行、网络 IO）",
+            "延迟优化：流式输出、异步处理、并行工具调用、缓存",
+            "成本优化：模型路由、上下文压缩、缓存策略、小模型替代",
+            "Token 管理：上下文窗口优化、记忆管理、高效的 Prompt 组织",
+            "成本监控：预算控制、用量统计、异常告警"
+          ],
+          practice: "Agent 性能优化与成本控制：1）性能基准测试：a）写一个 benchmark 脚本，测试典型任务的端到端延迟；b）分解各阶段耗时：LLM 调用占多少？工具执行占多少？网络占多少？c）找到瓶颈在哪里。2）延迟优化：a）流式输出：让用户尽早看到结果，减少等待感知；b）并行工具调用：如果有多个独立的工具调用，并行执行；c）异步处理：工具调用异步化，不阻塞 LLM 推理；d）对比优化前后的延迟。3）成本分析：a）统计一个任务的 Token 消耗：输入多少？输出多少？总共多少钱？b）分析 Token 都花在哪里了：系统提示？对话历史？工具结果？c）计算 1000 次任务要花多少钱？能不能承受？4）成本优化实验：a）模型路由：简单任务用小模型（如 GPT-3.5/4o-mini），复杂任务用大模型；b）上下文压缩：用 LLM 或摘要模型把工具结果压缩后再给 LLM；c）缓存：相同或相似的查询直接返回缓存结果；d）每一项能省多少钱？5）Token 高效利用：a）优化系统提示词：在保证效果的前提下尽量短；b）记忆管理：历史对话太长就摘要或截断；c）工具结果裁剪：只返回最相关的部分，不要全塞进去；d）用更高效的 Prompt 格式。6）成本监控与告警：a）实现 Token 使用统计和成本计算；b）设置每日/每月预算上限，超了就告警或降级；c）监控单任务成本，异常高的任务及时发现；d）生成成本报告：每天花了多少、每个任务平均成本、成本趋势。",
+          deep_dive: "Agent 的成本和性能是生产落地的关键考量——效果再好，如果太贵太慢，也没法大规模用：1）Agent 为什么这么贵？普通的 LLM 调用可能就几美分，但 Agent 可能要几美元——因为：a）多轮调用：一个任务可能调用 LLM 5-10 次甚至更多；b）上下文膨胀：每加一轮对话、每加一个工具结果，上下文就更长，Token 更多；c）用大模型：为了工具调用和推理能力，往往需要用 GPT-4 级别的模型，更贵；d）工具成本：搜索 API、代码执行环境等也要钱。成本控制是 Agent 工程的核心挑战之一。2）性能优化的几个维度：a）首字延迟（Time to First Token）：用户多久能看到第一个字？影响用户体验；b）总延迟：整个任务做完要多久？影响效率；c）吞吐量：单位时间能处理多少任务？影响成本；d）资源利用率：GPU/CPU 利用率高不高？影响成本。不同场景优化的重点不一样——聊天场景重首字延迟，批处理重吞吐量。3）流式输出的心理学意义：流式输出不改变总延迟，但用户感知的等待时间更短——因为用户可以边看边等，而不是盯着加载转圈圈。这是提升用户体验性价比最高的优化，几乎所有 Chatbot 都做了。4）成本优化的「三板斧」：a）模型选择：能用小模型就不用大模型。小模型的成本可能只有大模型的 1/10 甚至 1/100。很多任务（如分类、摘要、简单工具调用）用小模型就够了；b）缓存：相同或相似的问题，直接返回缓存结果。缓存命中率高的话，能省 50% 以上的成本；c）上下文优化：减少输入 Token。方法：压缩历史、裁剪工具结果、优化 Prompt、用更短的系统提示。5）模型路由的艺术：模型路由就是「把合适的任务分配给合适的模型」——a）简单任务（分类、提取、翻译）→ 小模型（GPT-3.5、Qwen-7B）；b）中等任务（写作、一般推理）→ 中模型（GPT-4o-mini、Claude 3 Haiku）；c）复杂任务（复杂推理、多步规划）→ 大模型（GPT-4o、Claude 3 Opus）。怎么判断任务复杂度？可以用一个小模型先做分类，或者用置信度——如果小模型的答案置信度高就直接用，低就升级到大模型。6）成本与效果的权衡：成本优化不是「越省越好」，而是「在可接受的成本内达到最好的效果」。关键问题：a）你的预算是多少？b）效果下降多少是可以接受的？c）每提升 1% 的效果，愿意多花多少钱？这是产品和业务决策，不是纯技术决策。7）Agent 经济学会越来越重要：随着 Agent 的应用越来越广，成本会成为最重要的考量因素之一。未来的 Agent 系统会有更智能的成本优化——自动选择模型、动态调整策略、预测成本、优化资源分配。懂成本优化的工程师会更有价值。"
+        }, duration: "3小时", resources: [{ title: "Prompt 压缩指南", url: "https://www.promptingguide.ai/zh/techniques/compression", required: false }, { title: "LLM 成本计算器", url: "https://llm-calculator.com/", required: false }], checkpoint: "完成 Agent 性能基准测试，实施至少 3 项成本优化措施并量化节省" },
+      { day: 10, title: "Agent 前沿探索与项目收官",
+        summary: "探索 Agent 前沿方向，完善项目，规划长期学习路径", content: {
+          objective: "今天你将探索 Agent 的前沿方向，并完成项目收官。学完后了解 Agentic Workflow、自主 Agent、AI Agent 生态等前沿趋势，完善你的 Agent 项目作品集，规划长期学习和职业发展方向。",
+          key_points: [
+            "前沿方向：Agentic Workflow、自主 Agent、世界模型、具身智能",
+            "Agent 生态：Agent 平台、Agent 市场、Agent 基础设施",
+            "项目作品集打磨：文档、Demo、代码、技术博客全方位优化",
+            "面试准备：Agent 相关的面试题、项目讲解、系统设计",
+            "职业规划：AI Agent 领域的职业机会和成长路径"
+          ],
+          practice: "前沿探索与项目收官：1）前沿论文/项目速览：a）选 1-2 个你感兴趣的前沿方向深入了解：Agentic Workflow（如 Devin、OpenDevin）、World Model（如 Voyager、Genie）、多模态 Agent、具身智能机器人；b）读一篇相关的论文或技术博客；c）思考：这些技术和你的项目有什么关系？怎么应用？2）项目最终完善：a）完善 README：项目简介、架构图、功能特性、效果展示、快速开始；b）代码整理：模块化、加注释、写测试、加错误处理；c）Demo 准备：准备 3-5 个能展示项目亮点的演示场景；d）录一个 2-3 分钟的演示视频。3）技术博客：a）写一篇技术博客，分享你的 Agent 开发经验；b）内容可以是：踩过的坑、学到的东西、架构设计思考、效果对比；c）发布到知乎/博客/GitHub。4）面试准备：a）基础题：什么是 Agent？ReAct 的原理？RAG 和 Agent 的区别？b）项目题：你的 Agent 架构是怎样的？遇到最大的挑战是什么？怎么解决的？c）设计题：如果让你设计一个「智能客服 Agent」，你会怎么设计？d）开放题：你觉得 Agent 技术未来会怎么发展？最大的挑战是什么？5）职业规划思考：a）你对 AI Agent 这个方向感兴趣吗？为什么？b）你想在 Agent 领域做什么？（应用开发？框架建设？算法研究？）c）未来 1 年的学习目标是什么？d）怎么达成目标？（项目、课程、论文、社区）6）社区参与：a）关注 Agent 领域的优秀项目和研究者；b）加入相关的技术社区和讨论群；c）考虑给开源 Agent 项目贡献代码或文档；d）参加一些 Hackathon，实战锻炼。",
+          deep_dive: "Agent 是 AI 最激动人心的方向之一，它代表了从「AI 工具」到「AI 伙伴」的演进：1）Agent 为什么是大趋势？a）从工具到助手：现在的 AI 是「你问我答」的工具，未来的 Agent 是「你交待任务，它帮你完成」的助手；b）解放生产力：Agent 能承担大量重复性工作，让人专注于创造性的事；c）能力延伸：Agent 可以 24 小时工作、同时处理多件事、调用各种工具，能力远超个人；d）新的交互范式：从「人学习使用软件」变成「Agent 理解人的需求并操作软件」。2）Agent 技术的演进路线：a）第一代：单 Agent + 少量工具，ReAct 模式，能完成简单任务（当前阶段）；b）第二代：多 Agent 协作，有规划和反思能力，能完成复杂任务（正在到来）；c）第三代：自主 Agent，能自己设定目标、主动学习、长期执行任务（研究中）；d）第四代：具身 Agent，有物理身体，能在真实世界行动（更遥远）。我们现在大概在第一代末期、第二代初期。3）Agent 会改变什么？a）软件交互：未来你可能不再需要学习使用各种软件，直接告诉 Agent 你想做什么；b）工作方式：很多重复性工作会被 Agent 取代，人类更多做决策、创意、人际工作；c）编程：程序员的角色会从「写代码」变成「设计和审查 Agent 写的代码」；d）创业：小团队可以借助 Agent 做到以前大团队才能做的事，创业门槛降低。4）Agent 面临的核心挑战：a）可靠性：Agent 会犯错、会跑偏，怎么保证它做正确的事？b）安全性：Agent 有能力执行操作，怎么防止它做坏事？c）可解释性：Agent 的决策过程是黑箱，怎么知道它为什么这么做？d）评估：怎么衡量一个 Agent 好不好？e）成本：现在 Agent 还很贵，什么时候能普及？这些挑战既是难题，也是机会——谁能解决这些问题，谁就能做出成功的 Agent 产品。5）AI 时代的个人发展：a）不要害怕 AI 取代你，要学会用 AI 增强你；b）培养 AI 做不了的能力：创造力、批判性思维、人际沟通、复杂决策；c）成为「AI 增强人」：用 AI 工具提升你的效率和能力；d）保持学习：AI 技术发展很快，持续学习才能不被淘汰。6）给学习者的建议：a）动手实践：Agent 是做出来的，不是看出来的。亲手做一个项目，比读 10 篇论文都有用；b）从小处着手：不要一开始就想做一个「通用人工智能 Agent」，先做一个能解决具体问题的专用 Agent；c）关注真实需求：做真正有用的东西，而不是炫技的 Demo；d）保持好奇：这个领域每天都有新东西，保持探索的热情。Agent 的黄金时代才刚刚开始，现在入局正是时候！"
+        }, duration: "4小时", resources: [{ title: "Awesome AI Agents", url: "https://github.com/e2b-dev/awesome-ai-agents", required: false }, { title: "Lilian Weng 的 Agent 博客", url: "https://lilianweng.github.io/posts/2023-06-23-agent/", required: false }], checkpoint: "完善 Agent 项目作品集，了解前沿方向，制定个人学习规划" },
     ],
   },
 {
@@ -5775,7 +6314,164 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成以下综合练习和面试模拟：1）选3道Medium难度的综合题（如LRU缓存、合并K个升序链表、课程表II），每道题都按照面试流程：先澄清问题、说思路、分析复杂度、写代码、跑测试用例；2）分析一道题的多种解法：比如两数之和的暴力法→哈希表法→排序双指针法，对比时间空间复杂度；3）设计一个简易的推特（Twitter）系统：需要支持发布推文、获取新闻流、关注/取消关注，思考用哪些数据结构组合实现；4）模拟面试：找一个同学互相出题，按照真实面试的时间限制（45分钟一道题）和沟通要求练习。最后整理一份你自己的算法笔记，按数据结构和算法思想分类，记录每种题型的解题模板和注意事项。",
           deep_dive: "深入理解算法在AI系统中的实际应用与进阶方向：在真实的AI工程中，算法能力体现在多个层面——1）模型层：理解反向传播的DP本质、注意力机制的复杂度分析、优化器的数学原理；2）数据层：高效的数据预处理管道、数据集采样策略、特征工程的哈希技巧；3）系统层：分布式训练的参数同步策略、推理服务的请求调度、模型服务的缓存设计。对于想要在AI领域深入发展的工程师，建议后续学习进阶算法：随机算法（蒙特卡洛方法、模拟退火）、近似算法（处理NP难问题）、在线算法（面对流式数据）、并行算法（分布式环境下的算法设计）。算法思维比具体知识点更重要——面对一个新问题，你能否快速拆解、评估复杂度、设计出高效的解决方案，这才是区分工程师水平的核心。持续刷题、定期总结、在实际项目中刻意运用，算法能力就会稳步提升。"
-        }, duration: "3小时", resources: [{ title: "代码面试准备清单", url: "https://www.techinterviewhandbook.org/cheatsheet/", required: true, type: "doc", source: "official" }, { title: "Blind 75 LeetCode", url: "https://www.teachlcs.com/blind75/", required: true, type: "doc", source: "official" }, { title: "LeetCode精选题解", url: "https://github.com/azl397985856/LeetCode", required: false, type: "repo", source: "github" }], checkpoint: "能在45分钟内完成一道Medium难度的综合算法题" }
+        }, duration: "3小时", resources: [{ title: "代码面试准备清单", url: "https://www.techinterviewhandbook.org/cheatsheet/", required: true, type: "doc", source: "official" }, { title: "Blind 75 LeetCode", url: "https://www.teachlcs.com/blind75/", required: true, type: "doc", source: "official" }, { title: "LeetCode精选题解", url: "https://github.com/azl397985856/LeetCode", required: false, type: "repo", source: "github" }], checkpoint: "能在45分钟内完成一道Medium难度的综合算法题" },
+      { day: 15, title: "动态规划进阶",
+        summary: "深入动态规划，掌握区间DP、树形DP、状态压缩DP等高级题型", content: {
+          objective: "今天你将深入学习动态规划的高级类型：区间DP、树形DP、状态压缩DP等。学完后你能识别不同类型的DP问题，掌握状态设计和转移方程的推导方法，知道什么时候用DP以及怎么优化DP。",
+          key_points: [
+            "区间DP：在区间上做DP，状态表示为dp[l][r]，从小区间合并到大区间，如石子合并、最长回文子序列",
+            "树形DP：在树结构上做DP，状态表示为dp[u][0/1]，用DFS后序遍历计算，如打家劫舍III、树的直径",
+            "状态压缩DP：用二进制表示状态，适合状态数不多但组合多的问题，如旅行商问题、状压DP",
+            "DP优化：滚动数组优化空间、单调队列/斜率优化时间、四边形不等式优化",
+            "DP解题思路：定义状态→推导转移→确定边界→计算顺序→空间优化，五步法"
+          ],
+          practice: "完成以下DP进阶练习：1）区间DP：石子合并问题——有n堆石子排成一排，每次可以合并相邻的两堆，代价是两堆的和，求合并成一堆的最小代价；2）树形DP：二叉树的打家劫舍——每个节点有一个值，不能同时选父子节点，求最大和；3）状态压缩DP：旅行商问题的简化版——有n个城市，两两之间有距离，求从起点出发经过所有城市一次再回到起点的最短路径（n≤12）；4）DP优化：把你之前做过的01背包问题，用滚动数组把空间从O(nm)优化到O(m)；5）总结：整理一下你做过的DP问题，按类型分类，总结每种类型的状态设计套路。",
+          deep_dive: "深入理解动态规划的本质与适用场景：动态规划的核心思想是「把大问题分解成小问题，把小问题的答案存起来避免重复计算」。但DP不是万能的，它有适用条件：1）最优子结构：大问题的最优解可以由小问题的最优解构造出来；2）重叠子问题：不同的大问题会用到相同的小问题，重复计算多，存起来才划算。如果子问题不重叠（比如分治法的归并排序），那DP就没必要。DP的难点在于「怎么定义状态」和「怎么推导转移方程」。很多人觉得DP难，是因为状态定义不直观，需要经验和灵感。但其实DP是有套路的：1）先看问题类型：序列型、区间型、背包型、树形、状压；2）再想状态：题目问什么，状态就定义什么，加维度表示不同的情况；3）最后推转移：最后一步是什么？从哪些状态转移过来？怎么转移？常见的DP优化：1）空间优化：如果当前状态只需要前一行/前一个状态，就可以用滚动数组，把二维降一维，一维降变量；2）时间优化：单调队列优化、斜率优化、四边形不等式优化，这些能把O(n²)降到O(n)，但属于高级技巧，竞赛中常用。在AI中，DP也有很多应用：HMM的前向后向算法、维特比算法、序列对齐（如DNA序列比对的Smith-Waterman算法）、强化学习中的动态规划方法（策略迭代、价值迭代）等。理解DP的思想，能帮你更好地理解这些算法。"
+        }, duration: "2.5小时", resources: [{ title: "动态规划专题", url: "https://oi-wiki.org/dp/", required: true, type: "doc", source: "other" }, { title: "LeetCode DP题单", url: "https://leetcode.cn/tag/dynamic-programming/", required: false, type: "doc", source: "official" }], checkpoint: "能独立解决区间DP和树形DP问题，掌握DP解题套路" },
+      { day: 16, title: "图论算法",
+        summary: "系统学习图论：最短路径、最小生成树、拓扑排序、二分图等核心算法", content: {
+          objective: "今天你将系统学习图论的核心算法。学完后你能掌握图的存储方式、最短路径算法（Dijkstra、Floyd、Bellman-Ford）、最小生成树（Prim、Kruskal）、拓扑排序、二分图匹配等，知道不同算法的适用场景和时间复杂度。",
+          key_points: [
+            "图的存储：邻接矩阵（适合稠密图）、邻接表（适合稀疏图，最常用）、链式前向星（竞赛常用）",
+            "最短路径：Dijkstra（单源最短路，无负权）、Floyd（多源最短路）、Bellman-Ford（有负权，可检测负环）",
+            "最小生成树：Prim（从点出发，适合稠密图）、Kruskal（从边出发，适合稀疏图，配合并查集）",
+            "拓扑排序：对DAG（有向无环图）排序，每次选入度为0的点，用于任务调度、依赖分析",
+            "二分图匹配：匈牙利算法求最大匹配，适用于二分图的匹配问题，如任务分配、稳定婚姻"
+          ],
+          practice: "完成以下图论算法练习：1）实现Dijkstra算法：用邻接表存图，用优先队列优化，求单源最短路径；2）实现Floyd-Warshall算法：求所有点对的最短路径，理解三重循环的含义（k是中间点）；3）实现Kruskal算法：配合并查集，求最小生成树；4）拓扑排序：给一个有向无环图，用BFS（入度表）或DFS实现拓扑排序；5）二分图匹配（可选）：用匈牙利算法求二分图的最大匹配；6）思考：在AI领域，图论有什么应用？（知识图谱、图神经网络、推荐系统中的图算法、强化学习中的状态转移图等）",
+          deep_dive: "深入理解图论算法的设计思想与AI应用：图是一种强大的数据结构，能表示各种关系——社交网络、交通网络、知识图谱、分子结构、神经网络计算图等等。图论算法是计算机科学的基石之一。几个重要的设计思想：1）贪心思想：Dijkstra、Prim、Kruskal都是贪心算法——每一步都选当前最优的，最终得到全局最优。为什么贪心能得到最优解？因为这些问题有「最优子结构」和「贪心选择性质」。不是所有问题都能用贪心，比如有负权边的最短路Dijkstra就不行。2）松弛操作：最短路径算法的核心操作是「松弛」——如果经过中间点k，从i到j的路径更短，就更新。Dijkstra、Bellman-Ford、Floyd本质上都是在做松弛，只是顺序和策略不同。3）并查集：Kruskal算法需要判断两个点是否连通、合并两个集合，并查集就是干这个的——路径压缩+按秩合并，几乎是O(1)的操作。并查集是非常优雅的数据结构。4）图论在AI中的应用：a）知识图谱：用图表示知识，节点是实体，边是关系，图算法用于推理（如多跳推理）；b）图神经网络（GNN）：在图数据上做深度学习，如GCN、GAT，用于节点分类、链接预测、图分类；c）推荐系统：用户-物品二分图，图算法用于推荐；d）强化学习：马尔可夫决策过程可以看作图上的问题；e）神经网络的计算图：反向传播就是在计算图上做拓扑排序。图论是一个博大精深的领域，掌握基础算法能帮你理解很多AI算法的本质。"
+        }, duration: "2.5小时", resources: [{ title: "图论专题", url: "https://oi-wiki.org/graph/", required: true, type: "doc", source: "other" }, { title: "图算法可视化", url: "https://visualgo.net/zh/graphs", required: false, type: "tool", source: "official" }], checkpoint: "能实现Dijkstra和Kruskal算法，理解图论核心算法思想" },
+      { day: 17, title: "计算几何与数论",
+        summary: "了解计算几何和数论基础，拓展算法视野", content: {
+          objective: "今天你将学习计算几何和数论的基础知识。学完后你能掌握向量运算、凸包等计算几何基础，掌握素数、最大公约数、模运算、快速幂等数论基础，理解这些数学知识在算法和AI中的应用。",
+          key_points: [
+            "计算几何基础：向量（点积、叉积）、线段相交、多边形面积、凸包（Graham扫描法）",
+            "数论基础：素数判定（试除法、埃氏筛、欧拉筛）、最大公约数（欧几里得算法）、扩展欧几里得",
+            "模运算：模加法/乘法/幂、快速幂（二进制拆分，O(log n)计算a^b mod p）、逆元",
+            "组合数学：排列组合、容斥原理、卡特兰数、递推关系",
+            "数学与算法：很多算法问题本质上是数学问题，数学功底决定了算法能力的上限"
+          ],
+          practice: "完成以下数学与算法练习：1）向量运算：实现二维向量的点积和叉积，用叉积判断两个线段是否相交；2）素数筛：实现埃氏筛法和欧拉筛法，求n以内的所有素数，对比两种方法的效率；3）快速幂：实现快速幂算法，计算a^b mod mod，对比普通乘法和快速幂的运算次数；4）欧几里得算法：实现求最大公约数的辗转相除法，以及扩展欧几里得算法（求ax+by=gcd(a,b)的解）；5）组合计数：上楼梯问题——一次可以上1级或2级，上n级楼梯有多少种方法？用动态规划和组合数学两种方法解；6）思考：这些数学知识在AI中有什么应用？（向量运算在图形学和机器学习中无处不在、素数在密码学和哈希中、模运算在哈希和密码学中、组合数学在概率统计中...）",
+          deep_dive: "深入理解数学与算法/AI的关系：计算机科学本质上是数学的一个分支。算法能力的天花板，往往是数学功底决定的。让我们聊聊几个重要的数学领域和它们的应用。1）计算几何：a）向量是核心——点积（投影、夹角）、叉积（面积、方向）是最基本的运算；b）凸包是最经典的计算几何问题——给一堆点，找最小的凸多边形把它们都包起来。Graham扫描法用栈实现，很巧妙；c）在AI中，计算几何应用广泛：计算机视觉（目标检测的边框、图像变换、3D重建）、机器人（路径规划、避障）、图形学（渲染、碰撞检测）。2）数论：a）素数是数论的核心——素数分布、素数判定、素数筛，是密码学（RSA）的基础；b）模运算就像「时钟算术」——到了12就回到0。快速幂是非常重要的算法，不仅在数论中有用，在矩阵快速幂、快速倍增等技巧中也能看到它的影子；c）扩展欧几里得算法能求逆元，逆元在模运算除法中很重要——模意义下的除法等于乘逆元。3）组合数学：a）排列组合是概率统计的基础，也是算法题中的常客；b）卡特兰数是一个神奇的数列——括号匹配、出栈顺序、二叉树形态、凸多边形三角划分... 很多问题的答案都是卡特兰数；c）递推关系和动态规划关系密切——很多DP问题的本质就是找递推式。4）数学对AI工程师的重要性：a）线性代数：向量、矩阵、特征值，是深度学习的基础；b）概率统计：贝叶斯、分布、假设检验，是机器学习的基础；c）优化理论：梯度下降、凸优化，是训练模型的核心；d）信息论：熵、互信息，是决策树、GAN等算法的理论基础。算法和数学是相辅相成的——学好数学能让你更深刻地理解算法，刷算法题也能反过来巩固数学基础。"
+        }, duration: "2小时", resources: [{ title: "数论专题", url: "https://oi-wiki.org/math/number-theory/", required: true, type: "doc", source: "other" }, { title: "计算几何", url: "https://oi-wiki.org/geometry/", required: false, type: "doc", source: "other" }], checkpoint: "能实现快速幂和素数筛，了解计算几何和数论的核心概念" },
+      { day: 18, title: "字符串算法",
+        summary: "学习字符串匹配、KMP、字典树、哈希等核心字符串算法", content: {
+          objective: "今天你将学习字符串算法的核心知识。学完后你能掌握KMP字符串匹配、字典树（Trie）、字符串哈希、Manacher等算法，知道不同字符串问题的解法。字符串处理在NLP、文本挖掘、搜索引擎等领域有广泛应用。",
+          key_points: [
+            "字符串匹配：朴素匹配（暴力）、KMP算法（利用失败函数/next数组避免回溯）、Rabin-Karp（字符串哈希）",
+            "KMP核心：next数组（前缀函数）——每个位置的最长相等前缀后缀长度，匹配失败时不用完全回溯",
+            "字典树Trie：用树结构存储字符串，高效插入和查找前缀，适合自动补全、拼写检查",
+            "字符串哈希：把字符串映射成整数，O(1)比较字符串，如自然溢出、双哈希、前缀哈希",
+            "其他算法：Manacher（最长回文子串，O(n)）、AC自动机（多模式匹配）、后缀数组"
+          ],
+          practice: "完成以下字符串算法练习：1）实现KMP算法：a）计算next数组（前缀函数）；b）用KMP在文本串中查找模式串，返回所有匹配位置；c）对比朴素匹配和KMP的比较次数；2）实现字典树Trie：a）实现插入、查找、前缀查找三个操作；b）用Trie实现一个简单的单词统计程序；3）字符串哈希：a）实现字符串前缀哈希；b）用O(1)时间求任意子串的哈希值；c）用哈希判断两个字符串是否相等；4）最长回文子串（可选）：分别用暴力、DP、中心扩展法求最长回文子串，对比不同方法的时间复杂度；5）思考：字符串算法在NLP中有什么应用？（文本匹配、分词、拼写检查、自动补全、搜索引擎...）",
+          deep_dive: "深入理解字符串算法的设计思想与NLP应用：字符串是最常见的数据类型之一——文本、代码、DNA序列、日志... 都是字符串。字符串处理是计算机科学的经典领域。1）KMP的精髓：KMP之所以快，是因为它利用了「已经匹配过的信息」——当某个字符不匹配时，我们已经知道前面的字符是什么了，不需要从头再比。next数组（前缀函数）就是记录「到当前位置为止，最长的相等的前缀和后缀的长度」。有了这个信息，匹配失败时就可以直接跳到最长前缀的位置，而不是从头开始。KMP的思想很深刻——利用已知信息避免重复计算，这也是很多高效算法的共同特点。2）Trie的空间换时间：字典树用树结构存储字符串的公共前缀，插入和查找的时间复杂度都是字符串长度O(L)，和有多少个字符串无关。代价是空间——如果字符串重复度不高，可能会浪费很多空间。但在实际应用中（如自动补全、拼写检查），Trie非常高效。Trie的进阶：AC自动机（在Trie上做KMP，用于多模式匹配）、可持久化Trie、01 Trie（求最大异或值）。3）字符串哈希的威力：字符串哈希就是用一个函数把字符串映射成一个数，这样比较两个字符串是否相等就只需要O(1)的时间（比较哈希值）。但哈希有碰撞的风险——不同的字符串可能哈希值相同。降低碰撞概率的方法：双哈希（用两种不同的哈希函数，两个都相等才认为相等）、大模数、自然溢出。字符串哈希非常实用——字符串匹配、回文判定、子串问题... 很多都能用哈希优雅地解决。4）字符串算法在AI/NLP中的应用：a）文本预处理：分词、清洗、模式匹配；b）拼写检查：Trie + 编辑距离；c）自动补全：Trie前缀查找；d）多模式匹配：AC自动机用于敏感词过滤；e）生物信息学：DNA序列比对（动态规划）。字符串算法是NLP的基础之一，理解这些经典算法，能帮你更好地理解NLP中的文本处理技术。"
+        }, duration: "2.5小时", resources: [{ title: "字符串专题", url: "https://oi-wiki.org/string/", required: true, type: "doc", source: "other" }, { title: "KMP可视化", url: "https://visualgo.net/zh/string", required: false, type: "tool", source: "official" }], checkpoint: "能实现KMP和Trie，理解字符串匹配算法的核心思想" },
+      { day: 19, title: "算法设计思想总结",
+        summary: "系统总结常用的算法设计思想，形成算法知识体系", content: {
+          objective: "今天你将系统总结常用的算法设计思想：分治、贪心、动态规划、回溯、枚举、二分等。学完后你能看到一个问题就大致知道该用什么方法，形成完整的算法知识体系，知道各种思想的适用场景和优缺点。",
+          key_points: [
+            "分治法：把大问题分成几个小问题，分别解决再合并结果，如归并排序、快速排序、二分查找",
+            "贪心法：每一步都选当前最优的，期望最终得到全局最优，如区间调度、霍夫曼编码、Dijkstra",
+            "动态规划：把大问题分解成重叠的子问题，存储子问题答案避免重复计算，强调最优子结构",
+            "回溯法：暴力搜索的优化，通过剪枝减少搜索空间，适合排列组合、子集、路径搜索类问题",
+            "二分思想：二分答案、二分查找，在有序或有单调性的问题上能把O(n)降到O(log n)"
+          ],
+          practice: "完成以下算法思想总结与练习：1）整理你的算法知识图谱：a）按算法思想分类（分治、贪心、DP、回溯、二分、图论、数学...）；b）每一类列举2-3个典型题目；c）总结每类算法的适用场景和解题模板；2）一题多解：找一个问题（如「最长递增子序列」），分别用暴力、DP、贪心+二分三种方法做，对比时间复杂度和思路；3）解题流程总结：总结你做算法题的一般步骤——a）怎么读题？b）怎么分析复杂度要求？c）怎么想思路？d）怎么写代码？e）怎么调试和测试？4）常见陷阱：总结你做题时常犯的错误——数组越界、边界条件、溢出、特殊情况（空、0、1个元素）、超时...；5）思考：算法能力对AI工程师重要吗？为什么？（写高效的代码、理解算法本质、面试、培养逻辑思维...）",
+          deep_dive: "深入理解算法设计的元思想与AI的关系：学算法不只是为了刷题面试，更重要的是理解算法设计的思想，培养解决问题的能力。这些思想在AI中也随处可见。1）分治思想：a）归并排序：分成两半，分别排序，合并；b）快速排序：选个基准，小的放左边大的放右边，递归处理；c）在AI中，分治也很常见：决策树（每次选一个特征分裂）、K-means（先分簇再更新中心，迭代）、分布式训练（把数据分到不同机器上并行训练）。2）贪心思想：a）适用条件：贪心选择性质+最优子结构；b）优点：简单、高效；c）缺点：不一定正确，需要证明；d）在AI中：贪心算法用于特征选择、决策树的构建（每步选最优分裂特征）、强化学习中的ε-贪心策略。3）动态规划：a）核心：记忆化搜索+最优子结构；b）关键：状态定义+转移方程；c）在AI中：HMM的前向后向算法、维特比解码、强化学习的动态规划方法（策略迭代、价值迭代）、序列比对（Needleman-Wunsch算法）。4）回溯/搜索：a）本质是暴力枚举，但通过剪枝优化；b）在AI中：深度优先搜索（DFS）、广度优先搜索（BFS）、A*搜索（启发式搜索）、蒙特卡洛树搜索（MCTS，AlphaGo的核心）。搜索是AI的基石之一。5）二分思想：a）适用条件：有单调性；b）常见题型：二分查找、二分答案、最大化最小值/最小化最大值；c）在AI中：二分法用于超参数搜索、数值优化中的一维搜索。6）算法能力对AI工程师的价值：a）写高效的代码：数据预处理、特征工程、模型推理，代码效率很重要；b）理解算法本质：很多AI算法都是经典算法的变种，理解基础算法能帮你更快理解AI算法；c）逻辑思维：刷算法题锻炼的是逻辑思维和问题解决能力，这是做任何技术工作的基础；d）面试：算法题是技术面试的标配，尤其是大厂。算法是内功，内功深厚的人，学什么都快。"
+        }, duration: "2小时", resources: [{ title: "算法设计与分析", url: "https://leetcode.cn/leetbook/detail/top-interview-questions/", required: true, type: "doc", source: "official" }, { title: "算法可视化", url: "https://visualgo.net/zh", required: false, type: "tool", source: "official" }], checkpoint: "能系统总结常用算法思想，知道每种思想的适用场景和典型问题" },
+      { day: 20, title: "算法竞赛入门与进阶路径",
+        summary: "了解算法竞赛与刷题方法，制定长期提升计划", content: {
+          objective: "今天你将了解算法竞赛的世界，学习科学的刷题方法，制定长期的算法学习计划。学完后你知道从哪里刷题、怎么刷题、怎么进阶，明白算法能力是长期积累的，不是一蹴而就的。",
+          key_points: [
+            "刷题平台：LeetCode（面试主流）、Codeforces（竞赛向）、AtCoder（日本竞赛平台）、洛谷（中文OI）",
+            "刷题方法：按题型分类刷、按难度递进、做一题会一题、总结套路、定期复习、参加周赛",
+            "复杂度分析：时间复杂度、空间复杂度，是算法的核心——知道什么复杂度能过，什么过不了",
+            "代码能力：边界处理、代码规范、调试能力、写bug-free的代码，和算法思路一样重要",
+            "成长路径：入门（数据结构+基础算法）→ 进阶（DP+图论+字符串）→ 高级（高级数据结构+计算几何+数论）→ 竞赛/面试"
+          ],
+          practice: "完成以下算法学习规划：1）评估当前水平：a）你现在能独立解决什么难度的算法题？b）你掌握了哪些数据结构和算法？c）你的薄弱环节是什么？（DP？图论？代码写不对？）2）制定刷题计划：a）目标：3个月、6个月、1年分别想达到什么水平？b）频率：每周刷几道题？每次刷多久？c）内容：先刷什么后刷什么？3）学习方法：a）复习机制：做过的题怎么复习不遗忘？b）总结整理：怎么整理你的算法笔记？c）提升效率：怎么刷题效果最好？（先想再看答案、写之前先想清楚、做完之后总结）4）模拟面试：a）找一道中等难度的题，计时30分钟，模拟面试做一下；b）录音或录屏，回头看自己的问题——是思路不对？还是代码写得慢？还是边界没考虑到？5）思考：算法和AI的关系是什么？算法竞赛厉害的人，做AI就一定厉害吗？为什么？（不一定，但逻辑思维和学习能力是相通的）",
+          deep_dive: "深入理解算法学习的正确姿势与AI职业发展：很多人学算法会陷入两个极端——要么觉得算法没用，不如多学点框架；要么沉迷刷题，觉得刷的题越多越厉害。正确的态度应该是：算法是基础，很重要，但不是全部。1）为什么要学算法？a）面试：几乎所有大厂的技术面试都要考算法；b）能力：算法训练逻辑思维和问题解决能力，这是程序员的核心能力；c）理解底层：很多框架和工具背后都是算法，懂算法才能真正理解；d）效率：写的代码更快更省，不会写出O(n²)还以为是O(n)。2）怎么学算法才高效？a）不要追求数量：做100道题但每道都吃透，比做500道但都一知半解强；b）按类型刷：集中刷某一类题，形成肌肉记忆；c）先想再看：自己想15-30分钟，实在想不出来再看答案，看完之后自己写一遍；d）总结套路：每种题型都有套路，总结出来下次就能快速识别；e）定期复习：用艾宾浩斯遗忘曲线，做过的题定期重做；f）打比赛：参加周赛，在压力下做题，提升速度和抗压能力。3）算法在AI工程师能力体系中的位置：a）编程能力（代码、调试、工程）；b）算法与数据结构；c）数学基础（线代、概率、优化）；d）机器学习/深度学习理论；e）框架和工具使用；f）业务理解和落地能力。算法只是其中一部分，但很基础——地基不牢，地动山摇。4）算法竞赛 vs 工程能力：a）算法竞赛考的是快速解决问题的能力，代码怎么写都行，能过就行；b）工程开发考的是长期维护的能力，代码的可读性、可维护性、健壮性更重要；c）两者都重要，不能偏废——只会竞赛不会工程的是「做题家」，只会工程不会算法的是「调包侠」；d）最好的状态是：算法基本功扎实，工程能力也强。5）给AI学习者的建议：a）算法题要刷，但不用刷到竞赛水平——能轻松搞定中等难度，能做出大部分困难题，就足够了；b）重点掌握：数组、链表、哈希表、树、递归、DP、二分、排序、图论基础，这些是最常用的；c）把更多时间花在数学和机器学习理论上，那才是AI工程师的核心竞争力；d）多做项目，在实践中运用算法和数据结构。算法是内功，AI是外功，内外兼修才能成为真正的高手。"
+        }, duration: "2小时", resources: [{ title: "LeetCode", url: "https://leetcode.cn/", required: true, type: "doc", source: "official" }, { title: "Codeforces", url: "https://codeforces.com/", required: false, type: "doc", source: "official" }], checkpoint: "有明确的算法学习计划，知道怎么高效地提升算法能力" },
+      { day: 15, title: "高级动态规划",
+        summary: "掌握区间DP、树形DP、状态压缩DP等高级DP模型，解决更复杂的优化问题。", content: {
+          objective: "今天你将学习高级动态规划的多种模型，进一步提升DP解题能力。学完后你能识别并解决区间DP、树形DP、状态压缩DP、数位DP等高级DP问题，理解每种模型的适用场景和状态设计思路。在AI领域，这些高级DP思想可以应用于序列建模、结构预测、神经网络架构搜索等问题。",
+          key_points: [
+            "区间DP：在区间上做DP，dp[i][j]表示区间[i,j]的最优解，典型问题如戳气球、最长回文子序列",
+            "树形DP：在树结构上做DP，通常后序遍历，用子节点信息推父节点，如二叉树最大路径和",
+            "状态压缩DP：用二进制位表示状态，适合状态数不多的情况，如旅行商问题TSP、棋盘问题",
+            "数位DP：处理数字各位上的DP，用于统计满足条件的数字个数，如数字1的个数、不含连续1的数",
+            "DP优化：单调队列优化、斜率优化、四边形不等式，用于降低DP时间复杂度"
+          ],
+          practice: "完成以下高级DP实战：1）区间DP：实现戳气球问题，给定n个气球，每个气球上有数字，戳破第i个气球获得nums[left]*nums[i]*nums[right]个硬币，求能获得的最大硬币数；2）树形DP：实现二叉树的最大路径和，路径可以从任意节点开始到任意节点结束；3）状态压缩DP：实现旅行商问题TSP的DP解法，给定n个城市和两两之间的距离，求从起点出发经过所有城市一次再回到起点的最短路径（n<=15）；4）经典题：打家劫舍III（树形DP）、最长回文子序列（区间DP）。每道题都先明确定义状态，再推导转移方程，最后实现代码。",
+          deep_dive: "深入理解DP设计的艺术与AI应用：DP的核心是状态定义和状态转移，好的状态定义能让问题迎刃而解，差的定义则让问题变得复杂无比。设计DP状态的几个原则：1）状态要能表示问题的子结构；2）转移方程要能从子问题推出原问题；3）初始条件要明确；4）要考虑空间优化。在AI领域，DP思想有深刻的应用：隐马尔可夫模型（HMM）的三个基本问题——评估问题用前向/后向算法（DP）、解码问题用Viterbi算法（DP）、学习问题用Baum-Welch算法（EM），其中前两个都是典型的DP问题。在序列建模中，CRF（条件随机场）的推理也是DP问题。在强化学习中，值迭代和策略迭代本质上就是在马尔可夫决策过程（MDP）上做动态规划。另外，DP的思想还延伸到了更广泛的领域：比如Transformer中的注意力机制，可以看作是一种可学习的动态规划；神经网络架构搜索（NAS）也可以用DP来优化。掌握高级DP，不仅能解决算法题，更能培养你将复杂问题分解为子问题的思维能力。"
+        }, duration: "2.5小时", resources: [{ title: "区间DP总结", url: "https://leetcode.com/problems/burst-balloons/", required: true, type: "doc", source: "official" }, { title: "树形DP题目集", url: "https://leetcode.com/problems/house-robber-iii/", required: false, type: "doc", source: "official" }, { title: "状态压缩DP教程", url: "https://cp-algorithms.com/dynamic_programming/bitmask.html", required: false, type: "doc", source: "other" }], checkpoint: "能独立实现区间DP和树形DP各一道中等难度题目" },
+      { day: 16, title: "图论进阶：最短路与最小生成树",
+        summary: "掌握Dijkstra、Floyd、Bellman-Ford最短路算法和Prim、Kruskal最小生成树算法。", content: {
+          objective: "今天你将系统学习图论中的经典算法——最短路和最小生成树。学完后你能熟练掌握Dijkstra、Bellman-Ford、Floyd-Warshall三种最短路算法的原理和实现，掌握Prim和Kruskal两种最小生成树算法，能根据问题特点选择最合适的算法。这些算法在网络路由、路径规划、推荐系统、社交网络分析等领域有广泛应用。",
+          key_points: [
+            "Dijkstra算法：单源最短路，贪心策略，用优先队列优化，适用于无负权边的图，时间O(E log V)",
+            "Bellman-Ford算法：单源最短路，可检测负环，适用于有负权边的图，时间O(VE)",
+            "Floyd-Warshall算法：多源最短路，动态规划思想，三重循环，适用于小规模图，时间O(V³)",
+            "Prim算法：最小生成树，从一个点出发逐步扩展，用优先队列优化，类似Dijkstra",
+            "Kruskal算法：最小生成树，按边权排序依次加入，用并查集检测环，时间O(E log E)"
+          ],
+          practice: "完成以下图论算法实战：1）实现Dijkstra算法：用邻接表+优先队列，求单源最短路，测试一个有向带权图；2）实现Floyd-Warshall算法：求所有点对的最短路，输出距离矩阵，验证与Dijkstra结果一致；3）实现Kruskal算法：用并查集实现，求最小生成树的总权重；4）实现Prim算法：用优先队列优化，对比Kruskal的结果是否相同；5）应用题：网络延迟时间（有n个节点，信号从k发出，多久所有节点都收到）。最后对比各算法的适用场景：什么时候用Dijkstra，什么时候用Bellman-Ford，什么时候用Floyd？",
+          deep_dive: "深入理解图算法的工程应用与变种：这些经典图算法在实际工程中有大量变种和应用。在网络路由中，OSPF协议用的就是Dijkstra算法，而距离矢量路由协议则基于Bellman-Ford的思想。在推荐系统中，可以把用户和物品看作二分图，用图算法做推荐。在交通导航中，A*算法是Dijkstra的启发式版本，用估价函数引导搜索方向，在实际导航中比纯Dijkstra快很多。在社交网络分析中，最小生成树可以用于发现社区结构。图算法的进阶方向包括：1）最短路径的变种——k最短路径、约束最短路、随机最短路；2）最大流最小割——Ford-Fulkerson方法、Edmonds-Karp算法、Dinic算法；3）图匹配——二分图最大匹配（匈牙利算法）、稳定婚姻问题；4）强连通分量——Tarjan算法、Kosaraju算法。在AI领域，图神经网络（GNN）将深度学习和图论结合，用于处理图结构数据，是当前的研究热点。掌握基础图算法，是深入图神经网络和复杂系统分析的前提。"
+        }, duration: "2.5小时", resources: [{ title: "Dijkstra可视化", url: "https://visualgo.net/en/sssp", required: true, type: "tool", source: "official" }, { title: "图论算法总结", url: "https://cp-algorithms.com/graph/breadth-first-search.html", required: true, type: "doc", source: "other" }, { title: "最小生成树讲解", url: "https://leetcode.com/problems/min-cost-to-connect-all-points/", required: false, type: "doc", source: "official" }], checkpoint: "能独立实现Dijkstra和Kruskal算法" },
+      { day: 17, title: "字符串算法：KMP与Trie树",
+        summary: "掌握KMP字符串匹配算法和Trie字典树，以及AC自动机和后缀数组等进阶内容。", content: {
+          objective: "今天你将深入学习字符串处理的核心算法。学完后你能理解KMP算法的原理并实现字符串匹配，掌握Trie字典树的实现和应用，了解AC自动机和后缀数组等高级字符串算法。在NLP领域，分词、文本搜索、模式匹配等任务都建立在这些字符串算法的基础之上。",
+          key_points: [
+            "KMP算法：利用已匹配的前缀信息避免回溯，next数组存储最长相等前后缀长度，时间O(n+m)",
+            "Trie字典树：用树结构存储字符串集合，共享前缀，适合前缀匹配、自动补全、拼写检查",
+            "AC自动机：Trie + KMP的fail指针，多模式匹配，一次文本扫描找出所有模式串",
+            "后缀数组：将所有后缀排序，可用于求最长公共前缀、不同子串个数等",
+            "滚动哈希：Rabin-Karp算法，用哈希值快速比较字符串，用于模式匹配和查重"
+          ],
+          practice: "完成以下字符串算法实战：1）实现KMP算法：给定文本串和模式串，找出模式串在文本串中所有出现的位置，先手动计算next数组，再实现代码；2）实现Trie字典树：支持insert（插入单词）、search（查找单词）、startsWith（查找前缀）三个操作；3）实现滚动哈希Rabin-Karp：用哈希方法做模式匹配，对比KMP的性能差异；4）应用练习：实现一个简单的拼写检查器，用Trie存储字典，输入单词时给出推荐（编辑距离为1的单词）；5）经典题：实现strStr()、最长公共前缀。最后思考：在什么场景下用KMP，什么场景用Trie？",
+          deep_dive: "深入理解字符串算法在NLP和搜索引擎中的应用：字符串算法是计算机科学中最经典的领域之一，也是NLP和搜索引擎的基础。在搜索引擎中，倒排索引（Inverted Index）是核心数据结构，而倒排索引的构建和查询都离不开字符串处理。在生物信息学中，DNA序列比对（BLAST算法）就用到了类似KMP的思想和动态规划。在NLP中，分词算法的最大匹配法、Trie树用于词典存储、AC自动机用于敏感词过滤。后缀自动机（Suffix Automaton）是更高级的字符串数据结构，能在线性时间内处理很多字符串问题，被称为'字符串算法的终极武器'。另外，布隆过滤器（Bloom Filter）也常用于字符串的存在性判断，空间效率极高但有一定误判率。在实际工程中，你很少需要从零实现这些算法，但理解它们的原理能帮你选择合适的工具和数据结构。比如，做前缀匹配选Trie，做多模式匹配选AC自动机，做子串查询选后缀数组或后缀自动机，做海量数据的存在性判断选布隆过滤器。掌握这些，你就能在面对字符串相关的系统设计时做出正确的技术选型。"
+        }, duration: "2小时", resources: [{ title: "KMP算法详解", url: "https://leetcode.com/problems/implement-strstr/", required: true, type: "doc", source: "official" }, { title: "Trie树教程", url: "https://leetcode.com/problems/implement-trie-prefix-tree/", required: true, type: "doc", source: "official" }, { title: "字符串算法集合", url: "https://cp-algorithms.com/string/kmp.html", required: false, type: "doc", source: "other" }], checkpoint: "能独立实现KMP和Trie字典树" },
+      { day: 18, title: "算法设计思想总结",
+        summary: "系统总结分治、贪心、回溯、动规、二分等算法设计范式，形成完整的算法知识体系。", content: {
+          objective: "今天你将系统总结所有算法设计思想，形成完整的算法知识体系。学完后你能根据问题特点快速判断应该用哪种算法思想，掌握各种算法范式的适用边界和典型问题，理解不同算法思想之间的联系和区别。这是算法学习从量变到质变的关键一步。",
+          key_points: [
+            "分治法：分解→解决→合并，典型问题有归并排序、快速排序、二分查找、汉诺塔",
+            "贪心算法：每步局部最优期望全局最优，需证明正确性，典型问题有活动选择、哈夫曼编码",
+            "回溯法：暴力搜索+剪枝，解决组合搜索问题，典型问题有全排列、组合、子集、N皇后",
+            "动态规划：最优子结构+重叠子问题，自底向上或自顶向下，典型问题有LCS、背包、最短路",
+            "算法选型策略：先看问题类型→再看数据规模→选择合适算法→验证边界情况"
+          ],
+          practice: "完成以下算法思想总结练习：1）制作一张算法思想对比表：包含分治、贪心、回溯、动规、二分、双指针、滑动窗口、BFS、DFS，每种思想的核心特点、适用场景、典型题目、时间复杂度特点；2）对5道不同类型的题目进行算法选型：给定题目描述，分析应该用哪种算法思想，为什么，写出解题思路（不需要写完整代码）；3）对比同一种问题的多种解法：比如最短路问题可以用BFS（无权）、Dijkstra（无负权）、Bellman-Ford（有负权）、Floyd（多源），对比各自的适用场景；4）总结你自己的解题模板：每种算法思想的代码框架、注意事项、常见坑点。最后思考：为什么说算法是一种思维方式，而不只是代码模板？",
+          deep_dive: "深入理解算法思维的本质与进阶方向：学习算法的真正目的不是背多少道题，而是培养解决问题的思维方式。当你面对一个全新的问题时，你能否：1）快速理解问题的本质；2）判断问题的复杂度（是P问题还是NP问题）；3）设计出高效的解决方案；4）分析方案的时间空间复杂度；5）在无法得到最优解时退而求其次，找近似解或启发式解。这才是算法能力的真正体现。算法学习的进阶方向：1）计算复杂性理论：P vs NP、NP完全问题、可计算性理论，理解什么问题是计算机难以解决的；2）随机算法：蒙特卡洛方法、拉斯维加斯算法、随机快速排序，用随机性换时间或空间；3）近似算法：处理NP难问题，在可接受的时间内得到近似最优解，有近似比保证；4）在线算法：面对流式输入，不知道未来的数据，需要即时做出决策；5）并行算法：在多机多核环境下设计并行算法，考虑通信开销和负载均衡。对于AI开发者来说，算法思维尤其重要——设计新的模型结构、优化训练算法、设计高效的推理系统，都需要扎实的算法功底。持续学习，在实际项目中运用，算法能力就会不断提升。"
+        }, duration: "2小时", resources: [{ title: "算法思想总览", url: "https://leetcode.com/explore/", required: true, type: "doc", source: "official" }, { title: "算法设计手册", url: "https://www.algorist.com/", required: false, type: "book", source: "other" }, { title: "经典算法题目分类", url: "https://github.com/youngyangyang04/leetcode-master", required: false, type: "repo", source: "github" }], checkpoint: "能说出至少6种算法设计范式的核心思想和典型应用" },
+      { day: 19, title: "算法竞赛入门与训练方法",
+        summary: "了解算法竞赛文化与训练方法，掌握科学的刷题策略，持续提升算法能力。", content: {
+          objective: "今天你将了解算法竞赛的世界，掌握科学的刷题和训练方法。学完后你能了解主要的算法竞赛（ICPC、Codeforces、LeetCode周赛等），掌握循序渐进的刷题策略，知道如何避免无效刷题，制定自己的算法提升计划。算法能力是工程师的内功，需要持续修炼。",
+          key_points: [
+            "主要竞赛：ICPC/CCPC（团队赛，3人1机，5小时）、Codeforces（个人赛，2小时，Rating系统）、LeetCode周赛",
+            "刷题策略：按题型分类刷而非按题号刷，先易后难，每道题吃透而不是追求数量",
+            "训练方法：模拟赛+赛后补题+专题训练+写题解，注重质量而非数量",
+            "时间管理：面试前集中刷2-3个月，平时保持每周3-5题的手感，定期复习",
+            "推荐资源：LeetCode、Codeforces、AtCoder、洛谷、牛客网，各有侧重"
+          ],
+          practice: "完成以下算法训练规划：1）评估你当前的算法水平：在LeetCode上做10道Easy和5道Medium，统计正确率和耗时，了解自己的基础；2）制定一个3个月的算法提升计划：第一个月打基础（数据结构+简单算法），第二个月专题训练（DP、图论、字符串等），第三个月综合练习+模拟面试；3）选择一个适合你的刷题平台，注册账号，开始第一周的训练计划；4）建立你的算法笔记系统：按专题分类，每道题记录题目、思路、代码、注意事项、相似题目；5）参加一次LeetCode周赛或Codeforces比赛，体验真实的竞赛氛围，赛后把不会的题补完。最后思考：算法能力和工程能力的关系是什么？如何平衡两者的学习时间？",
+          deep_dive: "深入理解算法能力在职业发展中的作用和正确心态：关于算法面试，行业内有很多讨论——有人认为算法面试筛选不出真正的工程能力，有人认为算法是基础中的基础。客观来看：1）算法是计算机科学的核心，扎实的算法功底能让你在面对复杂系统时更有底气；2）算法面试是大公司筛选候选人的有效方式，虽然不完美但相对公平；3）算法能力强的工程师，通常学习能力和逻辑思维也更强，这是用人单位看重的。但也要避免走入误区：1）不要为了刷题而刷题，理解思想比背代码重要；2）不要忽视工程能力，算法是内功，工程是外功，两者都要强；3）不要妄自菲薄，算法能力是可以训练的，大部分人通过2-3个月的集中训练都能达到不错的水平；4）不要停止学习，算法是需要长期保持手感的技能。对于AI开发者来说，算法尤其重要——你不仅要会用现成的框架和模型，更要理解背后的算法原理，甚至改进算法。最后送大家一句话：'算法和数据结构是程序员的内功，内功深厚的人，学什么都快。' 希望大家能享受算法学习的过程，在解决问题中获得成长。"
+        }, duration: "1.5小时", resources: [{ title: "LeetCode", url: "https://leetcode.com/", required: true, type: "doc", source: "official" }, { title: "Codeforces", url: "https://codeforces.com/", required: false, type: "doc", source: "official" }, { title: "算法学习路线图", url: "https://neetcode.io/roadmap", required: false, type: "doc", source: "other" }], checkpoint: "有了自己的算法学习计划和刷题方法" },
+      { day: 20, title: "算法综合大作业与项目",
+        summary: "完成一个算法综合项目，将所学算法应用到实际问题中，检验学习成果。", content: {
+          objective: "今天你将完成一个算法综合大作业，把这四周学到的所有算法知识应用到一个实际项目中。学完后你能独立完成一个有一定复杂度的算法项目，从问题分析、算法选型、代码实现到性能优化的完整流程。这是对你四周算法学习成果的最好检验。",
+          key_points: [
+            "项目选题方向：路径规划、推荐系统、文本搜索引擎、游戏AI、数据可视化",
+            "项目要求：至少用到3种不同的算法或数据结构，有清晰的问题定义和评估指标",
+            "实现步骤：需求分析→算法选型→架构设计→代码实现→测试评估→优化改进",
+            "评估维度：正确性、效率（时间/空间）、代码质量、可扩展性、文档完整性",
+            "展示方式：README文档+代码仓库+演示Demo+技术博客"
+          ],
+          practice: "完成以下算法综合项目（四选一或自拟题目）：\n\n项目A - 智能路径规划系统：\n1）实现一个地图导航系统，支持点到点最短路径（Dijkstra/A*）；\n2）支持多约束路径规划（避开某些区域、最短时间vs最短距离）；\n3）可视化展示路径和地图；\n4）评估不同算法的性能差异。\n\n项目B - 简易文本搜索引擎：\n1）用Trie树+倒排索引构建一个简易搜索引擎；\n2）支持关键词搜索、前缀搜索、模糊搜索；\n3）对搜索结果排序（TF-IDF或简单的相关度计算）；\n4）测试搜索速度和准确率。\n\n项目C - 推荐系统原型：\n1）基于用户-物品二部图，实现基于图的推荐算法；\n2）支持协同过滤和基于内容的推荐；\n3）评估推荐效果（用简单的离线指标）；\n4）对比不同推荐算法的优劣。\n\n项目D - 游戏AI：\n1）实现一个小游戏（如五子棋、迷宫、贪吃蛇）；\n2）实现游戏AI（用 minimax+αβ剪枝、或强化学习、或搜索算法）；\n3）评估AI的难度和智能程度；\n4）尝试优化AI的性能。\n\n项目要求：\n- 完整的代码实现，有清晰的注释\n- README说明项目功能、架构、使用方法\n- 至少用到3种不同的算法/数据结构\n- 有性能测试和结果分析\n- 可以在本地运行并看到效果",
+          deep_dive: "算法学习的终点是解决实际问题：学完这20天的算法课程，你已经掌握了算法和数据结构的核心知识。但真正的挑战在于——如何把这些知识应用到实际工作中？给大家几个建议：1）在项目中刻意运用：下次做项目时，先想一想这个问题可以用什么算法优化，而不是上来就写暴力解法；2）关注系统设计：算法是微观的，系统设计是宏观的，两者结合才能做出好的系统；3）持续学习进阶：机器学习算法、分布式算法、并行计算、编译优化，这些都是算法可以深入的方向；4）保持好奇心：遇到问题多问几个为什么，底层是怎么实现的？时间复杂度是多少？有没有更优的方法？对于AI开发者来说，算法思维尤其重要。你可能不需要每天写排序算法，但你需要理解：Transformer的注意力机制为什么是O(n²)复杂度？大模型的KV Cache是怎么优化推理速度的？分布式训练的AllReduce是怎么回事？这些问题的答案都建立在扎实的算法基础之上。最后，希望大家记住：算法不是目的，而是工具。重要的不是你会多少种算法，而是你能不能在恰当的时候选择恰当的算法，解决实际的问题。祝大家在算法的世界里玩得开心！"
+        }, duration: "4小时", resources: [{ title: "算法项目灵感", url: "https://github.com/nadav-daniels/algorithms", required: false, type: "repo", source: "github" }, { title: "系统设计入门", url: "https://github.com/donnemartin/system-design-primer", required: false, type: "repo", source: "github" }], checkpoint: "完成一个算法综合项目并通过自己的测试" }
+
     ]
   },
 
@@ -5926,7 +6622,73 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成以下生产者消费者综合实验：1）用Python的threading模块，结合Lock和Semaphore，实现一个线程安全的阻塞队列，支持put和get操作，队满put阻塞、队空get阻塞；2）启动3个生产者线程和5个消费者线程，生产者生成随机数放入队列，消费者取出并打印，验证程序能正确运行不崩溃；3）用multiprocessing模块实现多进程版本的生产者消费者，用Queue进行进程间通信，对比线程版本和进程版本的区别；4）给你的队列加上超时机制和优雅关闭功能，理解如何正确终止生产者消费者；5）对比你的实现和Python标准库queue.Queue的性能差异，思考性能差距在哪里。最后分析：PyTorch的DataLoader是如何利用生产者消费者模式的？",
           deep_dive: "深入理解并发编程的高级模式与AI系统中的应用：生产者消费者是并发编程中最基础也最重要的模式之一，在此基础上还有很多高级变体：工作窃取（Work Stealing）模式，每个线程有自己的队列，空闲时从其他队列偷任务，比全局队列负载均衡更好，Go语言的goroutine调度器、Java的ForkJoinPool都用了这个模式；流水线（Pipeline）模式，数据经过多个阶段处理，每个阶段是一个生产者消费者，适合流式数据处理。在AI系统中，生产者消费者模式无处不在：PyTorch的DataLoader用多个worker进程（生产者）预加载数据，放到队列中，主进程（消费者）取数据训练，这就是典型的生产者消费者；TensorFlow的tf.data也是类似的流水线设计；推理服务的请求处理、批处理（Batching）也是生产者消费者的变种；分布式训练中的参数服务器，worker和ps之间也有生产者消费者的影子。另外，还有一些高级并发模式值得学习：Future/Promise异步模式、Actor模型、响应式编程（Reactive）等。掌握这些并发模式，能帮你设计和开发高性能的AI系统。"
-        }, duration: "3小时", resources: [{ title: "生产者消费者问题", url: "https://en.wikipedia.org/wiki/Producer%E2%80%93consumer_problem", required: true, type: "article", source: "official" }, { title: "PyTorch DataLoader", url: "https://pytorch.org/docs/stable/data.html", required: false, type: "doc", source: "official" },  { title: "IPC代码示例", url: "https://github.com/angrave/SystemProgramming", required: false, type: "repo", source: "github" }], checkpoint: "手写实现的生产者消费者能在多线程环境下正确工作，性能接近标准库" }
+        }, duration: "3小时", resources: [{ title: "生产者消费者问题", url: "https://en.wikipedia.org/wiki/Producer%E2%80%93consumer_problem", required: true, type: "article", source: "official" }, { title: "PyTorch DataLoader", url: "https://pytorch.org/docs/stable/data.html", required: false, type: "doc", source: "official" },  { title: "IPC代码示例", url: "https://github.com/angrave/SystemProgramming", required: false, type: "repo", source: "github" }], checkpoint: "手写实现的生产者消费者能在多线程环境下正确工作，性能接近标准库" },
+      { day: 11, title: "文件系统深入：ext4与VFS",
+        summary: "深入理解文件系统实现原理，掌握VFS虚拟文件系统层和ext4文件系统结构。", content: {
+          objective: "今天你将深入学习文件系统的实现原理。学完后你能理解虚拟文件系统（VFS）的设计思想，掌握ext4文件系统的核心数据结构和工作原理，了解文件的存储方式和目录组织方式。对于AI开发者来说，理解文件系统能帮你更好地优化数据读写性能，排查存储相关的性能瓶颈。",
+          key_points: [
+            "VFS虚拟文件系统：内核中的抽象层，向上提供统一的系统调用接口，向下兼容各种具体文件系统",
+            "ext4文件系统：索引节点（inode）存元数据、数据块存内容、目录项（dentry）存文件名到inode的映射",
+            "文件存储方式：直接块、间接块、双重间接、三重间接，支持大文件；ext4用extent替代块指针更高效",
+            "目录结构：目录是特殊的文件，存储目录项，每个目录项包含文件名和inode号",
+            "文件系统性能：块大小选择、碎片整理、日志机制（journal）保障一致性，断电不丢数据"
+          ],
+          practice: "完成以下文件系统深入实践：1）探索ext2/ext3/ext4文件系统：用df -T查看当前文件系统类型，用dumpe2fs或tune2fs查看文件系统超级块信息，了解块大小、inode数量、卷标等参数；2）理解inode：用ls -i查看文件的inode号，用stat查看文件的详细元数据（inode、权限、大小、时间戳等），思考为什么硬链接不能跨文件系统；3）软硬链接：创建硬链接和软链接，对比两者的区别（inode是否相同、能否跨文件系统、删除源文件的影响），用ls -li查看验证；4）文件系统挂载：理解mount命令的原理，查看/etc/fstab文件，理解开机自动挂载的配置；5）简单实验：在一个小的磁盘镜像上创建ext4文件系统，挂载进去创建一些文件，用debugfs查看inode和数据块，加深理解。最后思考：为什么AI训练中大量小文件的读写性能差？怎么优化？",
+          deep_dive: "深入理解文件系统的设计权衡与AI场景优化：文件系统是操作系统中最经典的主题之一，几十年来涌现了几十种不同的文件系统，每种都有不同的设计目标和适用场景。经典的文件系统包括：1）ext2/ext3/ext4：Linux标准文件系统，成熟稳定，通用场景；2）XFS：SGI开发的高性能文件系统，适合大文件和高并发；3）Btrfs：写时复制（CoW）文件系统，支持快照、子卷、校验和；4）ZFS：Sun开发的高级文件系统，功能强大，支持RAID、快照、压缩、去重；5）F2FS：专为闪存设计的文件系统，在SSD和手机上广泛使用。在AI训练场景中，文件系统的性能至关重要——尤其是小文件和随机读写。深度学习数据集通常由大量图片、文本文件组成，随机读取小文件的性能瓶颈往往在文件系统而不是存储介质。优化方法包括：1）打包存储：把大量小文件打包成TFRecord、RecordIO、LMDB等格式，变成顺序读写；2）缓存：用内存缓存热门数据；3）并行IO：多线程/多进程并发读取；4）选择合适的文件系统：XFS在大文件顺序读写上性能好，ext4更通用；5）调整挂载参数：比如noatime减少元数据写入。另外，分布式文件系统（如Lustre、GlusterFS、Ceph）在大规模分布式训练中扮演着重要角色，提供全局命名空间和高带宽。理解文件系统的底层原理，能帮你在遇到存储性能瓶颈时找到优化方向。"
+        }, duration: "2小时", resources: [{ title: "ext4文件系统详解", url: "https://www.kernel.org/doc/html/latest/filesystems/ext4.html", required: true, type: "doc", source: "official" }, { title: "VFS虚拟文件系统", url: "https://www.win.tue.nl/~aeb/linux/lk/lk-8.html", required: false, type: "doc", source: "other" }, { title: "Linux文件系统架构", url: "https://tldp.org/LDP/tlk/fs/filesystem.html", required: false, type: "doc", source: "other" }], checkpoint: "能解释inode、VFS、extent三个核心概念" },
+      { day: 12, title: "IO模型：阻塞、非阻塞、IO多路复用",
+        summary: "掌握五种IO模型的原理与区别，理解select/poll/epoll的实现机制与性能差异。", content: {
+          objective: "今天你将系统学习IO模型的核心概念。学完后你能区分阻塞IO、非阻塞IO、IO多路复用、信号驱动IO、异步IO五种模型，深入理解select、poll、epoll的实现原理和性能差异，掌握高性能网络编程的基础。对于AI服务开发者来说，理解IO模型是构建高并发推理服务的关键。",
+          key_points: [
+            "五种IO模型：阻塞IO、非阻塞IO、IO多路复用、信号驱动IO、异步IO，区别在于数据准备和数据拷贝阶段是否阻塞",
+            "IO多路复用：一个线程/进程监控多个文件描述符，任意一个就绪就返回，用一个线程服务多个连接",
+            "select：线性扫描所有fd，有最大数量限制（1024），每次调用都要拷贝fd集，性能随连接数增加线性下降",
+            "poll：用链表存储fd，没有最大数量限制，但还是要线性扫描，和select本质一样",
+            "epoll：Linux特有的高性能方案，红黑树+就绪链表，事件驱动，无需扫描，性能随连接数增加几乎不下降"
+          ],
+          practice: "完成以下IO模型实践：1）概念理解：用生活中的例子（比如去餐厅吃饭、取快递等）类比五种IO模型，讲清楚每个阶段在做什么，什么时候阻塞，什么时候不阻塞；2）select/poll/epoll对比：制作一张对比表，从连接数上限、就绪通知方式、数据拷贝、性能特点、适用场景等维度对比三者；3）代码实验：写一个简单的TCP服务器，分别用阻塞IO和epoll两种方式实现，然后用压测工具（如wrk或ab）测试并发连接数和QPS，对比性能差异；4）深入理解epoll的工作模式：水平触发（LT）和边缘触发（ET）的区别，各自的优缺点和适用场景，思考为什么ET模式必须用非阻塞IO；5）思考：在AI推理服务中，通常是计算密集型而不是IO密集型，那IO模型还重要吗？什么时候推理服务会遇到IO瓶颈？怎么优化？",
+          deep_dive: "深入理解高性能网络编程与Reactor模式：epoll是Linux高性能网络编程的基石，几乎所有高性能网络框架（Nginx、Redis、Netty、libevent等）都基于epoll实现。但光有epoll还不够，还需要好的架构设计——这就是Reactor模式。Reactor模式的核心思想是：把IO事件和业务处理分离，用一个主线程（Reactor线程）监听所有连接的IO事件，事件到达后分发给对应的Handler处理。Reactor模式有几种变体：1）单线程Reactor：所有事情都在一个线程里做，简单但不能利用多核，适合IO密集但计算少的场景；2）多线程Reactor：Reactor线程只负责IO事件分发，业务处理交给线程池，充分利用多核；3）主从Reactor：主Reactor负责accept新连接，从Reactor负责已连接的IO事件，扩展性更好。Nginx用的就是多进程Reactor模型，Redis用的是单线程Reactor+IO多线程。在AI推理服务中，Reactor模式也非常有用：网络IO（接收请求、返回结果）和计算（模型推理）分离，IO线程负责收发数据，GPU/CPU计算线程负责推理，两者通过队列连接，这样既能高并发处理连接，又能充分利用算力。另外，还有一种叫Proactor的模式（异步IO模型），在Windows上用IOCP实现，Linux上的AIO还不够成熟。理解这些高性能网络编程的核心思想，能帮你构建出高性能、高可用的AI服务。"
+        }, duration: "2.5小时", resources: [{ title: "IO模型详解", url: "https://www.cs.fsu.edu/~baker/devices/lxr/http/source/linux/fs/select.c", required: true, type: "doc", source: "other" }, { title: "epoll源码分析", url: "https://github.com/torvalds/linux/blob/master/fs/eventpoll.c", required: false, type: "repo", source: "github" }, { title: "Reactor模式", url: "https://www.dre.vanderbilt.edu/~schmidt/PDF/reactor-siemens.pdf", required: false, type: "paper", source: "other" }], checkpoint: "能说清楚select/poll/epoll三者的区别和各自适用场景" },
+      { day: 13, title: "进程间通信与同步",
+        summary: "掌握管道、消息队列、共享内存、信号量等IPC机制，理解各自优缺点和适用场景。", content: {
+          objective: "今天你将系统学习进程间通信（IPC）的各种方式。学完后你能掌握管道、消息队列、共享内存、信号量、套接字等IPC机制的原理和使用方法，能根据场景选择最合适的IPC方式。在AI的多进程数据加载、分布式训练的进程通信中，IPC是核心基础。",
+          key_points: [
+            "管道（Pipe）：最简单的IPC，半双工，父子进程间用；命名管道（FIFO）可用于无亲缘关系的进程",
+            "消息队列（Message Queue）：内核维护的消息链表，进程按优先级收发消息，有类型区分，比管道灵活",
+            "共享内存（Shared Memory）：最快的IPC，直接共享物理内存，无需拷贝，需配合信号量使用保证同步",
+            "信号量（Semaphore）：计数器，用于进程间同步和互斥，保护共享资源，P操作减一V操作加一",
+            "Socket套接字：最通用的IPC，支持跨网络通信，Unix域套接字用于本机，性能也很高"
+          ],
+          practice: "完成以下IPC实践：1）管道实验：写一个简单的父子进程通信程序，父进程写数据，子进程读数据，用pipe()系统调用；2）共享内存+信号量：用共享内存实现一个生产者消费者模型，生产者往共享内存写数据，消费者读数据，用信号量同步，体会共享内存的高效；3）消息队列实验：用消息队列实现两个进程的消息传递，支持不同类型的消息；4）对比实验：实现一个简单的ping-pong程序（进程A发一个数给进程B，B加1再发回来，来回10000次），分别用管道、消息队列、共享内存+信号量、Unix域套接字四种方式实现，对比它们的延迟和吞吐量，记录数据并分析差异原因；5）思考：在PyTorch的DataLoader中，多进程数据加载是怎么把数据传递给主进程的？用的是哪种IPC方式？为什么选这种方式？如果数据量特别大，应该怎么优化？",
+          deep_dive: "深入理解共享内存与零拷贝技术：在所有IPC方式中，共享内存是最快的，因为它避免了内核态和用户态之间的数据拷贝——两个进程直接访问同一块物理内存。但共享内存也带来了同步问题——多个进程同时读写会产生竞态条件，所以需要配合信号量或互斥锁使用。共享内存的实现方式有几种：1）System V共享内存（shmget/shmat/shmdt）：经典的SysV接口；2）POSIX共享内存（shm_open+mmap）：更现代的接口，基于内存映射文件；3）mmap匿名映射：父子进程之间的共享内存；4）/dev/shm：基于内存的tmpfs文件系统，把文件映射到内存。在AI和大数据领域，零拷贝（Zero-Copy）技术非常重要——减少数据在内核态和用户态之间的拷贝次数，能大幅提升IO密集型应用的性能。零拷贝的技术包括：1）mmap+write：用内存映射替代read+write，减少一次拷贝；2）sendfile：直接在内核空间从文件描述符拷贝到socket，减少两次拷贝；3）splice：在两个文件描述符之间移动数据，不需要到用户态；4）DMA Gather Copy：DMA直接从内存的多个位置拷贝数据，不需要先拼接。Kafka、Nginx等高性能框架都大量使用了零拷贝技术。在AI推理服务中，零拷贝也很有用——减少图片、张量等数据在内存中的拷贝次数，降低CPU开销和延迟。理解这些底层原理，能帮你优化AI系统的IO性能。"
+        }, duration: "2小时", resources: [{ title: "Linux IPC指南", url: "https://tldp.org/LDP/lpg/node7.html", required: true, type: "doc", source: "other" }, { title: "共享内存详解", url: "https://www.man7.org/linux/man-pages/man7/shm_overview.7.html", required: false, type: "doc", source: "official" }, { title: "零拷贝技术", url: "https://lwn.net/Articles/232191/", required: false, type: "article", source: "other" }], checkpoint: "能用共享内存+信号量实现一个简单的生产者消费者模型" },
+      { day: 14, title: "死锁、活锁与饥饿",
+        summary: "理解死锁的四个必要条件和处理策略，掌握银行家算法，了解活锁和饥饿的区别。", content: {
+          objective: "今天你将学习并发系统中的经典问题——死锁、活锁和饥饿。学完后你能准确描述死锁的四个必要条件，掌握死锁的四种处理策略（预防、避免、检测、恢复），理解银行家算法的原理，能区分死锁、活锁和饥饿。在多线程/多进程的AI系统中，死锁是常见且难以调试的问题，理解这些概念能帮你预防和排查。",
+          key_points: [
+            "死锁四个必要条件：互斥、占有并等待、非抢占、循环等待，四个同时满足才会发生死锁",
+            "死锁预防：破坏四个必要条件之一，比如破坏循环等待（资源有序分配）、破坏占有并等待（一次性申请所有资源）",
+            "死锁避免：银行家算法，每次分配前判断系统是否处于安全状态，不安全就不分配",
+            "死锁检测与恢复：允许死锁发生，定期检测（资源分配图），发现后通过剥夺资源、撤销进程等方式恢复",
+            "活锁与饥饿：活锁是进程都在忙等但不前进（如两个人互相让路都过不去）；饥饿是某个进程一直得不到资源"
+          ],
+          practice: "完成以下死锁相关实践：1）死锁模拟：写一个简单的死锁程序——两个线程，线程A先拿锁1再拿锁2，线程B先拿锁2再拿锁1，运行足够多次后会触发死锁，观察程序卡住的现象；然后用死锁预防的方法修改代码（比如统一锁的顺序），验证死锁不再发生；2）银行家算法：实现一个简化版的银行家算法，给定系统的资源总数、已分配矩阵、需求矩阵，判断系统是否处于安全状态，如果有进程请求资源，判断能否安全分配；3）活锁模拟：实现一个活锁的例子（如两个绅士互相让路，都往左/右让，结果还是过不去），思考如何解决活锁；4）思考：在AI系统中，死锁可能发生在什么场景？比如多GPU训练中可能的死锁场景、多进程数据加载中可能的死锁场景、分布式训练中可能的死锁场景；你遇到过什么死锁问题？是怎么解决的？5）死锁排查：如果一个程序疑似死锁了，你会怎么排查？用什么工具？（提示：gdb、pstack、jstack、/proc/pid/stack等）",
+          deep_dive: "深入理解并发问题的本质与调试方法：死锁只是并发问题的一种，并发系统中还有很多其他问题——竞态条件（Race Condition）、数据竞争（Data Race）、优先级反转（Priority Inversion）、虚假唤醒（Spurious Wakeup）等等。为什么并发程序这么难写？因为人的大脑是顺序思考的，而并发是多个执行流同时进行，组合爆炸，很难覆盖所有情况。调试并发程序也特别困难——问题难以复现，和时序有关，加了日志可能就不出现了（Heisenbug）。应对并发问题的方法有几个层次：1）避免并发：能不用并发就不用，用单线程+事件驱动（如Node.js、Redis），简单可靠；2）降低共享：尽量减少共享数据，用消息传递代替共享内存（如Actor模型、CSP模型）；3）正确同步：必须共享时，用正确的同步原语（互斥锁、读写锁、信号量、条件变量、原子操作等）；4）工具辅助：用静态分析工具（如ThreadSanitizer、Helgrind）检测数据竞争和死锁；5）设计模式：用成熟的并发设计模式，比如生产者消费者、读写锁、线程池、Future/Promise等。在AI系统中，并发问题尤其常见和复杂——多线程数据加载、多GPU训练、分布式训练的参数同步、推理服务的请求处理，处处都有并发。好消息是，现代深度学习框架（PyTorch、TensorFlow）已经帮我们处理了大部分底层的并发问题，但理解这些原理，能帮你在遇到框架没覆盖的场景时自己解决问题，也能在出现诡异的bug时想到可能是并发问题。最后送一句话：「不要用并发，除非你不得不用；要用的话，尽量用成熟的模式和工具。」"
+        }, duration: "2小时", resources: [{ title: "死锁详解", url: "https://www.geeksforgeeks.org/operating-system-deadlock/", required: true, type: "doc", source: "official" }, { title: "银行家算法", url: "https://www.studytonight.com/operating-system/bankers-algorithm", required: false, type: "doc", source: "other" }, { title: "ThreadSanitizer", url: "https://github.com/google/sanitizers/wiki/ThreadSanitizerCppManual", required: false, type: "tool", source: "other" }], checkpoint: "能说清楚死锁的四个必要条件和三种处理策略" },
+      { day: 15, title: "操作系统综合项目：Mini Shell",
+        summary: "实现一个简易的Shell，综合运用进程、信号、管道、IO重定向等知识。", content: {
+          objective: "今天你将完成一个操作系统综合项目——实现一个简易的Shell（命令解释器）。通过这个项目，你会把前14天学到的进程管理、信号处理、管道、IO重定向、环境变量等知识融会贯通。这是检验你操作系统学习成果的最好方式。",
+          key_points: [
+            "项目目标：实现一个支持命令执行、参数解析、管道、IO重定向、内置命令的简易Shell",
+            "核心功能：执行外部命令（fork+exec）、管道（pipe+dup2）、输入输出重定向（< > >>）、内置命令（cd/pwd/exit/echo）",
+            "信号处理：处理Ctrl+C（SIGINT）、Ctrl+Z（SIGTSTP）信号，不退出Shell",
+            "环境变量：支持读取和设置环境变量，PATH搜索可执行文件",
+            "错误处理：命令不存在、权限不足、语法错误等异常情况的处理"
+          ],
+          practice: "实现一个Mini Shell，要求如下：\n\n基础功能（必做）：\n1）命令解析：解析用户输入的命令行，拆分命令名和参数；\n2）执行外部命令：用fork()+execvp()执行外部命令，父进程wait等待子进程结束；\n3）内置命令：实现cd、pwd、exit、echo四个内置命令；\n4）IO重定向：支持>（输出重定向）、<（输入重定向）、>>（追加重定向）；\n5）管道：支持单个管道（cmd1 | cmd2），两个命令通过管道连接。\n\n进阶功能（选做）：\n1）多管道：支持多个管道（cmd1 | cmd2 | cmd3）；\n2）信号处理：捕获SIGINT和SIGTSTP信号，不退出Shell，只终止前台进程；\n3）后台运行：命令末尾加&支持后台运行，不阻塞Shell；\n4）通配符：支持简单的*通配符展开；\n5）Tab补全：用readline库实现命令自动补全；\n6）历史记录：支持上下键查看历史命令。\n\n项目要求：\n- 代码结构清晰，模块化设计\n- 有错误处理，不会轻易崩溃\n- 有基本的注释和文档\n- 可以编译运行并正常使用\n\n完成后，用你的Mini Shell执行一些常用命令，测试各项功能是否正常工作。",
+          deep_dive: "操作系统学习的意义与进阶方向：完成这个Mini Shell项目后，你应该对操作系统的核心概念有了扎实的理解。但操作系统是一个非常博大精深的领域，这三周只是入门。如果你想继续深入，可以往这些方向发展：1）内核开发：深入Linux内核源码，学习调度器、内存管理、文件系统、网络协议栈的具体实现，甚至参与内核开发；2）系统编程：深入学习Linux系统编程，掌握所有系统调用和库函数，写出高性能的系统级程序；3）性能优化：学习性能分析工具（perf、bcc/BPF、strace、ltrace等），掌握系统性能调优方法，成为性能优化专家；4）分布式系统：从单机操作系统扩展到分布式系统，学习分布式存储、分布式计算、一致性协议等；5）操作系统设计：了解不同操作系统的设计哲学（Unix/Linux、Windows、macOS/iOS、Android、RTOS等），比较它们的优缺点。对于AI开发者来说，深入理解操作系统至少有三方面的价值：1）排障能力：遇到系统级别的问题（性能瓶颈、资源耗尽、诡异崩溃），能快速定位和解决；2）优化能力：能从系统层面优化AI训练和推理的性能，让同样的硬件跑出更好的效果；3）架构能力：在设计AI系统（大规模训练集群、高并发推理服务）时，能做出合理的架构决策。最后，希望大家记住——操作系统是软件的基石，越往上走，越发现基础的重要性。持续学习，不断夯实基础，你就能走得更远。"
+        }, duration: "4小时", resources: [{ title: "Shell编写教程", url: "https://www.cs.usfca.edu/~benson/cs326/pintos/pintos/src/threads/init.c", required: false, type: "article", source: "other" }, { title: "xv6操作系统", url: "https://pdos.csail.mit.edu/6.828/2020/xv6.html", required: false, type: "doc", source: "other" }, { title: "Linux系统编程", url: "https://man7.org/tlpi/", required: false, type: "book", source: "other" }], checkpoint: "实现了一个能执行命令、支持管道和重定向的Mini Shell" }
+
     ]
   },
 
@@ -6129,7 +6891,20 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成以下LED驱动综合项目：1）定义寄存器结构体：定义一个GPIO_TypeDef结构体，包含MODER（模式寄存器）、OTYPER（输出类型）、OSPEEDR（速度）、PUPDR（上下拉）、IDR（输入数据）、ODR（输出数据）、BSRR（置位/复位）等寄存器，注意寄存器的偏移地址要正确；2）实现底层操作：实现GPIO_Init()初始化函数、GPIO_SetPin()置位函数、GPIO_ResetPin()清零函数、GPIO_TogglePin()翻转函数、GPIO_ReadPin()读取函数，用BSRR实现置位和清位保证原子性；3）LED驱动封装：在GPIO驱动基础上封装LED驱动，实现LED_Init()、LED_On()、LED_Off()、LED_Toggle()等函数，隐藏GPIO细节，提供更友好的接口；4）模块化组织：把代码分成gpio.h/gpio.c、led.h/led.c、main.c三个模块，每个模块职责清晰，头文件只放对外接口；5）添加错误检查：用assert_param宏检查参数合法性（如引脚号是否有效、模式是否合法），在开发阶段开启断言；6）最后写一个main函数，调用LED驱动实现LED闪烁效果，验证整个驱动的正确性。",
           deep_dive: "深入理解嵌入式驱动架构与设计模式：你今天实现的是一个简单的GPIO驱动，但真实的嵌入式驱动框架要复杂得多，也有很多成熟的设计模式。分层架构是嵌入式驱动最经典的设计：最底层是寄存器直接操作（LL库/直接操作寄存器），往上是外设驱动层（GPIO/UART/SPI等驱动），再往上是HAL层（硬件抽象层，提供统一接口），再往上是BSP（板级支持包，针对具体板子的引脚和外设配置），最上层是应用。这样分层的好处是：换芯片只需要改底层驱动，上层应用不用动；换板子只需要改BSP，HAL层和驱动层都不用动。除了分层，还有很多常用的驱动设计模式：1）面向对象的C：用结构体+函数指针模拟类和接口，比如Linux驱动的file_operations；2）设备模型：把所有设备抽象成设备对象，用总线-驱动-设备模型管理，如Linux的设备驱动模型；3）中断处理：上半部（快速响应，只做紧急的事）+下半部（延后处理，如工作队列、tasklet），减少关中断时间；4）环形缓冲区（Ring Buffer）：用于串口、网络等数据收发，生产者消费者模型，无锁设计；5）状态机：用于复杂的协议处理和业务逻辑，清晰可靠。在嵌入式AI领域（如边缘AI、TinyML），驱动同样重要——摄像头驱动、麦克风驱动、显示驱动、NPU/AI加速器驱动等，都是AI应用的基础设施。理解了驱动的设计思想，你就能更快地学习和使用各种嵌入式框架（如STM32 HAL、Zephyr、FreeRTOS+驱动、Linux驱动等），也能自己设计出结构清晰、易于维护的嵌入式软件。"
-        }, duration: "3小时", resources: [{ title: "嵌入式C最佳实践", url: "https://www.state-machine.com/", required: true, type: "doc", source: "official" }, { title: "MISRA C规范", url: "https://www.misra.org.uk/", required: false, type: "doc", source: "official" },  { title: "GPIO驱动模板", url: "https://github.com/Ewenwan/gpio-driver", required: false, type: "repo", source: "github" }], checkpoint: "能写出完整的GPIO驱动，具备模块化、volatile、错误检查三大要素" }
+        }, duration: "3小时", resources: [{ title: "嵌入式C最佳实践", url: "https://www.state-machine.com/", required: true, type: "doc", source: "official" }, { title: "MISRA C规范", url: "https://www.misra.org.uk/", required: false, type: "doc", source: "official" },  { title: "GPIO驱动模板", url: "https://github.com/Ewenwan/gpio-driver", required: false, type: "repo", source: "github" }], checkpoint: "能写出完整的GPIO驱动，具备模块化、volatile、错误检查三大要素" },
+      { day: 15, title: "嵌入式C进阶与最佳实践",
+        summary: "学习MISRA C规范、代码静态分析、单元测试等进阶内容", content: {
+          objective: "今天你将学习嵌入式C的进阶知识和最佳实践，包括MISRA C规范、代码静态分析、单元测试、断言与防御式编程。学完后你能写出更高质量、更可靠、更安全的嵌入式代码，了解工业级嵌入式开发的标准流程。",
+          key_points: [
+            "MISRA C：工业界最常用的C语言安全编码规范，减少潜在bug和安全隐患",
+            "静态分析：用cppcheck、clang-tidy等工具自动检查代码问题，不运行就能发现bug",
+            "单元测试：用Unity、CMock等框架做单元测试，保证代码质量，支持回归测试",
+            "防御式编程：断言、参数检查、错误处理、容错设计，代码在异常情况下也能优雅处理",
+            "代码审查：Code Review的重要性和最佳实践，多人协作保证代码质量"
+          ],
+          practice: "完成以下进阶实践：1）MISRA C学习：了解MISRA C的核心规则（如禁止使用goto、禁止隐式类型转换、函数只有一个出口等），思考这些规则为什么能减少bug；2）静态分析实践：用cppcheck或clang-tidy扫描你之前写的LED驱动代码，看看能发现什么问题，修复找到的问题；3）单元测试入门：用Unity测试框架为你的LED驱动写单元测试，测试初始化、开、关、翻转等功能，确保每个函数都按预期工作；4）防御式编程练习：给你的函数加上参数检查（用assert或if判断），处理非法输入（如NULL指针、无效参数），设计错误返回码；5）代码自查：用今天学到的知识，review你之前写的代码，找出可以改进的地方并优化；6）思考：为什么工业级嵌入式开发需要这么多规范和流程？这些规范和敏捷开发有冲突吗？怎么平衡？",
+          deep_dive: "深入理解嵌入式软件质量与功能安全：在消费电子中，bug可能只是体验不好；但在汽车、医疗、航空航天等领域，软件bug可能导致人身伤害甚至死亡。所以这些领域有严格的功能安全标准，如ISO 26262（汽车）、IEC 61508（工业）、DO-178C（航空）。这些标准对软件开发流程有严格要求，包括：需求管理、设计评审、代码规范、静态分析、单元测试、集成测试、验证确认、配置管理等。MISRA C就是这些标准中常用的编码规范，它定义了C语言的一个安全子集，限制使用C语言中容易出错的特性。除了MISRA C，还有一些提高代码质量的重要实践：1）代码静态分析（Static Analysis）：不运行代码，通过分析代码结构和逻辑来发现问题。常见工具：cppcheck（开源）、clang-tidy（LLVM）、PC-Lint（商业）、Coverity（商业）。静态分析能发现内存泄漏、空指针解引用、数组越界、未初始化变量、类型转换问题等。2）单元测试（Unit Testing）：对每个函数/模块进行测试，确保功能正确。嵌入式中常用的测试框架：Unity（轻量）、CMock（模拟）、CppUTest（支持C/C++）。单元测试的好处：保证质量、便于重构、文档作用、快速定位问题。3）持续集成（CI）：每次代码提交都自动运行编译、静态分析、单元测试，尽早发现问题。4）防御式编程：编程时假设输入可能是错的、调用可能失败、硬件可能出问题，代码要能优雅地处理各种异常情况。核心思想：「快速失败」（Fail Fast）——问题越早发现越好。在AI时代，嵌入式软件的质量同样重要——AI模型部署到嵌入式设备上，驱动代码、推理框架、应用代码都需要保证可靠性和安全性。理解这些最佳实践，能让你写出更专业的嵌入式代码，也能更好地和嵌入式团队协作。"
+        }, duration: "2.5小时", resources: [{ title: "MISRA C规范", url: "https://www.misra.org.uk/", required: false, type: "doc", source: "official" }, { title: "Unity测试框架", url: "https://github.com/ThrowTheSwitch/Unity", required: false, type: "repo", source: "github" }, { title: "cppcheck", url: "https://cppcheck.sourceforge.io/", required: false, type: "tool", source: "official" }], checkpoint: "能用静态分析工具检查代码，并为关键函数写单元测试" }
     ]
   },
 
@@ -6280,7 +7055,72 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成以下综合实践项目：1）系统设计：先画系统架构图，设计5个任务——传感器采集任务（周期读取温湿度、光照、气压）、数据处理任务（滤波、校准、融合计算）、显示任务（LCD/串口输出数据）、告警任务（温度超阈值报警）、通信任务（通过UART/WiFi上报数据）；2）IPC设计：选择合适的IPC机制——传感器到处理用队列（传递数据）、处理到显示用二值信号量+共享内存（数据就绪通知）、显示和报警都要写LCD用互斥锁保护、系统初始化完成用事件组同步所有任务启动；3）优先级设计：给每个任务分配合理的优先级，解释为什么这么分配，哪些任务是硬实时，哪些是软实时；4）编码实现：在开发板或模拟器上实现整个系统，确保每个任务都正常运行，数据能正确传递，没有死锁和优先级反转；5）性能测试：测量端到端延迟（从传感器采样到告警输出的时间），测试高负载下系统的稳定性，故意制造一些错误（如队列满、任务死循环）观察系统行为；6）思考：如果在这个系统里加入AI推理任务（比如用传感器数据做异常检测），应该放在哪里？优先级设多少？怎么和现有任务交互？",
           deep_dive: "深入理解多任务系统架构设计与权衡：完成这个综合项目后，让我们来深入思考一下多任务系统设计中的一些关键问题和权衡。首先，任务怎么划分？这是多任务系统设计最重要也最考验经验的问题。常见的划分方法有：1）按功能划分：每个功能模块一个任务，比如传感器任务、显示任务、通信任务——这是最常用的方式，优点是职责清晰、耦合低；2）按实时性划分：把所有硬实时的放一个高优先级任务，软实时的放低优先级；3）按数据流划分：流水线模式，每个阶段一个任务，数据从上游流向下游。任务不是越多越好，也不是越少越好。任务太多：上下文切换开销大，同步复杂，容易出bug；任务太少：达不到并行/并发的效果，响应慢。一般来说，中等复杂度的嵌入式系统有5-20个任务比较合适。然后是优先级怎么分配？一个经典的原则是速率单调调度（Rate Monotonic Scheduling，RMS）：周期越短、频率越高的任务，优先级越高。这是理论上最优的固定优先级调度算法。但实际工程中还要考虑：1）紧迫性：虽然不频繁但一旦发生必须马上响应的，优先级要高（比如告警、安全相关）；2）执行时间：执行时间短的任务优先级可以高一点（减少对其他任务的影响）；3）重要性：关键任务优先级高。然后是任务间通信的选择：需要传递数据——队列；只需要同步（你做完叫我）——二值信号量/任务通知；保护共享资源——互斥锁；等待多个事件——事件组；轻量级一对一——任务通知。在边缘AI场景中，多任务架构设计尤为重要：AI推理任务通常计算量大、耗时长，不能让它阻塞了高优先级的实时控制任务。常见的架构是：1）高优先级：实时控制（电机、安全）、传感器采集；2）中优先级：数据预处理、通信；3）低优先级：AI推理、UI显示、日志记录。AI推理任务跑在低优先级，有空闲CPU就跑，高优先级任务来了就让路，既保证了实时性，又充分利用了算力。最后，记住嵌入式开发的铁律：简单就是可靠。能用简单方案解决的，就不要搞复杂。任务少一点，IPC少一点，系统就稳定一点。"
-        }, duration: "3小时", resources: [{ title: "FreeRTOS示例代码", url: "https://www.freertos.org/FreeRTOS-quick-start-guide.html", required: true, type: "doc", source: "official" }, { title: "综合示例", url: "https://www.freertos.org/demoapps.html", required: false, type: "doc", source: "official" },  { title: "FreeRTOS项目模板", url: "https://github.com/FreeRTOS/FreeRTOS/tree/main/FreeRTOS/Demo/CORTEX_STM32F103_Keil", required: false, type: "repo", source: "github" }], checkpoint: "完整的多任务系统能在不同优先级下正确工作，数据不丢失，实时性满足设计要求" }
+        }, duration: "3小时", resources: [{ title: "FreeRTOS示例代码", url: "https://www.freertos.org/FreeRTOS-quick-start-guide.html", required: true, type: "doc", source: "official" }, { title: "综合示例", url: "https://www.freertos.org/demoapps.html", required: false, type: "doc", source: "official" },  { title: "FreeRTOS项目模板", url: "https://github.com/FreeRTOS/FreeRTOS/tree/main/FreeRTOS/Demo/CORTEX_STM32F103_Keil", required: false, type: "repo", source: "github" }], checkpoint: "完整的多任务系统能在不同优先级下正确工作，数据不丢失，实时性满足设计要求" },
+      { day: 11, title: "事件组与任务通知",
+        summary: "学习事件组和任务通知，实现更高效的任务同步", content: {
+          objective: "今天你将学习FreeRTOS的事件组（Event Groups）和任务通知（Task Notifications），这是两种更灵活、更高效的同步机制。学完后你能用事件组实现多事件等待，用任务通知替代信号量/队列以提高性能和节省内存。",
+          key_points: [
+            "事件组：用一个整数的每一位代表一个事件，任务可以等待多个事件（与/或逻辑），适合复杂同步场景",
+            "事件组API：xEventGroupCreate、xEventGroupSetBits、xEventGroupWaitBits、xEventGroupClearBits",
+            "任务通知：每个任务自带的通知值，替代二值信号量/计数信号量/事件组，更快更省内存",
+            "任务通知API：xTaskNotifyGive、ulTaskNotifyTake、xTaskNotify、xTaskNotifyWait",
+            "同步机制选型：信号量、队列、事件组、任务通知各适合什么场景，怎么选"
+          ],
+          practice: "完成以下事件组与任务通知实践：1）事件组练习：创建一个事件组，定义3个事件位（如事件A、B、C），创建3个任务分别设置不同的事件位，创建1个任务等待所有事件都发生（AND逻辑）或任一事件发生（OR逻辑），理解事件组的两种等待方式；2）任务通知练习：用任务通知实现二值信号量的功能——一个任务Give，一个任务Take，对比和普通信号量的区别；3）性能对比（可选）：分别用信号量和任务通知做同步，测量10000次同步的耗时，看看任务通知快多少；4）综合练习：设计一个场景——一个任务需要等多个条件满足后才能继续执行（如「传感器数据就绪 + 网络连接成功 + 用户命令到达」），用事件组实现这个逻辑；5）思考：事件组和信号量有什么区别？任务通知能完全替代信号量吗？任务通知有什么局限性？",
+          deep_dive: "深入理解RTOS同步机制的设计哲学：RTOS提供了多种同步机制——信号量、互斥量、队列、事件组、任务通知——它们各有特点，适用于不同场景。理解它们的底层实现和设计取舍，能帮你写出更高效的代码。1）为什么需要这么多同步机制？因为不同的场景有不同的需求：a）简单的互斥访问 → 互斥量；b）简单的同步/计数 → 信号量；c）数据传递 → 队列；d）多事件组合 → 事件组；e）追求极致性能和节省内存 → 任务通知。没有最好的，只有最合适的。2）事件组的实现原理：事件组本质上就是一个受保护的整数，每一位代表一个事件。任务等待事件时，如果条件不满足就阻塞在那里；当有任务设置事件位时，内核检查所有等待的任务，看它们的条件是否满足了，如果满足了就唤醒。FreeRTOS的事件组还支持「等待时清除」（xEventGroupWaitBits 的 xClearOnExit 参数），很方便。3）任务通知为什么更快？信号量、队列等都是内核对象，需要创建、需要内存、操作时要走通用的内核API路径。而任务通知是每个任务TCB里自带的一个变量，操作它不需要操作内核对象，路径更短，所以更快（据说快45%），也更省内存（不需要额外创建内核对象）。但任务通知也有局限：a）只能一对一（一个任务只能通知另一个任务）；b）只有一个通知值（信号量/队列可以有多个）；c）没有广播功能。4）同步机制的选型指南：a）需要传递数据 → 队列；b）只是同步/计数 → 信号量；c）保护共享资源 → 互斥量；d）等待多个事件组合 → 事件组；e）一对一同步，追求性能 → 任务通知。5）从「对象」到「能力」的演进：早期的RTOS只有信号量和队列，功能简单但不够灵活。后来逐渐加入了互斥量（优先级继承）、事件组、任务通知等。趋势是：a）更灵活（能适应更多场景）；b）更高效（减少内存占用和CPU开销）；c）更易用（API更友好）。6）边缘AI场景的同步：在边缘AI设备中，同步机制同样重要——比如「摄像头采集一帧图像 → NPU推理完成 → 显示结果」，这三个环节就需要同步。理解RTOS的同步机制，能帮你更好地设计AI应用的流水线。"
+        }, duration: "2小时", resources: [{ title: "FreeRTOS事件组", url: "https://www.freertos.org/FreeRTOS-Event-Groups.html", required: true, type: "doc", source: "official" }, { title: "FreeRTOS任务通知", url: "https://www.freertos.org/RTOS-task-notifications.html", required: true, type: "doc", source: "official" }], checkpoint: "能用事件组实现多事件等待，能用任务通知实现任务同步" },
+      { day: 12, title: "软件定时器与空闲钩子",
+        summary: "学习软件定时器和空闲钩子，理解低功耗设计", content: {
+          objective: "今天你将学习FreeRTOS的软件定时器（Software Timers）和空闲钩子（Idle Hook），以及基于它们的低功耗设计。学完后你能用软件定时器实现定时任务，用空闲钩子做后台处理，理解Tickless Idle等低功耗机制。",
+          key_points: [
+            "软件定时器：用软件实现的定时器，不占用硬件定时器资源，可以创建很多个，回调函数在定时器任务中执行",
+            "定时器类型：单次触发（One-shot）和自动重载（Auto-reload），分别对应不同的应用场景",
+            "定时器API：xTimerCreate、xTimerStart、xTimerStop、xTimerReset、xTimerChangePeriod",
+            "空闲钩子与空闲任务：空闲任务优先级最低，没事干的时候就跑空闲任务，可以在空闲钩子中做低优先级的后台处理",
+            "低功耗设计：Tickless Idle模式，空闲时进入低功耗状态，唤醒时恢复，大幅降低功耗"
+          ],
+          practice: "完成以下软件定时器与低功耗实践：1）软件定时器练习：创建两个定时器——一个单次定时器（5秒后执行一次），一个周期定时器（每秒执行一次），观察两个定时器的行为，理解单次和周期的区别；2）定时器命令队列：理解软件定时器的回调函数是在定时器服务任务（Daemon Task）中执行的，不是在中断里执行的，所以回调函数里可以调用FreeRTOS API，但要注意不能阻塞太久；3）空闲钩子练习：实现一个空闲钩子函数，在里面做一些低优先级的事情（如统计CPU使用率、刷新看门狗、做一些后台计算），观察空闲钩子的执行频率；4）低功耗了解：了解FreeRTOS的Tickless Idle模式——当系统空闲时，停止SysTick，进入低功耗，有事件时再唤醒，理解这种机制为什么能省电；5）综合练习：设计一个低功耗传感器节点——大部分时间休眠，每隔1秒唤醒采集一次传感器数据，如果数据异常就立即处理，用软件定时器+低功耗模式实现；6）思考：软件定时器和硬件定时器各有什么优缺点？什么情况下用软件定时器，什么情况下必须用硬件定时器？",
+          deep_dive: "深入理解RTOS的低功耗设计与时间管理：在嵌入式设备中，尤其是电池供电的IoT设备，功耗是最关键的指标之一。RTOS的低功耗设计直接影响设备的续航时间。1）为什么需要软件定时器？硬件定时器资源有限（通常只有几个），而且硬件定时器的中断上下文有很多限制（不能调用很多API）。软件定时器用一个硬件定时器（SysTick）做时基，就能实现任意多个软件定时器，而且回调函数在任务上下文执行，编程更灵活。代价是：精度不如硬件定时器，回调不能太复杂（否则会影响其他定时器）。2）定时器任务的工作原理：FreeRTOS的软件定时器是由一个专门的系统任务（Timer Service Task / Daemon Task）管理的。所有定时器的回调函数都在这个任务里顺序执行。应用任务通过「定时器命令队列」（Timer Command Queue）给定时器任务发命令（启动、停止、修改周期等）。这种设计的好处是：a）定时器API都是线程安全的；b）所有定时器操作都在一个任务里，不需要考虑竞态条件。3）空闲任务的妙用：空闲任务看起来「没用」，实际上很重要：a）内存回收：释放已删除任务的内存；b）低功耗：进入Tickless Idle；c）后台处理：通过空闲钩子做一些低优先级的事情。空闲钩子的注意事项：a）不能阻塞（空闲任务必须随时能运行）；b）不能太耗时（否则影响系统响应）；c）不能调用会让空闲任务挂起的API。4）Tickless Idle的原理：正常情况下，SysTick每隔1ms（或10ms）中断一次，即使系统没事干也要唤醒，这会阻止CPU进入深度睡眠。Tickless Idle的思路是：当所有任务都阻塞时，计算下一个要唤醒的时间，把SysTick停掉，让CPU进入深度睡眠，到时间了再唤醒。这样能大幅降低功耗（待机功耗可能降低90%以上）。实现Tickless Idle需要移植层的支持（和具体的MCU低功耗模式相关）。5）低功耗设计的层次：a）CPU级：Tickless Idle、睡眠模式、停止模式、待机模式；b）外设级：不用的外设关掉时钟、降低时钟频率；c）板级：电源域管理、不用的模块断电；d）算法级：减少运算量、降低采样率、批量处理。低功耗是一个系统工程，需要软硬件协同设计。6）边缘AI的功耗挑战：在边缘设备上跑AI模型，功耗是一大挑战——AI计算量大，耗电多。优化方法：a）模型优化：量化、剪枝、蒸馏，减少计算量；b）硬件加速：NPU/GPU，提高能效比；c）调度优化：只在需要时推理，平时休眠；d）算法优化：减少帧率、降低分辨率。理解RTOS的低功耗机制，能帮你更好地设计低功耗AI边缘设备。"
+        }, duration: "2小时", resources: [{ title: "FreeRTOS软件定时器", url: "https://www.freertos.org/RTOS-software-timer.html", required: true, type: "doc", source: "official" }, { title: "FreeRTOS低功耗", url: "https://www.freertos.org/low-power-tickless-rtos.html", required: false, type: "doc", source: "official" }], checkpoint: "能用软件定时器实现周期性任务，理解空闲钩子和低功耗原理" },
+      { day: 13, title: "内存管理与堆配置",
+        summary: "深入理解FreeRTOS的内存管理，掌握不同堆分配方案", content: {
+          objective: "今天你将深入学习FreeRTOS的内存管理机制，理解五种堆分配方案（heap_1到heap_5）的区别和适用场景，掌握内存碎片问题和优化方法。学完后你能根据项目需求选择合适的内存分配方案，优化内存使用。",
+          key_points: [
+            "FreeRTOS内存管理：5种堆实现（heap_1到heap_5），各有不同特性，适合不同场景",
+            "heap_4：最常用，支持合并相邻空闲块（coalescing），减少内存碎片，适合大多数应用",
+            "heap_5：支持多个非连续内存区域（如内部RAM + 外部RAM），灵活但复杂",
+            "内存碎片：频繁分配释放不同大小的内存会导致碎片，可用内存总量够但没有连续的大块",
+            "内存优化：栈大小估算、静态分配、内存池、避免碎片化的最佳实践"
+          ],
+          practice: "完成以下内存管理实践：1）堆分配方案调研：阅读FreeRTOS官方文档，了解heap_1到heap_5五种内存分配方案的特点、优缺点和适用场景，用表格对比；2）heap_4实验：配置使用heap_4，做内存分配释放实验——分配几个不同大小的内存块，释放其中一些，再分配更大的块，观察空闲内存的变化，理解内存合并（coalescing）；3）栈大小估算：用uxTaskGetStackHighWaterMark()检查你的任务实际用了多少栈，根据结果调整栈大小，既不浪费也不溢出；4）内存池实践（可选）：实现一个简单的内存池——预分配一大块内存，分成固定大小的块，需要时取一块，用完放回，这种方式不会产生碎片，适合频繁分配释放相同大小内存的场景；5）内存优化练习：review你的代码，看看有没有可以优化内存使用的地方——比如栈太大、堆配置过大、全局变量太多等；6）思考：为什么内存碎片在嵌入式中是个大问题？有哪些避免或减少碎片的方法？什么时候应该用静态分配而不是动态分配？",
+          deep_dive: "深入理解嵌入式内存管理的挑战与最佳实践：内存是嵌入式系统中最宝贵的资源之一——MCU的RAM通常只有几KB到几MB，比PC小几个数量级。而且嵌入式系统往往要长时间运行，不能重启，内存泄漏和碎片可能会导致系统运行一段时间后崩溃。1）为什么需要5种heap实现？因为不同的嵌入式系统需求差异很大：a）heap_1：最简单，只分配不释放，内存永远不会碎。适合系统启动后创建所有任务，之后不再动态创建删除的简单系统；b）heap_2：支持分配释放，但不合并空闲块，碎片问题较严重。现在基本被heap_4取代；c）heap_3：包装标准库的malloc/free，需要配置堆大小。不推荐，因为标准库的malloc可能有碎片问题，而且不可重入；d）heap_4：最常用，支持合并相邻空闲块，碎片少，效率高。适合大多数应用；e）heap_5：在heap_4基础上支持多个非连续内存区域。适合内存不连续的系统（如内部RAM + 外部SDRAM）。2）内存碎片是怎么产生的？想象一下：你依次分配了A(100字节)、B(50字节)、C(200字节)，然后释放了B。现在有150字节的空闲内存（50+100，如果C后面还有的话），但它们不连续，如果要分配120字节，虽然总空闲够，但没有连续的120字节的块，就会分配失败。这就是内存碎片——总空闲内存不少，但都是小碎片，用不上。3）怎么避免内存碎片？a）静态分配：所有东西都在编译时分配，运行时不动态分配。最安全，但不灵活；b）内存池：预分配多个固定大小的块，需要时取，用完还。不会有碎片，但只能分配固定大小；c）按大小分多个内存池：小对象用小内存池，大对象用大内存池，减少碎片；d）分配策略优化：比如heap_4的最先适配（first fit）+ 合并，比heap_2好很多；e）系统设计上：尽量在启动时分配好所有需要的内存，运行时不频繁分配释放。4）栈溢出检测：栈溢出是嵌入式系统中最常见也最隐蔽的bug之一——栈溢出可能破坏其他数据，导致各种诡异的现象，而且很难调试。FreeRTOS提供了栈溢出检测（uxTaskGetStackHighWaterMark），可以测量任务栈的历史最大使用量（高水位线），帮助你调整栈大小。5）边缘AI的内存挑战：AI模型需要大量内存——权重、激活值、特征图都占内存。在嵌入式设备上部署AI模型，内存优化是关键：a）量化：INT8量化可以减少3/4的内存；b）优化推理框架：TensorRT Lite、TFLite Micro、ONNX Runtime Micro等都做了内存优化；c）分块推理：把大的计算分成小块，减少峰值内存；d）内存复用：不同层的激活值可以复用同一块内存。理解内存管理，能帮你更好地在嵌入式设备上部署AI模型。"
+        }, duration: "2小时", resources: [{ title: "FreeRTOS内存管理", url: "https://www.freertos.org/a00111.html", required: true, type: "doc", source: "official" }, { title: "heap_4实现分析", url: "https://www.freertos.org/a00111.html#heap_4", required: false, type: "doc", source: "official" }], checkpoint: "能解释5种堆分配的区别，能用水位线检查任务栈使用情况" },
+      { day: 14, title: "中断管理与紧急处理",
+        summary: "深入理解FreeRTOS中断管理，掌握优先级别和延迟中断", content: {
+          objective: "今天你将深入学习FreeRTOS的中断管理机制，理解中断优先级和任务优先级的关系，掌握延迟中断处理（Deferred Interrupt Processing）和二值信号量同步模式。学完后你能正确设计中断服务程序，处理好实时性和复杂性的平衡。",
+          key_points: [
+            "中断优先级vs任务优先级：中断优先级高于所有任务优先级，高优先级中断可以抢占低优先级中断和任务",
+            "ISR注意事项：中断服务程序要尽量短，不能调用非ISR安全的API，不能阻塞，快速处理后把复杂工作交给任务",
+            "延迟中断处理：ISR只做最紧急的事（如读数据、清中断标志），然后用信号量/队列通知任务，复杂的处理交给任务做",
+            "FromISR系列API：带FromISR后缀的函数是中断安全的，可以在ISR中调用，如xSemaphoreGiveFromISR、xQueueSendFromISR",
+            "优先级翻转与解决方案：高优先级任务等低优先级任务持有的资源，中间优先级任务又抢占低优先级，导致高优先级被延迟"
+          ],
+          practice: "完成以下中断管理实践：1）二值信号量同步练习：用定时器模拟一个外部中断，在ISR中调用xSemaphoreGiveFromISR()释放信号量，在任务中调用xSemaphoreTake()等待信号量，实现「中断触发 → 任务处理」的经典模式；2）队列ISR练习：在ISR中用xQueueSendFromISR()发送数据到队列，在任务中接收数据，理解队列的中断安全版本；3）延迟中断处理实验：对比两种方式——a）所有处理都在ISR中做；b）ISR只做最基本的，大部分处理交给任务。分析两种方式的优缺点和适用场景；4）中断优先级配置：了解你的MCU有多少个中断优先级，FreeRTOS怎么配置中断优先级，哪些优先级的中断可以调用FreeRTOS的FromISR API，哪些不行；5）优先级翻转理解：思考什么是优先级翻转，为什么它是个问题，FreeRTOS用什么方法解决（互斥量的优先级继承），画一个优先级翻转的时序图；6）综合设计：设计一个数据采集系统——传感器通过DMA/中断采集数据，采集完成后触发中断，ISR把数据放到队列里，一个任务从队列取数据做处理，另一个任务做显示/传输，理解这种「中断 + 队列 + 任务」的架构。",
+          deep_dive: "深入理解实时系统的中断设计与确定性：在实时系统中，中断是实现确定性响应的关键——外部事件来了，中断能立即打断当前执行，保证实时性。但中断也是系统中最容易出问题的地方，需要精心设计。1）为什么ISR要尽量短？因为：a）ISR运行时，同级或更低级的中断被屏蔽，影响其他中断的响应；b）ISR不能被任务抢占，如果ISR太长，会影响高优先级任务的实时性；c）ISR里能做的事情有限（不能阻塞、不能调用很多API）。所以最佳实践是：ISR只做最紧急、最必须的事情（读寄存器、清中断标志、把数据放队列/发信号量），复杂的处理交给任务。这就是「延迟中断处理」（Deferred Interrupt Processing）。2）FromISR API的特殊之处：为什么有两套API（普通版和FromISR版）？因为：a）ISR不能阻塞，所以FromISR版不能等待（没有xTicksToWait参数或只能设为0）；b）ISR的上下文特殊，需要特殊的方式唤醒任务（portYIELD_FROM_ISR()）；c）有些内部机制在ISR中不一样。所以记住：在ISR中只能调用带FromISR后缀的函数。3）中断优先级的配置：Cortex-M内核的中断优先级有一个重要的概念——「优先级分组」（Priority Grouping），把优先级分成抢占优先级（Preempt Priority）和子优先级（Subpriority）。FreeRTOS需要配置：a）configMAX_SYSCALL_INTERRUPT_PRIORITY：高于这个优先级的中断不能调用FreeRTOS API，也不会被FreeRTOS关中断影响，保证这些非常紧急的中断的实时性；b）configKERNEL_INTERRUPT_PRIORITY：内核本身使用的中断优先级（PendSV、SysTick），通常设为最低。这是FreeRTOS中断设计的一个精妙之处——不是所有中断都受RTOS管理，特别紧急的中断可以「绕过」RTOS，保证最坏情况下的响应时间。4）优先级反转（Priority Inversion）：这是实时系统中的经典问题。想象一下：高优先级任务H需要一个资源，但这个资源被低优先级任务L持有了，这时候H要等L。但在等的过程中，中优先级任务M抢占了L，导致L没法释放资源，H就被延迟了——相当于M的优先级比H还高。这就叫优先级反转。解决方法：a）优先级继承（Priority Inheritance）：持有资源的低优先级任务，临时提升到等待这个资源的最高优先级任务的优先级，做完后再降回来。FreeRTOS的互斥量（Mutex）支持优先级继承；b）优先级天花板（Priority Ceiling）：每个资源有一个天花板优先级，任务获取资源时把自己的优先级升到天花板。也能解决优先级反转。5）中断延迟与实时性：衡量实时系统的一个重要指标是「中断延迟」（Interrupt Latency）——从中断发生到ISR开始执行的时间。影响因素：a）关中断时间：RTOS在执行临界区代码时会关中断，关多久就会延迟多久；b）当前正在执行的指令：有些指令不能被打断（如多周期指令）；c）总线/内存访问延迟。FreeRTOS的设计目标之一就是关中断时间尽量短，保证实时性。6）边缘AI系统的中断设计：在边缘AI设备中，中断同样重要——摄像头帧中断、NPU推理完成中断、音频采样中断等。理解中断设计，能帮你设计出实时性更好、更稳定的AI边缘系统。"
+        }, duration: "2.5小时", resources: [{ title: "FreeRTOS中断管理", url: "https://www.freertos.org/RTOS-task-notifications.html", required: true, type: "doc", source: "official" }, { title: "FreeRTOS二值信号量中断同步", url: "https://www.freertos.org/a00113.html", required: false, type: "doc", source: "official" }], checkpoint: "能用二值信号量实现中断到任务的同步，理解中断优先级设计原则" },
+      { day: 15, title: "RTOS综合实战与调试技巧",
+        summary: "综合运用RTOS知识完成一个小项目，掌握调试和性能分析方法", content: {
+          objective: "今天你将综合运用前两周学到的RTOS知识，完成一个多任务综合项目，并学习RTOS的调试技巧和性能分析方法。学完后你能独立设计和实现多任务嵌入式系统，能定位和解决常见的RTOS问题。",
+          key_points: [
+            "多任务系统设计：任务划分、优先级设计、通信同步机制选择、资源管理的整体架构设计",
+            "常见问题与调试：死锁、优先级翻转、栈溢出、内存泄漏、竞态条件，怎么定位和解决",
+            "系统状态查看：uxTaskGetSystemState()、vTaskList()、uxTaskGetStackHighWaterMark()等调试API",
+            "性能分析：CPU使用率统计、任务运行时间统计、系统状态可视化，找到性能瓶颈",
+            "RTOS最佳实践：任务设计原则、资源访问规范、错误处理、可测试性设计"
+          ],
+          practice: "完成以下综合实战与调试练习：1）综合项目：设计并实现一个小型的多任务系统，可以选择以下题目之一：a）智能传感器节点：传感器采集任务 + 数据处理任务 + 显示/传输任务 + 按键控制任务；b）简单游戏机：显示任务 + 按键输入任务 + 游戏逻辑任务 + 音效任务；要求：至少3个任务、用到至少2种IPC（如队列+信号量）、合理的优先级设计；2）状态查看练习：使用vTaskList()或uxTaskGetSystemState()打印所有任务的状态、优先级、栈水位等信息，观察系统运行时各任务的状态变化；3）CPU使用率统计：实现一个简单的CPU使用率统计功能——用一个空闲钩子计数器，或者用运行时间统计API（vTaskGetRunTimeStats()），看看CPU忙不忙，各个任务各占多少时间；4）故意制造一个bug（可选）：比如制造一个死锁、栈溢出或竞态条件，然后尝试用调试工具和方法定位它，锻炼调试能力；5）代码review：用今天学到的最佳实践，检查你写的RTOS代码，看看有没有可以改进的地方——任务划分是否合理、优先级是否恰当、有没有竞态条件、错误处理是否完善；6）总结复盘：总结你学习FreeRTOS的收获，画出知识图谱，规划后续深入学习的方向（如Zephyr、RT-Thread、Linux驱动等）。",
+          deep_dive: "深入理解RTOS调试与嵌入式系统优化：RTOS系统比裸机系统复杂得多，出问题也更难调试——任务切换、竞态条件、死锁、优先级翻转等问题，有时候很难复现和定位。掌握调试技巧能帮你事半功倍。1）常见的RTOS问题与定位方法：a）栈溢出：症状是程序莫名其妙地跑飞、变量被改乱、进入HardFault。定位：用uxTaskGetStackHighWaterMark()检查每个任务的栈使用率，如果水位线接近栈顶就可能溢出。解决：增大栈、优化栈使用（减少局部大数组、减少函数调用深度）；b）死锁：两个任务互相等对方持有的资源，都卡住了。症状：两个任务都不运行了，系统好像「死了」一部分。定位：看任务状态，两个任务都在阻塞等信号量/互斥量。预防：按固定顺序获取资源、设置超时时间、尽量减少资源持有时间；c）竞态条件：多个任务访问共享资源没有同步，导致结果不确定。症状：有时候对有时候错，很难复现。定位：仔细检查所有共享资源的访问，看有没有加保护。预防：所有共享资源都要用互斥量/临界区保护；d）内存泄漏：动态分配的内存没有释放，运行久了内存用完。症状：系统运行一段时间后分配失败、崩溃。定位：跟踪内存分配释放，用xPortGetFreeHeapSize()观察空闲内存趋势。预防：尽量用静态分配、分配释放成对出现、用内存池。2）调试工具和手段：a）打印调试：最简单也最常用，用printf或串口打印任务状态和变量。缺点是会影响实时性；b）断点调试：用J-Link/ST-Link加断点，单步执行。缺点是中断和多任务场景下断点可能会打乱时序；c）RTOS感知调试：很多IDE（如Keil、IAR、VS Code + Cortex-Debug）支持RTOS感知调试——能在调试器里看到所有任务的状态、栈、队列等，非常方便；d）系统观测：FreeRTOS有很多状态查询API，可以写一个命令行或菜单，随时查看系统状态；e）Segger SystemView：非常强大的FreeRTOS追踪工具，可以记录并可视化任务切换、中断、API调用等，分析系统行为的神器。3）多任务系统的设计原则：a）任务划分：每个任务职责单一（高内聚），任务之间通过消息通信（低耦合），而不是共享一堆全局变量；b）优先级设计：越紧急、越短的任务优先级越高。计算密集型任务优先级不要太高，否则可能占满CPU；c）数据流向：尽量让数据从高优先级任务流向低优先级任务，或者用队列解耦；d）错误处理：每个任务都要考虑错误情况——API调用失败怎么办？数据异常怎么办？不能假设一切都会成功；e）看门狗：每个任务「喂狗」，如果某个任务跑飞了或卡住了，看门狗超时复位系统，提高可靠性。4）从RTOS到更复杂的系统：掌握了FreeRTOS，你就掌握了实时操作系统的核心思想——任务调度、同步通信、内存管理、中断处理。这些思想在其他RTOS（Zephyr、RT-Thread、uC/OS）中都是通用的，甚至在Linux驱动开发中也有很多相似之处（进程调度、中断处理、并发控制等）。继续深入的方向：a）学习更复杂的RTOS：Zephyr功能更全，适合IoT；b）学习Linux驱动和嵌入式Linux；c）学习嵌入式AI框架：TFLite Micro、ONNX Runtime Micro；d）学习具体的应用方向：电机控制、工业通信、图像处理等。嵌入式是一个很广的领域，打好RTOS的基础，你就能在这个领域走得更远。"
+        }, duration: "3小时", resources: [{ title: "FreeRTOS调试FAQ", url: "https://www.freertos.org/FAQHelp.html", required: true, type: "doc", source: "official" }, { title: "Segger SystemView", url: "https://www.segger.com/products/development-tools/systemview/", required: false, type: "tool", source: "official" }], checkpoint: "完成一个3任务以上的综合项目，能查看系统状态和调试常见问题" }
     ]
   },
 
@@ -6798,7 +7638,73 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "用Python（或MATLAB）实现一个端到端的数字通信系统仿真，要求如下：\n\n基本要求（必做）：\n1）信源：随机生成二进制比特流\n\n2）信道编码（至少实现一种）：\n   a）汉明码（7,4）：能纠正1位错误\n   b）或者简单的重复码、奇偶校验\n   对比编码和不编码的性能差异\n\n3）调制解调（至少实现两种，对比性能）：\n   a）BPSK（二进制相移键控）——最简单\n   b）QPSK（正交相移键控）——频谱效率翻倍\n   c）16QAM——高阶调制，频谱效率更高（选做）\n   每个都要实现调制和解调（最佳判决）\n\n4）信道：AWGN（加性白高斯噪声）信道\n   - 可以调节信噪比（Eb/N0或SNR）\n   - 信噪比范围：从很低到很高（比如0dB到15dB）\n\n5）接收端：\n   a）解调（硬判决）\n   b）信道译码\n   c）误码率计算（统计错的比特数/总比特数）\n\n6）性能评估：\n   - 画出误码率（BER） vs 信噪比（Eb/N0）的曲线\n   - 对比：BPSK理论曲线 vs 仿真曲线（验证是否正确）\n   - 对比：BPSK vs QPSK的性能（应该差不多）\n   - 对比：编码 vs 不编码（编码应该在高信噪比下更好）\n   - 用半对数坐标（y轴对数，x轴线性）\n\n进阶功能（选做）：\n1）OFDM：实现一个简单的OFDM系统——加循环前缀（CP）、IFFT/FFT调制解调\n2）更高级的编码：卷积码+维特比译码、LDPC（可以用现成库）\n3）同步：加载波同步（科斯塔斯环）和位同步（早迟门）\n4）多径衰落信道：不只是AWGN，加多径和衰落，看性能变化\n5）自适应调制编码：根据信道质量动态调整调制方式和编码率\n6）端到端AI通信：用自编码器（Autoencoder）设计一个端到端的通信系统，和传统方案对比\n\n项目要求：\n- 完整的代码（结构清晰、有注释）\n- 性能曲线图（至少3组对比）\n- 结果分析：你的仿真结果和理论值相比怎么样？有没有差距？为什么？\n- 总结：你从这个项目中学到了什么？\n\n提示：\n- 用numpy做数值计算，用matplotlib画图\n- BPSK：0→+1，1→-1（反过来也行），解调就是看大于0还是小于0\n- QPSK：每两个比特映射到一个复数星座点（I路和Q路各传1比特）\n- AWGN噪声：根据信噪比算出噪声方差，加高斯噪声\n- 误码率不要太低的时候统计，统计至少100个错比特才比较准\n\n完成后，思考一下：如果要把这个仿真系统做得更接近真实通信系统，还需要加哪些模块？",
           deep_dive: "从通信系统看信息的传递与处理：完成这个项目后，你应该对数字通信系统有了一个完整的、端到端的认识。让我们从更高的视角，回顾一下通信系统和信息处理的关系：1）通信的本质：通信的本质是什么？是「在一点精确或近似地复现另一点所挑选的消息」（香农，1948）。注意，是「挑选的消息」，不是「创造」消息。通信不创造信息，只是传递信息。这和AI不一样——AI是处理和生成信息，通信是传输信息；2）通信系统的分层思想：和计算机网络的OSI七层模型类似，通信系统也是分层的——物理层（调制解调、信道编码、天线）、数据链路层（帧、差错控制、MAC）、网络层（路由）、传输层（端到端可靠传输）、应用层（具体应用）。每一层负责不同的功能，下层为上层提供服务。这种分层的思想，是工程中处理复杂系统的经典方法；3）通信与AI的殊途同归：有趣的是，通信和AI看似是两个不同的领域，但底层有很多共通的数学工具——概率论、随机过程、线性代数、优化理论、信息论。而且，它们处理的对象都是「信息」：a）通信：关心的是信息怎么可靠、高效地从A传到B；b）AI：关心的是信息怎么被处理、理解、生成。两者一个管「传」，一个管「算」，但都是在和信息打交道；4）AI+通信的未来：现在AI和通信的融合越来越深——a）AI for 通信：用AI优化通信网络、用AI做信道估计和均衡、用AI做资源调度、用AI做故障诊断、用AI设计新的编码和调制方式；b）通信 for AI：5G/6G的高带宽低时延，让云AI、边缘AI、协同AI成为可能；海量的连接和数据，为AI提供了燃料。两者互相促进，共同推动数字世界的发展；5）信息时代的基础设施：通信网络（尤其是移动通信网络）已经成为和水、电、路一样的基础设施——没有它，数字经济、互联网、AI都无从谈起。从1G到5G，通信技术的进步，一次次改变了我们的生活和工作方式。未来的6G，会带来什么，我们还难以想象。希望这门通信原理的学习，不仅让你掌握了一些技术知识，更能让你对「信息」这个东西有更深的理解——我们正处在信息革命的浪潮中，理解信息的本质，理解它是怎么被度量、被传输、被处理的，会让你更好地把握这个时代。"
+        }, duration: "4小时", resources: [{ title: "Python通信仿真教程", url: "https://pysdr.org/", required: false, type: "doc", source: "other" }, { title: "通信原理经典教材", url: "https://www.amazon.com/Digital-Communications-John-G-Proakis/dp/0072957166", required: false, type: "book", source: "other" }, { title: "GNU Radio", url: "https://www.gnuradio.org/", required: false, type: "doc", source: "other" }], checkpoint: "完成端到端数字通信系统仿真，画出BER-SNR曲线并和理论对比" },
+      { day: 11, title: "数字基带传输与码型",
+        summary: "理解数字基带传输的基本问题，掌握常用线路编码和码型的原理与特点。", content: {
+          objective: "今天你将学习数字基带传输。学完后你能理解什么是基带传输，掌握常见的线路编码（NRZ、RZ、AMI、Manchester、HDB3等）的原理和特点，理解码间串扰的产生原因和奈奎斯特第一准则，了解升余弦滚降滤波器的作用。基带传输是数字通信的基础。",
+          key_points: [
+            "基带传输：不经过调制解调，直接在信道中传输数字基带信号；简单、成本低，适合短距离和有线（如USB、以太网、PCIe）",
+            "线路编码（码型）：为什么要编码？（有直流分量、长连0连1不利于时钟提取、有码间串扰等），好的码型应该没有直流、有足够的跳变、功率谱集中",
+            "常用码型：NRZ（最简单但有直流）、RZ（有跳变但带宽大）、AMI（无直流但有长连0问题）、Manchester（自同步但带宽加倍）、HDB3（无直流+连0控制，E1/T1用）",
+            "码间串扰（ISI）：因为信道带宽有限，前面的码元拖尾影响后面的码元，导致判决错误；是数字通信中最基本的问题之一",
+            "奈奎斯特第一准则：在理想低通信道下，无码间串扰的最高码元速率是2Baud/Hz（即带宽为B的信道最多传2B Baud）；滚降特性的实际系统会低一些"
+          ],
+          practice: "完成以下数字基带传输实践：1）码型对比：画一张对比表，对比以下码型的特点——NRZ、RZ、AMI、Manchester、差分Manchester、HDB3，从以下维度对比：直流分量、时钟提取能力、带宽、编码复杂度、抗干扰能力、典型应用；2）波形绘制：给定二进制序列 10110010，分别画出它的：a）单极性NRZ波形；b）双极性NRZ波形；c）RZ波形（占空比50%）；d）Manchester波形；e）AMI波形（假设第一个1是+）；3）奈奎斯特准则理解：什么是码间串扰？为什么会有码间串扰？奈奎斯特第一准则说的是什么？理想低通信道带宽为4000Hz的话，无码间串扰的最高码元速率是多少？如果是升余弦滚降，滚降系数0.5呢？4）时钟提取：为什么需要时钟提取？（接收端需要知道每个码元的起止时刻才能判决）长连0或长连1为什么对时钟提取不利？Manchester编码为什么能解决这个问题？5）眼图：什么是眼图？它是怎么得到的？眼图能看出什么？（最佳判决时刻、最佳判决门限、噪声容限、码间串扰大小）「眼睛」睁得越大说明什么？6）思考：USB、以太网、SATA、PCIe这些常用的数字接口，它们分别用的是什么编码？为什么选这种编码？",
+          deep_dive: "深入理解现代高速串行接口与SerDes技术：数字基带传输看起来是基础理论，但它实际上是所有高速数字接口的基础——USB、HDMI、PCIe、SATA、以太网、DDR，这些我们每天都在用的接口，底层都是数字基带传输的问题。让我们了解一下现代高速串行接口的核心技术——SerDes：1）并行vs串行：以前的接口很多是并行的（比如IDE、PCI、DDR内存），数据线有很多根，大家一起传。但并行接口有几个问题：线对之间的时延差（skew）、串扰大、引脚多、成本高、难以做高速。所以现在高速接口几乎都是串行的——一对差分线（Tx和Rx）就能传很高的速率；2）SerDes是什么：Serializer/Deserializer（串行器/解串器）的缩写，发送端把并行数据转成串行数据发出去，接收端把串行数据再转成并行。SerDes是高速串行接口的核心；3）关键技术：高速串行传输需要解决很多问题——a）时钟恢复（CDR）：接收端没有随路时钟，要从数据里恢复出时钟来，这就是时钟数据恢复电路；b）信道均衡：信道有衰减和色散，高频分量损失大，导致码间串扰严重，需要均衡（发送端预加重、接收端均衡器、DFE判决反馈均衡等）来补偿；c）编码：8b/10b、64b/66b、128b/130b等编码，保证直流平衡、有足够跳变、便于时钟恢复；d）差分传输：用差分信号抗共模干扰；e）阻抗匹配：传输线阻抗必须匹配，否则反射严重；4）速率演进：串行接口的速率提升得非常快——PCIe从1代的2.5GT/s到5代的32GT/s，USB从1.0的12Mbps到USB4的40Gbps，以太网从10M到10M到100G。每一代速率的提升，都离不开信号处理和电路技术的进步；5）AI与通信：AI和通信的结合越来越紧密——用AI做信道估计和均衡、用AI做编码译码、用AI做调制解调、用AI优化网络资源分配。通信中的很多问题本质上都是优化问题和信号处理问题，而AI正好擅长这些。对于AI工程师来说，理解通信的基本原理，能帮助你在做边缘AI、物联网、自动驾驶等方向时，更好地理解通信系统和数据传输的瓶颈。"
+        }, duration: "2小时", resources: [{ title: "数字基带传输", url: "https://www.electronics-notes.com/articles/radio/radio-systems/digital-baseband-transmission.php", required: true, type: "article", source: "other" }, { title: "线路编码", url: "https://www.allaboutcircuits.com/textbook/digital/chpt-12/line-codes/", required: false, type: "article", source: "other" }, { title: "奈奎斯特准则", url: "https://en.wikipedia.org/wiki/Nyquist_ISI_criterion", required: false, type: "doc", source: "other" }], checkpoint: "能说出5种以上线路编码的特点，解释奈奎斯特第一准则和码间串扰" },
+      { day: 12, title: "数字调制技术（ASK/FSK/PSK/QAM）",
+        summary: "掌握二进制和多进制数字调制的原理，理解QAM等高阶调制的特点与应用。", content: {
+          objective: "今天你将系统学习数字调制技术。学完后你能理解ASK、FSK、PSK、QAM这几大类数字调制的原理，掌握二进制和多进制调制的区别，理解星座图的概念，知道不同调制方式的优缺点和适用场景。调制是把数字信号搬到载波上，以便在无线信道和带通信道中传输。",
+          key_points: [
+            "数字调制：用数字基带信号控制载波的参数（幅度、频率、相位），有ASK（幅移键控）、FSK（频移键控）、PSK（相移键控）三大类，以及组合型的QAM",
+            "二进制调制：2ASK、2FSK、2PSK（BPSK）、2DPSK（差分相移键控，解决相位模糊）；BPSK抗干扰能力最强，2ASK最差",
+            "多进制调制（M进制）：用一个码元传多个比特，频谱效率更高，但抗噪声能力更差；如QPSK（4PSK，1个码元2比特）、8PSK、16QAM、64QAM、256QAM",
+            "星座图：用复平面上的点表示调制信号的幅度和相位，每个点对应一个码元（一组比特）；点越多，频谱效率越高，但点越近，越容易受噪声干扰出错",
+            "误码率与信噪比：不同调制方式在相同信噪比下误码率不同；一般来说，在相同信噪比下：BPSK > QPSK > 8PSK > 16QAM > 64QAM（抗噪能力从强到弱）"
+          ],
+          practice: "完成以下数字调制实践：1）调制方式分类：用一张图总结数字调制的分类——从大类到具体方式，标上每个的全称和特点：幅移键控（ASK）→ 2ASK；频移键控（FSK）→ 2FSK、MSK、GFSK；相移键控（PSK）→ BPSK、QPSK、8PSK、DPSK；正交幅度调制（QAM）→ 16QAM、64QAM、256QAM、1024QAM；2）星座图理解：画出以下调制方式的星座图（理想情况下）：a）BPSK（2个点）；b）QPSK（4个点，在四个象限）；c）8PSK（8个点在一个圆上）；d）16QAM（4x4的方阵）；并说明每个点对应几个比特（log2(M)）；3）频谱效率计算：什么是频谱效率（频带利用率）？单位是bit/s/Hz。计算一下：BPSK、QPSK、8PSK、16QAM、64QAM、256QAM的理论频谱效率各是多少？（奈奎斯特极限下，滚降为0时）4）误码率对比：在相同的信噪比下，BPSK和QPSK的误码率相比怎么样？（其实一样！因为QPSK可以看作两个正交的BPSK）那为什么还要用QPSK？（频谱效率翻倍）5）调制方式选择：以下场景适合用什么调制方式？为什么？a）深空通信（信噪比很低，对可靠性要求极高）；b）WiFi（速率高，信道好的时候快，差的时候慢）；c）蓝牙低功耗（简单、省电、速率不高）；d）5G（高速率、自适应调制）；6）思考：为什么高阶调制（如256QAM、1024QAM）频谱效率更高，但只有在信道条件好的时候才用？为什么通信系统常常做自适应调制编码（AMC）？",
+          deep_dive: "深入理解现代通信中的高级调制技术：调制技术是通信的核心之一，从最早的莫尔斯电码（其实就是一种OOK通断键控，属于ASK）到现在的1024QAM甚至更高阶调制，调制技术一直在进步，目标都是更高效、更可靠地传输信息。让我们了解一些现代通信中的高级调制技术：1）OFDM（正交频分复用）：严格来说OFDM是一种多载波调制技术，不算调制方式，但它和高阶调制（QAM）结合是现在所有高速通信（WiFi、4G、5G、DVB-T）的基础。原理是把一个高速数据流分成很多低速的子数据流，每个在一个正交的子载波上调制，子载波之间互相重叠但正交，频谱效率很高；2）自适应调制编码（AMC）：无线信道是时变的（衰落、干扰），信道好的时候用高阶调制（64QAM/256QAM）+ 高码率编码，传得快；信道差的时候用低阶调制（QPSK/BPSK）+ 低码率编码，更可靠。这样就能根据信道情况动态调整，最大化吞吐量。这是现代无线通信的核心技术之一；3）高阶调制的极限：调制阶数是不是越高越好？理论上，信噪比无限高的话，调制阶数可以无限大，频谱效率也无限高。但实际上受限于信噪比、器件的非线性、相位噪声、ADC/DAC的精度等等。现在5G里用到了1024QAM，WiFi 7里有4096QAM，还在往更高走；4）调制与编码的结合：调制和信道编码通常是一起设计的——比如Turbo码、LDPC码，和调制结合可以获得更好的性能。高阶调制+软判决译码是黄金搭档；5）AI赋能的智能调制：AI在调制解调领域也有应用——用深度学习做调制识别（识别出信号用了什么调制方式，这在认知无线电和军事通信中很重要）、用AI做自适应调制编码决策、用AI做非线性补偿（功率放大器的非线性会导致信号失真，AI可以补偿）、甚至用端到端的自编码器重新设计整个通信系统；6）未来的调制技术：还在研究中的——轨道角动量（OAM）调制、基于AI的端到端通信、语义通信等等。调制技术的演进，推动着通信系统的速率越来越高、体验越来越好。对于AI工程师来说，理解调制的基本概念，能帮助你更好地理解无线通信系统、物联网和5G/6G——这些都是AI落地的重要场景。"
+        }, duration: "2.5小时", resources: [{ title: "数字调制技术入门", url: "https://www.electronics-notes.com/articles/radio/modulation/amplitude-frequency-phase-shift-keying.php", required: true, type: "article", source: "other" }, { title: "QAM与星座图", url: "https://www.allaboutcircuits.com/textbook/radio-frequency/qam-quadrature-amplitude-modulation/", required: false, type: "article", source: "other" }, { title: "OFDM原理", url: "https://www.electronics-notes.com/articles/radio/ofdm/ofdm-orthogonal-frequency-division-multiplexing.php", required: false, type: "article", source: "other" }], checkpoint: "能画出BPSK/QPSK/16QAM的星座图，解释不同调制方式的权衡关系" },
+      { day: 13, title: "信道编码与差错控制",
+        summary: "理解信道编码的基本原理，掌握分组码、卷积码、Turbo码、LDPC码的特点与应用。", content: {
+          objective: "今天你将学习信道编码和差错控制。学完后你能理解信道编码的基本思想（冗余换可靠性），掌握奇偶校验、CRC、汉明码的原理，了解卷积码、Turbo码、LDPC码等现代编码的特点，知道ARQ和FEC两种差错控制方式的区别。信道编码是保证通信可靠性的关键技术。",
+          key_points: [
+            "信道编码的意义：信道有噪声，接收端可能出错；信道编码通过增加冗余信息，让接收端能检测甚至纠正错误，用冗余换取可靠性",
+            "差错控制方式：ARQ（自动重传请求，发现错了就重传，可靠但时延大）、FEC（前向纠错，发纠错码，接收端自己纠错，实时性好但效率低）、HARQ（混合ARQ，FEC+重传，结合两者优点）",
+            "常用检错码：奇偶校验（最简单，只能检奇数个错）、CRC（循环冗余校验，检测能力强，以太网/USB/几乎所有通信协议都用）",
+            "经典纠错码：汉明码（第一个纠错码，能纠1位错）、BCH码、RS码（Reed-Solomon，纠突发错误，CD/DVD用）；分组码是一块一块编的",
+            "现代纠错码：卷积码（带记忆，维特比译码）、Turbo码（接近香农极限，3G/4G用）、LDPC码（低密度奇偶校验，性能接近香农，5G/WiFi用）、Polar码（5G控制信道用）"
+          ],
+          practice: "完成以下信道编码实践：1）CRC计算：给定信息位 110101，生成多项式 G(x) = x³+x+1（即1011），手工计算CRC校验位是多少？并验证接收端怎么检验；2）汉明码理解：（7,4）汉明码是什么意思？（7位总长度，4位信息，3位校验）它能纠正几位错？如果收到的码字是 1100110（假设是偶校验），请问有没有错？如果有错，第几位错了？正确的信息位是什么？3）编码增益：什么是编码增益？为什么说信道编码能「提高」系统性能？（在相同误码率下，需要的信噪比更低了，相当于获得了增益）比如Turbo码能带来几个dB的编码增益？4）码率：什么是码率（编码效率）？比如 1/2、2/3、3/4 码率分别是什么意思？码率越高效率越高还是越低？可靠性越好还是越差？5）ARQ vs FEC：对比ARQ和FEC的优缺点——从可靠性、效率、时延、复杂度、适用场景等方面对比；什么是HARQ？为什么它更好？（既保证可靠性，又不至于太低效）6）思考：为什么香农极限告诉我们存在接近零误码的编码，但我们还是要研究更好的编码？（因为接近香农极限的码，译码复杂度太高，工程上需要兼顾性能和复杂度）从汉明码到Turbo码到LDPC码到Polar码，编码理论的演进方向是什么？",
+          deep_dive: "深入理解现代信道编码与香农极限：信道编码是通信理论中最精彩的部分之一——克劳德·香农在1948年的那篇划时代论文《通信的数学理论》中，不仅建立了信息论，还证明了信道编码定理：只要信息速率低于信道容量，就存在一种编码方式，能让误码率任意小。这个「信道容量」就是著名的香农极限。但香农只证明了「存在性」，没说怎么找到这样的码。此后几十年，编码理论的发展，就是不断寻找「接近香农极限、译码复杂度可接受」的编码的过程。让我们回顾一下这段精彩的历史：1）早期的分组码（1950s-1960s）：汉明码（1950）、BCH码（1959）、RS码（1960）。这些码都有代数结构，译码相对简单，但性能离香农极限还很远；2）卷积码（1955）和维特比译码（1967）：卷积码有记忆，译码用维特比算法（最大似然），性能比分组码好，在卫星通信、移动通信中用了很多年；3）Turbo码的革命（1993）：两位法国工程师Berrou等人提出了Turbo码——两个递归系统卷积码并行级联，加交织器，译码用迭代译码。Turbo码的性能震惊了整个编码界——它离香农极限只有零点几个dB！在此之前，大家都觉得离香农极限还有距离。Turbo码立刻被用到了3G和4G移动通信中；4）LDPC码的复兴（1990s至今）：LDPC码其实早在1962年就被Gallager提出了，但当时太超前，没人意识到它的价值，被遗忘了30多年。Turbo码出来后，人们重新发现了LDPC码——它性能和Turbo码相当，甚至更好，而且译码可以并行实现，适合硬件高速译码。现在LDPC码已经被5G、WiFi 5/6、DVB-S2等标准采用，是目前最主流的信道编码之一；5）Polar码（2009）：土耳其教授Erdal Arıkan提出的Polar码，是第一个被严格证明能达到香农极限的构造性编码（有明确的构造方法，不是「随机构造」）。Polar码被选作5G控制信道的编码方案。从汉明码到Polar码，人类花了近60年，终于「摸到了」香农极限。这段历史本身就很精彩——理论和实践互相推动，高峰迭起。现在，AI也开始进入信道编码领域——用深度学习译码、用AI设计编码、用AI优化HARQ等等。虽然AI暂时还不能取代经典的编码理论，但在一些复杂场景下，AI可能会带来新的突破。信道编码是通信理论皇冠上的明珠，它的思想——「用冗余换取可靠性」——在计算机科学的其他领域（如存储、分布式系统）也有广泛应用。"
+        }, duration: "2.5小时", resources: [{ title: "信道编码入门", url: "https://www.electronics-notes.com/articles/radio/digital-communications/channel-coding.php", required: true, type: "article", source: "other" }, { title: "CRC原理", url: "https://www.zlib.net/crc_v3.txt", required: false, type: "article", source: "other" }, { title: "香农与信息论", url: "https://en.wikipedia.org/wiki/Claude_Shannon", required: false, type: "doc", source: "other" }], checkpoint: "能解释信道编码的基本思想，说出至少4种信道编码和它们的典型应用" },
+      { day: 14, title: "复用与多址技术",
+        summary: "理解复用和多址的基本概念，掌握FDM/TDM/FDM/CDM/SDM等技术的原理与应用。", content: {
+          objective: "今天你将学习复用与多址技术。学完后你能理解什么是复用和多址，掌握FDM（频分）、TDM（时分）、CDM（码分）、SDM（空分）这几类复用多址技术的原理和特点，了解它们在各个通信系统中的典型应用。复用和多址是提高频谱效率、让多个用户共享信道的核心技术。",
+          key_points: [
+            "复用 vs 多址：复用（Multiplexing）是把多个信号合成一个在一条信道里传（如一根光纤传很多路电话）；多址（Multiple Access）是多个用户怎么共享同一个信道（如手机怎么接入基站）；技术类似，只是场景不同",
+            "频分复用/多址（FDM/FDMA）：把频率分成很多子信道，每个用户/信号用一个；最简单，传统模拟通信常用，现在的OFDM本质也是频分的一种",
+            "时分复用/多址（TDM/TDMA）：把时间分成很多时隙，每个用户/信号在自己的时隙里传，大家轮流用整个带宽；GSM用的就是TDMA",
+            "码分复用/多址（CDM/CDMA）：所有用户在同一时间、同一频率上传输，但用不同的正交码（扩频码）区分，靠码的正交性把不同用户分开；3G用的就是CDMA",
+            "空分复用/多址（SDM/SDMA）：用多天线技术，在空间上区分不同用户；MIMO和Massive MIMO就是空分复用，是5G提升容量的关键"
+          ],
+          practice: "完成以下复用与多址实践：1）四种多址对比：画一张对比表，对比FDMA、TDMA、CDMA、OFDMA这四种多址方式——从原理、频谱效率、抗干扰能力、复杂度、典型应用（第几代移动通信）等维度对比；2）TDM理解：E1/T1是经典的时分复用系统。查一下：E1的速率是多少？（2.048Mbps）它有多少个时隙？每个时隙速率多少？（64kbps）为什么是64kbps？（一个PCM语音信号，8kHz采样，8bit量化）；3）CDMA原理：理解CDMA的核心思想——扩频和正交码：a）什么是扩频？（用一个高速的码序列把信号频谱展宽）b）扩频有什么好处？（抗干扰、抗多径、保密、多址）c）怎么区分不同用户？（每个用户用不同的正交码，接收时用自己的码解扩，就能把自己的信号拿出来，别人的信号还是噪声一样）4）OFDM/OFDMA：OFDM和传统FDM有什么区别？（子载波正交，可以重叠，频谱效率更高）OFDMA和OFDM又是什么关系？（OFDM是调制技术，OFDMA是多址方式——把不同的子载波分配给不同用户）5）MIMO与空分复用：什么是MIMO？（多输入多输出，收发都用多天线）MIMO怎么提高容量？（空间复用，多天线传不同的数据流，相当于增加了信道数量）什么是Massive MIMO？（5G里用，基站用几十上百根天线）6）思考：为什么移动通信从1G到5G，多址技术从FDMA到TDMA到CDMA到OFDMA？每一代换多址技术的原因是什么？未来6G可能会用什么新的多址技术？",
+          deep_dive: "深入理解多址技术的演进与6G展望：复用和多址技术是移动通信的核心技术之一，每一代移动通信的升级，往往都伴随着多址技术的革新。让我们回顾一下移动通信多址技术的演进历程，并看看未来的方向：1）1G（模拟移动通信）：FDMA（频分多址）。每个用户占一个频道，模拟调制。系统容量小、通话质量差、容易被窃听；2）2G（数字移动通信）：GSM用TDMA（时分多址）+ 跳频，IS-95用CDMA。数字时代开始了，语音质量、容量、安全性都比1G好很多；3）3G：三大标准（WCDMA、cdma2000、TD-SCDMA）都是基于CDMA的。CDMA的容量比TDMA大，而且软切换、抗多径等特性更好。3G开启了移动互联网时代；4）4G LTE：用OFDMA（正交频分多址）+ MIMO。为什么不用CDMA了？因为CDMA有「远近效应」等问题，而且OFDM+MIMO能提供更高的频谱效率和系统容量。4G让移动互联网真正普及；5）5G：还是OFDMA为基础，但加了很多新技术——Massive MIMO（大规模天线阵，空分多址）、毫米波、更高阶的调制（256QAM/1024QAM）、更灵活的帧结构等等。5G的目标是更快的速率、更低的时延、更多的连接；6）6G会怎样？现在大家已经在研究6G了，可能的方向包括：a）太赫兹通信（更高的频段，更宽的带宽）；b）智能超表面（RIS，可重构的电磁表面，智能调控无线环境）；c）AI原生的空口（从物理层到高层，全用AI设计和优化）；d）语义通信（传的是「意思」而不是「比特」）；e）天地一体化网络（卫星+地面+海洋，无缝覆盖）。多址技术也可能有新的突破——比如NOMA（非正交多址）、OAM（轨道角动量）多址等等。通信技术的发展速度很快，从1G到5G，大约每10年一代，每一代速率都提升了100倍以上。对于AI工程师来说，通信和AI的融合是大趋势——一方面，AI可以让通信网络更智能（网络优化、资源调度、故障诊断）；另一方面，通信技术的进步（5G/6G）也让更多AI应用成为可能（自动驾驶、云游戏、元宇宙、工业互联网）。两者是互相促进的关系。"
+        }, duration: "2小时", resources: [{ title: "复用与多址技术", url: "https://www.electronics-notes.com/articles/radio/radio-systems/multiple-access-techniques.php", required: true, type: "article", source: "other" }, { title: "CDMA原理", url: "https://www.plextek.com/whitepapers/cdma-tutorial.html", required: false, type: "article", source: "other" }, { title: "MIMO技术入门", url: "https://www.electronics-notes.com/articles/radio/wi-fi-wlan-wi-max/802-11n-mimo.php", required: false, type: "article", source: "other" }], checkpoint: "能说出4种主要的多址方式，并对比它们的原理和应用场景" },
+      { day: 15, title: "通信系统综合：设计一个简单的数字通信系统",
+        summary: "设计一个端到端的数字通信系统，综合运用信源编码、信道编码、调制、解调、译码等知识。", content: {
+          objective: "今天你将完成一个通信原理综合项目——设计并实现一个简单的数字通信系统。通过这个项目，你会把前三周学到的信号与系统、傅里叶变换、调制解调、信道编码、同步等知识融会贯通。你将亲手实现一个从比特到比特的完整通信链路，直观地理解通信系统是怎么工作的。",
+          key_points: [
+            "系统组成：信源→信源编码→信道编码→调制→（信道+噪声）→解调→信道译码→信源译码→信宿，一条完整的链路",
+            "关键模块：比特生成、信道编码（汉明码/CRC/卷积码）、调制（BPSK/QPSK/16QAM）、加噪（AWGN信道）、解调、译码、误码率统计",
+            "性能评估：在不同信噪比（SNR）下的误码率（BER），画出BER-SNR曲线，和理论曲线对比",
+            "同步问题：载波同步、位同步、帧同步，实际通信系统中这些都很重要，没有同步就没法正确接收",
+            "仿真工具：用Python（numpy+matplotlib+scipy）或MATLAB做系统级仿真，快速验证算法和性能"
+          ],
+          practice: "用Python（或MATLAB）实现一个端到端的数字通信系统仿真，要求如下：\n\n基本要求（必做）：\n1）信源：随机生成二进制比特流\n\n2）信道编码（至少实现一种）：\n   a）汉明码（7,4）：能纠正1位错误\n   b）或者简单的重复码、奇偶校验\n   对比编码和不编码的性能差异\n\n3）调制解调（至少实现两种，对比性能）：\n   a）BPSK（二进制相移键控）——最简单\n   b）QPSK（正交相移键控）——频谱效率翻倍\n   c）16QAM——高阶调制，频谱效率更高（选做）\n   每个都要实现调制和解调（最佳判决）\n\n4）信道：AWGN（加性白高斯噪声）信道\n   - 可以调节信噪比（Eb/N0或SNR）\n   - 信噪比范围：从很低到很高（比如0dB到15dB）\n\n5）接收端：\n   a）解调（硬判决）\n   b）信道译码\n   c）误码率计算（统计错的比特数/总比特数）\n\n6）性能评估：\n   - 画出误码率（BER） vs 信噪比（Eb/N0）的曲线\n   - 对比：BPSK理论曲线 vs 仿真曲线（验证是否正确）\n   - 对比：BPSK vs QPSK的性能（应该差不多）\n   - 对比：编码 vs 不编码（编码应该在高信噪比下更好）\n   - 用半对数坐标（y轴对数，x轴线性）\n\n进阶功能（选做）：\n1）OFDM：实现一个简单的OFDM系统——加循环前缀（CP）、IFFT/FFT调制解调\n2）更高级的编码：卷积码+维特比译码、LDPC（可以用现成库）\n3）同步：加载波同步（科斯塔斯环）和位同步（早迟门）\n4）多径衰落信道：不只是AWGN，加多径和衰落，看性能变化\n5）自适应调制编码：根据信道质量动态调整调制方式和编码率\n6）端到端AI通信：用自编码器（Autoencoder）设计一个端到端的通信系统，和传统方案对比\n\n项目要求：\n- 完整的代码（结构清晰、有注释）\n- 性能曲线图（至少3组对比）\n- 结果分析：你的仿真结果和理论值相比怎么样？有没有差距？为什么？\n- 总结：你从这个项目中学到了什么？\n\n提示：\n- 用numpy做数值计算，用matplotlib画图\n- BPSK：0→+1，1→-1（反过来也行），解调就是看大于0还是小于0\n- QPSK：每两个比特映射到一个复数星座点（I路和Q路各传1比特）\n- AWGN噪声：根据信噪比算出噪声方差，加高斯噪声\n- 误码率不要太低的时候统计，统计至少100个错比特才比较准\n\n完成后，思考一下：如果要把这个仿真系统做得更接近真实通信系统，还需要加哪些模块？",
+          deep_dive: "从通信系统看信息的传递与处理：完成这个项目后，你应该对数字通信系统有了一个完整的、端到端的认识。让我们从更高的视角，回顾一下通信系统和信息处理的关系：1）通信的本质：通信的本质是什么？是「在一点精确或近似地复现另一点所挑选的消息」（香农，1948）。注意，是「挑选的消息」，不是「创造」消息。通信不创造信息，只是传递信息。这和AI不一样——AI是处理和生成信息，通信是传输信息；2）通信系统的分层思想：和计算机网络的OSI七层模型类似，通信系统也是分层的——物理层（调制解调、信道编码、天线）、数据链路层（帧、差错控制、MAC）、网络层（路由）、传输层（端到端可靠传输）、应用层（具体应用）。每一层负责不同的功能，下层为上层提供服务。这种分层的思想，是工程中处理复杂系统的经典方法；3）通信与AI的殊途同归：有趣的是，通信和AI看似是两个不同的领域，但底层有很多共通的数学工具——概率论、随机过程、线性代数、优化理论、信息论。而且，它们处理的对象都是「信息」：a）通信：关心的是信息怎么可靠、高效地从A传到B；b）AI：关心的是信息怎么被处理、理解、生成。两者一个管「传」，一个管「算」，但都是在和信息打交道；4）AI+通信的未来：现在AI和通信的融合越来越深——a）AI for 通信：用AI优化通信网络、用AI做信道估计和均衡、用AI做资源调度、用AI做故障诊断、用AI设计新的编码和调制方式；b）通信 for AI：5G/6G的高带宽低时延，让云AI、边缘AI、协同AI成为可能；海量的连接和数据，为AI提供了燃料。两者互相促进，共同推动数字世界的发展；5）信息时代的基础设施：通信网络（尤其是移动通信网络）已经成为和水、电、路一样的基础设施——没有它，数字经济、互联网、AI都无从谈起。从1G到5G，通信技术的进步，一次次改变了我们的生活和工作方式。未来的6G，会带来什么，我们还难以想象。希望这门通信原理的学习，不仅让你掌握了一些技术知识，更能让你对「信息」这个东西有更深的理解——我们正处在信息革命的浪潮中，理解信息的本质，理解它是怎么被度量、被传输、被处理的，会让你更好地把握这个时代。"
         }, duration: "4小时", resources: [{ title: "Python通信仿真教程", url: "https://pysdr.org/", required: false, type: "doc", source: "other" }, { title: "通信原理经典教材", url: "https://www.amazon.com/Digital-Communications-John-G-Proakis/dp/0072957166", required: false, type: "book", source: "other" }, { title: "GNU Radio", url: "https://www.gnuradio.org/", required: false, type: "doc", source: "other" }], checkpoint: "完成端到端数字通信系统仿真，画出BER-SNR曲线并和理论对比" }
+
 
     ]
   },
@@ -6950,7 +7856,73 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "动手练习：1）推导一阶直线倒立摆的线性化状态空间模型（小车质量M、摆杆质量m、摆长l、重力加速度g）；2）用Python实现倒立摆的动力学仿真，设计PID控制器使摆杆保持直立并能稳定小车位置；3）仿真测试：从不同初始摆角开始，观察控制器能否将系统稳定到平衡点；测试加入外部冲击扰动后系统的恢复能力；分析PID参数对系统性能的影响。",
           deep_dive: "深入拓展：了解LQR（线性二次型调节器）和LQG（线性二次高斯）最优控制方法在倒立摆中的应用，对比PID和LQR的性能差异，探索强化学习（如DQN、PPO）在倒立摆控制中的应用，理解传统控制与智能控制的优缺点和适用场景。"
-        }, duration: "3小时", resources: [{ title: "倒立摆控制", url: "https://www.mathworks.com/help/slcontrol/ug/inverted-pendulum.html", required: true, type: "doc", source: "official" }, { title: "倒立摆仿真", url: "https://www.seaer.com/Dynamics/Stability/pendulum.htm", required: false, type: "tool", source: "official" },  { title: "倒立摆控制项目", url: "https://github.com/Technical-Slides/inverted-pendulum", required: false, type: "repo", source: "github" }, { title: "倒立摆控制论文", url: "https://arxiv.org/abs/2109.09127", required: false, type: "paper", source: "academic" }], checkpoint: "能完成倒立摆的建模和控制器设计，仿真验证控制效果" }
+        }, duration: "3小时", resources: [{ title: "倒立摆控制", url: "https://www.mathworks.com/help/slcontrol/ug/inverted-pendulum.html", required: true, type: "doc", source: "official" }, { title: "倒立摆仿真", url: "https://www.seaer.com/Dynamics/Stability/pendulum.htm", required: false, type: "tool", source: "official" },  { title: "倒立摆控制项目", url: "https://github.com/Technical-Slides/inverted-pendulum", required: false, type: "repo", source: "github" }, { title: "倒立摆控制论文", url: "https://arxiv.org/abs/2109.09127", required: false, type: "paper", source: "academic" }], checkpoint: "能完成倒立摆的建模和控制器设计，仿真验证控制效果" },
+      { day: 11, title: "根轨迹法与系统校正",
+        summary: "掌握根轨迹分析方法和PID以外的系统校正方式，理解超前/滞后校正的原理。", content: {
+          objective: "今天你将学习根轨迹法和系统校正技术。学完后你能理解根轨迹的基本概念和绘制规则，掌握PID以外的校正方法（超前校正、滞后校正、超前滞后校正），能根据系统性能指标要求设计合适的校正装置。根轨迹是经典控制理论的核心分析工具之一。",
+          key_points: [
+            "根轨迹定义：系统某一参数（通常是开环增益K）从0变化到无穷时，闭环特征根在s平面上移动的轨迹",
+            "根轨迹绘制规则：起点终点、分支数、实轴上的根轨迹、渐近线、分离点会合点、出射角入射角、与虚轴交点",
+            "根轨迹分析：从根轨迹图判断系统稳定性、动态性能（超调量、调节时间）、稳态性能",
+            "超前校正：提供相位超前，提高系统相角裕度和响应速度，适合需要快速响应的场合",
+            "滞后校正：提高稳态精度，基本不改变动态性能，牺牲带宽换精度，适合需要高精度的场合"
+          ],
+          practice: "完成以下根轨迹与校正实践：1）根轨迹绘制：给定几个典型的传递函数（如一阶、二阶、三阶系统），手工绘制根轨迹草图，然后用MATLAB/Python的control库验证；2）根轨迹分析：从根轨迹图分析系统稳定性，确定临界稳定时的K值，分析不同K值下系统的阶跃响应特点；3）超前校正设计：给定一个系统的性能指标要求（如相角裕度、截止频率），设计超前校正装置，用仿真验证校正前后的阶跃响应和伯德图变化；4）滞后校正设计：设计滞后校正提高系统稳态精度，对比校正前后的稳态误差和动态性能变化；5）思考：在机器人运动控制中，什么时候需要超前校正？什么时候需要滞后校正？两者各有什么优缺点？可以结合你熟悉的控制场景分析。",
+          deep_dive: "深入理解现代控制理论与经典控制的关系：根轨迹法和频域分析法（伯德图、奈奎斯特判据）都属于经典控制理论的范畴，它们的特点是用传递函数描述系统，主要分析单输入单输出（SISO）系统，物理意义直观，工程上应用广泛。但经典控制也有局限性——它处理不了多输入多输出（MIMO）系统，也处理不了非线性、时变系统，而且主要是频域分析，对状态的直接控制能力有限。现代控制理论则用状态空间描述系统，能处理MIMO、非线性、时变系统，方法更通用。现代控制的核心是状态反馈——通过测量或估计系统的所有状态，然后用状态的线性组合作为控制量，可以任意配置闭环系统的极点（只要系统能控），这比PID调参要强大得多。状态空间方法还包括：能控性和能观性分析、状态观测器设计、最优控制（LQR）、卡尔曼滤波等。在机器人、航空航天等领域，现代控制理论用得非常多。那为什么还要学经典控制？因为：1）经典控制简单直观，很多实际问题用PID就够了；2）经典控制是理解现代控制的基础；3）在工程实践中，频域分析的方法（比如伯德图看带宽、相角裕度）非常实用。在AI与控制结合的领域，经典控制和现代控制都有应用——传统的控制方法提供稳定的底层控制，AI负责上层的决策和规划。比如自动驾驶中，底层的车辆控制还是用PID或MPC，而上层的路径规划、行为决策则用AI方法。理解控制理论的全貌，能帮你在做AI+机器人/控制的项目时，选择合适的方法，设计出更稳定可靠的系统。"
+        }, duration: "2小时", resources: [{ title: "根轨迹法详解", url: "https://ctms.engin.umich.edu/CTMS/index.php?example=Introduction&section=ControlRootLocus", required: true, type: "doc", source: "other" }, { title: "系统校正方法", url: "https://ctms.engin.umich.edu/CTMS/index.php?example=Introduction&section=ControlFrequency", required: false, type: "doc", source: "other" }, { title: "Python Control库", url: "https://python-control.readthedocs.io/", required: false, type: "doc", source: "official" }], checkpoint: "能用根轨迹法分析系统稳定性，并设计简单的超前校正" },
+      { day: 12, title: "状态空间与现代控制",
+        summary: "掌握状态空间模型和状态反馈控制，理解能控性、能观性和极点配置原理。", content: {
+          objective: "今天你将学习现代控制理论的基础——状态空间方法。学完后你能建立系统的状态空间模型，理解能控性和能观性的概念，掌握状态反馈极点配置方法，了解状态观测器的设计思想。状态空间方法是现代控制理论的基石，也是机器人控制、航空航天等领域的核心工具。",
+          key_points: [
+            "状态空间模型：用状态方程x'=Ax+Bu和输出方程y=Cx+Du描述系统，适用于MIMO、非线性、时变系统",
+            "能控性：能否通过控制输入在有限时间内将系统从任意初始状态转移到任意目标状态，用能控性矩阵判断",
+            "能观性：能否通过有限时间的输出测量确定系统的初始状态，用能观性矩阵判断",
+            "状态反馈：u=-Kx，通过选择增益矩阵K来任意配置闭环极点（只要系统能控），比PID更强大",
+            "状态观测器：当状态不能全部测量时，用观测器估计系统状态，Luenberger观测器是最常用的"
+          ],
+          practice: "完成以下状态空间与现代控制实践：1）状态空间建模：将几个典型系统（如RLC电路、弹簧-质量-阻尼系统、直流电机）建立状态空间模型，选择合适的状态变量，写出A、B、C、D矩阵；2）能控能观分析：对给定的系统，计算能控性矩阵和能观性矩阵，判断系统是否能控、是否能观，理解能控和能观的物理意义；3）极点配置：给定一个二阶系统和期望的闭环极点，用状态反馈设计K矩阵，用仿真对比极点配置前后的阶跃响应，验证极点是否在期望位置；4）观测器设计：给定一个系统，假设只有输出能测，设计一个状态观测器（Luenberger观测器），估计系统状态，对比真实状态和估计状态的误差，看观测器的收敛速度；5）思考：在机器人控制中，哪些状态是可以直接测量的？哪些需要估计？为什么需要状态观测器？传感器融合和状态观测有什么关系？",
+          deep_dive: "深入理解最优控制与LQR：状态反馈可以任意配置极点，但极点应该选在哪里？这是一个设计问题。有没有一种系统的方法来找到最优的反馈增益？有，这就是最优控制。最优控制要解决的问题是：在满足系统动态约束的前提下，找到一个控制策略，使得某个性能指标（代价函数）最小化。经典的最优控制问题用变分法和庞特里亚金极小值原理求解。对于线性系统、二次型代价函数的情况，有一个解析解——这就是LQR（线性二次型调节器）。LQR的代价函数通常是 J = ∫(xᵀQx + uᵀRu) dt，第一项是状态误差的惩罚（希望状态接近原点），第二项是控制量的惩罚（希望控制量不要太大，省能量），Q和R是权重矩阵，用来权衡状态误差和控制代价。LQR的解是 u = -Kx，其中 K = R⁻¹BᵀP，P是黎卡提方程的解。LQR有几个很好的性质：1）保证闭环系统稳定；2）有至少60度的相角裕度，鲁棒性很好；3）可以通过调整Q和R来权衡响应速度和控制代价。LQR是现代控制中最经典、最实用的设计方法之一。在机器人控制中，LQR也有广泛应用——比如机械手的关节控制、四旋翼飞行器的姿态控制等等。比LQR更高级的还有LQG（线性二次高斯控制，LQR+卡尔曼滤波）、H∞控制（鲁棒控制）、MPC（模型预测控制）等。在AI与控制的交叉领域，强化学习也可以看作是一种最优控制——只是环境模型未知，需要通过交互来学习。传统的最优控制需要精确的模型，而强化学习不需要模型，这是两者的核心区别。但两者的目标是一致的——找到最优的控制策略，使得长期回报/代价最优。理解最优控制的基本思想，能帮你更好地理解强化学习，也能在有模型的场景下用更高效的传统方法。"
+        }, duration: "2.5小时", resources: [{ title: "状态空间方法", url: "https://ctms.engin.umich.edu/CTMS/index.php?example=Introduction&section=ControlStateSpace", required: true, type: "doc", source: "other" }, { title: "LQR最优控制", url: "https://ctms.engin.umich.edu/CTMS/index.php?example=Introduction&section=ControlLQR", required: false, type: "doc", source: "other" }, { title: "现代控制理论", url: "https://www.cambridge.org/core/books/modern-control-theory/3", required: false, type: "book", source: "other" }], checkpoint: "能建立简单系统的状态空间模型，并用状态反馈配置极点" },
+      { day: 13, title: "卡尔曼滤波与状态估计",
+        summary: "掌握卡尔曼滤波的原理和应用，理解状态估计在控制系统中的重要性。", content: {
+          objective: "今天你将学习卡尔曼滤波器——20世纪最伟大的算法之一。学完后你能理解卡尔曼滤波的核心思想和五个经典方程，掌握卡尔曼滤波在状态估计、传感器融合中的应用，能在简单问题中实现卡尔曼滤波。卡尔曼滤波是导航、机器人、自动驾驶等领域的核心算法。",
+          key_points: [
+            "卡尔曼滤波核心思想：用预测和更新两步递归估计系统状态，是线性高斯系统下的最优状态估计器",
+            "预测步：根据系统模型预测下一时刻的状态和协方差，x̂' = Fx̂ + Bu，P' = FPFᵀ + Q",
+            "更新步：根据测量值修正预测，计算卡尔曼增益K，然后更新状态估计和协方差",
+            "五个经典方程：预测2个（状态预测、协方差预测）+ 更新3个（卡尔曼增益、状态更新、协方差更新）",
+            "扩展卡尔曼滤波EKF：对非线性系统，在当前估计点处做泰勒展开线性化，然后用卡尔曼滤波"
+          ],
+          practice: "完成以下卡尔曼滤波实践：1）直观理解：用一个简单的例子（如小车运动）理解卡尔曼滤波的工作原理——我们有一个运动模型预测小车位置，也有传感器测量小车位置，但两者都有噪声，卡尔曼滤波把两者结合起来，得到比单独用任何一个都更准确的估计；2）一维卡尔曼滤波实现：用Python实现一个简单的一维卡尔曼滤波，估计一个匀速运动物体的位置，模拟带噪声的测量，对比真实位置、测量值和估计值，看卡尔曼滤波是怎么平滑噪声的；3）调参实验：调整过程噪声协方差Q和测量噪声协方差R，观察对滤波效果的影响——Q大了会怎么样？R大了会怎么样？理解Q和R的物理意义；4）传感器融合：假设有两个传感器测量同一个量（比如温度，一个准但慢，一个快但不准），用卡尔曼滤波融合两个传感器的数据，看融合后的结果是不是比任何一个单独的都好；5）思考：在机器人定位中，卡尔曼滤波和SLAM有什么关系？扩展卡尔曼滤波EKF和无迹卡尔曼滤波UKF有什么区别？各有什么优缺点？",
+          deep_dive: "深入理解卡尔曼滤波的家族与贝叶斯滤波框架：卡尔曼滤波不是一个单一的算法，而是一个大家族，适用于不同的场景：1）卡尔曼滤波（KF）：原始版本，适用于线性高斯系统；2）扩展卡尔曼滤波（EKF）：非线性系统的版本，通过泰勒展开线性化，简单但精度有限，在强非线性下可能发散；3）无迹卡尔曼滤波（UKF）：也是非线性版本，但不用泰勒展开，而是用Sigma点采样，精度比EKF高，计算量也不大；4）容积卡尔曼滤波（CKF）：基于球面-径向容积准则的采样方法，精度更高，数值稳定性更好；5）信息滤波（IF）：卡尔曼滤波的信息矩阵形式，适合多传感器融合和分布式系统；6）粒子滤波（PF）：用粒子表示状态分布，完全非参数，可以处理任意非线性和非高斯分布，但计算量大，需要很多粒子。这些滤波器其实都可以统一在贝叶斯滤波的框架下——贝叶斯滤波的核心思想是：根据先验知识（预测）和观测数据（更新），用贝叶斯定理计算后验概率分布。卡尔曼滤波是贝叶斯滤波在线性高斯假设下的解析解，粒子滤波是贝叶斯滤波的蒙特卡洛近似。卡尔曼滤波的应用极其广泛：1）导航与制导：阿波罗登月、航天飞机、卫星、导弹的导航都用了卡尔曼滤波；2）自动驾驶：多传感器融合（摄像头、雷达、激光雷达、IMU、GPS），目标跟踪；3）机器人：SLAM（同时定位与建图）、运动估计；4）信号处理：语音增强、视频稳像、经济预测；5）控制：和LQR结合形成LQG（线性二次高斯控制）。卡尔曼滤波为什么这么重要？因为现实世界中所有的传感器都有噪声，所有的模型都有误差，我们需要从带噪声的观测中估计出真实的状态，这是所有感知和控制系统的基础。在AI领域，卡尔曼滤波也有很多应用——目标跟踪、状态估计、传感器融合，甚至在强化学习中也有用武之地。理解卡尔曼滤波的思想，能帮你在处理带噪声的时序数据时找到优雅的解决方案。"
+        }, duration: "2.5小时", resources: [{ title: "卡尔曼滤波详解", url: "https://www.bzarg.com/p/how-a-kalman-filter-works-in-pictures/", required: true, type: "article", source: "other" }, { title: "卡尔曼滤波Python实现", url: "https://filterpy.readthedocs.io/", required: false, type: "doc", source: "other" }, { title: "概率机器人学", url: "https://probabilistic-robotics.org/", required: false, type: "book", source: "other" }], checkpoint: "能用自己的话解释卡尔曼滤波的两个步骤，并实现一个简单的一维卡尔曼滤波" },
+      { day: 14, title: "非线性控制与鲁棒控制入门",
+        summary: "了解非线性系统的特点和基本分析方法，理解鲁棒控制的基本思想。", content: {
+          objective: "今天你将学习非线性控制和鲁棒控制的入门知识。学完后你能理解非线性系统和线性系统的本质区别，了解非线性系统的基本分析方法（描述函数法、相平面法、李雅普诺夫方法），理解鲁棒性的概念和H∞控制的基本思想。这是向高级控制理论进阶的起点。",
+          key_points: [
+            "非线性系统特点：可能有多个平衡点、可能产生自激振荡（极限环）、可能有混沌、不能用叠加原理",
+            "相平面法：在二维平面上画出系统的相轨迹，直观分析系统的动态行为和稳定性，适用于低阶系统",
+            "描述函数法：近似分析非线性系统的自激振荡，用线性系统的频域方法处理非线性",
+            "李雅普诺夫直接法：构造李雅普诺夫函数V(x)，根据V(x)和V'(x)的性质判断稳定性，是最通用的方法",
+            "鲁棒控制：控制器在模型存在不确定性、外部扰动时仍能保证稳定性和性能，H∞是经典方法"
+          ],
+          practice: "完成以下非线性控制入门实践：1）非线性系统观察：模拟几个典型的非线性系统（如范德波尔振荡器、单摆），观察它们的动态行为——有没有极限环？平衡点有几个？和线性系统对比有什么不同；2）相平面分析：对一个简单的二阶非线性系统，画出相轨迹图，分析平衡点的类型（稳定节点、不稳定节点、焦点、鞍点等），理解不同类型平衡点的物理意义；3）李雅普诺夫稳定性：对一个简单系统，构造李雅普诺夫函数，用李雅普诺夫直接法判断系统的稳定性，理解李雅普诺夫函数的物理意义（类似能量函数）；4）鲁棒性理解：思考为什么需要鲁棒控制？实际系统中哪些因素会导致模型不确定性？如果模型不准，PID控制器还能用吗？鲁棒控制和自适应控制有什么区别；5）思考：在机器人控制中，哪些环节是非线性的？为什么机器人控制是一个非线性控制问题？传统的PID在机器人控制中有什么局限性？",
+          deep_dive: "深入理解控制理论的全貌与AI的关系：控制理论发展了近一个世纪，已经形成了非常庞大的理论体系。让我们梳理一下控制理论的全景图：1）经典控制理论（20世纪40-50年代）：传递函数、频域分析、根轨迹、PID校正，主要处理SISO线性定常系统，工程上非常实用；2）现代控制理论（20世纪60-70年代）：状态空间、能控能观、状态反馈、LQR、卡尔曼滤波、最优控制，能处理MIMO系统，数学上更优美；3）非线性控制（20世纪70-80年代）：微分几何方法、反馈线性化、滑模控制、自适应控制，处理非线性系统；4）鲁棒控制（20世纪80-90年代）：H∞控制、μ综合，处理模型不确定性；5）智能控制（20世纪90年代至今）：模糊控制、神经网络控制、专家系统，用AI方法处理复杂不确定系统；6）模型预测控制MPC（2000年后兴起）：在线求解优化问题，处理约束，在过程控制中广泛应用；7）数据驱动控制（近年热点）：从数据中学习控制器，不需要精确模型，和AI深度融合。控制理论的发展趋势是：从线性到非线性、从确定到不确定、从模型驱动到数据驱动。AI特别是强化学习，给控制理论带来了新的机遇——对于复杂的、难以建模的系统，用强化学习从数据中学习控制策略，这是传统控制方法做不到的。但传统控制也有它的优势——稳定性保证、可解释性、样本效率高。未来的趋势应该是两者结合：底层用传统控制保证稳定性和安全性，上层用AI做决策和规划，形成分层的智能控制系统。在机器人、自动驾驶等领域，这种分层架构已经很常见了。作为AI开发者，了解控制理论的全貌，能帮你更好地定位AI在控制系统中的位置，知道什么问题该用什么方法，设计出更可靠、更高效的智能系统。"
+        }, duration: "2小时", resources: [{ title: "非线性控制导论", url: "https://www.cambridge.org/core/books/nonlinear-systems-and-control/5", required: false, type: "book", source: "other" }, { title: "鲁棒控制基础", url: "https://ctms.engin.umich.edu/CTMS/index.php?example=Introduction&section=ControlRobust", required: false, type: "doc", source: "other" }, { title: "滑模控制", url: "https://www.mathworks.com/help/slcontrol/ug/sliding-mode-control.html", required: false, type: "doc", source: "official" }], checkpoint: "能说出非线性系统和线性系统的三个主要区别，理解李雅普诺夫稳定性的基本思想" },
+      { day: 15, title: "控制理论综合项目：倒立摆控制",
+        summary: "实现倒立摆系统的建模和控制，综合运用PID、状态空间、LQR、卡尔曼滤波等知识。", content: {
+          objective: "今天你将完成一个控制理论的经典综合项目——倒立摆控制。通过这个项目，你会把前三周学到的建模、PID控制、状态空间、LQR最优控制、卡尔曼滤波等知识融会贯通。倒立摆是控制理论的经典试验台，几乎所有控制方法都会在倒立摆上验证。",
+          key_points: [
+            "倒立摆系统：小车在轨道上左右移动，摆杆铰接在小车上，目标是保持摆杆直立并跟踪小车位置",
+            "系统建模：用牛顿力学或拉格朗日方法建立倒立摆的动力学方程，然后线性化得到状态空间模型",
+            "PID控制：只用摆杆角度反馈，用PID控制器保持平衡，理解单PID控制倒立摆的局限性",
+            "LQR控制：用全状态反馈（小车位置、小车速度、摆杆角度、摆杆角速度）设计最优控制器",
+            "卡尔曼滤波：当只有部分状态可测时（如只能测小车位置和摆杆角度），用卡尔曼滤波估计速度"
+          ],
+          practice: "完成倒立摆控制综合项目，要求如下：\n\n基础功能（必做）：\n1）系统建模：建立一阶直线倒立摆的动力学方程，在平衡点附近线性化，得到状态空间模型（A、B、C、D矩阵），状态变量包括：小车位置x、小车速度dx/dt、摆杆角度θ、摆杆角速度dθ/dt；\n2）仿真环境：用Python（numpy + scipy）或MATLAB搭建倒立摆的仿真环境，可以给定控制量，模拟系统的动态响应；\n3）PID控制：设计一个PID控制器（只用摆杆角度反馈），尝试让倒立摆保持直立，调整PID参数看看能不能稳定，理解为什么纯PID控制倒立摆有难度；\n4）LQR控制：用全状态反馈设计LQR控制器，调整Q和R权重，观察不同权重下的控制效果（响应速度、控制量大小），找到你满意的参数；\n5）性能对比：对比PID控制和LQR控制的效果（稳定性、响应速度、抗干扰能力），分析为什么LQR效果更好。\n\n进阶功能（选做）：\n1）卡尔曼滤波：假设只能测量小车位置和摆杆角度（速度不能直接测），用卡尔曼滤波估计四个状态，然后用估计的状态做LQR控制，对比有滤波和无滤波的效果；\n2）抗干扰测试：给系统加扰动（如给小车一个推力、测量噪声），测试控制器的抗干扰能力；\n3）动画可视化：给倒立摆做一个简单的动画演示，直观看到控制效果；\n4）非线性控制：尝试用反馈线性化或滑模控制，对比线性控制器和非线性控制器的区别；\n5）强化学习控制：用强化学习（如DQN或PPO）训练一个控制器，和传统控制方法对比，各有什么优缺点？\n\n项目要求：\n- 完整的代码实现\n- 仿真结果和分析报告\n- 不同控制方法的对比\n- 可以运行并看到效果",
+          deep_dive: "控制理论的意义与AI+控制的未来：完成倒立摆项目后，你应该对经典控制和现代控制有了扎实的理解。你可能会问：现在AI这么火，控制理论还有用吗？我的回答是：非常有用。原因有几个：1）安全性：控制系统通常和物理世界交互，出问题可能导致人身伤害和财产损失，传统控制方法有严格的稳定性证明，这是AI目前做不到的；2）样本效率：传统控制只需要一个模型（甚至不需要模型，比如PID），而强化学习需要大量的交互数据，在真实物理系统上，数据是昂贵的甚至危险的；3）可解释性：传统控制的每一步都有明确的物理意义，可以解释为什么这么控制，而深度学习是黑盒；4）实时性：传统控制计算量小，可以在微控制器上跑，AI模型通常需要更多计算资源。那AI在控制中没用吗？当然不是。AI的价值在于：1）复杂系统：对于难以建模的复杂系统（如流体控制、化学过程、人形机器人），AI可以从数据中学习策略；2）高层决策：底层运动控制用传统方法，上层的路径规划、行为决策用AI；3）感知：视觉、语音、力觉等感知任务，AI比传统方法强太多了；4）学习能力：系统会变化、环境会变化，AI可以在线学习和适应。未来的方向是「传统控制 + AI」的融合——分层控制架构：最底层是传统的伺服控制（PID/MPC），保证稳定性和实时性；中间层是运动规划和状态估计，可能用传统方法也可能用学习方法；最高层是任务规划和决策，用AI方法。这样既保证了安全稳定，又有智能性。在机器人、自动驾驶、工业自动化等领域，这种融合已经是大趋势了。最后，希望这次控制理论的学习，能帮你打开一扇新的门——当你再看机器人、自动驾驶这些AI应用时，你能看到底层的控制原理，而不只是上层的神经网络。AI + 控制，才是完整的智能系统。"
+        }, duration: "4小时", resources: [{ title: "倒立摆控制教程", url: "https://ctms.engin.umich.edu/CTMS/index.php?example=InvertedPendulum&section=SystemModeling", required: true, type: "article", source: "other" }, { title: "Cartpole强化学习", url: "https://gymnasium.farama.org/environments/classic_control/cart_pole/", required: false, type: "doc", source: "official" }, { title: "控制理论视频课程", url: "https://www.youtube.com/playlist?list=PLMrJAkhIeNNT_Xh3Oy0Y4LTj0Oxo12R4G", required: false, type: "video", source: "youtube" }], checkpoint: "实现了倒立摆的LQR控制并能稳定倒立" }
+
     ]
   },
 
@@ -7111,7 +8083,73 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "动手练习：1）完整搭建一个服务机器人导航系统：创建机器人URDF模型→在Gazebo中搭建仿真环境→用slam_toolbox构建地图→配置Navigation2导航堆栈→实现点到点自主导航；2）添加动态避障功能：在环境中放置移动障碍物，测试导航系统的动态避障能力；3）集成视觉感知：添加一个目标检测节点，当检测到特定物体（如人）时，机器人停下或绕行；4）测试系统鲁棒性：从不同位置出发、添加干扰、遮挡传感器，观察系统表现并调试；5）写一个简单的任务调度节点：让机器人依次前往多个目标点完成巡逻任务，每个目标点停留一段时间后继续。最后思考：如果要把这个系统部署到真实机器人上，还需要做哪些工作？",
           deep_dive: "深入理解机器人系统工程与AI机器人的未来：从一个demo到一个真正能用的机器人产品，中间差的是系统工程。机器人是一个高度复杂的系统——机械、电子、嵌入式、软件、算法、AI深度融合，任何一个环节出问题都会影响整体表现。几个重要的工程能力：1）系统集成能力：把传感器、执行器、计算单元、软件模块正确地组装在一起，让它们协同工作；2）调试排错能力：机器人问题往往很复杂，可能是机械问题、电路问题、软件bug、算法缺陷，需要系统性的思维和方法；3）性能优化：实时性、资源占用、可靠性、成本，都是工程中需要权衡的因素；4）安全性：机器人要保证人的安全，功能安全(ISO 26262)、碰撞检测、急停机制，都是必不可少的。展望未来，AI机器人正在进入快速发展期：大语言模型让机器人有了自然语言交互和任务规划能力，视觉-语言模型让机器人更好地理解环境，具身智能让机器人通过与环境交互学习。这些技术与ROS2这样的机器人软件基础设施结合，正在推动机器人从工业场景走向家庭、服务、医疗等更广阔的领域。对于AI从业者来说，掌握ROS2和机器人技术，能让你把AI算法落地到物理世界，创造出真正改变世界的智能产品。"
-        }, duration: "3小时", resources: [{ title: "服务机器人案例", url: "https://github.com/chvmp/robotnik", required: true, type: "doc", source: "official" }, { title: "ROS2机器人项目", url: "https://github.com/prototypeolu/ros2-nav-bringup", required: false, type: "tool", source: "official" }], checkpoint: "机器人能在办公室环境中自主导航并避开移动障碍物" }
+        }, duration: "3小时", resources: [{ title: "服务机器人案例", url: "https://github.com/chvmp/robotnik", required: true, type: "doc", source: "official" }, { title: "ROS2机器人项目", url: "https://github.com/prototypeolu/ros2-nav-bringup", required: false, type: "tool", source: "official" }], checkpoint: "机器人能在办公室环境中自主导航并避开移动障碍物" },
+      { day: 11, title: "MoveIt2与机械臂运动规划",
+        summary: "掌握MoveIt2运动规划框架的使用，理解运动学、路径规划、碰撞检测等概念。", content: {
+          objective: "今天你将学习MoveIt2——ROS2生态中最重要的机械臂运动规划框架。学完后你能理解运动学正解/逆解的概念，掌握MoveIt2的基本使用，能配置一个机械臂的MoveIt2工程，实现简单的运动规划和避障。MoveIt2是做机器人 manipulation（操作）的必备工具。",
+          key_points: [
+            "运动学正解：已知关节角度，求末端执行器的位姿（位置+姿态），通常用DH参数法求解",
+            "运动学逆解：已知末端执行器的位姿，求对应的关节角度，可能有多个解、无解，比正解难",
+            "MoveIt2核心组件：运动规划库（OMPL）、碰撞检测（FCL）、运动学求解器（KDL/IKFast/TRAC-IK）",
+            "MoveGroup：MoveIt2的核心接口，提供运动规划、执行、场景管理等功能，是开发者主要交互的对象",
+            "规划场景：包含机器人模型、环境障碍物、碰撞物体，运动规划时要考虑避障"
+          ],
+          practice: "完成以下MoveIt2与运动规划实践：1）运动学理解：对一个简单的2R或3R平面机械臂，手动推导运动学正解和逆解，用Python实现并验证；理解为什么逆解可能有多个解（如肘部在上和肘部在下）；2）MoveIt2入门：用MoveIt Setup Assistant为一个机械臂（如UR5、Panda或你自己的机器人）配置MoveIt2工程，生成配置包；3）运动规划实战：在RViz2中用MoveIt2的可视化界面，拖动机械臂末端到目标位姿，点击Plan & Execute，观察运动规划的过程，看看规划出来的路径是什么样的；4）避障实验：在规划场景中添加几个障碍物（盒子、圆柱等），再做运动规划，看看规划器能不能绕开障碍物；尝试把目标放在障碍物后面，看看会怎么样；5）思考：在工业机器人和服务机器人中，运动规划分别有什么特点？为什么需要运动规划？直接给关节插值不行吗？AI在运动规划中有什么应用？",
+          deep_dive: "深入理解运动规划算法与机器人操作：运动规划是机器人学的核心问题之一——从起点到终点，找到一条无碰撞、满足约束的路径。运动规划算法有很多种：1）基于采样的规划算法：如RRT（快速扩展随机树）、PRM（概率路图），不需要精确建模空间，随机采样，概率完备，高维空间中效率高，是MoveIt中最常用的；2）基于优化的规划算法：如CHOMP、TrajOpt，把规划问题转化为优化问题，轨迹更平滑；3）人工势场法：目标吸引、障碍排斥，简单但容易陷入局部最优；4）A*等图搜索算法：在低维空间中好用，高维空间维度爆炸；5）混合方法：把多种方法结合。对于7自由度的机械臂，状态空间是7维的，基于采样的方法通常是最好的选择。但运动规划只是机器人操作的第一步——规划出路径后，还需要轨迹优化（让轨迹更平滑、更省时间、更省能量）、轨迹跟踪（用控制器让机器人沿着轨迹走）、力控制（和环境接触时需要控制接触力，而不是位置）等等。在未来的工厂和家庭中，机器人需要和环境、和人交互，这就需要力觉、触觉、视觉等多模态感知，也需要更智能的规划和控制方法。AI和机器人的结合是当前的热点——用深度学习做感知（物体识别、位姿估计）、用强化学习做操作策略学习、用模仿学习从演示中学习技能。但传统的运动规划和控制仍然是基础——保证机器人安全、稳定、高效地运动。如果你对机器人操作感兴趣，MoveIt2是必须掌握的工具，它把很多复杂的算法都封装好了，你可以专注于上层的应用开发。"
+        }, duration: "2.5小时", resources: [{ title: "MoveIt2官方文档", url: "https://moveit.picknik.ai/", required: true, type: "doc", source: "official" }, { title: "运动学与D-H参数", url: "https://www.cs.cmu.edu/~hulden/courses/15462-f11/lectures/lec24_kinematics.pdf", required: false, type: "doc", source: "other" }, { title: "OMPL运动规划库", url: "https://ompl.kavrakilab.org/", required: false, type: "tool", source: "other" }], checkpoint: "能用MoveIt2为机械臂规划一条避障的运动轨迹" },
+      { day: 12, title: "机器人感知与视觉伺服",
+        summary: "理解机器人视觉的基本概念，掌握眼在手眼标定和视觉伺服的基本原理。", content: {
+          objective: "今天你将学习机器人视觉感知和视觉伺服。学完后你能理解手眼标定的原理和重要性，掌握视觉伺服的基本概念和分类（位置-based vs 速度-based），了解相机标定、目标检测、位姿估计在机器人中的应用。视觉是机器人最重要的感知方式之一，视觉伺服是用视觉信号闭环控制机器人运动的技术。",
+          key_points: [
+            "相机标定：确定相机的内参（焦距、主点、畸变系数）和外参（相机相对于机器人的位姿），是视觉测量的基础",
+            "手眼标定：确定相机和机器人末端执行器之间的位姿关系，eye-in-hand（相机在手上）和eye-to-hand（相机固定）",
+            "位姿估计：从图像中估计物体的6D位姿（位置+姿态），是视觉抓取的关键步骤",
+            "基于位置的视觉伺服（PBVS）：先估计目标位姿，再用逆运动学求关节角，规划路径，视觉在环外",
+            "基于图像的视觉伺服（IBVS）：直接在图像空间定义误差，用图像雅可比矩阵直接控制机器人速度，视觉在环内"
+          ],
+          practice: "完成以下机器人视觉与视觉伺服实践：1）相机标定入门：用棋盘格和OpenCV做一个简单的相机标定，获取相机内参和畸变系数，理解每个参数的物理意义；2）手眼标定理解：画示意图说明eye-in-hand和eye-to-hand两种配置的区别，分别推导标定方程AX=XB，理解为什么需要多组不同的姿态来求解；3）视觉伺服概念：对比PBVS和IBVS的优缺点，思考各自适用的场景——什么时候用PBVS？什么时候用IBVS？为什么IBVS对相机标定误差更鲁棒？4）目标检测与抓取：设计一个简单的视觉抓取系统流程——相机拍照片→目标检测→位姿估计→运动规划→抓取执行，每个环节需要用到什么技术？可能会遇到什么问题？5）思考：在工业4.0和智能制造中，机器视觉扮演什么角色？为什么说「眼睛」是机器人最重要的传感器？AI特别是深度学习，给机器人视觉带来了哪些革命性的变化？",
+          deep_dive: "深入理解机器人感知的完整图景与AI的作用：机器人感知是一个非常广泛的领域，除了视觉，还有很多其他传感器：1）视觉传感器：2D相机（单目、双目、RGB-D）、3D相机（结构光、ToF、激光雷达）、事件相机；2）力/力矩传感器：测量接触力和力矩，用于力控制、装配、打磨；3）触觉传感器：电子皮肤、阵列触觉，感受接触形状、材质、温度；4）IMU：测量加速度和角速度，用于状态估计；5）距离传感器：超声波、红外、激光测距；6）位置传感器：编码器、电位器，测量关节角度。每种传感器都有它的优缺点和适用场景。多传感器融合是机器人感知的核心问题——把不同传感器的信息结合起来，得到比单一传感器更准确、更可靠、更全面的环境感知。卡尔曼滤波和它的变种（EKF、UKF、粒子滤波）是最常用的融合方法。在这些传感器中，视觉是信息最丰富的，也是最难处理的。传统的计算机视觉方法（特征提取、SIFT/SURF、模板匹配、几何方法）在工业场景中（光照稳定、背景简单）效果很好，但在复杂环境下鲁棒性差。深度学习的出现彻底改变了计算机视觉——目标检测（YOLO、Faster R-CNN）、语义分割（Mask R-CNN）、实例分割、6D位姿估计（PoseCNN、DOPE），这些任务的准确率得到了质的飞跃。但深度学习也有它的问题——需要大量标注数据、泛化能力有限、可解释性差、计算量大。在实际机器人系统中，通常是传统方法和深度学习结合——深度学习负责高层的语义理解（这是什么物体？在哪里？），传统方法负责精确的几何计算（精确的位姿、边缘、尺寸）。未来的机器人感知，应该是多模态的——视觉、力觉、触觉、听觉等多种传感器融合，才能真正理解物理世界。而AI，特别是多模态大模型，将在其中扮演核心角色。"
+        }, duration: "2小时", resources: [{ title: "视觉伺服导论", url: "https://www.cs.cmu.edu/~16385/s17/Slides/15.0_Visual_Servoing.pdf", required: false, type: "doc", source: "other" }, { title: "手眼标定", url: "https://www.mathworks.com/help/vision/ug/hand-eye-calibration.html", required: false, type: "doc", source: "official" }, { title: "ROS2视觉教程", url: "https://docs.ros.org/en/humble/Tutorials/Intermediate/Tf2/Tf2-Main.html", required: false, type: "doc", source: "official" }], checkpoint: "能解释手眼标定的原理，说出PBVS和IBVS的区别" },
+      { day: 13, title: "Gazebo仿真与数字孪生",
+        summary: "掌握Gazebo物理仿真器的使用，理解仿真在机器人开发中的重要性。", content: {
+          objective: "今天你将学习Gazebo——机器人领域最常用的物理仿真器。学完后你能理解物理仿真的基本原理（刚体动力学、碰撞检测、传感器仿真），掌握Gazebo的基本使用，能在仿真环境中搭建机器人模型、加载传感器、测试算法。仿真在机器人开发中至关重要——安全、高效、低成本。",
+          key_points: [
+            "物理仿真引擎：模拟刚体动力学、碰撞、摩擦、重力等物理现象，常用的有ODE、Bullet、Simbody、DART",
+            "Gazebo架构：世界描述（SDF文件）、物理引擎、传感器仿真、可视化界面、插件系统",
+            "URDF/SDF：机器人模型描述格式，URDF是ROS标准，SDF是Gazebo原生格式，更强大",
+            "传感器仿真：摄像头、深度相机、激光雷达、IMU、力传感器等都可以在仿真中模拟，带噪声模型",
+            "数字孪生：用仿真构建物理系统的数字副本，可以测试、验证、优化，是工业4.0的核心概念"
+          ],
+          practice: "完成以下Gazebo仿真实践：1）Gazebo入门：打开Gazebo，熟悉界面，添加一些简单物体（盒子、球、圆柱），点击播放看物理效果——物体下落、碰撞、滚动，感受物理仿真；2）机器人模型：用URDF或SDF创建一个简单的机器人模型（比如差速轮式机器人或简单的机械臂），导入Gazebo中，观察它在物理引擎下的行为；3）传感器仿真：给机器人添加传感器（摄像头、激光雷达、IMU），在仿真中看传感器输出的图像/点云/数据，和真实传感器对比；4）Gazebo插件：了解Gazebo的插件系统——驱动插件、传感器插件、系统插件，写一个简单的插件控制机器人运动；5）思考：为什么机器人开发需要仿真？直接在真实机器人上开发不行吗？仿真和真实之间的差距（Sim-to-Real Gap）有哪些？怎么缩小这个差距？AI算法（如强化学习）为什么特别依赖仿真？",
+          deep_dive: "深入理解仿真的重要性与Sim-to-Real：仿真在机器人开发中的作用怎么强调都不为过：1）安全性：在真实机器人上测试危险的场景可能损坏机器人甚至伤人，在仿真中随便怎么试都没关系；2）效率：仿真可以加速时间、并行运行，比真实实验快得多；3）成本：不需要买昂贵的机器人硬件，一台电脑就能开发；4）可复现性：仿真环境是确定的，实验可以精确重复；5）数据生成：可以生成大量标注数据，用来训练深度学习模型。但仿真也有它的最大问题——Sim-to-Real Gap（仿真到真实的差距）：仿真中的物理参数（摩擦系数、质量、惯性）和真实有差距；仿真中的传感器模型是理想化的，真实传感器有各种噪声和畸变；仿真中的环境是简化的，真实环境复杂多变。用仿真训练出来的算法，直接放到真实机器人上可能效果很差。怎么缩小Sim-to-Real Gap？常用的方法有：1）系统辨识：精确测量真实系统的物理参数，让仿真更准确；2）随机化（Domain Randomization）：在仿真中随机化各种参数（物理参数、视觉参数、环境），让策略在各种变化下都鲁棒，到真实环境中也能适应；3）域适应（Domain Adaptation）：用迁移学习的方法，把仿真域学到的知识迁移到真实域；4）仿真到真实的微调：在真实环境中用少量数据微调；5）混合仿真：部分真实部分仿真，比如硬件在环（HIL）。在强化学习中，Sim-to-Real是一个核心研究问题——因为强化学习需要大量交互数据，只能在仿真中训练，但最终要用到真实机器人上。随着仿真技术的进步（更精确的物理引擎、更真实的渲染、更多的传感器模型），Sim-to-Real Gap在不断缩小，但还没有完全解决。数字孪生（Digital Twin）是仿真的进阶版本——不仅仅是离线仿真，而是和真实系统实时同步、双向连接的数字副本，可以用来监控、诊断、预测、优化真实系统。在智能制造中，数字孪生是核心技术之一。未来，随着仿真技术和AI的发展，「在仿真中训练，在真实中部署」会越来越普及，这将大大加速机器人和AI的落地应用。"
+        }, duration: "2小时", resources: [{ title: "Gazebo官方文档", url: "https://gazebosim.org/docs", required: true, type: "doc", source: "official" }, { title: "URDF教程", url: "https://docs.ros.org/en/humble/Tutorials/Intermediate/URDF/URDF-Main.html", required: false, type: "doc", source: "official" }, { title: "数字孪生白皮书", url: "https://www.mckinsey.com/capabilities/operations/our-insights/what-is-digital-twin-technology-and-why-it-matters", required: false, type: "article", source: "other" }], checkpoint: "能在Gazebo中加载一个机器人模型并跑起来" },
+      { day: 14, title: "SLAM与自主导航",
+        summary: "理解SLAM的基本概念和主流方案，掌握ROS2 Navigation2导航框架的使用。", content: {
+          objective: "今天你将学习SLAM和自主导航——移动机器人的核心技术。学完后你能理解SLAM（同时定位与建图）的基本概念和主要方案（激光SLAM、视觉SLAM），掌握ROS2 Navigation2导航框架的基本使用，能让机器人在已知地图中自主导航。SLAM是移动机器人实现自主的关键。",
+          key_points: [
+            "SLAM定义：机器人在未知环境中一边移动一边建立环境地图，同时估计自己的位置，是「鸡生蛋、蛋生鸡」的问题",
+            "激光SLAM：用激光雷达做SLAM，代表算法有GMapping、Hector SLAM、Cartographer、LOAM，成熟稳定，工业界主流",
+            "视觉SLAM（VSLAM）：用相机做SLAM，代表方案有ORB-SLAM、VINS、DSO，信息丰富但难度大，是研究热点",
+            "Navigation2：ROS2的导航框架，包含定位（AMCL）、路径规划（全局+局部）、代价地图、行为树等组件",
+            "自主导航流程：建图→定位→全局路径规划→局部路径规划→运动控制，形成完整的导航闭环"
+          ],
+          practice: "完成以下SLAM与自主导航实践：1）SLAM理解：用自己的话解释什么是SLAM，为什么SLAM难？激光SLAM和视觉SLAM各有什么优缺点？分别适合什么场景？2）Cartographer入门：用Gazebo仿真环境，运行Cartographer激光SLAM算法，控制机器人移动，观看地图构建的过程，理解SLAM是怎么一边走一边建图的；3）导航入门：在已经建好的地图上，运行Navigation2导航栈，在RViz2中给机器人一个目标点，观察机器人的路径规划和导航过程，理解全局规划和局部规划的区别；4）避障实验：在机器人导航路径上手动放一个障碍物（可以是动态的，比如用手挡一下），观察机器人怎么检测到障碍并重新规划路径绕过它；5）思考：在家庭服务机器人、工厂AGV、自动驾驶汽车中，SLAM和导航分别有什么特点和难点？为什么说SLAM是「机器人的圣杯」问题？AI在SLAM中有什么应用？",
+          deep_dive: "深入理解SLAM的技术细节与未来方向：SLAM是机器人学中最核心、最难的问题之一，经过几十年的发展，已经形成了比较成熟的技术体系。让我们深入了解一下：1）SLAM的数学基础：贝叶斯滤波、卡尔曼滤波、粒子滤波、图优化（最大似然估计）。早期SLAM用滤波方法（EKF-SLAM、FastSLAM），现在主流是图优化方法（把SLAM转化为一个最小二乘优化问题，用g2o、Ceres等求解器求解）；2）前端和后端：SLAM通常分为前端和后端。前端负责数据关联——新来的传感器数据和地图匹配，计算位姿变换；后端负责优化——把所有的位姿和约束放在一起优化，得到全局一致的地图和轨迹；3）回环检测：机器人回到之前到过的地方，能认出来，并修正累积误差，这是SLAM的关键能力，也是难点；4）多传感器融合SLAM：融合激光、视觉、IMU、GPS等多种传感器，比单传感器更鲁棒、更准确，是趋势。SLAM的研究前沿包括：1）语义SLAM：不仅建几何地图，还建语义地图（知道哪里是墙、哪里是门、哪里是人），让机器人理解环境；2）动态SLAM：处理动态环境（移动物体），传统SLAM假设环境是静态的；3）多机器人SLAM：多个机器人协作建图；4）神经SLAM：用深度学习做SLAM的某些模块甚至整个SLAM；5） lifelong SLAM：机器人在环境中长期运行，地图能持续更新。在自动驾驶领域，SLAM和高精地图是核心技术——但自动驾驶通常用的是「高精地图 + 定位」而不是纯SLAM，因为道路环境相对固定，可以提前建好地图。而在未知环境中探索的机器人（比如火星车、灾难救援机器人），就必须靠SLAM了。理解SLAM的基本原理，能帮你更好地理解移动机器人是怎么「认识」环境的，也为进一步深入机器人学打下基础。"
+        }, duration: "2.5小时", resources: [{ title: "Navigation2官方文档", url: "https://navigation.ros.org/", required: true, type: "doc", source: "official" }, { title: "Cartographer", url: "https://google-cartographer.readthedocs.io/", required: false, type: "doc", source: "official" }, { title: "视觉SLAM十四讲", url: "https://github.com/gaoxiang12/slambook2", required: false, type: "repo", source: "github" }], checkpoint: "能说清楚SLAM的概念，并用Navigation2实现简单的自主导航" },
+      { day: 15, title: "机器人综合项目：自主移动机器人",
+        summary: "搭建一个完整的自主移动机器人系统，综合运用ROS2、SLAM、导航、感知等知识。", content: {
+          objective: "今天你将完成一个机器人综合项目——搭建一个完整的自主移动机器人系统。通过这个项目，你会把前三周学到的ROS2编程、Gazebo仿真、SLAM建图、自主导航、视觉感知等知识融会贯通。这是检验你机器人学习成果的最好方式。",
+          key_points: [
+            "系统架构：分层设计——硬件驱动层、ROS2中间件层、算法层（SLAM/导航/感知）、应用层",
+            "核心功能：建图、定位、自主导航、避障、目标检测、人机交互",
+            "开发流程：仿真开发 → 硬件部署 → 集成测试 → 优化迭代",
+            "调试工具：RViz2可视化、ros2工具、日志系统、参数动态配置",
+            "常见问题：TF变换错误、坐标系不统一、传感器时间同步、延迟、参数调优"
+          ],
+          practice: "完成自主移动机器人综合项目，要求如下：\n\n基础功能（必做）：\n1）机器人模型：在Gazebo中搭建或使用一个现成的差速轮式机器人模型，配备激光雷达和摄像头传感器；\n2）SLAM建图：用Cartographer或GMapping控制机器人在仿真环境中走一圈，建立一张完整的二维栅格地图；\n3）自主导航：在已建地图上配置Navigation2，实现点到点的自主导航，包括路径规划、动态避障；\n4）可视化：在RViz2中配置完整的可视化界面——显示地图、机器人模型、激光点云、规划路径、TF变换、摄像头画面；\n5）基本测试：测试机器人的导航效果——从A点到B点能不能安全到达？遇到动态障碍物能不能避开？定位准不准？\n\n进阶功能（选做）：\n1）目标检测：用YOLO或其他目标检测模型，对摄像头画面做实时目标检测，把检测结果发布到ROS2话题上；\n2）语义导航：让机器人导航到某个语义目标，比如「导航到桌子那里」，而不是具体坐标；\n3）人机交互：做一个简单的Web界面或App，可以远程控制机器人、查看摄像头画面、指定导航目标；\n4）多机器人：实现两个机器人的协同导航，避免碰撞，甚至协作完成任务；\n5）实机部署：如果你有真实的机器人硬件（比如TurtleBot3、自己DIY的小车），把仿真中的代码部署到真实机器人上，体验Sim-to-Real；\n6）系统优化：优化导航参数，让机器人走得更快、更稳、更安全；优化系统延迟。\n\n项目要求：\n- 完整的代码和配置文件\n- README说明文档（功能介绍、架构、怎么运行）\n- 可以在仿真环境中完整运行\n- 有演示视频或截图\n\n完成后，总结一下你在这个项目中学到了什么，遇到了什么问题，是怎么解决的。",
+          deep_dive: "机器人学习的意义与AI+机器人的未来：完成这个综合项目后，你应该对机器人系统有了比较全面的理解。你可能会发现——做一个能真正动起来的机器人系统，比想象中要复杂得多。ROS2、SLAM、导航、运动规划、视觉、控制，每个领域都有很深的水。但这正是机器人的魅力所在——它是一个高度交叉的学科，融合了机械、电子、控制、计算机、AI等多个领域。AI的兴起给机器人带来了新的机遇：1）感知革命：深度学习让计算机视觉、语音识别、自然语言处理的性能突飞猛进，机器人终于能「看懂」、「听懂」这个世界了；2）决策革命：强化学习、大模型让机器人能做更智能的决策和规划；3）交互革命：大语言模型让人和机器人的自然语言交互成为可能，你可以用语言命令机器人做事。但AI也不是万能的——底层的运动控制、状态估计、实时系统，传统方法依然更可靠、更高效。未来的机器人一定是「AI + 传统机器人技术」的深度融合。如果你想在机器人领域深入发展，可以往这些方向走：1）机器人操作（Manipulation）：机械臂、抓取、装配、灵巧手；2）移动机器人（Mobile Robotics）：导航、SLAM、多机器人系统；3）人形机器人（Humanoid）：全身控制、平衡、运动规划，当前最火的方向；4）自主系统（Autonomous Systems）：自动驾驶、无人机、水下机器人；5）软体机器人（Soft Robotics）：新型材料和结构，更安全的人机交互；6）群体机器人（Swarm Robotics）：大量简单机器人协作完成复杂任务。最后，希望这次ROS和机器人的学习，能帮你打开机器人世界的大门。AI让机器人更聪明，机器人让AI有了身体，两者的结合将深刻改变未来的生产和生活方式。"
+        }, duration: "4小时", resources: [{ title: "ROS2机器人项目实战", url: "https://roboticsbackend.com/category/ros2/", required: false, type: "article", source: "other" }, { title: "TurtleBot3教程", url: "https://emanual.robotis.com/docs/en/platform/turtlebot3/overview/", required: false, type: "doc", source: "official" }, { title: "自主移动机器人导论", url: "https://www.cambridge.org/core/books/introduction-to-autonomous-mobile-robots/F39C28EC288B2D5D22A0B76E9F0A1A4B", required: false, type: "book", source: "other" }], checkpoint: "搭建了一个完整的自主移动机器人仿真系统，能建图和导航" }
+
     ]
   },
 
@@ -7335,7 +8373,73 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "设计并实现两轮自平衡小车项目，要求如下：\n\n系统组成（必做部分）：\n1）硬件选型：\n   - MCU：STM32或Arduino或ESP32\n   - 传感器：MPU6050（六轴IMU，加速度计+陀螺仪）\n   - 电机：两个直流减速电机（带编码器更好）\n   - 驱动：TB6612或L298N电机驱动板\n   - 电源：锂电池（7.4V或12V）+ 稳压电路\n   - 机械结构：车架、轮子（建议两轮差动式）\n\n2）软件功能：\n   a）传感器驱动：读取MPU6050的加速度和陀螺仪原始数据\n   b）姿态解算：用互补滤波融合加速度计和陀螺仪的数据，计算小车的倾角和角速度；如果能力够，可以用卡尔曼滤波\n   c）电机驱动：用PWM控制两个电机的转速和方向，实现正转、反转、刹车\n   d）直立环PID：角度环PID，输入是角度误差（目标角度-当前角度），输出是目标速度；目标角度通常是0度（竖直）\n   e）速度环PID：速度环PID，输入是速度误差（目标速度-当前速度），输出是PWM占空比；如果没有编码器可以估算速度，或者只用角度环\n   f）串级控制：角度环作为外环，输出作为速度环的目标，形成串级PID控制\n   g）基本功能：能直立站立、轻轻推一下能恢复平衡\n\n进阶功能（选做）：\n1）转向控制：增加一个转向环，控制两个电机的差速实现转向；可以用遥控（蓝牙/红外/APP）控制小车前后左右移动\n2）速度闭环：加编码器，实现真正的速度闭环，效果更好\n3）位置环：再加一个位置环，让小车走到指定位置\n4）手机APP：用蓝牙或WiFi做一个手机APP，远程控制小车、调PID参数、显示姿态\n5）调试界面：用串口上位机显示角度、速度、PWM等波形，方便调参\n6）进阶算法：用LQR控制代替PID，看效果会不会更好\n\n项目要求：\n- 完整的硬件方案（或仿真方案）\n- 软件代码（结构化、有注释）\n- PID参数调试记录和最终参数\n- 效果演示视频\n- 项目总结（遇到的问题、解决方法、收获）\n\n完成后，思考一下：这个自平衡小车和倒立摆有什么异同？如果要让小车走直线、转弯，还需要增加哪些控制环？",
           deep_dive: "从自平衡小车看机器人控制的分层架构：自平衡小车虽然简单，但它包含了机器人控制的很多核心要素——感知（IMU传感器）、状态估计（姿态解算）、控制（PID串级控制）、执行（电机驱动）。这些要素，在更复杂的机器人（如四旋翼无人机、人形机器人、自动驾驶汽车）中也同样存在，只是更复杂而已。让我们从自平衡小车出发，看看更高级的机器人控制的分层架构：1）硬件层：传感器（IMU、摄像头、激光雷达、编码器、力传感器）、执行器（电机、舵机、气缸）、动力系统（电池、电源管理）；2）驱动层：电机驱动、传感器驱动、通信接口驱动；3）状态估计层：把各种传感器的数据融合起来，估计机器人的状态——位置、速度、姿态、速度等等。这就是卡尔曼滤波、粒子滤波、SLAM这些算法发挥作用的地方。没有准确的状态估计，再好的控制算法也没用；4）控制层：根据目标状态和当前状态，计算控制量（给电机的指令）。低层面上是PID、LQR这些控制算法，高层面上是运动规划和轨迹优化；5）决策规划层：更高层的智能——要去哪里？走哪条路？先做什么后做什么？这是AI发挥作用的地方，强化学习、路径规划、行为决策都在这一层；6）交互层：和人或其他系统交互——语音、视觉、触屏、网络通信。你会发现，传统控制理论（PID、LQR、卡尔曼滤波）主要在下面几层，负责「怎么做好」；而AI主要在上层，负责「做什么」和「往哪走」。两者是互补的，不是替代关系。未来的智能机器人一定是「AI做决策规划 + 传统控制做底层执行」的组合。理解了这一点，你就知道AI工程师应该把精力放在哪里——不是去重新发明PID，而是在更高的层面，让机器人更智能、更自主。希望这个自平衡小车项目，能让你对控制和机器人有更直观的理解。"
+        }, duration: "4小时", resources: [{ title: "自平衡小车教程", url: "https://www.instructables.com/Self-Balancing-Robot/", required: false, type: "article", source: "other" }, { title: "MPU6050与姿态解算", url: "https://howtomechatronics.com/tutorials/arduino/arduino-and-mpu6050/", required: false, type: "article", source: "other" }, { title: "平衡车PID调试", url: "https://www.geek-workshop.com/thread-10094-1-1.html", required: false, type: "article", source: "other" }], checkpoint: "完成自平衡小车的系统设计和控制算法实现，小车能基本保持直立" },
+      { day: 11, title: "直流电机调速与PWM控制",
+        summary: "深入理解直流电机调速原理，掌握PWM控制和H桥驱动的设计方法。", content: {
+          objective: "今天你将深入学习直流电机调速和PWM控制技术。学完后你能理解直流电机的调速原理，掌握PWM（脉冲宽度调制）的概念和计算方法，理解H桥驱动电路的工作原理，能设计简单的电机调速系统。PWM和H桥是电机控制的基础技术。",
+          key_points: [
+            "直流电机调速方法：改变电枢电压（最常用）、改变磁通、改变电枢回路电阻；调压调速性能最好",
+            "PWM控制：脉冲宽度调制，用开关方式调节平均电压，频率固定改变占空比，效率高、响应快",
+            "H桥驱动：四个开关管组成H形，控制电流方向实现正反转，配合PWM实现调速，是直流电机驱动的标准电路",
+            "驱动芯片：L298N、L293D（小功率）、BTN7971、DRV8833等集成驱动芯片，比分立元件可靠",
+            "调速性能指标：调速范围、静差率、平滑性、效率、响应速度，不同应用要求不同"
+          ],
+          practice: "完成以下直流电机调速实践：1）PWM原理理解：假设定时器频率10kHz，电源电压12V，分别计算占空比为0%、25%、50%、75%、100%时的平均电压，画出PWM波形示意图；理解为什么PWM能等效为模拟电压；2）H桥工作原理：画出H桥电路的四个工作状态——正转、反转、停止（高阻）、刹车（短路制动），分别说明四个管子的开关状态和电流流向；理解为什么不能同时导通同一侧的上下管（直通短路）；3）死区时间：什么是死区时间？为什么需要死区？死区时间太长和太短分别有什么问题？4）调速系统设计：设计一个简单的直流电机调速系统——MCU产生PWM信号→H桥驱动电路→直流电机→（可选）速度反馈（编码器）→闭环调速，画出系统框图；5）实验验证：如果有条件，用Arduino或STM32+L298N驱动一个直流电机，用PWM调速，观察不同占空比下的电机转速，验证PWM调速的效果；6）思考：为什么现在的电机驱动几乎都用PWM方式，而不用线性稳压的方式调压？PWM调速有什么优缺点？",
+          deep_dive: "深入理解电机驱动的进阶技术与应用：PWM和H桥是电机驱动的基础，但实际的电机驱动系统比这复杂得多。让我们了解一些进阶知识：1）多种PWM方式：除了普通的边沿对齐PWM，还有中心对齐PWM（对称PWM），在电机控制中效果更好，因为它的电流纹波更小；还有空间矢量PWM（SVPWM），在三相电机控制中更高效，电压利用率更高；2）死区与死区补偿：为了防止上下桥臂直通，需要加入死区时间，但死区会导致输出电压误差、电流畸变，尤其是在低速轻载时更明显，所以需要死区补偿算法；3）电流采样：电机控制需要知道电流做闭环，采样方式有低边采样（在桥臂下端采样，简单但有共模问题）、高边采样（在桥臂上端采样，需要高共模抑制比的放大器）、相间采样（在两相之间采样）；4）保护电路：电机驱动必须有完善的保护——过流保护、过压保护、欠压保护、过温保护、短路保护，否则很容易烧管子；5）驱动隔离：高压大功率场合，控制电路和驱动电路需要隔离，用光耦或隔离驱动器，保证安全；6）散热设计：功率管工作时会发热，需要合理设计散热片，计算温升，确保在安全温度范围内。电机驱动是电力电子学的核心内容之一，小到玩具、大到高铁，都离不开电机驱动。对于做机器人、自动驾驶、工业自动化的AI工程师来说，理解电机驱动的原理很重要——因为所有运动的东西最终都是靠电机驱动的。虽然你可能不需要自己设计驱动板，但知道底层原理，能帮你更好地调试电机相关的问题，也能在选型时做出更合理的决策。"
+        }, duration: "2小时", resources: [{ title: "PWM电机控制", url: "https://www.electronics-tutorials.ws/blog/pulse-width-modulation.html", required: true, type: "article", source: "other" }, { title: "H桥驱动原理", url: "https://www.modularcircuits.com/blog/articles/h-bridge-secrets/h-bridge-the-basics/", required: false, type: "article", source: "other" }, { title: "直流电机调速", url: "https://www.ebay.com/gds/How-to--Control-the-Speed-of-a-DC-Motor-/10000000177622218/g.html", required: false, type: "article", source: "other" }], checkpoint: "能解释PWM调速和H桥的工作原理，画出H桥四种状态的电流路径" },
+      { day: 12, title: "三相异步电机与变频调速",
+        summary: "理解三相异步电机的工作原理和变频调速方法，掌握V/F控制和矢量控制的基本概念。", content: {
+          objective: "今天你将学习三相异步电机和变频调速技术。学完后你能理解异步电机的旋转磁场和工作原理，掌握变频调速的基本思想，了解V/F控制和矢量控制的区别，知道变频器的基本结构和应用。异步电机是工业中应用最广泛的电机，变频调速是工业节能的核心技术。",
+          key_points: [
+            "异步电机结构：定子（三相绕组）+ 转子（鼠笼式/绕线式），没有电刷和换向器，结构简单、可靠、便宜",
+            "旋转磁场：三相交流电通入定子绕组，产生旋转的磁场，转速n1=60f/p（同步转速），f是频率p是极对数",
+            "异步原理：转子转速n略低于同步转速n1，有转差率s=(n1-n)/n1，转子导体切割磁感线产生感应电流，从而受力旋转",
+            "变频调速：改变供电频率f来改变同步转速，从而调节电机转速，是异步电机最好的调速方式，高效节能",
+            "V/F控制：电压和频率成比例变化，保持磁通恒定，简单可靠，通用变频器常用；矢量控制（VC）：更高性能，类似直流电机的控制效果"
+          ],
+          practice: "完成以下异步电机与变频调速实践：1）旋转磁场理解：用示意图说明三相交流电如何产生旋转磁场——三个绕组在空间相差120度，通入时间上相差120度的正弦电流，合成磁场就会旋转；试着推导一下旋转磁场的转速为什么是60f/p；2）异步电机原理：为什么叫「异步」电机？转差率是什么？如果转子转速等于同步转速会怎么样？空载和满载时转差率大概是多少？3）变频调速理解：为什么变频率就能调速？为什么变频率的同时还要变电压？如果只变频率不变电压会怎么样？（低频时磁通饱和，高频时磁通不足）4）变频器结构：画出变频器的基本结构框图——整流部分（AC→DC）、滤波部分（电容）、逆变部分（DC→AC，三相逆变桥）、控制部分（MCU/DSP）；理解每部分的作用；5）V/F vs 矢量控制：对比V/F控制和矢量控制的区别——原理、性能、复杂度、成本、适用场景；什么情况下用V/F就够了？什么情况下必须用矢量控制？6）思考：为什么工业领域大量使用异步电机而不是直流电机？变频调速为什么能节能？（比如风机水泵用阀门调节流量很浪费，用变频调速就很节能）",
+          deep_dive: "深入理解电机控制的高级算法与工业传动：交流电机的控制比直流电机复杂得多，因为它是强耦合、多变量、非线性的系统。经过几十年的发展，交流调速技术已经非常成熟，主要有几代控制方法：1）V/F控制（恒压频比）：最简单最基本的方法，电压和频率成正比，保持磁通恒定，开环控制，不需要速度传感器，成本低，但动态性能一般，低速性能差，适合对性能要求不高的场合，比如风机、水泵、传送带。这也是市面上通用变频器最常用的方式。2）转差频率控制：在V/F的基础上增加了速度闭环，控制转差频率，性能比V/F好，但还是没解决耦合问题。3）矢量控制（Field Oriented Control，FOC）：也叫磁场定向控制，是现在高性能交流调速的主流。核心思想是把定子电流分解成励磁分量和转矩分量，像控制直流电机一样分别控制它们，实现解耦，从而获得和直流电机一样的控制性能。矢量控制需要知道转子磁链的位置，所以需要速度传感器（编码器），或者用无速度传感器算法（通过电压电流估算速度）。4）直接转矩控制（DTC）：另一种高性能控制方法，直接控制磁链和转矩，不需要坐标变换，响应更快，但转矩脉动大，低速性能不如矢量控制。5）模型预测控制（MPC）：最新的控制方法，基于电机模型预测未来的状态，选择最优的电压矢量，动态性能好，处理约束能力强，是研究热点。在工业传动领域，变频调速是一项革命性的技术——它不仅实现了高效的调速，更重要的是节能。在风机、水泵、压缩机这类应用中，用阀门/挡板调节流量的方式，大量能量都浪费在阀门上了，而用变频调速，节能率可以达到30%-50%，非常可观。这也是为什么国家大力推广变频调速的原因。对于做工业AI和智能制造的工程师来说，理解变频器和变频调速很重要——电机是工业中耗电最多的设备，电机系统的节能优化是工业AI的重要应用场景之一。"
+        }, duration: "2.5小时", resources: [{ title: "异步电机原理", url: "https://www.electronics-tutorials.ws/accircuits/three-phase-induction-motor.html", required: true, type: "article", source: "other" }, { title: "V/F控制与矢量控制", url: "https://www.automation.com/control-motion/articles/vfd-control-modes-vf-vector-and-sensorless-vector", required: false, type: "article", source: "other" }, { title: "变频器原理", url: "https://www.electrical4u.com/variable-frequency-drive/", required: false, type: "article", source: "other" }], checkpoint: "能解释异步电机的工作原理和变频调速的基本思想，说出V/F和矢量控制的区别" },
+      { day: 13, title: "伺服电机与高精度运动控制",
+        summary: "深入理解伺服电机系统的构成和工作原理，掌握高精度位置控制的实现方法。", content: {
+          objective: "今天你将深入学习伺服电机系统。学完后你能理解伺服系统的组成和工作原理，知道伺服电机和普通电机的区别，掌握位置、速度、电流三环控制的结构，了解编码器等位置传感器的原理。伺服系统是高精度运动控制的核心。",
+          key_points: [
+            "伺服系统组成：伺服电机 + 伺服驱动器 + 编码器（位置传感器）+ 控制器，闭环控制，高精度高响应",
+            "伺服电机类型：直流伺服、交流伺服（同步/异步）、步进伺服；现在主流是永磁同步交流伺服电机",
+            "反馈传感器：编码器（增量式/绝对式）、旋转变压器、光栅尺，决定了系统的精度和分辨率",
+            "三环控制：电流环（最内环，响应最快）→ 速度环（中间环）→ 位置环（最外环），从内到外环带宽递减",
+            "伺服性能指标：定位精度、重复定位精度、响应带宽、刚度、跟随误差、超调量、整定时间"
+          ],
+          practice: "完成以下伺服系统实践：1）伺服 vs 变频 vs 步进：制作一张对比表，从控制方式、精度、速度、响应、价格、适用场景等维度对比伺服电机、变频器驱动的异步电机、步进电机三者的区别；2）编码器原理：了解增量式编码器和绝对式编码器的工作原理——增量式编码器怎么判断方向和位置？为什么断电后要回零？绝对式编码器为什么断电后位置不丢？什么是单圈绝对式和多圈绝对式？3）三环控制理解：画一张伺服系统三环控制的框图，说明每个环的输入、输出、反馈、控制器（PID），以及三个环的关系——为什么电流环在最里面？为什么要从内环往外环调？4）位置控制模式：理解伺服的三种控制模式——位置模式、速度模式、转矩模式，分别用在什么场合？它们之间怎么切换？5）伺服调谐：理解伺服参数调谐的基本思路——先调电流环（通常驱动器已经调好），再调速度环，最后调位置环；增益太高和太低分别有什么问题？什么是前馈？前馈有什么用？6）思考：在数控机床、机器人、贴片机、3D打印机这些应用中，对伺服系统的要求分别是什么？哪个对精度要求最高？哪个对速度要求最高？",
+          deep_dive: "深入理解伺服驱动的前沿技术与发展趋势：伺服技术是运动控制的核心，也是衡量一个国家工业自动化水平的重要标志。让我们了解一下伺服技术的前沿发展：1）高性能化：更快的响应速度（带宽从几百Hz到几千Hz）、更高的精度（从微米级到纳米级）、更小的体积、更高的功率密度。这得益于更好的电机设计、更好的控制算法、更快的处理器（DSP/FPGA）。2）智能化：自动调谐（Auto-tuning）——驱动器自动识别负载特性，自动计算最优PID参数，不用人工调了；自适应控制——负载变化时自动调整参数；振动抑制——自动检测并抑制机械共振；摩擦力补偿——补偿摩擦力，提高低速性能；故障诊断和预测性维护——通过电流、振动、温度数据分析，预测故障。3）网络化：传统的模拟量+脉冲控制逐渐被工业以太网总线取代，比如EtherCAT、Profinet IRT、MECHATROLINK、SSCNET等，支持更多轴、更快的通信、更灵活的配置。这是运动控制的大趋势。4）一体化：把电机、驱动器、编码器、甚至减速器集成在一起，就是一体化伺服电机，接线更少、安装更方便、体积更小。5）直接驱动：取消减速器，电机直接驱动负载，叫DD马达（Direct Drive），没有背隙、精度高、寿命长，但成本高、转矩大、转速低，在高端半导体设备、检测设备中用得多。6）直线电机：把旋转电机「展开」变成直线的，就是直线电机，直接产生直线运动，不需要丝杠、齿轮等传动机构，速度快、精度高、寿命长，在高速高精度设备（高速贴片机、激光切割机、3D打印）中应用越来越多。伺服技术和AI的结合也很有意思——比如用深度学习做更智能的故障诊断和预测性维护、用强化学习做自适应控制、用AI优化运动轨迹。对于做机器人和智能制造的AI工程师来说，理解伺服系统的原理很重要——机器人的每个关节、产线的每个运动轴，都是伺服系统在控制。AI做决策和规划，最终还是要靠伺服来执行。"
+        }, duration: "2.5小时", resources: [{ title: "伺服系统基础", url: "https://www.yaskawa.com/products/motion-control/servo-drives", required: true, type: "doc", source: "official" }, { title: "编码器原理", url: "https://www.dynapar.com/technology/encoder-basics/", required: false, type: "article", source: "other" }, { title: "伺服调谐指南", url: "https://www.controleng.com/motion-control/servo-tuning-basics/", required: false, type: "article", source: "other" }], checkpoint: "能画出伺服三环控制框图，说出伺服和步进的区别" },
+      { day: 14, title: "电力电子与功率变换",
+        summary: "掌握电力电子的基本概念和主要电路拓扑，理解AC/DC、DC/DC、DC/AC、AC/AC四大变换。", content: {
+          objective: "今天你将学习电力电子学的基础知识。学完后你能理解电力电子的四大基本变换（AC-DC、DC-DC、DC-AC、AC-AC），掌握整流、斩波、逆变、交交变频的基本原理，了解主要的电力电子器件。电力电子是电机驱动、开关电源、新能源等领域的基础。",
+          key_points: [
+            "电力电子学：研究电力的变换与控制的学科，用半导体开关器件对电能进行变换和控制，是弱电控制强电的桥梁",
+            "四大变换：AC→DC（整流）、DC→DC（斩波）、DC→AC（逆变）、AC→AC（交交变频/调压），覆盖了所有电力变换场景",
+            "功率器件：晶闸管（SCR，半控型）、IGBT（复合器件，电压控制，现在的主流）、MOSFET（高速，中低压）、二极管（不可控）",
+            "整流电路：把交流电变成直流电，分不可控整流（二极管）、半控整流（晶闸管）、全控整流（PWM整流，能量双向）",
+            "逆变电路：把直流电变成交流电，是变频器、UPS、光伏逆变器的核心，最常用的是三相电压型桥式逆变"
+          ],
+          practice: "完成以下电力电子实践：1）四大变换总结：用一张图总结电力电子的四大基本变换——AC-DC、DC-DC、DC-AC、AC-AC，每种变换举2-3个实际应用例子，说明它们用在什么地方；2）整流电路：画出单相桥式不可控整流电路的原理图（四个二极管），说明工作原理，画出输入电压电流和输出电压的波形；什么是滤波电容？它的作用是什么？3）DC/DC变换器：了解三种基本的非隔离DC-DC拓扑——Buck（降压）、Boost（升压）、Buck-Boost（升降压），分别画出电路原理图，说明工作原理，写出输入输出电压关系（占空比D）；4）逆变电路：画出单相全桥逆变电路原理图，说明怎么把直流变成交流；什么是SPWM（正弦波PWM）？它是怎么输出正弦波的？5）功率器件对比：对比一下SCR（晶闸管）、IGBT、MOSFET、Power Diode这几种功率器件的特点——可控性（全控/半控/不可控）、开关速度、电压电流等级、适用场合、成本；6）思考：为什么电力电子技术这么重要？它和新能源（光伏、风电、电动车）有什么关系？为什么说电力电子是节能减排的关键技术？",
+          deep_dive: "深入理解电力电子的应用与发展趋势：电力电子技术是现代工业的「粮食」和「维生素」——哪里需要用电，哪里就有电力电子。它的应用非常广泛：1）工业传动：变频器、伺服驱动器，这是电力电子最大的应用领域，也是工业节能的关键；2）电源管理：开关电源（手机充电器、电脑电源、服务器电源）、不间断电源（UPS）、直流电源；3）新能源：光伏逆变器（把光伏板的直流电变成交流电上网）、风电变流器、储能变流器（PCS）；4）交通运输：新能源汽车的电机控制器、车载充电机（OBC）、DC-DC变换器、充电桩；5）消费电子：手机快充、笔记本电源、电视、空调变频；6）电力系统：高压直流输电（HVDC）、柔性交流输电（FACTS）、固态变压器。电力电子技术的发展趋势：1）高频化：开关频率越来越高，磁性元件（变压器、电感）可以做得更小，电源的功率密度越来越高；2）高效化：效率从90%、95%到98%、99%，追求「极致效率」，减少能量浪费；3）高密度：功率密度越来越高，电源做得越来越小越来越轻；4）智能化：加入MCU/DSP，实现数字控制、智能控制、通信、监控、故障诊断；5）宽禁带半导体：这是最有革命性的——碳化硅（SiC）和氮化镓（GaN）这些第三代半导体材料，比传统的硅（Si）器件开关速度更快、损耗更低、耐温更高，可以让电力电子设备更小、更轻、更高效。现在已经在新能源汽车、光伏、快充等领域开始应用了，未来会越来越普及。电力电子是一门非常有价值的学科——它既是电子工程的一部分，也是电气工程的一部分，横跨了强弱电。对于AI从业者来说，电力电子和AI的结合点也很多——比如用AI优化电源控制、用AI做故障诊断、用AI提高光伏逆变器的效率等等。理解电力电子的基本概念，能帮你更好地理解各种电气设备和系统。"
+        }, duration: "2小时", resources: [{ title: "电力电子基础", url: "https://www.electronics-tutorials.ws/power/power-electronics.html", required: true, type: "article", source: "other" }, { title: "DC-DC变换器", url: "https://www.analog.com/en/technical-articles/basics-of-power-supply-topologies.html", required: false, type: "article", source: "other" }, { title: "IGBT与碳化硅", url: "https://www.infineon.com/cms/en/product/power/", required: false, type: "doc", source: "official" }], checkpoint: "能说出电力电子的四大基本变换和各自的应用，解释Buck和Boost电路的工作原理" },
+      { day: 15, title: "电机控制综合项目：自平衡小车",
+        summary: "设计一个两轮自平衡小车的控制系统，综合运用电机控制、PID、传感器、姿态解算等知识。", content: {
+          objective: "今天你将完成一个电机控制综合项目——两轮自平衡小车。通过这个项目，你会把前三周学到的直流电机驱动、PID控制、传感器（陀螺仪+加速度计）、姿态解算、串级PID等知识融会贯通。自平衡小车是学习控制理论和电机控制的经典项目，有趣又有挑战性。",
+          key_points: [
+            "项目原理：两轮自平衡小车的原理和倒立摆类似——小车倒下时，轮子往倒下的方向加速，利用反作用力把小车拉回来，维持直立",
+            "系统组成：MCU + MPU6050（六轴传感器：三轴加速度+三轴陀螺） + 两个直流减速电机 + 电机驱动 + 电源 + 车身",
+            "姿态解算：用加速度计测倾角（重力方向），用陀螺仪测角速度，两者融合得到准确的角度，常用互补滤波或卡尔曼滤波",
+            "串级PID：外环是角度环（直立环），目标是保持直立，输出目标速度；内环是速度环（速度环），目标是跟踪目标速度，输出PWM",
+            "控制流程：传感器读数→姿态解算→角度环PID→速度环PID→电机驱动→电机转动→形成闭环"
+          ],
+          practice: "设计并实现两轮自平衡小车项目，要求如下：\n\n系统组成（必做部分）：\n1）硬件选型：\n   - MCU：STM32或Arduino或ESP32\n   - 传感器：MPU6050（六轴IMU，加速度计+陀螺仪）\n   - 电机：两个直流减速电机（带编码器更好）\n   - 驱动：TB6612或L298N电机驱动板\n   - 电源：锂电池（7.4V或12V）+ 稳压电路\n   - 机械结构：车架、轮子（建议两轮差动式）\n\n2）软件功能：\n   a）传感器驱动：读取MPU6050的加速度和陀螺仪原始数据\n   b）姿态解算：用互补滤波融合加速度计和陀螺仪的数据，计算小车的倾角和角速度；如果能力够，可以用卡尔曼滤波\n   c）电机驱动：用PWM控制两个电机的转速和方向，实现正转、反转、刹车\n   d）直立环PID：角度环PID，输入是角度误差（目标角度-当前角度），输出是目标速度；目标角度通常是0度（竖直）\n   e）速度环PID：速度环PID，输入是速度误差（目标速度-当前速度），输出是PWM占空比；如果没有编码器可以估算速度，或者只用角度环\n   f）串级控制：角度环作为外环，输出作为速度环的目标，形成串级PID控制\n   g）基本功能：能直立站立、轻轻推一下能恢复平衡\n\n进阶功能（选做）：\n1）转向控制：增加一个转向环，控制两个电机的差速实现转向；可以用遥控（蓝牙/红外/APP）控制小车前后左右移动\n2）速度闭环：加编码器，实现真正的速度闭环，效果更好\n3）位置环：再加一个位置环，让小车走到指定位置\n4）手机APP：用蓝牙或WiFi做一个手机APP，远程控制小车、调PID参数、显示姿态\n5）调试界面：用串口上位机显示角度、速度、PWM等波形，方便调参\n6）进阶算法：用LQR控制代替PID，看效果会不会更好\n\n项目要求：\n- 完整的硬件方案（或仿真方案）\n- 软件代码（结构化、有注释）\n- PID参数调试记录和最终参数\n- 效果演示视频\n- 项目总结（遇到的问题、解决方法、收获）\n\n完成后，思考一下：这个自平衡小车和倒立摆有什么异同？如果要让小车走直线、转弯，还需要增加哪些控制环？",
+          deep_dive: "从自平衡小车看机器人控制的分层架构：自平衡小车虽然简单，但它包含了机器人控制的很多核心要素——感知（IMU传感器）、状态估计（姿态解算）、控制（PID串级控制）、执行（电机驱动）。这些要素，在更复杂的机器人（如四旋翼无人机、人形机器人、自动驾驶汽车）中也同样存在，只是更复杂而已。让我们从自平衡小车出发，看看更高级的机器人控制的分层架构：1）硬件层：传感器（IMU、摄像头、激光雷达、编码器、力传感器）、执行器（电机、舵机、气缸）、动力系统（电池、电源管理）；2）驱动层：电机驱动、传感器驱动、通信接口驱动；3）状态估计层：把各种传感器的数据融合起来，估计机器人的状态——位置、速度、姿态、速度等等。这就是卡尔曼滤波、粒子滤波、SLAM这些算法发挥作用的地方。没有准确的状态估计，再好的控制算法也没用；4）控制层：根据目标状态和当前状态，计算控制量（给电机的指令）。低层面上是PID、LQR这些控制算法，高层面上是运动规划和轨迹优化；5）决策规划层：更高层的智能——要去哪里？走哪条路？先做什么后做什么？这是AI发挥作用的地方，强化学习、路径规划、行为决策都在这一层；6）交互层：和人或其他系统交互——语音、视觉、触屏、网络通信。你会发现，传统控制理论（PID、LQR、卡尔曼滤波）主要在下面几层，负责「怎么做好」；而AI主要在上层，负责「做什么」和「往哪走」。两者是互补的，不是替代关系。未来的智能机器人一定是「AI做决策规划 + 传统控制做底层执行」的组合。理解了这一点，你就知道AI工程师应该把精力放在哪里——不是去重新发明PID，而是在更高的层面，让机器人更智能、更自主。希望这个自平衡小车项目，能让你对控制和机器人有更直观的理解。"
         }, duration: "4小时", resources: [{ title: "自平衡小车教程", url: "https://www.instructables.com/Self-Balancing-Robot/", required: false, type: "article", source: "other" }, { title: "MPU6050与姿态解算", url: "https://howtomechatronics.com/tutorials/arduino/arduino-and-mpu6050/", required: false, type: "article", source: "other" }, { title: "平衡车PID调试", url: "https://www.geek-workshop.com/thread-10094-1-1.html", required: false, type: "article", source: "other" }], checkpoint: "完成自平衡小车的系统设计和控制算法实现，小车能基本保持直立" }
+
 
     ]
   },
@@ -7487,7 +8591,73 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成以下Web服务器综合项目：1）用Python的socket实现一个基础HTTP服务器，能处理GET请求，返回HTML页面、文本、JSON等不同类型的响应；2）添加POST请求支持，能解析表单数据和JSON数据，实现一个简单的计算器API；3）实现静态文件服务：能返回指定目录下的静态文件（HTML、CSS、JS、图片），正确处理Content-Type；4）添加路由系统：可以注册路径和处理函数的映射，支持路径参数（如/user/<id>）；5）测试你的服务器：用curl、浏览器、Postman分别测试各种请求，验证功能正确性，同时测试并发能力（可以用ab或wrk压测）。最后对比你的实现和Python标准库http.server的区别，思考如何进一步优化性能。",
           deep_dive: "深入理解生产级Web服务器与AI服务架构：你今天实现的是一个简单的单线程阻塞式服务器，在实际生产环境中，Web服务器要复杂得多。生产级服务器通常有这些特点：1）高性能IO模型：用epoll/kqueue等IO多路复用实现高并发，如Nginx、Node.js、Netty；2）多进程/多线程：结合多进程和IO多路复用，充分利用多核CPU，如Python的Gunicorn、uWSGI；3）反向代理：Nginx作为反向代理处理静态文件、负载均衡、SSL终结，后面接应用服务器；4）应用框架：Flask、FastAPI、Django等框架封装了底层细节，提供路由、中间件、ORM等功能，让开发者专注业务逻辑。在AI服务架构中，一个典型的模型推理服务通常是：客户端→CDN/负载均衡→Nginx反向代理→推理服务（FastAPI/Gunicorn）→模型推理（PyTorch/TensorRT）。还有专门的推理服务框架如Triton Inference Server、TorchServe、TF Serving，提供动态批处理、模型版本管理、多模型支持等高级功能。另外，微服务架构也是现在AI系统的常见架构——把不同功能拆成独立服务，通过gRPC或HTTP通信，用Kubernetes编排管理。理解这些架构的演进和原理，能帮你更好地设计和开发AI应用服务，从简单的脚本到生产级系统都能应对。"
-        }, duration: "3小时", resources: [{ title: "Python HTTP服务器", url: "https://docs.python.org/3/library/http.server.html", required: true, type: "doc", source: "official" }, { title: "Web服务器设计", url: "https://ruslanspivak.com/lsbaws-part1/", required: false, type: "doc", source: "other" },  { title: "TinyWebServer", url: "https://github.com/qinguoyi/TinyWebServer", required: false, type: "repo", source: "github" }], checkpoint: "手写的Web服务器能正确处理GET和POST请求，返回有效响应" }
+        }, duration: "3小时", resources: [{ title: "Python HTTP服务器", url: "https://docs.python.org/3/library/http.server.html", required: true, type: "doc", source: "official" }, { title: "Web服务器设计", url: "https://ruslanspivak.com/lsbaws-part1/", required: false, type: "doc", source: "other" },  { title: "TinyWebServer", url: "https://github.com/qinguoyi/TinyWebServer", required: false, type: "repo", source: "github" }], checkpoint: "手写的Web服务器能正确处理GET和POST请求，返回有效响应" },
+      { day: 11, title: "传输层深入：TCP拥塞控制",
+        summary: "深入理解TCP拥塞控制算法，掌握慢启动、拥塞避免、快速重传、快速恢复原理。", content: {
+          objective: "今天你将深入学习TCP的拥塞控制机制。学完后你能理解拥塞控制的四个核心阶段（慢启动、拥塞避免、快速重传、快速恢复），掌握经典的Tahoe、Reno、NewReno算法，了解BBR等现代拥塞控制算法。对于AI开发者来说，理解TCP拥塞控制能帮你优化分布式训练的网络性能，排查网络相关的性能瓶颈。",
+          key_points: [
+            "拥塞控制 vs 流量控制：流量控制是点对点的（接收方能力），拥塞控制是全局的（网络承载能力）",
+            "慢启动：cwnd从1开始指数增长，直到达到ssthresh，目的是快速探测网络带宽",
+            "拥塞避免：超过ssthresh后线性增长（每个RTT加1），慢慢接近网络容量",
+            "快速重传/快速恢复：收到3个重复ACK就重传，不用等超时；丢包后ssthresh减半，cwnd从ssthresh开始线性增长",
+            "现代拥塞控制：BBR基于带宽和RTT测量，不依赖丢包信号，在高带宽延迟积网络中性能更好"
+          ],
+          practice: "完成以下TCP拥塞控制实践：1）算法理解：用图示和文字描述Tahoe和Reno的区别，分别描述在慢启动、拥塞避免、超时、收到3个重复ACK时cwnd和ssthresh的变化；2）模拟实验：用NS-3或Python简单模拟TCP拥塞控制过程，画出发送窗口随时间的变化曲线，观察慢启动的指数增长和拥塞避免的线性增长；3）抓包分析：用Wireshark抓取一次大文件传输的TCP流量，观察拥塞窗口的变化（通过分析序列号和确认号推断），看看能不能看到慢启动和拥塞避免的阶段，有没有丢包和重传；4）算法对比：对比Reno和BBR两种拥塞控制算法的优缺点，分析它们在不同网络环境（有线网、无线网、长肥管道、弱网）下的表现；5）思考：在分布式训练中，通常需要在机器之间传输大量的梯度数据（几十GB甚至更多），TCP的拥塞控制会成为瓶颈吗？有什么优化方法？（提示：调整TCP参数、用RDMA、用用户态协议栈等）",
+          deep_dive: "深入理解拥塞控制的演进与AI网络优化：TCP拥塞控制是互联网的核心技术之一，几十年来不断演进。从最早的Tahoe（1988），到Reno、NewReno、SACK，再到近些年的CUBIC（Linux默认）、BBR（Google提出），拥塞控制算法一直在进化，以适应不断变化的网络环境。为什么拥塞控制这么难？因为它本质上是一个分布式控制问题——每个连接独立地调整自己的发送速率，但它们共享网络带宽，互相影响。理想的拥塞控制应该满足：1）公平性：各连接公平分享带宽；2）效率：链路利用率高，不浪费；3）低延迟：排队延迟小；4）快速收敛：网络变化后能快速调整到新的平衡点。但这些目标往往是矛盾的，需要权衡。在AI分布式训练场景中，网络性能至关重要——数据并行训练需要在每个step同步梯度，梯度同步的时间直接影响训练速度。针对AI场景的网络优化有几个方向：1）TCP参数调优：调整缓冲区大小、拥塞控制算法、MTU等；2）RDMA（远程直接内存访问）：绕过内核，直接从用户态访问远程内存，极低延迟和极高带宽，是高性能计算和AI训练的主流方案；3）用户态协议栈：把TCP/IP协议栈移到用户态，减少内核态和用户态的切换开销，如DPDK+用户态协议栈；4）集合通信库：NCCL（NVIDIA）、RCCL（AMD）等库针对GPU通信做了深度优化，支持多种集合通信原语（AllReduce、AllGather、ReduceScatter等）；5）网络拓扑感知：根据集群的网络拓扑（如胖树、环形）优化通信调度。理解这些底层网络原理，能帮你在分布式训练遇到网络瓶颈时找到优化方向。"
+        }, duration: "2小时", resources: [{ title: "TCP拥塞控制详解", url: "https://datatracker.ietf.org/doc/html/rfc5681", required: true, type: "doc", source: "official" }, { title: "BBR拥塞控制", url: "https://queue.acm.org/detail.cfm?id=3022184", required: false, type: "article", source: "other" }, { title: "TCP/IP详解", url: "https://www.kohala.com/start/", required: false, type: "book", source: "other" }], checkpoint: "能画出TCP拥塞控制的状态机图，解释慢启动和拥塞避免的区别" },
+      { day: 12, title: "HTTP协议与RESTful API设计",
+        summary: "深入理解HTTP协议细节，掌握RESTful API设计原则和最佳实践。", content: {
+          objective: "今天你将深入学习HTTP协议和RESTful API设计。学完后你能理解HTTP/1.1、HTTP/2、HTTP/3的主要区别和演进，掌握RESTful API的设计原则，知道如何设计出优雅、易用、可扩展的API。对于AI服务开发者来说，HTTP是推理服务最常用的接口，好的API设计能大幅提升服务质量。",
+          key_points: [
+            "HTTP演进：HTTP/0.9→1.0→1.1→2→3，每一代的核心改进：持久连接、管线化、多路复用、QUIC",
+            "HTTP/2核心改进：二进制分帧、多路复用（单TCP连接并行请求）、头部压缩、服务器推送",
+            "HTTP/3：基于QUIC协议，用UDP替代TCP，解决队头阻塞问题，更快的连接建立，更好的弱网表现",
+            "REST设计原则：资源命名（名词复数）、HTTP方法语义（GET查POST增PUT改PATCH部分改DELETE删）、无状态",
+            "API最佳实践：版本控制、分页、过滤、排序、错误处理（HTTP状态码+错误码）、幂等性、文档"
+          ],
+          practice: "完成以下HTTP与API设计实践：1）HTTP报文分析：用curl -v访问一个网站，查看请求和响应报文，理解请求行、请求头、请求体、状态行、响应头、响应体的含义；2）HTTP方法练习：设计一个用户管理API的RESTful接口，列出各个操作的URL和HTTP方法（获取列表、获取单个、创建、更新、删除、修改密码等），理解REST的资源导向思想；3）状态码学习：整理常见HTTP状态码的含义和适用场景（2xx/3xx/4xx/5xx系列，重点是200/201/204、301/302/304、400/401/403/404/409/429、500/502/503/504）；4）API设计练习：为一个AI推理服务设计RESTful API，功能包括：提交推理任务、查询任务状态、获取推理结果、取消任务、列出历史任务、获取模型信息。设计好URL结构、HTTP方法、请求参数、响应格式、错误处理；5）思考：REST API一定是最好的吗？什么时候适合用REST，什么时候适合用RPC（gRPC），什么时候适合用GraphQL？AI推理服务适合用哪种API风格？为什么？",
+          deep_dive: "深入理解API设计的艺术与AI服务架构：API设计不仅仅是技术问题，更是产品和设计问题——API是服务的对外接口，是用户（其他开发者）感知服务的第一印象。好的API应该是：简单易懂（看名字就知道怎么用）、一致性（相同的模式和约定）、健壮（边界情况处理好）、可演进（向后兼容）、文档完善。API设计的几个核心原则：1）面向资源而非面向动作：用名词描述资源，用HTTP动词描述操作，而不是用/updateUser、/deleteUser这种RPC风格；2）用HTTP状态码表达结果：不要所有请求都返回200然后在body里写code，正确使用HTTP状态码；3）幂等性：GET、PUT、DELETE应该是幂等的（多次调用和一次调用效果相同），POST可以不是；4）版本管理：API变更时要考虑向后兼容，用URL版本（/v1/）或Header版本；5）分页和过滤：列表接口一定要支持分页，避免一次返回太多数据；6）错误处理：错误信息要有足够的信息帮助调用方定位问题，包括错误码、错误消息、追踪ID等。在AI服务中，API设计有一些特殊的考虑：1）同步 vs 异步：简单的推理可以同步返回，复杂的、耗时长的任务应该用异步模式（提交任务→轮询状态/回调通知）；2）流式输出：像ChatGPT那样的流式响应，用SSE（Server-Sent Events）或WebSocket；3）大文件传输：上传图片/视频等大文件，考虑用分片上传；4）多模态输入：支持文本、图片、音频等多种输入格式；5）限流和配额：服务端要做限流保护，防止被打垮。另外，除了REST，还有几种常见的API风格：1）gRPC：基于HTTP/2和Protobuf，高性能，强类型，适合内部服务间通信；2）GraphQL：客户端按需请求数据，灵活，适合前端API；3）WebSocket：全双工通信，适合实时性要求高的场景。选择合适的API风格，是架构设计的重要决策。"
+        }, duration: "2小时", resources: [{ title: "HTTP/2规范", url: "https://http2.github.io/", required: true, type: "doc", source: "official" }, { title: "RESTful API设计指南", url: "https://restfulapi.net/", required: false, type: "doc", source: "other" }, { title: "Google API设计指南", url: "https://cloud.google.com/apis/design", required: false, type: "doc", source: "official" }], checkpoint: "能为一个AI推理服务设计出完整的RESTful API" },
+      { day: 13, title: "DNS与CDN原理",
+        summary: "理解DNS域名解析的完整过程和CDN内容分发网络的工作原理。", content: {
+          objective: "今天你将学习DNS和CDN这两个互联网基础设施的工作原理。学完后你能理解DNS域名解析的完整流程（递归查询、迭代查询），知道DNS缓存机制和优化方法，理解CDN的核心技术和工作流程。对于AI服务开发者来说，CDN能大幅提升静态资源的访问速度，DNS是服务高可用的基础。",
+          key_points: [
+            "DNS解析过程：浏览器缓存→系统缓存→hosts文件→本地DNS服务器→根域名服务器→顶级域→权威DNS",
+            "DNS记录类型：A（IPv4）、AAAA（IPv6）、CNAME（别名）、MX（邮件）、NS（域名服务器）、TXT（文本）",
+            "DNS优化：多级缓存、智能DNS（按地理位置/运营商返回最近的IP）、DNS预解析、HTTPDNS",
+            "CDN核心思想：内容缓存到边缘节点，用户从最近的节点获取数据，减少延迟和回源带宽",
+            "CDN关键技术：内容分发/缓存策略、负载均衡、健康检查、缓存刷新/预热、HTTPS加速"
+          ],
+          practice: "完成以下DNS与CDN实践：1）DNS解析实验：用dig或nslookup命令查询一个域名的解析过程，查看返回的各种记录（A、CNAME、NS等），用dig +trace查看完整的迭代查询过程，理解DNS的层级结构；2）DNS缓存实验：连续两次用dig查询同一个域名，对比响应时间，理解DNS缓存的作用；查看电脑的DNS缓存（Windows用ipconfig /displaydns，Linux用nscd或systemd-resolve）；3）CDN原理理解：画一张CDN工作原理图，标注用户、边缘节点、中间节点、源站，描述静态资源请求的完整流程；思考CDN缓存的命中率受哪些因素影响，怎么提高缓存命中率；4）hosts文件实验：修改系统hosts文件，把一个域名指向127.0.0.1，观察访问效果，理解hosts文件在解析中的优先级；5）思考：在AI服务中，DNS和CDN分别可以用来做什么？比如：模型文件的分发用不用CDN？API服务的高可用怎么用DNS实现？全球用户访问的AI服务怎么优化网络延迟？",
+          deep_dive: "深入理解DNS安全与全球加速架构：DNS是互联网的地址簿，是所有网络通信的第一步，但它本身也有很多安全问题：1）DNS欺骗/缓存投毒：攻击者篡改DNS缓存，把用户引导到恶意网站；2）DNS劫持：运营商或攻击者篡改DNS解析结果；3）DDoS攻击：DNS放大攻击，用DNS的大响应包放大攻击流量。应对措施：1）DNSSEC：DNS安全扩展，用数字签名保证DNS响应的真实性；2）HTTPS DNS（DoH）/DNS over TLS（DoT）：加密DNS查询，防止被篡改和监听；3）Anycast DNS：多地部署，任播技术，就近访问，也能抗DDoS；4）HTTPDNS：用HTTP协议请求DNS解析，绕过运营商的Local DNS，防止劫持。CDN是互联网重要的基础设施，它的作用不仅仅是加速静态资源，还演化出了很多高级功能：1）动态加速：针对动态请求的优化，TCP优化、路由优化、协议优化；2）全站加速：动静态混合，智能识别动静，分别走不同的链路；3）安全防护：WAF（Web应用防火墙）、DDoS防护、CC防护；4）边缘计算：在CDN边缘节点上跑代码（Serverless），把计算也搬到离用户近的地方。在AI服务全球化部署中，CDN和边缘计算的作用越来越大：1）静态资源（模型文件、前端页面）用CDN全球加速；2）简单的推理任务可以在边缘节点执行，降低延迟；3）复杂的任务回源到中心节点；4）全球负载均衡（GSLB）基于DNS把用户路由到最近的可用服务节点。理解这些基础设施的原理，能帮你设计出高性能、高可用、全球化的AI系统。"
+        }, duration: "1.5小时", resources: [{ title: "DNS原理详解", url: "https://www.cloudflare.com/learning/dns/what-is-dns/", required: true, type: "doc", source: "official" }, { title: "CDN工作原理", url: "https://www.cloudflare.com/learning/cdn/what-is-a-cdn/", required: false, type: "doc", source: "official" }, { title: "DNS根服务器", url: "https://root-servers.org/", required: false, type: "doc", source: "other" }], checkpoint: "能描述DNS递归查询和迭代查询的过程，解释CDN为什么能加速" },
+      { day: 14, title: "WebSocket与实时通信",
+        summary: "掌握WebSocket协议原理与应用场景，了解SSE、长轮询等其他实时通信方案。", content: {
+          objective: "今天你将学习实时通信的各种方案，重点是WebSocket协议。学完后你能理解WebSocket的握手过程和帧格式，掌握WebSocket的编程方法，能区分WebSocket、SSE、长轮询、短轮询等实时通信方案的适用场景。在AI领域，WebSocket常用于流式输出、实时对话、交互式应用等场景。",
+          key_points: [
+            "WebSocket：HTML5新增协议，基于TCP，全双工通信，握手用HTTP Upgrade，之后是二进制帧",
+            "WebSocket握手：HTTP请求带Upgrade: websocket头，服务器返回101 Switching Protocols，连接建立",
+            "帧格式：数据以帧为单位传输，帧类型有文本帧、二进制帧、关闭帧、ping/pong帧，支持分片",
+            "其他实时方案：短轮询（定时刷新）、长轮询（请求挂起有数据才返回）、SSE（服务器推送事件，单向）",
+            "适用场景：WebSocket适合双向实时通信（聊天、协作、游戏），SSE适合服务端单向推送（流式输出）"
+          ],
+          practice: "完成以下WebSocket与实时通信实践：1）WebSocket服务端：用Node.js或Python（如FastAPI、Flask-SocketIO）实现一个简单的WebSocket服务，客户端用浏览器的原生WebSocket API连接，实现一个简单的聊天室（支持广播消息）；2）抓包分析：用Wireshark或浏览器开发者工具的Network面板，查看WebSocket的握手过程和数据帧，理解Upgrade头、101状态码、帧格式；3）SSE实验：实现一个Server-Sent Events服务，服务器定时推送消息，客户端用EventSource接收，对比SSE和WebSocket的区别；4）方案对比：制作一张对比表，从通信方向、协议、延迟、开销、兼容性、适用场景等维度对比短轮询、长轮询、SSE、WebSocket四种实时通信方案；5）思考：在AI应用中，哪些场景适合用WebSocket？哪些适合用SSE？哪些用普通的HTTP请求就够了？比如：聊天机器人的流式输出、实时语音识别、实时监控仪表盘、模型训练进度展示，分别适合用哪种方案？为什么？",
+          deep_dive: "深入理解实时通信架构与AI流式输出：实时通信是现代Web应用的重要组成部分，不同的场景需要选择不同的技术方案。让我们深入对比一下：1）短轮询（Short Polling）：最简单，前端定时发请求问后端有没有新数据。优点：实现简单，兼容性好。缺点：浪费资源，延迟高（取决于轮询间隔）。适合数据更新不频繁、实时性要求不高的场景。2）长轮询（Long Polling）：前端发请求，后端挂起请求，有数据了才返回，前端拿到结果后立即再发下一个请求。优点：比短轮询延迟低，基于HTTP兼容性好。缺点：连接数多，服务端压力大。是没有WebSocket时的降级方案。3）SSE（Server-Sent Events）：基于HTTP，服务器单向推送，自动重连，事件类型支持。优点：实现简单，自动重连，适合服务端主动推数据的场景。缺点：只能服务端推客户端，浏览器有并发连接数限制。适合流式输出、消息通知、实时数据展示等单向场景。4）WebSocket：全双工，双向通信，建立连接后没有HTTP头开销。优点：实时性好，双向通信，开销小。缺点：实现复杂，需要处理重连、心跳等。适合聊天、游戏、协作编辑等双向实时场景。在AI应用中，流式输出（如ChatGPT的逐字输出）是非常重要的用户体验。实现流式输出有几种方式：1）SSE：简单易用，最常用，因为流式输出本质上是服务端单向推送；2）WebSocket：如果需要双向交互（比如用户中途打断），可以用WebSocket；3）Chunked Transfer Encoding：HTTP分块传输，也是一种方案。选择哪种方案，取决于你的具体需求。另外，在大规模实时通信场景中，还需要考虑：1）水平扩展：单机连接数有限，需要多机部署，就涉及到消息广播的问题，通常用Redis Pub/Sub或消息队列；2）心跳检测：定期发ping/pong检测连接是否还活着；3）断线重连：网络不稳定时自动重连，恢复状态；4）消息可靠性：怎么保证消息不丢、不重复、有序。理解这些实时通信的原理和架构，能帮你设计出体验良好的实时AI应用。"
+        }, duration: "2小时", resources: [{ title: "WebSocket规范", url: "https://datatracker.ietf.org/doc/html/rfc6455", required: true, type: "doc", source: "official" }, { title: "SSE详解", url: "https://html.spec.whatwg.org/multipage/server-sent-events.html", required: false, type: "doc", source: "official" }, { title: "Socket.io", url: "https://socket.io/", required: false, type: "tool", source: "other" }], checkpoint: "能用WebSocket实现一个简单的聊天室应用" },
+      { day: 15, title: "计算机网络综合项目：HTTP服务器",
+        summary: "实现一个简易的HTTP服务器，综合运用TCP编程、HTTP协议、并发处理等知识。", content: {
+          objective: "今天你将完成一个计算机网络综合项目——实现一个简易的HTTP服务器。通过这个项目，你会把前三周学到的TCP编程、HTTP协议、并发模型、IO多路复用等知识融会贯通。这是检验你网络学习成果的最好方式。",
+          key_points: [
+            "项目目标：实现一个支持静态文件、并发连接的简易HTTP服务器",
+            "核心功能：解析HTTP请求、返回HTTP响应、支持GET方法、支持静态文件、返回正确的状态码",
+            "并发模型：用多进程或多线程或IO多路复用（epoll）实现并发，支持同时处理多个连接",
+            "HTTP特性：支持200/404/403/500等状态码、Content-Type自动识别、长连接（Keep-Alive）",
+            "性能优化：非阻塞IO、零拷贝（sendfile）、缓存、压缩等（选做）"
+          ],
+          practice: "实现一个Mini HTTP服务器，要求如下：\n\n基础功能（必做）：\n1）TCP服务器：创建socket，bind，listen，accept客户端连接；\n2）HTTP请求解析：解析请求行（方法、路径、HTTP版本）、请求头；\n3）静态文件服务：根据请求路径查找文件，存在则返回200和文件内容，不存在返回404；\n4）响应格式：正确的响应行、响应头（Content-Type、Content-Length、Connection等）、响应体；\n5）并发处理：用多线程或多进程或epoll实现并发，支持同时处理多个请求。\n\n进阶功能（选做）：\n1）HTTP方法：支持HEAD、POST方法；\n2）目录浏览：请求目录时返回目录列表的HTML；\n3）长连接：支持HTTP/1.1的Keep-Alive，一个连接处理多个请求；\n4）sendfile：用sendfile系统调用实现零拷贝文件传输，提高性能；\n5）缓存：支持If-Modified-Since，返回304 Not Modified；\n6）压缩：支持gzip压缩传输；\n7）性能测试：用wrk或ab做压测，看看你的服务器QPS能到多少，和Nginx对比有多大差距。\n\n项目要求：\n- 代码结构清晰，模块化设计\n- 有错误处理，不会轻易崩溃\n- 有基本的注释和文档\n- 可以编译运行，能用浏览器或curl访问\n\n完成后，用浏览器访问你的服务器，测试静态文件、404页面、并发访问等功能。",
+          deep_dive: "网络编程的进阶方向与AI网络挑战：完成这个HTTP服务器项目后，你应该对计算机网络和网络编程有了扎实的理解。但网络是一个非常博大精深的领域，还有很多可以深入的方向：1）协议设计：设计自己的应用层协议，理解协议设计的艺术（效率、扩展性、兼容性、安全性的权衡）；2）网络编程框架：学习成熟的网络框架（Netty、libevent、asio等），理解Reactor模式、Proactor模式，掌握高性能网络编程的精髓；3）网络安全：学习TLS/SSL、HTTPS、加密算法、证书体系，理解网络安全的原理；4）网络性能优化：TCP参数调优、内核参数调优、DPDK/用户态协议栈、RDMA，追求极致的网络性能；5）分布式系统：从单机网络编程扩展到分布式系统，学习一致性、共识算法、分布式存储、分布式计算。对于AI开发者来说，网络的重要性越来越高——随着模型越来越大、数据越来越多，单机训练已经不够了，分布式训练成为常态。分布式训练中，通信往往是瓶颈——尤其是数据并行的AllReduce操作，通信时间和GPU数量、模型大小成正比。针对AI通信的优化是一个活跃的研究方向：1）算法层面：梯度压缩、量化、稀疏化，减少需要传输的数据量；2）系统层面：RDMA、NCCL/RCCL等高性能集合通信库；3）架构层面：模型并行、流水线并行、混合并行，减少通信量；4）网络层面：更高带宽的网络（InfiniBand、400G以太网）、更好的拓扑（胖树）。未来，AI和网络的结合会越来越紧密——AI优化网络，网络支撑AI。理解网络底层原理，能帮你在分布式训练遇到瓶颈时找到优化方向，也能设计出更高效的AI系统架构。"
+        }, duration: "4小时", resources: [{ title: "HTTP服务器实现教程", url: "https://beej.us/guide/bgnet/", required: false, type: "article", source: "other" }, { title: "Tinyhttpd源码", url: "https://sourceforge.net/projects/tinyhttpd/", required: false, type: "repo", source: "other" }, { title: "UNIX网络编程", url: "https://www.unpbook.com/", required: false, type: "book", source: "other" }], checkpoint: "实现了一个能返回静态文件、支持并发的简易HTTP服务器" }
+
     ]
   },
 
@@ -7638,7 +8808,73 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成以下学生管理系统综合项目：1）需求分析与设计：列出系统的主要功能模块，画出E-R图，设计数据库表结构（学生表、课程表、成绩表、教师表、班级表等），确定主键、外键、约束和索引；2）建库建表：用SQL创建数据库和所有表，添加必要的约束（主键、外键、非空、唯一、默认值等）；3）数据初始化：编写SQL插入测试数据，每个表至少10条记录，确保数据有意义且关系正确；4）功能实现：用SQL实现核心功能：a）学生信息的增删改查；b）课程信息的增删改查；c）成绩录入和修改；d）查询某个学生的所有成绩；e）查询某门课的成绩排名；f）统计每个班级的平均分；g）查询不及格的学生和科目；5）性能优化：为常用查询添加索引，用EXPLAIN验证索引是否生效；6）后端实现（可选）：用Python的Flask/FastAPI + SQLAlchemy实现后端API，提供RESTful接口。最后用真实数据测试所有功能，确保正确性。",
           deep_dive: "深入理解ORM与AI数据层架构：在实际项目中，很少直接写裸SQL，通常会用ORM（对象关系映射）框架，比如Python的SQLAlchemy和Django ORM、Java的MyBatis和Hibernate、Go的GORM等。ORM的好处是：1）用面向对象的方式操作数据库，不用写SQL，开发效率高；2）自动处理SQL注入、参数绑定等安全问题；3）跨数据库兼容，换数据库不用改太多代码。但ORM也有缺点：复杂查询性能可能不如手写SQL，可能生成低效的SQL，需要理解底层才能用好。在AI项目的数据层架构中，通常会有这些组件：1）业务数据库（MySQL/PostgreSQL）：存用户、订单、配置等结构化业务数据；2）缓存（Redis）：存热点数据、会话、排行榜、特征等，加速访问；3）对象存储（S3/MinIO）：存训练数据、模型文件、图片、视频等大文件；4）数据仓库（Snowflake/BigQuery/Hive）：存历史数据，做数据分析和离线训练；5）特征存储（Feast/Tecton）：管理机器学习特征，保证在线离线一致性；6）向量数据库（Milvus/Pinecone/Weaviate）：存向量embedding，做相似度搜索和RAG；7）ML元数据存储（MLflow）：管实验、模型、版本、指标等。理解这些数据组件的作用和架构，能帮你设计出更合理的AI系统数据层。最后，数据库还有很多高级主题值得后续深入学习：存储过程、触发器、视图、物化视图、复制（主从/多主）、分片（水平/垂直）、备份恢复、性能调优等。这些都是成为资深开发者必备的知识。"
-        }, duration: "3小时", resources: [{ title: "SQLite教程", url: "https://docs.python.org/3/library/sqlite3.html", required: true, type: "doc", source: "official" }, { title: "Flask数据库", url: "https://flask-sqlalchemy.palletsprojects.com/", required: false, type: "tool", source: "official" },  { title: "StudentManagementSystem", url: "https://github.com/qinguoyi/StudentManagementSystem", required: false, type: "repo", source: "github" }], checkpoint: "学生管理系统能正确存储和查询学生、课程、成绩信息" }
+        }, duration: "3小时", resources: [{ title: "SQLite教程", url: "https://docs.python.org/3/library/sqlite3.html", required: true, type: "doc", source: "official" }, { title: "Flask数据库", url: "https://flask-sqlalchemy.palletsprojects.com/", required: false, type: "tool", source: "official" },  { title: "StudentManagementSystem", url: "https://github.com/qinguoyi/StudentManagementSystem", required: false, type: "repo", source: "github" }], checkpoint: "学生管理系统能正确存储和查询学生、课程、成绩信息" },
+      { day: 11, title: "索引深入：B+树与哈希索引",
+        summary: "深入理解B+树索引和哈希索引的原理与区别，掌握聚簇索引和非聚簇索引的概念。", content: {
+          objective: "今天你将深入学习数据库索引的核心原理。学完后你能理解B+树为什么成为数据库索引的首选，掌握聚簇索引和非聚簇索引的区别，知道哈希索引的适用场景，理解索引的最左前缀原则。索引是数据库性能优化的关键，理解索引原理能帮你写出高效的SQL，设计出合理的索引策略。",
+          key_points: [
+            "B+树结构：多路平衡查找树，所有数据都在叶子节点，叶子节点用链表连接，适合范围查询和排序",
+            "B+树 vs B树：B树数据在所有节点，B+树只在叶子；B+树叶子链表相连；B+树查询更稳定（都走到叶子）",
+            "聚簇索引 vs 非聚簇索引：聚簇索引叶子存完整数据行（InnoDB主键索引），非聚簇索引叶子存主键值（需要回表）",
+            "哈希索引：基于哈希表，等值查询O(1)非常快，但不支持范围查询和排序，也不支持最左前缀",
+            "索引使用原则：最左前缀匹配、覆盖索引（避免回表）、索引选择性、避免索引失效（函数、隐式类型转换）"
+          ],
+          practice: "完成以下索引深入实践：1）B+树理解：画一个3阶B+树的示意图，演示插入几个数据的过程，理解分裂的过程；对比B树和B+树的区别，分析为什么数据库选择B+树而不是B树、红黑树、跳表；2）聚簇索引与回表：用EXPLAIN分析一条SQL，看看用的是什么索引，是不是覆盖索引，有没有回表；设计一个需要回表的查询和一个覆盖索引的查询，对比性能差异；3）最左前缀原则：假设有一个联合索引(a,b,c)，判断以下查询能否用到索引：WHERE a=1、WHERE a=1 AND b=2、WHERE b=2 AND a=1、WHERE a=1 AND c=3、WHERE a>1 AND b=2，然后用EXPLAIN验证你的判断；4）索引设计练习：为一个用户表（id、name、age、city、create_time）设计索引，考虑这些查询条件：按id查、按name查、按city+age范围查、按create_time排序、按name+city查，你会设计哪些索引？为什么？5）思考：在AI应用中，数据库索引有什么特殊的考虑吗？比如存储向量的数据库（向量数据库）用的是什么索引？和传统的B+树有什么不同？",
+          deep_dive: "深入理解数据库索引的艺术与向量数据库：索引是数据库性能优化的核心，但索引不是越多越好——索引会加速查询，但会减慢写入（插入/更新/删除时要维护所有索引），还会占用存储空间。好的索引设计是一门艺术，需要在读写之间找到平衡。索引设计的几个高级话题：1）联合索引的列顺序：等值条件的列放前面，区分度高的列放前面，范围查询的列放后面；2）索引下推（Index Condition Pushdown，ICP）：在索引遍历过程中就过滤条件，减少回表次数；3）自适应哈希索引：InnoDB的自适应哈希索引，监控索引使用情况，自动为热点页建哈希索引；4）全文索引：针对文本的倒排索引，用于关键词搜索；5）GIS索引：R树，用于地理空间数据查询。在AI时代，出现了一种新的数据库——向量数据库（Vector Database），专门用于存储和检索向量。传统数据库是精确匹配（等于、大于、包含等），而向量数据库是相似性检索（最近邻搜索ANN）——找和查询向量最相似的前K个向量。向量索引的主要算法有：1）IVF（倒排文件）：先聚类，搜索时只在邻近的类里找，用准确性换速度；2）HNSW（层次化 navigable 小世界图）：基于图的索引，目前性能最好的ANN算法之一，多层次结构，查找时从顶层往下跳；3）PQ/SQ（乘积量化/标量量化）：向量压缩，用更小的空间存储更多的向量，内存友好；4）LSH（局部敏感哈希）：哈希后相似的向量有更高概率落到同一个桶里。Milvus、Pinecone、Weaviate、FAISS等都是常见的向量数据库/库。向量数据库是RAG（检索增强生成）系统的核心组件，理解向量索引的原理，能帮你更好地构建RAG系统。"
+        }, duration: "2小时", resources: [{ title: "MySQL索引详解", url: "https://dev.mysql.com/doc/refman/8.0/en/optimization-indexes.html", required: true, type: "doc", source: "official" }, { title: "B+树可视化", url: "https://www.cs.usfca.edu/~galles/visualization/BPlusTree.html", required: false, type: "tool", source: "other" }, { title: "向量数据库对比", url: "https://thedataquarry.com/posts/vector-db-benchmark/", required: false, type: "article", source: "other" }], checkpoint: "能解释聚簇索引和非聚簇索引的区别，说出B+树比红黑树适合索引的三个原因" },
+      { day: 12, title: "事务与ACID、隔离级别",
+        summary: "深入理解事务的ACID特性和四种隔离级别，掌握MVCC多版本并发控制原理。", content: {
+          objective: "今天你将深入学习数据库事务和并发控制的核心概念。学完后你能准确描述ACID的含义，理解脏读、不可重复读、幻读三种异常现象，掌握四种隔离级别的区别和各自解决的问题，理解InnoDB的MVCC（多版本并发控制）实现原理。事务是数据库的基石，理解事务原理是数据库进阶的必经之路。",
+          key_points: [
+            "ACID：原子性（Atomicity）、一致性（Consistency）、隔离性（Isolation）、持久性（Durability）",
+            "三种读异常：脏读（读到未提交数据）、不可重复读（同事务内两次读同一行结果不同）、幻读（同事务内两次查询行数不同）",
+            "四种隔离级别：读未提交（Read Uncommitted）、读已提交（Read Committed）、可重复读（Repeatable Read）、串行化（Serializable）",
+            "MVCC：多版本并发控制，通过undo log保存历史版本，读写不冲突，提高并发性能；快照读和当前读",
+            "InnoDB实现：RR隔离级别下，通过MVCC+Next-Key Lock（间隙锁+行锁）解决幻读问题"
+          ],
+          practice: "完成以下事务与隔离级别实践：1）异常现象模拟：用两个MySQL会话模拟脏读、不可重复读、幻读三种异常，在不同隔离级别下观察现象，验证每种隔离级别分别解决了什么问题；2）MVCC理解：思考为什么MVCC能实现读写不冲突？读操作读的是什么版本？写操作呢？undo log在其中扮演什么角色？Read View是什么？怎么判断一个版本对当前事务可见？3）隔离级别的权衡：为什么不直接用最高的串行化隔离级别？隔离级别和性能的关系是什么？实际业务中你会选择什么隔离级别？为什么？4）死锁实验：在两个会话中模拟数据库死锁（和操作系统的死锁是一个原理），观察MySQL如何处理死锁，查看死锁日志，思考如何避免死锁；5）思考：在AI服务中，数据库事务重要吗？哪些场景需要用事务？哪些不需要？比如用户系统、订单系统、训练任务管理系统，分别对事务的要求是什么？",
+          deep_dive: "深入理解事务实现与分布式事务：ACID听起来简单，但实现起来非常复杂，每个字母背后都有一整套技术：1）原子性（Atomicity）：要么全做要么全不做。通过undo log（回滚日志）实现——事务执行过程中，记录下所有修改的反向操作，如果事务需要回滚，就用undo log回滚到之前的状态。2）一致性（Consistency）：事务执行前后数据都处于合法状态。这是事务的最终目的，其他三个特性都是为了保证一致性。一致性由数据库（约束、触发器）和应用层共同保证。3）隔离性（Isolation）：并发事务之间互不干扰。通过锁机制和MVCC实现。锁又分为共享锁（S锁，读锁）、排他锁（X锁，写锁）、意向锁、行锁、表锁、间隙锁等等。4）持久性（Durability）：事务提交后，数据就永久保存了，即使宕机也不会丢。通过redo log（重做日志）实现——事务提交时，先把修改记录到redo log里，再慢慢刷到磁盘。宕机后可以从redo log恢复。WAL（Write-Ahead Logging，预写式日志）是核心思想——先写日志，再写数据。单机事务已经很复杂了，分布式事务更难——多个节点上的操作要保持原子性。分布式事务的解决方案有：1）两阶段提交（2PC）：Prepare阶段+Commit阶段，协调者统一调度，强一致但性能差；2）三阶段提交（3PC）：在2PC基础上加CanCommit阶段，减少阻塞；3）TCC（Try-Confirm-Cancel）：业务层面实现的两阶段，性能好但侵入性强；4）Saga：长事务解决方案，一系列本地事务+补偿，最终一致；5）消息事务+最终一致性：用消息队列保证事务最终一致。在微服务架构和分布式系统中，分布式事务是核心难题之一。在AI系统中，同样会遇到分布式事务的场景——比如跨多个服务的用户操作、分布式训练的状态同步等。理解事务的本质，能帮你在面对这些问题时做出合理的技术选型。"
+        }, duration: "2.5小时", resources: [{ title: "MySQL事务隔离级别", url: "https://dev.mysql.com/doc/refman/8.0/en/innodb-transaction-isolation-levels.html", required: true, type: "doc", source: "official" }, { title: "MVCC原理", url: "https://dev.mysql.com/doc/refman/8.0/en/innodb-multi-versioning.html", required: false, type: "doc", source: "official" }, { title: "数据库系统概念", url: "https://www.db-book.com/", required: false, type: "book", source: "other" }], checkpoint: "能说出四种隔离级别的区别，以及InnoDB RR级别下如何解决幻读" },
+      { day: 13, title: "SQL优化与执行计划",
+        summary: "掌握SQL优化的方法论，学会用EXPLAIN分析执行计划，定位性能瓶颈。", content: {
+          objective: "今天你将学习SQL优化的方法论和实战技巧。学完后你能用EXPLAIN命令分析SQL的执行计划，判断SQL有没有走索引、扫描了多少行、有没有用临时表、有没有文件排序等，掌握常见的SQL优化技巧。SQL优化是后端开发者的必备技能，也是排查数据库性能问题的基础。",
+          key_points: [
+            "EXPLAIN输出：id、select_type、table、type、possible_keys、key、key_len、ref、rows、Extra",
+            "type列详解：从好到坏——system > const > eq_ref > ref > range > index > ALL，至少要达到range级别",
+            "Extra列关注：Using index（覆盖索引，好）、Using where（需要回表过滤）、Using filesort（文件排序，差）、Using temporary（临时表，差）",
+            "优化原则：尽量让SQL走索引、避免全表扫描、减少扫描行数、避免文件排序和临时表、用LIMIT限制返回行数",
+            "慢查询定位：慢查询日志、show profile、performance_schema，找出慢SQL再优化"
+          ],
+          practice: "完成以下SQL优化实践：1）EXPLAIN练习：找10条不同的SQL查询（简单查询、联合查询、子查询、排序、分组等），分别用EXPLAIN分析执行计划，解读每个字段的含义，判断这条SQL的性能好不好，有没有优化空间；2）慢SQL优化：找一条全表扫描的慢SQL，分析为什么没走索引（是没有索引？还是索引失效？），添加合适的索引后再EXPLAIN，对比优化前后的type、rows、Extra的变化，验证优化效果；3）排序优化：写一个需要排序的查询，如果出现Using filesort，想办法优化——加合适的索引让排序用索引完成，或者优化排序的方式；4）JOIN优化：写一个多表JOIN的查询，分析执行计划，看看驱动表的选择是否合理，有没有用到索引，能不能优化成覆盖索引；5）综合练习：假设一个博客系统的数据库（用户表、文章表、评论表、标签表），针对常见的查询场景，设计索引并优化SQL：文章列表分页、用户的文章列表、文章详情+评论、热门文章排行、按标签筛选文章。",
+          deep_dive: "深入理解查询优化器与数据库性能调优体系：SQL优化不只是改SQL和加索引，它是一个系统性的工程——从SQL语句、索引设计、表结构，到数据库参数、服务器配置、硬件选型、架构设计，每个层面都可以优化。数据库优化的层次：1）SQL层：优化SQL语句，重写慢SQL；2）索引层：合理设计索引，让查询走索引；3）表结构层：范式和反范式的权衡，字段类型选择，表分区；4）数据库配置层：参数调优（缓冲池大小、日志大小、连接数等）；5）架构层：读写分离、分库分表、缓存、CDN；6）硬件层：更多内存、更快的磁盘（SSD/NVMe）、更多CPU。MySQL的查询优化器（Optimizer）负责生成执行计划——它会基于成本模型估算不同执行计划的代价，选择代价最低的那个。但优化器不是万能的，它可能选错索引，可能选错驱动表，因为它的统计信息可能不准，成本模型可能和实际情况有偏差。所以我们需要用EXPLAIN看实际的执行计划，如果发现优化器选错了，可以用FORCE INDEX等方式强制走某个索引。性能调优的方法论：1）先定位：不要上来就瞎优化，先用工具定位瓶颈在哪里（是CPU密集？IO密集？锁等待？）；2）量化：用数据说话，不要凭感觉，优化前后都要有benchmark；3）找最大瓶颈：Amdahl定律——优化占比最高的部分，收益最大；4）验证：每次只改一个变量，这样才知道是什么起了作用；5）权衡：优化通常有代价，比如索引加了写入会变慢，读写分离了一致性会变差，要权衡利弊。在AI系统中，数据库通常不是性能瓶颈（瓶颈在计算），但如果是面向用户的AI服务（比如对话机器人、AI应用），数据库也可能成为瓶颈。掌握数据库优化的方法论，能帮你从容应对各种性能问题。"
+        }, duration: "2小时", resources: [{ title: "MySQL EXPLAIN详解", url: "https://dev.mysql.com/doc/refman/8.0/en/explain.html", required: true, type: "doc", source: "official" }, { title: "SQL优化指南", url: "https://use-the-index-luke.com/", required: false, type: "doc", source: "other" }, { title: "MySQL性能调优", url: "https://www.percona.com/resources/technical-presentations", required: false, type: "doc", source: "other" }], checkpoint: "能读懂EXPLAIN输出，定位一条慢SQL的性能瓶颈" },
+      { day: 14, title: "Redis与NoSQL数据库",
+        summary: "掌握Redis核心数据结构与应用场景，了解NoSQL数据库的分类和各自适用场景。", content: {
+          objective: "今天你将学习Redis和NoSQL数据库。学完后你能掌握Redis的五种核心数据结构（String、List、Hash、Set、Sorted Set）及其典型应用场景，理解Redis的持久化机制和内存淘汰策略，了解NoSQL数据库的四大分类和代表产品。在AI服务中，Redis是最常用的缓存和会话存储，也是实现限流、排行榜、分布式锁等功能的利器。",
+          key_points: [
+            "Redis数据结构：String（缓存、计数、分布式锁）、List（队列、栈、时间线）、Hash（对象存储）、Set（去重、交集并集、标签）、ZSet（排行榜、延时队列、范围查找）",
+            "Redis持久化：RDB（快照，二进制，恢复快）、AOF（追加日志，数据更安全）、混合持久化（RDB+AOF结合，4.0+）",
+            "内存淘汰策略：noeviction、allkeys-lru、volatile-lru、allkeys-random、volatile-random、volatile-ttl",
+            "NoSQL分类：键值型（Redis）、文档型（MongoDB）、列式（Cassandra、HBase）、图（Neo4j）",
+            "Redis应用：缓存、分布式锁、排行榜、计数器、消息队列、限流、地理位置、布隆过滤器"
+          ],
+          practice: "完成以下Redis与NoSQL实践：1）Redis数据结构练习：用redis-cli操作五种基本数据结构，每种结构练习至少5个常用命令，思考每种结构适合什么场景；2）应用场景实现：用Redis实现以下功能——a）文章点赞数/浏览数计数；b）用户关注列表和粉丝列表，计算共同关注（交集）；c）排行榜（如积分榜、热搜榜），支持增加分数、获取前N名、获取某人排名；d）分布式锁（用SETNX+过期时间）；3）持久化机制理解：对比RDB和AOF的优缺点，分别适合什么场景？如果Redis宕机了，数据会丢多少？怎么配置能兼顾性能和数据安全？4）NoSQL调研：调研四种NoSQL的代表产品、特点、适用场景、优缺点，制作一张对比表，包括：键值型（Redis、DynamoDB）、文档型（MongoDB、CouchDB）、列式（Cassandra、HBase）、图数据库（Neo4j、Nebula）；5）思考：在AI系统中，Redis可以用来做什么？比如：缓存模型结果、存储用户对话历史、限流、分布式任务队列、实时排行榜，还有呢？哪些场景适合用Redis，哪些适合用关系型数据库？",
+          deep_dive: "深入理解缓存架构与一致性问题：缓存是提升系统性能的利器，但引入缓存也带来了新的问题——缓存和数据库的一致性问题、缓存穿透、缓存击穿、缓存雪崩等等。让我们系统梳理一下：1）缓存穿透：查询不存在的数据，每次都打到数据库。解决方案：布隆过滤器、缓存空值。2）缓存击穿：热点key过期，大量请求同时打到数据库。解决方案：互斥锁、永不过期（逻辑过期）。3）缓存雪崩：大量key同时过期，或者Redis宕机，大量请求打到数据库。解决方案：过期时间加随机值、多级缓存、Redis集群、限流降级。4）缓存和数据库的一致性：这是经典难题。常见的缓存更新策略：a）Cache Aside：读的时候先读缓存，没有就读数据库再写缓存；写的时候先更新数据库，再删除缓存。这是最常用的策略。b）Read/Write Through：缓存层封装了读写，应用只操作缓存，缓存负责同步到数据库。c）Write Behind：写的时候只写缓存，异步批量写回数据库，性能好但可能丢数据。为什么是删缓存而不是更缓存？因为并发场景下更新缓存可能有竞态条件，导致脏数据，删缓存更简单安全，虽然下一次读会miss，但这是可以接受的。延迟双删（更新数据库→删缓存→延时一会再删一次）是一种更保险的做法。在AI服务中，缓存尤其重要——模型推理通常很慢，缓存热门请求的结果，能大幅降低延迟和算力成本。但也要注意：AI的输出可能不是完全确定的（同样的输入可能有略微不同的输出），缓存的时候要考虑是否能接受这个差异。另外，缓存只是性能优化的一个层面，还有很多其他优化手段：数据库优化、读写分离、分库分表、CDN、边缘计算等等。架构设计就是在各种约束条件下找到最优的平衡点。"
+        }, duration: "2小时", resources: [{ title: "Redis官方文档", url: "https://redis.io/docs/", required: true, type: "doc", source: "official" }, { title: "Redis设计与实现", url: "https://redisbook.readthedocs.io/", required: false, type: "book", source: "other" }, { title: "NoSQL数据库对比", url: "https://www.mongodb.com/nosql-explained", required: false, type: "doc", source: "official" }], checkpoint: "能用Redis实现排行榜和分布式锁两个功能" },
+      { day: 15, title: "数据库综合项目：简单博客系统",
+        summary: "设计并实现一个简单的博客系统的数据库和API，综合运用数据库设计、SQL、索引、事务等知识。", content: {
+          objective: "今天你将完成一个数据库综合项目——设计并实现一个简单的博客系统的后端。通过这个项目，你会把前三周学到的数据库设计、SQL编写、索引优化、事务、缓存等知识融会贯通。这是检验你数据库学习成果的最好方式。",
+          key_points: [
+            "项目目标：实现一个支持用户、文章、评论、标签的博客系统的数据库设计和核心API",
+            "数据库设计：表结构设计、字段类型选择、主键外键、索引设计、范式与反范式权衡",
+            "核心功能：用户注册/登录、文章CRUD、评论功能、标签系统、文章列表分页",
+            "性能优化：合理的索引设计、缓存层（Redis）、分页优化、SQL优化",
+            "安全考虑：SQL注入防护、密码哈希、权限控制、输入验证"
+          ],
+          practice: "设计并实现一个简易博客系统，要求如下：\n\n数据库设计（必做）：\n1）用户表：id、用户名、密码哈希、邮箱、创建时间、更新时间；\n2）文章表：id、标题、内容摘要、内容正文、作者id、状态（草稿/已发布）、创建时间、更新时间、浏览量、点赞数；\n3）评论表：id、文章id、用户id、内容、创建时间；\n4）标签表：id、标签名、创建时间；\n5）文章标签关联表：文章id、标签id（多对多关系）。\n\nSQL编写（必做）：\n1）用户注册和登录（密码用bcrypt哈希存储）；\n2）发布文章、修改文章、删除文章（事务保证一致性）；\n3）文章列表分页（支持按时间排序、按浏览量排序）；\n4）文章详情（文章信息+作者信息+评论列表）；\n5）按标签筛选文章；\n6）发表评论、删除评论；\n7）统计每篇文章的评论数。\n\n索引设计（必做）：\n1）为所有表设计合理的索引（主键、唯一索引、普通索引、联合索引）；\n2）用EXPLAIN分析核心查询的执行计划，确保走索引；\n3）至少实现一个覆盖索引。\n\n进阶功能（选做）：\n1）Redis缓存：热门文章、文章详情缓存，处理缓存一致性；\n2）全文搜索：用MySQL全文索引或Elasticsearch实现文章搜索；\n3）点赞功能：文章点赞、取消点赞、点赞数统计；\n4）压力测试：用JMeter或ab压测核心接口，优化到你能达到的最好性能。\n\n项目要求：\n- 表结构设计文档（ER图+说明）\n- 完整的DDL语句\n- 核心业务的SQL语句\n- 索引设计说明和EXPLAIN验证\n- 可以是纯SQL脚本，也可以配合你熟悉的后端语言实现API",
+          deep_dive: "数据库学习的意义与进阶方向：完成这个项目后，你应该对关系型数据库有了扎实的理解。但数据库领域非常博大精深，还有很多可以深入的方向：1）数据库内核：研究数据库源码，理解查询优化器、存储引擎、事务管理器的实现，甚至自己实现一个简单的数据库；2）数据库调优专家：深入理解MySQL/PostgreSQL的内部机制，成为数据库性能优化专家；3）分布式数据库：学习TiDB、CockroachDB、Spanner等分布式数据库的原理，理解分布式事务、一致性协议、数据分片、负载均衡；4）数据仓库与大数据：学习OLAP数据库（ClickHouse、Doris、Snowflake）、数据湖、数据仓库建设、ETL/ELT，从数据中挖掘价值；5）向量数据库与AI：深入学习向量数据库，结合大模型构建RAG系统、智能搜索系统。对于AI开发者来说，数据库的角色也在变化——传统的关系型数据库依然重要（用户、订单、任务管理），但向量数据库、图数据库这些新型数据库越来越重要（知识图谱、RAG检索、推荐系统）。未来的AI应用，一定是多种数据库的组合——关系型存结构化数据、向量数据库存embedding、图数据库存关系、时序数据库存指标、缓存存热点数据。作为AI开发者，不需要成为数据库专家，但要了解各种数据库的特点和适用场景，在架构设计时做出正确的选择。最后，希望大家记住——数据库是数据的归宿，是所有应用的基石。AI再强大，也离不开数据的存储和检索。把基础打扎实，你就能走得更远。"
+        }, duration: "4小时", resources: [{ title: "数据库系统概念", url: "https://www.db-book.com/", required: false, type: "book", source: "other" }, { title: "MySQL实战45讲", url: "https://time.geekbang.org/column/intro/100020801", required: false, type: "doc", source: "other" }, { title: "设计数据密集型应用", url: "https://dataintensive.net/", required: false, type: "book", source: "other" }], checkpoint: "完成博客系统的数据库设计、核心SQL和索引优化" }
+
     ]
   },
 
@@ -7789,7 +9025,72 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成以下综合实践项目：1）系统设计：先画系统架构图和数据流图，设计分层的驱动结构——底层是各外设的寄存器驱动，中间是统一的抽象接口，上层是应用逻辑；2）驱动开发：逐个实现各个驱动——I2C温湿度传感器（如AHT20/SHT30）、SPI Flash（如W25Q系列）、ADC光敏电阻、UART调试输出、定时器定时采样；3）应用逻辑：实现主循环，每秒采集一次传感器数据，经过简单滤波后，通过UART输出，同时每隔1分钟把数据存入SPI Flash；4）可靠性设计：加入I2C总线超时恢复、SPI Flash读写校验、ADC过采样滤波、看门狗监控等机制，提高系统可靠性；5）测试验证：用逻辑分析仪观察I2C和SPI的时序是否正确，用串口助手看数据输出是否正常，长时间运行测试稳定性，故意制造一些错误（如拔掉传感器）看系统能不能恢复；6）思考：如果要在这个系统里加入AI推理（比如用传感器数据做异常检测），应该怎么设计架构？AI推理放在哪一层？怎么和驱动交互？",
           deep_dive: "深入理解驱动架构设计与工程实践：完成这个综合项目后，让我们来深入思考一下驱动开发中的架构设计和工程实践问题。首先，为什么要分层？分层设计是驱动开发最核心的设计思想。典型的分层结构是：1）硬件层：实际的物理硬件，各种外设和传感器；2）寄存器驱动层：直接操作硬件寄存器，是最底层的软件，和硬件强相关；3）抽象接口层（HAL/BSP）：向上提供统一的API，隐藏硬件细节，应用层不用管底层是STM32还是GD32，也不用管具体是哪个引脚；4）设备驱动层：针对具体设备（如某个传感器、某个显示屏）的驱动，调用底层抽象接口；5）应用层：业务逻辑，调用各种设备驱动。这样分层的好处是：1）可移植：换了芯片，只需要改最底层的寄存器驱动，上层不用动；2）可复用：同一种传感器的驱动，可以在不同项目、不同MCU上复用；3）易测试：每层可以单独测试；4）易维护：问题定位清晰，是硬件问题、驱动问题还是应用问题，一目了然。然后是驱动开发的工程实践经验：1）先看手册再写代码：拿到一个新外设，先认真读数据手册（Datasheet），理解寄存器定义、时序要求、电气特性，不要上来就写代码；2）从简单到复杂：先实现最基本的功能（比如读ID），验证通信正常了，再逐步加复杂功能；3）善用工具：逻辑分析仪看时序、示波器看波形、串口打印日志、LED做状态指示，调试工具用得好，事半功倍；4）错误处理：驱动一定要考虑异常情况——通信失败怎么办？超时怎么办？数据校验不通过怎么办？不能假设一切正常；5）性能优化：对于高频操作，考虑用DMA、用中断、减少CPU占用；对于低频操作，简单可靠就好。在边缘AI场景中，驱动架构尤为重要。AI应用需要和很多硬件打交道——摄像头、麦克风、显示屏、NPU、各种传感器。如果驱动架构设计得好，AI应用开发就会很顺畅；如果驱动写得乱，AI算法再厉害也发挥不出来。优秀的驱动工程师，是嵌入式AI团队里非常宝贵的人才。理解这些架构思想和工程实践，能让你从\"会写驱动\"提升到\"能设计驱动架构\"的水平。"
-        }, duration: "3小时", resources: [{ title: "驱动架构", url: "https://www.st.com/resource/en/user_manual/dm00113874.pdf", required: true, type: "doc", source: "official" }, { title: "HAL设计", url: "https://www.state-machine.com/", required: false, type: "doc", source: "official" },  { title: "多传感器融合", url: "https://github.com/embedded/embedded-sensor-framework", required: false, type: "repo", source: "github" }, { title: "传感器驱动开发", url: "https://www.cnblogs.com/yuanf234/p/sensor-driver.html", required: false, type: "doc", source: "blog" }], checkpoint: "多传感器驱动系统能稳定运行，数据采集和存储正确" }
+        }, duration: "3小时", resources: [{ title: "驱动架构", url: "https://www.st.com/resource/en/user_manual/dm00113874.pdf", required: true, type: "doc", source: "official" }, { title: "HAL设计", url: "https://www.state-machine.com/", required: false, type: "doc", source: "official" },  { title: "多传感器融合", url: "https://github.com/embedded/embedded-sensor-framework", required: false, type: "repo", source: "github" }, { title: "传感器驱动开发", url: "https://www.cnblogs.com/yuanf234/p/sensor-driver.html", required: false, type: "doc", source: "blog" }], checkpoint: "多传感器驱动系统能稳定运行，数据采集和存储正确" },
+      { day: 11, title: "ADC与DAC驱动",
+        summary: "学习模数/数模转换驱动开发，理解模拟信号采集与输出", content: {
+          objective: "今天你将学习ADC（模数转换）和DAC（数模转换）的驱动开发。学完后你能理解ADC的工作原理和技术参数，能用轮询、中断、DMA三种方式采集ADC数据，掌握DAC的输出配置，了解模拟前端设计的基本知识。",
+          key_points: [
+            "ADC原理：将连续模拟信号转换成离散数字信号，采样率、分辨率、精度、转换时间是关键参数",
+            "ADC采集方式：轮询（简单但占CPU）、中断（转换完成通知）、DMA（大批量自动搬运，CPU不参与）",
+            "多通道采集：规则组+注入组，扫描模式，多通道依次转换，适合多传感器数据采集",
+            "DAC原理：数字信号转模拟信号，8/12位分辨率，输出缓冲，常用于波形生成、电压控制",
+            "模拟前端：信号调理（放大、滤波）、参考电压、PCB布局对ADC精度的影响"
+          ],
+          practice: "完成以下ADC/DAC驱动实践：1）ADC轮询采集：配置ADC为单通道单次转换模式，用轮询方式读取ADC值，转换成电压，理解分辨率和电压计算公式；2）ADC中断方式：配置ADC转换完成中断，在中断中读取数据并存入缓冲区，主循环处理数据，对比轮询方式的CPU占用；3）ADC+DMA多通道：配置ADC为多通道扫描模式+DMA连续传输，自动把多个通道的转换结果搬到内存，CPU只需要读内存就行，体会DMA的高效；4）DAC波形生成：用DAC生成正弦波、方波、三角波，可以配合定时器触发DMA实现，用示波器观察输出波形；5）思考：在边缘AI设备中，ADC通常用来采集什么信号？（麦克风音频、振动传感器、生物信号、电池电压等）如果要做语音识别，需要多高的采样率和分辨率？AI推理前的信号预处理（滤波、特征提取）和ADC驱动怎么配合？",
+          deep_dive: "深入理解ADC原理与高精度采集技术：ADC看起来简单，但要做好高精度采集并不容易，里面有很多门道。1）ADC的关键技术参数：a）分辨率（Resolution）：8位/10位/12位/16位，位数越多，能分辨的电压越小。12位ADC的话，参考电压3.3V，LSB（最低有效位）= 3.3V/4096 ≈ 0.8mV；b）采样率（Sampling Rate）：每秒采样多少次，根据奈奎斯特定理，采样率至少是信号最高频率的2倍才能还原信号；c）精度（Accuracy）：实际值和测量值的差，受偏移误差、增益误差、非线性等影响，不是分辨率越高精度就一定越高；d）转换时间：完成一次转换需要的时间，决定了最高采样率。2）为什么需要DMA？ADC采样率高了以后，如果每转换一次就触发一次中断，CPU会被频繁打断，效率很低。DMA（直接内存访问）可以让ADC的数据自动搬到内存里，不需要CPU参与，转换完成一整批数据了再通知CPU。这样CPU可以干别的事，大大提高了效率。这在高速数据采集（如音频、振动）场景中尤其重要。3）多通道采集的模式：STM32的ADC有规则通道（Regular Channel）和注入通道（Injected Channel）。规则通道就是普通的、按顺序转换的通道；注入通道是「插队」的通道，可以打断规则通道的转换，用于紧急的、高优先级的测量（比如安全相关的电压电流监测）。4）影响ADC精度的因素：a）参考电压：参考电压不准，结果肯定不准。要用高精度的参考电压源；b）电源噪声：模拟电路对电源噪声很敏感，要加去耦电容，模拟电源和数字电源分开；c）PCB布局：模拟线和数字线要分开，地平面要完整，ADC输入走线要短；d）输入阻抗：信号源的阻抗太高的话，会影响采样精度；e）采样时间：采样电容充电需要时间，信号源阻抗大就要加长采样时间。5）AI前端的信号链：在AI边缘设备中，ADC采集的信号通常不能直接送给AI模型推理，需要经过信号预处理：a）放大：微弱信号要先放大；b）滤波：去除噪声和干扰；c）特征提取：从原始信号中提取特征（如音频的MFCC、振动的FFT频谱）；d）然后才是AI推理。整个信号链的设计——从模拟前端到ADC到预处理到AI推理——决定了系统的整体性能。理解ADC的原理和限制，能帮你更好地设计AI边缘设备的信号采集系统。"
+        }, duration: "2.5小时", resources: [{ title: "ADC应用笔记", url: "https://www.st.com/resource/en/application_note/an2834-how-to-get-the-best-adc-accuracy-in-stm32-microcontrollers-stmicroelectronics.pdf", required: true, type: "doc", source: "official" }, { title: "STM32 ADC", url: "https://www.st.com/resource/en/reference_manual/dm00031051.pdf", required: false, type: "doc", source: "official" }], checkpoint: "能用DMA方式实现多通道ADC采集，理解ADC精度影响因素" },
+      { day: 12, title: "CAN总线与工业通信",
+        summary: "学习CAN总线协议与驱动开发，理解工业级通信的可靠性设计", content: {
+          objective: "今天你将学习CAN总线的原理和驱动开发。学完后你能理解CAN协议的特点和帧格式，能用CAN控制器实现收发，理解CAN的错误处理和容错机制，了解CAN FD和工业以太网的发展。CAN是工业控制和汽车电子中最重要的通信总线之一。",
+          key_points: [
+            "CAN总线：控制器局域网，差分信号传输，抗干扰强，可靠性高，多主架构，广泛用于汽车和工业",
+            "CAN帧格式：标准帧（11位ID）、扩展帧（29位ID）、数据帧、远程帧、错误帧、过载帧",
+            "CAN特性：CSMA/CD+AMP（载波监听多路访问+冲突避免按优先级仲裁），高优先级ID先发送",
+            "错误处理：位错误、填充错误、CRC错误、格式错误、应答错误，主动错误/被动错误/总线关闭",
+            "CAN FD：灵活数据率，仲裁段和数据段可以不同速率，数据段最高8Mbps， payload最大64字节"
+          ],
+          practice: "完成以下CAN总线学习实践：1）CAN基础配置：配置CAN控制器的波特率、工作模式（正常/回环/静默），理解位时序（同步段、传播段、相位段）和波特率计算；2）回环测试：配置CAN为回环模式，自己发自己收，验证CAN发送和接收功能是否正常，这是调试CAN的常用方法；3）双机通信：两块开发板通过CAN总线连接，一块发数据，一块收数据，实现简单的通信协议，验证CAN的实际通信；4）错误处理了解：了解CAN的五种错误类型和错误处理机制，思考：如果CAN总线有干扰导致出错，系统会怎么应对？怎么恢复？5）思考：在工业AI场景中（如预测性维护、工业质检），CAN总线通常用来做什么？AI边缘设备怎么通过CAN和PLC、变频器、传感器等工业设备通信？如果要采集大量设备数据做AI分析，CAN总线够不够用？什么时候需要工业以太网？",
+          deep_dive: "深入理解CAN总线的可靠性设计与工业通信演进：CAN总线为什么能在汽车和工业领域成为事实标准？因为它从设计之初就把可靠性放在第一位。让我们深入理解它的几个关键设计。1）差分信号传输：CAN用CAN_H和CAN_L两根差分线传输信号，用两根线的电压差来表示逻辑0和1。差分信号的好处是抗干扰能力强——外界干扰对两根线的影响差不多，差值不变，所以能在噪声很大的工业环境中可靠通信。2）CSMA/CD+AMP仲裁机制：CAN是多主总线，每个节点都可以主动发数据。如果多个节点同时发怎么办？CAN的做法是：每个节点发的同时也监听总线，如果发的是隐性位（逻辑1）但监听到显性位（逻辑0），说明有更高优先级的节点在发，自己就退出来，等总线空闲了再重发。ID越小优先级越高。这种机制保证了高优先级的消息不会被低优先级的阻塞，非常适合实时控制。3）完善的错误处理：CAN协议内置了非常完善的错误检测和处理机制：a）位错误：发的和收的不一样（除了仲裁阶段）；b）填充错误：连续5个相同位后应该插入一个相反位（位填充），没插就是错；c）CRC错误：CRC校验不对；d）格式错误：帧格式不对；e）应答错误：发出去没人应答。每个节点都有发送错误计数器（TEC）和接收错误计数器（REC），错了就加，对了就减。根据计数器值，节点分为三个状态：主动错误（Error Active）、被动错误（Error Passive）、总线关闭（Bus Off）。总线关闭后，节点不能再发数据，需要软件干预才能恢复。这种机制可以防止有问题的节点一直发错帧干扰整个总线。4）CAN FD与传统CAN：传统CAN的最大数据率是1Mbps，数据段最多8字节。随着汽车电子的发展，这不够用了。CAN FD（Flexible Data-rate）做了改进：a）仲裁段还是传统CAN的速率（保证兼容性和仲裁）；b）数据段可以用更高的速率（最高8Mbps）；c）数据段最大可以到64字节。这样既兼容了传统CAN，又提高了带宽。5）工业通信的演进：从现场总线（CAN、Profibus、Modbus RTU）到工业以太网（EtherCAT、Profinet、Ethernet/IP、TSN），工业通信的带宽越来越高，延迟越来越低。在工业AI场景中，需要采集大量的传感器数据做分析，传统CAN的带宽可能不够，这时候就需要工业以太网。但CAN的可靠性、实时性、低成本，在很多场景下还是不可替代的。理解CAN的原理，不仅是掌握一种总线，更是理解工业级通信的可靠性设计思想。"
+        }, duration: "2.5小时", resources: [{ title: "CAN规范", url: "https://www.can-cia.org/", required: true, type: "doc", source: "official" }, { title: "STM32 CAN", url: "https://www.st.com/resource/en/reference_manual/dm00031051.pdf", required: false, type: "doc", source: "official" }], checkpoint: "能实现CAN总线的收发，理解CAN错误处理和可靠性机制" },
+      { day: 13, title: "USB设备驱动开发",
+        summary: "了解USB协议基础与设备驱动开发，理解现代外设接口的工作原理", content: {
+          objective: "今天你将学习USB的基础知识和嵌入式USB设备驱动开发。学完后你能理解USB的基本概念（主机/设备/端点/传输类型），能用USB设备控制器实现虚拟串口（CDC）或大容量存储（MSC），了解USB在嵌入式AI设备中的应用。",
+          key_points: [
+            "USB基础：主从架构（Host/Device），差分信号，热插拔，即插即用，自动配置，向下兼容",
+            "USB端点（Endpoint）：设备上的数据源/目的地，控制端点、批量端点、中断端点、等时端点，各有特点",
+            "传输类型：控制传输（配置/命令）、批量传输（大量数据，如U盘）、中断传输（少量数据，如鼠标）、等时传输（实时数据，如音频）",
+            "USB描述符：设备描述符、配置描述符、接口描述符、端点描述符，主机通过描述符了解设备",
+            "USB设备类：CDC（虚拟串口）、MSC（大容量存储）、HID（人机接口）、UVC（视频）、Audio（音频）"
+          ],
+          practice: "完成以下USB驱动学习实践：1）USB CDC虚拟串口：用MCU的USB设备控制器实现USB虚拟串口（CDC ACM类），在电脑上显示为COM口，通过它和MCU通信，理解USB CDC的原理和实现；2）USB HID键盘（可选）：实现一个USB HID键盘设备，按下按键后电脑上能显示字符，理解HID类的报告描述符；3）USB MSC大容量存储（可选）：把MCU的内部Flash或外部SPI Flash模拟成U盘，电脑可以直接读写，理解MSC类的Bulk-Only Transport和SCSI命令；4）USB枚举过程：理解USB设备插入后，主机怎么一步步识别设备、读取描述符、加载驱动、配置设备的整个过程；5）思考：在AI边缘设备中，USB接口有什么用？（连接U盘传模型和数据、连接摄像头、USB网卡上网、USB口调试、连接AI计算棒等）USB OTG是什么？设备模式和主机模式有什么区别？如果让你设计一个带AI功能的USB设备（比如USB AI摄像头），你会怎么实现？",
+          deep_dive: "深入理解USB协议栈与嵌入式USB设计：USB是一个非常复杂的协议，但为什么它能成为通用外设接口的事实标准？因为它有很多优点：热插拔、即插即用、统一接口、供电+数据合一、高带宽等等。让我们深入理解它的核心思想。1）USB的分层架构：和网络协议类似，USB协议也是分层的：a）物理层：电气特性、差分信号、连接器；b）链路层：数据包格式、PID、CRC、位填充；c）设备层：端点、管道、传输类型；d）类层：各种设备类（HID、MSC、CDC等）；e）应用层：具体的应用逻辑。分层设计让USB协议既统一又灵活——底层的USB总线是通用的，上层可以定义各种设备类来实现不同功能。2）端点和管道：端点是USB设备上的逻辑数据源/目的地，每个端点有编号、方向、类型。主机和设备端点之间的连接叫「管道」（Pipe）。控制端点0是每个设备必须有的，用来做配置和控制。其他端点根据设备功能不同而不同。3）四种传输类型的设计哲学：为什么需要四种传输类型？因为不同的应用有不同的需求：a）控制传输：可靠、双向、不频繁，用于配置和命令；b）批量传输：可靠、大量、对延迟不敏感，比如U盘传文件；c）中断传输：少量、低延迟、可靠，比如鼠标键盘；d）等时传输：大量、实时、不可靠（出错不重传），比如音频视频。USB针对不同的需求设计了不同的传输方式，在可靠性、延迟、带宽之间做了不同的权衡。4）USB OTG（On-The-Go）：传统USB是严格的主从结构——主机是主机，设备是设备。OTG让设备既能当主机又能当设备，两个OTG设备连在一起可以协商谁当主机。在嵌入式中，OTG很有用——比如你的设备既能当U盘连电脑（设备模式），又能插U盘读数据（主机模式）。5）AI时代的USB：USB在AI边缘设备中应用非常广泛：a）USB摄像头：图像采集，最常见的AI输入设备；b）USB麦克风阵列：语音采集；c）USB AI计算棒：Intel Neural Compute Stick、Google Coral USB Accelerator，插USB就能加速AI推理；d）USB转串口/网口/SPI：扩展接口；e）USB Type-C PD：供电+数据+视频，一线通。USB 3.0/3.1/3.2的带宽达到5Gbps/10Gbps/20Gbps，完全能满足高清视频、高速数据传输的需求。理解USB的原理，能帮你更好地设计和使用USB AI设备。"
+        }, duration: "2.5小时", resources: [{ title: "USB 2.0规范", url: "https://www.usb.org/document-library/usb-20-specification", required: false, type: "doc", source: "official" }, { title: "STM32 USB", url: "https://www.st.com/en/development-tools/stm32-usb-device-library.html", required: false, type: "doc", source: "official" }], checkpoint: "能实现USB CDC虚拟串口，理解USB传输类型和设备类概念" },
+      { day: 14, title: "驱动调试与问题定位",
+        summary: "掌握嵌入式驱动的调试方法和问题定位技巧", content: {
+          objective: "今天你将学习嵌入式驱动开发的调试方法和问题定位技巧。学完后你能使用示波器、逻辑分析仪等硬件调试工具，掌握串口打印、断言、断言等软件调试方法，知道常见驱动问题的排查思路和解决方案。调试能力是驱动工程师的核心竞争力。",
+          key_points: [
+            "硬件调试工具：万用表、示波器、逻辑分析仪、总线分析仪（CAN/I2C/SPI/USB）、J-Link/SWD调试器",
+            "软件调试方法：串口打印、LED调试、assert断言、栈溢出检测、HardFault定位与分析",
+            "常见问题：时序问题、电平不匹配、上拉/下拉、电源问题、EMI/EMC、静电ESD",
+            "调试思路：从易到难、从已知到未知、控制变量、二分法定位、假设验证",
+            "硬件知识基础：看原理图、读芯片手册、理解常用电路、会用测试仪器"
+          ],
+          practice: "完成以下驱动调试学习实践：1）硬件工具使用：如果有示波器或逻辑分析仪，用它抓I2C或SPI的通信波形，分析时序是否正确，体会硬件调试的直观性；2）HardFault定位：故意制造一个HardFault（比如访问空指针、往只读内存写），学习如何定位发生错误的位置和原因——看Fault Status寄存器、栈回溯、map文件；3）调试技巧总结：结合你之前做驱动遇到的问题，总结一下：a）你遇到过哪些驱动bug？b）你是怎么定位和解决的？c）有什么经验教训？4）问题排查流程：设计一个驱动问题排查的checklist——从电源、时钟、复位、引脚配置、外设配置、中断、DMA、应用层，一步步排查，形成系统化的调试流程；5）思考：为什么驱动开发调试这么难？和应用开发相比，驱动调试的难点在哪里？（硬件软件混在一起、问题不可复现、工具少、文档不全等）你觉得怎么提升驱动调试能力？",
+          deep_dive: "深入理解嵌入式调试的方法论与思维方式：驱动开发中，调试可能占了60%以上的时间——写代码快，找bug慢。好的调试方法和思维方式，能让你事半功倍。1）调试的核心思维：调试本质上是一个「提出假设 → 验证假设」的科学探究过程。a）观察现象：问题是什么？什么时候出现？有什么规律？b）提出假设：可能是什么原因导致的？c）设计实验：怎么验证这个假设对不对？d）验证分析：实验结果支持假设吗？支持的话继续深入，不支持的话换个假设。这个过程和科学研究是一样的。2）从易到难的排查原则：遇到问题，先查最简单最可能的原因，不要一开始就想复杂的。比如：a）通信不通：先查线接对了没？电源有没有？再查配置对不对？再查时序对不对？最后查芯片坏没坏；b）很多「诡异」的问题，最后发现都是低级错误——线接反了、电源没开、焊虚了、宏定义写错了。3）控制变量法：问题可能有多个原因，一次只改一个东西，看问题有没有变化。如果一次改好几个地方，就算好了你也不知道是哪个起作用的。4）二分法定位：如果有很多模块，不知道哪里出问题，可以用二分法——从中间切开，看前半部分对不对，逐步缩小范围。这是定位复杂问题的高效方法。5）工欲善其事必先利其器：好的工具能大大提升调试效率。必备工具：a）万用表：测电压、通断、电流；b）示波器：看波形、时序、噪声、纹波；c）逻辑分析仪：抓数字信号、分析协议（I2C/SPI/UART等）；d）J-Link/SWD调试器：单步、断点、看寄存器、看内存；e）串口：最便宜也最有用的调试工具，打印日志；f）总线分析仪：专业的协议分析，如CANoe、USB分析仪等。6）常见驱动bug的分类：a）配置类：寄存器配错了、时钟没开、引脚复用错了；b）时序类：时序不对、速度太快、等待时间不够；c）电平类：电平不匹配、上拉下拉不对、驱动能力不够；d）竞态类：多任务/中断里同时访问同一个外设，数据不一致；e）内存类：栈溢出、内存泄漏、野指针、越界；f）硬件类：芯片坏了、板级问题、焊接问题、电源噪声。7）读手册的能力：驱动工程师的一个核心能力就是快速读懂芯片手册（Datasheet/Reference Manual），从中找到需要的信息。手册通常有几百页甚至上千页，不需要全读，知道去哪找什么就行。寄存器描述、时序图、电气特性、应用笔记是重点。调试能力是需要长期积累的，但掌握了正确的方法，能让你快速成长。遇到问题不要怕，每解决一个bug，你的能力就提升一分。"
+        }, duration: "2.5小时", resources: [{ title: "HardFault调试", url: "https://www.keil.com/appnotes/files/apnt209.pdf", required: true, type: "doc", source: "official" }, { title: "逻辑分析仪", url: "https://www.saleae.com/", required: false, type: "tool", source: "official" }], checkpoint: "能使用至少3种调试工具，有系统化的问题排查思路" },
+      { day: 15, title: "驱动架构设计与最佳实践",
+        summary: "学习驱动架构设计思想和最佳实践，提升驱动代码质量", content: {
+          objective: "今天你将学习驱动的架构设计和最佳实践。学完后你理解驱动分层、设备模型、面向对象的C等设计思想，掌握驱动开发的编码规范和最佳实践，能设计出结构清晰、可移植、可维护的驱动代码。",
+          key_points: [
+            "驱动分层架构：硬件层→驱动层→HAL层→BSP层→应用层，每层职责清晰，便于移植和测试",
+            "设备驱动模型：总线-驱动-设备模型，设备和驱动分离，支持热插拔和动态加载，Linux驱动模型的核心思想",
+            "面向对象的C：用结构体+函数指针模拟类和接口，实现封装、继承、多态，提高代码复用性",
+            "驱动设计原则：单一职责、开闭原则、依赖倒置、最小接口、错误处理、可配置性",
+            "编码规范：MISRA C、命名规范、注释、文件结构、版本管理、单元测试"
+          ],
+          practice: "完成以下驱动架构学习实践：1）驱动重构练习：把你之前写的某个驱动（如GPIO或UART）进行重构，按照分层思想设计——底层是寄存器操作，中间层是驱动逻辑，上层是统一API，每层之间通过接口调用，不直接依赖具体实现；2）面向对象C练习：设计一个「字符设备」基类（包含open、read、write、close等函数指针），然后让UART和SPI都「继承」这个基类，实现统一的接口，体会面向对象思想在C语言中的应用；3）错误处理完善：给你的驱动加上完善的错误处理——参数检查、返回错误码、超时处理、重试机制、断言，让驱动更健壮；4）可配置性设计：用宏定义、配置结构体等方式，让你的驱动可以灵活配置（如引脚号、波特率、缓冲区大小等），不需要改驱动代码就能适配不同板子；5）代码review：用今天学到的最佳实践，review你之前写的驱动代码，找出可以改进的地方并优化；6）思考：为什么好的驱动架构这么重要？你见过哪些「坏」的驱动代码？有什么问题？你觉得一个优秀的驱动工程师应该具备哪些素质？",
+          deep_dive: "深入理解驱动架构设计与软件设计思想：驱动写得好不好，不只是「能跑就行」，更重要的是可维护性、可移植性、可扩展性。优秀的驱动架构，能让你在换芯片、换板子、加功能的时候，少改很多代码。让我们深入理解几个核心的设计思想。1）分层架构的力量：分层是软件工程中最重要的思想之一，在驱动开发中尤其重要。经典的分层：a）硬件层（LLD）：最底层，直接操作寄存器，和具体芯片强相关；b）驱动层：封装外设功能，向上提供驱动API，和外设类型相关但和具体芯片无关；c）HAL/BSP层：硬件抽象层/板级支持包，针对具体板子的配置和初始化，隔离板级差异；d）应用层：业务逻辑，只调用HAL层API，完全不关心底层硬件。分层的好处：a）移植性强：换芯片只需要改硬件层；换板子只需要改BSP；b）可测试性好：上层代码可以在PC上模拟测试；c）并行开发：不同层可以由不同的人开发；d）易于维护：修改某一层不影响其他层。2）设备驱动模型：Linux驱动模型（bus-driver-device）是驱动架构的经典设计。核心思想是把「设备」和「驱动」分开——设备描述硬件有什么（资源），驱动描述软件怎么用（方法），总线负责把两者匹配起来。这样做的好处：a）一个驱动可以支持多个同类型设备；b）一个设备可以被多个驱动使用；c）支持热插拔和动态加载；d）设备和驱动解耦。虽然裸机和RTOS环境通常没有这么复杂，但这种「分离」的思想是相通的。3）面向对象的C：C语言是面向过程的，但不代表不能用面向对象的思想。很多优秀的C代码（如Linux内核、SQLite）都用到了面向对象的技巧：a）封装：用结构体把数据和操作封装在一起；b）继承：基类结构体放在子类的第一个成员，实现「is-a」关系；c）多态：用函数指针表（虚函数表）实现运行时多态。面向对象的思想能大大提高代码的复用性和可扩展性。4）驱动的「鲁棒性」：嵌入式系统通常需要长时间运行，不能轻易重启，所以驱动的健壮性非常重要。怎么提升鲁棒性？a）防御式编程：假设输入都是错的，做好参数检查；b）错误码：明确的错误返回值，调用者知道出了什么错；c）超时机制：所有可能阻塞的操作都要有超时，不能死等；d）重试机制：临时性错误（如总线干扰）自动重试；e）容错设计：外设坏了系统不能崩溃，要能降级运行；f）看门狗：真出问题了能自动复位恢复。5）从驱动工程师到系统工程师：只会写寄存器操作的是「驱动码农」，能设计架构、理解系统、权衡取舍的才是「驱动工程师」。再往上，能理解整个系统、跨软硬件协同设计的，就是「系统工程师」。在AI时代，驱动工程师的价值不仅在于写驱动，更在于理解AI的需求，优化驱动和系统架构，让AI模型在嵌入式设备上跑得又快又好。这需要你既懂硬件又懂软件，既懂底层又懂应用。持续学习，拓宽视野，你的价值会越来越高。"
+        }, duration: "3小时", resources: [{ title: "Linux驱动模型", url: "https://www.kernel.org/doc/html/latest/driver-api/driver-model/overview.html", required: false, type: "doc", source: "official" }, { title: "C语言接口与实现", url: "https://github.com/ZeroE04/C-Interfaces-and-Implementations", required: false, type: "repo", source: "github" }], checkpoint: "能设计分层的驱动架构，写出可移植可维护的驱动代码" }
     ]
   },
 
@@ -7901,7 +9202,46 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成以下HAL框架综合设计实践：1）框架架构设计：画出HAL框架的三层架构图，定义每层的职责和交互方式，明确哪些代码是通用的、哪些是平台相关的；2）统一接口定义：用C语言定义GPIO、UART、I2C、SPI的统一接口，包含初始化、读写、控制等核心函数，设计句柄结构体和错误码；3）平台实现：选择一个MCU平台（如STM32F1），实现上述四个外设的HAL驱动，确保符合统一接口规范；4）BSP编写：为一个虚拟开发板编写BSP，包含LED、按键、串口等板级外设的初始化和引脚定义；5）应用验证：编写一个应用程序（如通过I2C读取传感器、UART打印、LED闪烁），使用HAL接口而不直接操作寄存器，验证功能正确性；6）移植测试：尝试将应用移植到另一个MCU系列（如STM32F4），看看需要改多少代码，评估框架的可移植性，找出可以改进的地方；7）思考：在边缘AI设备中，HAL框架应该怎么扩展以支持AI加速硬件？NPU驱动应该放在哪一层？AI框架和HAL的边界在哪里？如果要支持多种NPU，接口应该怎么设计？",
           deep_dive: "深入理解HAL框架的工程化与架构演进：设计一个能用的HAL框架不难，但设计一个好用、好维护、高性能、可扩展的HAL框架，需要深厚的架构功底。让我们从工程化的角度，深入理解HAL框架的演进路径和关键设计决策。首先，HAL框架的演进通常有几个阶段：第一阶段：封装寄存器。最简单的HAL，就是把寄存器操作封装成函数，比如把GPIO_SetPin(GPIOC, 13)封装成函数。这一步解决了可读性问题，但还是和具体芯片强耦合，换芯片就要重写。第二阶段：统一接口+多实现。同一品牌的不同系列芯片，外设IP差不多，只是寄存器地址不一样。这时候可以定义统一的接口，每个系列提供一套实现，用宏或者条件编译切换。STM32 HAL库就是这个阶段的代表——同一品牌下的不同系列接口基本一致，换系列不用改应用代码，但换品牌就不行了。第三阶段：设备模型+驱动注册。借鉴Linux的思想，设备和驱动分离，设备描述硬件信息，驱动提供操作接口，运行时匹配绑定。这时候可移植性更强，跨品牌也有可能，但框架本身的复杂度也上去了。Zephyr就是典型代表。第四阶段：设备树+运行时配置。用设备树（Device Tree）描述硬件信息，框架通用，硬件信息由设备树描述，编译时或运行时解析。这是最灵活的方式，Linux内核就是这么做的，但对资源受限的MCU来说可能太重了。然后是HAL框架中几个关键的架构决策：第一，接口抽象到什么程度？是像STM32 HAL那样抽象到外设功能（HAL_GPIO_Init、HAL_UART_Transmit），还是像Zephyr那样抽象到设备类别（gpio_pin_configure、uart_tx）？抽象程度越高，可移植性越好，但性能损失和学习成本也越高。第二，怎么支持多平台？用条件编译（#ifdef）还是用函数指针表？条件编译简单高效，但每种平台都要加一堆#ifdef，代码会很乱；函数指针表优雅，运行时切换，但有一点性能开销，而且占用更多Flash。第三，错误处理和调试支持怎么设计？有没有统一的错误码？有没有日志系统？有没有断言？这些东西看似不重要，但在实际项目中，调试的便利性直接影响开发效率。第四，配置系统怎么设计？所有可配置的东西怎么管理？用宏定义还是配置结构体还是设备树？这直接影响框架的灵活性和易用性。在边缘AI和TinyML场景中，HAL框架的思想正在被广泛应用。比如TensorFlow Lite Micro的架构，本质上也是一种HAL框架——上层是通用的解释器和算子，底层是各种硬件加速的后端（CMSIS-NN、ESP-NN、Cadence HiFi5、自定义NPU等），通过注册机制接入框架。上层应用不用关心底层用的是什么硬件，同一套模型代码可以跑在各种不同的芯片上。这就是HAL思想的威力——一次编写，到处运行。通过今天的综合实践，你不仅掌握了HAL框架的设计方法，更重要的是培养了分层、抽象、解耦的架构思维。这种思维方式，无论是做嵌入式开发、后端开发还是AI工程，都是通用的。"
-        }, duration: "3小时", resources: [{ title: "HAL框架设计", url: "https://www.state-machine.com/", required: true, type: "doc", source: "official" }, { title: "STM32 HAL参考", url: "https://www.st.com/resource/en/user_manual/dm00113874.pdf", required: false, type: "doc", source: "official" },  { title: "跨平台HAL实现", url: "https://github.com/embedded/cross-platform-hal", required: false, type: "repo", source: "github" }, { title: "嵌入式框架设计", url: "https://www.cnblogs.com/yuanf234/p/hal-framework-design.html", required: false, type: "doc", source: "blog" }], checkpoint: "HAL框架能在不同MCU上运行，应用代码无需修改" }
+        }, duration: "3小时", resources: [{ title: "HAL框架设计", url: "https://www.state-machine.com/", required: true, type: "doc", source: "official" }, { title: "STM32 HAL参考", url: "https://www.st.com/resource/en/user_manual/dm00113874.pdf", required: false, type: "doc", source: "official" },  { title: "跨平台HAL实现", url: "https://github.com/embedded/cross-platform-hal", required: false, type: "repo", source: "github" }, { title: "嵌入式框架设计", url: "https://www.cnblogs.com/yuanf234/p/hal-framework-design.html", required: false, type: "doc", source: "blog" }], checkpoint: "HAL框架能在不同MCU上运行，应用代码无需修改" },
+      { day: 8, title: "低功耗HAL设计",
+        summary: "学习低功耗模式与HAL低功耗管理，理解IoT和边缘AI设备的低功耗设计", content: {
+          objective: "今天你将学习嵌入式低功耗设计和HAL层的低功耗管理。学完后你能理解MCU的各种低功耗模式（Sleep、Stop、Standby），掌握HAL的低功耗配置方法，能设计低功耗的应用方案。低功耗是IoT和边缘AI设备的核心需求之一。",
+          key_points: [
+            "低功耗模式：Sleep模式（仅CPU停，外设运行）、Stop模式（时钟停，RAM保持）、Standby模式（几乎全关，唤醒最慢）",
+            "功耗来源：CPU、外设、时钟、存储器、IO口、电源转换，每个部分都有优化空间",
+            "低功耗管理：运行时调频调压、外设按需开关、动态功耗管理、Tickless Idle",
+            "唤醒源：外部中断、RTC闹钟、定时器、串口、USB，低功耗下怎么唤醒系统",
+            "低功耗设计：从硬件、软件、算法三个层面综合优化，达到目标功耗"
+          ],
+          practice: "完成以下低功耗学习实践：1）低功耗模式测试：配置MCU进入不同的低功耗模式（Sleep/Stop/Standby），用万用表或功耗分析仪测量各模式下的电流，对比功耗差异，理解不同模式的适用场景；2）唤醒源配置：配置RTC闹钟作为唤醒源，让MCU在Standby模式下每隔10秒唤醒一次，采集数据后再睡回去，实现周期性低功耗工作；3）外设功耗管理：优化你的代码——不用的外设关掉时钟、不用的IO配置成模拟输入、降低时钟频率、关闭不用的电源域，看看能降低多少功耗；4）低功耗应用设计：设计一个低功耗传感器节点的方案——平时休眠，定时唤醒采集传感器数据，如果数据异常就发报警，平时可以维持很低的平均功耗；5）思考：在边缘AI设备中，低功耗为什么这么重要？AI推理通常计算量大、功耗高，如果用电池供电，怎么平衡AI性能和功耗？（如：平时低功耗休眠，有事件了才唤醒做推理；用低功耗唤醒词检测；用NPU加速降低推理功耗等）",
+          deep_dive: "深入理解低功耗设计与边缘AI的功耗挑战：在电池供电的IoT和边缘AI设备中，功耗是最关键的指标之一——功耗低意味着续航长，或者用更小的电池。但AI推理通常需要大量计算，功耗很高。怎么平衡AI性能和功耗，是边缘AI的核心挑战之一。1）MCU的低功耗模式深度解析：STM32等MCU通常有多个低功耗等级，功耗越低，唤醒时间越长，能做的事越少。a）Sleep模式：CPU内核停止，但是外设还在运行，中断可以随时唤醒。功耗几mA，唤醒时间几us。适合短时间等待、需要快速响应的场景；b）Stop模式：所有时钟都停了，但是SRAM和寄存器的数据还保持着。功耗几uA到几十uA，唤醒时间几us到几十us。适合需要定期唤醒、但唤醒后不需要重新初始化的场景；c）Standby模式：几乎整个芯片都断电了，只有备份寄存器和RTC还在工作。功耗不到1uA，但是唤醒后相当于重新启动，需要重新初始化。适合对功耗要求极高、唤醒频率很低的场景。选择哪种模式，需要在功耗和响应速度之间权衡。2）功耗优化的层次：低功耗优化是一个系统工程，需要从多个层面入手：a）芯片选型：选低功耗系列的MCU，同样性能下功耗更低；b）硬件设计：电源设计、选用低功耗器件、不用的模块断电、电源域划分；c）时钟配置：能用慢时钟就不用快时钟，能关就关；d）软件优化：减少CPU运行时间、用DMA代替CPU、事件驱动代替轮询；e）算法优化：计算量越小，功耗越低。3）AI边缘设备的低功耗策略：AI推理功耗高，怎么办？几个思路：a）事件触发式：平时低功耗休眠，用低功耗传感器（如PIR、声音检测）唤醒，有事件了才启动AI推理；b）分级处理：先用简单的算法做粗判，如果疑似有目标，再用AI做精判。大部分时间用低功耗的简单算法，少部分时间用高功耗的AI；c）硬件加速：用NPU/TPU/GPU做AI推理，能效比比CPU高很多；d）模型优化：量化、剪枝、蒸馏，减少计算量和内存访问；e）动态调整：根据电池电量和场景动态调整AI模型大小和推理频率。4）电源管理IC（PMIC）：复杂的低功耗系统通常需要专门的PMIC芯片来管理电源——多路电源输出、动态电压调整、充电管理、电量计、各种保护功能。PMIC和MCU配合，能实现更精细的功耗管理。5）低功耗调试的挑战：低功耗调试很难——因为调试器连接着的时候，芯片可能进不了真正的低功耗模式；电流表的精度可能不够测uA级的电流；功耗问题往往需要长时间运行才能看出来。工具：功耗分析仪（如Power Profiler Kit）、示波器配合小电阻测电流、专用的低功耗调试工具。低功耗设计是一门艺术，需要软硬件结合，需要对系统有深刻的理解。在AIoT时代，低功耗设计能力越来越有价值。"
+        }, duration: "2.5小时", resources: [{ title: "STM32低功耗", url: "https://www.st.com/resource/en/application_note/an12296-stm32-microcontrollers-lowpower-overview-stmicroelectronics.pdf", required: true, type: "doc", source: "official" }, { title: "低功耗设计指南", url: "https://www.st.com/resource/en/application_note/an4467-getting-started-with-stm32l4l4plus-lowpower-microcontrollers-stmicroelectronics.pdf", required: false, type: "doc", source: "official" }], checkpoint: "能配置并测量至少两种低功耗模式，理解低功耗设计的系统方法" },
+      { day: 9, title: "HAL代码生成与CubeMX工具",
+        summary: "掌握STM32CubeMX等图形化配置工具，提高驱动开发效率", content: {
+          objective: "今天你将学习STM32CubeMX等HAL代码生成工具的使用。学完后你能用CubeMX图形化配置MCU外设、生成初始化代码，理解HAL库和LL库的区别，掌握用工具快速搭建项目的方法。现代驱动开发要善于利用工具提高效率。",
+          key_points: [
+            "STM32CubeMX：ST官方图形化配置工具，可视化配置引脚、时钟、外设，自动生成初始化代码和工程",
+            "HAL库 vs LL库：HAL库（Hardware Abstraction Layer）抽象层次高、易用、可移植性好；LL库（Low Layer）更接近硬件、效率更高",
+            "代码生成流程：芯片选型→引脚分配→时钟配置→外设配置→中间件配置→生成代码→编写应用逻辑",
+            "生成代码的结构：main.c、stm32xxxx_hal_msp.c、stm32xxxx_it.c、各种驱动文件，各文件职责",
+            "注意事项：用户代码要写在BEGIN/END注释之间，重新生成不会被覆盖；理解哪些可以改哪些不能改"
+          ],
+          practice: "完成以下CubeMX工具实践：1）新建项目：用STM32CubeMX新建一个项目，选择你的开发板对应的MCU型号，配置系统时钟（比如配置到最高频率），配置一个GPIO作为LED输出，配置一个UART作为调试串口；2）生成代码：生成MDK-ARM或Makefile工程，看看生成的代码结构——main函数、HAL初始化、MSP初始化、中断处理函数都在哪里；3）添加用户代码：在生成的代码基础上，在正确的位置（USER CODE BEGIN/END之间）添加你的应用代码——LED闪烁、串口打印等，然后重新生成代码，验证你的代码没有被覆盖；4）高级配置：尝试配置一些更复杂的外设，比如I2C、SPI、ADC+DMA、定时器PWM等，看看生成的初始化代码是什么样的，和你自己手写的对比，哪个更规范、更完整；5）思考：自动代码生成工具的优点和缺点是什么？（优点：快、不容易出错、标准化；缺点：生成的代码可能冗余、不灵活、生成的代码不一定最优）什么场景下适合用工具？什么时候需要手写？你觉得AI时代，驱动开发会被AI代码生成取代吗？还是会被AI增强？",
+          deep_dive: "深入理解代码生成工具与驱动开发的未来：芯片越来越复杂，外设越来越多，手动配置所有寄存器既费时又容易出错。代码生成工具就是为了解决这个问题而出现的。让我们深入理解这类工具的设计思想和影响。1）CubeMX的设计哲学：ST的CubeMX+HAL库的思路，是把MCU的配置和初始化代码从手写变成图形化配置+自动生成。这样做有几个好处：a）提高效率：可视化配置，几分钟就能完成以前几小时的工作；b）减少错误：官方生成的代码经过验证，比自己写的更可靠；c）标准化：所有项目的结构和风格都差不多，便于团队协作和维护；d）降低门槛：新手也能快速上手，不需要记住所有寄存器。但也有代价：生成的代码可能比较臃肿、灵活性不够、出了问题更难调试。2）HAL vs LL vs 寄存器：STM32提供了三层抽象：a）寄存器操作：最底层，效率最高，最灵活，但是开发慢、容易错、可移植性差；b）LL库（Low Layer）：对寄存器做了很薄的封装，几乎和直接操作寄存器一样高效，但是代码可读性更好，不容易写错位；c）HAL库：更高层的抽象，封装了完整的外设操作流程，易用性好，但是效率略低、代码较大。选择哪一层？看需求——对性能要求极高的地方用LL或寄存器，一般应用用HAL就够了，兼顾效率和开发速度。3）代码生成的「安全区」：用CubeMX最容易犯的错误就是在用户代码区外面写代码，结果重新生成的时候被覆盖了。所以生成的代码里到处都是/* USER CODE BEGIN */和/* USER CODE END */的注释——在中间写的代码会被保留。这是一种「约定优于配置」的设计——工具和开发者约定好哪些地方是用户的，工具不会碰。这种设计在很多代码生成工具中都能看到。4）AI时代的驱动开发：AI大模型的代码生成能力越来越强，未来驱动开发会变成什么样？我觉得：a）简单的、常规的驱动开发，会越来越多地被AI和代码生成工具取代；b）但是复杂的、需要深度调试的、和硬件紧密相关的问题，还是需要人来解决；c）驱动工程师的工作重心会从「写代码」转向「系统设计、架构优化、疑难问题解决、性能优化」；d）会用AI和工具的工程师，会比不会用的效率高很多。所以，不要排斥工具，要学会用工具提高自己的效率，把精力放在更有价值的事情上。5）从「会写驱动」到「会设计系统」：工具越来越强，单纯写代码的价值在降低。但是系统设计能力、问题定位能力、架构优化能力，这些是工具很难替代的。所以作为驱动工程师，要不断提升自己的系统思维和架构能力，而不只是会操作寄存器。理解了这些趋势，你就能更好地规划自己的学习和职业发展。"
+        }, duration: "2小时", resources: [{ title: "STM32CubeMX", url: "https://www.st.com/en/development-tools/stm32cubemx.html", required: true, type: "tool", source: "official" }, { title: "HAL库用户手册", url: "https://www.st.com/resource/en/user_manual/dm00105879-description-of-stm32f4-hal-and-ll-drivers-stmicroelectronics.pdf", required: false, type: "doc", source: "official" }], checkpoint: "能用CubeMX生成完整的初始化工程，正确添加用户代码" },
+      { day: 10, title: "HAL综合项目与职业发展",
+        summary: "完成HAL综合项目，总结学习路径，规划嵌入式职业发展", content: {
+          objective: "今天你将通过一个综合项目来巩固HAL开发的知识，并且规划嵌入式开发的职业发展路径。学完后你能独立完成一个基于HAL库的多外设综合项目，了解嵌入式领域的职业方向和成长路径，明确下一步的学习方向。",
+          key_points: [
+            "综合项目：整合GPIO、UART、I2C、SPI、定时器、ADC等多个外设，完成一个功能完整的小系统",
+            "项目架构：分层设计、模块化编程、错误处理、低功耗考虑，体现工程化思维",
+            "职业方向：嵌入式软件工程师、驱动工程师、固件工程师、系统工程师、AIoT工程师",
+            "技能树：C/C++、RTOS、驱动开发、网络、AIoT、硬件基础、调试能力",
+            "学习路径：从入门到精通的学习路线图，推荐资源和成长方法"
+          ],
+          practice: "完成以下综合项目与职业规划：1）综合项目：设计并实现一个小型的「环境监测站」——功能包括：a）用I2C读取温湿度传感器数据；b）用ADC读取电池电压；c）用UART打印数据日志；d）用按键切换显示模式；e）用OLED屏幕显示数据；f）低功耗模式（可选）；g）数据上传（可选，用WiFi或蓝牙）。要求：用HAL库、模块化设计、合理的错误处理；2）代码review：对你的项目代码进行自我review，从可读性、可维护性、健壮性、效率等方面找问题并优化；3）知识图谱：把你学到的嵌入式知识整理成一张知识图谱——基础、C语言、驱动、RTOS、网络、AIoT等，看看哪些部分已经掌握了，哪些还需要加强；4）职业规划：思考你对嵌入式哪个方向最感兴趣？（驱动开发、RTOS、物联网、汽车电子、工业控制、边缘AI...）你未来1-2年的学习目标是什么？怎么实现？5）社区与资源：关注嵌入式社区和优秀的博主/公众号/开源项目，加入技术交流群，保持学习的状态；6）总结复盘：总结你这两周学习HAL的收获和感受，写一篇学习笔记或者博客文章，输出是最好的学习方式。",
+          deep_dive: "深入理解嵌入式职业发展与AI时代的机遇：嵌入式是一个很广的领域，也是一个需要长期积累的领域。AI时代的到来，给嵌入式带来了新的机遇和挑战。让我们聊聊职业发展。1）嵌入式的几个主要方向：a）MCU/裸机开发：资源受限的小型设备，如小家电、玩具、简单传感器；b）RTOS开发：用FreeRTOS/RT-Thread/Zephyr等系统，稍微复杂一点的设备；c）驱动开发：Linux驱动、裸机驱动，技术深度要求高；d）嵌入式Linux：跑Linux的嵌入式设备，如路由器、网关、摄像头；e）IoT/物联网：无线通信（WiFi/BLE/NB-IoT/LoRa）、云平台连接；f）汽车电子：AUTOSAR、功能安全、车规级开发；g）工业控制：PLC、工业总线、运动控制；h）边缘AI：在嵌入式设备上部署AI模型，AI推理加速。每个方向都有自己的技术栈和发展路径，选一个你感兴趣的方向深入下去，比什么都懂一点更有价值。2）嵌入式工程师的核心竞争力：嵌入式工程师的价值在哪里？a）软硬件协同能力：既懂软件又懂硬件，能做跨软硬件的系统设计和问题排查；b）性能优化能力：在资源受限的环境下，把性能和功耗做到极致；c）可靠性意识：嵌入式设备往往要长时间运行，出问题可能造成严重后果；d）调试能力：面对复杂问题，能系统化地定位和解决。这些能力需要长期的项目经验积累，不是看几本书就能学会的。3）AI时代的变与不变：AI来了，嵌入式工程师会被取代吗？我觉得：a）会变的：开发方式会变——AI辅助写代码、自动生成驱动、智能调试工具会越来越多；b）会变的：产品形态会变——越来越多的嵌入式设备会加入AI功能；c）不变的：对底层原理的理解、系统设计能力、问题解决能力，这些是AI替代不了的；d）机遇：AIoT、边缘AI、智能硬件，这些新领域需要大量既懂嵌入式又懂AI的复合型人才。4）给学习者的建议：a）打好基础：C语言、计算机组成原理、数字电路、模拟电路，这些基础越扎实，后面走得越远；b）多动手：嵌入式是实践出真知的学科，光看不练假把式。买块开发板，跟着教程做，在实践中学习；c）读源码：优秀的代码是最好的老师——HAL库、FreeRTOS、Linux内核，读源码能学到很多；d）做项目：找一个感兴趣的项目（如智能家居、机器人、无人机），从头到尾做一遍，能力提升最快；e）保持好奇：嵌入式技术在不断发展，新的芯片、新的协议、新的框架层出不穷，保持学习的热情。嵌入式是一个「越老越吃香」的领域，经验很重要。只要你持续学习，持续实践，你的价值会越来越高。"
+        }, duration: "3小时", resources: [{ title: "嵌入式学习路线", url: "https://github.com/m4xhu/embedded_system_learning_notes", required: false, type: "repo", source: "github" }, { title: "RT-Thread", url: "https://www.rt-thread.org/", required: false, type: "doc", source: "official" }], checkpoint: "完成一个多外设综合项目，制定个人学习和职业发展规划" }
     ]
   },
 
@@ -8222,6 +9562,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           deep_dive: "从飞控板看嵌入式系统的硬件架构：飞控板虽然小，但它是一个非常典型的嵌入式系统——有MCU、有传感器、有执行器接口、有通信、有电源。几乎所有嵌入式系统都遵循类似的架构。让我们从系统的角度回顾一下：1）感知层（输入）：各种传感器把物理量转换成电信号——IMU测加速度和角速度、气压计测气压（高度）、磁罗盘测航向、GPS测位置、电压传感器测电池电压。这些传感器通过I2C、SPI、UART等接口和MCU通信；2）处理层（核心）：MCU是系统的大脑，负责：读取传感器数据→做数据融合（姿态解算）→运行控制算法（PID等）→输出控制指令。还负责通信、日志、故障检测等等；3）执行层（输出）：MCU输出的控制信号，去驱动执行器——PWM信号去电调→电调驱动电机→电机带动螺旋桨产生推力。还有LED、蜂鸣器等指示设备；4）通信层：和外界交换信息——接收遥控信号、和地面站通信（数传/WiFi/蓝牙）、GPS定位；5）电源层：给整个系统供电——从电池取电→稳压→给各个模块供电。电压有高有低（电池电压、5V、3.3V等）。这五层架构，不仅适用于飞控板，也适用于几乎所有的嵌入式系统和智能硬件——手机、手表、路由器、工业控制器、机器人、自动驾驶汽车，都是类似的架构，只是更复杂而已。对于AI工程师来说，理解硬件架构很重要——你的算法最终要跑在硬件上，硬件的性能、功耗、成本，直接决定了算法能做到什么程度。比如在边缘设备上跑AI，你就得考虑算力够不够、内存够不够、功耗会不会太大、成本能不能接受。软硬结合，才能做出真正优秀的产品。"
         }, duration: "4小时", resources: [{ title: "开源飞控项目Betaflight", url: "https://github.com/betaflight", required: false, type: "repo", source: "github" }, { title: "STM32飞控设计参考", url: "https://www.st.com/en/applications/drones-and-robotics.html", required: false, type: "doc", source: "official" }, { title: "PCB设计进阶", url: "https://www.analog.com/en/education/education-library/technical-articles.html", required: false, type: "doc", source: "other" }], checkpoint: "完成四轴飞控板的原理图和PCB设计，输出完整的设计文件" }
 
+
     ]
   },
 
@@ -8437,7 +9778,73 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "用Python实现一个实时音频效果器，要求如下：\n\n项目要求：\n实现一个可以实时处理麦克风输入并从扬声器输出的音频效果器，至少包含3种音频效果。\n\n基础效果（至少实现3种）：\n1）图形均衡器（EQ）：\n   - 至少5段（比如低音、中低音、中音、中高音、高音），每段可以调节增益\n   - 用IIR滤波器（Peaking EQ滤波器）或FIR滤波器实现\n   - 可以实时调节各段增益（用命令行参数或键盘控制）\n\n2）回声/延迟：\n   - 可以调节延迟时间和反馈量（decay）\n   - 实现多个回声（多抽头延迟）效果会更好\n\n3）降噪：\n   - 简单的谱减法降噪（先估计噪声谱，然后从带噪语音的谱中减去噪声谱）\n   - 或者自适应噪声对消（需要参考噪声的话可能不好做，谱减法更简单）\n\n4）混响（选做，有挑战性）：\n   - 简单的Schroeder混响（全通滤波器+梳状滤波器组合）\n   - 或者Moorer混响等更高级的算法\n\n5）变调/变速（选做，有挑战性）：\n   - 用相位声码器（Phase Vocoder）实现变调不变速，或者变速不变调\n\n技术要求：\n1）用sounddevice库做实时音频输入输出（比pyaudio好用）\n2）块处理模式（block processing），比如块大小1024或2048样点\n3）滤波和处理在回调函数或单独的处理线程中进行\n4）尽量降低延迟，同时保证不爆音（欠载/过载）\n5）代码结构清晰，模块化设计（每个效果是一个模块/类）\n\n进阶功能（选做）：\n1）可视化：实时显示输入输出的波形或频谱（用matplotlib的动画模式或者pyqtgraph）\n2）预设：保存和加载效果预设\n3）MIDI控制：用MIDI控制器调节效果参数\n4）GUI界面：用tkinter、PyQt或streamlit做一个图形界面来调节参数\n5）立体声处理：左右声道分别处理，做立体声效果\n6）更多效果：哇哇音、合唱、镶边、失真、压缩器等等\n\n提示：\n- 先从离线处理开始（读一个wav文件，处理完保存成另一个），确认算法没问题了再改成实时的\n- 实时处理中，延迟是个大问题，块大小要选合适\n- 注意数值范围，音频一般是float32，范围[-1, 1]，处理完要clip防止溢出爆音\n- 混响和变调比较难，可以先从简单的EQ、回声、降噪开始\n\n项目要求：\n- 完整的代码（有注释、结构清晰）\n- README说明怎么安装、怎么运行、有哪些效果\n- 每个效果的算法说明（用了什么原理）\n- 演示视频或音频（处理前后的效果对比）\n\n完成后，思考一下：你做的效果器和专业的音频插件（比如VST插件）比，有什么差距？实时音频处理最大的挑战是什么？",
           deep_dive: "从音频DSP到计算听觉场景分析：音频处理是信号处理的一个重要分支，也是AI和信号处理结合最紧密的领域之一。让我们看看更广阔的音频DSP世界：1）音频处理的应用：音频DSP的应用非常广泛——消费电子（手机、耳机、音响、智能音箱）、专业音频（混音、母带、效果器）、语音通信（电话、视频会议、回声消除、降噪）、音乐信息检索（音乐推荐、自动配乐、音频指纹）、语音识别和合成（这已经是AI的主战场了）、助听器和人工耳蜗（医用音频处理）；2）计算听觉场景分析（CASA）：人类的听觉系统非常厉害——在嘈杂的环境中，我们能专注地听某一个人说话（这叫「鸡尾酒会效应」），能分辨出各种声音的来源和方向。计算听觉场景分析就是要让计算机也具备这种能力——把混合的声音分开（声源分离）、识别是什么声音（声音事件检测）、定位声源方向。这是一个很有挑战性的方向，现在深度学习（尤其是U-Net、Transformer等）在声源分离方面取得了很大进展；3）空间音频：让声音有立体感、空间感——环绕声、3D音频、头部相关传输函数（HRTF）、空间音频。现在VR/AR的发展，让空间音频变得越来越重要。空间音频的处理需要很多信号处理技术——头相关传输函数、声像定位、 Ambisonics等等；4）AI+音频的融合：音频领域是AI和传统信号处理结合最紧密的领域之一：a）语音识别（ASR）和合成（TTS）：已经基本被深度学习「革命」了；b）语音增强和降噪：传统方法（谱减法、维纳滤波、卡尔曼滤波）+ 深度学习（DNN、GAN、U-Net）结合，效果越来越好；c）音乐信息检索：音高检测、节拍检测、和弦识别、音乐分类、音乐生成，AI在这些方面都有广泛应用；d）声源分离：Demucs、Spleeter等深度学习模型，能把一首歌里的人声、鼓、贝斯、其他伴奏分开，效果很好；5）可解释性与物理模型：AI虽然效果好，但黑盒、难解释。而传统信号处理有清晰的物理意义和数学基础。现在的趋势是把两者结合——把信号处理的先验知识融入AI模型中，让模型更高效、更可解释、更鲁棒。对于AI工程师来说，音频是一个非常有意思的应用领域——既有理论深度，又有很强的趣味性和实用性。而且，理解音频DSP，对于做语音识别、语音合成、音乐生成等AI方向的同学来说，是非常有帮助的基础。希望这个DSP课程和音频效果器项目，能让你对信号处理和音频世界产生兴趣。"
+        }, duration: "4小时", resources: [{ title: "SoundDevice文档", url: "https://python-sounddevice.readthedocs.io/", required: false, type: "doc", source: "official" }, { title: "音频效果器设计", url: "https://www.dspguide.com/ch22/1.htm", required: false, type: "article", source: "other" }, { title: "谱减法降噪", url: "https://en.wikipedia.org/wiki/Spectral_subtraction", required: false, type: "doc", source: "other" }], checkpoint: "完成至少3种效果的实时音频效果器，能实时处理麦克风输入并播放" },
+      { day: 11, title: "IIR数字滤波器设计",
+        summary: "掌握无限冲激响应（IIR）数字滤波器的设计方法和特点，理解双线性变换法。", content: {
+          objective: "今天你将学习IIR数字滤波器设计。学完后你能理解IIR滤波器和FIR滤波器的区别，掌握脉冲响应不变法和双线性变换法的原理，学会用Python的scipy.signal设计Butterworth、Chebyshev等IIR滤波器，理解IIR滤波器的优缺点和适用场景。IIR滤波器用较少的阶数就能达到较好的性能。",
+          key_points: [
+            "IIR vs FIR：IIR有反馈（递归结构），冲激响应无限长；FIR没有反馈，冲激响应有限长；IIR的优点是阶数少、效率高，缺点是非线性相位、可能不稳定",
+            "设计方法：间接法（先设计模拟滤波器，再变换成数字的）——脉冲响应不变法、双线性变换法；也可以直接在数字域设计",
+            "模拟原型滤波器：Butterworth（通带最平坦，全频段单调下降）、Chebyshev I（通带等波纹，阻带单调，过渡带更窄）、Chebyshev II、椭圆滤波器（通带阻带都等波纹，同样性能阶数最少）",
+            "双线性变换法：把模拟滤波器的s域映射到数字滤波器的z域，整个虚轴映射到单位圆上，没有混叠；但有频率畸变（频率轴是非线性压缩的），需要预畸变补偿",
+            "滤波器选型：同样的性能指标，阶数：椭圆 < Chebyshev < Butterworth；相位线性度：Butterworth > Chebyshev > 椭圆；根据需求选"
+          ],
+          practice: "完成以下IIR滤波器设计实践：1）IIR vs FIR对比：制作一张对比表，从以下维度对比IIR和FIR滤波器：a）系统结构（递归/非递归）；b）冲激响应（有限/无限）；c）相位线性度（线性/非线性）；d）稳定性（FIR一定稳定，IIR不一定）；e）相同性能下的阶数；f）设计难度；g）适用场景；2）模拟原型滤波器对比：对比Butterworth、Chebyshev I、Chebyshev II、椭圆滤波器这四种原型的特点——通带特性、阻带特性、过渡带宽度（同样阶数下）、相位特性、复杂度；画示意图说明它们的幅频响应形状；3）双线性变换理解：什么是双线性变换？（s = (2/T)(1-z⁻¹)/(1+z⁻¹)）它的频率映射关系是什么样的？（模拟频率Ω和数字频率ω的关系：ω = 2 arctan(ΩT/2)）什么是频率畸变？为什么要做频率预畸变？4）Python设计练习：用scipy.signal设计一个Butterworth低通IIR滤波器，指标：采样率1kHz，通带截止频率100Hz，通带波纹≤1dB，阻带截止频率200Hz，阻带衰减≥40dB。要求：a）计算需要的阶数；b）求出系数；c）画幅频和相频响应曲线；d）再用同样指标设计一个Chebyshev I型滤波器，对比阶数；5）IIR滤波器的问题：IIR滤波器有哪些潜在的问题？（非线性相位、可能不稳定、系数量化敏感、极限环振荡）什么情况下必须用FIR而不能用IIR？（对相位线性度要求高的场景，如图像处理、数据通信）6）思考：既然IIR滤波器效率更高（阶数少），为什么很多应用还是用FIR？（因为线性相位很重要，IIR的相位失真在很多场合不能接受）",
+          deep_dive: "深入理解滤波器设计的进阶话题：滤波器设计是信号处理的核心技术之一，从经典的FIR/IIR到更高级的自适应滤波器、多速率滤波器，内容非常丰富。让我们了解一些进阶知识：1）滤波器的相位问题：很多初学者只关注幅频响应，忽略了相频响应。但相位同样重要——如果相位非线性，不同频率的分量延迟不一样，信号波形就会失真。比如在音频处理中，相位失真人耳可能不太敏感；但在图像处理、数据传输、雷达中，相位失真就会导致严重问题。所以这些场景必须用线性相位的FIR滤波器；2）最优化滤波器设计：除了窗函数法、等波纹逼近（Parks-McClellan）等经典方法，还有基于最优化的设计方法——比如最小二乘设计，让实际响应和理想响应在最小二乘意义下最接近；还有凸优化方法，可以处理更复杂的设计约束；3）自适应滤波器：固定系数的滤波器是「一成不变」的，但有些应用中信道是时变的，或者信号特性未知，这时候需要自适应滤波器——滤波器的系数能根据输入信号自动调整，以达到某种最优准则（如最小均方误差）。典型算法有LMS（最小均方）、RLS（递推最小二乘）。应用包括：回声消除、信道均衡、噪声对消、系统辨识；4）多速率信号处理：有时候需要改变采样率——上采样（插值）和下采样（抽取）。这时候需要抗混叠滤波器（抽取前）和镜像滤波器（插值后）。多速率滤波器在软件无线电、音频处理、采样率转换中用得很多；5）AI与滤波器设计：AI也可以用来设计滤波器——用深度学习设计自适应滤波器、用神经网络逼近非线性滤波器、用AI优化滤波器系数等等。而且，卷积神经网络（CNN）的卷积操作，本质上就是一种二维的FIR滤波（虽然是可学习的）；6）滤波器的硬件实现：滤波器设计完了，最终要在硬件上实现——在FPGA/ASIC中怎么高效实现FIR滤波器？（用分布式算法、用加法树、用流水线）IIR滤波器的硬件实现有什么注意事项？（系数量化、溢出、极限环）这是数字IC设计的重要内容。滤波器设计虽然是经典话题，但它和AI、和硬件的结合，仍然在不断发展。对于AI工程师来说，理解滤波器的概念，能帮助你更好地理解信号处理、理解卷积神经网络（CNN其实就是一种可学习的滤波器组）。"
+        }, duration: "2小时", resources: [{ title: "IIR滤波器设计", url: "https://www.allaboutcircuits.com/technical-articles/introduction-to-iir-filters/", required: true, type: "article", source: "other" }, { title: "Scipy滤波器设计", url: "https://docs.scipy.org/doc/scipy/reference/signal.html", required: false, type: "doc", source: "official" }, { title: "双线性变换法", url: "https://en.wikipedia.org/wiki/Bilinear_transform", required: false, type: "doc", source: "other" }], checkpoint: "能用Python设计Butterworth和Chebyshev IIR滤波器，理解IIR和FIR的区别" },
+      { day: 12, title: "随机信号与功率谱估计",
+        summary: "理解随机信号的基本概念和统计特性，掌握功率谱估计的经典方法（周期图法、相关法）。", content: {
+          objective: "今天你将学习随机信号和功率谱估计。学完后你能理解随机信号的统计描述（均值、方差、自相关、功率谱），掌握平稳随机过程的基本概念，学会用周期图法、自相关法等估计信号的功率谱，了解经典谱估计的问题和改进方法。实际中的信号大多是随机的，谱估计是信号处理的重要任务。",
+          key_points: [
+            "随机信号（随机过程）：不能用确定的时间函数描述，要用统计特性描述；每次观测是一个样本函数，整体是一个集合",
+            "统计特性：均值（一阶矩）、方差（二阶中心矩）、自相关函数（描述不同时刻的相关性）、自协方差；宽平稳（广义平稳）的定义：均值和自相关不随时间原点变化",
+            "维纳-辛钦定理：广义平稳随机过程的自相关函数和功率谱密度是一对傅里叶变换！这是连接时域和频域的桥梁，非常重要",
+            "经典谱估计方法：a）周期图法：直接对信号做FFT，取模平方；简单但方差大、分辨率受数据长度限制；b）自相关法（BT法）：先估计自相关，再做傅里叶变换；和周期图法本质一样",
+            "经典谱估计的改进：加窗减小泄漏（但降低分辨率）、平均周期图法（Welch法，分段加窗再平均，减小方差但牺牲分辨率）、多窗口法（MTM）"
+          ],
+          practice: "完成以下随机信号与谱估计实践：1）白噪声理解：什么是白噪声？（功率谱是常数，所有频率分量都有，像白光一样）白噪声的自相关函数是什么样的？（是冲激函数，不同时刻不相关）高斯白噪声又是什么？（幅度服从高斯分布，功率谱平坦）2）维纳-辛钦定理：用自己的话解释维纳-辛钦定理（Wiener-Khinchin theorem）。为什么它很重要？（因为它把随机信号的时域统计特性（自相关）和频域统计特性（功率谱）联系起来了）3）Python谱估计练习：\n   a）用numpy生成一段高斯白噪声（比如1024点）\n   b）用FFT计算它的周期图，画出来；它是一条平的直线吗？为什么不是？（因为方差大，看起来很毛糙）\n   c）用Welch法（分段平均）再做一次谱估计，是不是平滑多了？（方差减小了）\n   d）改变分段长度和重叠比例，看看效果有什么变化\n   e）生成一个含有两个正弦波+噪声的信号，分别用周期图法和Welch法估计功率谱，看看能不能分辨出两个谱峰\n4）频率分辨率：什么是频率分辨率？（能分辨出两个靠得很近的频率分量的能力）经典谱估计的频率分辨率大约是多少？（约等于1/T，T是数据长度）为什么说「数据长度决定了分辨率上限」？怎么才能提高频率分辨率？（加长时间数据，或者用现代谱估计方法）5）谱估计的权衡：在经典谱估计中，有什么矛盾？（偏差和方差的权衡、分辨率和方差的权衡）加窗函数、分段平均这些操作，分别是在牺牲什么换取什么？6）思考：为什么要研究随机信号？为什么不直接用傅里叶变换？（因为随机信号是无限长的、能量无限的，傅里叶变换不存在，所以要用功率谱——它是有限的）",
+          deep_dive: "深入理解现代谱估计与信号建模：经典谱估计方法（周期图、Welch）虽然简单直观，但有一个根本的限制——频率分辨率受限于数据长度（约1/T），这就是所谓的「测不准原理」在谱估计中的体现。如果数据很短，经典方法的分辨率就很差。为了解决这个问题，人们发展了现代谱估计方法。让我们了解一下：1）现代谱估计的思想：经典方法假设数据以外的部分都是零（相当于加了矩形窗），所以分辨率差。现代方法不对数据做零假设，而是先对信号建立一个模型（参数模型），然后用数据估计模型的参数，再从模型算出功率谱。这样，如果模型选得对，就能得到更高的分辨率；2）AR模型（自回归模型）：最常用的参数模型，认为当前的信号值可以用过去p个值的线性组合加一个白噪声来表示。AR模型的功率谱可以用Yule-Walker方程计算，或者用Burg算法、最小二乘法估计参数。AR谱估计的分辨率可以比经典方法高很多，尤其是对正弦信号加噪声的情况；3）其他模型：MA（滑动平均）模型、ARMA（自回归滑动平均）模型、ARMA更一般，但参数估计更难；4）特征分解类方法：还有一类基于特征分解的高分辨率谱估计方法——比如MUSIC算法、ESPRIT算法。它们利用相关矩阵的特征分解，把空间（或频率）分成信号子空间和噪声子空间，利用它们的正交性来超分辨地估计频率。这类方法在阵列信号处理、雷达、DOA（波达方向估计）中用得很多；5）时频分析：平稳信号的功率谱是全局的，但很多实际信号是非平稳的（频率随时间变化，比如语音、雷达回波）。这时候需要时频分析——同时看时间和频率上的分布。方法有：短时傅里叶变换（STFT）、小波变换、Wigner-Ville分布、希尔伯特黄变换（HHT）等等。时频分析是现代信号处理的重要分支；6）AI与谱估计：AI也在谱估计领域发挥作用——用深度学习做超分辨率谱估计、用神经网络做DOA估计、用AI做时频分析等等。谱估计的本质是从有限的、带噪声的数据中提取信号的频率特征，这和AI中的特征提取有共通之处。对于AI工程师来说，随机信号、功率谱、相关函数这些概念非常重要——因为你做的AI模型，处理的大多是带噪声的、随机的信号（图像、语音、文本，本质上都是随机的）。理解统计信号处理的思想，能帮助你更好地理解机器学习的很多概念。"
+        }, duration: "2.5小时", resources: [{ title: "随机信号与功率谱", url: "https://www.dspguide.com/ch2/1.htm", required: true, type: "article", source: "other" }, { title: "Welch法谱估计", url: "https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.welch.html", required: false, type: "doc", source: "official" }, { title: "现代谱估计入门", url: "https://en.wikipedia.org/wiki/Spectral_density_estimation", required: false, type: "doc", source: "other" }], checkpoint: "能解释维纳-辛钦定理，用Python做基本的功率谱估计（周期图法、Welch法）" },
+      { day: 13, title: "自适应滤波器与信号对消",
+        summary: "理解自适应滤波器的原理和LMS算法，掌握自适应噪声对消、系统辨识等应用。", content: {
+          objective: "今天你将学习自适应滤波器。学完后你能理解自适应滤波的基本思想和结构，掌握最常用的LMS（最小均方）算法的原理和实现，了解自适应滤波器在噪声对消、系统辨识、信道均衡等方面的典型应用。自适应滤波器是DSP中非常实用且有趣的技术。",
+          key_points: [
+            "自适应滤波器：系数能自动调整的滤波器，不需要预先知道信号和噪声的统计特性，能跟踪时变的环境；核心是调整系数的自适应算法",
+            "基本结构：输入信号x(n) → 自适应滤波器（可调系数h） → 输出y(n)；期望响应d(n)和y(n)比较，得到误差e(n)=d(n)-y(n)；用e(n)按照某种准则调整系数",
+            "最优准则：最常用的是最小均方误差（MMSE）准则——让误差的平方的统计平均最小；维纳滤波器是最优FIR滤波器（统计特性已知时），但它需要知道自相关和互相关",
+            "LMS算法：最常用的自适应算法，由Widrow和Hoff在1960年提出；用瞬时梯度代替真实梯度，简单、计算量小；系数更新公式：h(n+1) = h(n) + μ e(n) x(n)，μ是步长",
+            "典型应用：a）系统辨识（估计未知系统的特性）；b）自适应噪声对消（ANC，消除噪声保留信号）；c）信道均衡（补偿信道失真）；d）回声消除（比如视频会议里的回声）"
+          ],
+          practice: "完成以下自适应滤波器实践：1）LMS算法实现：用Python实现一个LMS自适应滤波器，要求：a）生成一个未知的FIR系统（比如随机抽头系数，或者一个已知的系统）；b）输入白噪声，经过未知系统得到输出，加上一点噪声作为期望响应d；c）用LMS算法让自适应滤波器去逼近这个未知系统；d）画出：学习曲线（MSE随迭代次数的变化）、最终系数和真实系数的对比；2）步长μ的影响：LMS的步长μ很关键，它影响收敛速度和稳态误差。做实验：a）用几个不同的μ值（太小的、合适的、太大的）运行上面的系统辨识实验；b）对比它们的学习曲线——μ太小会怎么样？（收敛慢）μ太大会怎么样？（可能发散，或者稳态误差大）c）μ的稳定范围大概是多少？（和输入信号的功率有关，μ < 2/λ_max，λ_max是自相关矩阵的最大特征值，经验上用输入功率的倒数的几分之一）3）自适应噪声对消：实现一个简单的自适应噪声对消系统：a）生成一个干净的语音信号或正弦信号s(n)；b）生成一个噪声v(n)，然后把s和v加起来作为主输入d = s + v；c）参考输入x是和v相关但和s不相关的噪声（比如v经过一个滤波后的版本，或者v加一点失真）；d）用自适应滤波器让y尽量逼近v，这样e = d - y ≈ s，噪声就被抵消了；e）画出对消前后的波形和频谱，听一听对消前后的声音（如果用语音）；4）应用思考：除了系统辨识和噪声对消，你还能想到自适应滤波器有什么应用？（至少想3个）它们的输入、期望响应、误差信号分别是什么？5）RLS算法了解（选做）：除了LMS，还有RLS（递推最小二乘）算法。查一下RLS和LMS的区别——收敛速度、计算量、对非平稳环境的跟踪能力等等；6）思考：为什么需要自适应滤波器？固定系数的滤波器有什么不足？自适应滤波器的「自适应」体现在哪里？",
+          deep_dive: "从自适应滤波到机器学习：有趣的是，自适应滤波和机器学习（尤其是神经网络）有很深的渊源。让我们来看看这个联系：1）LMS算法和感知机：Widrow的LMS算法（1960）和Rosenblatt的感知机（1957）几乎是同时代提出的，而且它们的形式非常像——都是线性模型、都是用误差来更新权重、都是梯度下降类的算法。Widrow的ADALINE（自适应线性神经元）其实就是一个单层的线性神经网络，可以说，自适应滤波是神经网络的先驱之一；2）梯度下降的思想：LMS算法的核心是「最陡下降法」——沿着误差平方的梯度反方向走一步，逐步逼近最优解。这和神经网络训练中用的梯度下降（以及它的变体SGD、Adam等）本质上是同一个思想。只是LMS用的是瞬时梯度（每次用一个样本的梯度来近似），这和随机梯度下降（SGD）是一样的；3）自适应滤波器 = 线性模型：从机器学习的角度看，一个FIR自适应滤波器其实就是一个线性回归模型——输入是抽头延迟线上的信号，输出是线性组合，损失函数是均方误差（MSE），优化算法是SGD/LMS。维纳滤波器就是线性回归的解析解（最小二乘解）；4）从自适应到深度学习：自适应滤波研究了几十年，发展出了很多算法和理论——LMS、RLS、卡尔曼滤波、格型滤波器、自适应IIR等等。这些算法的核心思想（梯度下降、递推估计、状态空间），后来都被深度学习吸收和发展了。反过来，深度学习的进展也在反过来影响信号处理——现在有很多用深度神经网络做自适应滤波、做信道估计、做均衡的研究；5）卡尔曼滤波：卡尔曼滤波也是一种重要的自适应估计方法——它是线性系统在最小均方误差准则下的最优状态估计器，能从带噪声的观测中递归地估计系统的状态。卡尔曼滤波在导航、控制、机器人、自动驾驶中用得极其广泛。它和自适应滤波、和RNN/LSTM也有很深的联系；6）信号处理与AI的融合：其实，信号处理和机器学习本来就是一家——都是从数据中提取信息，都是用统计和优化的方法。只是信号处理更偏向于一维信号（语音、雷达、通信），有更多的物理模型和先验知识；机器学习更通用，更偏向于从数据中学习。现在，两者的融合越来越深，形成了「数据驱动」+「物理模型」的新范式。对于AI工程师来说，了解自适应滤波和卡尔曼滤波这些经典信号处理方法是很有价值的——你能看到AI算法的思想源头，也能更好地理解时序信号处理、机器人、自动驾驶等应用领域。"
+        }, duration: "2.5小时", resources: [{ title: "自适应滤波器入门", url: "https://www.allaboutcircuits.com/technical-articles/introduction-to-adaptive-filters/", required: true, type: "article", source: "other" }, { title: "LMS算法原理", url: "https://en.wikipedia.org/wiki/Least_mean_squares_filter", required: false, type: "doc", source: "other" }, { title: "PySDR自适应滤波", url: "https://pysdr.org/content/sync.html", required: false, type: "doc", source: "other" }], checkpoint: "能用Python实现LMS算法，完成系统辨识或噪声对消实验" },
+      { day: 14, title: "多速率信号处理与采样率转换",
+        summary: "理解多速率信号处理的基本概念，掌握插值、抽取、分数倍采样率转换的原理和实现。", content: {
+          objective: "今天你将学习多速率信号处理。学完后你能理解为什么需要改变采样率，掌握抽取（下采样）和插值（上采样）的原理和实现，理解抗混叠滤波和抗镜像滤波的作用，了解半带滤波器、CIC滤波器等高效多速率滤波器结构。多速率处理在软件无线电、音频、视频中应用很广。",
+          key_points: [
+            "为什么要多速率：不同系统可能需要不同的采样率；有时希望降低采样率来减少计算量和存储；有时需要提高采样率（比如插值、D/A转换前）；采样率转换是数字系统的常见需求",
+            "抽取（Decimation，下采样）：把采样率降低M倍——每M个点取1个。但不能直接抽！直接抽会混叠，抽取前必须先做抗混叠低通滤波，把高于新奈奎斯特频率的分量滤掉",
+            "插值（Interpolation，上采样）：把采样率提高L倍——在两个样点之间插L-1个零（零值内插），然后做抗镜像低通滤波，把镜像滤掉，就能得到平滑的插值结果",
+            "分数倍转换：先插值L倍，再抽取M倍，就能实现 L/M 倍的有理分数采样率转换。两者的级联中，两个滤波器可以合并成一个（因为都是线性时不变的），更高效",
+            "高效结构：直接做高倍数的抽取/插值效率很低，发展了一些高效的结构——CIC滤波器（积分梳状滤波器，不需要乘法，适合大倍数抽取）、半带滤波器（一半系数为零，计算量减半）、多相分解（多相滤波器，效率很高）"
+          ],
+          practice: "完成以下多速率信号处理实践：1）抽取与混叠：用Python做一个实验：a）生成一个信号，含有100Hz和300Hz的正弦分量，采样率1000Hz；b）如果直接2倍抽取（采样率变成500Hz），会发生什么？300Hz的分量会混叠成多少Hz？（500-300=200Hz）c）先做抗混叠滤波（低通，截止250Hz），再抽取，画出抽取前后的频谱，对比一下混叠有没有被抑制；2）插值与镜像：a）生成一个100Hz的正弦信号，采样率200Hz；b）做4倍零值内插（每两个点之间插3个零），采样率变成800Hz，画它的频谱，你能看到镜像吗？（除了100Hz的主峰，还有100±200、100±400等镜像）c）加一个低通插值滤波（截止100Hz），把镜像滤掉，再看频谱和波形，是不是平滑多了？3）采样率转换：实现一个简单的采样率转换器——把44.1kHz的音频信号转成48kHz（比率是160/147）。用先插值再抽取的方式：a）先插值160倍；b）再抽取147倍；c）当然，这样计算量太大了，实际中会用多级实现和多相结构。你可以先从小的比率做起，比如3/2倍转换；4）CIC滤波器了解：CIC滤波器是什么？（积分器+梳状滤波器级联）它有什么优点？（不需要乘法器，只用加法和延迟，硬件实现非常高效，适合大倍数抽取）它有什么缺点？（通带不够平，过渡带比较宽，一般用在抽取的第一级，后面再补补偿滤波器）5）思考：音频CD的采样率是44.1kHz，而专业音频常用48kHz，视频系统常用48kHz或96kHz。为什么会有这些不同的采样率？不同采样率的设备之间怎么交换数据？6）应用：你能想到哪些应用需要改变采样率？（至少5个）",
+          deep_dive: "深入理解软件无线电与多速率DSP：多速率信号处理最重要的应用场景之一就是软件无线电（SDR，Software Defined Radio）。让我们来了解一下这个令人兴奋的领域：1）什么是软件无线电：传统的无线电通信设备（收音机、手机、基站），很多功能是用模拟电路和专用硬件做的——混频、滤波、调制解调，都是「硬的」，改不了。而软件无线电的思想是：尽可能用软件来实现无线电的各种功能，把A/D和D/A尽量靠近天线。这样的好处是灵活——同一个硬件，跑不同的软件，就能实现不同的通信标准（FM广播、WiFi、蓝牙、LTE等等）；2）采样率问题：在SDR中，天线收到的信号是射频的（几百MHz到几GHz），这么高的频率直接采样的话，ADC速率要非常高，成本高、功耗大。所以通常是先下变频到一个较低的中频（IF），再用ADC采样。然后在数字域做下变频（数字混频）和抽取，把采样率降到合适的水平，再做解调；3）多速率级联：把一个很高的采样率降下来，通常不是一次降到位，而是分级抽取——第一级用CIC滤波器（适合大倍数抽取，不需要乘法），把采样率降一个数量级；中间级用半带滤波器（效率高，系数一半是零）；最后一级用普通FIR滤波器做精细的滤波。这样分级实现，计算量比一次做小很多；4）数字上下变频器（DDC/DUC）：数字下变频器（DDC）是SDR接收端的核心——数字混频（把中频信号搬到基带）+ CIC抽取 + 半带滤波 + FIR滤波。数字上变频器（DUC）是发射端的，反过来。这些都是多速率信号处理的典型应用；5）SDR的发展：随着ADC/DAC技术的进步和FPGA/CPU算力的提升，软件无线电发展很快。现在有很多低成本的SDR硬件——RTL-SDR（几十块钱的电视棒就能收24-1766MHz）、HackRF、BladeRF、USRP等等。开源软件有GNU Radio、SDR#等等。你可以用这些东西，自己做一个收音机、对讲机、甚至GSM基站；6）SDR与AI：SDR和AI的结合也很有意思——用AI做调制识别、用AI做信号检测、用AI做自适应调制编码、用AI优化无线电资源管理。认知无线电（Cognitive Radio）这个概念，本质上就是让无线电更智能。对于AI工程师来说，SDR是一个很酷的领域——你可以亲手捕获和分析真实世界的无线电信号，用AI来处理它们。从FM广播到航空通信、从物联网到5G，无线信号无处不在，而SDR+AI给了我们洞察它们的能力。"
+        }, duration: "2小时", resources: [{ title: "多速率信号处理入门", url: "https://www.dspguide.com/ch3/1.htm", required: true, type: "article", source: "other" }, { title: "CIC滤波器原理", url: "https://www.analog.com/en/technical-articles/understanding-cascaded-integrator-comb-cic-filters.html", required: false, type: "article", source: "other" }, { title: "软件无线电简介", url: "https://pysdr.org/", required: false, type: "doc", source: "other" }], checkpoint: "能解释抽取和插值的原理及为什么需要滤波，用Python做简单的采样率转换" },
+      { day: 15, title: "DSP综合项目：实时音频效果器",
+        summary: "设计并实现一个实时音频效果器，综合运用FIR/IIR滤波、自适应滤波、频谱分析等DSP知识。", content: {
+          objective: "今天你将完成一个DSP综合项目——实时音频效果器。通过这个项目，你会把前三周学到的采样、FFT、滤波器设计、频谱分析、自适应滤波等知识融会贯通，并用Python实现一个可以实时运行的音频效果处理程序。音频是最直观、最好玩的DSP应用之一。",
+          key_points: [
+            "实时音频处理：从声卡采集声音→DSP处理→播放输出，低延迟，需要处理流式数据（块处理）",
+            "基本效果：均衡器（EQ）、混响（Reverb）、延迟（Delay）、回声（Echo）、变调（Pitch Shift）、降噪（Noise Reduction）、哇哇音（Wah）、合唱（Chorus）",
+            "关键技术：实时音频I/O（sounddevice/pyaudio）、块处理（分块处理，减少延迟）、滤波器设计、FFT/IFFT、重叠相加/重叠保存、相位声码器",
+            "性能考虑：实时处理有严格的时间限制（每块的处理时间必须小于块的时长），计算效率很重要；块大小权衡（大延迟大但效率高，小延迟小但开销大）",
+            "Python实现：用sounddevice做音频I/O，numpy/scipy做信号处理，可以做一个交互式的效果器界面（用streamlit或tkinter或命令行控制）"
+          ],
+          practice: "用Python实现一个实时音频效果器，要求如下：\n\n项目要求：\n实现一个可以实时处理麦克风输入并从扬声器输出的音频效果器，至少包含3种音频效果。\n\n基础效果（至少实现3种）：\n1）图形均衡器（EQ）：\n   - 至少5段（比如低音、中低音、中音、中高音、高音），每段可以调节增益\n   - 用IIR滤波器（Peaking EQ滤波器）或FIR滤波器实现\n   - 可以实时调节各段增益（用命令行参数或键盘控制）\n\n2）回声/延迟：\n   - 可以调节延迟时间和反馈量（decay）\n   - 实现多个回声（多抽头延迟）效果会更好\n\n3）降噪：\n   - 简单的谱减法降噪（先估计噪声谱，然后从带噪语音的谱中减去噪声谱）\n   - 或者自适应噪声对消（需要参考噪声的话可能不好做，谱减法更简单）\n\n4）混响（选做，有挑战性）：\n   - 简单的Schroeder混响（全通滤波器+梳状滤波器组合）\n   - 或者Moorer混响等更高级的算法\n\n5）变调/变速（选做，有挑战性）：\n   - 用相位声码器（Phase Vocoder）实现变调不变速，或者变速不变调\n\n技术要求：\n1）用sounddevice库做实时音频输入输出（比pyaudio好用）\n2）块处理模式（block processing），比如块大小1024或2048样点\n3）滤波和处理在回调函数或单独的处理线程中进行\n4）尽量降低延迟，同时保证不爆音（欠载/过载）\n5）代码结构清晰，模块化设计（每个效果是一个模块/类）\n\n进阶功能（选做）：\n1）可视化：实时显示输入输出的波形或频谱（用matplotlib的动画模式或者pyqtgraph）\n2）预设：保存和加载效果预设\n3）MIDI控制：用MIDI控制器调节效果参数\n4）GUI界面：用tkinter、PyQt或streamlit做一个图形界面来调节参数\n5）立体声处理：左右声道分别处理，做立体声效果\n6）更多效果：哇哇音、合唱、镶边、失真、压缩器等等\n\n提示：\n- 先从离线处理开始（读一个wav文件，处理完保存成另一个），确认算法没问题了再改成实时的\n- 实时处理中，延迟是个大问题，块大小要选合适\n- 注意数值范围，音频一般是float32，范围[-1, 1]，处理完要clip防止溢出爆音\n- 混响和变调比较难，可以先从简单的EQ、回声、降噪开始\n\n项目要求：\n- 完整的代码（有注释、结构清晰）\n- README说明怎么安装、怎么运行、有哪些效果\n- 每个效果的算法说明（用了什么原理）\n- 演示视频或音频（处理前后的效果对比）\n\n完成后，思考一下：你做的效果器和专业的音频插件（比如VST插件）比，有什么差距？实时音频处理最大的挑战是什么？",
+          deep_dive: "从音频DSP到计算听觉场景分析：音频处理是信号处理的一个重要分支，也是AI和信号处理结合最紧密的领域之一。让我们看看更广阔的音频DSP世界：1）音频处理的应用：音频DSP的应用非常广泛——消费电子（手机、耳机、音响、智能音箱）、专业音频（混音、母带、效果器）、语音通信（电话、视频会议、回声消除、降噪）、音乐信息检索（音乐推荐、自动配乐、音频指纹）、语音识别和合成（这已经是AI的主战场了）、助听器和人工耳蜗（医用音频处理）；2）计算听觉场景分析（CASA）：人类的听觉系统非常厉害——在嘈杂的环境中，我们能专注地听某一个人说话（这叫「鸡尾酒会效应」），能分辨出各种声音的来源和方向。计算听觉场景分析就是要让计算机也具备这种能力——把混合的声音分开（声源分离）、识别是什么声音（声音事件检测）、定位声源方向。这是一个很有挑战性的方向，现在深度学习（尤其是U-Net、Transformer等）在声源分离方面取得了很大进展；3）空间音频：让声音有立体感、空间感——环绕声、3D音频、头部相关传输函数（HRTF）、空间音频。现在VR/AR的发展，让空间音频变得越来越重要。空间音频的处理需要很多信号处理技术——头相关传输函数、声像定位、 Ambisonics等等；4）AI+音频的融合：音频领域是AI和传统信号处理结合最紧密的领域之一：a）语音识别（ASR）和合成（TTS）：已经基本被深度学习「革命」了；b）语音增强和降噪：传统方法（谱减法、维纳滤波、卡尔曼滤波）+ 深度学习（DNN、GAN、U-Net）结合，效果越来越好；c）音乐信息检索：音高检测、节拍检测、和弦识别、音乐分类、音乐生成，AI在这些方面都有广泛应用；d）声源分离：Demucs、Spleeter等深度学习模型，能把一首歌里的人声、鼓、贝斯、其他伴奏分开，效果很好；5）可解释性与物理模型：AI虽然效果好，但黑盒、难解释。而传统信号处理有清晰的物理意义和数学基础。现在的趋势是把两者结合——把信号处理的先验知识融入AI模型中，让模型更高效、更可解释、更鲁棒。对于AI工程师来说，音频是一个非常有意思的应用领域——既有理论深度，又有很强的趣味性和实用性。而且，理解音频DSP，对于做语音识别、语音合成、音乐生成等AI方向的同学来说，是非常有帮助的基础。希望这个DSP课程和音频效果器项目，能让你对信号处理和音频世界产生兴趣。"
         }, duration: "4小时", resources: [{ title: "SoundDevice文档", url: "https://python-sounddevice.readthedocs.io/", required: false, type: "doc", source: "official" }, { title: "音频效果器设计", url: "https://www.dspguide.com/ch22/1.htm", required: false, type: "article", source: "other" }, { title: "谱减法降噪", url: "https://en.wikipedia.org/wiki/Spectral_subtraction", required: false, type: "doc", source: "other" }], checkpoint: "完成至少3种效果的实时音频效果器，能实时处理麦克风输入并播放" }
+
 
     ]
   },
@@ -8654,7 +10061,73 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "用软件无线电（SDR）实现FM广播接收，要求如下：\n\n注意：如果没有SDR硬件，也可以用录制好的IQ数据文件来做，或者只做仿真部分。\n\n硬件需求（可选）：\n- RTL-SDR电视棒（二三十块钱，淘宝就能买到）\n- 天线（普通的FM天线或者一根导线也行）\n- 电脑（Linux/Windows/macOS都可以）\n\n软件需求：\n- Python + numpy + scipy + matplotlib\n- pyrtlsdr（RTL-SDR的Python库，有硬件的话需要）\n- sounddevice或pyaudio（播放音频）\n\n实验内容（必做）：\n1）环境搭建：\n   a）安装RTL-SDR的驱动和Python库（有硬件的话）\n   b）安装numpy、scipy、matplotlib、sounddevice\n   c）验证硬件能工作（能读到IQ数据）\n\n2）频谱观察：\n   a）用SDR接收一段频谱（比如88-108MHz的FM广播频段）\n   b）画出频谱图，看看各个FM电台的位置（一个个峰）\n   c）你能数出有多少个电台吗？分别在什么频率？\n   d）试试其他频段，比如433MHz的ISM频段，看看有什么信号\n\n3）FM解调：\n   实现一个FM解调器，步骤：\n   a）调到某个FM电台的频率（比如你当地的电台），采样率选1MHz或2MHz\n   b）采集IQ数据（复数形式，I是实部，Q是虚部）\n   c）数字下变频：把信号从射频搬到基带（其实RTL-SDR已经是基带IQ了，省了这步）\n   d）抽取和滤波：降低采样率，把信号带宽限制在200kHz左右（用低通滤波器+抽取）\n   e）FM解调：用「相位差分法」——计算相邻样点的相位差。具体公式：\n      y(n) = angle(x(n) * conj(x(n-1)))  （复数乘法取相位角）\n      这个相位差和频率偏移成正比，也就是解调后的音频信号\n   f）音频重采样：把采样率降到音频的采样率（比如44.1kHz或48kHz）\n   g）去直流、放大、播放\n\n4）进阶功能（选做）：\n   a）实时接收和解调：不是先录一段再处理，而是边接收边处理边播放（流式处理）\n   b）立体声解码：FM广播有立体声的话，试试能不能解调出左右声道（有点难，需要解码立体声导频）\n   c）RDS解码：FM广播里还有RDS数据（电台名、歌曲名等），试试能不能解出来\n   d）瀑布图：做一个实时的频谱瀑布图显示，看起来很酷\n   e）扫描电台：自动扫描整个FM频段，找出所有电台的频率和信号强度\n\n5）如果没有硬件：\n   a）可以下载FM广播的IQ录制文件（网上很多）\n   b）用Python读入文件，做频谱分析和解调\n   c）或者完全用仿真——自己生成一个FM信号，然后解调，验证算法正确性\n\n项目要求：\n- 完整的Python代码（有注释）\n- 频谱截图（你接收的FM广播频谱）\n- 解调后的音频（保存成wav文件）\n- 实验报告（步骤、遇到的问题、解决方法、收获）\n\n提示：\n- 先从离线处理开始（先录一段IQ数据，再慢慢写解调代码）\n- 调试的时候，每一步都画幅频和波形，看看对不对\n- FM解调的相位差分法很简单，几行代码就能实现\n- 注意采样率的转换，音频播放的采样率要对\n\n完成后，思考一下：你觉得SDR最酷的地方是什么？你还想用SDR接收和解调什么信号？",
           deep_dive: "软件无线电——打开无线世界的大门：软件无线电（SDR）是一项非常酷的技术，它把以前只有专业设备才能做的事情，变成了每个人用电脑加几十块钱的硬件就能玩的东西。在SDR出现之前，如果你想研究无线电，你需要昂贵的专用设备——频谱仪、信号源、协议分析仪，每台都几万几十万。现在，一台二三十块钱的RTL-SDR，就能让你看到从24MHz到1.7GHz的所有无线电信号，还能自己写代码解调。这是革命性的。让我们看看SDR的更多可能性：1）你能接收什么：RTL-SDR能覆盖的频段里，有各种各样的信号——FM广播、AM广播（需要下变频器）、航空通信（118-136MHz，AM调制的语音）、海事VHF、对讲机、TETRA数字集群、电视信号、ADS-B（飞机自动相关监视，1090MHz，能看到天上的飞机！）、AIS（船舶自动识别系统）、433MHz的各种遥控（车库门、车钥匙、气象站）、蓝牙、WiFi（速率太高，RTL-SDR采样率不够，只能看看）、GSM（可以偷听吗？技术上可以，但违法哦）、LoRa、Zigbee……无线电的世界远比你想象的热闹；2）发射呢？RTL-SDR只能接收，不能发射。如果想发射，可以用HackRF、BladeRF、USRP这些设备——它们既能收也能发。有了发射能力，你甚至可以自己做一个小电台、做一个无线麦克风、做一个LoRa网关。当然，发射要遵守法律法规，不能干扰正常通信；3）SDR与AI：SDR和AI的结合也是一个很有意思的方向——a）调制识别：给你一段信号，用AI识别它是什么调制方式（BPSK？QPSK？QAM？还是FM？）；b）信号分类：识别是什么类型的信号（WiFi？蓝牙？还是LoRa？）；c）自动解调：用深度学习端到端地解调信号，不用传统的信号处理流水线；d）射频指纹：每个发射机因为硬件差异，发射的信号都有独特的「指纹」，用AI可以识别出具体是哪个设备发的，这在安全领域很有用；4）开源SDR生态：SDR有非常活跃的开源社区——GNU Radio（最流行的SDR开发框架，图形化+Python）、SDR#（Windows下的SDR接收软件）、rtl-sdr（驱动和工具）、GQRX（Linux下的接收软件）、SigDigger、Inspectrum（信号分析工具）。还有很多专门的项目，比如dump1090（接收ADS-B看飞机）、gr-lora（LoRa解码）等等；5）黑客与安全：SDR也是无线安全研究的利器——你可以分析各种无线协议的安全性，找漏洞、做攻击和防御研究。物联网设备的无线安全，就是一个很活跃的研究领域。当然，一定要在合法合规的前提下研究。对于AI工程师来说，SDR是一个非常有趣的玩具和工具——它让你能「看见」看不见的电磁波，亲手实现通信算法，把信号处理和通信理论变成看得见听得到的东西。希望这个项目能点燃你对无线通信的兴趣。"
+        }, duration: "4小时", resources: [{ title: "RTL-SDR入门", url: "https://www.rtl-sdr.com/about-rtl-sdr/", required: false, type: "doc", source: "other" }, { title: "PySDR教程", url: "https://pysdr.org/", required: false, type: "doc", source: "other" }, { title: "GNU Radio", url: "https://www.gnuradio.org/", required: false, type: "doc", source: "other" }], checkpoint: "能用SDR（或仿真）接收并解调FM广播，看到频谱图并听到声音" },
+      { day: 11, title: "无线信道特性与衰落",
+        summary: "理解无线信道的传播特性，掌握大尺度衰落、小尺度衰落、多普勒效应等概念。", content: {
+          objective: "今天你将学习无线信道的特性。学完后你能理解无线信号是怎么传播的（直射、反射、折射、散射、绕射），掌握大尺度衰落（路径损耗、阴影衰落）和小尺度衰落（多径衰落）的区别和特点，理解多普勒效应和相干时间，了解无线信道和有线信道的根本不同。无线信道是无线通信最核心的挑战。",
+          key_points: [
+            "无线传播机制：直射（视距LOS）、反射（遇到大的物体）、绕射（障碍物边缘）、散射（遇到粗糙表面或小物体），实际中多种机制并存",
+            "大尺度衰落：长距离（几百米以上）的信号强度变化，主要由路径损耗（随距离增加而衰减，自由空间是和距离平方成反比）和阴影衰落（障碍物遮挡，服从对数正态分布）",
+            "小尺度衰落（多径衰落）：短距离/短时间内的信号剧烈起伏，由多径传播引起——同一信号经过不同路径到达接收端，相位不同，叠加后有的地方增强有的地方抵消（衰落）",
+            "衰落的分类：时间色散（时延扩展→符号间干扰）和频率色散（多普勒扩展→时间选择性衰落）；平坦衰落 vs 频率选择性衰落；快衰落 vs 慢衰落",
+            "多普勒效应：收发端有相对运动时，接收频率会变化（f_d = v/λ = v*f/c）；多普勒扩展导致信道随时间变化（时间选择性）"
+          ],
+          practice: "完成以下无线信道实践：1）自由空间路径损耗计算：在自由空间中，路径损耗PL(dB) = 20lg(d) + 20lg(f) + 20lg(4π/c)。计算一下：a）工作频率2.4GHz（WiFi），距离100米，路径损耗大约是多少dB？b）工作频率5GHz，同样距离，路径损耗多了多少dB？（频率越高，损耗越大）c）距离变成1000米，2.4GHz下路径损耗多了多少dB？（距离每10倍增加20dB）；2）多径衰落理解：画一张示意图说明多径传播是怎么产生的——直射径、地面反射、建筑物反射、散射等等。为什么多径会导致衰落？（因为不同路径长度不同，到达时间不同，相位不同，叠加后可能相长也可能相消，取决于位置）3）衰落类型判断：什么是平坦衰落？什么是频率选择性衰落？它们和信号带宽以及信道的时延扩展有什么关系？（如果信号带宽 < 相干带宽，就是平坦衰落；反之是频率选择性衰落）什么是快衰落？什么是慢衰落？和移动速度、多普勒扩展有什么关系？4）多普勒效应：一辆汽车以120km/h的速度行驶，用的是2.4GHz的信号，求最大多普勒频移是多少？（f_d = v/λ，λ=c/f，v换成m/s）这个多普勒频移会有什么影响？5）对抗衰落的技术：无线信道有这么多衰落问题，人们想了哪些办法来对抗衰落？（至少列出5种，如分集接收、信道编码、均衡、OFDM、扩频、智能天线、HARQ等等）每种方法主要对抗什么类型的衰落？6）思考：为什么无线通信比有线通信难这么多？无线信道的主要挑战有哪些？（衰落、干扰、噪声、时变、带宽受限、安全等等）",
+          deep_dive: "深入理解无线信道建模与MIMO技术：无线信道是无线通信系统中最不可控也最关键的部分。理解信道、建模信道、利用信道，是无线通信的核心课题。让我们深入了解一些进阶内容：1）统计信道模型：实际的无线信道非常复杂，我们不可能精确描述每一条径，所以用统计模型来描述它的特性。常见的模型有：a）大尺度：Okumura-Hata模型、COST-Hata模型、WINNER模型等，用来预测覆盖范围；b）小尺度：瑞利衰落（没有直射径，多径的包络服从瑞利分布）、莱斯衰落（有直射径，包络服从莱斯分布）、Nakagami-m分布（更通用）；2）多径信道的冲激响应：可以把多径信道看作一个线性时变系统，它的冲激响应是多径的集合——每条径有不同的幅度、时延、相位。这就是抽头延迟线模型（TDL模型）。两个重要的参数：a）时延扩展（Delay Spread）：多径的最大时延差，决定了相干带宽；b）多普勒扩展（Doppler Spread）：多普勒频移的范围，决定了相干时间；3）分集技术：对抗衰落最基本的方法就是「不要把鸡蛋放在同一个篮子里」——分集。分集的类型有：a）空间分集：多根天线，位置差得远，不会同时衰落；b）频率分集：用不同的频率传，不会同时衰落（OFDM其实也有频率分集的效果）；c）时间分集：不同的时间传，不会同时衰落（信道编码+交织）；d）极化分集：不同极化方向；4）MIMO（多输入多输出）：MIMO是无线通信的革命性技术——收发都用多根天线。MIMO有两种用法：a）分集增益：把同一个数据用多天线发/收，提高可靠性（这就是发射分集/接收分集）；b）复用增益：不同天线发不同的数据，成倍提高速率（空间复用）。在散射丰富的环境中，MIMO能让容量线性增长（天线数越多，容量越大），这太香了。从4G开始，MIMO已经成为标配；5）Massive MIMO：5G的核心技术之一，基站用几十上百根天线，同时服务很多用户。天线越多，波束越窄，干扰越小，容量越大。Massive MIMO把空间复用用到了极致；6）AI与信道：AI在无线信道领域也有很多应用——用深度学习做信道估计、用AI做信道状态信息反馈（CSI反馈）、用AI预测信道变化、用AI优化波束成形。未来的6G，会是「AI定义的空口」，AI会深度参与到物理层的方方面面。无线通信是一门充满魅力的学科——它既有深厚的数学理论（信息论、随机过程、优化），又有很强的工程实践，而且和我们每个人的生活息息相关。"
+        }, duration: "2.5小时", resources: [{ title: "无线信道基础", url: "https://www.electronics-notes.com/articles/radio/propagation/radio-signal-propagation.php", required: true, type: "article", source: "other" }, { title: "多径衰落与多普勒", url: "https://www.sharetechnote.com/html/Handbook_LTE_ChannelModeling.html", required: false, type: "doc", source: "other" }, { title: "MIMO技术入门", url: "https://www.electronics-notes.com/articles/radio/wi-fi-wlan-wi-max/802-11n-mimo.php", required: false, type: "article", source: "other" }], checkpoint: "能区分大尺度衰落和小尺度衰落，解释多径衰落和多普勒效应的成因" },
+      { day: 12, title: "移动通信系统演进（1G-5G）",
+        summary: "了解移动通信从1G到5G的发展历程，掌握各代系统的关键技术和特点。", content: {
+          objective: "今天你将学习移动通信系统的演进。学完后你能了解从1G到5G每一代移动通信的技术特点、代表标准、关键技术和典型应用，理解移动通信发展的内在逻辑（每10年一代，速率提升百倍，从语音到数据），掌握5G的三大应用场景和关键技术。移动通信的发展史就是信息时代的发展史。",
+          key_points: [
+            "1G（模拟）：模拟语音，FDMA，典型标准AMPS、TACS；容量小、音质差、不安全、易被窃听；开启了移动通信时代",
+            "2G（数字语音）：GSM（欧洲，TDMA+跳频）和IS-95 CDMA（美国）；数字时代，语音质量、安全性、容量都大幅提升；后期GPRS/EDGE开始支持数据（2.5G）",
+            "3G（移动互联网）：WCDMA、cdma2000、TD-SCDMA三大标准，都是基于CDMA；数据速率提升到几百kbps到几Mbps；开启了移动互联网时代，智能手机兴起",
+            "4G LTE（全IP宽带）：OFDMA+MIMO，纯分组域，全IP；数据速率几十Mbps到几百Mbps；移动互联网真正普及，短视频、直播、移动支付都靠4G",
+            "5G（万物互联）：三大场景——eMBB（增强移动宽带，大带宽）、uRLLC（超高可靠低时延）、mMTC（海量机器类通信）；关键技术：NR空口、Massive MIMO、毫米波、网络切片、边缘计算"
+          ],
+          practice: "完成以下移动通信演进实践：1）五代移动通信对比表：制作一张详细的对比表，对比1G、2G、3G、4G、5G：a）年代；b）代表标准；c）多址方式；d）核心技术；e）典型速率；f）主要业务；g）核心网架构；h）对你生活的影响；2）为什么是CDMA到OFDMA：3G用CDMA，4G为什么换成OFDMA了？CDMA有什么缺点？（远近效应、多用户干扰、码资源受限、不适合宽带高速）OFDM+MIMO有什么优势？（频谱效率高、抗多径能力强、MIMO结合好、适合宽带）；3）5G三大场景：用自己的话解释5G的三大应用场景：a）eMBB（enhanced Mobile Broadband）——增强移动宽带，是什么？有什么用？典型应用是什么？b）uRLLC（ultra-Reliable Low-Latency Communications）——超高可靠低时延，多高可靠？多低时延？用在什么地方？c）mMTC（massive Machine Type Communications）——海量机器类通信，是什么？用在什么地方？（物联网）每个场景至少举2个应用例子；4）5G关键技术：列出5G的至少5项关键技术，并简单说明它们的作用——Massive MIMO、毫米波、网络切片、边缘计算、NR空口、波束成形、高阶调制、小基站等等；5）从1G到5G的规律：回顾从1G到5G的发展，你能总结出哪些规律？（比如：每10年一代、速率提升约100倍、从模拟到数字、从语音到数据到万物互联、多址技术不断演进、频谱效率越来越高、业务越来越多样化）6）思考与展望：你觉得6G会是什么样的？会有哪些新的技术和应用？（大胆想象一下：太赫兹、智能超表面、卫星通信、全息通信、语义通信、AI原生、数字孪生、元宇宙等等）",
+          deep_dive: "深入理解5G与未来的6G：移动通信是过去30年发展最快、影响最大的技术领域之一。从1G到5G，每一代都带来了革命性的变化。让我们更深入地了解5G，并展望一下6G：1）5G不是更快的4G：很多人觉得5G就是比4G快，其实远不止如此。5G设计了三大场景，要服务的不只是人，还有物（物联网），还要支持工业级的应用（低时延高可靠）。可以说，4G改变生活，5G改变社会——5G会深度融入各行各业，工业互联网、车联网、远程医疗、智慧城市，都需要5G的能力；2）5G的技术突破：a）Massive MIMO：基站从几根天线变成了几十上百根，容量和覆盖大大提升；b）毫米波：用更高的频段（24GHz以上），带宽大，速率高，但传播差、覆盖小；c）网络切片：同一个物理网络，可以切出多个虚拟的「切片」，每个切片有不同的性能（带宽、时延、可靠性），服务不同的业务——这是5G从「尽力而为」到「可承诺SLA」的关键；d）边缘计算（MEC）：把计算和存储下沉到网络边缘（基站旁边），降低时延，减轻核心网压力；3）5G的挑战：5G虽然厉害，但也有挑战——a）成本高：基站贵、电费贵、建设成本高；b）覆盖难：频率高了，覆盖差了，需要建更多基站；c）杀手级应用待出现：4G有短视频、移动支付，5G的杀手级应用还不清晰；d）功耗大：Massive MIMO和高频段都很费电；4）6G展望：现在全球已经开始研究6G了，预计2030年左右商用。6G可能的方向包括：a）全场景覆盖：地面+卫星+海洋+空中，真正的全球无缝覆盖；b）太赫兹通信：更高的频段，更大的带宽（可能有几百GHz带宽），Tbps级的速率；c）智能超表面（RIS）：可以重构的电磁表面，智能调控电磁波的传播方向、相位、幅度，让无线环境「可编程」；d）AI原生：从物理层到网络层，AI深度融入，智能优化、智能调度、智能运维；e）感知通信一体化：通信和雷达感知融合，用通信信号做感知；f）数字孪生与元宇宙：高带宽低时延的6G，让全息通信、沉浸式XR、数字孪生成为可能；5）AI与6G：6G和AI的融合会比5G更深——AI会是6G的「内生能力」，而不是外挂的功能。网络会自优化、自愈、自学习。反过来，6G的超高速、低时延、万物互联，也会让AI应用更丰富、更强大。通信技术的发展脚步不会停下。对于AI工程师来说，5G和未来的6G，既是AI落地的重要场景，也是AI发挥价值的舞台。"
+        }, duration: "2小时", resources: [{ title: "移动通信发展史", url: "https://www.ericsson.com/en/about-us/history/telecom-history", required: false, type: "doc", source: "other" }, { title: "5G技术简介", url: "https://www.qualcomm.com/invention/5g/what-is-5g", required: true, type: "doc", source: "other" }, { title: "5G三大场景", url: "https://www.3gpp.org/news-events/3gpp-news/1815-5g-phase2", required: false, type: "doc", source: "official" }], checkpoint: "能说出从1G到5G各代的核心技术和特点，解释5G三大应用场景" },
+      { day: 13, title: "WiFi与蓝牙技术",
+        summary: "掌握WiFi和蓝牙这两种最常用的短距离无线通信技术的原理和特点。", content: {
+          objective: "今天你将学习WiFi和蓝牙技术。学完后你能理解WiFi（802.11）的原理和发展历程，掌握CSMA/CA介质访问控制协议的工作机制，了解WiFi 5/6/7的新特性；同时理解蓝牙的工作原理、BLE（低功耗蓝牙）的特点和应用场景。这两种是我们每天都在使用的无线技术。",
+          key_points: [
+            "WiFi（802.11）：无线局域网技术，工作在2.4GHz和5GHz（还有6GHz，WiFi 6E/7）频段，速率从最初的2Mbps到现在的几十Gbps；是移动互联网最主要的接入方式之一",
+            "CSMA/CA：WiFi的MAC层协议——载波监听多路访问/冲突避免；先听后说、冲突避免（RTS/CTS握手）、确认重传（ACK），因为无线环境下没法像有线那样边发边听检测冲突",
+            "WiFi演进：802.11b（11Mbps）→ 11a/g（54Mbps）→ 11n（WiFi 4，MIMO，几百Mbps）→ 11ac（WiFi 5，5GHz，Gbps级）→ 11ax（WiFi 6，OFDMA、MU-MIMO）→ 11be（WiFi 7，320MHz、4096QAM、Multi-Link）",
+            "蓝牙（Bluetooth）：短距离低功耗无线技术，工作在2.4GHz ISM频段，跳频扩频（FHSS）；传统蓝牙用于音频和文件传输，BLE（低功耗蓝牙）用于物联网、可穿戴设备",
+            "BLE特点：超低功耗（一颗纽扣电能用几个月甚至几年）、连接快、成本低、速率不高（1Mbps左右）；GATT协议是BLE应用层的基础，大量用于传感器、智能手环、智能家居"
+          ],
+          practice: "完成以下WiFi与蓝牙实践：1）WiFi版本对比：制作一张对比表，对比WiFi 4（802.11n）、WiFi 5（802.11ac）、WiFi 6（802.11ax）、WiFi 7（802.11be）：a）发布年份；b）最高理论速率；c）频段；d）调制方式（最高阶）；e）MIMO（单用户/多用户）；f）多址方式；g）主要新特性；2）CSMA/CA理解：WiFi为什么用CSMA/CA而不是像以太网那样用CSMA/CD？（因为无线环境有隐藏终端问题，而且发送时信号太强，听不到别人的，没法边发边听检测冲突）RTS/CTS是怎么解决隐藏终端问题的？画出RTS/CTS/Data/ACK的交互时序图；3）隐藏终端和暴露终端：什么是隐藏终端问题？什么是暴露终端问题？画图说明。它们分别会导致什么问题？（隐藏终端：冲突增多，效率下降；暴露终端：本来能发的不敢发，浪费信道资源）4）蓝牙和BLE对比：对比传统蓝牙（BR/EDR）和低功耗蓝牙（BLE）的区别——功耗、速率、距离、连接方式、典型应用、协议复杂度等；为什么BLE这么省电？（空闲时几乎不耗电，唤醒快，连接间隔长）5）BLE应用思考：你身边有哪些设备用了BLE？（至少列5个）它们为什么用BLE而不用WiFi？（因为BLE功耗低、成本低、不需要连互联网、传输数据量小）6）思考：WiFi、蓝牙、Zigbee、Z-Wave这些短距离无线技术各有什么定位？（WiFi：高速率、高功耗，用于上网；蓝牙/BLE：中等距离、低功耗，用于外设和IoT；Zigbee：低速率、低功耗、mesh组网，用于智能家居和工业IoT）它们之间是什么关系？（互补还是竞争？）",
+          deep_dive: "深入理解无线局域网与个域网的生态：短距离无线通信是一个非常庞大和活跃的领域，除了WiFi和蓝牙，还有很多其他技术，共同构成了无线个域网（WPAN）和无线局域网（WLAN）的生态。让我们来系统了解一下：1）WiFi的进阶技术：a）MU-MIMO（多用户MIMO）：WiFi 5开始有下行MU-MIMO，WiFi 6上下行都有。AP可以同时和多个设备通信，大大提高了多用户场景下的吞吐量；b）OFDMA：WiFi 6引入的，和4G/5G类似，把信道分成很多子载波，分配给不同的用户，同时传输，减少了等待时间，提高了效率，对密集场景（机场、 stadium）提升很大；c）TWT（目标唤醒时间）：WiFi 6引入的节能功能，设备可以约定什么时候醒来通信，其余时间睡觉，大大降低了功耗，对IoT很友好；d）WiFi 7的Multi-Link Operation（MLO）：可以同时用多个频段（2.4G+5G+6G）传输，提高速率、降低时延、提高可靠性；2）Zigbee和Thread：Zigbee是基于IEEE 802.15.4的低功耗无线Mesh网络技术，主要用于智能家居、工业传感器网络。Thread是基于IP的低功耗Mesh网络，由Google、Nest等推动，和Matter智能家居标准配合，发展很快；3）UWB（超宽带）：用很宽的频谱（超过500MHz）来传输，速率不高但测距定位精度非常高（厘米级），在室内定位、智能钥匙、空间感知方面很有前景。苹果的U1芯片就是UWB；4）NFC（近场通信）：极短距离（几厘米）的无线技术，用于移动支付、门禁、标签识别，非常方便安全；5）无线充电：也算一种短距离无线技术——把能量也通过无线传过去。Qi是最主流的标准，现在还有更远距离的无线充电技术在发展；6）AI与无线感知：WiFi、蓝牙这些无线信号，除了用来通信，还可以用来「感知」——比如通过WiFi信号的变化来检测人的存在、呼吸、手势（WiFi感知/WiFi Sensing）。这是一个很有意思的方向——把通信信号变成环境感知的工具。AI在这方面发挥着重要作用——用深度学习从CSI（信道状态信息）中提取人的行为特征。短距离无线通信的世界丰富多彩，从高速的WiFi到低功耗的BLE再到高精度的UWB，各有所长，共同连接着我们身边的智能设备。对于AI工程师来说，这些技术是物联网、智能家居、可穿戴设备的基础，也是AI落地的重要场景。"
+        }, duration: "2小时", resources: [{ title: "WiFi原理入门", url: "https://www.electronics-notes.com/articles/radio/wi-fi-wlan-wi-max/802-11-standard.php", required: true, type: "article", source: "other" }, { title: "蓝牙BLE技术", url: "https://www.novelbits.io/beginners-guide-bluetooth-low-energy/", required: false, type: "article", source: "other" }, { title: "WiFi 6技术解析", url: "https://www.cisco.com/c/en/us/solutions/wireless/what-is-wi-fi-6.html", required: false, type: "doc", source: "official" }], checkpoint: "能解释WiFi CSMA/CA的工作机制，说出WiFi和BLE各自的特点和适用场景" },
+      { day: 14, title: "物联网与低功耗广域网（LPWAN）",
+        summary: "理解物联网的基本概念和通信需求，掌握LoRa和NB-IoT这两种LPWAN技术的原理与特点。", content: {
+          objective: "今天你将学习物联网（IoT）和低功耗广域网（LPWAN）。学完后你能理解物联网的概念和应用场景，掌握LPWAN技术的特点（远距离、低功耗、低速率、大连接），深入了解LoRa和NB-IoT这两种主流LPWAN技术的原理、网络架构和典型应用。物联网是万物互联的基础。",
+          key_points: [
+            "物联网（IoT）：物物相连的互联网，让各种物理设备（传感器、控制器、家电、机器）接入网络，实现智能化的感知、管理和控制；是5G mMTC场景的核心",
+            "LPWAN（低功耗广域网）：专为物联网设计的无线通信技术，特点是——传输距离远（几公里到几十公里）、功耗极低（电池能用几年）、成本低、速率不高、连接数量大；适合抄表、环境监测、智慧城市等",
+            "LoRa：基于CSS（啁啾扩频）调制的LPWAN技术，工作在未授权的ISM频段（如433MHz、470MHz、868MHz、915MHz）；星形拓扑，LoRaWAN协议；部署灵活，企业可以自己建网",
+            "NB-IoT（窄带物联网）：3GPP定义的基于蜂窝的LPWAN技术，工作在授权频段，复用LTE网络基础设施；深度覆盖（比GSM多20dB）、海量连接（一个小区能连10万+设备）、超低功耗",
+            "物联网架构：感知层（传感器/终端）→ 网络层（各种接入技术）→ 平台层（连接管理、数据处理）→ 应用层（各种行业应用）；设备管理、数据采集、边缘计算是重要环节"
+          ],
+          practice: "完成以下物联网与LPWAN实践：1）LPWAN vs 其他无线技术：制作一张对比表，对比LoRa、NB-IoT、Sigfox、BLE、Zigbee、WiFi、2G/4G这些无线技术，从以下维度对比：a）传输距离；b）功耗（电池寿命）；c）数据速率；d）连接数密度；e）成本（模块+流量费）；f）工作频段（授权/免授权）；g）网络架构；h）典型应用场景；2）LoRa原理了解：什么是CSS调制（啁啾扩频）？它和我们学过的DS-CDMA（直接序列扩频）有什么不同？LoRa的「扩频因子」（Spreading Factor，SF）是什么意思？SF越大，传输距离越远还是越近？速率越高还是越低？（SF越大，距离越远，速率越低，功耗也越大）这是一个trade-off；3）NB-IoT的特点：NB-IoT为什么叫「窄带」？（带宽只有180kHz，很窄）NB-IoT有哪三种部署方式？（带内部署、保护带部署、独立部署）为什么NB-IoT覆盖能力这么强？（重传、重复发送，提高接收灵敏度；低频段绕射能力好）；4）物联网应用场景：列出至少10个物联网的应用场景，分行业分类（智能家居、智慧城市、智慧农业、工业物联网、智能交通、可穿戴、环境监测等等）。每个场景简单说明用了什么技术、解决了什么问题；5）物联网的挑战：物联网发展面临哪些挑战？（至少列出5个，如：标准不统一、安全与隐私、功耗、成本、海量设备管理、数据处理、互联互通等等）6）思考：为什么需要LPWAN？现有的蜂窝网络（2G/3G/4G）和短距离无线（WiFi/蓝牙/Zigbee）不能满足物联网的需求吗？（蜂窝的问题：功耗太高、成本太高；短距离的问题：距离太近）LPWAN填补了这个空白——距离远、功耗低、成本低，就是速率低一点，正好适合物联网的很多场景。",
+          deep_dive: "深入理解物联网生态与AIoT：物联网（IoT）已经说了很多年了，但其实它才刚刚开始——预计到2030年，全球物联网连接数会超过百亿甚至千亿级别。物联网不是一个单一的技术，而是一个庞大的生态。让我们看看这个生态的全貌和发展趋势：1）连接技术的多样化：物联网的连接需求太多样了——有的在室内、有的在野外；有的传的多、有的传的少；有的插电、有的用电池；有的动、有的静。所以没有一种技术能满足所有需求，而是多种技术并存，各有分工——高速的用5G/4G/WiFi，中速的用Cat.1/Cat.4，低速低功耗的用NB-IoT/LoRa，特别近的用BLE/Zigbee，高速移动的用5G/4G。未来会是多技术融合的；2）AIoT = AI + IoT：物联网产生海量的数据，但数据本身没有价值，从数据中提取信息、做出决策才有价值。所以AI和IoT的结合是必然的——AI是IoT的大脑，IoT是AI的感官。这就是AIoT的概念：边缘侧的AI（端侧推理）+ 云端的AI + 物联网数据，让设备更智能、让系统更高效。AIoT应用在很多领域——智能制造（工业4.0）、智慧城市、智慧家居、智慧医疗、自动驾驶；3）边缘计算：物联网设备太多、数据量太大，全传到云端处理不现实（带宽不够、延迟高、成本高、隐私问题）。所以需要边缘计算——在靠近数据产生的地方（网关、基站、边缘服务器）做计算和处理。只有必要的信息才传到云端。边缘计算和AI结合（边缘AI），是现在的大趋势；4）物联网安全：物联网设备数量巨大、分布广泛、计算能力弱，安全是一个大问题——Mirai僵尸网络就是劫持了大量IoT设备发动DDoS攻击。物联网的安全（设备安全、数据安全、网络安全、应用安全）是一个非常重要且有挑战的领域；5）数字孪生（Digital Twin）：把物理世界的设备、工厂、城市，在数字世界里建一个「孪生体」，实时同步状态，用来模拟、优化、预测。数字孪生是IoT+AI+3D建模的结合，在工业、城市管理、医疗等领域有很大价值；6）物联网的未来：未来的物联网会是什么样的？——「万物智联」是方向。设备越来越智能（端侧AI）、连接无处不在（5G+6G+卫星）、数据自由流动、应用无缝协同。物理世界和数字世界会越来越深地融合。对于AI工程师来说，AIoT是一个非常广阔的赛道——你的AI算法可以跑在端侧、边缘侧、云端，让无数的设备变得更智能。而理解各种无线通信技术（WiFi、蓝牙、LPWAN、5G），是做好AIoT的基础。"
+        }, duration: "2小时", resources: [{ title: "LoRa与LoRaWAN入门", url: "https://www.lora-alliance.org/about-lora", required: true, type: "doc", source: "official" }, { title: "NB-IoT技术", url: "https://www.3gpp.org/technologies/nb-iot", required: false, type: "doc", source: "official" }, { title: "物联网入门", url: "https://www.ibm.com/cloud/learn/internet-of-things", required: false, type: "doc", source: "other" }], checkpoint: "能解释LPWAN的特点，对比LoRa和NB-IoT的异同和适用场景" },
+      { day: 15, title: "无线通信综合：用SDR接收FM广播",
+        summary: "用软件无线电（SDR）接收和解调FM广播，综合运用信号与系统、调制解调、DSP等知识。", content: {
+          objective: "今天你将完成一个非常酷的无线通信综合实验——用软件无线电（SDR）接收和解调FM广播。通过这个项目，你会把前三周学到的信号与系统、傅里叶变换、调制解调、滤波、抽样率转换、DSP等知识真正用到真实世界的信号上。你将亲手捕获电磁波、看见频谱、解调出声音，直观感受无线通信的魅力。",
+          key_points: [
+            "软件无线电（SDR）：用软件实现无线电通信的大部分功能，A/D尽量靠近天线；灵活、可重构、适合学习和研究",
+            "RTL-SDR：非常便宜的SDR设备（电视棒改造的），能接收24MHz - 1766MHz的信号，覆盖FM广播、航空、对讲机、电视、很多IoT频段；入门神器",
+            "FM广播：调频广播，我国是88-108MHz，最大频偏75kHz，单声道/立体声；带宽约200kHz；FM是角度调制的一种，抗噪能力强",
+            "FM解调：有几种方法——鉴频器法（微分+包络检波）、相位差分法、正交解调法；最简单的是用复数信号的相位差分来解调FM",
+            "GNU Radio/Python：可以用GNU Radio（图形化的SDR开发框架），也可以用Python+NumPy+SciPy自己写信号处理代码"
+          ],
+          practice: "用软件无线电（SDR）实现FM广播接收，要求如下：\n\n注意：如果没有SDR硬件，也可以用录制好的IQ数据文件来做，或者只做仿真部分。\n\n硬件需求（可选）：\n- RTL-SDR电视棒（二三十块钱，淘宝就能买到）\n- 天线（普通的FM天线或者一根导线也行）\n- 电脑（Linux/Windows/macOS都可以）\n\n软件需求：\n- Python + numpy + scipy + matplotlib\n- pyrtlsdr（RTL-SDR的Python库，有硬件的话需要）\n- sounddevice或pyaudio（播放音频）\n\n实验内容（必做）：\n1）环境搭建：\n   a）安装RTL-SDR的驱动和Python库（有硬件的话）\n   b）安装numpy、scipy、matplotlib、sounddevice\n   c）验证硬件能工作（能读到IQ数据）\n\n2）频谱观察：\n   a）用SDR接收一段频谱（比如88-108MHz的FM广播频段）\n   b）画出频谱图，看看各个FM电台的位置（一个个峰）\n   c）你能数出有多少个电台吗？分别在什么频率？\n   d）试试其他频段，比如433MHz的ISM频段，看看有什么信号\n\n3）FM解调：\n   实现一个FM解调器，步骤：\n   a）调到某个FM电台的频率（比如你当地的电台），采样率选1MHz或2MHz\n   b）采集IQ数据（复数形式，I是实部，Q是虚部）\n   c）数字下变频：把信号从射频搬到基带（其实RTL-SDR已经是基带IQ了，省了这步）\n   d）抽取和滤波：降低采样率，把信号带宽限制在200kHz左右（用低通滤波器+抽取）\n   e）FM解调：用「相位差分法」——计算相邻样点的相位差。具体公式：\n      y(n) = angle(x(n) * conj(x(n-1)))  （复数乘法取相位角）\n      这个相位差和频率偏移成正比，也就是解调后的音频信号\n   f）音频重采样：把采样率降到音频的采样率（比如44.1kHz或48kHz）\n   g）去直流、放大、播放\n\n4）进阶功能（选做）：\n   a）实时接收和解调：不是先录一段再处理，而是边接收边处理边播放（流式处理）\n   b）立体声解码：FM广播有立体声的话，试试能不能解调出左右声道（有点难，需要解码立体声导频）\n   c）RDS解码：FM广播里还有RDS数据（电台名、歌曲名等），试试能不能解出来\n   d）瀑布图：做一个实时的频谱瀑布图显示，看起来很酷\n   e）扫描电台：自动扫描整个FM频段，找出所有电台的频率和信号强度\n\n5）如果没有硬件：\n   a）可以下载FM广播的IQ录制文件（网上很多）\n   b）用Python读入文件，做频谱分析和解调\n   c）或者完全用仿真——自己生成一个FM信号，然后解调，验证算法正确性\n\n项目要求：\n- 完整的Python代码（有注释）\n- 频谱截图（你接收的FM广播频谱）\n- 解调后的音频（保存成wav文件）\n- 实验报告（步骤、遇到的问题、解决方法、收获）\n\n提示：\n- 先从离线处理开始（先录一段IQ数据，再慢慢写解调代码）\n- 调试的时候，每一步都画幅频和波形，看看对不对\n- FM解调的相位差分法很简单，几行代码就能实现\n- 注意采样率的转换，音频播放的采样率要对\n\n完成后，思考一下：你觉得SDR最酷的地方是什么？你还想用SDR接收和解调什么信号？",
+          deep_dive: "软件无线电——打开无线世界的大门：软件无线电（SDR）是一项非常酷的技术，它把以前只有专业设备才能做的事情，变成了每个人用电脑加几十块钱的硬件就能玩的东西。在SDR出现之前，如果你想研究无线电，你需要昂贵的专用设备——频谱仪、信号源、协议分析仪，每台都几万几十万。现在，一台二三十块钱的RTL-SDR，就能让你看到从24MHz到1.7GHz的所有无线电信号，还能自己写代码解调。这是革命性的。让我们看看SDR的更多可能性：1）你能接收什么：RTL-SDR能覆盖的频段里，有各种各样的信号——FM广播、AM广播（需要下变频器）、航空通信（118-136MHz，AM调制的语音）、海事VHF、对讲机、TETRA数字集群、电视信号、ADS-B（飞机自动相关监视，1090MHz，能看到天上的飞机！）、AIS（船舶自动识别系统）、433MHz的各种遥控（车库门、车钥匙、气象站）、蓝牙、WiFi（速率太高，RTL-SDR采样率不够，只能看看）、GSM（可以偷听吗？技术上可以，但违法哦）、LoRa、Zigbee……无线电的世界远比你想象的热闹；2）发射呢？RTL-SDR只能接收，不能发射。如果想发射，可以用HackRF、BladeRF、USRP这些设备——它们既能收也能发。有了发射能力，你甚至可以自己做一个小电台、做一个无线麦克风、做一个LoRa网关。当然，发射要遵守法律法规，不能干扰正常通信；3）SDR与AI：SDR和AI的结合也是一个很有意思的方向——a）调制识别：给你一段信号，用AI识别它是什么调制方式（BPSK？QPSK？QAM？还是FM？）；b）信号分类：识别是什么类型的信号（WiFi？蓝牙？还是LoRa？）；c）自动解调：用深度学习端到端地解调信号，不用传统的信号处理流水线；d）射频指纹：每个发射机因为硬件差异，发射的信号都有独特的「指纹」，用AI可以识别出具体是哪个设备发的，这在安全领域很有用；4）开源SDR生态：SDR有非常活跃的开源社区——GNU Radio（最流行的SDR开发框架，图形化+Python）、SDR#（Windows下的SDR接收软件）、rtl-sdr（驱动和工具）、GQRX（Linux下的接收软件）、SigDigger、Inspectrum（信号分析工具）。还有很多专门的项目，比如dump1090（接收ADS-B看飞机）、gr-lora（LoRa解码）等等；5）黑客与安全：SDR也是无线安全研究的利器——你可以分析各种无线协议的安全性，找漏洞、做攻击和防御研究。物联网设备的无线安全，就是一个很活跃的研究领域。当然，一定要在合法合规的前提下研究。对于AI工程师来说，SDR是一个非常有趣的玩具和工具——它让你能「看见」看不见的电磁波，亲手实现通信算法，把信号处理和通信理论变成看得见听得到的东西。希望这个项目能点燃你对无线通信的兴趣。"
         }, duration: "4小时", resources: [{ title: "RTL-SDR入门", url: "https://www.rtl-sdr.com/about-rtl-sdr/", required: false, type: "doc", source: "other" }, { title: "PySDR教程", url: "https://pysdr.org/", required: false, type: "doc", source: "other" }, { title: "GNU Radio", url: "https://www.gnuradio.org/", required: false, type: "doc", source: "other" }], checkpoint: "能用SDR（或仿真）接收并解调FM广播，看到频谱图并听到声音" }
+
 
     ]
   },
@@ -8817,6 +10290,72 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           practice: "动手练习：1）需求分析：为自动化装配生产线写一份详细的功能需求说明——要做什么、有什么功能、性能要求是什么、安全要求是什么，越具体越好；2）IO分配表：列出所有的输入（传感器、按钮、开关）和输出（电机、电磁阀、指示灯），分配对应的PLC地址，做成表格；3）设计自动流程的顺序功能图(SFC)：从初始步→等待上料→上料→传送→装配→传送→检测→传送→分拣→回到等待，标注每一步的动作和转移条件；4）设计HMI主画面：生产线整体布局、各工位状态显示、总产量计数、运行状态、报警条、启动停止按钮，画出草图；5）思考：一个PLC项目中，软件设计和硬件设计哪个更重要？为什么说'需求分析'是整个项目最重要的一步？需求没搞清楚会有什么后果？",
           deep_dive: "深入理解PLC项目工程实践与工业控制的系统思维：学习PLC指令和编程只是基础，真正做好一个工业控制项目，需要系统思维和工程实践能力。让我们深入理解PLC项目的完整方法论和工业控制的系统思维。首先，PLC项目的完整生命周期。一个工业控制项目不只是'写程序'，它有完整的生命周期：第一，需求阶段——和客户沟通，搞清楚'要做什么'，输出需求规格说明书。这一步最关键——需求没搞对，后面做得再好都是白搭。第二，设计阶段——硬件设计（选型、原理图、IO表）、软件设计（程序架构、状态图、功能块）、HMI设计。好的设计是项目成功的基础。第三，实现阶段——写程序、画HMI画面、做配置。第四，测试阶段——实验室测试（模拟测试，先在实验室把功能测好）、FAT（工厂验收测试，在设备制造厂家测试）、SAT（现场验收测试，在客户现场安装后测试）。第五，调试和试运行阶段——现场安装、调试、优化参数、试生产。第六，运维阶段——日常维护、故障排除、功能升级。很多初学者以为PLC就是写程序，但实际上，写程序可能只占项目时间的20%，需求、设计、测试、调试占了大部分。然后是PLC程序的架构设计。小型的PLC程序可能就是一个主程序，从头到尾写下来。但对于大中型项目，程序架构非常重要——好的架构，程序清晰、容易调试、容易扩展、容易维护；坏的架构，逻辑混乱、到处都是GOTO和标志位，改一个bug引出十个bug。好的PLC程序架构通常有这些特点：第一，模块化——把程序分成不同的模块（功能块、子程序），每个模块功能单一，接口清晰；第二，分层——硬件层（直接读IO）、逻辑层（业务逻辑）、应用层（流程控制），层与层之间通过接口调用，不要跨层直接操作；第三，状态机思想——顺序控制用状态机实现，每个状态的动作和转移条件清晰，比用一堆标志位和定时器乱跳强太多；第四，标准化——命名规范、接口规范、编码规范，整个项目风格一致，谁都能看懂。工业界有很多PLC编程标准和规范（比如PLCopen的标准），就是为了提高程序质量和可维护性。接下来是工业控制中的安全思维。工业系统和消费电子最大的区别之一，就是对安全的要求——工业设备出故障可能造成人身伤害、重大财产损失、甚至环境灾难。所以，安全是工业控制的第一原则。安全设计要考虑：第一，急停和安全回路——急停是最高优先级的，不能靠软件，要做硬件安全回路；第二，安全分级——安全功能用专用的安全继电器、安全PLC来实现，不能用普通PLC代替；第三，故障安全（Fail-Safe）——出故障时，系统要进入安全状态（比如断电停机），而不是乱跑；第四，报警和预警——要有多层级的报警，有问题提前预警，不要等出事了才知道；第五，操作安全——重要操作要双人确认、要权限管理、要有防误操作设计。安全思维是工业工程师的基本素养。然后是工业控制的可靠性思维。工业设备通常要求24小时连续运行，一年开机率99%以上，停机损失很大。所以，可靠性设计非常重要：第一，冗余设计——关键部件（CPU、电源、通信）做冗余，一套坏了另一套顶上；第二，降级运行——部分故障时，系统不要全停，能降速运行、部分功能运行，把损失降到最小；第三，故障诊断——系统能自己检测哪里出了问题，准确报出故障点，方便快速维修；第四，可维护性设计——模块化设计、方便拆卸更换、有诊断信息，维修时间越短越好。可靠性和可维护性，是工业产品和消费产品的最大区别。最后，说说PLC工程师的能力模型。一个优秀的PLC工程师，不只是'会写梯形图'，他需要：电气知识（电路、电机、传感器）、控制理论（PID、运动控制）、编程能力（多种语言、软件架构）、通信知识（各种总线和协议）、工艺知识（了解所服务行业的生产工艺）、动手能力（接线、调试、排障）、安全意识、沟通能力（和客户、和机械工程师、和工艺师沟通）。PLC是一个'越老越值钱'的职业，因为经验非常重要。在智能制造时代，PLC工程师还需要了解工业互联网、AI、云计算等新技术，把传统控制和新技术结合起来，这就是'新型工业工程师'的方向。理解PLC项目的系统思维，能帮你从'会写几条指令'提升到'能独立做项目'的水平。"
         }, duration: "3小时", resources: [{ title: "自动化案例", url: "https://www.plcacademy.com/plc-automation/", required: true, type: "doc", source: "official" }, { title: "PLC仿真", url: "https://www.plc-fiddle.com/", required: false, type: "tool", source: "official" },   { title: "PLC控制项目示例", url: "https://github.com/topics/plc-control", required: false, type: "repo", source: "github" }], checkpoint: "PLC控制系统能正确执行自动化流程，HMI能监视和控制" },
+      { day: 11, title: "模拟量处理与PID控制",
+        summary: "掌握PLC模拟量采集和输出，用PLC实现PID控制闭环。", content: {
+          objective: "今天你将学习PLC的模拟量处理和PID控制功能。学完后你能理解模拟量和数字量的区别，掌握模拟量输入输出的编程方法，能用PLC的PID功能块实现闭环控制。模拟量控制是工业过程控制的核心，PID是最常用的控制算法。",
+          key_points: [
+            "模拟量vs数字量：数字量是0/1开关量，模拟量是连续变化的量（温度、压力、流量、液位等），需要AD/DA转换",
+            "AD转换：模拟量输入，把连续的电压/电流信号转换成数字量，有分辨率、量程、精度等指标",
+            "DA转换：模拟量输出，把数字量转换成电压/电流信号，用于控制调节阀、变频器等执行器",
+            "PLC PID功能块：大多数PLC都有内置的PID指令/功能块，只需设定参数就能实现PID控制",
+            "PID参数整定：经验法（临界比例度法、衰减曲线法）、自整定功能，不同对象参数差别很大"
+          ],
+          practice: "完成以下PLC模拟量与PID实践：1）模拟量理解：列举5个工业现场常见的模拟量（温度、压力、流量、液位、速度等），分别说明它们的传感器类型、输出信号范围（如4-20mA、0-10V）、常用单位；2）模拟量编程练习：用你熟悉的PLC（西门子/三菱/欧姆龙）编写模拟量采集和输出的程序——读取一个模拟量输入（如温度传感器），进行工程量转换（AD值转成实际温度），然后根据温度控制一个模拟量输出（如加热功率）；3）PID控制仿真：用PLC的PID功能块实现一个简单的温度控制闭环——设定目标温度，PID输出控制加热功率，观察温度能不能稳定在设定值；尝试调整P、I、D三个参数，看对控制效果有什么影响；4）参数整定：用临界比例度法整定PID参数——先把I和D设为0，增大P直到系统等幅振荡，然后根据经验公式计算PID参数；5）思考：在工业现场，PID控制通常用PLC实现还是用专用仪表实现？各有什么优缺点？什么情况下需要前馈控制、串级控制、分程控制等复杂控制方案？",
+          deep_dive: "深入理解工业过程控制与先进控制方法：PID是工业控制的主力军——据统计，工业现场90%以上的控制回路都是PID控制。但PID也有它的局限性——对于大滞后、非线性、强耦合、时变的复杂对象，PID的效果就不够好了。这时候就需要更先进的控制方法：1）串级控制：两个PID串联，主调节器的输出作为副调节器的设定值，用于克服中间变量的扰动，比如温度-流量串级、压力-流量串级；2）前馈控制：根据扰动直接调整控制量，在扰动还没影响到被控量之前就进行补偿，比反馈控制更快，通常和反馈结合使用（前馈-反馈控制）；3）比值控制：让两个量保持一定的比值关系，比如化工中的配料控制；4）分程控制：一个控制器的输出控制多个执行器，分不同的区间工作；5）Smith预估控制：专门处理大纯滞后对象，补偿滞后的影响；6）模糊控制：用模糊数学的方法，基于专家经验的控制，不需要精确的数学模型；7）模型预测控制（MPC）：基于过程模型，在线求解优化问题，预测未来的输出，处理约束能力强，在石油化工等过程工业中广泛应用；8）自适应控制：控制器参数能根据对象特性的变化自动调整，适应时变系统。在智能制造和工业4.0的背景下，先进控制和AI的结合越来越紧密——用机器学习建立过程模型、用强化学习优化控制参数、用大数据做故障诊断和预测性维护。但无论多高级的控制方法，PID都是基础——它简单、可靠、易理解、易维护，在大多数场景下都够用了。作为自动化工程师，首先要把PID用好，然后再根据需要学习更高级的方法。理解各种控制方法的适用场景和优缺点，才能在实际工程中做出正确的选择。"
+        }, duration: "2.5小时", resources: [{ title: "PLC模拟量处理", url: "https://www.allaboutcircuits.com/textbook/industrial/chpt-14/analog-input-output/", required: true, type: "doc", source: "other" }, { title: "PID控制教程", url: "https://www.eurotherm.com/training-resources/pid-control-tutorial/", required: false, type: "doc", source: "other" }, { title: "过程控制基础", url: "https://www.controleng.com/", required: false, type: "doc", source: "other" }], checkpoint: "能用PLC实现一个简单的温度PID闭环控制" },
+      { day: 12, title: "工业通信：Modbus与Profinet",
+        summary: "掌握工业通信协议，理解Modbus和Profinet/Ethernet/IP的原理和应用。", content: {
+          objective: "今天你将学习工业通信协议——PLC和其他设备（传感器、变频器、HMI、上位机）交换数据的方式。学完后你能理解Modbus RTU/TCP的原理和编程方法，了解Profinet、Ethernet/IP等工业以太网协议的特点，掌握工业通信的基本概念。通信是现代工业控制系统的神经网络。",
+          key_points: [
+            "Modbus：最经典的工业通信协议，简单开放，应用广泛，有RTU（串口）、ASCII、TCP（以太网）三种变种",
+            "Modbus功能码：读保持寄存器（03）、读输入寄存器（04）、写单个寄存器（06）、写多个寄存器（16）、读线圈（01）等",
+            "工业以太网：传统现场总线（RS485、CAN、Profibus DP）正在向工业以太网升级，速率更快、距离更远、更开放",
+            "Profinet：西门子主推的工业以太网协议，基于标准以太网，支持实时通信，是目前最主流的工业以太网之一",
+            "其他工业协议：Ethernet/IP（罗克韦尔）、EtherCAT（倍福，高性能）、Modbus TCP（施耐德，简单）、OPC UA（统一架构，跨平台）"
+          ],
+          practice: "完成以下工业通信实践：1）Modbus协议理解：画一张Modbus通信的示意图，说明主站和从站的关系，请求帧和响应帧的格式，地址映射（线圈、离散输入、输入寄存器、保持寄存器）；2）Modbus TCP编程：用Python的pymodbus库或你熟悉的语言，实现一个简单的Modbus TCP主站程序——连接到一个从站（可以用软件模拟，或者真实PLC），读写寄存器和线圈，验证通信是否正常；3）串口通信入门：了解RS232和RS485的区别，理解串口的参数（波特率、数据位、停止位、校验位），尝试用串口调试助手做简单的串口通信实验；4）工业以太网调研：调研至少3种主流的工业以太网协议（Profinet、Ethernet/IP、EtherCAT、Modbus TCP、OPC UA），对比它们的特点、应用场景、主要厂商、市场份额，制作一张对比表；5）思考：为什么工业现场不用普通的以太网，而要用工业以太网？工业以太网和商用以太网有什么区别？什么是实时性？为什么工业通信需要确定性？",
+          deep_dive: "深入理解工业通信的发展趋势与工业互联网：工业通信经历了几代演进：第一代是硬接线——每个信号一根线，简单但布线多、成本高；第二代是现场总线（Fieldbus）——用一根总线连接多个设备，比如Profibus DP、DeviceNet、Modbus RTU、CANopen，减少了布线，但不同厂商的协议互不兼容；第三代是工业以太网——基于标准以太网技术，加上工业级的增强，速率更高、兼容性更好，代表有Profinet、Ethernet/IP、EtherCAT、Powerlink等；第四代是TSN（时间敏感网络）——在标准以太网上实现确定性和实时性，是未来工业网络的发展方向。工业通信的发展趋势是：1）以太网化：从现场总线向工业以太网迁移；2）IP化：从设备层到管理层全IP化，一网到底；3）统一化：OPC UA等统一架构技术，解决不同厂商设备的互操作问题；4）实时化：对运动控制等高精度场景，需要微秒级的确定性；5）IT/OT融合：信息技术（IT）和运营技术（OT）融合，工业互联网、工业4.0的基础。在智能制造的架构中，通信是连接一切的基础——设备层、控制层、监控层、管理层、企业层，每层之间都需要通信。OPC UA（开放平台通信统一架构）是一个非常重要的技术，它被称为工业互联网的「普通话」——跨平台、跨厂商、安全可靠，不仅能传输数据，还能传输语义（知道数据是什么意思），是工业4.0的重要使能技术。对于做工业AI和智能制造的工程师来说，理解工业通信非常重要——数据是AI的粮食，而通信是数据的管道。没有稳定可靠的数据采集，再先进的AI算法也没用用武之地。"
+        }, duration: "2小时", resources: [{ title: "Modbus协议详解", url: "https://www.modbus.org/specs.php", required: true, type: "doc", source: "official" }, { title: "Profinet技术", url: "https://www.profinet.com/", required: false, type: "doc", source: "other" }, { title: "工业以太网对比", url: "https://www.automationworld.com/products/industrial-communication", required: false, type: "article", source: "other" }], checkpoint: "能解释Modbus的基本原理，说出至少3种工业以太网协议" },
+      { day: 13, title: "HMI人机界面与SCADA系统",
+        summary: "掌握HMI画面开发，理解SCADA系统的构成和功能。", content: {
+          objective: "今天你将学习HMI（人机界面）和SCADA（数据采集与监视控制系统）。学完后你能理解HMI和SCADA的区别，掌握HMI画面开发的基本方法，了解SCADA系统的构成和功能，知道什么是MES、ERP，以及工业软件的层级体系。HMI/SCADA是操作员和控制系统交互的窗口。",
+          key_points: [
+            "HMI人机界面：操作员和机器交互的界面，通常是触摸屏，用来显示参数、设置参数、报警、操作按钮",
+            "HMI画面开发：画面编辑、变量关联、报警配置、趋势曲线、用户权限、配方管理、数据记录",
+            "SCADA系统：数据采集与监视控制系统，比HMI更复杂，通常用于监控整个工厂/生产线，服务器+客户端架构",
+            "SCADA功能：实时监控、数据采集、报警管理、历史数据、趋势分析、报表生成、远程控制",
+            "工业软件层级：设备层→控制层（PLC）→监控层（HMI/SCADA）→执行层（MES）→计划层（ERP）"
+          ],
+          practice: "完成以下HMI与SCADA实践：1）HMI画面设计：用你熟悉的HMI软件（如威纶通EasyBuilder Pro、西门子WinCC、三菱GT Works3，或者免费的软件），设计一个简单的控制系统HMI画面——包括：主画面（设备状态显示、操作按钮）、参数设置画面（设定PID参数、目标值等）、趋势画面（显示温度、压力等的历史曲线）、报警画面（显示当前报警和历史报警）、用户登录画面；2）变量与PLC关联：理解HMI变量和PLC地址的映射关系——HMI怎么读写PLC的数据？用什么通信协议？地址怎么对应？3）SCADA系统调研：了解一个典型的SCADA系统由哪些部分组成（SCADA服务器、实时数据库、历史数据库、Web服务器、操作员站、工程师站），主流的SCADA软件有哪些（如WinCC、iFix、Intouch、KingView）；4）工业软件层级：画一张工业软件的层级架构图，从下到上分别是：设备层、控制层、监控层（SCADA/HMI）、执行层（MES制造执行系统）、计划层（ERP企业资源计划），说明每层的功能和典型软件；5）思考：在智能制造和工业4.0的架构中，SCADA和MES分别扮演什么角色？它们和工业互联网平台是什么关系？AI可以在哪些层级发挥作用？",
+          deep_dive: "深入理解工业软件体系与数字化转型：工业软件是工业的灵魂，是智能制造的核心。让我们系统梳理一下工业软件的完整体系：1）研发设计类（CAx）：CAD（计算机辅助设计）、CAE（计算机辅助工程）、CAM（计算机辅助制造）、CAPP（计算机辅助工艺规划）、EDA（电子设计自动化），代表厂商有达索、西门子、PTC、Autodesk、Synopsys、Cadence；2）生产控制类（工控软件）：PLC编程软件、HMI/SCADA、DCS（分布式控制系统）、运动控制软件，代表有西门子、罗克韦尔、施耐德、三菱；3）经营管理类：ERP（企业资源计划）、SCM（供应链管理）、CRM（客户关系管理）、HRM（人力资源管理）、财务软件，代表有SAP、Oracle、用友、金蝶；4）执行层：MES（制造执行系统）、APS（高级计划与排程）、WMS（仓储管理系统）、QMS（质量管理系统），连接ERP和控制层，是智能制造的核心；5）新兴类：工业互联网平台、数字孪生、工业大数据、工业AI。这些软件从上到下构成了一个完整的体系——ERP做计划、MES做执行、SCADA做监控、PLC做控制、设备做生产。但传统的工业软件体系有一个大问题：数据孤岛——每层的软件来自不同厂商，数据不互通，形成一个个信息孤岛。这就是为什么需要工业互联网平台——把所有数据都接上来，统一存储、统一治理、统一分析，再加上AI，实现数据驱动的智能决策。在这个体系中，AI可以在多个层面发挥作用：1）设备层：设备的预测性维护、故障诊断、质量检测；2）控制层：先进过程控制（APC）、用AI优化PID参数；3）执行层：智能排产、质量预测、能耗优化；4）管理层：供应链优化、需求预测、智能决策。工业AI的特点是：场景分散、长尾效应明显、数据质量差、对可靠性要求高、ROI（投资回报率）要明确。理解工业软件的完整体系，能帮你在做工业AI项目时，找到最合适的切入点和应用场景。"
+        }, duration: "2小时", resources: [{ title: "SCADA系统详解", url: "https://www.schneider-electric.com/en/work/campaign/innovation/scada.jsp", required: false, type: "doc", source: "official" }, { title: "工业软件体系", url: "https://www.gartner.com/en/information-technology/topics/industrial-iot", required: false, type: "doc", source: "other" }, { title: "MES与智能制造", url: "https://www.mesa.org/", required: false, type: "doc", source: "other" }], checkpoint: "能设计一个简单的HMI画面，说出SCADA和MES的区别" },
+      { day: 14, title: "工业机器人与运动控制",
+        summary: "理解工业机器人的基本原理和编程，了解运动控制的核心概念。", content: {
+          objective: "今天你将学习工业机器人和运动控制。学完后你能理解工业机器人的分类和基本结构，掌握机器人示教编程的基本方法，了解运动控制的核心概念（点位控制、连续轨迹控制、插补、电子齿轮、电子凸轮）。工业机器人是智能制造的核心装备。",
+          key_points: [
+            "工业机器人分类：按结构分——直角坐标、圆柱坐标、球坐标、SCARA、关节型（六轴）、并联（Delta）；按应用分——焊接、搬运、装配、喷涂、打磨",
+            "机器人编程方式：示教编程（手把手教）、离线编程（在电脑上编好再下载）、编程语言（如RAPID、KRL、Inform）",
+            "运动控制类型：点位控制（PTP，只关心起点终点）、连续轨迹控制（CP，关心路径）、直线插补、圆弧插补",
+            "伺服系统：运动控制的执行机构，由伺服电机、伺服驱动器、编码器组成，高精度、高响应",
+            "运动控制器：发脉冲/总线指令给伺服驱动器，实现多轴协调运动，如电子齿轮、电子凸轮、飞剪、追剪"
+          ],
+          practice: "完成以下工业机器人与运动控制实践：1）机器人基础调研：调研至少3种不同类型的工业机器人（如六轴关节机器人、SCARA机器人、Delta并联机器人），对比它们的结构特点、自由度、负载、工作范围、应用场景、代表厂商（发那科、ABB、库卡、安川、新松等）；2）示教编程理解：说明工业机器人示教编程的基本流程——手动移动机器人到各个点位、记录点位、编写运动指令（MOVJ、MOVL、MOVC等）、设置速度、测试运行；理解关节运动和直线运动的区别；3）运动控制概念：解释什么是插补？为什么需要插补？直线插补和圆弧插补的原理是什么？什么是电子齿轮？什么是电子凸轮？它们分别用于什么场景；4）伺服系统：了解伺服系统的组成（电机、驱动器、编码器、控制器），理解位置环、速度环、电流环的三环控制结构，对比步进电机和伺服电机的区别；5）思考：在智能制造产线中，PLC和工业机器人是什么关系？谁是主站谁是从站？它们之间怎么通信？为什么机器人需要单独的控制器，而不是直接用PLC控制？",
+          deep_dive: "深入理解运动控制的前沿与AI的结合：运动控制是自动化的核心技术之一，它的发展水平直接决定了制造的精度和效率。运动控制技术的发展趋势：1）总线化：从脉冲控制向总线控制发展（EtherCAT、Profinet IRT、Powerlink），接线更简单、控制精度更高、可支持更多轴；2）集成化：运动控制和PLC功能集成在同一个控制器里，就是PAC（可编程自动化控制器），甚至把安全、视觉、机器人功能都集成进去；3）智能化：加入自整定、自诊断、预测性维护等智能功能；4）高速高精度：随着3C电子、半导体等行业的发展，对运动控制的速度和精度要求越来越高，从毫秒级到微秒级，从微米级到纳米级；5）软件定义运动控制：用软件实现运动控制算法，运行在标准硬件上，更灵活、更易升级。AI和运动控制的结合是一个热点方向：1）基于AI的故障诊断：用振动、电流等数据，通过机器学习算法诊断伺服系统和机械的故障，实现预测性维护；2）参数自整定：用强化学习或其他AI方法，自动整定PID参数和运动控制参数，比传统方法更快更好；3）轨迹优化：用AI优化运动轨迹，在保证精度的前提下缩短运动时间、减小振动；4）顺应控制：在装配、打磨等需要和环境接触的场景，用强化学习学习力控策略，比传统的力控制更智能；5）视觉伺服：用视觉反馈控制机器人运动，AI视觉提供更强大的感知能力。另外，协作机器人（Cobot）是工业机器人的一个重要发展方向——可以和人一起工作，不需要安全围栏，更安全、更灵活，适合中小批量、柔性生产场景。协作机器人通常用拖曳示教、图形化编程，更容易使用。未来的制造一定是「人+机器人+AI」协同工作的——人做决策和复杂操作，机器人做重复性劳动，AI提供智能和洞察。理解运动控制和工业机器人的基本原理，能帮你更好地理解智能制造，也为工业AI找到合适的应用场景。"
+        }, duration: "2.5小时", resources: [{ title: "工业机器人入门", url: "https://www.robotics.org/", required: false, type: "doc", source: "other" }, { title: "运动控制基础", url: "https://www.electronics-tutorials.ws/io/io_1.html", required: false, type: "article", source: "other" }, { title: "伺服系统原理", url: "https://www.yaskawa.com/products/motion-control/servo-drives", required: false, type: "doc", source: "official" }], checkpoint: "能说出至少5种工业机器人类型，理解点位控制和连续轨迹控制的区别" },
+      { day: 15, title: "PLC综合项目：自动生产线模拟",
+        summary: "实现一个模拟自动生产线的PLC程序，综合运用开关量、模拟量、通信、HMI等知识。", content: {
+          objective: "今天你将完成一个PLC综合项目——设计并实现一个模拟自动生产线的控制系统。通过这个项目，你会把前三周学到的PLC编程基础、顺控设计、模拟量处理、PID控制、工业通信、HMI等知识融会贯通。这是检验你PLC学习成果的最好方式。",
+          key_points: [
+            "项目背景：模拟一条简单的自动生产线——上料→检测→加工→分拣→下料，五个工位自动运行",
+            "系统构成：PLC（主控）+ 传感器（检测位置、有无工件）+ 执行器（电机、气缸、指示灯）+ HMI（操作监控）",
+            "控制要求：自动/手动模式、急停和安全、故障报警和处理、生产计数、参数可调",
+            "设计流程：需求分析→IO分配→程序结构设计→顺控图绘制→编程实现→HMI画面→调试",
+            "编程思想：模块化编程、状态机思想、结构化编程，让程序清晰易维护"
+          ],
+          practice: "设计并实现一个模拟自动生产线PLC项目，要求如下：\n\n系统描述：\n一条简易的工件分拣生产线，由五个工位组成：\n1）上料工位：检测到有工件后，传送带启动，把工件送到检测工位\n2）检测工位：检测工件的颜色（或材质/大小），区分出合格品和不合格品\n3）加工工位：对合格品进行加工（钻孔/打磨等模拟操作），不合格品直接流走\n4）分拣工位：根据检测结果，把合格品推到成品槽，不合格品推到废品槽\n5）下料工位：成品收集，计数统计\n\n功能要求（必做）：\n1）IO分配：列出所有的输入和输出点，定义地址和符号名\n2）手动模式：每个动作都可以手动单独操作，用于调试和故障恢复\n3）自动模式：按下启动按钮后，生产线自动连续运行；按下停止按钮，完成当前周期后停止\n4）急停功能：急停按钮按下后，所有动作立即停止，复位后才能重新启动\n5）报警功能：传感器故障、电机过载、气缸超时等异常情况报警，HMI显示报警信息\n6）生产计数：统计总产量、合格品数、不合格品数、合格率\n7）HMI画面：主画面（生产线状态显示）、操作画面（手动操作按钮）、参数设置（调整各工位延时、计数设定）、报警画面、趋势图（如加工温度/压力）\n\n进阶功能（选做）：\n1）传送带速度控制：用变频器+模拟量控制传送带速度，速度可在HMI调整\n2）PID温度控制：加工工位有加热装置，用PID控制温度，温度曲线显示在HMI上\n3）Modbus通信：PLC和上位机用Modbus TCP通信，上位机可以监控和采集数据\n4）仿真验证：用PLC仿真软件或虚拟PLC测试程序，验证功能正确性\n5）触摸屏操作：在真实触摸屏或模拟器上运行HMI画面\n\n项目要求：\n- 完整的IO表和地址分配\n- 结构化的PLC程序（分多个子程序/功能块）\n- 顺控图或状态机描述\n- HMI画面工程\n- 设计文档和说明\n- 可以运行并验证主要功能",
+          deep_dive: "PLC与工业控制的未来——从自动化到智能化：完成这个综合项目后，你应该对PLC编程和工业控制有了扎实的理解。你可能会觉得——PLC编程不就是写逻辑吗？好像没什么技术含量。但实际上，真正的工业控制编程，难点不在语法，而在：1）可靠性：工业环境恶劣（高温、高湿、粉尘、电磁干扰），程序要能7×24小时稳定运行，不出bug；2）安全性：涉及人身安全和设备安全，要有完善的安全回路和故障处理机制；3）可维护性：生产线要运行十几年，程序要让后来的工程师能看懂、能修改、能扩展；4）规范性：大型程序几万步几十万步，没有规范是没法维护的；5）工艺知识：控制逻辑要和生产工艺紧密结合，不懂工艺写不好程序。这就是为什么优秀的自动化工程师很值钱——不仅要懂技术，还要懂工艺、懂现场。工业自动化的发展趋势是什么？1）从单机自动化到整线/整厂自动化：从单台设备的自动化，到整条生产线、整个工厂的自动化，系统越来越大，越来越复杂；2）从自动化到智能化：传统的自动化是「按预先设定的程序重复执行」，而智能化是「能感知、能决策、能学习、能自适应」；3）从封闭到开放：传统的PLC都是封闭系统，各家互不兼容，现在逐渐向开放的、基于标准IT技术的方向发展；4）软件定义制造：硬件标准化，软件定义功能和流程，柔性生产，快速换产；5）IT/OT融合：信息技术和运营技术融合，工业互联网、工业大数据、工业AI。在这个大趋势下，PLC工程师的角色也在变化——从只会写梯形图，到要懂工业网络、懂SCADA/MES、懂数据库、懂数据分析、甚至懂AI。AI不会完全取代PLC，但会给PLC和自动化赋能——让控制更智能、让生产更高效、让设备更可靠。未来的自动化工程师，应该是「传统自动化 + 工业软件 + AI」的复合型人才。希望这次PLC的学习，能为你打开工业自动化和智能制造的大门。"
+        }, duration: "4小时", resources: [{ title: "PLC项目实例", url: "https://www.plcacademy.com/plc-programming-examples/", required: false, type: "article", source: "other" }, { title: "工业自动化入门", url: "https://www.automation.com/", required: false, type: "doc", source: "other" }, { title: "智能制造体系", url: "https://www.i-scoop.eu/industry-4-0/", required: false, type: "doc", source: "other" }], checkpoint: "完成自动生产线的PLC程序设计和HMI画面开发" }
+,
     ]
   },
 
@@ -8957,7 +10496,73 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "软件实现：位置指令处理、运动规划、伺服控制、误差补偿",
           deep_dive: "硬件配置：控制器、伺服驱动器、伺服电机、编码器、导轨丝杠"
-        }, duration: "3小时", resources: [{ title: "定位系统", url: "https://www.motioncontroltips.com/positioning-systems/", required: true, type: "doc", source: "official" }, { title: "数控系统", url: "https://www.fanuc.com/", required: false, type: "doc", source: "official" },   { title: "数控系统开源项目", url: "https://github.com/LinuxCNC/linuxcnc", required: false, type: "repo", source: "github" }], checkpoint: "定位系统能实现精密定位，误差在允许范围内" }
+        }, duration: "3小时", resources: [{ title: "定位系统", url: "https://www.motioncontroltips.com/positioning-systems/", required: true, type: "doc", source: "official" }, { title: "数控系统", url: "https://www.fanuc.com/", required: false, type: "doc", source: "official" },   { title: "数控系统开源项目", url: "https://github.com/LinuxCNC/linuxcnc", required: false, type: "repo", source: "github" }], checkpoint: "定位系统能实现精密定位，误差在允许范围内" },
+      { day: 11, title: "三环控制与伺服调谐",
+        summary: "深入理解伺服系统的三环控制结构，掌握伺服参数调谐的方法。", content: {
+          objective: "今天你将深入学习伺服系统的三环控制结构和参数调谐方法。学完后你能理解电流环、速度环、位置环的作用和关系，掌握伺服参数自整定和手动调谐的方法，知道怎么根据负载情况优化伺服性能。伺服调谐是运动控制工程师的核心技能之一。",
+          key_points: [
+            "三环控制结构：从内到外依次是电流环（最内环，响应最快）、速度环（中间环）、位置环（最外环，响应最慢），内环是外环的基础",
+            "电流环：控制电机的电流（转矩），响应最快，带宽通常最高，是整个伺服系统的基础",
+            "速度环：控制电机的转速，用速度编码器做反馈，速度环的性能决定了系统的抗扰能力",
+            "位置环：控制电机的位置，最外环，决定了定位精度和跟随误差，是最终的控制目标",
+            "伺服调谐：调整各个环的PID参数，使系统既快速响应又不震荡，需要在响应性和稳定性之间权衡"
+          ],
+          practice: "完成以下伺服调谐实践：1）三环理解：画一张伺服系统三环控制的框图，标注清楚每个环的输入、输出、反馈、控制器，说明三个环的关系和各自的作用；思考：为什么要三环？能不能只有位置环？为什么电流环在最里面？2）参数影响分析：分别分析位置环增益、速度环增益、速度环积分时间常数这几个参数，增大或减小会对系统性能有什么影响？（比如：响应速度、超调量、稳定性、稳态误差、跟随误差）3）自整定操作：如果有真实的伺服系统或仿真软件，运行伺服驱动器的自动调谐功能，观察调谐过程，看调谐前后的参数变化和响应曲线变化；4）手动调谐练习：按照「从内到外」的顺序（先调电流环→再速度环→最后位置环），练习手动调整伺服参数，用阶跃响应曲线评估调整效果；5）思考：在实际应用中，什么情况下需要高响应的伺服？什么情况下需要高刚性？什么情况下需要高稳定性？不同的应用场景（如数控机床、贴片机、机械手、传送带）对伺服的要求有什么不同？",
+          deep_dive: "深入理解伺服系统的性能指标与高级控制技术：评价一个伺服系统的好坏，有哪些性能指标呢？1）精度：定位精度、重复定位精度、跟随误差、稳态误差；2）响应速度：频率响应（带宽）、上升时间、调整时间；3）稳定性：相位裕度、增益裕度、不会震荡；4）刚性：抗负载扰动的能力；5）平滑性：速度波动、转矩波动、运行是否平稳。这些指标往往是互相矛盾的——比如响应快了就容易超调、刚性高了就容易震荡，所以调谐的过程就是权衡的过程。除了基本的PID控制，现代伺服驱动器还有很多高级控制算法：1）前馈控制（Feedforward）：速度前馈、加速度前馈，根据指令提前给出控制量，减小跟随误差，高速高精度场合必须；2）摩擦力补偿：补偿机械系统的摩擦力（静摩擦、库仑摩擦、粘性摩擦），减小低速爬行和反向间隙；3）振动抑制：陷波滤波器（Notch Filter）滤除机械谐振频率，避免共振；还有模型跟随控制、扰动观测器（DOB）等；4）自整定（Auto-tuning）：驱动器自动测量负载特性，自动计算最优PID参数；5）自适应控制：控制器参数能根据负载变化自动调整；6）观测器技术：用状态观测器估计速度、扰动、摩擦力等，提高系统性能。在高端应用中，这些高级功能都是必不可少的。比如在高速贴片机中，需要极高的加速度和定位精度，前馈控制、振动抑制、摩擦力补偿都是标配。在AI时代，伺服系统也在变得更智能——1）参数自动整定：用机器学习的方法自动调谐参数，比传统方法更快更准；2）故障诊断与预测性维护：用电机的电流、振动、温度等数据，通过AI算法预测故障，提前维护；3）自适应控制：面对未知的、变化的负载，自动调整控制策略；4）节能优化：根据负载情况自动优化控制算法，降低能耗。伺服系统是运动控制的核心执行机构，它的性能直接决定了整台机器的精度和速度。理解伺服系统的原理，掌握调谐方法，是运动控制工程师的基本功。"
+        }, duration: "2.5小时", resources: [{ title: "伺服系统原理", url: "https://www.analog.com/en/technical-articles/servo-control-system-design-basics.html", required: true, type: "article", source: "other" }, { title: "伺服调谐指南", url: "https://www.yaskawa.com/support/technical-resources/tuning", required: false, type: "doc", source: "official" }, { title: "运动控制技术", url: "https://www.motioncontroltips.com/", required: false, type: "doc", source: "other" }], checkpoint: "能画出伺服三环控制框图，说出每个环的作用和调谐顺序" },
+      { day: 12, title: "多轴运动控制与插补",
+        summary: "掌握多轴协调运动控制的原理，理解直线插补、圆弧插补等插补算法。", content: {
+          objective: "今天你将学习多轴协调运动控制和插补技术。学完后你能理解什么是插补、为什么需要插补，掌握直线插补和圆弧插补的基本原理，了解电子齿轮、电子凸轮等高级运动控制功能，知道运动控制器和PLC的区别。多轴协调是机器人、数控机床、3D打印等设备的核心。",
+          key_points: [
+            "插补定义：在给定的起点和终点之间，实时计算出一系列中间点，让各个轴协调运动，走出预定的轨迹",
+            "直线插补：让多个轴协调运动走出直线轨迹，每个轴的速度按比例分配，同时到达终点",
+            "圆弧插补：让两个轴（通常是X和Y）协调运动走出圆弧轨迹，计算比直线插补复杂",
+            "电子齿轮：从动轴按设定的比例跟随主动轴运动，代替传统的机械齿轮，比例可调、无背隙",
+            "电子凸轮：从动轴按照凸轮曲线跟随主动轴运动，代替传统的机械凸轮，曲线可灵活编程"
+          ],
+          practice: "完成以下多轴运动控制实践：1）直线插补理解：假设一个两轴系统，从点(0,0)运动到点(100,50)，直线插补的话X轴和Y轴各自走多少距离？速度怎么分配？用Python简单模拟一下直线插补的过程，画出轨迹；2）圆弧插补概念：理解圆弧插补的基本原理——为什么不能简单地让X走余弦、Y走正弦？增量式插补（如DDA数字微分分析法）是怎么工作的？3）电子齿轮与电子凸轮：对比机械齿轮和电子齿轮的优缺点，机械凸轮和电子凸轮的优缺点；电子齿轮和电子凸轮分别适合什么应用场景？举几个工业中的实际例子；4）运动控制器调研：了解运动控制器的分类——PLC+运动控制模块、专用运动控制器、PC-based运动控制卡、软运动控制器，对比它们的特点和适用场景，了解主流厂商（倍福、固高、雷赛、PMAC等）；5）思考：数控机床的数控系统（CNC）和普通的PLC有什么区别？为什么需要专用的数控系统？3D打印机的运动控制用的是什么插补？机器人的运动规划和机床的插补有什么异同？",
+          deep_dive: "深入理解CNC与机器人运动控制的异同：CNC（计算机数字控制，就是机床的控制系统）和机器人控制，都是多轴协调运动控制，但它们有很多不同之处：1）坐标系：CNC通常是直角坐标（XYZ+ABC），是笛卡尔空间的直线/圆弧插补；机器人是关节空间的运动，需要正/逆运动学转换，把笛卡尔空间的目标转换成各关节的角度；2）轨迹：CNC的轨迹是预先编程好的G代码，路径是确定的；机器人的运动规划需要考虑避障、奇异点、关节限位等约束，更复杂；3）精度：CNC追求极高的加工精度（微米级甚至纳米级），对跟随误差要求很高；机器人的精度相对低一些（毫米级），但更灵活；4）插补：CNC的插补是核心——直线、圆弧、螺旋线、NURBS曲线插补等；机器人的核心是运动规划——路径规划和轨迹规划。但两者也在融合——现在的高端数控系统也有机器人功能，机器人控制器也支持直线/圆弧插补。运动控制技术的发展方向：1）高速高精度：随着3C电子、半导体等行业的发展，对速度和精度的要求越来越高；2）多轴化：从2轴、3轴到5轴、6轴、甚至几十上百轴，系统越来越复杂；3）软件化：用软件实现运动控制算法，运行在标准的工业PC上，就是软运动控制（SoftMotion），更灵活、更便宜、升级更容易，代表是倍福的TwinCAT；4）集成化：把逻辑控制、运动控制、机器人、视觉、安全都集成在同一个控制器里，也就是PAC（可编程自动化控制器）；5）智能化：加入AI功能，比如自动调谐、故障诊断、预测性维护、轨迹优化。对于AI开发者来说，理解运动控制的基本原理很重要——如果你要做工业AI、机器人、自动驾驶，都和运动控制密切相关。AI可以在高层（路径规划、决策）发挥作用，也可以在底层（参数优化、故障诊断）发挥作用。理解了底层的控制原理，才能设计出更好的AI系统。"
+        }, duration: "2小时", resources: [{ title: "CNC与插补技术", url: "https://www.mmsonline.com/articles/cnc-control-basics", required: false, type: "article", source: "other" }, { title: "运动控制器选型", url: "https://www.motioncontrolonline.org/", required: false, type: "doc", source: "other" }, { title: "电子凸轮原理", url: "https://www.automationdirect.com/motioncontrol/cams", required: false, type: "article", source: "other" }], checkpoint: "能解释直线插补的原理，说出电子齿轮和电子凸轮的应用场景" },
+      { day: 13, title: "步进电机与开环控制",
+        summary: "掌握步进电机的工作原理和驱动方法，理解开环控制的优缺点和适用场景。", content: {
+          objective: "今天你将学习步进电机和开环控制。学完后你能理解步进电机的工作原理和基本特性，掌握步进电机的驱动方法和控制方式，知道开环控制和闭环控制的区别，能根据应用需求选择步进还是伺服。步进电机是低成本运动控制的首选，在3D打印机、小型自动化设备中广泛应用。",
+          key_points: [
+            "步进电机原理：把电脉冲转换成角位移，每来一个脉冲走一步，所以叫步进电机；有永磁式（PM）、反应式（VR）、混合式（HB）三种",
+            "步进电机特性：步距角、保持转矩、转动惯量、矩频特性（转速越高转矩越低）、共振区",
+            "细分驱动：把一步再分成很多小步，提高分辨率、减小振动、运行更平稳，是现在的主流驱动方式",
+            "开环控制：没有位置反馈，发多少脉冲走多少步，简单低成本，但可能丢步，精度有限",
+            "步进vs伺服：步进是开环、便宜、低速大扭矩、有丢步风险；伺服是闭环、贵、高速高精度、不丢步"
+          ],
+          practice: "完成以下步进电机实践：1）步进电机原理理解：用自己的话解释步进电机为什么能一步一步走？什么是步距角？整步、半步、细分有什么区别？细分是怎么提高分辨率的？2）矩频特性：理解步进电机的矩频特性曲线——为什么转速越高转矩越小？什么是牵入转矩和牵出转矩？如果负载转矩超过了电机的转矩会怎么样？3）驱动电路：了解步进电机驱动器的原理——两相四线、两相六线、五线四相的区别；什么是恒流斩波驱动？为什么要恒流？4）丢步与解决：步进电机开环控制最常见的问题就是丢步——什么情况下容易丢步？怎么判断有没有丢步？怎么减少丢步？（加减速、降低速度、增加转矩、换大电机、加编码器做半闭环）5）选型练习：假设你要做一个小型的传送带，负载惯量0.0001 kg·m²，最高转速300rpm，加速时间0.1s，应该选多大转矩的步进电机？（用转动惯量和角加速度估算需要的转矩）思考：3D打印机为什么大量用步进电机而不是伺服？什么情况下必须用伺服？",
+          deep_dive: "深入理解开环控制的边界与步进技术的演进：开环控制是最简单的控制方式——不需要反馈，直接给指令，假设执行机构能准确执行。它的优点是简单、成本低、不会震荡稳定；缺点是精度有限、可能丢步、抗扰能力差。那为什么步进电机这种开环的方案还这么流行？因为在很多场景下，它已经够用了——比如3D打印机、小型数控机床、贴标机、传送带、ATM机、医疗设备等等，这些场合负载不大、速度不高、精度要求不是特别苛刻，用步进电机性价比极高。步进电机技术也在不断发展：1）细分驱动：从整步、半步，到16细分、32细分、256细分，甚至更高，运行越来越平稳；2）高扭矩：新材料和新工艺让步进电机的转矩密度越来越高；3）高速化：改进驱动算法，提高高速性能；4）闭环步进：在步进电机上加编码器，做半闭环或全闭环控制，既有步进的低成本，又有伺服的不丢步，叫「步进伺服」或「闭环步进」，性价比很高；5）一体化步进：把电机、驱动器、编码器、控制器集成在一起，就是一体化步进电机，接线简单、使用方便。在运动控制的选型中，一个重要的问题是：选步进还是选伺服？简单的决策方法：1）如果你的应用是低速、低负载、精度要求不极高、预算有限——选步进，性价比高；2）如果你的应用是高速、高精度、负载变化大、需要高响应——选伺服，虽然贵但性能好；3）如果介于两者之间，可以考虑闭环步进，折中方案。对于AI开发者来说，了解步进电机很有意义——很多DIY项目、小型机器人、教学设备都用步进电机，便宜又容易控制。比如自制3D打印机、自制机械臂、智能小车，步进电机都是很好的选择。用Arduino、树莓派、ESP32就能控制步进电机，几美元就能做运动控制的实验，非常适合学习和原型验证。"
+        }, duration: "2小时", resources: [{ title: "步进电机基础", url: "https://www.electronics-tutorials.ws/io/stepper-motors.html", required: true, type: "article", source: "other" }, { title: "步进电机原理详解", url: "https://www.omc-stepperonline.com/stepper-motor-basics", required: false, type: "doc", source: "other" }, { title: "步进vs伺服", url: "https://www.motioncontroltips.com/stepper-vs-servo-motors-whats-the-difference/", required: false, type: "article", source: "other" }], checkpoint: "能解释步进电机的工作原理，说出步进和伺服的区别和各自适用场景" },
+      { day: 14, title: "现场总线与工业网络安全",
+        summary: "理解工业现场总线和工业网络安全的基本概念，掌握常见的工业网络安全威胁和防护措施。", content: {
+          objective: "今天你将学习工业现场总线和工业网络安全。学完后你能理解工业网络和办公网络的区别，了解工业控制系统中常见的网络安全威胁，掌握纵深防御的基本思想，知道怎么保护工业控制系统的安全。随着IT/OT融合，工业网络安全越来越重要。",
+          key_points: [
+            "工业网络vs办公网络：工业网络强调可用性和实时性，办公网络强调保密性和完整性；工业网络协议多、设备老、更新难",
+            "工业网络安全威胁：勒索软件攻击、数据窃取、设备篡改、供应链攻击、内部威胁、APT攻击",
+            "纵深防御：多层防护——物理安全、网络隔离、访问控制、入侵检测、安全监控、应急响应，不依赖单一防线",
+            "网络隔离：工业网和办公网隔离，用防火墙网闸；工业网内部按区域划分VLAN，限制横向移动",
+            "安全标准：IEC 62443工业控制系统安全标准、等保2.0，是工业网络安全的重要参考"
+          ],
+          practice: "完成以下工业网络安全实践：1）网络架构设计：为一个中型工厂设计工业网络架构——办公区、生产管理区、监控区、控制区、设备区，各个区域之间怎么隔离？用什么设备？哪些区域可以互相访问？哪些不能？画一张网络架构图；2）威胁分析：针对一个自动化生产线，列出可能的网络安全威胁——外部攻击、内部攻击、勒索软件、病毒、数据泄露、设备被控制等等，分别会造成什么后果？怎么防护？3）纵深防御理解：解释「纵深防御」的思想，为什么不能只靠一道防线？列出至少5层不同的防护措施，说明每层的作用；4）案例研究：找一个真实的工业网络安全事件（如震网病毒、勒索软件攻击工厂、乌克兰电网攻击），分析攻击是怎么发生的？造成了什么影响？有什么教训？怎么防范？5）思考：为什么工业控制系统的安全问题比IT系统更难解决？OT设备（PLC、DCS、SCADA）在安全方面有哪些弱点？IT/OT融合给安全带来了什么新的挑战？",
+          deep_dive: "深入理解工业网络安全的现状与防护体系：工业网络安全是一个越来越受重视的领域——过去，工业控制系统（ICS）都是孤立的，和外界物理隔离，所以安全不是大问题；但现在，工业互联网、智能制造、IT/OT融合，越来越多的工业设备连上网了，攻击面大大增加。针对工业控制系统的攻击也越来越多——震网（Stuxnet，2010年，攻击伊朗核设施）、勒索软件攻击医院和工厂、乌克兰电网攻击（2015年，导致大面积停电）等等。工业网络安全和普通IT安全有很大不同：1）目标不同：IT安全关注数据的保密性、完整性、可用性，优先保数据；OT安全优先保生产、保安全、保人身，可用性最重要；2）设备不同：OT设备（PLC、DCS、RTU）很多是十几年前的老设备，运算能力弱，不能装杀毒软件，甚至不能随便重启升级；3）后果不同：IT系统被攻击最多是数据泄露、服务不可用；OT系统被攻击可能导致生产线停机、设备损坏、人员伤亡、环境污染，后果严重得多；4）更新不同：IT系统可以经常打补丁、升级；OT系统一升级就要停产，影响生产，所以很多系统常年不更新。工业网络安全的防护体系通常包括：1）物理安全：控制设备的物理访问，闲人免进；2）网络隔离：最经典的是「气隙」（Air Gap）——物理断开，但现在越来越难了；更多用的是逻辑隔离——防火墙、网闸、VLAN、DMZ区；3）访问控制：身份认证、权限管理、最小权限原则；4）端点防护：工业级杀毒软件、白名单、设备加固；5）监控检测：入侵检测系统（IDS）、安全信息与事件管理（SIEM）、异常检测；6）应急响应：应急预案、事件响应流程、灾难恢复；7）人员培训：人是最大的安全弱点，社会工程学攻击防不胜防。IEC 62443是目前最权威的工业控制系统安全标准，从政策、流程、技术、人员等多个维度定义了安全要求。在工业AI项目中，安全也是一个必须考虑的问题——你的AI系统接入工业网络，会不会引入安全漏洞？数据采集会不会影响生产？这些都是需要和客户的IT和OT团队一起评估的。理解工业网络安全的基本概念，能帮你更好地做工业项目。"
+        }, duration: "2小时", resources: [{ title: "工业控制系统安全", url: "https://www.cisa.gov/ics", required: true, type: "doc", source: "official" }, { title: "IEC 62443标准", url: "https://www.isa.org/standards-and-publications/isa-standards/isa-62443-series", required: false, type: "doc", source: "official" }, { title: "震网病毒分析", url: "https://www.symantec.com/connect/blogs/stuxnet-whats-story", required: false, type: "article", source: "other" }], checkpoint: "能解释工业网络和办公网络的区别，说出至少3种工业网络安全防护措施" },
+      { day: 15, title: "伺服系统综合项目：三轴运动平台控制",
+        summary: "设计并实现一个三轴运动平台的控制系统，综合运用伺服控制、运动控制、PLC编程等知识。", content: {
+          objective: "今天你将完成一个伺服系统综合项目——三轴运动平台控制。通过这个项目，你会把前三周学到的伺服原理、运动控制、PLC编程、HMI等知识融会贯通。三轴平台是很多设备的基础（3D打印机、数控机床、贴片机、检测设备等），理解了三轴控制，就能扩展到更多轴和更复杂的系统。",
+          key_points: [
+            "项目背景：一个XYZ三轴直角坐标运动平台，用于点胶、检测、搬运等应用",
+            "系统组成：三个伺服轴（X/Y/Z）+ 运动控制器/PLC + HMI + 传感器（限位、回零、到位）",
+            "核心功能：点到点运动、直线插补、相对/绝对定位、回零、手动操作、自动运行、参数设置",
+            "性能要求：定位精度、重复定位精度、最大速度、加速度、平稳性",
+            "调试流程：单轴调试→两轴联调→三轴联调→性能优化→可靠性测试"
+          ],
+          practice: "设计并实现一个三轴运动平台控制系统，要求如下：\n\n系统描述：\n一个XYZ三轴龙门式运动平台，每个轴由伺服电机+滚珠丝杠驱动，行程各300mm。平台需要支持手动调试和自动运行两种模式，用于点胶或检测场景。\n\n功能要求（必做）：\n1）IO与地址分配：列出所有输入输出点——3轴的伺服使能、报警清除、到位信号、正限位、负限位、原点、急停、启动、停止、复位等；\n2）单轴运动：每个轴都可以独立手动点动（JOG），速度可调，有软限位保护；\n3）回零功能：每个轴可以执行回零操作（回原点），支持不同的回零模式（找原点开关+找编码器零位）；\n4）定位运动：支持绝对定位和相对定位，可以指定目标位置、速度、加速度；\n5）直线插补：支持三轴直线插补，走出空间直线轨迹，速度连续可调；\n6）程序编辑与运行：可以编写简单的运动程序（如移动到A点→延时→移动到B点→...），自动循环执行；\n7）HMI界面：a）手动操作界面（点动、回零、速度设置）；b）位置显示（三个轴的实时位置）；c）参数设置（加速度、减速度、软限位、回零速度等）；d）报警显示（伺服报警、限位报警、超差报警）。\n\n进阶功能（选做）：\n1）圆弧插补：支持XY平面的圆弧插补运动；\n2）电子齿轮：让Z轴跟随X轴做电子齿轮运动，比例可调；\n3）性能优化：调整伺服参数（PID增益、前馈、滤波器），优化跟随误差和定位时间；\n4）视觉定位：配合工业相机，实现视觉定位+运动补偿（示意即可）；\n5）仿真验证：用运动控制仿真软件或PLC仿真，验证程序逻辑和运动轨迹。\n\n项目要求：\n- 系统方案设计（硬件选型、系统架构）\n- IO表和地址分配\n- PLC/运动控制器程序（结构化编程）\n- HMI画面设计\n- 参数调试与优化方案\n- 设计文档和使用说明\n\n完成后，思考一下：如果要把这个三轴平台改成四轴（加一个旋转轴）或六轴机器人，控制方案要做哪些改变？",
+          deep_dive: "伺服与运动控制的未来——从自动化到自主化：完成这个综合项目后，你应该对伺服系统和运动控制有了比较全面的理解。运动控制是一个非常成熟但也在不断发展的领域——从最早的液压、气动，到直流电机、步进电机，再到交流伺服、直线电机，从模拟控制到数字控制，从单轴到多轴协调，从开环到闭环，性能在不断提升，成本在不断下降。运动控制的发展趋势有几个：1）高速高精度：这是永恒的追求——电子制造（半导体、3C）需要微米甚至纳米级的精度，加速度几十个g；2）软件定义运动：从专用硬件到软件实现，运行在标准工业PC上，更灵活、更便宜、更容易升级，倍福是这一趋势的代表；3）集成化：逻辑、运动、机器人、视觉、安全，全部集成在一个控制器里，一个软件搞定；4）智能化：加入AI，自动调谐、自动诊断、预测性维护、自适应控制；5）网络化：从脉冲控制到总线控制，从现场总线到工业以太网，再到TSN时间敏感网络，更高速、更确定、更远距离。运动控制和AI的结合是一个很有前景的方向：1）基于视觉的伺服控制：用视觉做闭环，提高精度和灵活性；2）智能参数整定：用强化学习等方法自动优化控制参数；3）预测性维护：通过电流、振动、温度等数据预测故障；4）力控和柔顺控制：在装配、打磨等接触操作中，用学习的方法优化力控策略；5）运动规划：用AI方法做更智能的轨迹规划，避障、节能、时间最优。未来的运动控制系统，会从「执行指令的工具」变成「有一定智能的自主系统」——不仅能精确执行指令，还能感知环境、自主决策、自适应变化。这就是从自动化（Automation）到自主化（Autonomy）的演进。对于AI开发者来说，理解运动控制的底层原理，能让你更好地把AI和物理世界结合起来——毕竟AI不能只停留在屏幕里，最终要驱动机器、改变物理世界。运动控制就是连接AI和物理世界的「肌肉」和「四肢」。"
+        }, duration: "4小时", resources: [{ title: "三轴运动平台设计", url: "https://www.machinedesign.com/mechanical-motion-systems/article/21830886/basics-of-linear-motion-systems", required: false, type: "article", source: "other" }, { title: "运动控制应用案例", url: "https://www.controleng.com/motion-control/", required: false, type: "doc", source: "other" }, { title: "工业机器人与运动控制", url: "https://www.robotics.org/motion-control.cfm", required: false, type: "doc", source: "other" }], checkpoint: "完成三轴运动平台的控制方案设计和程序框架" }
+
     ]
   },
 
@@ -9180,7 +10785,73 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "设计一个小型家庭屋顶光伏发电系统，要求如下：\n\n项目背景：\n一个家庭，月平均用电量300度，屋顶可用面积约30平方米，当地年均等效利用小时数约1100小时。设计一个并网型光伏发电系统，自发自用，余电上网。\n\n设计内容（必做）：\n1）容量设计：\n   a）根据用电量和屋顶面积，估算系统容量（多少kWp）；\n   b）计算年发电量和自发自用比例；\n   c）估算投资回报周期（上网电价、补贴、节省电费）。\n\n2）设备选型：\n   a）光伏组件：选择组件类型（单晶/多晶）、功率、数量、串并联方式；\n   b）逆变器：选择并网逆变器，确定功率、MPPT路数、效率、通信功能；\n   c）其他设备：汇流箱、直流断路器、交流断路器、防雷器、电表、线缆。\n\n3）电气设计：\n   a）画出系统电气主接线图（直流侧+交流侧）；\n   b）计算直流侧和交流侧的线缆截面积（考虑载流量和压降）；\n   c）设计防雷接地系统（组件、逆变器、配电箱都要接地）；\n   d）列出保护配置（过流、过压、漏电、孤岛、反孤岛等）。\n\n4）安全规范：\n   a）说明需要遵守哪些电气安全规范；\n   b）列出施工和运维中的安全注意事项；\n   c）设计消防和应急方案。\n\n进阶内容（选做）：\n1）储能系统：增加储能电池，设计光储一体化系统（光伏发电+电池储能+逆变器），实现峰谷套利、断电备用；\n2）MPPT算法：用Python模拟一下光伏电池的输出特性，实现扰动观察法或电导增量法MPPT算法，看跟踪效果；\n3）经济性分析：详细的投资回报分析——初装成本、年发电量、节省电费、卖电收益、补贴、维护成本、投资回收期、IRR；\n4）监控系统：设计一个监控系统，实时监测发电量、用电量、电池SOC（如果有储能），可以用手机APP查看；\n5）仿真验证：用PSpice或Simulink或Python仿真一下光伏系统的工作过程。\n\n项目要求：\n- 完整的设计方案文档\n- 电气主接线图\n- 设备清单和选型依据\n- 经济性分析\n- 安全说明\n\n完成后，思考一下：光伏发电为什么需要MPPT？并网逆变器为什么要有孤岛保护？什么是虚拟电厂？它和分布式光伏有什么关系？",
           deep_dive: "新能源革命与AI的机遇：光伏发电、风电这些新能源，正在深刻改变电力系统和能源行业。双碳目标（碳达峰、碳中和）已经成为全球共识，新能源是实现双碳的核心路径。让我们看看新能源带来的机遇和挑战：1）能源结构转型：从化石能源（煤、油、气）向可再生能源（风、光、水、生物质）转型，这是能源领域的一场革命。预计到2050年，全球80%以上的电力将来自可再生能源；2）从集中式到分布式：传统电力系统是大电厂、大电网、集中式的；未来的电力系统会有大量的分布式光伏、分布式储能、电动汽车，是「集中式+分布式」结合的，配电网从被动变成主动；3）电力电子的角色：新能源发电（光伏是直流、风电是变频交流）都需要电力电子变流器接入电网。电力电子是新能源的「接口」技术，也是新型电力系统的核心支撑技术。一个新型电力系统里，电力电子装置的占比会越来越高；4）储能的重要性：新能源不稳定（晚上没有太阳、风时大时小），需要储能来「削峰填谷」，把多余的电存起来，需要的时候再放出来。电化学储能（锂电池、钠电池等）、抽水蓄能、压缩空气、飞轮、氢储能，各种储能技术都在快速发展；5）虚拟电厂（VPP）：把分散的分布式光伏、储能、电动汽车、可调负荷聚合起来，当作一个虚拟的电厂来调度，参与电力市场和电网调节。这是分布式能源的高级形态；6）AI+能源：AI在能源领域有非常多的应用——新能源功率预测（预测明天发多少电）、智能调度（优化电网运行）、负荷预测（预测用户用多少电）、设备故障诊断与预测性维护、虚拟电厂优化调度、需求响应、电力市场交易优化等等。能源+AI是一个非常大的赛道，也是AI落地的重要场景。完成这个光伏项目后，希望你不仅学到了电力知识，更能看到新能源革命这个大趋势——能源行业正在经历百年未有之大变局，而AI将在其中扮演关键角色。对于AI从业者来说，这是巨大的机遇。"
+        }, duration: "4小时", resources: [{ title: "光伏发电系统设计", url: "https://www.energy.gov/eere/solar/solar-technologies-office", required: false, type: "doc", source: "official" }, { title: "并网逆变器原理", url: "https://www.sma.de/en/products/solar-inverters.html", required: false, type: "doc", source: "official" }, { title: "分布式光伏与虚拟电厂", url: "https://www.greentechmedia.com/articles/read/what-is-a-virtual-power-plant", required: false, type: "article", source: "other" }], checkpoint: "完成小型光伏发电系统的方案设计，包括容量计算、设备选型、电气设计" },
+      { day: 11, title: "电力系统故障与保护",
+        summary: "理解电力系统常见故障类型，掌握继电保护的基本原理和保护装置的作用。", content: {
+          objective: "今天你将学习电力系统故障和继电保护。学完后你能理解电力系统常见的故障类型（短路、断线等）和危害，掌握继电保护的基本原理和「四性」要求，了解常见的保护类型（过流保护、速断保护、差动保护等）。继电保护是电力系统安全的第一道防线。",
+          key_points: [
+            "故障类型：对称故障（三相短路）、不对称故障（单相接地、两相短路、两相接地），单相接地最常见，三相短路最严重",
+            "故障危害：短路电流巨大（几十倍额定电流），烧毁设备、引起电弧、电压骤降、系统振荡、甚至大面积停电",
+            "继电保护四性：选择性（该跳的跳不该跳的不跳）、速动性（尽快切除故障）、灵敏性（对故障反应灵敏）、可靠性（该动作时不误动、不该动时不拒动）",
+            "保护类型：过电流保护、电流速断保护、限时电流速断（三段式电流保护）、距离保护、差动保护、零序保护",
+            "保护装置：电磁式继电器→晶体管式→微机保护，现在主流是微机保护（MCU+DSP），功能强、性能好、灵活"
+          ],
+          practice: "完成以下电力系统保护实践：1）故障类型分析：列出电力系统中常见的故障类型——短路故障（三相、两相、单相接地、两相接地）、断线故障、其他异常运行状态（过负荷、过电压、低频率等），分别说明它们的特点、危害、发生概率；2）继电保护四性：用自己的话解释继电保护的「四性」——选择性、速动性、灵敏性、可靠性；思考：这四性之间有没有矛盾？比如速动性和选择性，灵敏性和可靠性，矛盾的时候怎么权衡？3）三段式电流保护：理解什么是三段式电流保护——I段（电流速断，无时限，保护线路首端）、II段（限时电流速断，带短延时，保护全长）、III段（定时限过流，带长延时，作后备）；为什么需要三段？一段不行吗？4）差动保护：什么是差动保护？它的原理是什么（基尔霍夫电流定律）？为什么差动保护灵敏度高、动作快？它用在什么地方（变压器、发电机、母线、大型电机）？5）接地保护：中性点接地方式有哪几种？大电流接地系统和小电流接地系统有什么区别？单相接地故障时它们的表现有什么不同？6）思考：为什么电力系统需要继电保护？能不能只靠断路器和熔断器？继电保护和断路器是什么关系？",
+          deep_dive: "深入理解继电保护的进阶技术与智能电网：继电保护是电力系统最重要的安全屏障——没有保护，电力系统根本无法安全运行。让我们了解一些进阶的保护技术和发展趋势：1）主保护与后备保护：主保护是快速切除故障的第一梯队（比如差动保护、距离保护I段）；后备保护是主保护拒动或断路器拒动时的第二道防线（比如远后备、近后备）。两者配合，保证任何情况下故障都能被切除；2）自动重合闸：输电线路的故障很多是瞬时性的（雷击、鸟害、风偏），跳开后再合一下就好了。所以有了自动重合闸装置——跳闸后自动合上，大部分情况下都能成功，大大提高了供电可靠性。重合闸有单相重合闸、三相重合闸、综合重合闸等方式；3）微机保护：现在的保护装置都是微机保护了——用MCU/DSP做核心，采样电流电压，用算法计算判断故障，输出跳闸信号。比起传统的电磁式继电器，微机保护功能强得多——一套装置可以做多种保护、有故障录波、有通信接口、可以远程监控和整定；4）数字化变电站/智能变电站：这是继电保护的发展方向——用电子式互感器（代替传统的电磁式CT/PT）、用智能断路器（带智能单元）、用光纤以太网传递采样值和跳闸信号（IEC 61850标准），整个变电站全数字化，没有那么多电缆了，安装调试更方便，可靠性更高；5）人工智能在保护中的应用：传统保护是基于固定的整定值和判据，AI可以做更智能的保护——比如用机器学习识别故障类型、用神经网络做故障测距、用专家系统做保护整定。AI在电力系统故障诊断、状态评估、预测维护方面也有很大应用空间。电力系统是最复杂的人造系统之一，它关系到国计民生。继电保护虽然不是热门领域，但它是电力系统安全稳定运行的基石。对于做能源AI、电力AI的同学来说，理解继电保护的基本概念是很有必要的。"
+        }, duration: "2小时", resources: [{ title: "继电保护基础", url: "https://www.electrical4u.com/protective-relay-and-relay-protection/", required: true, type: "article", source: "other" }, { title: "三段式电流保护", url: "https://electrical-engineering-portal.com/overcurrent-protection-phase-faults", required: false, type: "article", source: "other" }, { title: "微机保护原理", url: "https://www.selinc.com/Products/Protective-Relays/", required: false, type: "doc", source: "official" }], checkpoint: "能说清继电保护的四性要求，说出至少3种保护类型和它们的作用" },
+      { day: 12, title: "高低压电器与开关柜",
+        summary: "掌握常用高低压电器的工作原理和用途，了解开关柜的构成和选型。", content: {
+          objective: "今天你将学习高低压电器和开关柜。学完后你能理解断路器、隔离开关、熔断器、接触器、继电器等常用电器的工作原理和用途，了解高低压开关柜的基本构成和类型，知道电气一次系统的基本组成。这些是配电工程的基础知识。",
+          key_points: [
+            "高压电器：断路器（灭弧，切断负荷和短路电流）、隔离开关（隔离电源，不能带负荷拉合）、负荷开关（能带负荷但不能切短路）、熔断器、互感器（CT/PT）",
+            "低压电器：断路器（空气开关）、接触器、热继电器、熔断器、按钮、指示灯、转换开关、中间继电器",
+            "开关柜（高压）：把断路器、隔离开关、互感器、保护装置等都装在柜子里，成套设备，安全可靠，安装方便；有KYN、XGN等型号",
+            "配电柜（低压）：低压进线柜、出线柜、电容补偿柜、计量柜，把低压的开关、仪表、保护都装在柜子里",
+            "一次系统：从电源到负载的主电路，传输电能；二次系统：控制、测量、保护、信号回路，是「控制系统」"
+          ],
+          practice: "完成以下高低压电器实践：1）高压电器对比：制作一张对比表，对比高压断路器、隔离开关、负荷开关、熔断器的区别——能不能带负荷操作？能不能切断短路电流？主要作用是什么？常用什么型号？2）断路器灭弧：为什么切断电路时会产生电弧？电弧有什么危害？断路器是怎么灭弧的？了解几种灭弧方式——油灭弧、真空灭弧、SF6灭弧、空气灭弧，它们的特点和适用场合；3）低压电器识别：认识以下低压电器并了解它们的作用——塑壳断路器（MCCB）、微型断路器（MCB）、交流接触器、热继电器、中间继电器、时间继电器、电流互感器、电压互感器、浪涌保护器（SPD）；4）电机启动回路：画出一个最基本的三相异步电机启动控制回路——主回路（断路器+接触器+热继电器+电机）和控制回路（按钮+接触器线圈+辅助触点），说明工作原理（启停、自锁、过载保护）；5）开关柜认识：了解高压开关柜的基本结构——母线室、断路器室、电缆室、继电器仪表室；什么是「五防」？（防误分误合断路器、防带负荷拉合隔离开关、防带电挂地线、防带地线合闸、防误入带电间隔）6）思考：为什么高压开关柜里既要装断路器又要装隔离开关？只用一个不行吗？停电送电的操作顺序是什么？为什么要有这个顺序？",
+          deep_dive: "深入理解电气成套设备与配电系统：高低压开关柜、配电柜这些「成套设备」，看起来好像就是把各种电器装在铁柜子里，但实际上是电气工程中非常重要的一个行业。让我们深入了解一下：1）一次设备和二次设备：电力系统中的设备分为一次设备和二次设备。一次设备（主设备）：直接参与电能的生产、输送、分配和使用的设备，比如发电机、变压器、断路器、母线、电缆、电动机、电容器等，它们的特点是电压高、电流大、功率大。二次设备：对一次设备进行监测、控制、调节、保护的辅助设备，比如测量仪表、继电器、保护装置、监控系统、直流电源等，它们的特点是电压低、电流小、功率小。二次设备是电力系统的「神经系统」和「大脑」；2）电气主接线：表示电能从电源到负载的传递路径，是发电厂/变电站/配电房的核心设计。常见的主接线形式：单母线、单母线分段、双母线、桥形接线、一个半断路器接线（3/2接线）等。不同的接线形式，可靠性、灵活性、成本都不一样，要根据重要性和预算选择；3）成套设备行业：生产高低压开关柜、配电柜的行业叫电气成套设备行业，是电气行业里很大的一块。国际知名厂商有ABB、西门子、施耐德（这三家被称为电气三巨头），国内有正泰、德力西、良信、大全、森源等。现在国内厂商在中低端市场已经很强了，高端市场也在逐步突破；4）智能开关柜：传统开关柜正在向智能化发展——加入在线监测（温度监测、局部放电监测、断路器状态监测）、加入通信接口（可以远程监控）、加入智能保护、加入物联网功能。这也是智能电网和工业互联网在配电侧的落地；5）配电自动化：配电网也在自动化——FTU（馈线终端）、DTU（配电终端）、TTU（配变终端），加上通信网络，实现配电网的远程监控、故障定位、自动隔离、自动恢复供电，大大提高供电可靠性。对于做工业AI、能源AI的同学来说，了解配电系统和电气设备是很有用的——很多AI应用都是要落地到具体的工业场景中的，而电是所有工业的基础。"
+        }, duration: "2小时", resources: [{ title: "高压电器基础", url: "https://www.electrical4u.com/electrical-equipment/", required: true, type: "article", source: "other" }, { title: "低压电器选型指南", url: "https://www.se.com/ww/en/work/products/low-voltage/", required: false, type: "doc", source: "official" }, { title: "开关柜五防", url: "https://electrical-engineering-portal.com/5-prevention-interlocking-switchgear", required: false, type: "article", source: "other" }], checkpoint: "能区分断路器、隔离开关、接触器的不同用途，说出开关柜五防的内容" },
+      { day: 13, title: "变压器与供配电系统",
+        summary: "掌握变压器的工作原理和运行特性，了解供配电系统的基本构成和电压等级。", content: {
+          objective: "今天你将学习变压器和供配电系统。学完后你能理解变压器的工作原理和作用，掌握变压器的主要参数和运行特性，了解电力系统的电压等级和供配电系统的基本构成。变压器是电力系统中最重要的设备之一。",
+          key_points: [
+            "变压器原理：基于电磁感应（互感），变换交流电压，不改变频率和功率；升压/降压/隔离，传输电能时用高压减小电流降低损耗",
+            "变压器结构：铁芯（磁路）+ 绕组（电路），还有油箱、绝缘、冷却系统、调压装置、保护装置等",
+            "主要参数：额定容量（kVA）、额定电压（一次/二次）、额定电流、变比、短路阻抗、空载损耗、负载损耗、接线组别",
+            "电压等级：我国电力系统电压等级——输电（1000kV/750kV/500kV/220kV/110kV/35kV）、配电（10kV/6kV/0.4kV），用户侧一般是380/220V",
+            "供配电系统：从电网受电→高压配电→变压器降压→低压配电→用电设备；由高压配电室、变压器、低压配电室、线路组成"
+          ],
+          practice: "完成以下变压器与供配电实践：1）变压器原理理解：用电磁感应和互感的原理解释变压器为什么能变压？为什么只能变交流不能变直流？理想变压器的电压比、电流比、匝数比是什么关系？（U1/U2=N1/N2，I1/I2=N2/N1）2）变压器损耗：变压器的损耗有哪几种？空载损耗（铁损，和负载无关，和电压频率有关）、负载损耗（铜损，和负载电流平方成正比）、附加损耗；什么是变压器的效率？什么负载率下效率最高？3）变压器连接组别：什么是Dyn11？什么是Yyn0？它们有什么区别？（D是三角形，y是星形，n是中性线，数字是时钟表示法的相位差）4）供配电系统结构：画一个典型的工厂供配电系统框图——10kV进线→高压配电柜→变压器→低压配电柜→各车间配电箱→用电设备；标注各个部分的电压等级和主要设备；5）负荷计算：怎么计算一个工厂或建筑的总用电负荷？需要系数法、利用系数法、单位面积法等等，为什么不能把所有设备功率直接加起来？（因为同时系数、负载率、功率因数）6）思考：为什么电力系统要用高压输电？电压越高越好吗？超高压输电有什么问题？为什么居民用电是220/380V而不是更高或更低？",
+          deep_dive: "深入理解电力系统全貌与新型电力系统：变压器是电力系统的核心设备之一——没有变压器，就没有现代电力系统。因为发电厂发出的电是中低压的，要远距离输送必须升高电压（减小电流降低线路损耗），到了用户侧又要降低电压（安全、方便使用）。一个电力系统中，变压器的总容量通常是发电机总容量的5-8倍。让我们从更高的视角看看整个电力系统：1）发电侧：把其他形式的能量转换成电能——火电（煤/气）、水电、核电、风电、光伏、生物质等等。传统的火电是主力，现在新能源（风光）发展很快，占比越来越高；2）输电侧：把电能从发电厂送到负荷中心，用高压/超高压/特高压交流或直流输电。输电网络是电力系统的「高速公路」；3）变电侧：变电站，把电压从高变低（或者反过来），是输电和配电的连接点；4）配电侧：把电能分配给各个用户，分高压配电（10kV/35kV）和低压配电（380/220V）；5）用电侧：各种用电设备——工业用电、居民用电、商业用电、农业用电等等。整个电力系统是一个实时平衡的系统——发多少电就得用多少电，电能不能大规模储存（现在的储能还不够），所以需要实时调度，保持供需平衡。这也是电力系统最难的地方之一。现在，电力系统正在经历一场深刻的变革——从传统的「源随荷动」（发电跟着负荷变）到「新型电力系统」（高比例新能源、高比例电力电子、高比例电动汽车、低惯性）。新型电力系统带来了很多新的挑战：1）新能源的间歇性和随机性（风什么时候吹、太阳什么时候照，不是人能控制的），给电网调度带来很大挑战；2）电力电子设备大量接入，系统惯量降低，稳定性问题更突出；3）分布式光伏、储能、电动汽车大量接入，配电网从单向变成双向潮流，运行更复杂。这些挑战也给AI带来了很多用武之地——新能源功率预测、智能调度、虚拟电厂、需求响应、故障诊断、设备健康管理等等。能源行业是AI的重要应用场景，也是一个大有可为的领域。"
+        }, duration: "2小时", resources: [{ title: "变压器工作原理", url: "https://www.electronics-tutorials.ws/transformer/transformer-basics.html", required: true, type: "article", source: "other" }, { title: "供配电系统基础", url: "https://www.electrical-engineering-portal.com/power-distribution-system", required: false, type: "article", source: "other" }, { title: "电力系统入门", url: "https://www.eia.gov/energyexplained/electricity/", required: false, type: "doc", source: "other" }], checkpoint: "能解释变压器的工作原理，画出典型的供配电系统结构图" },
+      { day: 14, title: "电气安全与接地防雷",
+        summary: "掌握电气安全的基本知识，理解接地、接零、防雷的原理和方法。", content: {
+          objective: "今天你将学习电气安全和接地防雷。学完后你能理解触电的危害和安全电压，掌握接地和接零的原理及区别，了解防雷的基本方法和措施，知道基本的电气安全规范。电气安全是电气工作的第一课，生命至上，安全第一。",
+          key_points: [
+            "触电危害：电流通过人体造成伤害，分电击（电流通过人体内部，最危险）和电伤（电弧烧伤等）；伤害程度和电流大小、持续时间、路径、电流种类有关",
+            "安全电压：不致使人直接致死或致残的电压，我国规定36V、24V、12V三个等级，干燥环境36V，潮湿环境要更低",
+            "接地保护（TT/IT系统）：把设备金属外壳接大地，设备漏电时外壳电压被限制在安全值，通过接地电流让保护动作",
+            "接零保护（TN系统）：把设备金属外壳接零线（中性线），设备漏电时形成单相短路，大电流让保护装置（断路器/熔断器）快速动作跳闸",
+            "防雷措施：接闪器（避雷针/避雷带/避雷网，引雷）→引下线（传导入地）→接地装置（散流）；还有避雷器（过电压保护）"
+          ],
+          practice: "完成以下电气安全实践：1）触电急救：什么是触电急救的第一步？（迅速脱离电源）怎么脱离电源？（拉闸、拔插头、用绝缘物挑开电线）脱离电源后怎么急救？（心肺复苏CPR、人工呼吸）记住：急救的黄金时间只有几分钟；2）三种接地系统：了解三种低压配电系统的接地型式——TN系统（接零，又分TN-S、TN-C、TN-C-S）、TT系统（接地）、IT系统（不接地/高阻接地）；分别画图说明它们的原理，对比优缺点和适用场合；3）漏电保护：什么是剩余电流动作保护器（漏电保护器，RCD/漏电开关）？它的工作原理是什么？（检测火线和零线的电流差，差到一定值就跳闸）为什么家里必须装漏电保护器？漏电保护器和断路器有什么区别？4）接地电阻：什么是接地电阻？它的大小有什么影响？为什么接地电阻越小越好？一般要求多少欧姆？（防雷接地≤10Ω，保护接地≤4Ω，等等）怎么测量接地电阻？5）防雷常识：雷电有哪些危害？（直击雷、感应雷、雷电波侵入）建筑物怎么防雷？外部防雷（接闪器+引下线+接地）和内部防雷（避雷器、等电位连接、屏蔽）分别防什么？6）思考：为什么有些设备用接地保护，有些用接零保护？两者能不能混用？为什么？在什么情况下必须用漏电保护器？",
+          deep_dive: "深入理解电气安全规范与工程实践：电气安全是电气工作的头等大事——每年都有很多触电伤亡的事故，很多都是因为不了解安全知识、违章操作。所以，做任何电气相关的工作，安全永远是第一位的。让我们了解一些重要的安全规范和实践：1）电工安全操作规程：从事电气工作必须遵守的规范——比如停电、验电、挂牌、上锁（LOTO，Lockout-Tagout，上锁挂牌，这是工业安全非常重要的制度）、装设接地线、有人监护，等等。这些规程都是用生命的代价换来的，必须严格遵守；2）等电位联结：把建筑物内所有的金属物体（水管、燃气管、暖气管道、建筑物钢筋、设备外壳等等）都用导体连在一起，让它们的电位相等。这样即使发生漏电或雷击，也不会出现电位差伤人，是非常重要的安全措施。卫生间的等电位联结更是强制要求；3）剩余电流保护（漏电保护）分级：总保护、中级保护、末端保护，多级配合，既保证安全又尽量不扩大停电范围；4）电弧故障保护（AFCI）：传统的断路器只能检测过流和短路，但是有些故障（比如电线老化、接触不良）会产生电弧，电流不一定大，但很容易引起火灾。电弧故障断路器能检测到危险的电弧并跳闸，预防电气火灾。在欧美已经应用很多年了，国内也开始重视；5）电气火灾预防：电气火灾是火灾的主要原因之一。预防措施包括：正确选型、规范施工、定期检测、过载保护、短路保护、漏电保护、电弧故障保护、温度监测等等。现在还有用红外热成像、在线测温、物联网等技术做电气火灾预警的；6）安全文化：安全不仅是技术问题，更是管理问题、文化问题。建立安全制度、培训安全意识、养成安全习惯，比什么都重要。对于AI工程师来说，虽然你可能不是专业电工，但只要接触硬件、做实验、调设备，就一定会和电打交道。掌握基本的电气安全知识，不仅是职业需要，更是对自己的生命安全负责。永远记住：安全第一，预防为主。"
+        }, duration: "2小时", resources: [{ title: "电气安全基础", url: "https://www.osha.gov/electrical-safety", required: true, type: "doc", source: "official" }, { title: "接地系统详解", url: "https://www.electrical-engineering-portal.com/earthing-systems-tn-tt-it", required: false, type: "article", source: "other" }, { title: "防雷技术入门", url: "https://www.lightningprotection.com/lightning-protection-basics/", required: false, type: "article", source: "other" }], checkpoint: "能解释接地和接零的区别，说出至少5条电气安全注意事项" },
+      { day: 15, title: "电力系统综合项目：小型光伏发电系统设计",
+        summary: "设计一个小型屋顶光伏发电系统，综合运用电力系统、电力电子、电气安全等知识。", content: {
+          objective: "今天你将完成一个电力系统综合项目——小型屋顶光伏发电系统设计。通过这个项目，你会把前三周学到的电路、电机、电力系统、电气安全、电力电子等知识融会贯通。光伏发电是新能源的重要组成部分，也是实现双碳目标的关键技术。",
+          key_points: [
+            "系统组成：光伏组件（太阳能电池板，发直流电）→ 逆变器（直流变交流，并网）→ 并网柜 → 用户负载 → 电网",
+            "核心设备：光伏组件（晶硅/薄膜，转换效率、功率、电压电流参数）、并网逆变器（MPPT最大功率点跟踪、孤岛保护、并网功能）、汇流箱、直流柜、交流柜、计量表",
+            "设计要点：容量估算（用电量、屋顶面积、当地辐照量）、组件选型与排布、逆变器选型、线缆选型、防雷接地、并网要求",
+            "MPPT原理：最大功率点跟踪，光伏电池的输出特性是非线性的，和光照温度都有关系，MPPT算法实时找到最大功率点，提高发电效率",
+            "并网要求：和电网同频同相、电能质量达标（谐波、电压偏差）、防孤岛效应、有完善的保护装置"
+          ],
+          practice: "设计一个小型家庭屋顶光伏发电系统，要求如下：\n\n项目背景：\n一个家庭，月平均用电量300度，屋顶可用面积约30平方米，当地年均等效利用小时数约1100小时。设计一个并网型光伏发电系统，自发自用，余电上网。\n\n设计内容（必做）：\n1）容量设计：\n   a）根据用电量和屋顶面积，估算系统容量（多少kWp）；\n   b）计算年发电量和自发自用比例；\n   c）估算投资回报周期（上网电价、补贴、节省电费）。\n\n2）设备选型：\n   a）光伏组件：选择组件类型（单晶/多晶）、功率、数量、串并联方式；\n   b）逆变器：选择并网逆变器，确定功率、MPPT路数、效率、通信功能；\n   c）其他设备：汇流箱、直流断路器、交流断路器、防雷器、电表、线缆。\n\n3）电气设计：\n   a）画出系统电气主接线图（直流侧+交流侧）；\n   b）计算直流侧和交流侧的线缆截面积（考虑载流量和压降）；\n   c）设计防雷接地系统（组件、逆变器、配电箱都要接地）；\n   d）列出保护配置（过流、过压、漏电、孤岛、反孤岛等）。\n\n4）安全规范：\n   a）说明需要遵守哪些电气安全规范；\n   b）列出施工和运维中的安全注意事项；\n   c）设计消防和应急方案。\n\n进阶内容（选做）：\n1）储能系统：增加储能电池，设计光储一体化系统（光伏发电+电池储能+逆变器），实现峰谷套利、断电备用；\n2）MPPT算法：用Python模拟一下光伏电池的输出特性，实现扰动观察法或电导增量法MPPT算法，看跟踪效果；\n3）经济性分析：详细的投资回报分析——初装成本、年发电量、节省电费、卖电收益、补贴、维护成本、投资回收期、IRR；\n4）监控系统：设计一个监控系统，实时监测发电量、用电量、电池SOC（如果有储能），可以用手机APP查看；\n5）仿真验证：用PSpice或Simulink或Python仿真一下光伏系统的工作过程。\n\n项目要求：\n- 完整的设计方案文档\n- 电气主接线图\n- 设备清单和选型依据\n- 经济性分析\n- 安全说明\n\n完成后，思考一下：光伏发电为什么需要MPPT？并网逆变器为什么要有孤岛保护？什么是虚拟电厂？它和分布式光伏有什么关系？",
+          deep_dive: "新能源革命与AI的机遇：光伏发电、风电这些新能源，正在深刻改变电力系统和能源行业。双碳目标（碳达峰、碳中和）已经成为全球共识，新能源是实现双碳的核心路径。让我们看看新能源带来的机遇和挑战：1）能源结构转型：从化石能源（煤、油、气）向可再生能源（风、光、水、生物质）转型，这是能源领域的一场革命。预计到2050年，全球80%以上的电力将来自可再生能源；2）从集中式到分布式：传统电力系统是大电厂、大电网、集中式的；未来的电力系统会有大量的分布式光伏、分布式储能、电动汽车，是「集中式+分布式」结合的，配电网从被动变成主动；3）电力电子的角色：新能源发电（光伏是直流、风电是变频交流）都需要电力电子变流器接入电网。电力电子是新能源的「接口」技术，也是新型电力系统的核心支撑技术。一个新型电力系统里，电力电子装置的占比会越来越高；4）储能的重要性：新能源不稳定（晚上没有太阳、风时大时小），需要储能来「削峰填谷」，把多余的电存起来，需要的时候再放出来。电化学储能（锂电池、钠电池等）、抽水蓄能、压缩空气、飞轮、氢储能，各种储能技术都在快速发展；5）虚拟电厂（VPP）：把分散的分布式光伏、储能、电动汽车、可调负荷聚合起来，当作一个虚拟的电厂来调度，参与电力市场和电网调节。这是分布式能源的高级形态；6）AI+能源：AI在能源领域有非常多的应用——新能源功率预测（预测明天发多少电）、智能调度（优化电网运行）、负荷预测（预测用户用多少电）、设备故障诊断与预测性维护、虚拟电厂优化调度、需求响应、电力市场交易优化等等。能源+AI是一个非常大的赛道，也是AI落地的重要场景。完成这个光伏项目后，希望你不仅学到了电力知识，更能看到新能源革命这个大趋势——能源行业正在经历百年未有之大变局，而AI将在其中扮演关键角色。对于AI从业者来说，这是巨大的机遇。"
         }, duration: "4小时", resources: [{ title: "光伏发电系统设计", url: "https://www.energy.gov/eere/solar/solar-technologies-office", required: false, type: "doc", source: "official" }, { title: "并网逆变器原理", url: "https://www.sma.de/en/products/solar-inverters.html", required: false, type: "doc", source: "official" }, { title: "分布式光伏与虚拟电厂", url: "https://www.greentechmedia.com/articles/read/what-is-a-virtual-power-plant", required: false, type: "article", source: "other" }], checkpoint: "完成小型光伏发电系统的方案设计，包括容量计算、设备选型、电气设计" }
+
 
     ]
   },
@@ -9339,7 +11010,47 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成以下电气安全综合实践：1）风险评估练习：选一个你熟悉的电气场景（比如实验室、家庭配电房、工厂车间、充电桩），做一次电气安全风险评估：a）识别有哪些电气危害（触电风险在哪里？火灾风险在哪里？有没有爆炸风险？）；b）评估每个风险的等级（可能性：高/中/低，严重程度：高/中/低，风险等级矩阵）；c）针对高风险项，制定风险控制措施（从工程措施、管理措施、PPE三方面考虑）；2）应急流程编制：为你的工作/生活场景，编制一份电气事故应急预案，包括：a）触电事故应急流程（发现人怎么做、谁负责急救、谁负责报警、谁负责上报）；b）电气火灾应急流程（谁断电、谁灭火、谁报警、谁疏散）；c）应急物资清单（灭火器、绝缘棒、绝缘手套、急救箱、应急灯等）；d）应急联系电话；3）安全检查表：制作一份电气安全日常检查清单，列出需要定期检查的项目——比如：设备外观、线缆状况、保护装置（断路器、漏电保护器测试）、接地连接、标识标牌、消防通道、应急照明等；4）法规标准了解：了解我国主要的电气安全相关法规标准——《安全生产法》、《电力法》、《低压配电设计规范》、《建筑物防雷设计规范》、《剩余电流动作保护装置安装和运行》等等；5）思考与总结：a）回顾这两周学的电气安全知识，哪些是你之前不知道的？b）你觉得自己在工作/生活中，有哪些电气安全隐患？c）你打算怎么改进？d）为什么说「安全第一，预防为主」？为什么安全规章制度都是用血的教训换来的？",
           deep_dive: "安全是永恒的主题——对电气安全的再思考：电气安全这个主题，怎么强调都不为过。因为电是看不见摸不着的，一旦出事，轻则受伤，重则丧命。每年都有很多触电伤亡的事故，很多都是因为麻痹大意、违章操作。让我们从更深的层面谈谈安全：1）安全的本质：安全的本质是什么？是预知危险、规避危险。危险是客观存在的，但事故是可以预防的。很多人觉得「我不会那么倒霉」、「以前都这么做也没事」，但概率这个东西，发生在别人身上是故事，发生在自己身上就是事故。安全意识的核心，就是「敬畏风险」——永远不要心存侥幸；2）海因里希法则：这个著名的安全法则说——每一起严重事故的背后，必然有29次轻微事故和300起未遂先兆以及1000起事故隐患。也就是说，重大事故不是偶然发生的，是大量小隐患积累的结果。反过来，只要我们把每一个小隐患都消除了，重大事故自然就不会发生。这就是「隐患险于明火，防范胜于救灾」；3）安全文化：安全不只是技术问题，更是管理问题、文化问题。一个企业/团队的安全做得好不好，关键看管理层重不重视、制度完不完善、培训到不到位、员工有没有安全意识。安全文化好的地方，人人讲安全、事事讲安全；安全文化差的地方，违章操作屡见不鲜；4）对工程师的意义：作为技术人员，我们不仅要对自己的安全负责，还要对用户的安全负责——我们设计的产品、做的项目，会不会有安全隐患？有没有符合安全规范？一个负责任的工程师，会把安全放在第一位，而不是只看功能和成本。很多产品质量问题，最后可能就是安全问题；5）AI与安全：AI在安全领域有很多应用——视频监控的智能识别（识别违章操作、识别火灾烟雾）、预测性维护（预测设备故障防止事故）、智能巡检（代替人去危险的地方）、应急响应优化等等。AI可以让安全管理从「事后追责」变成「事前预防」。对于AI工程师来说，做安全相关的AI应用，是一件很有社会价值的事情。最后，送给大家一句安全行业的名言：「高高兴兴上班来，平平安安回家去」。希望大家无论做什么工作、在什么地方，都把安全放在心上。"
+        }, duration: "2小时", resources: [{ title: "电气安全工作规程", url: "https://www.osha.gov/electrical", required: false, type: "doc", source: "official" }, { title: "触电急救教程", url: "https://www.redcross.org/take-a-class/cpr/performing-cpr/cpr-steps", required: false, type: "doc", source: "other" }, { title: "风险评估方法", url: "https://www.hse.gov.uk/risk/", required: false, type: "doc", source: "official" }], checkpoint: "能对一个简单场景做电气风险评估，说出触电和电气火灾的应急处理步骤" },
+      { day: 8, title: "剩余电流保护与电弧故障防护",
+        summary: "掌握漏电保护器和电弧故障保护器的工作原理与应用，预防电气火灾和触电。", content: {
+          objective: "今天你将深入学习剩余电流保护（漏电保护）和电弧故障防护。学完后你能理解漏电保护器（RCD）的工作原理和参数选择，了解电弧故障的危害和AFCI（电弧故障断路器）的作用，知道怎么配置多级保护来保障电气安全。这些是预防触电和电气火灾的关键技术。",
+          key_points: [
+            "剩余电流动作保护器（RCD/漏电开关）：检测火线和零线的电流差值（剩余电流），超过阈值就快速跳闸，防止人身触电和接地故障火灾",
+            "RCD参数：额定剩余动作电流IΔn（30mA是高灵敏度，用于人身保护；300mA用于防火）、动作时间（快速型≤0.1s、延时型）、极数",
+            "漏电保护分级：总保护、中级保护、末级保护，多级配合，既保证安全又缩小停电范围，农村常用三级保护",
+            "电弧故障：危险的串联/并联电弧，电流不一定大但温度极高（几千度），是电气火灾的主要原因之一，传统断路器检测不到",
+            "电弧故障断路器（AFCI）：专门检测危险的电弧波形，识别出故障电弧并跳闸，预防电气火灾，和RCD功能互补"
+          ],
+          practice: "完成以下剩余电流与电弧防护实践：1）RCD原理理解：画一张漏电保护器的工作原理图——零序电流互感器（套在火零线上，正常时电流和为零，漏电时出现不平衡）→ 电子放大电路 → 脱扣器 → 跳闸；为什么正常情况下火线和零线的电流大小相等方向相反？漏电时为什么会有差值？2）参数选型：如果是家里的插座回路，应该选什么参数的漏电保护器？（额定电流、IΔn动作电流、动作时间）如果是总开关呢？如果是潮湿环境（卫生间、厨房）呢？为什么？3）RCD测试：漏电保护器上的「T」键（测试键）是做什么用的？为什么要定期按？（建议每月一次）RCD误动和拒动分别是什么原因？怎么排查？4）电弧故障理解：什么是串联电弧？什么是并联电弧？分别是怎么产生的？（比如电线断了、接头松动、绝缘老化、老鼠咬线）为什么传统的断路器和熔断器不能检测出串联电弧？（因为串联电弧电流不大，没超过额定电流）5）AFCI应用：了解电弧故障断路器（AFCI/AFDD）的基本原理——用数字信号处理分析电流波形，识别危险电弧的特征；哪些场所最需要装AFCI？（卧室、客厅、有大量插座和电线的地方）6）思考：RCD和AFCI的保护对象有什么不同？（一个防触电，一个防火灾）它们是互补还是替代关系？为什么说家庭配电中两者都需要？",
+          deep_dive: "深入理解电气火灾防控技术：电气火灾是火灾的主要原因之一——据统计，我国火灾中有30%以上是电气原因引起的，而且比例还在上升。随着家用电器越来越多、线路老化、装修不规范，电气火灾防控越来越重要。让我们系统了解一下电气火灾防控的技术体系：1）源头防控：正确的设计和施工是基础——合理的负荷计算、正确的线缆选型、规范的施工工艺、合格的产品质量。很多电气火灾都是因为偷工减料、私拉乱接、使用劣质产品造成的；2）保护电器：传统的保护电器有——熔断器（过流和短路保护）、断路器（过载+短路保护）、漏电保护器（接地故障+人身触电保护）。但这些还不够，因为：a）过载保护是反时限的，电流超过不多的话要很久才跳闸，这时候电线已经发热了；b）短路保护是检测到大电流才跳，但是串联电弧电流不大，不会触发；c）漏电保护能检测接地故障，但检测不到串联电弧；3）电弧故障保护（AFCI/AFDD）：这是专门针对电弧故障的保护，是预防电气火灾的重要技术。AFCI能识别正常电弧（开关、插拔、电机电刷）和故障电弧（松脱、绝缘破损），只在故障电弧时跳闸。北美已经强制要求很多回路装AFCI了，国内也在逐步推广；4）温度监测：在线监测接头、母线、电缆的温度，发现异常高温及时报警，在火灾发生前就预警。技术有：感温电缆、光纤测温、红外测温、无线测温传感器（基于无源RFID或电池）。现在物联网技术发展很快，在线测温成本越来越低，应用越来越多；5）电气火灾监控系统：集中监控整个建筑的电气状态——剩余电流、温度、电弧故障、电压电流等等，异常就报警，把被动灭火变成主动预警。这是智慧消防的重要组成部分；6）AI+电气安全：用AI算法分析电气数据，更准确地识别故障、预测风险。比如用深度学习识别电弧波形、用机器学习预测电气故障、用大数据分析发现隐患。对于AI从业者来说，电气安全和消防是一个很有价值的垂直领域——直接关系到生命财产安全，而且技术在快速迭代。"
+        }, duration: "2小时", resources: [{ title: "RCD漏电保护原理", url: "https://www.electronics-tutorials.ws/blog/residual-current-device.html", required: true, type: "article", source: "other" }, { title: "AFCI电弧故障保护", url: "https://www.nfpa.org/Public-Education/By-topic/Electrical-safety/Arc-fault-circuit-interrupters", required: false, type: "doc", source: "official" }, { title: "电气火灾预防", url: "https://www.esfi.org/electrical-fire-safety/", required: false, type: "doc", source: "other" }], checkpoint: "能解释RCD的工作原理，说明为什么需要AFCI以及它保护什么" },
+      { day: 9, title: "静电防护与电磁兼容EMC",
+        summary: "理解静电的危害和防护措施，掌握电磁兼容（EMC）的基本概念和设计要点。", content: {
+          objective: "今天你将学习静电防护（ESD）和电磁兼容（EMC）。学完后你能理解静电的产生机理和危害，掌握静电防护的常用方法，了解电磁兼容的基本概念（EMI和EMS），知道怎么在设计中考虑EMC问题。这两个问题在电子和电气产品中很容易被忽视，但出了问题又很难解决。",
+          key_points: [
+            "静电产生：不同物质接触分离就会产生静电（摩擦起电、感应起电），绝缘材料上的静电能维持很久，电压可达几千到几万伏",
+            "静电危害：静电放电（ESD）会损坏电子元器件（击穿、烧毁）、引起易燃易爆场所的爆炸和火灾、影响产品质量（尘埃及吸附）",
+            "静电防护：接地（导体接地）、增湿（提高空气湿度降低绝缘）、防静电材料（防静电服/台垫/包装）、离子中和（离子风机）、人员培训",
+            "电磁兼容EMC：设备在其电磁环境中能正常工作，且不对环境中的任何设备产生不能忍受的电磁骚扰；包括EMI（电磁骚扰发射）和EMS（抗扰度）",
+            "EMC设计：接地设计、屏蔽设计、滤波设计、PCB布局布线、电路设计，从源头减少干扰，提高抗扰能力"
+          ],
+          practice: "完成以下静电防护与EMC实践：1）静电现象：回忆一下生活中的静电现象——冬天脱毛衣的火花、摸门把手被电一下、梳子吸纸屑，这些都是静电。计算一下：人体电容约100pF，静电电压10000V的话，人体带多少电荷？（Q=CV）释放的能量有多少？（E=0.5CV²）这些能量为什么能损坏半导体器件？2）ESD防护方法：列出一个电子工厂/实验室的静电防护措施清单——人员方面（防静电服、防静电鞋、防静电手环、接地）、环境方面（防静电地面、工作台、离子风机、湿度控制）、物料方面（防静电包装、周转箱、元件管）、管理方面（培训、检测、制度）；3）EMC三要素：理解电磁骚扰的三要素——骚扰源（干扰源）、耦合路径（传导/辐射）、敏感设备。要解决EMC问题，就要从这三个方面入手——抑制骚扰源、切断耦合路径、提高敏感设备的抗扰度；4）EMC测试项目：了解一下EMC都测什么——发射测试（传导发射CE、辐射发射RE）和抗扰度测试（静电放电ESD、辐射抗扰RS、电快速瞬变脉冲群EFT、浪涌Surge、传导抗扰CS、电压暂降Dips等等）；为什么每个产品都要过EMC认证？（比如CE、FCC、CCC）5）PCB EMC设计：画PCB的时候，有哪些和EMC有关的注意事项？（比如：走线尽量短、回路面积尽量小、模拟地数字地分开、电源滤波电容就近放、高速信号包地、阻抗匹配等等）6）思考：为什么精密的模拟电路和数字电路要分开接地？什么是单点接地？什么是多点接地？它们各适用于什么频率？",
+          deep_dive: "深入理解电磁兼容与电子系统可靠性：电磁兼容（EMC）是电子电气产品的一项基本性能——不干扰别人，也不被别人干扰。但EMC又是一个非常复杂的问题，涉及到电路、电磁场、PCB、结构、材料等多方面知识，很多工程师直到产品要过认证出了问题，才发现EMC的重要性。让我们深入了解一下：1）EMC的重要性：为什么要做EMC？因为电磁骚扰会导致很多问题——轻则设备工作异常（比如死机、重启、数据错误、显示乱码），重则引发安全事故（比如医疗设备失灵、工业控制误动作、汽车电子故障）。所以各国都有强制性的EMC标准和认证，不通过就不能上市销售；2）EMC设计理念：EMC问题，越早考虑越好解决，成本也越低。在概念设计阶段就考虑EMC，可能只需要调整一下方案、注意一下布局；等到了样机阶段出了问题再整改，可能要改PCB、改结构、加屏蔽、加滤波，成本高还不一定能彻底解决。所以EMC设计要贯穿产品开发的全过程；3）三要素法分析EMC：所有EMC问题都可以用「骚扰源-耦合路径-敏感设备」这个模型来分析。解决EMC问题的思路也是从这三方面入手：a）抑制骚扰源：让产生干扰的地方尽量少产生干扰，比如开关电源的EMI优化、时钟信号的处理、驱动电路的缓启动；b）切断耦合路径：干扰怎么传过去的？是通过电线传的（传导），还是通过空间传的（辐射）？是共模还是差模？对症下药——传导的就加滤波（共模电感、X电容Y电容），辐射的就加屏蔽（金属壳、导电布、屏蔽材料）；c）提高抗扰度：让敏感电路不那么容易被干扰，比如加滤波、加屏蔽、用差分信号、提高信噪比、软件容错；4）电磁兼容和人工智能的结合：EMC测试和故障诊断中也可以用AI——比如用机器学习识别EMI问题的来源、用深度学习做干扰类型分类、用优化算法优化屏蔽和滤波设计。在电磁仿真领域，AI也可以用来加速仿真计算。对于做硬件、做嵌入式、做机器人的AI工程师来说，了解EMC和ESD的基本概念是很有必要的——很多时候系统不稳定、出莫名其妙的问题，根源可能就是EMC或者ESD。掌握这些知识，能帮你设计出更稳定可靠的电子系统。"
+        }, duration: "2小时", resources: [{ title: "ESD静电防护基础", url: "https://www.esda.org/about-esd/", required: true, type: "doc", source: "official" }, { title: "EMC电磁兼容入门", url: "https://www.electronics-tutorials.ws/emi/electromagnetic-compatibility.html", required: false, type: "article", source: "other" }, { title: "PCB EMC设计指南", url: "https://www.analog.com/en/technical-articles/emc-design-techniques-for-pcb-layout.html", required: false, type: "article", source: "other" }], checkpoint: "能说出静电防护的5种常用方法，解释EMC的三要素" },
+      { day: 10, title: "电气安全综合：风险评估与应急处理",
+        summary: "学习电气安全风险评估方法和事故应急处理流程，建立完整的电气安全意识。", content: {
+          objective: "今天你将学习电气安全风险评估和应急处理，完成电气安全的综合总结。学完后你能对一个电气场景做基本的风险评估，知道触电、电气火灾等事故的应急处理流程，掌握电气安全工作的基本制度和规范，建立完整的电气安全意识。安全无小事，责任大于天。",
+          key_points: [
+            "风险评估：识别电气危害（触电、火灾、爆炸、坠落等）→ 评估风险等级（可能性×严重程度）→ 制定控制措施→ 定期审查，PDCA循环",
+            "风险控制措施：消除（不用电）→ 替代（用安全电压）→ 工程措施（隔离、绝缘、接地、漏电保护）→ 管理措施（制度、培训、标识）→ 个体防护（绝缘手套、绝缘鞋），按优先级选择",
+            "触电急救：第一步迅速脱离电源（拉闸、切断、用绝缘物挑开），第二步判断意识和呼吸，第三步心肺复苏（CPR）+ 拨打120，黄金4分钟",
+            "电气火灾处理：先断电再灭火，带电灭火用干粉/CO2灭火器不能用水和泡沫，拨打119，疏散人员",
+            "安全管理制度：工作票制度、操作票制度、交接班制度、巡回检查制度、设备定期试验轮换制度、培训制度"
+          ],
+          practice: "完成以下电气安全综合实践：1）风险评估练习：选一个你熟悉的电气场景（比如实验室、家庭配电房、工厂车间、充电桩），做一次电气安全风险评估：a）识别有哪些电气危害（触电风险在哪里？火灾风险在哪里？有没有爆炸风险？）；b）评估每个风险的等级（可能性：高/中/低，严重程度：高/中/低，风险等级矩阵）；c）针对高风险项，制定风险控制措施（从工程措施、管理措施、PPE三方面考虑）；2）应急流程编制：为你的工作/生活场景，编制一份电气事故应急预案，包括：a）触电事故应急流程（发现人怎么做、谁负责急救、谁负责报警、谁负责上报）；b）电气火灾应急流程（谁断电、谁灭火、谁报警、谁疏散）；c）应急物资清单（灭火器、绝缘棒、绝缘手套、急救箱、应急灯等）；d）应急联系电话；3）安全检查表：制作一份电气安全日常检查清单，列出需要定期检查的项目——比如：设备外观、线缆状况、保护装置（断路器、漏电保护器测试）、接地连接、标识标牌、消防通道、应急照明等；4）法规标准了解：了解我国主要的电气安全相关法规标准——《安全生产法》、《电力法》、《低压配电设计规范》、《建筑物防雷设计规范》、《剩余电流动作保护装置安装和运行》等等；5）思考与总结：a）回顾这两周学的电气安全知识，哪些是你之前不知道的？b）你觉得自己在工作/生活中，有哪些电气安全隐患？c）你打算怎么改进？d）为什么说「安全第一，预防为主」？为什么安全规章制度都是用血的教训换来的？",
+          deep_dive: "安全是永恒的主题——对电气安全的再思考：电气安全这个主题，怎么强调都不为过。因为电是看不见摸不着的，一旦出事，轻则受伤，重则丧命。每年都有很多触电伤亡的事故，很多都是因为麻痹大意、违章操作。让我们从更深的层面谈谈安全：1）安全的本质：安全的本质是什么？是预知危险、规避危险。危险是客观存在的，但事故是可以预防的。很多人觉得「我不会那么倒霉」、「以前都这么做也没事」，但概率这个东西，发生在别人身上是故事，发生在自己身上就是事故。安全意识的核心，就是「敬畏风险」——永远不要心存侥幸；2）海因里希法则：这个著名的安全法则说——每一起严重事故的背后，必然有29次轻微事故和300起未遂先兆以及1000起事故隐患。也就是说，重大事故不是偶然发生的，是大量小隐患积累的结果。反过来，只要我们把每一个小隐患都消除了，重大事故自然就不会发生。这就是「隐患险于明火，防范胜于救灾」；3）安全文化：安全不只是技术问题，更是管理问题、文化问题。一个企业/团队的安全做得好不好，关键看管理层重不重视、制度完不完善、培训到不到位、员工有没有安全意识。安全文化好的地方，人人讲安全、事事讲安全；安全文化差的地方，违章操作屡见不鲜；4）对工程师的意义：作为技术人员，我们不仅要对自己的安全负责，还要对用户的安全负责——我们设计的产品、做的项目，会不会有安全隐患？有没有符合安全规范？一个负责任的工程师，会把安全放在第一位，而不是只看功能和成本。很多产品质量问题，最后可能就是安全问题；5）AI与安全：AI在安全领域有很多应用——视频监控的智能识别（识别违章操作、识别火灾烟雾）、预测性维护（预测设备故障防止事故）、智能巡检（代替人去危险的地方）、应急响应优化等等。AI可以让安全管理从「事后追责」变成「事前预防」。对于AI工程师来说，做安全相关的AI应用，是一件很有社会价值的事情。最后，送给大家一句安全行业的名言：「高高兴兴上班来，平平安安回家去」。希望大家无论做什么工作、在什么地方，都把安全放在心上。"
         }, duration: "2小时", resources: [{ title: "电气安全工作规程", url: "https://www.osha.gov/electrical", required: false, type: "doc", source: "official" }, { title: "触电急救教程", url: "https://www.redcross.org/take-a-class/cpr/performing-cpr/cpr-steps", required: false, type: "doc", source: "other" }, { title: "风险评估方法", url: "https://www.hse.gov.uk/risk/", required: false, type: "doc", source: "official" }], checkpoint: "能对一个简单场景做电气风险评估，说出触电和电气火灾的应急处理步骤" }
+
 
     ]
   },
@@ -9366,16 +11077,126 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
       learningPath: ["LLM 全栈路径"],
     },
     dailyTasks: [
-      { day: 1, title: "Self-Attention 机制精讲", summary: "理解 Q/K/V 矩阵运算，手写 Self-Attention 的前向传播", content: "理解 Q/K/V 矩阵运算，手写 Self-Attention 的前向传播", duration: "2小时", resources: [R_JALAMMAR, R_HF_COURSE], checkpoint: "能手写 Self-Attention 的前向传播" },
-      { day: 2, title: "Multi-Head Attention 实现", summary: "使用 PyTorch 从零实现 Multi-Head Attention，理解多头的作用", content: "使用 PyTorch 从零实现 Multi-Head Attention，理解多头的作用", duration: "2小时", resources: [R_PYTORCH_TUT, R_HF_TRANSFORMERS], checkpoint: "能用 PyTorch 从零实现 Multi-Head Attention" },
-      { day: 3, title: "Position Encoding 详解", summary: "理解 Sinusoidal、RoPE、ALiBi 等位置编码方案", content: "理解 Sinusoidal、RoPE、ALiBi 等位置编码方案", duration: "2小时", resources: [R_HF_TRANSFORMERS], checkpoint: "能解释不同位置编码方案的原理" },
-      { day: 4, title: "GPT 范式：自回归语言模型", summary: "理解 GPT 的 Decoder-only 架构和自回归生成过程", content: "理解 GPT 的 Decoder-only 架构和自回归生成过程", duration: "2小时", resources: [R_HF_COURSE], checkpoint: "能解释 GPT 的自回归生成过程" },
-      { day: 5, title: "BERT 范式：掩码语言模型", summary: "理解 BERT 的 Encoder 架构和 MLM/NSP 预训练任务", content: "理解 BERT 的 Encoder 架构和 MLM/NSP 预训练任务", duration: "2小时", resources: [R_HF_COURSE], checkpoint: "能解释 BERT 的 MLM/NSP 预训练任务" },
-      { day: 6, title: "T5 范式：Encoder-Decoder 统一", summary: "理解 T5 的 Text-to-Text 统一框架", content: "理解 T5 的 Text-to-Text 统一框架", duration: "2小时", resources: [R_HF_TRANSFORMERS], checkpoint: "能解释 T5 的 Text-to-Text 框架" },
-      { day: 7, title: "Scaling Law 与涌现能力", summary: "理解模型规模、数据量、计算量的关系，阅读 Scaling Law 论文", content: "理解模型规模、数据量、计算量的关系，阅读 Scaling Law 论文", duration: "2小时", resources: [R_HF_COURSE], checkpoint: "能解释 Scaling Law 的核心结论" },
-      { day: 8, title: "MoE 混合专家架构", summary: "理解 Mixture of Experts 的路由机制和稀疏激活", content: "理解 Mixture of Experts 的路由机制和稀疏激活", duration: "2小时", resources: [R_HF_TRANSFORMERS], checkpoint: "能解释 MoE 的路由机制" },
-      { day: 9, title: "长上下文技术", summary: "理解 RoPE 扩展、滑动窗口注意力等长上下文方案", content: "理解 RoPE 扩展、滑动窗口注意力等长上下文方案", duration: "2小时", resources: [R_HF_TRANSFORMERS], checkpoint: "能解释长上下文技术的原理" },
-      { day: 10, title: "实战：加载并分析开源 LLM", summary: "使用 HuggingFace 加载一个开源模型（如 Qwen/Llama），分析其架构和参数量", content: "使用 HuggingFace 加载一个开源模型（如 Qwen/Llama），分析其架构和参数量", duration: "3小时", resources: [R_HF_TRANSFORMERS, R_PYTORCH_TUT], checkpoint: "能加载开源 LLM 并分析其架构" },
+      { day: 1, title: "Self-Attention 机制精讲", summary: "理解 Q/K/V 矩阵运算，手写 Self-Attention 的前向传播", content: {
+          objective: "今天你将学习Self-Attention 机制精讲。学完后你能理解 Q/K/V 矩阵运算，手写 Self-Attention 的前向传播。",
+          key_points: [
+            "核心概念：理解Self-Attention 机制精讲的基本原理和重要性",
+            "技术要点：掌握理解 Q/K/V 矩阵运算，手写 Self-Attention 的前向传播的关键技术",
+            "应用场景：了解Self-Attention 机制精讲在实际项目中的应用方式",
+            "常见问题：认识Self-Attention 机制精讲实践中可能遇到的挑战",
+            "与AI关联：理解Self-Attention 机制精讲在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践Self-Attention 机制精讲：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考Self-Attention 机制精讲在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解Self-Attention 机制精讲的进阶话题：从原理到实践，Self-Attention 机制精讲是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解Self-Attention 机制精讲技术的发展历程和最新进展；2）最佳实践：总结行业内Self-Attention 机制精讲的成熟方法论和常见模式；3）踩坑经验：认识Self-Attention 机制精讲实践中常见的陷阱和解决方案；4）与AI结合：思考Self-Attention 机制精讲如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握Self-Attention 机制精讲的关键。"
+        }, duration: "2小时", resources: [R_JALAMMAR, R_HF_COURSE], checkpoint: "能手写 Self-Attention 的前向传播" },
+      { day: 2, title: "Multi-Head Attention 实现", summary: "使用 PyTorch 从零实现 Multi-Head Attention，理解多头的作用", content: {
+          objective: "今天你将学习Multi-Head Attention 实现。学完后你能使用 PyTorch 从零实现 Multi-Head Attention，理解多头的作用。",
+          key_points: [
+            "核心概念：理解Multi-Head Attention 实现的基本原理和重要性",
+            "技术要点：掌握使用 PyTorch 从零实现 Multi-Head Attention，理解多头的作用的关键技术",
+            "应用场景：了解Multi-Head Attention 实现在实际项目中的应用方式",
+            "常见问题：认识Multi-Head Attention 实现实践中可能遇到的挑战",
+            "与AI关联：理解Multi-Head Attention 实现在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践Multi-Head Attention 实现：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考Multi-Head Attention 实现在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解Multi-Head Attention 实现的进阶话题：从原理到实践，Multi-Head Attention 实现是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解Multi-Head Attention 实现技术的发展历程和最新进展；2）最佳实践：总结行业内Multi-Head Attention 实现的成熟方法论和常见模式；3）踩坑经验：认识Multi-Head Attention 实现实践中常见的陷阱和解决方案；4）与AI结合：思考Multi-Head Attention 实现如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握Multi-Head Attention 实现的关键。"
+        }, duration: "2小时", resources: [R_PYTORCH_TUT, R_HF_TRANSFORMERS], checkpoint: "能用 PyTorch 从零实现 Multi-Head Attention" },
+      { day: 3, title: "Position Encoding 详解", summary: "理解 Sinusoidal、RoPE、ALiBi 等位置编码方案", content: {
+          objective: "今天你将学习Position Encoding 详解。学完后你能理解 Sinusoidal、RoPE、ALiBi 等位置编码方案。",
+          key_points: [
+            "核心概念：理解Position Encoding 详解的基本原理和重要性",
+            "技术要点：掌握理解 Sinusoidal、RoPE、ALiBi 等位置编码方案的关键技术",
+            "应用场景：了解Position Encoding 详解在实际项目中的应用方式",
+            "常见问题：认识Position Encoding 详解实践中可能遇到的挑战",
+            "与AI关联：理解Position Encoding 详解在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践Position Encoding 详解：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考Position Encoding 详解在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解Position Encoding 详解的进阶话题：从原理到实践，Position Encoding 详解是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解Position Encoding 详解技术的发展历程和最新进展；2）最佳实践：总结行业内Position Encoding 详解的成熟方法论和常见模式；3）踩坑经验：认识Position Encoding 详解实践中常见的陷阱和解决方案；4）与AI结合：思考Position Encoding 详解如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握Position Encoding 详解的关键。"
+        }, duration: "2小时", resources: [R_HF_TRANSFORMERS], checkpoint: "能解释不同位置编码方案的原理" },
+      { day: 4, title: "GPT 范式：自回归语言模型", summary: "理解 GPT 的 Decoder-only 架构和自回归生成过程", content: {
+          objective: "今天你将学习GPT 范式：自回归语言模型。学完后你能理解 GPT 的 Decoder-only 架构和自回归生成过程。",
+          key_points: [
+            "核心概念：理解GPT 范式：自回归语言模型的基本原理和重要性",
+            "技术要点：掌握理解 GPT 的 Decoder-only 架构和自回归生成过程的关键技术",
+            "应用场景：了解GPT 范式：自回归语言模型在实际项目中的应用方式",
+            "常见问题：认识GPT 范式：自回归语言模型实践中可能遇到的挑战",
+            "与AI关联：理解GPT 范式：自回归语言模型在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践GPT 范式：自回归语言模型：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考GPT 范式：自回归语言模型在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解GPT 范式：自回归语言模型的进阶话题：从原理到实践，GPT 范式：自回归语言模型是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解GPT 范式：自回归语言模型技术的发展历程和最新进展；2）最佳实践：总结行业内GPT 范式：自回归语言模型的成熟方法论和常见模式；3）踩坑经验：认识GPT 范式：自回归语言模型实践中常见的陷阱和解决方案；4）与AI结合：思考GPT 范式：自回归语言模型如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握GPT 范式：自回归语言模型的关键。"
+        }, duration: "2小时", resources: [R_HF_COURSE], checkpoint: "能解释 GPT 的自回归生成过程" },
+      { day: 5, title: "BERT 范式：掩码语言模型", summary: "理解 BERT 的 Encoder 架构和 MLM/NSP 预训练任务", content: {
+          objective: "今天你将学习BERT 范式：掩码语言模型。学完后你能理解 BERT 的 Encoder 架构和 MLM/NSP 预训练任务。",
+          key_points: [
+            "核心概念：理解BERT 范式：掩码语言模型的基本原理和重要性",
+            "技术要点：掌握理解 BERT 的 Encoder 架构和 MLM/NSP 预训练任务的关键技术",
+            "应用场景：了解BERT 范式：掩码语言模型在实际项目中的应用方式",
+            "常见问题：认识BERT 范式：掩码语言模型实践中可能遇到的挑战",
+            "与AI关联：理解BERT 范式：掩码语言模型在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践BERT 范式：掩码语言模型：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考BERT 范式：掩码语言模型在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解BERT 范式：掩码语言模型的进阶话题：从原理到实践，BERT 范式：掩码语言模型是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解BERT 范式：掩码语言模型技术的发展历程和最新进展；2）最佳实践：总结行业内BERT 范式：掩码语言模型的成熟方法论和常见模式；3）踩坑经验：认识BERT 范式：掩码语言模型实践中常见的陷阱和解决方案；4）与AI结合：思考BERT 范式：掩码语言模型如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握BERT 范式：掩码语言模型的关键。"
+        }, duration: "2小时", resources: [R_HF_COURSE], checkpoint: "能解释 BERT 的 MLM/NSP 预训练任务" },
+      { day: 6, title: "T5 范式：Encoder-Decoder 统一", summary: "理解 T5 的 Text-to-Text 统一框架", content: {
+          objective: "今天你将学习T5 范式：Encoder-Decoder 统一。学完后你能理解 T5 的 Text-to-Text 统一框架。",
+          key_points: [
+            "核心概念：理解T5 范式：Encoder-Decoder 统一的基本原理和重要性",
+            "技术要点：掌握理解 T5 的 Text-to-Text 统一框架的关键技术",
+            "应用场景：了解T5 范式：Encoder-Decoder 统一在实际项目中的应用方式",
+            "常见问题：认识T5 范式：Encoder-Decoder 统一实践中可能遇到的挑战",
+            "与AI关联：理解T5 范式：Encoder-Decoder 统一在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践T5 范式：Encoder-Decoder 统一：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考T5 范式：Encoder-Decoder 统一在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解T5 范式：Encoder-Decoder 统一的进阶话题：从原理到实践，T5 范式：Encoder-Decoder 统一是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解T5 范式：Encoder-Decoder 统一技术的发展历程和最新进展；2）最佳实践：总结行业内T5 范式：Encoder-Decoder 统一的成熟方法论和常见模式；3）踩坑经验：认识T5 范式：Encoder-Decoder 统一实践中常见的陷阱和解决方案；4）与AI结合：思考T5 范式：Encoder-Decoder 统一如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握T5 范式：Encoder-Decoder 统一的关键。"
+        }, duration: "2小时", resources: [R_HF_TRANSFORMERS], checkpoint: "能解释 T5 的 Text-to-Text 框架" },
+      { day: 7, title: "Scaling Law 与涌现能力", summary: "理解模型规模、数据量、计算量的关系，阅读 Scaling Law 论文", content: {
+          objective: "今天你将学习Scaling Law 与涌现能力。学完后你能理解模型规模、数据量、计算量的关系，阅读 Scaling Law 论文。",
+          key_points: [
+            "核心概念：理解Scaling Law 与涌现能力的基本原理和重要性",
+            "技术要点：掌握理解模型规模、数据量、计算量的关系，阅读 Scaling Law 论文的关键技术",
+            "应用场景：了解Scaling Law 与涌现能力在实际项目中的应用方式",
+            "常见问题：认识Scaling Law 与涌现能力实践中可能遇到的挑战",
+            "与AI关联：理解Scaling Law 与涌现能力在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践Scaling Law 与涌现能力：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考Scaling Law 与涌现能力在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解Scaling Law 与涌现能力的进阶话题：从原理到实践，Scaling Law 与涌现能力是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解Scaling Law 与涌现能力技术的发展历程和最新进展；2）最佳实践：总结行业内Scaling Law 与涌现能力的成熟方法论和常见模式；3）踩坑经验：认识Scaling Law 与涌现能力实践中常见的陷阱和解决方案；4）与AI结合：思考Scaling Law 与涌现能力如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握Scaling Law 与涌现能力的关键。"
+        }, duration: "2小时", resources: [R_HF_COURSE], checkpoint: "能解释 Scaling Law 的核心结论" },
+      { day: 8, title: "MoE 混合专家架构", summary: "理解 Mixture of Experts 的路由机制和稀疏激活", content: {
+          objective: "今天你将学习MoE 混合专家架构。学完后你能理解 Mixture of Experts 的路由机制和稀疏激活。",
+          key_points: [
+            "核心概念：理解MoE 混合专家架构的基本原理和重要性",
+            "技术要点：掌握理解 Mixture of Experts 的路由机制和稀疏激活的关键技术",
+            "应用场景：了解MoE 混合专家架构在实际项目中的应用方式",
+            "常见问题：认识MoE 混合专家架构实践中可能遇到的挑战",
+            "与AI关联：理解MoE 混合专家架构在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践MoE 混合专家架构：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考MoE 混合专家架构在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解MoE 混合专家架构的进阶话题：从原理到实践，MoE 混合专家架构是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解MoE 混合专家架构技术的发展历程和最新进展；2）最佳实践：总结行业内MoE 混合专家架构的成熟方法论和常见模式；3）踩坑经验：认识MoE 混合专家架构实践中常见的陷阱和解决方案；4）与AI结合：思考MoE 混合专家架构如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握MoE 混合专家架构的关键。"
+        }, duration: "2小时", resources: [R_HF_TRANSFORMERS], checkpoint: "能解释 MoE 的路由机制" },
+      { day: 9, title: "长上下文技术", summary: "理解 RoPE 扩展、滑动窗口注意力等长上下文方案", content: {
+          objective: "今天你将学习长上下文技术。学完后你能理解 RoPE 扩展、滑动窗口注意力等长上下文方案。",
+          key_points: [
+            "核心概念：理解长上下文技术的基本原理和重要性",
+            "技术要点：掌握理解 RoPE 扩展、滑动窗口注意力等长上下文方案的关键技术",
+            "应用场景：了解长上下文技术在实际项目中的应用方式",
+            "常见问题：认识长上下文技术实践中可能遇到的挑战",
+            "与AI关联：理解长上下文技术在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践长上下文技术：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考长上下文技术在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解长上下文技术的进阶话题：从原理到实践，长上下文技术是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解长上下文技术技术的发展历程和最新进展；2）最佳实践：总结行业内长上下文技术的成熟方法论和常见模式；3）踩坑经验：认识长上下文技术实践中常见的陷阱和解决方案；4）与AI结合：思考长上下文技术如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握长上下文技术的关键。"
+        }, duration: "2小时", resources: [R_HF_TRANSFORMERS], checkpoint: "能解释长上下文技术的原理" },
+      { day: 10, title: "实战：加载并分析开源 LLM", summary: "使用 HuggingFace 加载一个开源模型（如 Qwen/Llama），分析其架构和参数量", content: {
+          objective: "今天你将学习实战：加载并分析开源 LLM。学完后你能使用 HuggingFace 加载一个开源模型（如 Qwen/Llama），分析其架构和参数量。",
+          key_points: [
+            "核心概念：理解实战：加载并分析开源 LLM的基本原理和重要性",
+            "技术要点：掌握使用 HuggingFace 加载一个开源模型（如 Qwen/Llama），分析其架构和参数量的关键技术",
+            "应用场景：了解实战：加载并分析开源 LLM在实际项目中的应用方式",
+            "常见问题：认识实战：加载并分析开源 LLM实践中可能遇到的挑战",
+            "与AI关联：理解实战：加载并分析开源 LLM在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践实战：加载并分析开源 LLM：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考实战：加载并分析开源 LLM在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解实战：加载并分析开源 LLM的进阶话题：从原理到实践，实战：加载并分析开源 LLM是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解实战：加载并分析开源 LLM技术的发展历程和最新进展；2）最佳实践：总结行业内实战：加载并分析开源 LLM的成熟方法论和常见模式；3）踩坑经验：认识实战：加载并分析开源 LLM实践中常见的陷阱和解决方案；4）与AI结合：思考实战：加载并分析开源 LLM如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握实战：加载并分析开源 LLM的关键。"
+        }, duration: "3小时", resources: [R_HF_TRANSFORMERS, R_PYTORCH_TUT], checkpoint: "能加载开源 LLM 并分析其架构" },
     ],
   },
   // =====================================================
@@ -9401,16 +11222,126 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
       learningPath: ["LLM 全栈路径"],
     },
     dailyTasks: [
-      { day: 1, title: "Tokenizer 原理与选择", summary: "理解 BPE/SentencePiece/WordPiece 分词算法，选择合适的 Tokenizer", content: "理解 BPE/SentencePiece/WordPiece 分词算法，选择合适的 Tokenizer", duration: "2小时", resources: [R_HF_TRANSFORMERS], checkpoint: "能解释不同分词算法的原理" },
-      { day: 2, title: "预训练数据清洗", summary: "学习数据去重、质量过滤、有害内容移除等数据清洗技术", content: "学习数据去重、质量过滤、有害内容移除等数据清洗技术", duration: "2小时", resources: [R_HF_COURSE], checkpoint: "能描述数据清洗的主要技术" },
-      { day: 3, title: "数据配比策略", summary: "理解不同数据源（网页/代码/论文）的配比对模型能力的影响", content: "理解不同数据源（网页/代码/论文）的配比对模型能力的影响", duration: "2小时", resources: [R_HF_COURSE], checkpoint: "能解释数据配比对模型的影响" },
-      { day: 4, title: "分布式训练概述", summary: "理解数据并行（DDP）、模型并行、流水线并行的区别", content: "理解数据并行（DDP）、模型并行、流水线并行的区别", duration: "2小时", resources: [R_PYTORCH_DOC], checkpoint: "能区分不同并行策略的适用场景" },
-      { day: 5, title: "FSDP 全分片数据并行", summary: "使用 PyTorch FSDP 进行大模型分布式训练", content: "使用 PyTorch FSDP 进行大模型分布式训练", duration: "2小时", resources: [R_PYTORCH_DOC], checkpoint: "能配置 FSDP 训练流程" },
-      { day: 6, title: "DeepSpeed ZeRO 策略", summary: "理解 ZeRO-1/2/3 的显存优化原理", content: "理解 ZeRO-1/2/3 的显存优化原理", duration: "2小时", resources: [R_PYTORCH_DOC], checkpoint: "能解释 ZeRO 各阶段的优化原理" },
-      { day: 7, title: "混合精度训练", summary: "理解 BF16/FP16 混合精度训练的原理和注意事项", content: "理解 BF16/FP16 混合精度训练的原理和注意事项", duration: "2小时", resources: [R_PYTORCH_TUT], checkpoint: "能配置混合精度训练" },
-      { day: 8, title: "梯度累积与检查点", summary: "使用梯度累积突破显存限制，使用梯度检查点节省显存", content: "使用梯度累积突破显存限制，使用梯度检查点节省显存", duration: "2小时", resources: [R_PYTORCH_DOC], checkpoint: "能实现梯度累积和梯度检查点" },
-      { day: 9, title: "预训练监控与调优", summary: "监控训练 loss、学习率调度、梯度范数等关键指标", content: "监控训练 loss、学习率调度、梯度范数等关键指标", duration: "2小时", resources: [R_PYTORCH_TUT], checkpoint: "能解读训练监控指标" },
-      { day: 10, title: "实战：小规模预训练实验", summary: "在小数据集上完成一次小规模预训练实验，观察 loss 曲线", content: "在小数据集上完成一次小规模预训练实验，观察 loss 曲线", duration: "3小时", resources: [R_HF_COURSE, R_PYTORCH_TUT], checkpoint: "能完成一次小规模预训练实验" },
+      { day: 1, title: "Tokenizer 原理与选择", summary: "理解 BPE/SentencePiece/WordPiece 分词算法，选择合适的 Tokenizer", content: {
+          objective: "今天你将学习Tokenizer 原理与选择。学完后你能理解 BPE/SentencePiece/WordPiece 分词算法，选择合适的 Tokenizer。",
+          key_points: [
+            "核心概念：理解Tokenizer 原理与选择的基本原理和重要性",
+            "技术要点：掌握理解 BPE/SentencePiece/WordPiece 分词算法，选择合适的 Tokenizer的关键技术",
+            "应用场景：了解Tokenizer 原理与选择在实际项目中的应用方式",
+            "常见问题：认识Tokenizer 原理与选择实践中可能遇到的挑战",
+            "与AI关联：理解Tokenizer 原理与选择在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践Tokenizer 原理与选择：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考Tokenizer 原理与选择在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解Tokenizer 原理与选择的进阶话题：从原理到实践，Tokenizer 原理与选择是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解Tokenizer 原理与选择技术的发展历程和最新进展；2）最佳实践：总结行业内Tokenizer 原理与选择的成熟方法论和常见模式；3）踩坑经验：认识Tokenizer 原理与选择实践中常见的陷阱和解决方案；4）与AI结合：思考Tokenizer 原理与选择如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握Tokenizer 原理与选择的关键。"
+        }, duration: "2小时", resources: [R_HF_TRANSFORMERS], checkpoint: "能解释不同分词算法的原理" },
+      { day: 2, title: "预训练数据清洗", summary: "学习数据去重、质量过滤、有害内容移除等数据清洗技术", content: {
+          objective: "今天你将学习预训练数据清洗。学完后你能学习数据去重、质量过滤、有害内容移除等数据清洗技术。",
+          key_points: [
+            "核心概念：理解预训练数据清洗的基本原理和重要性",
+            "技术要点：掌握学习数据去重、质量过滤、有害内容移除等数据清洗技术的关键技术",
+            "应用场景：了解预训练数据清洗在实际项目中的应用方式",
+            "常见问题：认识预训练数据清洗实践中可能遇到的挑战",
+            "与AI关联：理解预训练数据清洗在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践预训练数据清洗：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考预训练数据清洗在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解预训练数据清洗的进阶话题：从原理到实践，预训练数据清洗是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解预训练数据清洗技术的发展历程和最新进展；2）最佳实践：总结行业内预训练数据清洗的成熟方法论和常见模式；3）踩坑经验：认识预训练数据清洗实践中常见的陷阱和解决方案；4）与AI结合：思考预训练数据清洗如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握预训练数据清洗的关键。"
+        }, duration: "2小时", resources: [R_HF_COURSE], checkpoint: "能描述数据清洗的主要技术" },
+      { day: 3, title: "数据配比策略", summary: "理解不同数据源（网页/代码/论文）的配比对模型能力的影响", content: {
+          objective: "今天你将学习数据配比策略。学完后你能理解不同数据源（网页/代码/论文）的配比对模型能力的影响。",
+          key_points: [
+            "核心概念：理解数据配比策略的基本原理和重要性",
+            "技术要点：掌握理解不同数据源（网页/代码/论文）的配比对模型能力的影响的关键技术",
+            "应用场景：了解数据配比策略在实际项目中的应用方式",
+            "常见问题：认识数据配比策略实践中可能遇到的挑战",
+            "与AI关联：理解数据配比策略在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践数据配比策略：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考数据配比策略在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解数据配比策略的进阶话题：从原理到实践，数据配比策略是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解数据配比策略技术的发展历程和最新进展；2）最佳实践：总结行业内数据配比策略的成熟方法论和常见模式；3）踩坑经验：认识数据配比策略实践中常见的陷阱和解决方案；4）与AI结合：思考数据配比策略如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握数据配比策略的关键。"
+        }, duration: "2小时", resources: [R_HF_COURSE], checkpoint: "能解释数据配比对模型的影响" },
+      { day: 4, title: "分布式训练概述", summary: "理解数据并行（DDP）、模型并行、流水线并行的区别", content: {
+          objective: "今天你将学习分布式训练概述。学完后你能理解数据并行（DDP）、模型并行、流水线并行的区别。",
+          key_points: [
+            "核心概念：理解分布式训练概述的基本原理和重要性",
+            "技术要点：掌握理解数据并行（DDP）、模型并行、流水线并行的区别的关键技术",
+            "应用场景：了解分布式训练概述在实际项目中的应用方式",
+            "常见问题：认识分布式训练概述实践中可能遇到的挑战",
+            "与AI关联：理解分布式训练概述在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践分布式训练概述：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考分布式训练概述在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解分布式训练概述的进阶话题：从原理到实践，分布式训练概述是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解分布式训练概述技术的发展历程和最新进展；2）最佳实践：总结行业内分布式训练概述的成熟方法论和常见模式；3）踩坑经验：认识分布式训练概述实践中常见的陷阱和解决方案；4）与AI结合：思考分布式训练概述如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握分布式训练概述的关键。"
+        }, duration: "2小时", resources: [R_PYTORCH_DOC], checkpoint: "能区分不同并行策略的适用场景" },
+      { day: 5, title: "FSDP 全分片数据并行", summary: "使用 PyTorch FSDP 进行大模型分布式训练", content: {
+          objective: "今天你将学习FSDP 全分片数据并行。学完后你能使用 PyTorch FSDP 进行大模型分布式训练。",
+          key_points: [
+            "核心概念：理解FSDP 全分片数据并行的基本原理和重要性",
+            "技术要点：掌握使用 PyTorch FSDP 进行大模型分布式训练的关键技术",
+            "应用场景：了解FSDP 全分片数据并行在实际项目中的应用方式",
+            "常见问题：认识FSDP 全分片数据并行实践中可能遇到的挑战",
+            "与AI关联：理解FSDP 全分片数据并行在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践FSDP 全分片数据并行：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考FSDP 全分片数据并行在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解FSDP 全分片数据并行的进阶话题：从原理到实践，FSDP 全分片数据并行是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解FSDP 全分片数据并行技术的发展历程和最新进展；2）最佳实践：总结行业内FSDP 全分片数据并行的成熟方法论和常见模式；3）踩坑经验：认识FSDP 全分片数据并行实践中常见的陷阱和解决方案；4）与AI结合：思考FSDP 全分片数据并行如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握FSDP 全分片数据并行的关键。"
+        }, duration: "2小时", resources: [R_PYTORCH_DOC], checkpoint: "能配置 FSDP 训练流程" },
+      { day: 6, title: "DeepSpeed ZeRO 策略", summary: "理解 ZeRO-1/2/3 的显存优化原理", content: {
+          objective: "今天你将学习DeepSpeed ZeRO 策略。学完后你能理解 ZeRO-1/2/3 的显存优化原理。",
+          key_points: [
+            "核心概念：理解DeepSpeed ZeRO 策略的基本原理和重要性",
+            "技术要点：掌握理解 ZeRO-1/2/3 的显存优化原理的关键技术",
+            "应用场景：了解DeepSpeed ZeRO 策略在实际项目中的应用方式",
+            "常见问题：认识DeepSpeed ZeRO 策略实践中可能遇到的挑战",
+            "与AI关联：理解DeepSpeed ZeRO 策略在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践DeepSpeed ZeRO 策略：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考DeepSpeed ZeRO 策略在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解DeepSpeed ZeRO 策略的进阶话题：从原理到实践，DeepSpeed ZeRO 策略是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解DeepSpeed ZeRO 策略技术的发展历程和最新进展；2）最佳实践：总结行业内DeepSpeed ZeRO 策略的成熟方法论和常见模式；3）踩坑经验：认识DeepSpeed ZeRO 策略实践中常见的陷阱和解决方案；4）与AI结合：思考DeepSpeed ZeRO 策略如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握DeepSpeed ZeRO 策略的关键。"
+        }, duration: "2小时", resources: [R_PYTORCH_DOC], checkpoint: "能解释 ZeRO 各阶段的优化原理" },
+      { day: 7, title: "混合精度训练", summary: "理解 BF16/FP16 混合精度训练的原理和注意事项", content: {
+          objective: "今天你将学习混合精度训练。学完后你能理解 BF16/FP16 混合精度训练的原理和注意事项。",
+          key_points: [
+            "核心概念：理解混合精度训练的基本原理和重要性",
+            "技术要点：掌握理解 BF16/FP16 混合精度训练的原理和注意事项的关键技术",
+            "应用场景：了解混合精度训练在实际项目中的应用方式",
+            "常见问题：认识混合精度训练实践中可能遇到的挑战",
+            "与AI关联：理解混合精度训练在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践混合精度训练：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考混合精度训练在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解混合精度训练的进阶话题：从原理到实践，混合精度训练是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解混合精度训练技术的发展历程和最新进展；2）最佳实践：总结行业内混合精度训练的成熟方法论和常见模式；3）踩坑经验：认识混合精度训练实践中常见的陷阱和解决方案；4）与AI结合：思考混合精度训练如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握混合精度训练的关键。"
+        }, duration: "2小时", resources: [R_PYTORCH_TUT], checkpoint: "能配置混合精度训练" },
+      { day: 8, title: "梯度累积与检查点", summary: "使用梯度累积突破显存限制，使用梯度检查点节省显存", content: {
+          objective: "今天你将学习梯度累积与检查点。学完后你能使用梯度累积突破显存限制，使用梯度检查点节省显存。",
+          key_points: [
+            "核心概念：理解梯度累积与检查点的基本原理和重要性",
+            "技术要点：掌握使用梯度累积突破显存限制，使用梯度检查点节省显存的关键技术",
+            "应用场景：了解梯度累积与检查点在实际项目中的应用方式",
+            "常见问题：认识梯度累积与检查点实践中可能遇到的挑战",
+            "与AI关联：理解梯度累积与检查点在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践梯度累积与检查点：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考梯度累积与检查点在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解梯度累积与检查点的进阶话题：从原理到实践，梯度累积与检查点是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解梯度累积与检查点技术的发展历程和最新进展；2）最佳实践：总结行业内梯度累积与检查点的成熟方法论和常见模式；3）踩坑经验：认识梯度累积与检查点实践中常见的陷阱和解决方案；4）与AI结合：思考梯度累积与检查点如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握梯度累积与检查点的关键。"
+        }, duration: "2小时", resources: [R_PYTORCH_DOC], checkpoint: "能实现梯度累积和梯度检查点" },
+      { day: 9, title: "预训练监控与调优", summary: "监控训练 loss、学习率调度、梯度范数等关键指标", content: {
+          objective: "今天你将学习预训练监控与调优。学完后你能监控训练 loss、学习率调度、梯度范数等关键指标。",
+          key_points: [
+            "核心概念：理解预训练监控与调优的基本原理和重要性",
+            "技术要点：掌握监控训练 loss、学习率调度、梯度范数等关键指标的关键技术",
+            "应用场景：了解预训练监控与调优在实际项目中的应用方式",
+            "常见问题：认识预训练监控与调优实践中可能遇到的挑战",
+            "与AI关联：理解预训练监控与调优在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践预训练监控与调优：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考预训练监控与调优在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解预训练监控与调优的进阶话题：从原理到实践，预训练监控与调优是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解预训练监控与调优技术的发展历程和最新进展；2）最佳实践：总结行业内预训练监控与调优的成熟方法论和常见模式；3）踩坑经验：认识预训练监控与调优实践中常见的陷阱和解决方案；4）与AI结合：思考预训练监控与调优如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握预训练监控与调优的关键。"
+        }, duration: "2小时", resources: [R_PYTORCH_TUT], checkpoint: "能解读训练监控指标" },
+      { day: 10, title: "实战：小规模预训练实验", summary: "在小数据集上完成一次小规模预训练实验，观察 loss 曲线", content: {
+          objective: "今天你将学习实战：小规模预训练实验。学完后你能在小数据集上完成一次小规模预训练实验，观察 loss 曲线。",
+          key_points: [
+            "核心概念：理解实战：小规模预训练实验的基本原理和重要性",
+            "技术要点：掌握在小数据集上完成一次小规模预训练实验，观察 loss 曲线的关键技术",
+            "应用场景：了解实战：小规模预训练实验在实际项目中的应用方式",
+            "常见问题：认识实战：小规模预训练实验实践中可能遇到的挑战",
+            "与AI关联：理解实战：小规模预训练实验在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践实战：小规模预训练实验：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考实战：小规模预训练实验在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解实战：小规模预训练实验的进阶话题：从原理到实践，实战：小规模预训练实验是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解实战：小规模预训练实验技术的发展历程和最新进展；2）最佳实践：总结行业内实战：小规模预训练实验的成熟方法论和常见模式；3）踩坑经验：认识实战：小规模预训练实验实践中常见的陷阱和解决方案；4）与AI结合：思考实战：小规模预训练实验如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握实战：小规模预训练实验的关键。"
+        }, duration: "3小时", resources: [R_HF_COURSE, R_PYTORCH_TUT], checkpoint: "能完成一次小规模预训练实验" },
     ],
   },
   // =====================================================
@@ -9436,16 +11367,126 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
       learningPath: ["LLM 全栈路径"],
     },
     dailyTasks: [
-      { day: 1, title: "RAG 架构概述", summary: "理解 RAG 的基本流程：索引→检索→生成，对比 Naive RAG / Advanced RAG / Modular RAG", content: "理解 RAG 的基本流程：索引→检索→生成，对比 Naive RAG / Advanced RAG / Modular RAG", duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能解释 RAG 的基本流程" },
-      { day: 2, title: "文档加载与分块", summary: "学习 PDF/Word/HTML 等文档的加载和分块策略（固定长度/语义分块）", content: "学习 PDF/Word/HTML 等文档的加载和分块策略（固定长度/语义分块）", duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能实现文档加载和分块" },
-      { day: 3, title: "Embedding 模型选择", summary: "理解 Embedding 原理，选择合适的中文/英文 Embedding 模型", content: "理解 Embedding 原理，选择合适的中文/英文 Embedding 模型", duration: "2小时", resources: [R_HF_TRANSFORMERS], checkpoint: "能选择合适的 Embedding 模型" },
-      { day: 4, title: "向量数据库实战", summary: "使用 ChromaDB/Milvus/FAISS 存储和检索向量", content: "使用 ChromaDB/Milvus/FAISS 存储和检索向量", duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能用向量数据库存储和检索向量" },
-      { day: 5, title: "检索策略优化", summary: "学习混合检索（BM25+向量）、重排序（Reranker）等高级检索技术", content: "学习混合检索（BM25+向量）、重排序（Reranker）等高级检索技术", duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能实现混合检索和重排序" },
-      { day: 6, title: "Prompt 模板设计", summary: "设计高效的 RAG Prompt 模板，包含上下文和引用来源", content: "设计高效的 RAG Prompt 模板，包含上下文和引用来源", duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能设计 RAG Prompt 模板" },
-      { day: 7, title: "RAG 评估指标", summary: "学习 RAGAS 等评估框架，衡量检索准确率和生成质量", content: "学习 RAGAS 等评估框架，衡量检索准确率和生成质量", duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能使用 RAGAS 评估 RAG 系统" },
-      { day: 8, title: "多轮对话 RAG", summary: "实现支持多轮对话的 RAG 系统，处理上下文指代消解", content: "实现支持多轮对话的 RAG 系统，处理上下文指代消解", duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能实现多轮对话 RAG" },
-      { day: 9, title: "RAG 常见问题排查", summary: "解决幻觉、检索不到、上下文超长等常见问题", content: "解决幻觉、检索不到、上下文超长等常见问题", duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能排查 RAG 常见问题" },
-      { day: 10, title: "实战：构建企业知识库", summary: "完成一个完整的 RAG 知识库系统，支持文档上传和问答", content: "完成一个完整的 RAG 知识库系统，支持文档上传和问答", duration: "3小时", resources: [R_LANGCHAIN, R_GRADIO], checkpoint: "能构建完整的 RAG 知识库系统" },
+      { day: 1, title: "RAG 架构概述", summary: "理解 RAG 的基本流程：索引→检索→生成，对比 Naive RAG / Advanced RAG / Modular RAG", content: {
+          objective: "今天你将学习RAG 架构概述。学完后你能理解 RAG 的基本流程：索引→检索→生成，对比 Naive RAG / Advanced RAG / Modular RAG。",
+          key_points: [
+            "核心概念：理解RAG 架构概述的基本原理和重要性",
+            "技术要点：掌握理解 RAG 的基本流程：索引→检索→生成，对比 Naive RAG / Advanced RAG / Modular RAG的关键技术",
+            "应用场景：了解RAG 架构概述在实际项目中的应用方式",
+            "常见问题：认识RAG 架构概述实践中可能遇到的挑战",
+            "与AI关联：理解RAG 架构概述在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践RAG 架构概述：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考RAG 架构概述在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解RAG 架构概述的进阶话题：从原理到实践，RAG 架构概述是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解RAG 架构概述技术的发展历程和最新进展；2）最佳实践：总结行业内RAG 架构概述的成熟方法论和常见模式；3）踩坑经验：认识RAG 架构概述实践中常见的陷阱和解决方案；4）与AI结合：思考RAG 架构概述如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握RAG 架构概述的关键。"
+        }, duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能解释 RAG 的基本流程" },
+      { day: 2, title: "文档加载与分块", summary: "学习 PDF/Word/HTML 等文档的加载和分块策略（固定长度/语义分块）", content: {
+          objective: "今天你将学习文档加载与分块。学完后你能学习 PDF/Word/HTML 等文档的加载和分块策略（固定长度/语义分块）。",
+          key_points: [
+            "核心概念：理解文档加载与分块的基本原理和重要性",
+            "技术要点：掌握学习 PDF/Word/HTML 等文档的加载和分块策略（固定长度/语义分块）的关键技术",
+            "应用场景：了解文档加载与分块在实际项目中的应用方式",
+            "常见问题：认识文档加载与分块实践中可能遇到的挑战",
+            "与AI关联：理解文档加载与分块在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践文档加载与分块：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考文档加载与分块在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解文档加载与分块的进阶话题：从原理到实践，文档加载与分块是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解文档加载与分块技术的发展历程和最新进展；2）最佳实践：总结行业内文档加载与分块的成熟方法论和常见模式；3）踩坑经验：认识文档加载与分块实践中常见的陷阱和解决方案；4）与AI结合：思考文档加载与分块如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握文档加载与分块的关键。"
+        }, duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能实现文档加载和分块" },
+      { day: 3, title: "Embedding 模型选择", summary: "理解 Embedding 原理，选择合适的中文/英文 Embedding 模型", content: {
+          objective: "今天你将学习Embedding 模型选择。学完后你能理解 Embedding 原理，选择合适的中文/英文 Embedding 模型。",
+          key_points: [
+            "核心概念：理解Embedding 模型选择的基本原理和重要性",
+            "技术要点：掌握理解 Embedding 原理，选择合适的中文/英文 Embedding 模型的关键技术",
+            "应用场景：了解Embedding 模型选择在实际项目中的应用方式",
+            "常见问题：认识Embedding 模型选择实践中可能遇到的挑战",
+            "与AI关联：理解Embedding 模型选择在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践Embedding 模型选择：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考Embedding 模型选择在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解Embedding 模型选择的进阶话题：从原理到实践，Embedding 模型选择是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解Embedding 模型选择技术的发展历程和最新进展；2）最佳实践：总结行业内Embedding 模型选择的成熟方法论和常见模式；3）踩坑经验：认识Embedding 模型选择实践中常见的陷阱和解决方案；4）与AI结合：思考Embedding 模型选择如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握Embedding 模型选择的关键。"
+        }, duration: "2小时", resources: [R_HF_TRANSFORMERS], checkpoint: "能选择合适的 Embedding 模型" },
+      { day: 4, title: "向量数据库实战", summary: "使用 ChromaDB/Milvus/FAISS 存储和检索向量", content: {
+          objective: "今天你将学习向量数据库实战。学完后你能使用 ChromaDB/Milvus/FAISS 存储和检索向量。",
+          key_points: [
+            "核心概念：理解向量数据库实战的基本原理和重要性",
+            "技术要点：掌握使用 ChromaDB/Milvus/FAISS 存储和检索向量的关键技术",
+            "应用场景：了解向量数据库实战在实际项目中的应用方式",
+            "常见问题：认识向量数据库实战实践中可能遇到的挑战",
+            "与AI关联：理解向量数据库实战在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践向量数据库实战：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考向量数据库实战在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解向量数据库实战的进阶话题：从原理到实践，向量数据库实战是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解向量数据库实战技术的发展历程和最新进展；2）最佳实践：总结行业内向量数据库实战的成熟方法论和常见模式；3）踩坑经验：认识向量数据库实战实践中常见的陷阱和解决方案；4）与AI结合：思考向量数据库实战如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握向量数据库实战的关键。"
+        }, duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能用向量数据库存储和检索向量" },
+      { day: 5, title: "检索策略优化", summary: "学习混合检索（BM25+向量）、重排序（Reranker）等高级检索技术", content: {
+          objective: "今天你将学习检索策略优化。学完后你能学习混合检索（BM25+向量）、重排序（Reranker）等高级检索技术。",
+          key_points: [
+            "核心概念：理解检索策略优化的基本原理和重要性",
+            "技术要点：掌握学习混合检索（BM25+向量）、重排序（Reranker）等高级检索技术的关键技术",
+            "应用场景：了解检索策略优化在实际项目中的应用方式",
+            "常见问题：认识检索策略优化实践中可能遇到的挑战",
+            "与AI关联：理解检索策略优化在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践检索策略优化：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考检索策略优化在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解检索策略优化的进阶话题：从原理到实践，检索策略优化是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解检索策略优化技术的发展历程和最新进展；2）最佳实践：总结行业内检索策略优化的成熟方法论和常见模式；3）踩坑经验：认识检索策略优化实践中常见的陷阱和解决方案；4）与AI结合：思考检索策略优化如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握检索策略优化的关键。"
+        }, duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能实现混合检索和重排序" },
+      { day: 6, title: "Prompt 模板设计", summary: "设计高效的 RAG Prompt 模板，包含上下文和引用来源", content: {
+          objective: "今天你将学习Prompt 模板设计。学完后你能设计高效的 RAG Prompt 模板，包含上下文和引用来源。",
+          key_points: [
+            "核心概念：理解Prompt 模板设计的基本原理和重要性",
+            "技术要点：掌握设计高效的 RAG Prompt 模板，包含上下文和引用来源的关键技术",
+            "应用场景：了解Prompt 模板设计在实际项目中的应用方式",
+            "常见问题：认识Prompt 模板设计实践中可能遇到的挑战",
+            "与AI关联：理解Prompt 模板设计在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践Prompt 模板设计：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考Prompt 模板设计在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解Prompt 模板设计的进阶话题：从原理到实践，Prompt 模板设计是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解Prompt 模板设计技术的发展历程和最新进展；2）最佳实践：总结行业内Prompt 模板设计的成熟方法论和常见模式；3）踩坑经验：认识Prompt 模板设计实践中常见的陷阱和解决方案；4）与AI结合：思考Prompt 模板设计如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握Prompt 模板设计的关键。"
+        }, duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能设计 RAG Prompt 模板" },
+      { day: 7, title: "RAG 评估指标", summary: "学习 RAGAS 等评估框架，衡量检索准确率和生成质量", content: {
+          objective: "今天你将学习RAG 评估指标。学完后你能学习 RAGAS 等评估框架，衡量检索准确率和生成质量。",
+          key_points: [
+            "核心概念：理解RAG 评估指标的基本原理和重要性",
+            "技术要点：掌握学习 RAGAS 等评估框架，衡量检索准确率和生成质量的关键技术",
+            "应用场景：了解RAG 评估指标在实际项目中的应用方式",
+            "常见问题：认识RAG 评估指标实践中可能遇到的挑战",
+            "与AI关联：理解RAG 评估指标在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践RAG 评估指标：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考RAG 评估指标在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解RAG 评估指标的进阶话题：从原理到实践，RAG 评估指标是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解RAG 评估指标技术的发展历程和最新进展；2）最佳实践：总结行业内RAG 评估指标的成熟方法论和常见模式；3）踩坑经验：认识RAG 评估指标实践中常见的陷阱和解决方案；4）与AI结合：思考RAG 评估指标如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握RAG 评估指标的关键。"
+        }, duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能使用 RAGAS 评估 RAG 系统" },
+      { day: 8, title: "多轮对话 RAG", summary: "实现支持多轮对话的 RAG 系统，处理上下文指代消解", content: {
+          objective: "今天你将学习多轮对话 RAG。学完后你能实现支持多轮对话的 RAG 系统，处理上下文指代消解。",
+          key_points: [
+            "核心概念：理解多轮对话 RAG的基本原理和重要性",
+            "技术要点：掌握实现支持多轮对话的 RAG 系统，处理上下文指代消解的关键技术",
+            "应用场景：了解多轮对话 RAG在实际项目中的应用方式",
+            "常见问题：认识多轮对话 RAG实践中可能遇到的挑战",
+            "与AI关联：理解多轮对话 RAG在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践多轮对话 RAG：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考多轮对话 RAG在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解多轮对话 RAG的进阶话题：从原理到实践，多轮对话 RAG是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解多轮对话 RAG技术的发展历程和最新进展；2）最佳实践：总结行业内多轮对话 RAG的成熟方法论和常见模式；3）踩坑经验：认识多轮对话 RAG实践中常见的陷阱和解决方案；4）与AI结合：思考多轮对话 RAG如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握多轮对话 RAG的关键。"
+        }, duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能实现多轮对话 RAG" },
+      { day: 9, title: "RAG 常见问题排查", summary: "解决幻觉、检索不到、上下文超长等常见问题", content: {
+          objective: "今天你将学习RAG 常见问题排查。学完后你能解决幻觉、检索不到、上下文超长等常见问题。",
+          key_points: [
+            "核心概念：理解RAG 常见问题排查的基本原理和重要性",
+            "技术要点：掌握解决幻觉、检索不到、上下文超长等常见问题的关键技术",
+            "应用场景：了解RAG 常见问题排查在实际项目中的应用方式",
+            "常见问题：认识RAG 常见问题排查实践中可能遇到的挑战",
+            "与AI关联：理解RAG 常见问题排查在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践RAG 常见问题排查：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考RAG 常见问题排查在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解RAG 常见问题排查的进阶话题：从原理到实践，RAG 常见问题排查是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解RAG 常见问题排查技术的发展历程和最新进展；2）最佳实践：总结行业内RAG 常见问题排查的成熟方法论和常见模式；3）踩坑经验：认识RAG 常见问题排查实践中常见的陷阱和解决方案；4）与AI结合：思考RAG 常见问题排查如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握RAG 常见问题排查的关键。"
+        }, duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能排查 RAG 常见问题" },
+      { day: 10, title: "实战：构建企业知识库", summary: "完成一个完整的 RAG 知识库系统，支持文档上传和问答", content: {
+          objective: "今天你将学习实战：构建企业知识库。学完后你能完成一个完整的 RAG 知识库系统，支持文档上传和问答。",
+          key_points: [
+            "核心概念：理解实战：构建企业知识库的基本原理和重要性",
+            "技术要点：掌握完成一个完整的 RAG 知识库系统，支持文档上传和问答的关键技术",
+            "应用场景：了解实战：构建企业知识库在实际项目中的应用方式",
+            "常见问题：认识实战：构建企业知识库实践中可能遇到的挑战",
+            "与AI关联：理解实战：构建企业知识库在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践实战：构建企业知识库：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考实战：构建企业知识库在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解实战：构建企业知识库的进阶话题：从原理到实践，实战：构建企业知识库是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解实战：构建企业知识库技术的发展历程和最新进展；2）最佳实践：总结行业内实战：构建企业知识库的成熟方法论和常见模式；3）踩坑经验：认识实战：构建企业知识库实践中常见的陷阱和解决方案；4）与AI结合：思考实战：构建企业知识库如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握实战：构建企业知识库的关键。"
+        }, duration: "3小时", resources: [R_LANGCHAIN, R_GRADIO], checkpoint: "能构建完整的 RAG 知识库系统" },
     ],
   },
   // =====================================================
@@ -9471,16 +11512,126 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
       learningPath: ["LLM 全栈路径"],
     },
     dailyTasks: [
-      { day: 1, title: "Agent 概念与架构", summary: "理解 LLM Agent 的核心组件：规划、记忆、工具、执行", content: "理解 LLM Agent 的核心组件：规划、记忆、工具、执行", duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能解释 Agent 的核心组件" },
-      { day: 2, title: "Function Calling 实战", summary: "使用 OpenAI/Anthropic 的 Function Calling 接口实现工具调用", content: "使用 OpenAI/Anthropic 的 Function Calling 接口实现工具调用", duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能实现 Function Calling 工具调用" },
-      { day: 3, title: "ReAct 框架精讲", summary: "理解 Reasoning + Acting 循环，手写 ReAct Agent", content: "理解 Reasoning + Acting 循环，手写 ReAct Agent", duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能手写 ReAct Agent" },
-      { day: 4, title: "工具定义与注册", summary: "学习如何定义自定义工具（搜索/计算/数据库查询），注册到 Agent", content: "学习如何定义自定义工具（搜索/计算/数据库查询），注册到 Agent", duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能定义并注册自定义工具" },
-      { day: 5, title: "Agent 记忆系统", summary: "实现短期记忆（对话历史）和长期记忆（向量存储）", content: "实现短期记忆（对话历史）和长期记忆（向量存储）", duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能实现 Agent 记忆系统" },
-      { day: 6, title: "多 Agent 协作", summary: "使用 LangGraph/CrewAI 构建多 Agent 协作系统", content: "使用 LangGraph/CrewAI 构建多 Agent 协作系统", duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能构建多 Agent 协作系统" },
-      { day: 7, title: "Agent 规划与分解", summary: "学习任务分解（Task Decomposition）和规划策略（CoT/ToT）", content: "学习任务分解（Task Decomposition）和规划策略（CoT/ToT）", duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能解释任务分解和规划策略" },
-      { day: 8, title: "代码生成 Agent", summary: "构建能编写和执行代码的 Agent，实现数据分析自动化", content: "构建能编写和执行代码的 Agent，实现数据分析自动化", duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能构建代码生成 Agent" },
-      { day: 9, title: "Agent 安全与护栏", summary: "实现 Agent 输出验证、循环检测、资源限制等安全措施", content: "实现 Agent 输出验证、循环检测、资源限制等安全措施", duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能实现 Agent 安全护栏" },
-      { day: 10, title: "实战：构建智能助手", summary: "完成一个多工具 Agent 系统，支持搜索、代码执行和文件操作", content: "完成一个多工具 Agent 系统，支持搜索、代码执行和文件操作", duration: "3小时", resources: [R_LANGCHAIN, R_GRADIO], checkpoint: "能构建多工具 Agent 系统" },
+      { day: 1, title: "Agent 概念与架构", summary: "理解 LLM Agent 的核心组件：规划、记忆、工具、执行", content: {
+          objective: "今天你将学习Agent 概念与架构。学完后你能理解 LLM Agent 的核心组件：规划、记忆、工具、执行。",
+          key_points: [
+            "核心概念：理解Agent 概念与架构的基本原理和重要性",
+            "技术要点：掌握理解 LLM Agent 的核心组件：规划、记忆、工具、执行的关键技术",
+            "应用场景：了解Agent 概念与架构在实际项目中的应用方式",
+            "常见问题：认识Agent 概念与架构实践中可能遇到的挑战",
+            "与AI关联：理解Agent 概念与架构在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践Agent 概念与架构：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考Agent 概念与架构在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解Agent 概念与架构的进阶话题：从原理到实践，Agent 概念与架构是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解Agent 概念与架构技术的发展历程和最新进展；2）最佳实践：总结行业内Agent 概念与架构的成熟方法论和常见模式；3）踩坑经验：认识Agent 概念与架构实践中常见的陷阱和解决方案；4）与AI结合：思考Agent 概念与架构如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握Agent 概念与架构的关键。"
+        }, duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能解释 Agent 的核心组件" },
+      { day: 2, title: "Function Calling 实战", summary: "使用 OpenAI/Anthropic 的 Function Calling 接口实现工具调用", content: {
+          objective: "今天你将学习Function Calling 实战。学完后你能使用 OpenAI/Anthropic 的 Function Calling 接口实现工具调用。",
+          key_points: [
+            "核心概念：理解Function Calling 实战的基本原理和重要性",
+            "技术要点：掌握使用 OpenAI/Anthropic 的 Function Calling 接口实现工具调用的关键技术",
+            "应用场景：了解Function Calling 实战在实际项目中的应用方式",
+            "常见问题：认识Function Calling 实战实践中可能遇到的挑战",
+            "与AI关联：理解Function Calling 实战在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践Function Calling 实战：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考Function Calling 实战在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解Function Calling 实战的进阶话题：从原理到实践，Function Calling 实战是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解Function Calling 实战技术的发展历程和最新进展；2）最佳实践：总结行业内Function Calling 实战的成熟方法论和常见模式；3）踩坑经验：认识Function Calling 实战实践中常见的陷阱和解决方案；4）与AI结合：思考Function Calling 实战如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握Function Calling 实战的关键。"
+        }, duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能实现 Function Calling 工具调用" },
+      { day: 3, title: "ReAct 框架精讲", summary: "理解 Reasoning + Acting 循环，手写 ReAct Agent", content: {
+          objective: "今天你将学习ReAct 框架精讲。学完后你能理解 Reasoning + Acting 循环，手写 ReAct Agent。",
+          key_points: [
+            "核心概念：理解ReAct 框架精讲的基本原理和重要性",
+            "技术要点：掌握理解 Reasoning + Acting 循环，手写 ReAct Agent的关键技术",
+            "应用场景：了解ReAct 框架精讲在实际项目中的应用方式",
+            "常见问题：认识ReAct 框架精讲实践中可能遇到的挑战",
+            "与AI关联：理解ReAct 框架精讲在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践ReAct 框架精讲：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考ReAct 框架精讲在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解ReAct 框架精讲的进阶话题：从原理到实践，ReAct 框架精讲是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解ReAct 框架精讲技术的发展历程和最新进展；2）最佳实践：总结行业内ReAct 框架精讲的成熟方法论和常见模式；3）踩坑经验：认识ReAct 框架精讲实践中常见的陷阱和解决方案；4）与AI结合：思考ReAct 框架精讲如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握ReAct 框架精讲的关键。"
+        }, duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能手写 ReAct Agent" },
+      { day: 4, title: "工具定义与注册", summary: "学习如何定义自定义工具（搜索/计算/数据库查询），注册到 Agent", content: {
+          objective: "今天你将学习工具定义与注册。学完后你能学习如何定义自定义工具（搜索/计算/数据库查询），注册到 Agent。",
+          key_points: [
+            "核心概念：理解工具定义与注册的基本原理和重要性",
+            "技术要点：掌握学习如何定义自定义工具（搜索/计算/数据库查询），注册到 Agent的关键技术",
+            "应用场景：了解工具定义与注册在实际项目中的应用方式",
+            "常见问题：认识工具定义与注册实践中可能遇到的挑战",
+            "与AI关联：理解工具定义与注册在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践工具定义与注册：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考工具定义与注册在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解工具定义与注册的进阶话题：从原理到实践，工具定义与注册是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解工具定义与注册技术的发展历程和最新进展；2）最佳实践：总结行业内工具定义与注册的成熟方法论和常见模式；3）踩坑经验：认识工具定义与注册实践中常见的陷阱和解决方案；4）与AI结合：思考工具定义与注册如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握工具定义与注册的关键。"
+        }, duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能定义并注册自定义工具" },
+      { day: 5, title: "Agent 记忆系统", summary: "实现短期记忆（对话历史）和长期记忆（向量存储）", content: {
+          objective: "今天你将学习Agent 记忆系统。学完后你能实现短期记忆（对话历史）和长期记忆（向量存储）。",
+          key_points: [
+            "核心概念：理解Agent 记忆系统的基本原理和重要性",
+            "技术要点：掌握实现短期记忆（对话历史）和长期记忆（向量存储）的关键技术",
+            "应用场景：了解Agent 记忆系统在实际项目中的应用方式",
+            "常见问题：认识Agent 记忆系统实践中可能遇到的挑战",
+            "与AI关联：理解Agent 记忆系统在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践Agent 记忆系统：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考Agent 记忆系统在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解Agent 记忆系统的进阶话题：从原理到实践，Agent 记忆系统是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解Agent 记忆系统技术的发展历程和最新进展；2）最佳实践：总结行业内Agent 记忆系统的成熟方法论和常见模式；3）踩坑经验：认识Agent 记忆系统实践中常见的陷阱和解决方案；4）与AI结合：思考Agent 记忆系统如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握Agent 记忆系统的关键。"
+        }, duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能实现 Agent 记忆系统" },
+      { day: 6, title: "多 Agent 协作", summary: "使用 LangGraph/CrewAI 构建多 Agent 协作系统", content: {
+          objective: "今天你将学习多 Agent 协作。学完后你能使用 LangGraph/CrewAI 构建多 Agent 协作系统。",
+          key_points: [
+            "核心概念：理解多 Agent 协作的基本原理和重要性",
+            "技术要点：掌握使用 LangGraph/CrewAI 构建多 Agent 协作系统的关键技术",
+            "应用场景：了解多 Agent 协作在实际项目中的应用方式",
+            "常见问题：认识多 Agent 协作实践中可能遇到的挑战",
+            "与AI关联：理解多 Agent 协作在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践多 Agent 协作：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考多 Agent 协作在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解多 Agent 协作的进阶话题：从原理到实践，多 Agent 协作是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解多 Agent 协作技术的发展历程和最新进展；2）最佳实践：总结行业内多 Agent 协作的成熟方法论和常见模式；3）踩坑经验：认识多 Agent 协作实践中常见的陷阱和解决方案；4）与AI结合：思考多 Agent 协作如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握多 Agent 协作的关键。"
+        }, duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能构建多 Agent 协作系统" },
+      { day: 7, title: "Agent 规划与分解", summary: "学习任务分解（Task Decomposition）和规划策略（CoT/ToT）", content: {
+          objective: "今天你将学习Agent 规划与分解。学完后你能学习任务分解（Task Decomposition）和规划策略（CoT/ToT）。",
+          key_points: [
+            "核心概念：理解Agent 规划与分解的基本原理和重要性",
+            "技术要点：掌握学习任务分解（Task Decomposition）和规划策略（CoT/ToT）的关键技术",
+            "应用场景：了解Agent 规划与分解在实际项目中的应用方式",
+            "常见问题：认识Agent 规划与分解实践中可能遇到的挑战",
+            "与AI关联：理解Agent 规划与分解在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践Agent 规划与分解：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考Agent 规划与分解在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解Agent 规划与分解的进阶话题：从原理到实践，Agent 规划与分解是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解Agent 规划与分解技术的发展历程和最新进展；2）最佳实践：总结行业内Agent 规划与分解的成熟方法论和常见模式；3）踩坑经验：认识Agent 规划与分解实践中常见的陷阱和解决方案；4）与AI结合：思考Agent 规划与分解如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握Agent 规划与分解的关键。"
+        }, duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能解释任务分解和规划策略" },
+      { day: 8, title: "代码生成 Agent", summary: "构建能编写和执行代码的 Agent，实现数据分析自动化", content: {
+          objective: "今天你将学习代码生成 Agent。学完后你能构建能编写和执行代码的 Agent，实现数据分析自动化。",
+          key_points: [
+            "核心概念：理解代码生成 Agent的基本原理和重要性",
+            "技术要点：掌握构建能编写和执行代码的 Agent，实现数据分析自动化的关键技术",
+            "应用场景：了解代码生成 Agent在实际项目中的应用方式",
+            "常见问题：认识代码生成 Agent实践中可能遇到的挑战",
+            "与AI关联：理解代码生成 Agent在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践代码生成 Agent：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考代码生成 Agent在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解代码生成 Agent的进阶话题：从原理到实践，代码生成 Agent是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解代码生成 Agent技术的发展历程和最新进展；2）最佳实践：总结行业内代码生成 Agent的成熟方法论和常见模式；3）踩坑经验：认识代码生成 Agent实践中常见的陷阱和解决方案；4）与AI结合：思考代码生成 Agent如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握代码生成 Agent的关键。"
+        }, duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能构建代码生成 Agent" },
+      { day: 9, title: "Agent 安全与护栏", summary: "实现 Agent 输出验证、循环检测、资源限制等安全措施", content: {
+          objective: "今天你将学习Agent 安全与护栏。学完后你能实现 Agent 输出验证、循环检测、资源限制等安全措施。",
+          key_points: [
+            "核心概念：理解Agent 安全与护栏的基本原理和重要性",
+            "技术要点：掌握实现 Agent 输出验证、循环检测、资源限制等安全措施的关键技术",
+            "应用场景：了解Agent 安全与护栏在实际项目中的应用方式",
+            "常见问题：认识Agent 安全与护栏实践中可能遇到的挑战",
+            "与AI关联：理解Agent 安全与护栏在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践Agent 安全与护栏：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考Agent 安全与护栏在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解Agent 安全与护栏的进阶话题：从原理到实践，Agent 安全与护栏是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解Agent 安全与护栏技术的发展历程和最新进展；2）最佳实践：总结行业内Agent 安全与护栏的成熟方法论和常见模式；3）踩坑经验：认识Agent 安全与护栏实践中常见的陷阱和解决方案；4）与AI结合：思考Agent 安全与护栏如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握Agent 安全与护栏的关键。"
+        }, duration: "2小时", resources: [R_LANGCHAIN], checkpoint: "能实现 Agent 安全护栏" },
+      { day: 10, title: "实战：构建智能助手", summary: "完成一个多工具 Agent 系统，支持搜索、代码执行和文件操作", content: {
+          objective: "今天你将学习实战：构建智能助手。学完后你能完成一个多工具 Agent 系统，支持搜索、代码执行和文件操作。",
+          key_points: [
+            "核心概念：理解实战：构建智能助手的基本原理和重要性",
+            "技术要点：掌握完成一个多工具 Agent 系统，支持搜索、代码执行和文件操作的关键技术",
+            "应用场景：了解实战：构建智能助手在实际项目中的应用方式",
+            "常见问题：认识实战：构建智能助手实践中可能遇到的挑战",
+            "与AI关联：理解实战：构建智能助手在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践实战：构建智能助手：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考实战：构建智能助手在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解实战：构建智能助手的进阶话题：从原理到实践，实战：构建智能助手是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解实战：构建智能助手技术的发展历程和最新进展；2）最佳实践：总结行业内实战：构建智能助手的成熟方法论和常见模式；3）踩坑经验：认识实战：构建智能助手实践中常见的陷阱和解决方案；4）与AI结合：思考实战：构建智能助手如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握实战：构建智能助手的关键。"
+        }, duration: "3小时", resources: [R_LANGCHAIN, R_GRADIO], checkpoint: "能构建多工具 Agent 系统" },
     ],
   },
   // =====================================================
@@ -9506,16 +11657,126 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
       learningPath: ["LLM 全栈路径"],
     },
     dailyTasks: [
-      { day: 1, title: "LLM 评估概述", summary: "理解 LLM 评估的挑战：开放式生成、多维度能力、主观性", content: "理解 LLM 评估的挑战：开放式生成、多维度能力、主观性", duration: "2小时", resources: [R_HF_COURSE], checkpoint: "能解释 LLM 评估的挑战" },
-      { day: 2, title: "自动评估指标", summary: "学习 BLEU/ROUGE/METEOR 等传统指标和 BERTScore/LLM-as-Judge 等新方法", content: "学习 BLEU/ROUGE/METEOR 等传统指标和 BERTScore/LLM-as-Judge 等新方法", duration: "2小时", resources: [R_HF_COURSE], checkpoint: "能解释各类自动评估指标" },
-      { day: 3, title: "基准测试集", summary: "了解 MMLU/HumanEval/GSM8K/MT-Bench 等主流评测基准", content: "了解 MMLU/HumanEval/GSM8K/MT-Bench 等主流评测基准", duration: "2小时", resources: [R_HF_COURSE], checkpoint: "能描述主流评测基准的用途" },
-      { day: 4, title: "人工评估方法", summary: "学习人类偏好评估、A/B 测试、Elo 评分等方法", content: "学习人类偏好评估、A/B 测试、Elo 评分等方法", duration: "2小时", resources: [R_HF_COURSE], checkpoint: "能解释人工评估方法" },
-      { day: 5, title: "幻觉检测与缓解", summary: "理解幻觉成因，学习事实一致性检测和幻觉缓解策略", content: "理解幻觉成因，学习事实一致性检测和幻觉缓解策略", duration: "2小时", resources: [R_HF_TRANSFORMERS], checkpoint: "能解释幻觉检测和缓解策略" },
-      { day: 6, title: "偏见与公平性", summary: "检测 LLM 中的性别/种族/文化偏见，学习去偏方法", content: "检测 LLM 中的性别/种族/文化偏见，学习去偏方法", duration: "2小时", resources: [R_HF_TRANSFORMERS], checkpoint: "能描述偏见检测和去偏方法" },
-      { day: 7, title: "越狱攻击与防御", summary: "理解 Prompt Injection、Jailbreak 等攻击方式及防御策略", content: "理解 Prompt Injection、Jailbreak 等攻击方式及防御策略", duration: "2小时", resources: [R_HF_TRANSFORMERS], checkpoint: "能解释越狱攻击和防御策略" },
-      { day: 8, title: "安全对齐技术", summary: "深入学习 RLHF/DPO/Constitutional AI 等对齐方法", content: "深入学习 RLHF/DPO/Constitutional AI 等对齐方法", duration: "2小时", resources: [R_HF_PEFT], checkpoint: "能解释各类对齐方法" },
-      { day: 9, title: "模型卡片与透明度", summary: "学习编写 Model Card，披露模型能力和局限性", content: "学习编写 Model Card，披露模型能力和局限性", duration: "2小时", resources: [R_HF_TRANSFORMERS], checkpoint: "能编写 Model Card" },
-      { day: 10, title: "实战：评估一个开源 LLM", summary: "选择一个开源模型，使用多个基准进行评估并生成报告", content: "选择一个开源模型，使用多个基准进行评估并生成报告", duration: "3小时", resources: [R_HF_COURSE, R_HF_TRANSFORMERS], checkpoint: "能完成 LLM 评估并生成报告" },
+      { day: 1, title: "LLM 评估概述", summary: "理解 LLM 评估的挑战：开放式生成、多维度能力、主观性", content: {
+          objective: "今天你将学习LLM 评估概述。学完后你能理解 LLM 评估的挑战：开放式生成、多维度能力、主观性。",
+          key_points: [
+            "核心概念：理解LLM 评估概述的基本原理和重要性",
+            "技术要点：掌握理解 LLM 评估的挑战：开放式生成、多维度能力、主观性的关键技术",
+            "应用场景：了解LLM 评估概述在实际项目中的应用方式",
+            "常见问题：认识LLM 评估概述实践中可能遇到的挑战",
+            "与AI关联：理解LLM 评估概述在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践LLM 评估概述：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考LLM 评估概述在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解LLM 评估概述的进阶话题：从原理到实践，LLM 评估概述是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解LLM 评估概述技术的发展历程和最新进展；2）最佳实践：总结行业内LLM 评估概述的成熟方法论和常见模式；3）踩坑经验：认识LLM 评估概述实践中常见的陷阱和解决方案；4）与AI结合：思考LLM 评估概述如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握LLM 评估概述的关键。"
+        }, duration: "2小时", resources: [R_HF_COURSE], checkpoint: "能解释 LLM 评估的挑战" },
+      { day: 2, title: "自动评估指标", summary: "学习 BLEU/ROUGE/METEOR 等传统指标和 BERTScore/LLM-as-Judge 等新方法", content: {
+          objective: "今天你将学习自动评估指标。学完后你能学习 BLEU/ROUGE/METEOR 等传统指标和 BERTScore/LLM-as-Judge 等新方法。",
+          key_points: [
+            "核心概念：理解自动评估指标的基本原理和重要性",
+            "技术要点：掌握学习 BLEU/ROUGE/METEOR 等传统指标和 BERTScore/LLM-as-Judge 等新方法的关键技术",
+            "应用场景：了解自动评估指标在实际项目中的应用方式",
+            "常见问题：认识自动评估指标实践中可能遇到的挑战",
+            "与AI关联：理解自动评估指标在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践自动评估指标：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考自动评估指标在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解自动评估指标的进阶话题：从原理到实践，自动评估指标是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解自动评估指标技术的发展历程和最新进展；2）最佳实践：总结行业内自动评估指标的成熟方法论和常见模式；3）踩坑经验：认识自动评估指标实践中常见的陷阱和解决方案；4）与AI结合：思考自动评估指标如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握自动评估指标的关键。"
+        }, duration: "2小时", resources: [R_HF_COURSE], checkpoint: "能解释各类自动评估指标" },
+      { day: 3, title: "基准测试集", summary: "了解 MMLU/HumanEval/GSM8K/MT-Bench 等主流评测基准", content: {
+          objective: "今天你将学习基准测试集。学完后你能了解 MMLU/HumanEval/GSM8K/MT-Bench 等主流评测基准。",
+          key_points: [
+            "核心概念：理解基准测试集的基本原理和重要性",
+            "技术要点：掌握了解 MMLU/HumanEval/GSM8K/MT-Bench 等主流评测基准的关键技术",
+            "应用场景：了解基准测试集在实际项目中的应用方式",
+            "常见问题：认识基准测试集实践中可能遇到的挑战",
+            "与AI关联：理解基准测试集在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践基准测试集：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考基准测试集在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解基准测试集的进阶话题：从原理到实践，基准测试集是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解基准测试集技术的发展历程和最新进展；2）最佳实践：总结行业内基准测试集的成熟方法论和常见模式；3）踩坑经验：认识基准测试集实践中常见的陷阱和解决方案；4）与AI结合：思考基准测试集如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握基准测试集的关键。"
+        }, duration: "2小时", resources: [R_HF_COURSE], checkpoint: "能描述主流评测基准的用途" },
+      { day: 4, title: "人工评估方法", summary: "学习人类偏好评估、A/B 测试、Elo 评分等方法", content: {
+          objective: "今天你将学习人工评估方法。学完后你能学习人类偏好评估、A/B 测试、Elo 评分等方法。",
+          key_points: [
+            "核心概念：理解人工评估方法的基本原理和重要性",
+            "技术要点：掌握学习人类偏好评估、A/B 测试、Elo 评分等方法的关键技术",
+            "应用场景：了解人工评估方法在实际项目中的应用方式",
+            "常见问题：认识人工评估方法实践中可能遇到的挑战",
+            "与AI关联：理解人工评估方法在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践人工评估方法：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考人工评估方法在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解人工评估方法的进阶话题：从原理到实践，人工评估方法是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解人工评估方法技术的发展历程和最新进展；2）最佳实践：总结行业内人工评估方法的成熟方法论和常见模式；3）踩坑经验：认识人工评估方法实践中常见的陷阱和解决方案；4）与AI结合：思考人工评估方法如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握人工评估方法的关键。"
+        }, duration: "2小时", resources: [R_HF_COURSE], checkpoint: "能解释人工评估方法" },
+      { day: 5, title: "幻觉检测与缓解", summary: "理解幻觉成因，学习事实一致性检测和幻觉缓解策略", content: {
+          objective: "今天你将学习幻觉检测与缓解。学完后你能理解幻觉成因，学习事实一致性检测和幻觉缓解策略。",
+          key_points: [
+            "核心概念：理解幻觉检测与缓解的基本原理和重要性",
+            "技术要点：掌握理解幻觉成因，学习事实一致性检测和幻觉缓解策略的关键技术",
+            "应用场景：了解幻觉检测与缓解在实际项目中的应用方式",
+            "常见问题：认识幻觉检测与缓解实践中可能遇到的挑战",
+            "与AI关联：理解幻觉检测与缓解在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践幻觉检测与缓解：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考幻觉检测与缓解在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解幻觉检测与缓解的进阶话题：从原理到实践，幻觉检测与缓解是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解幻觉检测与缓解技术的发展历程和最新进展；2）最佳实践：总结行业内幻觉检测与缓解的成熟方法论和常见模式；3）踩坑经验：认识幻觉检测与缓解实践中常见的陷阱和解决方案；4）与AI结合：思考幻觉检测与缓解如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握幻觉检测与缓解的关键。"
+        }, duration: "2小时", resources: [R_HF_TRANSFORMERS], checkpoint: "能解释幻觉检测和缓解策略" },
+      { day: 6, title: "偏见与公平性", summary: "检测 LLM 中的性别/种族/文化偏见，学习去偏方法", content: {
+          objective: "今天你将学习偏见与公平性。学完后你能检测 LLM 中的性别/种族/文化偏见，学习去偏方法。",
+          key_points: [
+            "核心概念：理解偏见与公平性的基本原理和重要性",
+            "技术要点：掌握检测 LLM 中的性别/种族/文化偏见，学习去偏方法的关键技术",
+            "应用场景：了解偏见与公平性在实际项目中的应用方式",
+            "常见问题：认识偏见与公平性实践中可能遇到的挑战",
+            "与AI关联：理解偏见与公平性在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践偏见与公平性：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考偏见与公平性在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解偏见与公平性的进阶话题：从原理到实践，偏见与公平性是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解偏见与公平性技术的发展历程和最新进展；2）最佳实践：总结行业内偏见与公平性的成熟方法论和常见模式；3）踩坑经验：认识偏见与公平性实践中常见的陷阱和解决方案；4）与AI结合：思考偏见与公平性如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握偏见与公平性的关键。"
+        }, duration: "2小时", resources: [R_HF_TRANSFORMERS], checkpoint: "能描述偏见检测和去偏方法" },
+      { day: 7, title: "越狱攻击与防御", summary: "理解 Prompt Injection、Jailbreak 等攻击方式及防御策略", content: {
+          objective: "今天你将学习越狱攻击与防御。学完后你能理解 Prompt Injection、Jailbreak 等攻击方式及防御策略。",
+          key_points: [
+            "核心概念：理解越狱攻击与防御的基本原理和重要性",
+            "技术要点：掌握理解 Prompt Injection、Jailbreak 等攻击方式及防御策略的关键技术",
+            "应用场景：了解越狱攻击与防御在实际项目中的应用方式",
+            "常见问题：认识越狱攻击与防御实践中可能遇到的挑战",
+            "与AI关联：理解越狱攻击与防御在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践越狱攻击与防御：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考越狱攻击与防御在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解越狱攻击与防御的进阶话题：从原理到实践，越狱攻击与防御是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解越狱攻击与防御技术的发展历程和最新进展；2）最佳实践：总结行业内越狱攻击与防御的成熟方法论和常见模式；3）踩坑经验：认识越狱攻击与防御实践中常见的陷阱和解决方案；4）与AI结合：思考越狱攻击与防御如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握越狱攻击与防御的关键。"
+        }, duration: "2小时", resources: [R_HF_TRANSFORMERS], checkpoint: "能解释越狱攻击和防御策略" },
+      { day: 8, title: "安全对齐技术", summary: "深入学习 RLHF/DPO/Constitutional AI 等对齐方法", content: {
+          objective: "今天你将学习安全对齐技术。学完后你能深入学习 RLHF/DPO/Constitutional AI 等对齐方法。",
+          key_points: [
+            "核心概念：理解安全对齐技术的基本原理和重要性",
+            "技术要点：掌握深入学习 RLHF/DPO/Constitutional AI 等对齐方法的关键技术",
+            "应用场景：了解安全对齐技术在实际项目中的应用方式",
+            "常见问题：认识安全对齐技术实践中可能遇到的挑战",
+            "与AI关联：理解安全对齐技术在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践安全对齐技术：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考安全对齐技术在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解安全对齐技术的进阶话题：从原理到实践，安全对齐技术是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解安全对齐技术技术的发展历程和最新进展；2）最佳实践：总结行业内安全对齐技术的成熟方法论和常见模式；3）踩坑经验：认识安全对齐技术实践中常见的陷阱和解决方案；4）与AI结合：思考安全对齐技术如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握安全对齐技术的关键。"
+        }, duration: "2小时", resources: [R_HF_PEFT], checkpoint: "能解释各类对齐方法" },
+      { day: 9, title: "模型卡片与透明度", summary: "学习编写 Model Card，披露模型能力和局限性", content: {
+          objective: "今天你将学习模型卡片与透明度。学完后你能学习编写 Model Card，披露模型能力和局限性。",
+          key_points: [
+            "核心概念：理解模型卡片与透明度的基本原理和重要性",
+            "技术要点：掌握学习编写 Model Card，披露模型能力和局限性的关键技术",
+            "应用场景：了解模型卡片与透明度在实际项目中的应用方式",
+            "常见问题：认识模型卡片与透明度实践中可能遇到的挑战",
+            "与AI关联：理解模型卡片与透明度在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践模型卡片与透明度：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考模型卡片与透明度在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解模型卡片与透明度的进阶话题：从原理到实践，模型卡片与透明度是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解模型卡片与透明度技术的发展历程和最新进展；2）最佳实践：总结行业内模型卡片与透明度的成熟方法论和常见模式；3）踩坑经验：认识模型卡片与透明度实践中常见的陷阱和解决方案；4）与AI结合：思考模型卡片与透明度如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握模型卡片与透明度的关键。"
+        }, duration: "2小时", resources: [R_HF_TRANSFORMERS], checkpoint: "能编写 Model Card" },
+      { day: 10, title: "实战：评估一个开源 LLM", summary: "选择一个开源模型，使用多个基准进行评估并生成报告", content: {
+          objective: "今天你将学习实战：评估一个开源 LLM。学完后你能选择一个开源模型，使用多个基准进行评估并生成报告。",
+          key_points: [
+            "核心概念：理解实战：评估一个开源 LLM的基本原理和重要性",
+            "技术要点：掌握选择一个开源模型，使用多个基准进行评估并生成报告的关键技术",
+            "应用场景：了解实战：评估一个开源 LLM在实际项目中的应用方式",
+            "常见问题：认识实战：评估一个开源 LLM实践中可能遇到的挑战",
+            "与AI关联：理解实战：评估一个开源 LLM在LLM开发流程中的地位和作用"
+          ],
+          practice: "动手实践实战：评估一个开源 LLM：1）阅读相关文档和教程，建立整体认知；2）动手实现或运行一个简单示例，验证理解；3）思考实战：评估一个开源 LLM在实际项目中的应用场景，记录你的想法；4）整理学习笔记，总结关键知识点和个人理解。",
+          deep_dive: "深入理解实战：评估一个开源 LLM的进阶话题：从原理到实践，实战：评估一个开源 LLM是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解实战：评估一个开源 LLM技术的发展历程和最新进展；2）最佳实践：总结行业内实战：评估一个开源 LLM的成熟方法论和常见模式；3）踩坑经验：认识实战：评估一个开源 LLM实践中常见的陷阱和解决方案；4）与AI结合：思考实战：评估一个开源 LLM如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握实战：评估一个开源 LLM的关键。"
+        }, duration: "3小时", resources: [R_HF_COURSE, R_HF_TRANSFORMERS], checkpoint: "能完成 LLM 评估并生成报告" },
     ],
   },
 ];

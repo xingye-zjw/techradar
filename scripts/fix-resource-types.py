@@ -9,6 +9,8 @@ replacements = {
     'type: "wiki"': 'type: "doc"',
     'type: "website"': 'type: "doc"',
     'type: "forum"': 'type: "article"',
+    'type: "library"': 'type: "tool"',
+    'type: "course"': 'type: "doc"',
 }
 
 count = 0
