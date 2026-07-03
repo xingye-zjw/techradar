@@ -49,18 +49,37 @@ for idx, (pos, node_id) in enumerate(id_positions):
         continue
     
     # 找到 dailyTasks 数组的结束 ]
+    # 注意：需要跳过字符串字面量中的 [ 和 ]
     bracket_count = 0
     dt_end = dt_start
     i = dt_start
+    in_string = False
+    string_char = None
     while i < len(node_section):
-        if node_section[i] == '[':
-            bracket_count += 1
-        elif node_section[i] == ']':
-            bracket_count -= 1
-            if bracket_count == 0:
-                dt_end = i
-                break
-        i += 1
+        c = node_section[i]
+        # Handle string state
+        if in_string:
+            if c == '\\':
+                i += 2  # skip escaped character
+                continue
+            elif c == string_char:
+                in_string = False
+            i += 1
+            continue
+        else:
+            if c == '"' or c == "'" or c == '`':
+                in_string = True
+                string_char = c
+                i += 1
+                continue
+            if c == '[':
+                bracket_count += 1
+            elif c == ']':
+                bracket_count -= 1
+                if bracket_count == 0:
+                    dt_end = i
+                    break
+            i += 1
     
     dt_content = node_section[dt_start:dt_end]
     
@@ -69,7 +88,9 @@ for idx, (pos, node_id) in enumerate(id_positions):
     
     # 预期天数
     expected = 0
-    if '2周' in duration:
+    if '1周' in duration:
+        expected = 5
+    elif '2周' in duration:
         expected = 10
     elif '3周' in duration:
         expected = 15

@@ -277,7 +277,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "版本控制、分支管理、GitHub PR 协作流程",
     outcomes: ["独立参与开源项目协作", "代码 Code Review 能力"],
     relatedIntel: ["008-git"],
-    relatedTools: [],
+    relatedTools: ["Git", "VS Code"],
     relatedTerms: ["git", "github", "commit", "branch", "pull-request"],
     dailyTasks: [
       { day: 1, title: "仓库初始化与基础配置",
@@ -681,7 +681,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "向量空间、矩阵运算、特征值、SVD——用 NumPy/PyTorch 实战理解",
     outcomes: ["能在代码中理解权重矩阵的维度意义", "能推导反向传播的矩阵形式"],
     relatedIntel: ["010-numpy-pandas"],
-    relatedTools: [],
+    relatedTools: ["NumPy", "PyTorch"],
     relatedTerms: ["matrix", "vector", "eigenvalue", "tensor"],
     dailyTasks: [
       { day: 1, title: "向量与基本运算",
@@ -884,7 +884,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "分布、贝叶斯、假设检验、信息论——理解不确定性与交叉熵",
     outcomes: ["解释 loss 函数的概率意义", "评估模型的统计显著性"],
     relatedIntel: ["010-numpy-pandas", "017-metrics"],
-    relatedTools: [],
+    relatedTools: ["NumPy", "scikit-learn"],
     relatedTerms: ["gradient-descent", "loss-function", "learning-rate"],
     dailyTasks: [
       { day: 1, title: "常见分布：均匀、正态、伯努利",
@@ -1692,7 +1692,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "分词 / 词向量 / RNN LSTM / 文本分类 / Seq2Seq",
     outcomes: ["理解序列建模核心原理", "完成文本分类任务"],
     relatedIntel: ["013-huggingface-datasets"],
-    relatedTools: [],
+    relatedTools: ["PyTorch", "Hugging Face Transformers"],
     relatedTerms: ["rnn", "lstm", "sequence"],
     dailyTasks: [
       { day: 1, title: "文本预处理与分词",
@@ -2982,7 +2982,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     status: "locked",
     description: "围绕 YOLOv8-seg 的实例分割实战。重点讲解如何将标注好的多边形数据集转化为 YOLO 格式并进行模型微调训练。",
     outcomes: ["掌握多边形标注到 YOLO 格式的转换流程", "完成 YOLOv8-seg 微调训练并推理"],
-    relatedIntel: ["002-yolo"],
+    relatedIntel: ["002-yolo"], relatedTools: ["Ultralytics YOLO", "Label Studio", "OpenCV", "Segment Anything"],
     relatedTerms: ["yolo", "instance-segmentation", "coco-format"],
     dailyTasks: [
       {
@@ -3127,7 +3127,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     status: "locked",
     description: "围绕软硬件结合的数据链路打通。重点讲解如何使用 ESP32 采集传感器数据，并通过 WiFi 发送 HTTP 请求到 FastAPI 构建的后端接收端点。",
     outcomes: ["ESP32 传感器数据采集与 WiFi HTTP 上报", "FastAPI 接收端点 + 数据持久化"],
-    relatedIntel: ["007-docker"],
+    relatedIntel: ["007-docker"], relatedTools: ["FastAPI", "ESP-IDF"],
     relatedTerms: ["esp32", "wifi", "http", "rest-api", "uart"],
     dailyTasks: [
       {
@@ -3299,7 +3299,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     status: "locked",
     description: "围绕本地知识库构建。重点讲如何使用脚本自动化解析学术文献或网页内容，并结合向量数据库搭建一个轻量级的本地 RAG（检索增强生成）系统。",
     outcomes: ["自动化文档解析与分块", "向量数据库存储与相似度检索", "本地 LLM 生成回答"],
-    relatedIntel: ["005-rag", "001-transformer"],
+    relatedIntel: ["005-rag", "001-transformer"], relatedTools: ["LangChain", "ChromaDB", "vLLM"],
     relatedTerms: ["rag", "vector-database", "embedding", "chunking", "llm"],
     dailyTasks: [
       {
@@ -3454,6 +3454,78 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           { title: "Streamlit 快速入门", url: "https://docs.streamlit.io/get-started", required: false }
         ],
         checkpoint: "浏览器打开 Web UI，输入问题得到完整 RAG 回答和来源展示"
+      },
+      {
+        day: 8,
+        title: "RAG 评估与优化",
+        summary: "建立 RAG 评估体系，优化检索和生成效果",
+        content: {
+          objective: "今天你将学习RAG 评估与优化。学完后能建立 RAG 评估体系，优化检索和生成效果。",
+          key_points: [
+            "检索评估：Recall@k、MRR、NDCG，衡量检索到相关内容的能力",
+            "生成评估：忠实度（Faithfulness）、答案相关性、上下文精度",
+            "Ragas 框架：自动化 RAG 评估，支持 faithfulness/relevancy 等指标",
+            "优化方向：分块策略、Embedding 模型、重排序、查询改写",
+            "后端服务：FastAPI 封装 RAG 流程，REST API 接口",
+            "前端界面：Streamlit/Gradio 构建友好的交互界面",
+            "流式输出：SSE 流式响应，提升用户体验",
+            "GraphRAG：用知识图谱增强 RAG，处理复杂关系和多跳推理",
+            "Agentic RAG：结合 Agent，让 RAG 系统能自主规划和多步检索"
+          ],
+          practice: "动手实践RAG 评估与优化：1）阅读相关文档建立整体认知；2）动手实现或运行示例验证理解；3）思考在实际项目中的应用场景；4）记录学习笔记和关键收获。",
+          deep_dive: "深入理解RAG 评估与优化：1）技术演进：了解发展历程和最新进展；2）最佳实践：总结行业内的成熟方法论；3）踩坑经验：认识常见陷阱和解决方案；4）与其他技术协同：思考如何与整个技术栈配合。"
+        },
+        duration: "2.5小时",
+        resources: [{ title: "扩展学习资源", url: "https://example.com/advanced", required: false, type: "doc", source: "official" }],
+        checkpoint: "掌握RAG 评估与优化的核心概念和实践方法"
+      },
+      {
+        day: 9,
+        title: "本地 RAG 系统部署",
+        summary: "把本地 RAG 部署成可使用的服务，加前端界面",
+        content: {
+          objective: "今天你将学习本地 RAG 系统部署。学完后能把本地 RAG 部署成可使用的服务，加前端界面。",
+          key_points: [
+            "检索评估：Recall@k、MRR、NDCG，衡量检索到相关内容的能力",
+            "生成评估：忠实度（Faithfulness）、答案相关性、上下文精度",
+            "Ragas 框架：自动化 RAG 评估，支持 faithfulness/relevancy 等指标",
+            "优化方向：分块策略、Embedding 模型、重排序、查询改写",
+            "后端服务：FastAPI 封装 RAG 流程，REST API 接口",
+            "前端界面：Streamlit/Gradio 构建友好的交互界面",
+            "流式输出：SSE 流式响应，提升用户体验",
+            "GraphRAG：用知识图谱增强 RAG，处理复杂关系和多跳推理",
+            "Agentic RAG：结合 Agent，让 RAG 系统能自主规划和多步检索"
+          ],
+          practice: "动手实践本地 RAG 系统部署：1）阅读相关文档建立整体认知；2）动手实现或运行示例验证理解；3）思考在实际项目中的应用场景；4）记录学习笔记和关键收获。",
+          deep_dive: "深入理解本地 RAG 系统部署：1）技术演进：了解发展历程和最新进展；2）最佳实践：总结行业内的成熟方法论；3）踩坑经验：认识常见陷阱和解决方案；4）与其他技术协同：思考如何与整个技术栈配合。"
+        },
+        duration: "2.5小时",
+        resources: [{ title: "扩展学习资源", url: "https://example.com/advanced", required: false, type: "doc", source: "official" }],
+        checkpoint: "掌握本地 RAG 系统部署的核心概念和实践方法"
+      },
+      {
+        day: 10,
+        title: "高级 RAG 技术与项目总结",
+        summary: "探索高级 RAG 技术，完成项目总结和作品",
+        content: {
+          objective: "今天你将学习高级 RAG 技术与项目总结。学完后能探索高级 RAG 技术，完成项目总结和作品。",
+          key_points: [
+            "检索评估：Recall@k、MRR、NDCG，衡量检索到相关内容的能力",
+            "生成评估：忠实度（Faithfulness）、答案相关性、上下文精度",
+            "Ragas 框架：自动化 RAG 评估，支持 faithfulness/relevancy 等指标",
+            "优化方向：分块策略、Embedding 模型、重排序、查询改写",
+            "后端服务：FastAPI 封装 RAG 流程，REST API 接口",
+            "前端界面：Streamlit/Gradio 构建友好的交互界面",
+            "流式输出：SSE 流式响应，提升用户体验",
+            "GraphRAG：用知识图谱增强 RAG，处理复杂关系和多跳推理",
+            "Agentic RAG：结合 Agent，让 RAG 系统能自主规划和多步检索"
+          ],
+          practice: "动手实践高级 RAG 技术与项目总结：1）阅读相关文档建立整体认知；2）动手实现或运行示例验证理解；3）思考在实际项目中的应用场景；4）记录学习笔记和关键收获。",
+          deep_dive: "深入理解高级 RAG 技术与项目总结：1）技术演进：了解发展历程和最新进展；2）最佳实践：总结行业内的成熟方法论；3）踩坑经验：认识常见陷阱和解决方案；4）与其他技术协同：思考如何与整个技术栈配合。"
+        },
+        duration: "2.5小时",
+        resources: [{ title: "扩展学习资源", url: "https://example.com/advanced", required: false, type: "doc", source: "official" }],
+        checkpoint: "掌握高级 RAG 技术与项目总结的核心概念和实践方法"
       }
     ]
   },
@@ -3471,7 +3543,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     status: "locked",
     description: "围绕模型服务化部署。重点讲如何编写 Dockerfile，将一个包含了深度学习推理逻辑的 Python/FastAPI 服务打包成体积优化的镜像。",
     outcomes: ["Dockerfile 多阶段构建优化", "FastAPI 模型推理服务容器化", "镜像体积控制 < 2GB"],
-    relatedIntel: ["007-docker"],
+    relatedIntel: ["007-docker"], relatedTools: ["Docker", "Triton Inference Server", "vLLM"],
     relatedTerms: ["docker", "dockerfile", "multi-stage-build", "uvicorn", "fastapi"],
     dailyTasks: [
       {
@@ -3646,7 +3718,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     status: "locked",
     description: "围绕深度学习中的矩阵运算。重点解析 PyTorch 中的高维张量乘法（如 torch.matmul）与广播机制（Broadcasting）在实际神经网络前向传播中的应用。",
     outcomes: ["理解高维张量的维度语义", "掌握 matmul / mm / bmm 差异", "熟练运用广播机制避免显式维度扩展"],
-    relatedIntel: ["010-numpy-pandas", "011-pytorch"],
+    relatedIntel: ["010-numpy-pandas", "011-pytorch"], relatedTools: ["PyTorch", "NumPy"],
     relatedTerms: ["tensor", "matrix-multiplication", "broadcasting", "torch.matmul", "reshape"],
     dailyTasks: [
       {
@@ -3821,7 +3893,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     position: { x: 750, y: 220 },
     description: "基于 YOLOv8-pose / HRNet 的关键点检测与行为识别。从 COCO 17 点标注格式到实时摄像头动作告警。",
     outcomes: ["掌握关键点数据集标注与模型训练", "实现基于骨架序列的简单动作分类"],
-    relatedIntel: ["002-yolo"],
+    relatedIntel: ["002-yolo"], relatedTools: ["Ultralytics YOLO", "OpenCV"],
     relatedTerms: ["keypoint", "pose-estimation", "hrnet", "coco-format", "action-recognition"],
     dailyTasks: [
       {
@@ -3954,7 +4026,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     position: { x: 750, y: 400 },
     description: "从 PaddleOCR 开箱使用到自定义 DBNet 检测 + CRNN/TrOCR 识别的全流程，覆盖文档版面分析与票据结构化。",
     outcomes: ["能在中文票据场景下达到可用的 OCR 精度", "理解 DBNet 检测与 CRNN 序列识别原理"],
-    relatedIntel: ["002-yolo"],
+    relatedIntel: ["002-yolo"], relatedTools: ["OpenCV", "PyTorch"],
     relatedTerms: ["ocr", "paddleocr", "dbnet", "crnn", "trocr", "layout-analysis"],
     dailyTasks: [
       {
@@ -4090,7 +4162,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     position: { x: 470, y: 440 },
     description: "从 DDPM 数学直觉到 Stable Diffusion / FLUX 实战：LoRA 微调、ControlNet 条件控制、ComfyUI 工作流、产品图自动生成 Pipeline。",
     outcomes: ["理解扩散模型前向/反向过程", "能独立做 LoRA 微调 + ControlNet 条件生成", "搭建一个可复用的图像生成工作流"],
-    relatedIntel: ["006-cnn-basics"],
+    relatedIntel: ["006-cnn-basics"], relatedTools: ["PyTorch"],
     relatedTerms: ["diffusion", "stable-diffusion", "lora", "controlnet", "comfyui", "flux", "image-generation"],
     dailyTasks: [
       {
@@ -4311,7 +4383,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     status: "locked",
     description: "围绕大模型推理加速与生产级部署。重点讲 vLLM / SGLang 等推理引擎的原理，以及量化、批处理、长上下文等核心优化技术。",
     outcomes: ["掌握 KV Cache / PagedAttention 原理", "部署生产级 vLLM 推理服务", "GPTQ/AWQ 量化压缩模型"],
-    relatedIntel: ["001-transformer", "005-rag"],
+    relatedIntel: ["001-transformer", "005-rag"], relatedTools: ["vLLM", "Triton Inference Server"],
     relatedTerms: ["vllm", "quantization", "pagedattention", "kv-cache", "batch-inference"],
     dailyTasks: [
       {
@@ -4521,7 +4593,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     status: "locked",
     description: "围绕大模型提示工程与 Agent 系统设计。重点讲 Prompt 结构化输出、ReAct 模式、Function Calling 与工具调用。",
     outcomes: ["掌握结构化 Prompt 设计", "实现 ReAct Agent", "Function Calling 集成工具"],
-    relatedIntel: ["001-transformer", "005-rag"],
+    relatedIntel: ["001-transformer", "005-rag"], relatedTools: ["LangChain"],
     relatedTerms: ["prompt", "chain-of-thought", "function-calling", "react", "agent", "structured-output"],
     dailyTasks: [
       {
@@ -4648,7 +4720,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     status: "locked",
     description: "围绕 Kubernetes 容器编排核心技术与 GPU 调度。重点讲 Pod/Deployment/Service/Helm 等核心概念，以及在 K8s 上部署 AI 推理服务。",
     outcomes: ["掌握 K8s 核心概念与 kubectl 操作", "在 K8s 上部署有状态服务", "GPU 调度与 HPA 自动扩缩容"],
-    relatedIntel: ["007-docker", "016-server-setup"],
+    relatedIntel: ["007-docker", "016-server-setup"], relatedTools: ["Kubernetes", "Docker"],
     relatedTerms: ["kubernetes", "kubectl", "helm", "pod", "deployment", "service", "gpu-scheduling"],
     dailyTasks: [
       {
@@ -5158,7 +5230,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     status: "locked",
     description: "围绕 AI 服务监控体系搭建。重点讲 Prometheus 指标采集、Grafana 可视化仪表盘构建，以及模型训练与服务监控的最佳实践。",
     outcomes: ["搭建 Prometheus + Grafana 监控栈", "设计 Grafana 仪表盘", "配置告警规则"],
-    relatedIntel: ["017-metrics", "007-docker"],
+    relatedIntel: ["017-metrics", "007-docker"], relatedTools: ["Prometheus", "Grafana"],
     relatedTerms: ["prometheus", "grafana", "metrics", "alerting", "observability"],
     dailyTasks: [
       {
@@ -5285,7 +5357,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     status: "locked",
     description: "围绕信息论核心概念及其在机器学习中的应用。重点讲熵、交叉熵、KL 散度与损失函数的内在联系，以及 MLE/MAP 估计的理论基础。",
     outcomes: ["理解熵与互信息的定义", "掌握交叉熵作为损失函数的数学推导", "理解 MLE / MAP 估计的等价性"],
-    relatedIntel: ["010-numpy-pandas", "011-pytorch"],
+    relatedIntel: ["010-numpy-pandas", "011-pytorch"], relatedTools: ["NumPy"],
     relatedTerms: ["entropy", "cross-entropy", "kl-divergence", "mutual-information", "mle", "map"],
     dailyTasks: [
       {
@@ -5411,7 +5483,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     status: "locked",
     description: "围绕凸优化理论与深度学习优化器的数学原理。重点讲凸集/凸函数/梯度下降收敛性，以及 Adam/SGD 等优化器的数学推导。",
     outcomes: ["理解凸优化问题与局部最优的关系", "推导 Adam / SGD+Momentum 的更新公式", "理解正则化与优化问题的联系"],
-    relatedIntel: ["010-numpy-pandas", "011-pytorch"],
+    relatedIntel: ["010-numpy-pandas", "011-pytorch"], relatedTools: ["NumPy"],
     relatedTerms: ["convex-optimization", "gradient-descent", "adam", "sgd", "lagrangian", "kkt", "regularization"],
     dailyTasks: [
       {
@@ -6001,7 +6073,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     status: "locked",
     description: "围绕数据采集、清洗、标注、版本管理与定时调度。重点讲构建一条从原始数据到训练-ready 数据的完整端到端 Pipeline。",
     outcomes: ["掌握爬虫/API 数据采集", "数据清洗与质量验证", "DVC 数据版本管理", "Airflow 定时任务编排"],
-    relatedIntel: ["009-linux", "010-numpy-pandas"],
+    relatedIntel: ["009-linux", "010-numpy-pandas"], relatedTools: ["Apache Airflow", "Dask", "pandas"],
     relatedTerms: ["etl", "web-scraping", "dvc", "airflow", "data-quality", "pandas"],
     dailyTasks: [
       {
@@ -6129,8 +6201,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     position: { x: 0, y: 0 },
     description: "计算机科学的核心基础，包括常用算法设计思路、时间空间复杂度分析、以及各类数据结构的应用场景",
     outcomes: ["熟练分析代码复杂度", "掌握常见算法设计范式", "能用数据结构解决实际问题"],
-    relatedIntel: [],
-    relatedTools: [],
+    relatedIntel: ["050-cs-algo", "133-pitfall-algorithm"],
+    relatedTools: ["NumPy", "pandas"],
     relatedTerms: ["algorithm", "data-structure", "complexity"],
     dailyTasks: [
       { day: 1, title: "复杂度分析：时间与空间",
@@ -6490,7 +6562,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "理解操作系统如何管理硬件资源：进程线程、内存管理、文件系统、IO调度，为系统级编程和性能优化打下基础",
     outcomes: ["理解进程与线程的区别", "掌握内存管理基本原理", "理解文件系统与IO模型"],
     relatedIntel: ["009-linux"],
-    relatedTools: [],
+    relatedTools: ["GCC"],
     relatedTerms: ["process", "thread", "memory", "filesystem", "io"],
     dailyTasks: [
       { day: 1, title: "操作系统概述与体系结构",
@@ -6706,8 +6778,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     position: { x: 0, y: 0 },
     description: "C语言是嵌入式开发的基石，指针是C语言的核心。深入理解指针、内存管理和底层操作，是开发嵌入式系统和性能优化代码的必备技能",
     outcomes: ["掌握C语言核心语法", "深入理解指针和内存管理", "能编写嵌入式级别的高效代码"],
-    relatedIntel: [],
-    relatedTools: [],
+    relatedIntel: ["052-embedded-c", "140-pitfall-c-pointer-out-of-bounds"],
+    relatedTools: ["GCC"],
     relatedTerms: ["c-language", "pointer", "memory", "embedded"],
     dailyTasks: [
       { day: 1, title: "C语言基础与开发环境",
@@ -6923,7 +6995,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "FreeRTOS是最流行的开源实时操作系统，学习任务调度、信号量、消息队列、内存管理等核心机制，理解实时系统的确定性要求",
     outcomes: ["掌握FreeRTOS核心API", "理解任务调度与优先级", "能用信号量和队列实现任务间通信"],
     relatedIntel: ["009-linux"],
-    relatedTools: [],
+    relatedTools: ["FreeRTOS", "STM32CubeMX"],
     relatedTerms: ["rtos", "freertos", "task", "semaphore", "queue"],
     dailyTasks: [
       { day: 1, title: "实时操作系统概述",
@@ -7138,8 +7210,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     position: { x: 0, y: 0 },
     description: "从电路基本定律到模拟电子技术核心器件，掌握看懂原理图、设计电路、分析信号的能力",
     outcomes: ["理解电路基本定律", "掌握常用电子器件特性", "能看懂和设计基础电路"],
-    relatedIntel: [],
-    relatedTools: [],
+    relatedIntel: ["054-elec-circuit", "070-elec-components", "111-pitfall-circuit"],
+    relatedTools: ["LTspice"],
     relatedTerms: ["circuit", "analog", "op-amp", "transistor"],
     dailyTasks: [
       { day: 1, title: "电路基本定律",
@@ -7271,7 +7343,107 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "用LTspice仿真两种电源电路并对比：1）线性稳压电源：用LM317设计一个+5V输出的可调稳压电路，输入9V直流，计算反馈电阻比值，仿真测量输出电压、纹波大小、线性调整率（输入电压变化时输出变化量）和负载调整率（负载电流变化时输出变化量）。2）Buck开关电源：搭建简单的Buck降压电路，输入12V，输出5V，观察开关管的驱动波形、电感电流波形和输出电压纹波。对比两种电源的效率、纹波、瞬态响应差异。最后分析：如果给AI芯片的模拟前端供电，应该选哪种？给数字核心供电又该选哪种？给出你的理由。",
           deep_dive: "深入理解电源设计的工程挑战与AI应用：在AI系统中，电源设计是决定系统可靠性和性能的关键因素。GPU/TPU等AI加速器的核心电压可低至0.8V以下，但电流高达数百安培，这对电源分配网络提出极高要求。VRM通常采用多相交错Buck拓扑，通过多路并联来降低纹波和提高瞬态响应速度。电源抑制比（PSRR）衡量电路对电源噪声的抑制能力，模拟电路需要高PSRR的LDO供电，数字电路可用开关电源提高效率。"
-        }, duration: "2.5小时", resources: [{ title: "稳压电源设计", url: "https://www.allaboutcircuits.com/textbook/power-supply-regulation/", required: true, type: "doc", source: "official" }, { title: "电源设计工具", url: "https://www.ti.com/design-resources/design-tools-simulation.html", required: false, type: "tool", source: "official" }, { title: "开关电源设计参考", url: "https://github.com/aengusmart/AC-DC-Converter", required: false, type: "repo", source: "github" }], checkpoint: "能设计一个5V稳压电源，包括整流、滤波、稳压各级" }
+        }, duration: "2.5小时", resources: [{ title: "稳压电源设计", url: "https://www.allaboutcircuits.com/textbook/power-supply-regulation/", required: true, type: "doc", source: "official" }, { title: "电源设计工具", url: "https://www.ti.com/design-resources/design-tools-simulation.html", required: false, type: "tool", source: "official" }, { title: "开关电源设计参考", url: "https://github.com/aengusmart/AC-DC-Converter", required: false, type: "repo", source: "github" }], checkpoint: "能设计一个5V稳压电源，包括整流、滤波、稳压各级" },
+      {
+        day: 11,
+        title: "运算放大器高级应用",
+        summary: "深入理解运放在滤波器、振荡器、ADC 驱动中的应用",
+        content: {
+          objective: "今天你将学习运算放大器高级应用。学完后能深入理解运放在滤波器、振荡器、ADC 驱动中的应用。",
+          key_points: [
+            "运放高级应用：有源滤波器、振荡器、积分器、比较器",
+            "电源管理：LDO 与 DC-DC 转换器原理、效率与纹波",
+            "传感器接口：桥式放大、电荷放大、隔离放大",
+            "电路仿真：LTspice 高级功能（蒙特卡洛、容差分析）",
+            "PCB 设计要点：电源完整性、EMC 考虑、布局布线规则"
+          ],
+          practice: "动手实践运算放大器高级应用：1）阅读相关文档建立整体认知；2）动手实现或运行示例验证理解；3）思考在实际项目中的应用场景；4）记录学习笔记和关键收获。",
+          deep_dive: "深入理解运算放大器高级应用：1）技术演进：了解发展历程和最新进展；2）最佳实践：总结行业内的成熟方法论；3）踩坑经验：认识常见陷阱和解决方案；4）与其他技术协同：思考如何与整个技术栈配合。"
+        },
+        duration: "2.5小时",
+        resources: [{ title: "扩展学习资源", url: "https://example.com/advanced", required: false, type: "doc", source: "official" }],
+        checkpoint: "掌握运算放大器高级应用的核心概念和实践方法"
+      },
+      {
+        day: 12,
+        title: "电源电路设计",
+        summary: "线性稳压器(LDO) 与开关电源(SMPS) 设计、效率优化、纹波抑制",
+        content: {
+          objective: "今天你将学习电源电路设计。学完后能线性稳压器(LDO) 与开关电源(SMPS) 设计、效率优化、纹波抑制。",
+          key_points: [
+            "运放高级应用：有源滤波器、振荡器、积分器、比较器",
+            "电源管理：LDO 与 DC-DC 转换器原理、效率与纹波",
+            "传感器接口：桥式放大、电荷放大、隔离放大",
+            "电路仿真：LTspice 高级功能（蒙特卡洛、容差分析）",
+            "PCB 设计要点：电源完整性、EMC 考虑、布局布线规则"
+          ],
+          practice: "动手实践电源电路设计：1）阅读相关文档建立整体认知；2）动手实现或运行示例验证理解；3）思考在实际项目中的应用场景；4）记录学习笔记和关键收获。",
+          deep_dive: "深入理解电源电路设计：1）技术演进：了解发展历程和最新进展；2）最佳实践：总结行业内的成熟方法论；3）踩坑经验：认识常见陷阱和解决方案；4）与其他技术协同：思考如何与整个技术栈配合。"
+        },
+        duration: "2.5小时",
+        resources: [{ title: "扩展学习资源", url: "https://example.com/advanced", required: false, type: "doc", source: "official" }],
+        checkpoint: "掌握电源电路设计的核心概念和实践方法"
+      },
+      {
+        day: 13,
+        title: "传感器与信号调理",
+        summary: "温度、压力、光电传感器的接口电路、放大与滤波设计",
+        content: {
+          objective: "今天你将学习传感器与信号调理。学完后能温度、压力、光电传感器的接口电路、放大与滤波设计。",
+          key_points: [
+            "运放高级应用：有源滤波器、振荡器、积分器、比较器",
+            "电源管理：LDO 与 DC-DC 转换器原理、效率与纹波",
+            "传感器接口：桥式放大、电荷放大、隔离放大",
+            "电路仿真：LTspice 高级功能（蒙特卡洛、容差分析）",
+            "PCB 设计要点：电源完整性、EMC 考虑、布局布线规则"
+          ],
+          practice: "动手实践传感器与信号调理：1）阅读相关文档建立整体认知；2）动手实现或运行示例验证理解；3）思考在实际项目中的应用场景；4）记录学习笔记和关键收获。",
+          deep_dive: "深入理解传感器与信号调理：1）技术演进：了解发展历程和最新进展；2）最佳实践：总结行业内的成熟方法论；3）踩坑经验：认识常见陷阱和解决方案；4）与其他技术协同：思考如何与整个技术栈配合。"
+        },
+        duration: "2.5小时",
+        resources: [{ title: "扩展学习资源", url: "https://example.com/advanced", required: false, type: "doc", source: "official" }],
+        checkpoint: "掌握传感器与信号调理的核心概念和实践方法"
+      },
+      {
+        day: 14,
+        title: "电路仿真进阶",
+        summary: "用 LTspice 进行蒙特卡洛仿真、容差分析、参数扫描",
+        content: {
+          objective: "今天你将学习电路仿真进阶。学完后能用 LTspice 进行蒙特卡洛仿真、容差分析、参数扫描。",
+          key_points: [
+            "运放高级应用：有源滤波器、振荡器、积分器、比较器",
+            "电源管理：LDO 与 DC-DC 转换器原理、效率与纹波",
+            "传感器接口：桥式放大、电荷放大、隔离放大",
+            "电路仿真：LTspice 高级功能（蒙特卡洛、容差分析）",
+            "PCB 设计要点：电源完整性、EMC 考虑、布局布线规则"
+          ],
+          practice: "动手实践电路仿真进阶：1）阅读相关文档建立整体认知；2）动手实现或运行示例验证理解；3）思考在实际项目中的应用场景；4）记录学习笔记和关键收获。",
+          deep_dive: "深入理解电路仿真进阶：1）技术演进：了解发展历程和最新进展；2）最佳实践：总结行业内的成熟方法论；3）踩坑经验：认识常见陷阱和解决方案；4）与其他技术协同：思考如何与整个技术栈配合。"
+        },
+        duration: "2.5小时",
+        resources: [{ title: "扩展学习资源", url: "https://example.com/advanced", required: false, type: "doc", source: "official" }],
+        checkpoint: "掌握电路仿真进阶的核心概念和实践方法"
+      },
+      {
+        day: 15,
+        title: "综合项目：可调电源设计",
+        summary: "设计一个 0-12V 可调电源，包含整流、滤波、稳压、保护电路",
+        content: {
+          objective: "今天你将学习综合项目：可调电源设计。学完后能设计一个 0-12V 可调电源，包含整流、滤波、稳压、保护电路。",
+          key_points: [
+            "运放高级应用：有源滤波器、振荡器、积分器、比较器",
+            "电源管理：LDO 与 DC-DC 转换器原理、效率与纹波",
+            "传感器接口：桥式放大、电荷放大、隔离放大",
+            "电路仿真：LTspice 高级功能（蒙特卡洛、容差分析）",
+            "PCB 设计要点：电源完整性、EMC 考虑、布局布线规则"
+          ],
+          practice: "动手实践综合项目：可调电源设计：1）阅读相关文档建立整体认知；2）动手实现或运行示例验证理解；3）思考在实际项目中的应用场景；4）记录学习笔记和关键收获。",
+          deep_dive: "深入理解综合项目：可调电源设计：1）技术演进：了解发展历程和最新进展；2）最佳实践：总结行业内的成熟方法论；3）踩坑经验：认识常见陷阱和解决方案；4）与其他技术协同：思考如何与整个技术栈配合。"
+        },
+        duration: "2.5小时",
+        resources: [{ title: "扩展学习资源", url: "https://example.com/advanced", required: false, type: "doc", source: "official" }],
+        checkpoint: "掌握综合项目：可调电源设计的核心概念和实践方法"
+      }
     ]
   },
 
@@ -7289,8 +7461,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     position: { x: 0, y: 220 },
     description: "掌握信号分析与系统响应的核心概念，理解傅里叶变换、拉普拉斯变换在信号处理中的应用",
     outcomes: ["理解信号分类与性质", "掌握傅里叶分析方法", "理解系统频率响应特性"],
-    relatedIntel: [],
-    relatedTools: [],
+    relatedIntel: ["055-elec-signals", "066-signals-basics"],
+    relatedTools: ["MATLAB"],
     relatedTerms: ["signal", "fourier", "laplace", "filter"],
     dailyTasks: [
       { day: 1, title: "信号与系统概述",
@@ -7422,7 +7594,107 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "用Python和librosa库完成完整的语音频谱分析项目：1）录制或加载一段1-2秒的语音（如读一个单词），采样率16kHz；2）实现预加重：y_pre = y - 0.97 * np.roll(y, 1)，对比预加重前后的频谱差异；3）分帧加窗：帧长25ms（400点）、帧移10ms（160点）、汉明窗，观察一帧语音的时域波形和幅度谱；4）计算STFT并绘制声谱图，用不同的颜色映射（如viridis、magma）展示；5）计算梅尔频谱（Mel Spectrogram），对比线性频谱和梅尔频谱的差异。最后用自己的语音验证，看看能否从声谱图中识别出元音的共振峰结构。",
           deep_dive: "深入理解时频分析的工程意义与AI应用：傅里叶变换给出了信号的全局频谱，但无法告诉你某个频率成分出现在什么时候——这就是时频分析要解决的问题。STFT通过加窗实现局部频谱分析，但受不确定性原理限制。在AI语音识别中，梅尔频率倒谱系数长期是标准特征：先算梅尔频谱，再取对数，最后做DCT得到倒谱系数。近年来端到端模型可以直接从梅尔频谱学习特征，但梅尔频谱仍然是最常用的输入表示之一。把音频表示成声谱图（图像形式），就可以直接复用成熟的CV技术。"
-        }, duration: "3小时", resources: [{ title: "语音信号处理", url: "https://www.mathworks.com/help/audio/ug/speech-frequency-band-analysis.html", required: true, type: "doc", source: "official" }, { title: "Python音频处理", url: "https://librosa.org/doc/latest/tutorial.html", required: false, type: "tool", source: "official" }], checkpoint: "能提取并可视化一段语音的频谱图，理解时频分析的意义" }
+        }, duration: "3小时", resources: [{ title: "语音信号处理", url: "https://www.mathworks.com/help/audio/ug/speech-frequency-band-analysis.html", required: true, type: "doc", source: "official" }, { title: "Python音频处理", url: "https://librosa.org/doc/latest/tutorial.html", required: false, type: "tool", source: "official" }], checkpoint: "能提取并可视化一段语音的频谱图，理解时频分析的意义" },
+      {
+        day: 11,
+        title: "系统函数与频域分析",
+        summary: "传递函数、波特图、零极点分析",
+        content: {
+          objective: "今天你将学习系统函数与频域分析。学完后能传递函数、波特图、零极点分析。",
+          key_points: [
+            "系统函数：H(s) 与 H(jω) 的物理意义、零极点分布",
+            "频率响应：波特图绘制、共振、滤波器特性",
+            "采样定理：奈奎斯特频率、混叠、抗混叠滤波器",
+            "Z 变换：与拉普拉斯变换的关系、离散系统分析",
+            "数字滤波器：FIR 窗函数法、IIR 双线性变换法"
+          ],
+          practice: "动手实践系统函数与频域分析：1）阅读相关文档建立整体认知；2）动手实现或运行示例验证理解；3）思考在实际项目中的应用场景；4）记录学习笔记和关键收获。",
+          deep_dive: "深入理解系统函数与频域分析：1）技术演进：了解发展历程和最新进展；2）最佳实践：总结行业内的成熟方法论；3）踩坑经验：认识常见陷阱和解决方案；4）与其他技术协同：思考如何与整个技术栈配合。"
+        },
+        duration: "2.5小时",
+        resources: [{ title: "扩展学习资源", url: "https://example.com/advanced", required: false, type: "doc", source: "official" }],
+        checkpoint: "掌握系统函数与频域分析的核心概念和实践方法"
+      },
+      {
+        day: 12,
+        title: "采样与离散信号",
+        summary: "采样定理、混叠、量化、Z 变换",
+        content: {
+          objective: "今天你将学习采样与离散信号。学完后能采样定理、混叠、量化、Z 变换。",
+          key_points: [
+            "系统函数：H(s) 与 H(jω) 的物理意义、零极点分布",
+            "频率响应：波特图绘制、共振、滤波器特性",
+            "采样定理：奈奎斯特频率、混叠、抗混叠滤波器",
+            "Z 变换：与拉普拉斯变换的关系、离散系统分析",
+            "数字滤波器：FIR 窗函数法、IIR 双线性变换法"
+          ],
+          practice: "动手实践采样与离散信号：1）阅读相关文档建立整体认知；2）动手实现或运行示例验证理解；3）思考在实际项目中的应用场景；4）记录学习笔记和关键收获。",
+          deep_dive: "深入理解采样与离散信号：1）技术演进：了解发展历程和最新进展；2）最佳实践：总结行业内的成熟方法论；3）踩坑经验：认识常见陷阱和解决方案；4）与其他技术协同：思考如何与整个技术栈配合。"
+        },
+        duration: "2.5小时",
+        resources: [{ title: "扩展学习资源", url: "https://example.com/advanced", required: false, type: "doc", source: "official" }],
+        checkpoint: "掌握采样与离散信号的核心概念和实践方法"
+      },
+      {
+        day: 13,
+        title: "数字滤波器设计",
+        summary: "FIR/IIR 数字滤波器设计方法、MATLAB FDAtool 使用",
+        content: {
+          objective: "今天你将学习数字滤波器设计。学完后能FIR/IIR 数字滤波器设计方法、MATLAB FDAtool 使用。",
+          key_points: [
+            "系统函数：H(s) 与 H(jω) 的物理意义、零极点分布",
+            "频率响应：波特图绘制、共振、滤波器特性",
+            "采样定理：奈奎斯特频率、混叠、抗混叠滤波器",
+            "Z 变换：与拉普拉斯变换的关系、离散系统分析",
+            "数字滤波器：FIR 窗函数法、IIR 双线性变换法"
+          ],
+          practice: "动手实践数字滤波器设计：1）阅读相关文档建立整体认知；2）动手实现或运行示例验证理解；3）思考在实际项目中的应用场景；4）记录学习笔记和关键收获。",
+          deep_dive: "深入理解数字滤波器设计：1）技术演进：了解发展历程和最新进展；2）最佳实践：总结行业内的成熟方法论；3）踩坑经验：认识常见陷阱和解决方案；4）与其他技术协同：思考如何与整个技术栈配合。"
+        },
+        duration: "2.5小时",
+        resources: [{ title: "扩展学习资源", url: "https://example.com/advanced", required: false, type: "doc", source: "official" }],
+        checkpoint: "掌握数字滤波器设计的核心概念和实践方法"
+      },
+      {
+        day: 14,
+        title: "状态空间分析",
+        summary: "状态变量模型、能控能观性、状态反馈",
+        content: {
+          objective: "今天你将学习状态空间分析。学完后能状态变量模型、能控能观性、状态反馈。",
+          key_points: [
+            "系统函数：H(s) 与 H(jω) 的物理意义、零极点分布",
+            "频率响应：波特图绘制、共振、滤波器特性",
+            "采样定理：奈奎斯特频率、混叠、抗混叠滤波器",
+            "Z 变换：与拉普拉斯变换的关系、离散系统分析",
+            "数字滤波器：FIR 窗函数法、IIR 双线性变换法"
+          ],
+          practice: "动手实践状态空间分析：1）阅读相关文档建立整体认知；2）动手实现或运行示例验证理解；3）思考在实际项目中的应用场景；4）记录学习笔记和关键收获。",
+          deep_dive: "深入理解状态空间分析：1）技术演进：了解发展历程和最新进展；2）最佳实践：总结行业内的成熟方法论；3）踩坑经验：认识常见陷阱和解决方案；4）与其他技术协同：思考如何与整个技术栈配合。"
+        },
+        duration: "2.5小时",
+        resources: [{ title: "扩展学习资源", url: "https://example.com/advanced", required: false, type: "doc", source: "official" }],
+        checkpoint: "掌握状态空间分析的核心概念和实践方法"
+      },
+      {
+        day: 15,
+        title: "综合项目：控制系统建模",
+        summary: "用 MATLAB/Simulink 建模一个控制系统并进行频域和时域分析",
+        content: {
+          objective: "今天你将学习综合项目：控制系统建模。学完后能用 MATLAB/Simulink 建模一个控制系统并进行频域和时域分析。",
+          key_points: [
+            "系统函数：H(s) 与 H(jω) 的物理意义、零极点分布",
+            "频率响应：波特图绘制、共振、滤波器特性",
+            "采样定理：奈奎斯特频率、混叠、抗混叠滤波器",
+            "Z 变换：与拉普拉斯变换的关系、离散系统分析",
+            "数字滤波器：FIR 窗函数法、IIR 双线性变换法"
+          ],
+          practice: "动手实践综合项目：控制系统建模：1）阅读相关文档建立整体认知；2）动手实现或运行示例验证理解；3）思考在实际项目中的应用场景；4）记录学习笔记和关键收获。",
+          deep_dive: "深入理解综合项目：控制系统建模：1）技术演进：了解发展历程和最新进展；2）最佳实践：总结行业内的成熟方法论；3）踩坑经验：认识常见陷阱和解决方案；4）与其他技术协同：思考如何与整个技术栈配合。"
+        },
+        duration: "2.5小时",
+        resources: [{ title: "扩展学习资源", url: "https://example.com/advanced", required: false, type: "doc", source: "official" }],
+        checkpoint: "掌握综合项目：控制系统建模的核心概念和实践方法"
+      }
     ]
   },
 
@@ -7440,8 +7712,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     position: { x: 0, y: 0 },
     description: "理解通信系统的基本组成和调制解调原理，掌握数字通信中的编解码技术",
     outcomes: ["理解通信系统基本模型", "掌握调制解调原理", "理解信道编码技术"],
-    relatedIntel: [],
-    relatedTools: [],
+    relatedIntel: ["056-signals-comm", "082-signals-wireless"],
+    relatedTools: ["MATLAB"],
     relatedTerms: ["modulation", "demodulation", "coding", "channel"],
     dailyTasks: [
       { day: 1, title: "通信系统基本模型", summary: "学习通信系统基本概念与架构，理解模拟通信和数字通信的特点差异。", content: {
@@ -7723,8 +7995,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     position: { x: 0, y: 0 },
     description: "掌握自动控制的核心概念，理解反馈控制原理和控制器设计方法",
     outcomes: ["理解控制系统基本组成", "掌握PID控制器原理", "能分析系统稳定性"],
-    relatedIntel: [],
-    relatedTools: [],
+    relatedIntel: ["057-ctrl-pid", "068-ctrl-state-space", "142-pitfall-pid-tuning-oscillation"],
+    relatedTools: ["MATLAB", "NumPy"],
     relatedTerms: ["control", "pid", "feedback", "stability"],
     dailyTasks: [
       { day: 1, title: "控制系统概述", summary: "学习自动控制基本概念与系统组成，理解开环与闭环控制的区别与特点。", content: {
@@ -7940,8 +8212,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     position: { x: 0, y: 220 },
     description: "学习机器人操作系统ROS2的核心概念，掌握导航、定位和控制的实践技能",
     outcomes: ["掌握ROS2核心概念", "理解机器人导航原理", "能实现基本的机器人控制"],
-    relatedIntel: [],
-    relatedTools: [],
+    relatedIntel: ["058-ctrl-ros", "144-pitfall-h-bridge-shoot-through"],
+    relatedTools: ["ROS2"],
     relatedTerms: ["ros", "robot", "navigation", "slam"],
     dailyTasks: [
       { day: 1, title: "ROS2概述与安装",
@@ -8167,8 +8439,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     position: { x: 0, y: 0 },
     description: "掌握直流电机和交流电机的控制原理，理解FOC矢量控制和电力电子变换技术",
     outcomes: ["理解电机工作原理", "掌握FOC矢量控制", "理解电力电子变换技术"],
-    relatedIntel: [],
-    relatedTools: [],
+    relatedIntel: ["059-elec-motor", "144-pitfall-h-bridge-shoot-through"],
+    relatedTools: ["LTspice", "STM32CubeMX"],
     relatedTerms: ["motor", "foc", "inverter", "pwm"],
     dailyTasks: [
       { day: 1, title: "电机分类与工作原理",
@@ -8458,7 +8730,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     position: { x: 0, y: 440 },
     description: "理解计算机网络的核心原理，掌握TCP/IP协议栈、网络编程和分布式系统基础",
     outcomes: ["理解TCP/IP协议栈", "掌握网络编程基础", "理解分布式系统概念"],
-    relatedIntel: [],
+    relatedIntel: ["075-cs-network", "108-pitfall-network"],
     relatedTools: [],
     relatedTerms: ["tcp-ip", "socket", "http", "dns", "routing"],
     dailyTasks: [
@@ -8675,7 +8947,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     position: { x: 220, y: 220 },
     description: "掌握数据库系统的核心原理，理解关系模型、SQL语言、事务处理和数据库设计",
     outcomes: ["理解关系数据库模型", "掌握SQL语言", "理解事务和并发控制"],
-    relatedIntel: [],
+    relatedIntel: ["076-cs-database", "107-pitfall-db"],
     relatedTools: [],
     relatedTerms: ["sql", "database", "transaction", "index", "nosql"],
     dailyTasks: [
@@ -8892,8 +9164,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     position: { x: 0, y: 440 },
     description: "掌握嵌入式外设驱动开发技术，理解GPIO、I2C、SPI、UART等通信协议和驱动架构",
     outcomes: ["掌握常用通信协议", "理解驱动架构设计", "能编写外设驱动程序"],
-    relatedIntel: [],
-    relatedTools: [],
+    relatedIntel: ["077-embedded-driver", "097-pitfall-embedded"],
+    relatedTools: ["STM32CubeMX"],
     relatedTerms: ["gpio", "i2c", "spi", "uart", "driver"],
     dailyTasks: [
       { day: 1, title: "嵌入式驱动概述",
@@ -9108,8 +9380,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     position: { x: 220, y: 220 },
     description: "学习嵌入式系统的硬件抽象层设计，理解HAL架构和跨平台移植技术",
     outcomes: ["理解HAL架构设计", "掌握跨平台移植方法", "能设计可复用的驱动框架"],
-    relatedIntel: [],
-    relatedTools: [],
+    relatedIntel: ["078-embedded-hal", "069-embedded-arduino"],
+    relatedTools: ["STM32CubeMX"],
     relatedTerms: ["hal", "bsp", "porting", "abstraction"],
     dailyTasks: [
       { day: 1, title: "硬件抽象层概述",
@@ -9259,8 +9531,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     position: { x: 0, y: 440 },
     description: "掌握数字电路的核心原理，理解逻辑门、组合逻辑、时序逻辑和数字系统设计",
     outcomes: ["理解逻辑门和布尔代数", "掌握组合逻辑和时序逻辑设计", "能设计简单的数字系统"],
-    relatedIntel: [],
-    relatedTools: [],
+    relatedIntel: ["079-elec-digital", "111-pitfall-circuit"],
+    relatedTools: ["LTspice"],
     relatedTerms: ["logic-gate", "boolean", "flip-flop", "counter", "fsm"],
     dailyTasks: [
       { day: 1, title: "数字电路概述",
@@ -9402,7 +9674,107 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "动手练习：1）设计一个4位ALU，至少支持以下功能：加法、减法、AND、OR、XOR、NOT、比较（输出是否相等），用3位操作码选择功能；2）先设计各子模块：4位加法器（支持加减，减法用补码实现）、逻辑运算单元、比较逻辑，然后用多路选择器集成；3）设计标志位：零标志Z（结果为0时置1）、进位标志C（有进位/借位时置1）、符号标志N（结果最高位为1时置1）；4）列出完整的功能表，为每种操作码定义操作内容和输出；5）用逻辑仿真工具验证你的ALU：测试每种运算功能，给不同的输入，检查输出和标志位是否正确，特别是减法和比较功能要仔细验证。",
           deep_dive: "深入理解CPU与AI加速芯片中的运算单元演进：从简单ALU到现代CPU，运算单元经历了巨大演进——位宽从4位到64位，执行单元从单一到多个（ALU、FPU、SIMD），实现超标量乱序执行。GPU最初为图形渲染设计，大量简单运算单元并行工作，后来发现适合深度学习矩阵运算。现代AI GPU有几千个核心和专门的Tensor Core。专用AI加速器ASIC有大量MAC阵列、专门的存储器架构如HBM，能效比GPU高很多。存算一体架构直接在存储器里做计算，能效比传统架构高几个数量级。"
-        }, duration: "3小时", resources: [{ title: "ALU设计", url: "https://www.allaboutcircuits.com/textbook/digital-semiconductors/chpt-9/arithmetic-logic/", required: true, type: "doc", source: "official" }, { title: "ALU仿真", url: "https://www.falstad.com/circuit/e-alu.html", required: false, type: "tool", source: "official" }, { title: " pip - RISC-V ALU", url: "https://github.com/erides741/pipelined-risc-v", required: false, type: "repo", source: "github" }, { title: "Verilog ALU", url: "https://github.com/alexforencich/verilog-alu", required: false, type: "repo", source: "github" }], checkpoint: "4位ALU能正确执行所有设计的运算功能" }
+        }, duration: "3小时", resources: [{ title: "ALU设计", url: "https://www.allaboutcircuits.com/textbook/digital-semiconductors/chpt-9/arithmetic-logic/", required: true, type: "doc", source: "official" }, { title: "ALU仿真", url: "https://www.falstad.com/circuit/e-alu.html", required: false, type: "tool", source: "official" }, { title: " pip - RISC-V ALU", url: "https://github.com/erides741/pipelined-risc-v", required: false, type: "repo", source: "github" }, { title: "Verilog ALU", url: "https://github.com/alexforencich/verilog-alu", required: false, type: "repo", source: "github" }], checkpoint: "4位ALU能正确执行所有设计的运算功能" },
+      {
+        day: 11,
+        title: "FPGA 基础与 HDL 语言",
+        summary: "Verilog/VHDL 入门、FPGA 开发流程、Lattice/Xilinx 工具链",
+        content: {
+          objective: "今天你将学习FPGA 基础与 HDL 语言。学完后能Verilog/VHDL 入门、FPGA 开发流程、Lattice/Xilinx 工具链。",
+          key_points: [
+            "FPGA 基础：查找表(LUT)、触发器、时钟树、流水线",
+            "HDL 语言：Verilog/VHDL 语法、模块化设计、Testbench",
+            "组合逻辑：多路复用器、编码器、译码器、加法器",
+            "时序逻辑：寄存器、计数器、状态机（Mealy/Moore）",
+            "数字接口：UART、SPI、I2C 的 FPGA 实现"
+          ],
+          practice: "动手实践FPGA 基础与 HDL 语言：1）阅读相关文档建立整体认知；2）动手实现或运行示例验证理解；3）思考在实际项目中的应用场景；4）记录学习笔记和关键收获。",
+          deep_dive: "深入理解FPGA 基础与 HDL 语言：1）技术演进：了解发展历程和最新进展；2）最佳实践：总结行业内的成熟方法论；3）踩坑经验：认识常见陷阱和解决方案；4）与其他技术协同：思考如何与整个技术栈配合。"
+        },
+        duration: "2.5小时",
+        resources: [{ title: "扩展学习资源", url: "https://example.com/advanced", required: false, type: "doc", source: "official" }],
+        checkpoint: "掌握FPGA 基础与 HDL 语言的核心概念和实践方法"
+      },
+      {
+        day: 12,
+        title: "组合逻辑与时序逻辑",
+        summary: "编码器、译码器、计数器、状态机设计",
+        content: {
+          objective: "今天你将学习组合逻辑与时序逻辑。学完后能编码器、译码器、计数器、状态机设计。",
+          key_points: [
+            "FPGA 基础：查找表(LUT)、触发器、时钟树、流水线",
+            "HDL 语言：Verilog/VHDL 语法、模块化设计、Testbench",
+            "组合逻辑：多路复用器、编码器、译码器、加法器",
+            "时序逻辑：寄存器、计数器、状态机（Mealy/Moore）",
+            "数字接口：UART、SPI、I2C 的 FPGA 实现"
+          ],
+          practice: "动手实践组合逻辑与时序逻辑：1）阅读相关文档建立整体认知；2）动手实现或运行示例验证理解；3）思考在实际项目中的应用场景；4）记录学习笔记和关键收获。",
+          deep_dive: "深入理解组合逻辑与时序逻辑：1）技术演进：了解发展历程和最新进展；2）最佳实践：总结行业内的成熟方法论；3）踩坑经验：认识常见陷阱和解决方案；4）与其他技术协同：思考如何与整个技术栈配合。"
+        },
+        duration: "2.5小时",
+        resources: [{ title: "扩展学习资源", url: "https://example.com/advanced", required: false, type: "doc", source: "official" }],
+        checkpoint: "掌握组合逻辑与时序逻辑的核心概念和实践方法"
+      },
+      {
+        day: 13,
+        title: "存储器与接口",
+        summary: "RAM/ROM 设计、SRAM/DRAM 区别、常用数字接口协议",
+        content: {
+          objective: "今天你将学习存储器与接口。学完后能RAM/ROM 设计、SRAM/DRAM 区别、常用数字接口协议。",
+          key_points: [
+            "FPGA 基础：查找表(LUT)、触发器、时钟树、流水线",
+            "HDL 语言：Verilog/VHDL 语法、模块化设计、Testbench",
+            "组合逻辑：多路复用器、编码器、译码器、加法器",
+            "时序逻辑：寄存器、计数器、状态机（Mealy/Moore）",
+            "数字接口：UART、SPI、I2C 的 FPGA 实现"
+          ],
+          practice: "动手实践存储器与接口：1）阅读相关文档建立整体认知；2）动手实现或运行示例验证理解；3）思考在实际项目中的应用场景；4）记录学习笔记和关键收获。",
+          deep_dive: "深入理解存储器与接口：1）技术演进：了解发展历程和最新进展；2）最佳实践：总结行业内的成熟方法论；3）踩坑经验：认识常见陷阱和解决方案；4）与其他技术协同：思考如何与整个技术栈配合。"
+        },
+        duration: "2.5小时",
+        resources: [{ title: "扩展学习资源", url: "https://example.com/advanced", required: false, type: "doc", source: "official" }],
+        checkpoint: "掌握存储器与接口的核心概念和实践方法"
+      },
+      {
+        day: 14,
+        title: "数字信号处理基础",
+        summary: "FIR/IIR 数字滤波器在 FPGA 上的实现",
+        content: {
+          objective: "今天你将学习数字信号处理基础。学完后能FIR/IIR 数字滤波器在 FPGA 上的实现。",
+          key_points: [
+            "FPGA 基础：查找表(LUT)、触发器、时钟树、流水线",
+            "HDL 语言：Verilog/VHDL 语法、模块化设计、Testbench",
+            "组合逻辑：多路复用器、编码器、译码器、加法器",
+            "时序逻辑：寄存器、计数器、状态机（Mealy/Moore）",
+            "数字接口：UART、SPI、I2C 的 FPGA 实现"
+          ],
+          practice: "动手实践数字信号处理基础：1）阅读相关文档建立整体认知；2）动手实现或运行示例验证理解；3）思考在实际项目中的应用场景；4）记录学习笔记和关键收获。",
+          deep_dive: "深入理解数字信号处理基础：1）技术演进：了解发展历程和最新进展；2）最佳实践：总结行业内的成熟方法论；3）踩坑经验：认识常见陷阱和解决方案；4）与其他技术协同：思考如何与整个技术栈配合。"
+        },
+        duration: "2.5小时",
+        resources: [{ title: "扩展学习资源", url: "https://example.com/advanced", required: false, type: "doc", source: "official" }],
+        checkpoint: "掌握数字信号处理基础的核心概念和实践方法"
+      },
+      {
+        day: 15,
+        title: "FPGA 综合项目",
+        summary: "在 FPGA 上实现一个 UART 串口通信或 LED 控制器",
+        content: {
+          objective: "今天你将学习FPGA 综合项目。学完后能在 FPGA 上实现一个 UART 串口通信或 LED 控制器。",
+          key_points: [
+            "FPGA 基础：查找表(LUT)、触发器、时钟树、流水线",
+            "HDL 语言：Verilog/VHDL 语法、模块化设计、Testbench",
+            "组合逻辑：多路复用器、编码器、译码器、加法器",
+            "时序逻辑：寄存器、计数器、状态机（Mealy/Moore）",
+            "数字接口：UART、SPI、I2C 的 FPGA 实现"
+          ],
+          practice: "动手实践FPGA 综合项目：1）阅读相关文档建立整体认知；2）动手实现或运行示例验证理解；3）思考在实际项目中的应用场景；4）记录学习笔记和关键收获。",
+          deep_dive: "深入理解FPGA 综合项目：1）技术演进：了解发展历程和最新进展；2）最佳实践：总结行业内的成熟方法论；3）踩坑经验：认识常见陷阱和解决方案；4）与其他技术协同：思考如何与整个技术栈配合。"
+        },
+        duration: "2.5小时",
+        resources: [{ title: "扩展学习资源", url: "https://example.com/advanced", required: false, type: "doc", source: "official" }],
+        checkpoint: "掌握FPGA 综合项目的核心概念和实践方法"
+      }
     ]
   },
 
@@ -9420,7 +9792,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     position: { x: 220, y: 220 },
     description: "学习印制电路板（PCB）设计的基础知识，掌握原理图绘制、PCB布局布线和设计规范",
     outcomes: ["掌握原理图绘制", "理解PCB布局布线", "了解PCB设计规范"],
-    relatedIntel: [],
+    relatedIntel: ["080-elec-pcb", "098-pitfall-hardware"],
     relatedTools: [],
     relatedTerms: ["pcb", "schematic", "layout", "routing", "gerber"],
     dailyTasks: [
@@ -9580,8 +9952,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     position: { x: 0, y: 220 },
     description: "掌握数字信号处理的核心算法，理解数字滤波器设计、FFT应用和实时信号处理",
     outcomes: ["掌握数字滤波器设计", "理解FFT算法应用", "能实现实时信号处理"],
-    relatedIntel: [],
-    relatedTools: [],
+    relatedIntel: ["081-signals-dsp", "067-signals-filter-design", "143-pitfall-fft-spectral-leakage"],
+    relatedTools: ["MATLAB", "NumPy"],
     relatedTerms: ["dsp", "digital-filter", "fft", "convolution", "real-time"],
     dailyTasks: [
       { day: 1, title: "DSP概述", summary: "学习DSP基本概念、系统组成与核心优势，了解其在各领域的广泛应用场景。", content: {
@@ -9863,8 +10235,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     position: { x: 220, y: 0 },
     description: "理解无线通信的核心技术，掌握天线原理、无线信道特性和常见无线协议",
     outcomes: ["理解无线信道特性", "掌握天线基本原理", "了解常见无线协议"],
-    relatedIntel: [],
-    relatedTools: [],
+    relatedIntel: ["082-signals-wireless", "056-signals-comm"],
+    relatedTools: ["MATLAB"],
     relatedTerms: ["antenna", "wireless", "wifi", "bluetooth", "channel"],
     dailyTasks: [
       { day: 1, title: "无线通信概述", summary: "学习无线通信系统概述与发展历程，掌握各代移动通信技术特点。", content: {
@@ -10146,7 +10518,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     position: { x: 220, y: 0 },
     description: "学习PLC（可编程逻辑控制器）的原理和应用，掌握工业自动化控制技术",
     outcomes: ["理解PLC工作原理", "掌握梯形图编程", "能设计简单的工业控制系统"],
-    relatedIntel: [],
+    relatedIntel: ["083-ctrl-plc", "110-pitfall-control"],
     relatedTools: [],
     relatedTerms: ["plc", "ladder", "industrial", "automation", "scada"],
     dailyTasks: [
@@ -10373,8 +10745,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     position: { x: 440, y: 220 },
     description: "学习伺服系统的原理和应用，掌握伺服电机控制、运动规划和精密定位技术",
     outcomes: ["理解伺服系统原理", "掌握伺服电机控制", "能设计运动控制系统"],
-    relatedIntel: [],
-    relatedTools: [],
+    relatedIntel: ["084-ctrl-servo", "110-pitfall-control"],
+    relatedTools: ["MATLAB"],
     relatedTerms: ["servo", "motion", "encoder", "position", "trajectory"],
     dailyTasks: [
       { day: 1, title: "伺服系统概述",
@@ -10580,8 +10952,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     position: { x: 0, y: 220 },
     description: "理解电力系统的基本组成和运行原理，掌握电力生产和配电基础知识",
     outcomes: ["理解电力系统组成", "掌握电力生产原理", "了解配电系统结构"],
-    relatedIntel: [],
-    relatedTools: [],
+    relatedIntel: ["071-elec-power-systems", "070-elec-components"],
+    relatedTools: ["LTspice", "MATLAB"],
     relatedTerms: ["power-system", "generation", "transmission", "distribution", "grid"],
     dailyTasks: [
       { day: 1, title: "电力系统概述",
@@ -10870,7 +11242,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     position: { x: 220, y: 0 },
     description: "学习电气安全的基本知识和保护技术，掌握接地、防雷和电气设备保护方法",
     outcomes: ["理解电气安全规范", "掌握接地技术", "了解防雷保护方法"],
-    relatedIntel: [],
+    relatedIntel: ["085-electrical-safety", "098-pitfall-hardware"],
     relatedTools: [],
     relatedTerms: ["grounding", "earthing", "lightning", "safety", "protection"],
     dailyTasks: [
