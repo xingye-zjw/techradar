@@ -62,7 +62,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["熟练使用命令行", "远程操控 GPU 服务器"],
     relatedIntel: ["009-linux", "016-server-setup"],
     relatedTools: ["Docker"],
-    relatedTerms: ["linux", "shell", "ssh", "cli"],
+    relatedTerms: ["linux", "shell", "ssh", "cli"], relatedNodes: ["git-github", "docker-basic", "devops-docker-api"],
     suggestions: {
       prerequisites: [
         "基本的计算机操作能力",
@@ -278,7 +278,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["独立参与开源项目协作", "代码 Code Review 能力"],
     relatedIntel: ["008-git"],
     relatedTools: ["Git", "VS Code"],
-    relatedTerms: ["git", "github", "commit", "branch", "pull-request"],
+    relatedTerms: ["git", "github", "commit", "branch", "pull-request"], relatedNodes: ["linux-basic", "docker-basic", "devops-cicd"],
     dailyTasks: [
       { day: 1, title: "仓库初始化与基础配置",
         summary: "掌握 Git 基础概念与初始化配置，完成第一次提交。", content: {
@@ -292,7 +292,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "从零创建你的第一个 Git 项目：新建 ai-study 目录，进入后用 git init 初始化仓库。先配置用户名和邮箱（如果还没配置的话）。创建 README.md 文件，写入项目简介。用 git status 查看当前状态，观察文件是 Untracked 状态。用 git add README.md 将文件加入暂存区，再次 git status 观察变成 Changes to be committed。然后用 git commit -m 'feat: 初始化项目 README' 完成第一次提交。再创建 .gitignore 文件，添加 src/ 和 data/ 目录的初始文件，分别用 git add 和 git commit 做两到三次提交。最后用 git log --oneline 查看提交历史，确保每次提交都有清晰的信息。",
           deep_dive: "深入理解 Git 提交快照的原理：与 SVN 等工具存储差异不同，Git 每次提交都是对整个项目做一个快照（类似拍照），未变化的文件只保留指针引用。这就是 Git 切换分支和回退速度极快的原因。提交对象包含：tree 对象指向根目录快照、parent 指向父提交、作者和提交者信息、提交说明。用 git cat-file -p HEAD 可以查看当前提交的原始内容。理解快照原理能帮你解释为什么 Git 操作那么快、为什么分支那么轻量。另外，Conventional Commits 是业界广泛采用的提交信息规范：feat 新功能、fix 修复bug、docs 文档、style 格式、refactor 重构、test 测试、chore 构建/工具。规范的提交信息能让历史记录更清晰，还能自动生成 Changelog 和版本号。从一开始养成好的 commit message 习惯，对未来的团队协作非常重要。"
-        }, duration: "1.5小时", resources: [R_GIT_SCM, B_GIT_TUTORIAL, { title: "GitHub Skills: Introduction to GitHub", url: "https://skills.github.com/", required: false }, { title: "廖雪峰 Git 教程", url: "https://liaoxuefeng.com/books/git/introduction/index.html", required: false },  { title: "awesome-git 资源列表", url: "https://github.com/dictcp/awesome-git", required: false, type: "repo", source: "github" }], checkpoint: "能从零创建 Git 仓库，完成一次 add + commit" },
+        }, duration: "1.5小时", resources: [R_GIT_SCM, B_GIT_TUTORIAL, { title: "GitHub Skills: Introduction to GitHub", url: "https://skills.github.com/", required: false, type: "repo", source: "github" }, { title: "廖雪峰 Git 教程", url: "https://liaoxuefeng.com/books/git/introduction/index.html", required: false, type: "book", source: "official" },  { title: "awesome-git 资源列表", url: "https://github.com/dictcp/awesome-git", required: false, type: "repo", source: "github" }], checkpoint: "能从零创建 Git 仓库，完成一次 add + commit" },
       { day: 2, title: "理解 .git 目录与对象模型",
         summary: "深入 Git 底层对象模型，理解 blob/tree/commit 的存储原理。", content: {
           objective: "今天你将深入 Git 的底层原理，理解 .git 目录结构和三种核心对象模型。学完后你能解释 Git 如何存储文件和目录结构，手动创建 blob/tree/commit 对象，看懂对象之间的引用关系。深入理解底层原理能帮你从本质上理解 Git 的各种操作，遇到疑难问题时能快速定位和修复，成为真正的 Git 高手。",
@@ -305,7 +305,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "动手探索 Git 底层对象世界：在之前创建的仓库中，用 ls -la .git/ 查看目录结构，用 cat .git/HEAD 查看当前分支指向，用 find .git/objects -type f 查看所有对象文件。然后手动创建对象：用 echo 'Hello Git' | git hash-object --stdin -w 创建一个 blob 对象，记录返回的 40 位哈希，用 git cat-file -p <哈希> 查看对象内容，用 git cat-file -t <哈希> 确认类型是 blob。接着创建几次文件提交，用 git cat-file -p HEAD 查看 commit 对象内容，找到它指向的 tree 哈希，再查看 tree 对象，看到里面的 blob 和子 tree，顺着引用链理解整个快照结构。最后画一张图展示 commit → tree → blob 的层级关系。",
           deep_dive: "深入理解 Git 的内容寻址文件系统：Git 本质上是一个键值存储的内容寻址系统，key 是 SHA-1 哈希，value 是对象内容。所有对象都存储在 .git/objects/ 下，按哈希前两位分子目录，后 38 位做文件名，这是为了兼容文件系统的单目录文件数限制。对象有四种类型：blob 文件内容、tree 目录结构、commit 提交快照、tag 标签。理解这一点能解释很多现象：为什么修改文件名但内容不变不增加存储空间、为什么两个不同分支有相同文件时不重复存储、为什么 Git 仓库大小增长主要来自大文件。另外，packfile 机制：对象多了 Git 会自动打包，把相似对象的增量压缩存储，大大减小仓库体积，用 git gc 可以手动触发垃圾回收和打包。在 AI 项目中，如果你不小心提交了大的模型权重文件，即使后来删除了，它仍存在于历史中，仓库体积会一直很大，这时候需要 git filter-branch 或 BFG Repo-Cleaner 来清理历史。理解底层原理才能真正掌握 Git 的高级用法。"
-        }, duration: "1.5小时", resources: [R_GIT_SCM, { title: "Git 内部原理 - 对象", url: "https://git-scm.com/book/zh/v2/Git-%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86-Git-%E5%AF%B9%E8%B1%A1", required: true }, { title: "Git Internals PDF by Scott Chacon", url: "https://github.com/pluralsight/git-internals-pdf", required: false },  { title: "git-vuln-model - Git安全漏洞模型", url: "https://github.com/so-called-pentesters/git-vuln-model", required: false, type: "repo", source: "github" }], checkpoint: "能解释 commit/tree/blob 三类对象的关系，并在 .git 中找到它们" },
+        }, duration: "1.5小时", resources: [R_GIT_SCM, { title: "Git 内部原理 - 对象", url: "https://git-scm.com/book/zh/v2/Git-%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86-Git-%E5%AF%B9%E8%B1%A1", required: true, type: "book", source: "official" }, { title: "Git Internals PDF by Scott Chacon", url: "https://github.com/pluralsight/git-internals-pdf", required: false, type: "repo", source: "github" },  { title: "git-vuln-model - Git安全漏洞模型", url: "https://github.com/so-called-pentesters/git-vuln-model", required: false, type: "repo", source: "github" }], checkpoint: "能解释 commit/tree/blob 三类对象的关系，并在 .git 中找到它们" },
       { day: 3, title: "分支创建、切换与合并",
         summary: "掌握 Git 分支操作，理解分支合并与冲突解决。", content: {
           objective: "今天你将系统学习 Git 分支的核心概念和操作方法。学完后你能创建和切换分支，在不同分支上独立开发，将功能分支合并回主线，手动解决合并冲突。分支是 Git 最强大的特性，对于 AI 开发来说，你可以为不同实验思路创建独立分支，大胆尝试新方法而不影响主代码，也便于对比不同方案的效果。",
@@ -318,7 +318,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完整练习分支工作流：首先在 main 分支上创建几个初始提交（比如写一个简单的数据集加载脚本）。然后用 git switch -c feature-aug 创建新分支，在新分支上添加数据增强功能，做两到三次提交。切换回 main，用 git log --oneline --graph 查看历史，验证看不到新分支的改动。接着在 main 上也做一个小修改（比如改 README），制造分叉。然后用 git merge feature-aug 把功能分支合并进来，观察是 Fast-forward 还是三方合并。接下来练习冲突解决：创建 feature-conflict 分支，修改同一文件的同一行，切回 main 也修改那一行，然后合并，手动解决冲突（保留两边的修改），git add + git commit 完成合并。最后用 git log --graph --all --oneline 可视化查看完整的分支图。",
           deep_dive: "深入理解分支合并的底层原理和不同策略：Fast-forward 合并只移动分支指针，不产生新提交，历史是线性的；三方合并（Recursive策略）找到两个分支的共同祖先，对比三个点（祖先、A分支头、B分支头）生成合并结果，产生一个合并提交。冲突产生的根本原因是两个分支对同一文件的同一区域做了不同修改，Git 无法自动判断哪个正确。在团队协作中，减少冲突的最佳实践包括：1. 小步提交、频繁合并，避免大功能长期游离；2. 按功能模块分工，不同人改不同文件；3. 定期从主干 rebase 到自己的分支，减少最终合并的冲突量；4. 用 git diff main...feature 提前查看两个分支的差异，预判冲突。另外，合并策略还有 ours（忽略对方改动）、theirs（全用对方的）、octopus（合并多个分支）等，不过很少用到。理解合并原理能帮你在遇到复杂合并时保持冷静，知道 Git 在做什么，出了问题也知道怎么回退。"
-        }, duration: "2小时", resources: [R_GIT_BRANCHING, R_GIT_SCM, B_GIT_TUTORIAL, { title: "Atlassian Git 分支教程", url: "https://www.atlassian.com/git/tutorials/using-branches", required: false },  { title: "git-flight-rules - Git故障排除指南", url: "https://github.com/k88hudson/git-flight-rules", required: false, type: "repo", source: "github" }], checkpoint: "能手动制造冲突并成功合并，git log 看到合并图" },
+        }, duration: "2小时", resources: [R_GIT_BRANCHING, R_GIT_SCM, B_GIT_TUTORIAL, { title: "Atlassian Git 分支教程", url: "https://www.atlassian.com/git/tutorials/using-branches", required: false, type: "article", source: "official" },  { title: "git-flight-rules - Git故障排除指南", url: "https://github.com/k88hudson/git-flight-rules", required: false, type: "repo", source: "github" }], checkpoint: "能手动制造冲突并成功合并，git log 看到合并图" },
       { day: 4, title: "远程仓库与 push/pull",
         summary: "掌握远程仓库操作，理解 push/fetch/pull 的区别与协作流程。", content: {
           objective: "今天你将学习 Git 远程仓库的核心概念和操作方法。学完后你能关联本地仓库与 GitHub 远程仓库，推送本地提交到远程，拉取远程更新到本地，理解 fetch 和 pull 的本质区别。远程协作是团队开发的基础，对于 AI 项目来说，你需要用 GitHub/GitLab 来共享代码、管理版本、协同开发模型。",
@@ -331,7 +331,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成远程仓库全流程操作：首先在 GitHub 上创建一个新的空仓库（不要初始化 README）。回到本地仓库，用 git remote add origin <你的仓库地址> 关联远程仓库。用 git remote -v 确认关联成功。然后用 git push -u origin main 将本地 main 分支推送到远程，-u 参数建立 upstream 追踪关系，以后直接 git push 即可。推送成功后刷新 GitHub 页面，验证代码已上传。接下来模拟'别人改了代码'的场景：在 GitHub 网页上直接编辑 README.md，添加一行内容并提交。回到本地，先用 git fetch origin 下载远程更新，用 git log --oneline main origin/main 对比本地和远程的差异，观察 main 和 origin/main 的位置。然后用 git merge origin/main 合并远程修改。最后再做一次本地修改，直接 git push 推送，验证追踪关系已建立。整个过程注意理解 fetch 和 pull 的区别。",
           deep_dive: "深入理解远程分支与追踪机制：远程分支（如 origin/main）是本地对远程仓库状态的只读快照，只有在网络操作（fetch/push/pull）时才会更新。这就是为什么你离线一段时间后 git status 显示的'落后/领先'可能不准确，需要先 fetch 一下。追踪分支（tracking branch）是本地分支与远程分支的关联关系，git status 会基于这个关系显示 ahead/behind 多少个提交。git push -u origin main 就是在建立追踪。常见的协作问题与解决：1. push 被拒绝（rejected）：远程有新提交，需要先 pull 合并再 push；2. pull 产生冲突：和本地合并冲突一样，手动解决后提交；3. 强制推送 git push --force：会覆盖远程历史，非常危险，只在自己的私人分支上使用，永远不要在公共分支上 force push。在 AI 团队协作中，最佳实践是每个人在自己的 feature 分支上开发，通过 Pull Request 合并到主干，而不是直接 push 到 main。这样既能保护主干代码的稳定性，又能通过 Code Review 提升代码质量。另外，多个远程仓库的场景也很常见，比如同时关联公司 GitLab 和个人 GitHub，用不同的别名区分即可。"
-        }, duration: "2小时", resources: [R_GIT_SCM, { title: "GitHub Docs: 连接到 GitHub", url: "https://docs.github.com/cn/get-started/getting-started-with-git/set-up-git", required: true }, { title: "Atlassian Git 远程仓库教程", url: "https://www.atlassian.com/git/tutorials/syncing", required: false },  { title: "git-remote-manager - Git远程仓库管理工具", url: "https://github.com/kimsangyeob/git-remote-manager", required: false, type: "repo", source: "github" }], checkpoint: "本地提交能成功推送到 GitHub，且能把远程修改 pull 回本地" },
+        }, duration: "2小时", resources: [R_GIT_SCM, { title: "GitHub Docs: 连接到 GitHub", url: "https://docs.github.com/cn/get-started/getting-started-with-git/set-up-git", required: true, type: "repo", source: "github" }, { title: "Atlassian Git 远程仓库教程", url: "https://www.atlassian.com/git/tutorials/syncing", required: false, type: "article", source: "official" },  { title: "git-remote-manager - Git远程仓库管理工具", url: "https://github.com/kimsangyeob/git-remote-manager", required: false, type: "repo", source: "github" }], checkpoint: "本地提交能成功推送到 GitHub，且能把远程修改 pull 回本地" },
       { day: 5, title: "Fork / 分支 / PR 流程",
         summary: "掌握开源贡献标准流程：Fork → 分支开发 → Pull Request。", content: {
           objective: "今天你将学习开源项目贡献的标准工作流：Fork + Pull Request。学完后你能 Fork 一个开源项目到自己的账号，在本地创建功能分支开发，推送后发起 PR 请求合并。这是参与开源项目的标准方式，也是工业界团队协作的通用流程。对于 AI 开发者来说，学会 PR 流程意味着你可以参与 HuggingFace、PyTorch 等开源项目的贡献，也能在团队中规范地协作开发。",
@@ -344,7 +344,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成一次完整的 PR 流程实战：首先在 GitHub 上找一个适合新手的项目（比如 first-contributions），点击 Fork 按钮把项目复制到自己账号下。然后用 git clone <你fork的仓库地址> 把自己的 Fork 克隆到本地。进入项目目录，用 git checkout -b add-my-name 创建一个功能分支。按照项目说明修改相应文件（比如添加你的名字到贡献者列表）。git add + git commit 提交改动，注意写清楚提交信息。用 git push origin add-my-name 推送到自己的远程仓库。回到 GitHub 页面，会看到提示'Compare & pull request'，点击发起 PR。填写 PR 标题和描述，说明你做了什么改动。最后提交 PR，查看 PR 页面，确认 CI 检查（如果有的话）的状态。整个过程熟悉从 Fork 到发 PR 的完整链路。",
           deep_dive: "深入理解 PR 协作的最佳实践和进阶技巧：1. 保持 Fork 与上游同步：添加 upstream 远程仓库（git remote add upstream 原仓库地址），定期 git fetch upstream + git merge upstream/main 来同步最新代码，避免你的 PR 因为过时而产生大量冲突；2. 一个 PR 只做一件事：小而聚焦的 PR 更容易被 review 和合并，大功能拆分成多个小 PR 逐步合并；3. PR 标题和描述很重要：标题用 Conventional Commits 格式，描述包含背景、改动内容、测试方法、截图，帮维护者快速理解你的改动；4. 及时响应 review 意见：收到反馈后在本地修改、push 新提交，PR 会自动更新，不需要重新发 PR；5. 允许维护者修改：发起 PR 时勾选'Allow edits from maintainers'，让维护者能直接在你的分支上修改，加快合并速度。在 AI 项目中，PR 流程还常常关联 Issue：先开 Issue 讨论方案，达成一致后再写代码发 PR，避免做无用功。另外，很多项目有 CLA（贡献者许可协议）或 DCO（开发者原创声明），第一次贡献需要签署。理解这些协作规范，你就能更顺畅地参与开源社区，也能在团队中更专业地协作。"
-        }, duration: "2小时", resources: [R_GIT_BRANCHING, R_GIT_SCM, B_GIT_TUTORIAL, { title: "GitHub Docs: Fork 项目", url: "https://docs.github.com/cn/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo", required: true }, { title: "如何为开源项目做贡献（中文指南）", url: "https://opensource.guide/zh-hans/how-to-contribute/", required: false },  { title: "first-contributions - 开源第一次贡献教程", url: "https://github.com/firstcontributions/first-contributions", required: false, type: "repo", source: "github" }], checkpoint: "能在自己的 GitHub 上发出人生第一个 Pull Request" },
+        }, duration: "2小时", resources: [R_GIT_BRANCHING, R_GIT_SCM, B_GIT_TUTORIAL, { title: "GitHub Docs: Fork 项目", url: "https://docs.github.com/cn/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo", required: true, type: "repo", source: "github" }, { title: "如何为开源项目做贡献（中文指南）", url: "https://opensource.guide/zh-hans/how-to-contribute/", required: false, type: "repo", source: "official" },  { title: "first-contributions - 开源第一次贡献教程", url: "https://github.com/firstcontributions/first-contributions", required: false, type: "repo", source: "github" }], checkpoint: "能在自己的 GitHub 上发出人生第一个 Pull Request" },
       { day: 6, title: "rebase 与交互式整理历史",
         summary: "掌握 git rebase 与交互式整理，保持提交历史整洁线性。", content: {
           objective: "今天你将学习 git rebase 的原理和使用方法，以及交互式变基整理提交历史。学完后你能用 rebase 把功能分支的提交移到主分支最新提交之后，保持线性历史；能用交互式 rebase 合并、编辑、重排、删除提交。整洁的提交历史让代码审查更容易，问题追溯更清晰，是专业开发者的必备技能。",
@@ -357,7 +357,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成 rebase 和交互式整理的完整练习：首先在 main 分支做几次提交作为基线。然后创建 feature 分支，在上面做 4-5 次小提交（比如每次添加一个小功能函数）。切回 main 再做一两次提交制造分叉。用 git log --oneline --graph --all 查看当前分支结构。然后切回 feature 分支，用 git rebase main 把 feature 变基到 main 之后，观察提交哈希是否变化，历史是否变成线性。接下来练习交互式 rebase：用 git rebase -i HEAD~4 对最近 4 次提交做整理，尝试把两个相邻的提交 squash（合并）成一个，把一个提交 reword（重写提交信息），调整提交顺序。完成后用 git log 确认结果符合预期。最后练习 rebase 冲突处理：故意制造冲突后 rebase，解决冲突并继续。",
           deep_dive: "深入理解 rebase 的底层原理与高级用法：rebase 的本质是找到两个分支的共同祖先，然后把当前分支从祖先之后的每个提交生成补丁（patch），在目标位置依次应用补丁，每个补丁生成一个新的提交对象（哈希不同）。这就是为什么 rebase 会改变提交哈希的原因。交互式 rebase 有很多实用操作：squash（合并到上一个提交）、fixup（合并但丢弃提交信息）、edit（暂停 rebase 修改该提交）、reword（只改提交信息）、drop（删除提交）、reorder（调整顺序）。高级技巧：1. git rebase --onto A B C 精确指定变基范围，把 B 到 C 的提交移到 A 上，适合挑拣部分提交；2. git pull --rebase 用 rebase 代替 merge 来拉取更新，保持本地历史整洁；3. git rerere（reuse recorded resolution）记录你解决过的冲突，下次遇到相同冲突自动解决。在 AI 项目中，rebase 常用于整理实验分支的提交历史：把一堆调试用的临时提交 squash 成几个有意义的提交，再发 PR。记住：rebase 是为了让历史更清晰易读，不是为了追求完美的线性而牺牲可追溯性。"
-        }, duration: "2小时", resources: [R_GIT_SCM, R_GIT_BRANCHING, { title: "Atlassian Git rebase 教程", url: "https://www.atlassian.com/git/tutorials/rewriting-history/git-rebase", required: false }], checkpoint: "能用 rebase 把多条 commit 合并成一条整洁历史" },
+        }, duration: "2小时", resources: [R_GIT_SCM, R_GIT_BRANCHING, { title: "Atlassian Git rebase 教程", url: "https://www.atlassian.com/git/tutorials/rewriting-history/git-rebase", required: false, type: "article", source: "official" }], checkpoint: "能用 rebase 把多条 commit 合并成一条整洁历史" },
       { day: 7, title: "git diff / stash / reset / checkout",
         summary: "掌握差异对比、暂存修改、撤销操作，理解 Git 三层结构。", content: {
           objective: "今天你将深入学习 Git 三层结构（工作区、暂存区、仓库）和相关的操作命令。学完后你能用 git diff 对比不同区域的差异，用 git stash 临时保存修改切换分支，用 git reset 撤销提交，用 git checkout 恢复文件。理解这些命令是掌握 Git 高级操作的基础，遇到操作失误时也能从容应对。",
@@ -370,7 +370,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "系统练习 Git 的撤销和暂存操作：首先创建一个有几次提交的仓库。1. 练习 git diff：修改一个文件但不 add，用 git diff 看工作区与暂存区差异；git add 后用 git diff --cached 看暂存区与 HEAD 的差异。2. 练习 git stash：修改几个文件，用 git stash save 'work in progress' 暂存起来，git status 查看工作区变干净，git stash list 查看暂存列表，然后用 git stash pop 恢复。3. 练习 git reset 三种模式：做一次提交后，用 git reset --soft HEAD~1 撤销提交但保留暂存区和工作区，重新提交；再做一次提交，用 git reset --mixed HEAD~1（默认）撤销提交和暂存；再做一次提交，用 git reset --hard HEAD~1 完全丢弃。4. 练习 git checkout -- file 丢弃单个文件的工作区修改。每个操作前后都用 git status 和 git log 观察变化，加深理解。",
           deep_dive: "深入理解 Git 的 HEAD 指针和引用机制：HEAD 是一个特殊指针，指向当前所在分支的最新提交。切换分支本质上就是改变 HEAD 的指向，然后把工作区更新为对应提交的快照。git reset 是移动 HEAD 和当前分支指针，而 git checkout 是只移动 HEAD（不改变分支指针），同时更新工作区。这就是为什么 reset 会改变分支历史而 checkout 不会。常见的误操作与恢复方法：1. 不小心 git reset --hard 了：用 git reflog 查看 HEAD 的移动历史，找到丢失的提交哈希，git reset --hard <哈希> 恢复；2. 不小心删了分支：reflog 也能找到，git checkout -b 恢复；3. git add 了不该加的文件：git reset HEAD <file> 从暂存区移除。git reflog 是 Git 的安全网，几乎所有操作都能在 reflog 中找到记录，默认保留 30 天。在 AI 项目中，这些操作特别有用：实验做崩了可以快速回退到上一个可用版本，临时切换到其他分支修 bug 时 stash 保存当前实验代码，对比两次提交的代码差异来找性能退化的原因。掌握这些'后悔药'，你用 Git 就会更有底气，大胆尝试而不怕搞坏。"
-        }, duration: "1.5小时", resources: [B_GIT_TUTORIAL, R_GIT_BRANCHING, R_GIT_SCM, { title: "Oh My Git! 游戏化学 Git", url: "https://ohmygit.org/", required: false }], checkpoint: "能解释 soft/mixed/hard 三种 reset 的区别并各用一次" },
+        }, duration: "1.5小时", resources: [B_GIT_TUTORIAL, R_GIT_BRANCHING, R_GIT_SCM, { title: "Oh My Git! 游戏化学 Git", url: "https://ohmygit.org/", required: false, type: "article", source: "official" }], checkpoint: "能解释 soft/mixed/hard 三种 reset 的区别并各用一次" },
       { day: 8, title: "标签 tag 与发布 Release",
         summary: "掌握 Git 标签与 GitHub Release，规范版本发布流程。", content: {
           objective: "今天你将学习 Git 标签（tag）和 GitHub Release 的使用方法。学完后你能为项目打标签标记版本号，理解轻量标签和附注标签的区别，在 GitHub 上创建 Release 并发布版本。对于 AI 项目来说，版本标签能帮你标记模型的稳定版本、基准实验、论文复现版本，方便回溯和对比不同版本的效果。",
@@ -383,7 +383,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成标签和 Release 的完整练习：首先在你的项目仓库中，确保有几个稳定的提交。用 git tag -a v0.1.0 -m '首个可用版本，包含基础训练功能' 创建一个附注标签。用 git tag 查看所有标签，用 git show v0.1.0 查看标签详情。然后用 git log --oneline --decorate 查看标签在提交历史中的位置。接着创建一个 bugfix 提交，再打一个 v0.1.1 补丁版本标签，理解语义化版本的 PATCH 递增。用 git push origin v0.1.0 和 git push origin v0.1.1 把标签推送到远程。登录 GitHub，进入 Releases 页面，基于 v0.1.0 创建一个 Release：填写版本号、标题、详细的更新说明（Changelog），可以上传一些附件（比如导出的模型权重文件）。最后在 README.md 中添加版本徽章，展示最新版本号。",
           deep_dive: "深入理解版本管理与发布的最佳实践：语义化版本（SemVer）是业界广泛采用的标准，它让版本号有了明确的含义：MAJOR 版本号递增表示有不兼容的 API 变更，MINOR 递增表示新增向下兼容的功能，PATCH 递增表示向下兼容的 bug 修复。在 AI 项目中，除了代码版本，模型版本也很重要，可以用标签来标记不同的模型版本，配合模型注册中心（如 MLflow Model Registry）一起使用。进阶发布技巧：1. Changelog 规范：每个版本都有清晰的变更记录，分为 Added / Changed / Deprecated / Removed / Fixed / Security 几类；2. 发布候选版本：v1.0.0-rc1、v1.0.0-beta.2 等先行版本，让用户提前测试；3. 自动发布：用 GitHub Actions 自动构建和发布，打 tag 后自动触发 Release 流程；4. Git 标签 vs 分支：标签是某个时间点的快照，永远不会变；分支会继续往前移动。在开源项目中，通常每个 MAJOR.MINOR 版本有一个维护分支（如 v1.2.x），在上面发布 PATCH 版本。理解这些版本管理实践，你就能更专业地管理项目发布，给用户提供稳定可靠的版本。"
-        }, duration: "1.5小时", resources: [{ title: "语义化版本 2.0", url: "https://semver.org/lang/zh-CN/", required: true }, { title: "Git 官方文档: Git 基础 - 打标签", url: "https://git-scm.com/book/zh/v2/Git-%E5%9F%BA%E7%A1%80-%E6%89%93%E6%A0%87%E7%AD%BE", required: true }, { title: "GitHub Docs: 管理发布版本", url: "https://docs.github.com/cn/repositories/releasing-projects-on-github/managing-releases-in-a-repository", required: false }], checkpoint: "能为项目打一个带说明的 tag，并在 GitHub 创建 Release 页面" },
+        }, duration: "1.5小时", resources: [{ title: "语义化版本 2.0", url: "https://semver.org/lang/zh-CN/", required: true, type: "article", source: "official" }, { title: "Git 官方文档: Git 基础 - 打标签", url: "https://git-scm.com/book/zh/v2/Git-%E5%9F%BA%E7%A1%80-%E6%89%93%E6%A0%87%E7%AD%BE", required: true, type: "book", source: "official" }, { title: "GitHub Docs: 管理发布版本", url: "https://docs.github.com/cn/repositories/releasing-projects-on-github/managing-releases-in-a-repository", required: false, type: "repo", source: "github" }], checkpoint: "能为项目打一个带说明的 tag，并在 GitHub 创建 Release 页面" },
       { day: 9, title: "Code Review 实战（在 PR 上）",
         summary: "掌握 GitHub PR Code Review 流程，学会给出和接收代码审查意见。", content: {
           objective: "今天你将学习在 GitHub Pull Request 上进行 Code Review 的完整流程和最佳实践。学完后你能在 PR 上添加行内评论和整体评论，作为 reviewer 给出专业的审查意见，作为 author 响应意见并更新代码。Code Review 是提升代码质量、知识共享、团队协作的核心环节，也是 AI 项目中保证模型代码正确性和可复现性的重要手段。",
@@ -396,7 +396,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成一次完整的 Code Review 实战练习：首先找到你之前创建的 PR（或者新建一个小改动的 PR）。然后用另一个账号（或找同学配合）模拟 reviewer 角色：1. 在 Files changed 页面浏览所有改动，点击代码行左侧 + 号添加行内评论，针对具体代码给出具体意见；2. 尝试用 Suggestion 功能直接建议代码修改，author 可以一键应用；3. 用 Review changes 功能提交整体 review，选择 Comment / Approve / Request changes 三种状态。然后切回 author 角色：1. 收到 review 意见后，在本地修改代码；2. git add + git commit + git push，PR 会自动更新；3. 对每条 review 评论进行回复，说明你是怎么改的或者为什么不改；4. 重新请求 review。最后选择一种合并方式（建议用 Squash and merge）把 PR 合并到 main 分支。整个过程体验 review 的完整闭环。",
           deep_dive: "深入理解 Code Review 的最佳实践与工程文化：Code Review 的目的不仅是找 bug，更是知识共享、统一规范、提升团队整体水平。Google 的研究表明，Code Review 是提升代码质量最有效的手段之一。好的 review 应该遵循以下原则：1. 对事不对人，评论代码而不是评论人；2. 区分必须改的和建议改的，不要吹毛求疵；3. 正面反馈很重要，好的代码也要表扬；4. 用提问的方式代替命令，比如'这里有没有考虑 X 情况？'比'你这里错了'更容易接受；5. 控制 review 时间，PR 太大拆小，单次 review 不超过 400 行代码。在 AI 项目中，Code Review 还有特殊的关注点：1. 数学公式和算法逻辑的正确性；2. 随机性的处理和可复现性（随机种子设置）；3. 数据处理 pipeline 的正确性；4. 超参数的合理性；5. 实验结果的可复现性。另外，很多团队用 CI/CD 来自动化部分 review 工作：单元测试、代码风格检查（Lint）、类型检查、安全扫描，这些自动化检查通过了再进行人工 review，能节省大量时间。理解这些最佳实践，你不仅能写出更好的代码，也能成为一个受欢迎的合作者。"
-        }, duration: "2小时", resources: [{ title: "GitHub Docs: Reviewing changes", url: "https://docs.github.com/cn/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests", required: true }, { title: "Google Engineering Practices: Code Review", url: "https://google.github.io/eng-practices/review/reviewer/", required: false }, { title: "GitHub Docs: 关于 Pull Request 合并", url: "https://docs.github.com/cn/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/about-pull-request-merges", required: false },  { title: "awesome-code-review - Code Review资源列表", url: "https://github.com/jakoch/awesome-code-review", required: false, type: "repo", source: "github" }], checkpoint: "有一个自己被 review 过并合并的 PR，记录 review→修复→合并 的完整流程" },
+        }, duration: "2小时", resources: [{ title: "GitHub Docs: Reviewing changes", url: "https://docs.github.com/cn/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests", required: true, type: "repo", source: "github" }, { title: "Google Engineering Practices: Code Review", url: "https://google.github.io/eng-practices/review/reviewer/", required: false, type: "article", source: "official" }, { title: "GitHub Docs: 关于 Pull Request 合并", url: "https://docs.github.com/cn/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/about-pull-request-merges", required: false, type: "repo", source: "github" },  { title: "awesome-code-review - Code Review资源列表", url: "https://github.com/jakoch/awesome-code-review", required: false, type: "repo", source: "github" }], checkpoint: "有一个自己被 review 过并合并的 PR，记录 review→修复→合并 的完整流程" },
       { day: 10, title: ".gitignore 与大文件策略",
         summary: "掌握 .gitignore 配置与大文件管理，避免仓库膨胀和误提交敏感数据。", content: {
           objective: "今天你将学习 .gitignore 文件的配置语法和大文件管理策略。学完后你能正确配置忽略规则，避免把训练数据、模型权重、日志文件、缓存文件等提交到 Git 仓库，了解 Git LFS 等大文件管理方案。对于 AI 项目来说，数据集和模型权重通常很大，不适合放在 Git 仓库中，正确的忽略策略能保持仓库轻量快速。",
@@ -409,7 +409,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成 .gitignore 和大文件管理的实战练习：首先在你的项目中创建一个完整的 .gitignore 文件，包含以下类别：Python 相关（__pycache__/、*.pyc、*.pyo、*.pyd）、编辑器相关（.vscode/、.idea/、*.swp）、日志和数据（*.log、data/、datasets/、results/）、模型权重（*.pt、*.pth、*.bin、*.ckpt、checkpoints/）、环境相关（.env、venv/、.venv/）。用 git check-ignore -v <文件名> 验证某个文件是否被忽略以及被哪条规则匹配。然后练习移除已误提交的文件：创建一个 data/big_data.npy 文件，提交后才发现不该提交，用 git rm --cached data/big_data.npy 从仓库中移除（保留本地），添加到 .gitignore，重新提交。最后了解 Git LFS 的基本用法：git lfs install、git lfs track '*.pt' 跟踪大模型文件，理解它的工作原理。",
           deep_dive: "深入理解 Git 的文件存储机制与大文件最佳实践：Git 是为代码设计的版本控制系统，代码是文本文件、体积小、适合做差异对比。但二进制大文件（模型权重、数据集、图片）不一样：1. Git 无法对二进制文件做增量存储，每次修改都会存一份完整的新副本，仓库体积会爆炸式增长；2. 克隆仓库时需要下载所有历史版本的所有大文件，非常耗时；3. GitHub 有单文件 100MB 的限制，超过会拒绝推送。解决方案包括：1. Git LFS（Large File Storage）：最常用的方案，用小指针文件代替大文件，真实文件存在 LFS 服务器，克隆时默认只下载当前版本的大文件，节省带宽和空间；2. DVC（Data Version Control）：专门为机器学习项目设计的数据版本控制工具，和 Git 配合使用，数据存在 S3/OSS 等对象存储，Git 只管理元数据；3. .gitignore + 数据下载脚本：把数据集放到专门的数据服务器或云存储，代码仓库里只放数据下载脚本。在实际 AI 项目中，推荐 DVC 或类似的专门工具，它们不仅能管理大数据和模型，还能追踪数据版本和实验的对应关系，实现完全可复现的机器学习流水线。记住：Git 是代码的版本控制，不是数据的版本控制。"
-        }, duration: "1.5小时", resources: [{ title: "gitignore 模板", url: "https://github.com/github/gitignore", required: true }, { title: "Git 官方文档: 忽略文件", url: "https://git-scm.com/book/zh/v2/Git-%E5%9F%BA%E7%A1%80-%E8%AE%B0%E5%BD%95%E6%9B%B4%E6%96%B0%E5%88%B0%E4%BB%93%E5%BA%93", required: false }, { title: "Git LFS 官方文档", url: "https://git-lfs.com/", required: false },  { title: "gitignore - GitIgnore项目集合", url: "https://github.com/github/gitignore", required: false, type: "repo", source: "github" }], checkpoint: "项目中不会再出现被意外 commit 的 .pyc / 训练数据 / 日志" },
+        }, duration: "1.5小时", resources: [{ title: "gitignore 模板", url: "https://github.com/github/gitignore", required: true, type: "repo", source: "github" }, { title: "Git 官方文档: 忽略文件", url: "https://git-scm.com/book/zh/v2/Git-%E5%9F%BA%E7%A1%80-%E8%AE%B0%E5%BD%95%E6%9B%B4%E6%96%B0%E5%88%B0%E4%BB%93%E5%BA%93", required: false, type: "book", source: "official" }, { title: "Git LFS 官方文档", url: "https://git-lfs.com/", required: false, type: "doc", source: "official" },  { title: "gitignore - GitIgnore项目集合", url: "https://github.com/github/gitignore", required: false, type: "repo", source: "github" }], checkpoint: "项目中不会再出现被意外 commit 的 .pyc / 训练数据 / 日志" },
       { day: 11, title: "子模块 submodule 与大型仓库",
         summary: "掌握 Git 子模块与仓库组织方式，管理多仓库项目架构。", content: {
           objective: "今天你将学习 Git submodule（子模块）的使用方法，以及大型项目的仓库组织策略。学完后你能把子仓库作为子模块引入主项目，更新子模块，递归克隆含子模块的仓库，理解 monorepo 和 multirepo 的优缺点。对于 AI 项目来说，你可能需要把第三方代码、共享工具库、数据集处理脚本等作为子模块引入主项目。",
@@ -422,7 +422,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成子模块的完整操作流程：首先在 GitHub 上创建两个独立仓库，一个叫 main-project，一个叫 common-utils。把 common-utils clone 到本地，提交一些工具函数代码。然后进入 main-project，用 git submodule add <common-utils地址> third_party/utils 添加子模块。查看 .gitmodules 文件，了解子模块的配置信息。提交这次改动。接着在 common-utils 仓库中做一些修改并推送，回到 main-project，进入 third_party/utils 目录，用 git pull origin main 拉取最新代码，然后回到主项目目录，用 git status 看到子模块指针有变化，git add + git commit 更新子模块指针。最后练习删除子模块（了解步骤，实际操作需谨慎）：git submodule deinit、git rm、删除 .git/modules 下的对应目录。整个过程理解子模块是'指针引用'的本质。",
           deep_dive: "深入理解大型项目的代码组织策略：submodule 只是 Git 提供的一种多仓库管理方案，实际项目中还有很多选择。Monorepo（单仓库）vs Polyrepo（多仓库）的争论由来已久：Monorepo 的优点是代码共享方便、原子提交、统一工具链、跨模块重构容易，缺点是仓库体积大、权限管理粗、CI 时间长，Google、Meta 等大公司用这种方式；Polyrepo 的优点是独立版本发布、权限精细、仓库小巧、技术栈灵活，缺点是跨仓库协作麻烦、依赖管理复杂、版本同步困难。在 AI 项目中，常见的组织方式是：1. 每个模型/项目一个独立仓库，共享的工具库和数据处理代码做成单独的仓库，用 submodule 或 pip 包的方式引入；2. 研究阶段用松散的多仓库，产品化后逐步整合到 monorepo；3. 数据和代码分开管理，代码用 Git，数据用 DVC 或对象存储。submodule 的常见坑点：1. 克隆时忘记 --recurse-submodules 导致子模块目录为空；2. 更新子模块后忘记在主仓库提交新指针；3. 子模块的分支头是分离的（detached HEAD），容易在错误的地方提交。进阶方案包括 git subtree（把子项目代码合并进来）、repo（Google 的多仓库管理工具）、以及各种 monorepo 工具（如 Nx、Turborepo、Bazel）。理解这些架构选择，你就能根据项目规模和团队情况做出合理的技术决策。"
-        }, duration: "1.5小时", resources: [R_GIT_SCM, { title: "Git 官方文档: 子模块", url: "https://git-scm.com/book/zh/v2/Git-%E5%B7%A5%E5%85%B7-%E5%AD%90%E6%A8%A1%E5%9D%97", required: true }, { title: "Atlassian Git submodule 教程", url: "https://www.atlassian.com/git/tutorials/git-submodule", required: false },  { title: "git-analyze - Git分析工具", url: "https://github.com/vasani-arpit/git-analyze", required: false, type: "repo", source: "github" }], checkpoint: "能把一个第三方代码以 submodule 形式引入自己的项目" },
+        }, duration: "1.5小时", resources: [R_GIT_SCM, { title: "Git 官方文档: 子模块", url: "https://git-scm.com/book/zh/v2/Git-%E5%B7%A5%E5%85%B7-%E5%AD%90%E6%A8%A1%E5%9D%97", required: true, type: "book", source: "official" }, { title: "Atlassian Git submodule 教程", url: "https://www.atlassian.com/git/tutorials/git-submodule", required: false, type: "article", source: "official" },  { title: "git-analyze - Git分析工具", url: "https://github.com/vasani-arpit/git-analyze", required: false, type: "repo", source: "github" }], checkpoint: "能把一个第三方代码以 submodule 形式引入自己的项目" },
       { day: 12, title: "bisect 定位引入 Bug 的提交",
         summary: "掌握 git bisect 二分查找，快速定位引入问题的提交。", content: {
           objective: "今天你将学习 git bisect 二分查找调试工具的使用方法。学完后你能用 bisect 在大量提交中快速定位引入 bug 的那次提交，无论是代码 bug、性能退化还是模型精度下降，都能高效找到根源。对于 AI 开发者来说，bisect 特别适合排查'上周还好好的，这周精度突然掉了'这类问题，快速定位是哪次代码改动导致的。",
@@ -435,7 +435,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "动手实践 git bisect 的完整流程：首先创建一个实验仓库，做 10 次提交，每次在一个 Python 脚本中添加一个小功能（比如一个计算函数）。在第 5 次提交时故意引入一个 bug（比如把加法改成减法）。现在假设你不知道 bug 是哪次引入的，用 bisect 来定位：1. git bisect start 启动；2. git bisect bad 标记当前 HEAD 是坏的；3. git bisect good <第1次提交哈希> 标记第 1 次提交是好的；4. Git 会自动检出中间的提交，你运行测试脚本判断好坏，然后用 git bisect good 或 git bisect bad 标记；5. 重复直到 Git 告诉你'是某某提交引入了这个 bug'。验证一下是不是确实是第 5 次提交。然后进阶练习自动化 bisect：写一个测试脚本，如果输出正确返回 0（good），错误返回 1（bad），用 git bisect run python test.py 让 Git 自动跑完全过程。最后用 git bisect reset 退出。",
           deep_dive: "深入理解 git bisect 的高级用法与调试思维：bisect 的核心思想是二分查找，这是一种在有序序列中快速定位的经典算法。Git 中的'有序'是指提交的时间顺序：好提交之前的都是好的，坏提交之后的都是坏的（假设 bug 引入后一直存在）。高级技巧包括：1. git bisect skip 跳过无法测试的提交（比如编译不过的中间版本）；2. git bisect visualize 用 git log 图形化查看当前 bisect 的范围和进度；3. git bisect replay 重放 bisect 过程；4. 不仅能找 bug，还能找性能退化、精度下降等任何可以用好坏二元判断的问题。在 AI 开发中，bisect 特别有用的场景包括：1. 模型精度突然下降，找哪次代码改动引入的；2. 训练速度变慢，找性能退化点；3. 某个数据集上效果变差，定位数据处理 pipeline 的改动；4. 内存泄漏或显存溢出，定位引入泄漏的提交。关键是要有自动化的测试脚本，能快速判断一个版本的'好坏'。比如写一个脚本，跑 100 步训练，验证 loss 是否在正常范围，或者验证准确率是否高于某个阈值。有了这样的脚本，bisect 就能全自动运行，几分钟内就能从几百个提交中精准定位到问题源头。这是一种非常强大的调试思维，不仅适用于 Git，也适用于任何系统性问题排查。"
-        }, duration: "2小时", resources: [R_GIT_BRANCHING, R_GIT_SCM, { title: "Git 官方文档: git bisect", url: "https://git-scm.com/docs/git-bisect", required: true }], checkpoint: "能用 git bisect 自动定位到引入 bug 的那次提交" },
+        }, duration: "2小时", resources: [R_GIT_BRANCHING, R_GIT_SCM, { title: "Git 官方文档: git bisect", url: "https://git-scm.com/docs/git-bisect", required: true, type: "doc", source: "official" }], checkpoint: "能用 git bisect 自动定位到引入 bug 的那次提交" },
       { day: 13, title: "GitHub Actions CI 初体验",
         summary: "入门 GitHub Actions，搭建第一个自动化 CI 流水线。", content: {
           objective: "今天你将学习 GitHub Actions 持续集成平台的基本用法。学完后你能编写简单的 workflow 配置文件，在每次 push 或 PR 时自动运行测试、检查代码、构建项目。对于 AI 项目来说，CI 能帮你自动运行单元测试、验证代码格式、检查模型是否能正常训练、确保每次提交都不会破坏已有功能，是保证代码质量的重要防线。",
@@ -448,7 +448,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "动手搭建你的第一个 CI 工作流：在你的项目中创建 .github/workflows/ci.yml 文件。配置内容包括：1. 触发条件：push 到 main 分支和所有 PR 时触发；2. 运行环境：ubuntu-latest；3. 步骤：checkout 代码（actions/checkout@v4）→ 设置 Python 环境（actions/setup-python@v5，指定 3.10 版本）→ 安装依赖（pip install -r requirements.txt 或 pytest）→ 运行测试（pytest tests/ -v）→ 运行代码风格检查（flake8 或 black --check）。创建一个简单的测试文件 tests/test_basic.py，写一个断言测试。提交并推送到 GitHub，进入 Actions 页面查看工作流运行情况。如果失败，查看日志定位问题，修改代码直到 CI 变绿。最后在 README.md 中添加 CI 状态徽章，格式为 ![CI](https://github.com/用户名/仓库名/actions/workflows/ci.yml/badge.svg)。",
           deep_dive: "深入理解 CI/CD 在 AI 项目中的最佳实践：传统软件的 CI 主要跑单元测试和代码检查，AI 项目的 CI 有其特殊性：1. 数据验证：检查数据集格式是否正确、标签是否完整、是否有损坏文件；2. 训练冒烟测试：用很小的 batch 和很少的步数跑一下训练，确保代码能跑通、loss 能下降、不会显存溢出；3. 模型评估基线：验证模型在小数据集上的准确率不低于某个阈值，防止精度退化；4. 代码质量：flake8/black 格式检查、mypy 类型检查、pylint 静态分析；5. 文档检查：确保 README 和 API 文档更新。GitHub Actions 的高级用法包括：矩阵构建（matrix strategy）同时测试多个 Python/PyTorch 版本；缓存依赖（actions/cache）加速 pip 安装和数据集下载；使用自托管 Runner 在自己的 GPU 机器上跑训练测试；多 Job 依赖关系，比如先跑测试再跑部署。AI 项目 CI 的挑战是测试耗时长、需要 GPU，通常做法是：PR 时只跑快速的单元测试和冒烟测试（CPU 上小数据），合并到 main 后再跑完整的评估和基准测试。另外，CI 是 DevOps 文化的一部分，目标是尽早发现问题，让每次小改动都经过验证，而不是攒一大堆改动最后一起出问题。掌握 CI 能让你的项目更专业、更可靠。"
-        }, duration: "2.5小时", resources: [{ title: "GitHub Actions 快速入门", url: "https://docs.github.com/cn/actions/quickstart", required: true }, { title: "GitHub Actions 官方文档", url: "https://docs.github.com/cn/actions", required: false }, { title: "GitHub Actions Marketplace", url: "https://github.com/marketplace?type=actions", required: false },  { title: "awesome-actions - Action资源列表", url: "https://github.com/SDCarrow/awesome-actions", required: false, type: "repo", source: "github" }], checkpoint: "在 GitHub Actions 上看到自己项目的第一条绿勾 CI 记录" },
+        }, duration: "2.5小时", resources: [{ title: "GitHub Actions 快速入门", url: "https://docs.github.com/cn/actions/quickstart", required: true, type: "repo", source: "github" }, { title: "GitHub Actions 官方文档", url: "https://docs.github.com/cn/actions", required: false, type: "repo", source: "github" }, { title: "GitHub Actions Marketplace", url: "https://github.com/marketplace?type=actions", required: false, type: "repo", source: "github" },  { title: "awesome-actions - Action资源列表", url: "https://github.com/SDCarrow/awesome-actions", required: false, type: "repo", source: "github" }], checkpoint: "在 GitHub Actions 上看到自己项目的第一条绿勾 CI 记录" },
       { day: 14, title: "综合：从零到 PR 的完整协作循环",
         summary: "综合全流程实战：项目初始化 → 分支开发 → Code Review → CI 验证 → 合并。", content: {
           objective: "今天你将综合运用前 13 天学到的所有 Git 和 GitHub 技能，完成一个从项目初始化到 PR 合并的完整协作闭环。这是一个综合实战项目，模拟真实团队开发的完整流程：规范的项目结构、功能分支开发、规范的提交信息、Pull Request、Code Review、CI 自动验证、合并发布。通过这次实战，你将把零散的知识点串联起来，形成完整的协作开发能力。",
@@ -461,7 +461,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成一个完整的端到端协作项目实战：1. 初始化项目：在 GitHub 创建新仓库，clone 到本地，创建标准项目结构（src/ 放代码、tests/ 放测试、README.md 写项目说明、requirements.txt 列依赖、.gitignore 配忽略规则），完成初始提交并 push 到 main；2. 功能开发：从 main 创建 feature 分支（比如 feature/image-classifier），实现一个简单的图像分类器或其他 AI 小功能，分多次小提交，每次提交都遵循 Conventional Commits 规范；3. 测试和 CI：写几个单元测试，配置 GitHub Actions 在 PR 时自动运行测试；4. 发起 PR：push 功能分支，在 GitHub 创建 PR，写清楚改动目的、实现方式、测试方法；5. Code Review：找同学或自己模拟 reviewer 角色，添加几条 review 意见，然后作为 author 修改代码并推送更新；6. 合并发布：等 CI 变绿、review 通过后，用 Squash and merge 合并 PR，然后打一个 v0.1.0 标签，创建 GitHub Release。整个过程记录每一步的操作和遇到的问题。",
           deep_dive: "深入理解团队协作的最佳实践与工作流模型：不同规模的团队有不同的 Git 工作流，常见的有：1. Git Flow：有 main/master（发布）、develop（开发）、feature（功能）、release（预发布）、hotfix（热修复）五种分支，适合有明确版本发布周期的项目；2. GitHub Flow：更简单，只有 main 分支 + feature 分支，功能完成就发 PR 合并到 main，随时可以部署，适合持续部署的 SaaS 产品，也是目前最流行的方式；3. Trunk-Based Development：所有人都在主干（trunk）上开发，用功能开关（Feature Flag）控制未完成功能的发布，配合 CI/CD 实现高频部署，Google、Meta 等大公司用这种方式。在 AI 项目中，通常采用 GitHub Flow 的变体：main 是稳定可复现的主分支，每个实验/功能一个分支，实验完成后评估效果，好的才合并回 main。配合 MLflow 或 DVC 来追踪数据和模型版本。另外，团队协作还有一些重要的最佳实践：1. 小步提交、小 PR，更容易 review 和定位问题；2. 提交信息规范，用 Conventional Commits，自动生成 Changelog；3. 每个 PR 关联一个 Issue，先讨论方案再写代码；4. 主分支保护（Branch Protection），必须 CI 通过和至少一个人 approve 才能合并；5. 定期清理已合并的分支，保持仓库整洁。理解这些协作模式和最佳实践，你就能快速融入任何开发团队，成为一个专业的协作者。"
-        }, duration: "3小时", resources: [R_GIT_SCM, R_GIT_BRANCHING, { title: "Conventional Commits 规范", url: "https://www.conventionalcommits.org/zh-hans/v1.0.0/", required: false }, { title: "GitHub Skills: Review Pull Requests", url: "https://skills.github.com/", required: false },  { title: "git-workflow - Git工作流指南", url: "https://github.com/vasani-arpit/git-workflow", required: false, type: "repo", source: "github" }], checkpoint: "项目有 README、有至少一个测试、有一个被 review 并合并的 PR、有一条 CI 绿勾" }],
+        }, duration: "3小时", resources: [R_GIT_SCM, R_GIT_BRANCHING, { title: "Conventional Commits 规范", url: "https://www.conventionalcommits.org/zh-hans/v1.0.0/", required: false, type: "article", source: "official" }, { title: "GitHub Skills: Review Pull Requests", url: "https://skills.github.com/", required: false, type: "repo", source: "github" },  { title: "git-workflow - Git工作流指南", url: "https://github.com/vasani-arpit/git-workflow", required: false, type: "repo", source: "github" }], checkpoint: "项目有 README、有至少一个测试、有一个被 review 并合并的 PR、有一条 CI 绿勾" }],
   },
 
   // =====================================================
@@ -480,7 +480,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["模型服务容器化部署", "GPU 训练环境隔离"],
     relatedIntel: ["007-docker"],
     relatedTools: ["Docker"],
-    relatedTerms: ["docker", "container", "image"],
+    relatedTerms: ["docker", "container", "image"], relatedNodes: ["linux-basic", "git-github", "devops-kubernetes", "devops-docker-api"],
     dailyTasks: [
       { day: 1, title: "Docker 核心概念与第一条命令",
         summary: "理解容器化思想，跑通第一个 Docker 容器，掌握基础命令。", content: {
@@ -494,7 +494,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成 Docker 入门实战操作：首先确保 Docker 已安装并启动（docker --version 验证）。1. 运行 docker run hello-world，观察镜像拉取、容器启动、输出 Hello from Docker 的完整过程，理解这条命令背后发生了什么；2. 用 docker ps -a 查看所有容器（包括已退出的），看到刚才的 hello-world 容器；3. 用 docker images 查看本地镜像，确认 hello-world 镜像已下载；4. 运行 docker run -it --rm ubuntu /bin/bash 启动一个交互式 Ubuntu 容器，在里面执行几个命令（ls、cat /etc/os-release），exit 退出，观察容器是否自动删除；5. 启动一个后台容器：docker run -d --name my-nginx nginx，用 docker ps 查看，用 docker logs my-nginx 看日志，最后用 docker stop my-nginx 停止。整个过程熟悉镜像拉取、容器生命周期管理的基本流程。",
           deep_dive: "深入理解容器的底层技术原理：Docker 容器不是什么黑科技，本质上是 Linux 内核的几个特性的组合：1. Namespaces 命名空间：隔离 PID（进程）、NET（网络）、MNT（文件系统挂载）、UTS（主机名）、IPC（进程间通信）、USER（用户），让容器觉得自己是独立的系统；2. Cgroups 控制组：限制容器能使用的资源（CPU、内存、磁盘 IO），防止一个容器占满宿主机资源；3. UnionFS 联合文件系统：把多个层叠加成一个文件系统，镜像分层的基础，不同镜像可以共享相同的底层层，大大节省存储空间。理解这些底层原理能解释很多现象：为什么容器启动那么快（只是创建 namespace 和 cgroup，不是启动新 OS）、为什么镜像可以分层（UnionFS）、为什么容器内看不到宿主机进程（PID namespace）。在 AI 开发中，Docker 还有一个重要优势：不同项目可以用不同版本的 CUDA/PyTorch，互不干扰，宿主机上不用装一堆版本的库。这也是为什么几乎所有 AI 公司都用 Docker 做训练环境和模型部署的原因。"
-        }, duration: "2小时", resources: [B_DOCKER_TUTORIAL, R_DOCKER_START, { title: "Docker 官方教程", url: "https://docs.docker.com/get-started/", required: true }, { title: "Docker 从入门到实践", url: "https://yeasy.gitbook.io/docker_practice/", required: false }], checkpoint: "能在本机跑通 hello-world 容器，并能列出镜像与容器" },
+        }, duration: "2小时", resources: [B_DOCKER_TUTORIAL, R_DOCKER_START, { title: "Docker 官方教程", url: "https://docs.docker.com/get-started/", required: true, type: "doc", source: "official" }, { title: "Docker 从入门到实践", url: "https://yeasy.gitbook.io/docker_practice/", required: false, type: "book", source: "official" }], checkpoint: "能在本机跑通 hello-world 容器，并能列出镜像与容器" },
       { day: 2, title: "编写第一个 Dockerfile",
         summary: "掌握 Dockerfile 编写与镜像构建，理解分层缓存机制。", content: {
           objective: "今天你将学习 Dockerfile 的编写方法和镜像构建原理。学完后你能编写包含基础镜像、依赖安装、代码复制的完整 Dockerfile，用 docker build 构建镜像，理解分层缓存机制来加速构建。对于 AI 开发者来说，学会写 Dockerfile 意味着你能把训练环境、推理服务打包成可移植的镜像，在任何机器上一键运行。",
@@ -507,7 +507,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "动手编写你的第一个 Python AI 项目 Dockerfile：1. 在项目目录创建一个简单的 Python 训练脚本 train.py（可以是简单的 PyTorch 测试代码），创建 requirements.txt 列出依赖（torch、numpy 等）；2. 编写 Dockerfile：FROM python:3.10-slim 作为基础镜像，WORKDIR /app 设置工作目录，COPY requirements.txt . 先复制依赖文件，RUN pip install --no-cache-dir -r requirements.txt 安装依赖，COPY . . 复制项目代码，CMD ['python', 'train.py'] 设置启动命令；3. 用 docker build -t my-train:v1 . 构建镜像，观察每层的构建过程和缓存使用；4. 构建完成后用 docker images 查看镜像大小；5. 用 docker run --rm my-train:v1 运行容器，验证训练脚本正常执行。然后修改代码（不改动 requirements.txt），重新构建，观察依赖层是否命中缓存，理解 COPY 顺序对缓存效率的影响。",
           deep_dive: "深入理解 Docker 镜像分层原理与构建最佳实践：Docker 镜像是由多个只读层堆叠而成的，每层只记录相对前一层的变化。运行容器时，在最上层加一个可写层。这种设计的优势是：1. 不同镜像可以共享相同的底层（比如都用 Ubuntu 基础镜像，只存一份）；2. 构建时利用缓存，不变的层直接复用，大大加快构建速度。但层太多也会增加镜像体积，最佳实践是把相关命令合并到一层（比如多个 RUN 用 && 连起来）。AI 项目 Dockerfile 的常见优化技巧：1. 优先复制 requirements.txt 再复制代码，这样代码修改不会触发依赖重装；2. 用 --no-cache-dir 减少 pip 缓存体积；3. 多阶段构建（后面会学）把编译环境和运行环境分开；4. 选择合适的基础镜像：slim 版比完整版小很多，alpine 更小但可能有 glibc 兼容性问题；5. 用 .dockerignore 排除不需要的文件（__pycache__、.git、数据文件等），减小构建上下文。另外，理解层的概念对调试也很有帮助：构建失败时，你可以启动失败前最后一个成功层的容器，手动执行失败的命令来调试问题。掌握这些最佳实践，你就能构建出高效、精简、可复现的 Docker 镜像。"
-        }, duration: "2小时", resources: [R_DOCKER_BUILD, { title: "Dockerfile 最佳实践", url: "https://docs.docker.com/develop/develop-images/dockerfile_best-practices/", required: true }, { title: "Docker 构建缓存详解", url: "https://docs.docker.com/build/cache/", required: false },  { title: "docker-exercises - Docker练习题", url: "https://github.com/vasani-arpit/docker-exercises", required: false, type: "repo", source: "github" }], checkpoint: "能从零写一个含依赖安装的 Dockerfile，build 并成功 run" },
+        }, duration: "2小时", resources: [R_DOCKER_BUILD, { title: "Dockerfile 最佳实践", url: "https://docs.docker.com/develop/develop-images/dockerfile_best-practices/", required: true, type: "doc", source: "official" }, { title: "Docker 构建缓存详解", url: "https://docs.docker.com/build/cache/", required: false, type: "doc", source: "official" },  { title: "docker-exercises - Docker练习题", url: "https://github.com/vasani-arpit/docker-exercises", required: false, type: "repo", source: "github" }], checkpoint: "能从零写一个含依赖安装的 Dockerfile，build 并成功 run" },
       { day: 3, title: "端口映射与长时服务",
         summary: "掌握端口映射与服务容器管理，部署可访问的 HTTP 服务。", content: {
           objective: "今天你将学习 Docker 的端口映射和长时服务运行方法。学完后你能把容器内的服务暴露到宿主机，用 -p 做端口映射，用 docker logs 查看服务日志，用 docker exec 进入运行中的容器调试。对于 AI 开发者来说，这是部署模型推理服务（FastAPI、Flask）、可视化工具（TensorBoard、Jupyter）的基础技能。",
@@ -520,7 +520,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "部署一个 FastAPI 推理服务并验证可访问：1. 创建一个简单的 FastAPI 应用 main.py，定义 GET /health 和 POST /predict 接口；2. 编写 Dockerfile，基于 python:3.10-slim，安装 fastapi 和 uvicorn，暴露 8000 端口，CMD 启动 uvicorn；3. 构建镜像 docker build -t my-api:v1 .；4. 后台运行容器：docker run -d --name api-server -p 8000:8000 my-api:v1；5. 用 docker ps 确认容器在运行，观察 PORTS 列的端口映射；6. 用 curl http://localhost:8000/health 测试健康检查接口，用 curl -X POST http://localhost:8000/predict 测试预测接口；7. 用 docker logs -f api-server 实时查看请求日志；8. 用 docker exec -it api-server /bin/bash 进入容器，查看进程、文件等，验证容器内环境。最后练习 docker stop 和 docker start 管理容器生命周期。",
           deep_dive: "深入理解 Docker 网络模型与服务部署最佳实践：Docker 默认使用 bridge 网络模式，每个容器有独立的 IP 和网络栈，通过宿主机做 NAT 转发。端口映射的底层原理是 iptables 的 DNAT 规则，把宿主机端口的流量转发到容器 IP 的对应端口。常见坑点：1. 服务必须监听 0.0.0.0 而不是 127.0.0.1，否则容器外部无法访问，因为 127.0.0.1 是容器内的回环地址；2. 端口冲突：宿主机端口只能被一个容器占用，多个服务要规划好端口；3. 多个端口可以映射：一个容器可以暴露多个端口（如 HTTP 和 gRPC）。在 AI 项目中，常见的服务端口包括：8000 FastAPI、8888 Jupyter、6006 TensorBoard、5000 Flask。生产环境部署的最佳实践：1. 用 --restart=always 让容器崩溃或宿主机重启后自动恢复；2. 用 --memory 和 --cpus 限制资源使用，防止一个服务占满资源；3. 日志轮转配置，避免日志文件无限增长占满磁盘；4. 不要把数据存在容器内（用 volume），容器是可丢弃的。另外，docker exec 进入容器调试很有用，但记住容器重启后任何手动修改都会丢失，要修改还是改 Dockerfile 重新构建。掌握这些服务部署技能，你就能把训练好的模型变成可调用的 API 服务。"
-        }, duration: "2小时", resources: [R_FASTAPI, { title: "Docker 网络与端口映射", url: "https://docs.docker.com/network/", required: true }, { title: "FastAPI 部署指南", url: "https://fastapi.tiangolo.com/deployment/", required: false },  { title: "docker-networking - Docker网络教程", url: "https://github.com/vasani-arpit/docker-networking", required: false, type: "repo", source: "github" }], checkpoint: "能在容器内启动一个 HTTP 服务并能从本机 curl 访问" },
+        }, duration: "2小时", resources: [R_FASTAPI, { title: "Docker 网络与端口映射", url: "https://docs.docker.com/network/", required: true, type: "doc", source: "official" }, { title: "FastAPI 部署指南", url: "https://fastapi.tiangolo.com/deployment/", required: false, type: "article", source: "official" },  { title: "docker-networking - Docker网络教程", url: "https://github.com/vasani-arpit/docker-networking", required: false, type: "repo", source: "github" }], checkpoint: "能在容器内启动一个 HTTP 服务并能从本机 curl 访问" },
       { day: 4, title: "挂载卷 volume 与持久化",
         summary: "理解容器数据持久化，掌握绑定挂载和 Volume 的使用。", content: {
           objective: "今天你将学习 Docker 的数据持久化方案。学完后你能理解为什么容器数据会丢失，掌握绑定挂载和命名卷两种持久化方式，用 -v 参数挂载目录，知道开发和生产环境分别该用哪种方式。对于 AI 开发者来说，数据持久化是训练任务的必备知识——训练数据、模型 checkpoint、日志文件都不能存在容器里。",
@@ -533,7 +533,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成 AI 训练场景的数据持久化实战：1. 创建宿主机目录结构：mkdir -p ai-train/{data,logs,checkpoints}，在 data 目录放一些训练数据文件；2. 准备一个简单的 PyTorch 训练脚本，每轮训练在 logs 目录写日志，在 checkpoints 目录保存模型权重；3. 用绑定挂载方式运行训练容器：docker run --rm -v $(pwd)/data:/app/data -v $(pwd)/logs:/app/logs -v $(pwd)/checkpoints:/app/checkpoints my-train:v1；4. 训练完成后，检查宿主机的 logs 和 checkpoints 目录，确认日志文件和模型文件已生成，容器删除后数据仍在；5. 再创建一个命名卷实验：docker volume create train-data，用 -v train-data:/app/data 方式挂载，用 docker volume inspect train-data 查看卷在宿主机的实际位置；6. 测试容器间数据共享：启动两个容器都挂载同一个卷，验证数据互通。最后思考：为什么训练数据、日志、checkpoint 必须放挂载卷而不能放容器内？如果误删容器会怎样？",
           deep_dive: "深入理解 Docker 存储驱动与 AI 训练持久化最佳实践：Docker 的存储驱动（overlay2 是当前默认）管理镜像层和容器可写层。可写层有两个问题：1. 生命周期与容器绑定，删容器就没了；2. 性能比直接写宿主机文件系统差，因为要经过 UnionFS 层。对于 AI 训练这种需要大量读写数据的场景，必须用挂载卷来获得接近原生的性能。生产环境中推荐使用命名卷而不是绑定挂载，原因是：1. 命名卷由 Docker 管理，不依赖宿主机的具体目录结构，更便于迁移和备份；2. 可以用 docker volume 命令统一管理（备份、恢复、删除）；3. 避免了宿主机目录权限的一些问题。在 AI 项目中，常见的挂载规划：1. 数据集：用只读挂载（-v /data:/data:ro）更安全，防止误改数据；2. 日志和 checkpoint：用读写挂载，容器崩溃后数据不丢，还能重新加载 checkpoint 继续训练；3. 配置文件：用绑定挂载方便修改，不用重新构建镜像。还有一个重要概念：tmpfs 挂载，把数据存在宿主机内存中，速度极快但重启丢失，适合放临时文件、缓存、机密信息，能提高性能并减少磁盘 IO。另外，多人共享一台 GPU 服务器时，用命名卷配合合适的权限管理，可以让不同项目的数据互相隔离，同时又能共享数据集。理解了这些存储原理和实践，你就能设计出既高效又安全的训练环境。"
-        }, duration: "1.5小时", resources: [R_DOCKER_START, { title: "Docker 存储详解", url: "https://docs.docker.com/storage/", required: true },  { title: "docker-volume-tutorial - Docker卷教程", url: "https://github.com/vasani-arpit/docker-volume-tutorial", required: false, type: "repo", source: "github" }], checkpoint: "能在容器中读写宿主机目录中的数据文件" },
+        }, duration: "1.5小时", resources: [R_DOCKER_START, { title: "Docker 存储详解", url: "https://docs.docker.com/storage/", required: true, type: "doc", source: "official" },  { title: "docker-volume-tutorial - Docker卷教程", url: "https://github.com/vasani-arpit/docker-volume-tutorial", required: false, type: "repo", source: "github" }], checkpoint: "能在容器中读写宿主机目录中的数据文件" },
       { day: 5, title: "多阶段构建缩小镜像",
         summary: "掌握多阶段构建技术，大幅减小镜像体积，提升部署效率。", content: {
           objective: "今天你将学习 Docker 多阶段构建技术。学完后你能用多个 FROM 指令分离构建环境和运行环境，只把编译产物放到最终镜像里，显著减小镜像体积，提高部署效率和安全性。对于 AI 项目，多阶段构建能把编译 CUDA 扩展、安装构建工具的步骤和最终运行环境分开，让生产镜像更精简。",
@@ -546,7 +546,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "实践多阶段构建并对比镜像大小：1. 先写一个普通的单阶段 Python 项目 Dockerfile，包含编译 numpy/pandas 所需的构建工具，构建后用 docker images 记录镜像大小；2. 改写为两阶段构建：第一阶段 FROM python:3.10 AS builder，安装 build-essential、cmake 等构建工具，COPY requirements.txt，RUN pip install --user -r requirements.txt 把依赖装到用户目录；第二阶段 FROM python:3.10-slim，只 COPY --from=builder /root/.local /usr/local，再 COPY 项目代码，这样最终镜像里没有 gcc 等构建工具；3. 构建多阶段版本，用 docker images 对比两个镜像的大小差异，计算节省了多少比例；4. 运行多阶段构建的容器，验证 Python 依赖是否正常工作、功能是否完整；5. 进阶练习：尝试三阶段构建（下载数据 → 编译/安装 → 运行），或者用 distroless 镜像作为最终基础镜像进一步缩小体积。思考：除了体积小，多阶段构建还有什么好处？",
           deep_dive: "深入理解多阶段构建的原理与 AI 项目镜像优化最佳实践：多阶段构建的核心思想是'构建环境和运行环境分离'——构建时需要各种工具，但运行时不需要，最终镜像只保留运行必需的东西。这遵循了 Docker 镜像的最小化原则。AI 项目常见的镜像优化策略：1. 基础镜像选择：pytorch/pytorch:latest 很大（几个 GB），pytorch/pytorch:x.x.x-cuda12.1-runtime 比 devel 版小很多，runtime 版只有运行时库，没有 nvcc 等编译工具；2. 多阶段分离编译：如果你的项目需要编译 CUDA 扩展（比如安装 detectron2、mmcv），把编译放在 builder 阶段，最终镜像用 runtime 基础镜像 + 复制编译好的包；3. 清理缓存：pip install 后 rm -rf ~/.cache/pip，apt-get install 后 apt-get clean && rm -rf /var/lib/apt/lists/*；4. 合并 RUN 指令：多个 RUN 合并成一个，减少层数和中间状态；5. 用 .dockerignore 排除不需要的文件，减小构建上下文；6. 对于只做推理的服务，甚至可以不用完整的 PyTorch，用 ONNX Runtime 或 TensorRT 替代，体积小、速度快。镜像大小为什么重要？1. 拉取镜像更快，尤其是在远程服务器上；2. 占用更少存储空间；3. 攻击面更小，更安全；4. CI/CD 构建更快。但也不要过度追求最小化，要权衡可调试性——太小的镜像连 bash、curl、ps 都没有，出问题很难调试。生产环境可以最小化，开发环境可以保留一些调试工具。掌握多阶段构建和镜像优化，你就能构建出专业级的 Docker 镜像。"
-        }, duration: "2小时", resources: [R_DOCKER_BUILD, { title: "多阶段构建文档", url: "https://docs.docker.com/build/building/multi-stage/", required: true }, { title: "Docker 镜像瘦身技巧", url: "https://www.docker.com/blog/containerize-your-python-developer-environment-part-2/", required: false },  { title: "docker-slim - 镜像瘦身工具", url: "https://github.com/docker-slim/docker-slim", required: false, type: "repo", source: "github" }], checkpoint: "两阶段构建出的镜像比单阶段显著更小（可量化）" },
+        }, duration: "2小时", resources: [R_DOCKER_BUILD, { title: "多阶段构建文档", url: "https://docs.docker.com/build/building/multi-stage/", required: true, type: "doc", source: "official" }, { title: "Docker 镜像瘦身技巧", url: "https://www.docker.com/blog/containerize-your-python-developer-environment-part-2/", required: false, type: "doc", source: "official" },  { title: "docker-slim - 镜像瘦身工具", url: "https://github.com/docker-slim/docker-slim", required: false, type: "repo", source: "github" }], checkpoint: "两阶段构建出的镜像比单阶段显著更小（可量化）" },
       { day: 6, title: "Docker Compose 多容器编排",
         summary: "用 Docker Compose 编排多容器应用，一条命令管理整个服务栈。", content: {
           objective: "今天你将学习 Docker Compose 多容器编排工具。学完后你能用 docker-compose.yml 定义多个服务（应用、数据库、缓存等），用一条命令启动/停止整个应用栈，理解服务间网络通信。对于 AI 项目，Compose 可以把推理服务、Redis 缓存、PostgreSQL 数据库、TensorBoard 可视化等一键编排启动。",
@@ -559,7 +559,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "搭建一个完整的 AI 推理服务栈：1. 创建项目目录，包含：FastAPI 推理服务（main.py）、requirements.txt、Dockerfile；2. 编写 docker-compose.yml，定义三个服务：api（FastAPI 推理服务，build: .，端口 8000:8000）、redis（缓存服务，image: redis:alpine，端口 6379:6379，数据卷持久化）、tensorboard（可视化服务，image: tensorflow/tensorflow，端口 6006:6006，挂载日志目录）；3. 在 FastAPI 代码里集成 Redis 缓存，把预测结果缓存起来，重复请求直接读缓存，验证服务间是否能通过服务名 redis 通信；4. 用 docker compose up -d --build 启动所有服务，观察构建和启动过程；5. 用 docker compose ps 查看所有服务状态，确认都在运行；6. 用 curl 测试 API 接口，第一次请求走模型推理，第二次请求走 Redis 缓存（响应更快）；7. 用 docker compose logs -f api 实时查看 API 日志；8. 最后用 docker compose down 停止并清理所有容器。思考：为什么用 Compose 而不是手动一个个 docker run？",
           deep_dive: "深入理解 Docker Compose 的网络、依赖管理与 AI 项目最佳实践：Compose 不只是启动多个容器，它还帮你管理网络、卷、依赖关系、环境变量等。网络方面：Compose 会自动创建一个默认网络，服务名就是 DNS 域名，互相访问直接用服务名，不用记 IP，非常方便。而且默认是隔离的，其他项目的容器访问不到。依赖管理：用 depends_on 指定启动顺序，但注意 depends_on 只是控制启动顺序，不会等服务'真正就绪'（比如数据库启动了但还没准备好接受连接），要真正等依赖就绪需要在应用代码里做健康检查或重试机制。AI 项目常用的 Compose 模式：1. 训练 + 可视化：训练服务 + TensorBoard + MLflow 跟踪，一条命令启动整个实验环境；2. 推理服务栈：API 服务 + Redis 缓存 + PostgreSQL 存预测记录 + Prometheus 监控；3. 开发环境：JupyterLab + GPU 支持 + 数据卷 + 各种预装库，新人入职一键启动开发环境。进阶技巧：1. 多环境配置：基础 docker-compose.yml + docker-compose.override.yml（开发用） + docker-compose.prod.yml（生产用），用 -f 指定；2. extends 复用配置，避免重复写相同的服务配置；3. profiles 按场景启动不同服务组合（如 docker compose --profile training up 只启动训练相关服务）；4. healthcheck 健康检查，确保服务真正可用。掌握 Compose 能大幅提升你管理多服务应用的效率，是从单容器到多服务部署的关键一步。"
-        }, duration: "2小时", resources: [{ title: "Compose 入门", url: "https://docs.docker.com/compose/gettingstarted/", required: true }, { title: "Compose 文件参考", url: "https://docs.docker.com/compose/compose-file/", required: false }, { title: "Compose 实战示例", url: "https://docs.docker.com/samples/", required: false }], checkpoint: "能用 compose 启动 2 个互相通信的容器并看到效果" },
+        }, duration: "2小时", resources: [{ title: "Compose 入门", url: "https://docs.docker.com/compose/gettingstarted/", required: true, type: "doc", source: "official" }, { title: "Compose 文件参考", url: "https://docs.docker.com/compose/compose-file/", required: false, type: "doc", source: "official" }, { title: "Compose 实战示例", url: "https://docs.docker.com/samples/", required: false, type: "doc", source: "official" }], checkpoint: "能用 compose 启动 2 个互相通信的容器并看到效果" },
       { day: 7, title: "环境变量、.env 与健康检查",
         summary: "掌握环境变量配置和健康检查，构建生产级容器化应用。", content: {
           objective: "今天你将学习容器化应用的配置管理和健康检查。学完后你能用环境变量配置应用参数，用 .env 文件管理敏感信息，用 HEALTHCHECK 让 Docker 自动检测服务健康状态。对于 AI 服务，健康检查能让编排工具自动重启故障服务，保障推理 API 的高可用。",
@@ -572,7 +572,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "为推理服务添加配置管理和健康检查：1. 准备 FastAPI 推理服务代码，从环境变量读取配置（模型路径、batch_size、日志级别等），用 os.getenv() 或 pydantic BaseSettings 管理；2. 创建 .env 文件，配置 MODEL_PATH=/app/models/best.pt、BATCH_SIZE=8、LOG_LEVEL=info 等变量，确保 .env 在 .gitignore 中不被提交；3. 编写 docker-compose.yml，用 env_file: .env 加载环境变量，同时用 environment 覆盖个别变量；4. 在 Dockerfile 中添加 HEALTHCHECK 指令，用 curl 调用 /health 接口检查服务是否正常，设置 interval=30s timeout=10s retries=3 start-period=60s；5. 启动服务，用 docker ps 观察 STATUS 列，等待服务变为 healthy；6. 测试健康检查：故意修改服务让 /health 返回错误，观察容器是否会变为 unhealthy；7. 验证环境变量传递：在应用代码中打印环境变量，确认配置正确传入；8. 进阶：用 docker compose config 查看 Compose 解析后的最终配置，验证变量替换是否正确。思考：为什么不能把密钥、密码硬编码在镜像里？",
           deep_dive: "深入理解容器化配置管理与健康检查的生产最佳实践：十二要素应用（The Twelve-Factor App）的第三条就是'配置存储在环境中'，这是云原生应用的基本原则。环境变量之所以成为标准，是因为：1. 与代码解耦，同一份镜像可以在不同环境（开发/测试/生产）用不同配置运行；2. 敏感信息不会进入代码仓库和镜像，更安全；3. 所有平台和编排工具都支持。配置的优先级（从低到高）：Dockerfile 中的 ENV < docker run -e < docker-compose environment < 应用内的默认值。健康检查的底层原理与应用场景：Docker 每隔一段时间执行健康检查命令，退出码 0 表示健康，1 表示不健康。连续失败 retries 次后标记为 unhealthy。健康检查本身不会自动重启容器，但配合 orchestrator（如 Kubernetes、Docker Swarm）就能实现自动故障恢复。在 AI 服务中，健康检查除了检查 HTTP 端口，还可以做更深层的检查：比如验证模型是否加载成功、GPU 是否可用、显存是否正常。一个好的健康检查应该能反映服务的真实可用状态。常见坑点：1. 健康检查命令本身要轻量，不能太耗资源，不然反而影响服务；2. 设置合理的 start-period，给应用足够的启动时间（加载大模型可能需要几分钟），不然启动过程中就被标记为不健康然后被杀掉；3. 不要把健康检查端口和服务端口分开，增加复杂度。另外，.env 文件的最佳实践：提供 .env.example 模板文件（不包含真实密钥），新人复制后填写自己的配置。掌握配置管理和健康检查，你的容器化应用就具备了生产级的基本素养。"
-        }, duration: "1.5小时", resources: [R_DOCKER_BUILD, { title: "Docker 环境变量", url: "https://docs.docker.com/compose/environment-variables/", required: true }, { title: "Docker 健康检查", url: "https://docs.docker.com/engine/reference/builder/#healthcheck", required: false },  { title: "docker-healthcheck - 健康检查示例", url: "https://github.com/vasani-arpit/docker-healthcheck", required: false, type: "repo", source: "github" }], checkpoint: "容器能读取外部 env，并在 docker ps 中显示 healthy" },
+        }, duration: "1.5小时", resources: [R_DOCKER_BUILD, { title: "Docker 环境变量", url: "https://docs.docker.com/compose/environment-variables/", required: true, type: "doc", source: "official" }, { title: "Docker 健康检查", url: "https://docs.docker.com/engine/reference/builder/#healthcheck", required: false, type: "doc", source: "official" },  { title: "docker-healthcheck - 健康检查示例", url: "https://github.com/vasani-arpit/docker-healthcheck", required: false, type: "repo", source: "github" }], checkpoint: "容器能读取外部 env，并在 docker ps 中显示 healthy" },
       { day: 8, title: "nvidia-docker 与 GPU 容器",
         summary: "掌握 NVIDIA GPU 容器配置，让 Docker 容器使用 GPU 加速训练。", content: {
           objective: "今天你将学习如何让 Docker 容器使用 NVIDIA GPU。学完后你能安装 nvidia-container-toolkit，理解 GPU 容器的工作原理，用 --gpus 参数运行 GPU 容器，验证 CUDA 是否可用。对于 AI 开发者，这是核心技能——几乎所有深度学习训练都要用 GPU，Docker + GPU 是标准的训练环境方案。",
@@ -585,7 +585,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "搭建 GPU 训练容器并验证可用：1. 确认宿主机已安装 NVIDIA 驱动，用 nvidia-smi 查看驱动版本和 GPU 信息，记录支持的最高 CUDA 版本；2. 安装 nvidia-container-toolkit（NVIDIA Container Toolkit），配置 Docker runtime，重启 Docker 服务；3. 运行基础 GPU 测试：docker run --rm --gpus all nvidia/cuda:12.1.0-base-ubuntu22.04 nvidia-smi，应该能看到和宿主机一样的 GPU 信息，说明 GPU 容器工作正常；4. 用 PyTorch 官方 GPU 镜像测试：docker run --rm -it --gpus all pytorch/pytorch:2.1.2-cuda12.1-cudnn8-runtime python -c 'import torch; print(torch.cuda.is_available()); print(torch.cuda.device_count()); print(torch.cuda.get_device_name(0))'，应该输出 True 和 GPU 型号；5. 练习指定 GPU 运行：用 --gpus 'device=0' 只用第一块 GPU，验证 torch.cuda.device_count() 为 1；6. 把你的训练脚本放到 GPU 容器里跑一遍，确认训练确实在使用 GPU（训练速度明显比 CPU 快，同时 nvidia-smi 能看到 GPU 利用率上升）；7. 试一个版本不匹配的情况（故意用太高的 CUDA 版本），观察报错信息，学会排查问题。思考：为什么容器不需要单独装 GPU 驱动？",
           deep_dive: "深入理解 GPU 容器的原理与 AI 训练最佳实践：NVIDIA Container Toolkit 的核心原理是'透传'——它不把驱动装进容器，而是在容器启动时把宿主机的 GPU 设备文件（/dev/nvidia*）和驱动库（libcuda.so 等）挂载映射进容器。这样容器里的 CUDA 应用就能直接使用宿主机的 GPU，性能接近原生（几乎没有虚拟化开销）。这也是为什么容器内 CUDA 版本必须 ≤ 宿主机驱动版本：驱动向下兼容，新版本驱动支持旧版本 CUDA，但反过来不行。AI 项目中 GPU 容器的最佳实践：1. 基础镜像选择：优先用官方 pytorch/pytorch 或 tensorflow/tensorflow 的 GPU 镜像，省得自己装 CUDA/cuDNN，选 runtime 版比 devel 版体积小很多；2. 版本锁定：明确指定镜像 tag（如 pytorch:2.1.2-cuda12.1-cudnn8-runtime），不要用 latest，避免不可预期的版本变化；3. GPU 资源控制：用 --gpus 指定用哪几块卡，多人共享服务器时尤其重要，避免抢卡；4. 数据持久化：训练数据、checkpoint、日志用 volume 挂载，不要存在容器里；5. 多 GPU 训练：确保容器能看到所有需要的 GPU，NCCL 通信库在容器内一般也能正常工作；6. 监控：在宿主机用 nvidia-smi 或 dcgm 监控 GPU 使用率、显存、温度。常见坑点：1. 用了 CPU 版 PyTorch 镜像却期望 GPU 可用；2. CUDA 版本和驱动版本不匹配；3. 忘了加 --gpus 参数导致 torch.cuda.is_available() 返回 False；4. 基础镜像缺少 cuDNN 导致某些算子跑不了。另外，除了训练，GPU 容器也用于推理服务——把模型加载到 GPU 上，通过 API 对外提供推理服务，这是生产环境模型部署的标准方式。掌握 GPU 容器，你就能在任何有 Docker 和 NVIDIA 驱动的机器上快速部署深度学习环境。"
-        }, duration: "2.5小时", resources: [{ title: "NVIDIA Container Toolkit", url: "https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html", required: true }, { title: "NVIDIA GPU Docker 镜像", url: "https://catalog.ngc.nvidia.com/orgs/nvidia/containers/pytorch", required: false }, { title: "GPU 容器故障排查", url: "https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/troubleshooting.html", required: false },  { title: "nvidia-docker-tutorial - GPU容器教程", url: "https://github.com/vasani-arpit/nvidia-docker-tutorial", required: false, type: "repo", source: "github" }], checkpoint: "能在 GPU 容器中跑出 True，说明 CUDA 可访问" },
+        }, duration: "2.5小时", resources: [{ title: "NVIDIA Container Toolkit", url: "https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html", required: true, type: "doc", source: "official" }, { title: "NVIDIA GPU Docker 镜像", url: "https://catalog.ngc.nvidia.com/orgs/nvidia/containers/pytorch", required: false, type: "doc", source: "official" }, { title: "GPU 容器故障排查", url: "https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/troubleshooting.html", required: false, type: "doc", source: "official" },  { title: "nvidia-docker-tutorial - GPU容器教程", url: "https://github.com/vasani-arpit/nvidia-docker-tutorial", required: false, type: "repo", source: "github" }], checkpoint: "能在 GPU 容器中跑出 True，说明 CUDA 可访问" },
       { day: 9, title: "构建 ML 训练镜像",
         summary: "构建专业的机器学习训练镜像，封装完整训练环境。", content: {
           objective: "今天你将学习如何构建专业的机器学习训练 Docker 镜像。学完后你能基于官方 PyTorch GPU 镜像构建包含项目依赖、训练代码、数据处理脚本的完整训练镜像，掌握训练镜像的最佳实践。对于 AI 工程师，构建可复现的训练镜像是团队协作和实验管理的基础。",
@@ -598,7 +598,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "构建一个完整的图像分类训练镜像：1. 准备训练项目：包含 train.py 训练脚本（PyTorch 训练 CNN 做 CIFAR-10 分类）、requirements.txt（torch、torchvision、numpy 等）、utils/ 工具目录；2. 编写 Dockerfile：基于 pytorch/pytorch:2.1.2-cuda12.1-cudnn8-runtime，WORKDIR /workspace，先 COPY requirements.txt，RUN pip install --no-cache-dir -r requirements.txt，再 COPY . . 复制项目代码，设置 CMD 为 python train.py；3. 构建镜像：docker build -t cifar10-train:v1 .，观察构建过程和缓存利用；4. 准备宿主机数据目录和输出目录，运行训练容器：docker run --rm --gpus all -v /path/to/data:/workspace/data -v /path/to/output:/workspace/output -e BATCH_SIZE=64 -e EPOCHS=10 cifar10-train:v1；5. 观察训练过程，确认 GPU 正在被使用（nvidia-smi），训练完成后检查 output 目录中的 checkpoint 和日志是否生成；6. 尝试断点续训：加载之前保存的 checkpoint 继续训练几轮，验证挂载卷的数据持久化；7. 优化 Dockerfile：添加 .dockerignore 排除数据、日志、__pycache__ 等，用多阶段构建进一步优化（可选）。思考：为什么训练镜像要包含代码而不是只装环境？",
           deep_dive: "深入理解 ML 训练镜像的设计原则与生产最佳实践：构建好的训练镜像有几个关键原则：1. 可复现性：所有版本都要明确锁定，包括基础镜像 tag、Python 包版本、甚至系统库版本，确保今天和一年后跑同样代码能得到相同结果；2. 关注点分离：代码和数据分开，镜像只装代码和环境，数据用 volume 挂载，这样同一个镜像可以在不同数据集上训练；3. 配置外部化：超参数、路径等通过环境变量或命令行参数传入，不写死在代码里，方便调整实验。生产级训练镜像的进阶优化：1. 多阶段构建：构建阶段装编译工具和依赖，运行阶段只留运行时；2. 非 root 用户运行：提高安全性，避免权限问题；3. 时区和语言环境设置：避免日志时间不对等问题；4. 预装常用工具：vim、curl、git、htop 等方便调试；5. 训练框架优化：开启 cuDNN benchmark、设置合适的线程数等。团队协作中的训练镜像最佳实践：1. 镜像仓库：用 Harbor 或云厂商的容器镜像服务管理私有镜像；2. CI 自动构建：代码提交后自动构建新镜像，确保镜像和代码同步；3. 镜像版本管理：用 Git commit hash 作为镜像标签，方便追溯代码版本；4. 基础镜像统一：团队共用同一个基础镜像（如 company/pytorch-base:2.1-cuda12.1），大家都基于它构建，保证环境一致性。另外，不要把数据集打进镜像里——数据集通常很大，而且经常变化，放在镜像里既慢又不灵活。但小的验证集或测试数据可以放进去，方便快速验证镜像是否正常工作。掌握训练镜像构建，你就能让团队的每个人都在完全一致的环境中做实验，消除'我这能跑你那不能跑'的问题。"
-        }, duration: "2.5小时", resources: [R_DOCKER_BUILD, R_PYTORCH_DOC, { title: "PyTorch Docker 镜像", url: "https://hub.docker.com/r/pytorch/pytorch", required: true }, { title: "ML 项目 Docker 化最佳实践", url: "https://docs.docker.com/build/building/packaging-ml-model/", required: false },  { title: "ml-docker-examples - ML Docker示例", url: "https://github.com/stasbe/ml-docker-examples", required: false, type: "repo", source: "github" }], checkpoint: "能把自己的 PyTorch 训练脚本封装成镜像并在 GPU 容器中跑起来" },
+        }, duration: "2.5小时", resources: [R_DOCKER_BUILD, R_PYTORCH_DOC, { title: "PyTorch Docker 镜像", url: "https://hub.docker.com/r/pytorch/pytorch", required: true, type: "doc", source: "official" }, { title: "ML 项目 Docker 化最佳实践", url: "https://docs.docker.com/build/building/packaging-ml-model/", required: false, type: "doc", source: "official" },  { title: "ml-docker-examples - ML Docker示例", url: "https://github.com/stasbe/ml-docker-examples", required: false, type: "repo", source: "github" }], checkpoint: "能把自己的 PyTorch 训练脚本封装成镜像并在 GPU 容器中跑起来" },
       { day: 10, title: "私有仓库与镜像推送",
         summary: "掌握镜像仓库使用，推送拉取镜像，实现构建一次到处运行。", content: {
           objective: "今天你将学习 Docker 镜像仓库的使用。学完后你能理解镜像仓库的作用，给镜像打标签，推送到 Docker Hub 或 GitHub Container Registry，从其他机器拉取并运行。对于团队协作，镜像仓库是共享环境、部署模型服务的基础设施，构建一次就能在任何机器上运行。",
@@ -611,7 +611,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成镜像推送与拉取完整流程：1. 注册一个 Docker Hub 账号（或使用 GitHub 的 ghcr.io），获取访问令牌（Access Token）；2. 在本地构建好的训练镜像（如 cifar10-train:v1）上打标签：docker tag cifar10-train:v1 your-username/cifar10-train:v1.0（Docker Hub 格式）或 docker tag cifar10-train:v1 ghcr.io/your-username/cifar10-train:v1.0（ghcr 格式）；3. 用 docker login 登录到镜像仓库，输入用户名和令牌；4. 推送镜像：docker push your-username/cifar10-train:v1.0，观察推送过程中的分层上传；5. 推送完成后，在仓库网页端确认镜像已上传；6. 模拟在另一台机器上使用：先删除本地镜像 docker rmi your-username/cifar10-train:v1.0，然后 docker pull 拉取，再 docker run 运行，验证功能正常；7. 练习不同标签：给同一个镜像打 latest 和 v1.0 两个标签，理解标签的作用（版本标记）；8. 学习 .dockerignore 排除敏感文件，确保镜像里不含密码、密钥等。思考：镜像标签和 Git commit 有什么关系？怎么管理镜像版本？",
           deep_dive: "深入理解镜像仓库原理与企业级镜像管理最佳实践：Docker 镜像仓库本质上是存储镜像层（layer）和 manifest 的服务。镜像分层存储的优势是：不同镜像共享相同的层，推送和拉取时只传输不同的部分，大大节省带宽和时间。比如你的十个项目镜像都基于同一个 pytorch 基础镜像，那基础镜像层在仓库里只存一份。企业级镜像管理的最佳实践：1. 私有仓库：公司的内部镜像（包含模型代码、商业逻辑）不能放公共仓库，用 Harbor、阿里云 ACR、AWS ECR 等私有仓库；2. 镜像版本管理：用语义化版本（v1.2.3）、Git commit hash、构建号等作为标签，方便追溯和回滚，不要只用 latest（不可控）；3. 镜像扫描：推送前或推送后自动扫描镜像漏洞（Trivy、Clair），及时发现安全问题；4. 镜像清理：定期清理旧的、不用的镜像，节省存储成本；5. 多架构镜像：buildx 构建支持 arm64/amd64 多架构的镜像，在不同硬件上都能跑。AI 项目的镜像仓库特殊考虑：1. 镜像通常很大（几个 GB 很正常），尽量选离你近的仓库，或者用缓存加速；2. 大镜像推送拉取慢，可以用 P2P 分发（如 Dragonfly）加速；3. 模型权重放哪里？小模型可以打进镜像里方便部署，大模型建议用对象存储（S3、OSS）单独存，启动时下载，不然镜像太大不好管理；4. 模型和镜像版本对应：记录哪个版本的模型对应哪个版本的镜像，方便问题排查。另外，docker save 和 docker load 可以把镜像存成 tar 文件，在没有网络的环境下传输，但日常还是用镜像仓库更方便。掌握镜像仓库的使用，你才能真正发挥 Docker'构建一次，到处运行'的威力。"
-        }, duration: "1.5小时", resources: [R_DOCKER_START, { title: "Docker Hub 快速入门", url: "https://docs.docker.com/docker-hub/quickstart/", required: true }, { title: "GitHub Container Registry", url: "https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry", required: false }, { title: "Harbor 私有仓库", url: "https://goharbor.io/docs/", required: false }], checkpoint: "能把本地构建的镜像 push 到远程仓库并从别处 pull 下来" },
+        }, duration: "1.5小时", resources: [R_DOCKER_START, { title: "Docker Hub 快速入门", url: "https://docs.docker.com/docker-hub/quickstart/", required: true, type: "doc", source: "official" }, { title: "GitHub Container Registry", url: "https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry", required: false, type: "repo", source: "github" }, { title: "Harbor 私有仓库", url: "https://goharbor.io/docs/", required: false, type: "doc", source: "official" }], checkpoint: "能把本地构建的镜像 push 到远程仓库并从别处 pull 下来" },
       { day: 11, title: "容器网络与多容器通信",
         summary: "深入理解 Docker 网络模型，掌握多容器通信与网络隔离。", content: {
           objective: "今天你将深入学习 Docker 的网络模型和多容器通信。学完后你能理解 bridge、host、none 三种网络模式的区别，创建自定义网络，让容器通过服务名互相通信，掌握网络隔离的安全实践。对于 AI 服务，这是构建多组件推理系统（API+缓存+数据库）的网络基础。",
@@ -624,7 +624,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "实践多容器网络通信与隔离：1. 先观察默认网络：docker network ls 查看所有网络，docker network inspect bridge 查看默认 bridge 网络详情；2. 启动两个容器在默认 bridge 网络，尝试用容器名互相 ping（会失败），再用 IP 互相 ping（能通），理解默认网络的限制；3. 创建自定义网络：docker network create ai-net，然后启动两个容器（如 api 和 redis）都用 --network ai-net 加入这个网络；4. 验证服务名通信：从 api 容器里 ping redis，应该能通，说明 DNS 自动解析；5. 网络隔离实验：再创建一个 ai-net2 网络，启动第三个容器，验证它访问不到 ai-net 里的容器；6. 端口映射与网络关系：测试 host 模式（--network host），容器直接用宿主机网络，不需要 -p 端口映射，对比性能差异；7. 在 Compose 中实践网络：编写 docker-compose.yml，定义两个网络 frontend 和 backend，把 API 服务放两个网络（同时对外和对内），Redis 只放 backend 网络，实现隔离。最后用 docker network inspect 查看网络里的容器列表。思考：为什么生产环境不建议用默认 bridge 网络？",
           deep_dive: "深入理解 Docker 网络底层原理与 AI 服务网络最佳实践：Docker 网络的底层涉及 Linux 的几个网络技术：1. veth pair：虚拟网线，一端在容器里（eth0），一端连到 docker0 网桥；2. docker0 bridge：默认的 Linux 网桥（虚拟交换机），所有默认网络的容器都连到上面，互相通信；3. iptables：做 NAT 和网络隔离，容器访问外网要做 SNAT，外部访问容器要做 DNAT（端口映射）；4. DNS 解析：自定义网络里内置 DNS 服务器，把容器名/服务名解析成对应 IP。bridge 模式下容器有独立 IP，网络隔离性好，但因为要经过 NAT 和网桥，性能有一点点损耗（一般可以忽略）。host 模式下容器直接用宿主机的网络栈，没有隔离，性能最好，但端口不能冲突，安全性低，适合对网络性能要求极高的场景。none 模式就是完全没有网络，适合只做计算不需要联网的任务，最安全。AI 项目的网络规划最佳实践：1. 推理服务：API 服务暴露端口，数据库和缓存不暴露，通过内部网络访问；2. 训练任务：一般不需要对外端口，只需访问数据和向外汇报训练状态；3. 多机训练：NCCL 通信需要特定的网络配置，host 模式或 macvlan 性能更好；4. 监控：Prometheus、Grafana 等监控组件单独放监控网络，通过特定端口访问。常见坑点：1. 容器 localhost 是容器自己，不是宿主机，想访问宿主机服务要用 host.docker.internal（Windows/Mac）或宿主机 IP；2. 自定义网络之间默认不通，需要把容器同时加入多个网络才能跨网访问；3. 容器之间用服务名通信，不要硬编码 IP，IP 会变但服务名不变。理解容器网络原理，你就能设计出既安全又高效的多容器应用架构。"
-        }, duration: "1.5小时", resources: [R_DOCKER_START, { title: "Docker 网络详解", url: "https://docs.docker.com/network/drivers/", required: true }, { title: "Docker 网络教程", url: "https://docs.docker.com/network/network-tutorial-standalone/", required: false },  { title: "docker-networking-exercises - 网络练习", url: "https://github.com/vasani-arpit/docker-networking-exercises", required: false, type: "repo", source: "github" }], checkpoint: "能在一个 compose 中让两个容器通过服务名而不是 IP 通信" },
+        }, duration: "1.5小时", resources: [R_DOCKER_START, { title: "Docker 网络详解", url: "https://docs.docker.com/network/drivers/", required: true, type: "doc", source: "official" }, { title: "Docker 网络教程", url: "https://docs.docker.com/network/network-tutorial-standalone/", required: false, type: "doc", source: "official" },  { title: "docker-networking-exercises - 网络练习", url: "https://github.com/vasani-arpit/docker-networking-exercises", required: false, type: "repo", source: "github" }], checkpoint: "能在一个 compose 中让两个容器通过服务名而不是 IP 通信" },
       { day: 12, title: "安全：非 root 用户与权限",
         summary: "掌握容器安全最佳实践，用非 root 用户运行，减小安全风险。", content: {
           objective: "今天你将学习 Docker 容器的安全配置。学完后你能理解为什么不能用 root 运行容器，学会在 Dockerfile 中创建非 root 用户并切换，处理挂载卷的权限问题，掌握容器安全的基本最佳实践。对于 AI 团队，容器安全是生产部署的基本要求，能防止容器被攻破后影响整个宿主机。",
@@ -637,7 +637,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "实践非 root 用户容器与权限管理：1. 先验证默认情况：启动一个 ubuntu 容器，执行 id 命令，看到 uid=0(root)，理解默认 root 风险；2. 编写一个安全的 Dockerfile：基于 python:3.10-slim，RUN useradd -m -u 1000 appuser 创建用户，USER appuser 切换到非 root 用户，设置工作目录为 /home/appuser/app；3. 构建镜像并运行，在容器内执行 id 确认是非 root 用户，尝试 apt-get install 应该会失败（权限不足），理解限制；4. 挂载卷权限实验：创建宿主机目录，先用 root 用户的容器写入文件，看到文件所有者是 root；再用非 root 用户的容器挂载，尝试写入（可能失败），然后修改宿主机目录所有者为 UID 1000 再试，理解权限匹配问题；5. 运行时指定用户：docker run -u 1001:1001 ... 覆盖默认用户，测试不同 UID 效果；6. 进阶安全实践：--read-only 让根文件系统只读，需要写的目录单独挂载 tmpfs；--cap-drop ALL 丢弃所有 Linux capabilities，只加必需的。最后检查你的训练镜像，确保生产版本不是 root 运行。思考：除了非 root，还有哪些容器安全措施？",
           deep_dive: "深入理解容器安全原理与 AI 生产环境安全最佳实践：容器安全的核心是'最小权限原则'和'攻击面最小化'。容器共享宿主机内核，理论上容器内的 root 用户如果能逃逸出来，就能获得宿主机的 root 权限，所以必须限制。Linux capabilities 是把 root 的特权拆分成细粒度的能力（如 CAP_NET_BIND_SERVICE 绑定低端口、CAP_SYS_ADMIN 管理系统），默认容器有一些 capabilities，但可以用 --cap-drop ALL 全部丢掉，再 --add-add 加需要的，进一步缩小攻击面。AI 生产环境的容器安全清单：1. 非 root 用户运行：这是最基本也是最重要的一条；2. 镜像漏洞扫描：定期扫描镜像中的 CVE 漏洞，及时更新基础镜像；3. 只读根文件系统：容器运行时不能改系统文件，即使被攻破也留不下后门；4. 不要用 --privileged：特权模式几乎等于关闭所有隔离，除非万不得已（比如需要再跑 Docker）；5. 限制资源：--memory、--cpus 限制容器能用的资源，防止被攻击后占满宿主机；6. 网络隔离：只暴露必要的端口，内部服务不对外；7. 敏感信息：密钥、密码用环境变量或 secrets 传入，绝对不要写进镜像或 Dockerfile；8. 不要用 latest 标签：不可控，不知道会拉到什么版本。AI 训练场景的特殊安全考虑：1. 训练数据可能包含敏感信息，数据访问权限要控制好；2. 模型权重是公司资产，防止被人从容器里拷走；3. GPU 访问也要注意，不要让一个人占满所有卡。另外，还有一些更高级的安全技术：Seccomp 限制系统调用、AppArmor/SELinux 强制访问控制、gVisor/Kata Containers 用更轻量的虚拟机进一步隔离。但对于大部分场景，做好非 root + 最小权限 + 镜像扫描就足够了。安全是一个持续的过程，不是一次性配置就完事，需要定期审计和更新。"
-        }, duration: "1.5小时", resources: [R_DOCKER_BUILD, { title: "Docker 安全最佳实践", url: "https://docs.docker.com/develop/security-best-practices/", required: true }, { title: "容器安全扫描", url: "https://docs.docker.com/build/building/security-scanning/", required: false },  { title: "docker-security - Docker安全示例", url: "https://github.com/vasani-arpit/docker-security", required: false, type: "repo", source: "github" }], checkpoint: "容器内进程以非 root 用户运行，并且写回宿主机目录的文件权限正常" },
+        }, duration: "1.5小时", resources: [R_DOCKER_BUILD, { title: "Docker 安全最佳实践", url: "https://docs.docker.com/develop/security-best-practices/", required: true, type: "doc", source: "official" }, { title: "容器安全扫描", url: "https://docs.docker.com/build/building/security-scanning/", required: false, type: "doc", source: "official" },  { title: "docker-security - Docker安全示例", url: "https://github.com/vasani-arpit/docker-security", required: false, type: "repo", source: "github" }], checkpoint: "容器内进程以非 root 用户运行，并且写回宿主机目录的文件权限正常" },
       { day: 13, title: "CI/CD 构建镜像与 Actions",
         summary: "用 GitHub Actions 自动化构建推送 Docker 镜像，实现 CI/CD 流水线。", content: {
           objective: "今天你将学习用 GitHub Actions 自动化构建和推送 Docker 镜像。学完后你能编写 CI/CD 工作流，在代码推送或打标签时自动构建镜像、推送到 ghcr.io，实现镜像与代码的持续集成。对于 AI 团队，自动化构建能保证训练镜像和部署镜像始终与代码同步，避免手动构建的不一致。",
@@ -650,7 +650,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "搭建 GitHub Actions 自动构建 Docker 镜像流水线：1. 准备一个 GitHub 仓库，包含 Dockerfile 和项目代码；2. 在仓库 Settings → Secrets and variables → Actions 中添加 GHCR_TOKEN（GitHub Personal Access Token，有 write:packages 权限）；3. 创建 .github/workflows/docker-build.yml 工作流文件，配置：name: Docker Build，触发条件 push 到 main 分支或打 v* tag；4. 工作流步骤：checkout 代码 → 设置 Docker Buildx（用于多架构构建）→ 登录 ghcr.io（用 secrets.GITHUB_TOKEN 或 PAT）→ 提取 metadata（自动生成标签，如基于 Git tag）→ 构建并推送镜像（docker/build-push-action）；5. 提交代码推送到 GitHub，观察 Actions 页面的构建过程，查看日志，确认构建成功；6. 打一个 Git tag（如 v1.0.0）推送，触发带版本标签的镜像构建，验证 ghcr.io 上出现对应标签的镜像；7. 进阶优化：添加镜像扫描步骤（用 Trivy）扫描漏洞，添加测试步骤（构建后运行容器验证功能），多阶段构建缓存配置加快速度。思考：CI/CD 对 AI 项目有什么价值？除了构建镜像还能自动化什么？",
           deep_dive: "深入理解 AI 项目 CI/CD 的最佳实践与进阶技巧：持续集成和持续部署对于 AI 项目同样重要，甚至更重要——因为 AI 项目不仅有代码，还有数据、模型、环境，复杂度更高。Docker 镜像 + CI/CD 是保证环境一致性和部署效率的关键组合。GitHub Actions 的核心概念：workflow 工作流（整个自动化流程）、job 任务（一组步骤，可以并行或串行）、step 步骤（单个动作）、action 动作（可复用的步骤，如 checkout、setup-python）。AI 项目 CI/CD 的典型流水线：1. 代码提交触发 → 2. 代码检查（lint、格式化）→ 3. 单元测试 → 4. 构建 Docker 镜像 → 5. 镜像安全扫描 → 6. 推送镜像到仓库 → 7. 自动部署到测试环境 → 8. 运行集成测试/模型验证 → 9. 手动审批后部署生产。进阶技巧：1. 构建缓存：用 GitHub Actions 的 cache 或 buildx 的缓存层，加快后续构建速度，大镜像节省的时间非常可观；2. 矩阵构建：一次构建多个版本的镜像（不同 PyTorch 版本、不同 CUDA 版本）；3. 多架构镜像：buildx 同时构建 amd64/arm64 版本，在不同硬件都能跑；4. 环境分离：main 分支构建生产镜像，dev 分支构建开发镜像，用不同标签区分；5. 模型 CI：不仅测试代码，还可以跑小型训练/推理测试验证模型性能没下降；6. Slack/飞书通知：构建成功或失败自动发消息通知团队。AI 项目 CI/CD 的特殊挑战：1. 测试需要 GPU：可以用自托管 runner（带 GPU 的机器），或者云厂商的 GPU runner；2. 大模型/大数据：测试数据要用小的子集，不然 CI 跑太慢；3. 训练时间长：完整训练不能放 CI 里，只跑快速验证。掌握 CI/CD 能把你从重复的构建部署工作中解放出来，专注于更有价值的事情。"
-        }, duration: "2.5小时", resources: [{ title: "Docker Build Push Action", url: "https://github.com/marketplace/actions/build-and-push-docker-images", required: true }, { title: "GitHub Actions Docker 教程", url: "https://docs.github.com/en/actions/use-cases-and-examples/building-and-testing/building-and-testing-python", required: false },  { title: "docker-ci - Docker CI模板", url: "https://github.com/vasani-arpit/docker-ci", required: false, type: "repo", source: "github" }], checkpoint: "在 GitHub Actions 中自动 build 镜像并 push 到 ghcr.io" },
+        }, duration: "2.5小时", resources: [{ title: "Docker Build Push Action", url: "https://github.com/marketplace/actions/build-and-push-docker-images", required: true, type: "repo", source: "github" }, { title: "GitHub Actions Docker 教程", url: "https://docs.github.com/en/actions/use-cases-and-examples/building-and-testing/building-and-testing-python", required: false, type: "repo", source: "github" },  { title: "docker-ci - Docker CI模板", url: "https://github.com/vasani-arpit/docker-ci", required: false, type: "repo", source: "github" }], checkpoint: "在 GitHub Actions 中自动 build 镜像并 push 到 ghcr.io" },
       { day: 14, title: "综合：模型推理服务端到端容器化",
         summary: "综合实战：从零构建完整的模型推理服务，容器化并端到端部署。", content: {
           objective: "今天你将完成一个端到端的模型推理服务容器化综合项目，串联前 13 天所有知识点。学完后你能独立完成从模型服务编写、Dockerfile 构建、多容器编排、健康检查、安全配置到镜像推送的完整流程。这是机器学习工程师从实验室走向生产部署的核心能力。",
@@ -663,7 +663,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成完整的模型推理服务容器化项目：1. 编写推理服务：用 FastAPI 写 main.py，包含 GET /health 健康检查、POST /predict 接收图片做图像分类（用 ResNet50 预训练模型）、集成 Redis 缓存预测结果（相同图片直接返回缓存）；2. 优化 Dockerfile：基于 pytorch/pytorch:2.1.2-cuda12.1-cudnn8-runtime，多阶段构建减小体积，创建非 root 用户，设置 HEALTHCHECK，暴露 8000 端口；3. 编写 docker-compose.yml，定义三个服务：api（推理服务，build: .，端口 8000，环境变量，依赖 redis，健康检查）、redis（缓存，image: redis:alpine，数据卷持久化，不对外暴露端口）、nginx（可选，反向代理，做负载均衡和静态文件）；4. 安全与配置：创建 .env 文件管理配置（模型路径、缓存 TTL、日志级别），确保非 root 用户运行，限制 CPU 和内存资源，设置 restart: always 自动重启；5. 本地测试：docker compose up -d --build 启动所有服务，用 curl 测试健康检查和预测接口，验证 Redis 缓存生效（第二次请求更快），用 docker compose ps 看所有服务 healthy，用 docker compose logs 排查问题；6. 性能验证：用 ab 或 wrk 做简单压测，观察 QPS 和延迟，检查 GPU 利用率；7. 推送部署：给镜像打标签，推送到 ghcr.io 或其他仓库，记录部署文档（如何拉取、如何启动、如何配置）。最后写一个简单的部署说明，确保别人拿到你的代码和镜像就能一键启动服务。",
           deep_dive: "深入理解生产级模型服务的架构与演进方向：今天的综合项目只是生产部署的起点，真正的生产级推理服务还有很多进阶方向。架构演进：1. 水平扩展：用 Nginx 或 Traefik 反向代理多个 API 实例，提高并发处理能力；2. 模型服务框架：用 TorchServe、Triton Inference Server、vLLM 等专业推理框架，支持动态批处理、多模型管理、GPU 共享，性能比自己写的 FastAPI 好很多；3. 异步处理：高并发场景下用 RabbitMQ/Kafka 做任务队列，后台 worker 异步处理，API 立即返回任务 ID，客户端轮询结果；4. 监控告警：Prometheus 采集指标（QPS、延迟、错误率、GPU 利用率），Grafana 做可视化大盘，Alertmanager 告警；5. 灰度发布：新版本先放 10% 流量验证，没问题再全量，降低发布风险；6. 自动扩缩容：根据 GPU 利用率或请求量自动增减实例数量，节省成本。AI 推理服务的特殊挑战：1. GPU 资源贵且稀缺，要尽可能提高利用率，动态批处理是常用手段；2. 模型加载慢，启动时间长，不能像普通 Web 服务那样快速扩容；3. 大模型推理显存占用高，需要量化、蒸馏、张量并行等技术优化；4. 模型版本多，A/B testing 比较不同版本模型的效果。容器化和编排（Kubernetes）是解决这些问题的基础设施。今天你掌握的 Docker 基础是进入云原生 AI 工程的敲门砖——从 Compose 到 Kubernetes，从单机部署到分布式训练和推理，容器技术贯穿始终。完成这个综合项目，你就具备了把 AI 模型从笔记本带到生产环境的基本能力，继续深入学习 Kubernetes、MLflow、Kubeflow 等工具，你就能成长为专业的 MLOps 工程师。"
-        }, duration: "3小时", resources: [R_FASTAPI, R_DOCKER_BUILD, R_ULTRALYTICS, { title: "FastAPI 容器化部署", url: "https://fastapi.tiangolo.com/deployment/docker/", required: true }], checkpoint: "一条 docker compose up -d 即可在任意机器启动推理 API 并可用 curl 调用" }],
+        }, duration: "3小时", resources: [R_FASTAPI, R_DOCKER_BUILD, R_ULTRALYTICS, { title: "FastAPI 容器化部署", url: "https://fastapi.tiangolo.com/deployment/docker/", required: true, type: "article", source: "official" }], checkpoint: "一条 docker compose up -d 即可在任意机器启动推理 API 并可用 curl 调用" }],
   },
 
   // =====================================================
@@ -682,7 +682,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["能在代码中理解权重矩阵的维度意义", "能推导反向传播的矩阵形式"],
     relatedIntel: ["010-numpy-pandas"],
     relatedTools: ["NumPy", "PyTorch"],
-    relatedTerms: ["matrix", "vector", "eigenvalue", "tensor"],
+    relatedTerms: ["matrix", "vector", "eigenvalue", "tensor"], relatedNodes: ["math-probability", "math-tensor-ops", "math-optimization"],
     dailyTasks: [
       { day: 1, title: "向量与基本运算",
         summary: "掌握向量运算及其几何意义，理解点积与范数在深度学习中的应用。", content: {
@@ -696,7 +696,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "动手完成向量运算实战：1. 用 np.array 创建两个5维向量 a 和 b；2. 计算 a+b、2*a、a·b、||a||₂；3. 计算两向量夹角的余弦值并验证；4. 将 a 单位化并验证其范数为1。最后用一个2维向量的例子，在坐标纸上画出向量及其加法的几何意义。",
           deep_dive: "深入理解范数族与机器学习的关系：L2范数对应岭回归（Ridge），惩罚大权重使模型更平滑；L1范数对应Lasso回归，产生稀疏解自动做特征选择；L∞范数取最大分量绝对值。在深度学习中，权重衰减（weight decay）就是对参数施加L2正则化，防止过拟合。"
-        }, duration: "1.5小时", resources: [B_LINEAR_ALGEBRA, R_NUMPY, R_3B1B_LIN, { title: "Khan Academy: 向量介绍", url: "https://www.khanacademy.org/math/linear-algebra/vectors-and-spaces/vectors/v/vector-introduction-linear-algebra", required: false }, { title: "MIT OCW 18.06 线性代数", url: "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/", required: false }], checkpoint: "能做向量加法、点积、范数、夹角计算，并解释几何意义" },
+        }, duration: "1.5小时", resources: [B_LINEAR_ALGEBRA, R_NUMPY, R_3B1B_LIN, { title: "Khan Academy: 向量介绍", url: "https://www.khanacademy.org/math/linear-algebra/vectors-and-spaces/vectors/v/vector-introduction-linear-algebra", required: false, type: "article", source: "official" }, { title: "MIT OCW 18.06 线性代数", url: "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/", required: false, type: "article", source: "official" }], checkpoint: "能做向量加法、点积、范数、夹角计算，并解释几何意义" },
       { day: 2, title: "矩阵与矩阵乘法",
         summary: "掌握矩阵运算规则与乘法本质，理解线性变换的矩阵表示。", content: {
           objective: "今天你将系统学习矩阵的基本概念、运算规则和矩阵乘法的本质。你会掌握矩阵的加减、数乘、转置和乘法运算，理解矩阵乘法不满足交换律的几何含义。矩阵是神经网络的核心——全连接层的权重就是矩阵，前向传播本质上是矩阵乘法。",
@@ -709,7 +709,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "动手完成矩阵运算实战：1. 创建两个矩阵 A(2×3) 和 B(3×2)，验证 A@B 的形状是 2×2；2. 手动计算一个 2×2 矩阵乘法的结果，与 NumPy 结果对比；3. 验证 (AB)ᵀ = BᵀAᵀ 这个重要性质；4. 构造一个 3×3 随机矩阵，验证它与单位矩阵相乘结果不变。思考：为什么神经网络中权重矩阵的维度是(in_features, out_features)？",
           deep_dive: "深入理解矩阵乘法的三种视角：元素视角（点积）、列视角（A的列的线性组合，系数来自B的列）、行视角（B的行的线性组合，系数来自A的行）。在深度学习中，列视角特别有用——输出的每一列都是输入特征的加权组合，权重就是对应列的系数。这种视角帮助我们理解特征是如何被组合和变换的。"
-        }, duration: "1.5小时", resources: [R_NUMPY, R_3B1B_LIN, { title: "Khan Academy: 矩阵乘法", url: "https://www.khanacademy.org/math/precalculus/x9e81a4f98389efdf:matrices/x9e81a4f98389efdf:multiplying-matrices-by-matrices/v/matrix-multiplication-intro", required: false },  { title: "矩阵乘法教程", url: "https://github.com/Matricali/Matrix-Multiplication-Tutorial", required: false, type: "repo", source: "github" }], checkpoint: "能解释 (m,k) @ (k,n) = (m,n) 的维度规则并手算一个 2x2 实例" },
+        }, duration: "1.5小时", resources: [R_NUMPY, R_3B1B_LIN, { title: "Khan Academy: 矩阵乘法", url: "https://www.khanacademy.org/math/precalculus/x9e81a4f98389efdf:matrices/x9e81a4f98389efdf:multiplying-matrices-by-matrices/v/matrix-multiplication-intro", required: false, type: "article", source: "official" },  { title: "矩阵乘法教程", url: "https://github.com/Matricali/Matrix-Multiplication-Tutorial", required: false, type: "repo", source: "github" }], checkpoint: "能解释 (m,k) @ (k,n) = (m,n) 的维度规则并手算一个 2x2 实例" },
       { day: 3, title: "广播 Broadcasting",
         summary: "掌握广播机制的规则与应用，理解深度学习中的维度匹配原理。", content: {
           objective: "今天你将系统学习 NumPy 和 PyTorch 中的广播机制。你会掌握广播的核心规则、常见的广播模式以及如何利用广播简化代码。广播是深度学习中无处不在的技术——批归一化、偏置相加、图像标准化都依赖广播，理解它能帮你快速定位维度错误。",
@@ -722,7 +722,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "动手完成广播实战练习：1. 创建形状为(3,4)的矩阵和形状为(4,)的向量，验证它们可以相加；2. 创建形状为(3,1)和(1,4)的数组，观察相加后的形状和结果；3. 模拟图像标准化：形状(224,224,3)的图像减去形状(3,)的均值向量，广播是否成功？4. 故意制造一个广播错误（如(3,4)加(3,)），观察错误信息并学会调试。",
           deep_dive: "深入理解广播的内存机制与深度学习应用：广播在底层并不真正复制数据，而是通过stride（步长）技巧实现零内存开销的扩展。在Transformer的注意力机制中，query形状(B,h,n_q,d)与key形状(B,h,n_k,d)计算注意力分数时，利用广播可以高效处理batch和多头维度。理解广播的深层原理，能帮你写出更高效、更简洁的深度学习代码。"
-        }, duration: "1.5小时", resources: [R_NUMPY, { title: "NumPy 广播机制详解", url: "https://numpy.org/doc/stable/user/basics.broadcasting.html", required: true }, { title: "Understanding Broadcasting (SciPy Cookbook)", url: "https://scipy-cookbook.readthedocs.io/items/Broadcasting.html", required: false },  { title: "broadcasting-visualization - 广播可视化", url: "https://github.com/MaxWickham/broadcasting-visualization", required: false, type: "repo", source: "github" }], checkpoint: "能预测两个 ndarray 做广播后的形状，并写出一个实际图像归一化的例子" },
+        }, duration: "1.5小时", resources: [R_NUMPY, { title: "NumPy 广播机制详解", url: "https://numpy.org/doc/stable/user/basics.broadcasting.html", required: true, type: "article", source: "official" }, { title: "Understanding Broadcasting (SciPy Cookbook)", url: "https://scipy-cookbook.readthedocs.io/items/Broadcasting.html", required: false, type: "doc", source: "official" },  { title: "broadcasting-visualization - 广播可视化", url: "https://github.com/MaxWickham/broadcasting-visualization", required: false, type: "repo", source: "github" }], checkpoint: "能预测两个 ndarray 做广播后的形状，并写出一个实际图像归一化的例子" },
       { day: 4, title: "逆矩阵、秩与线性方程组",
         summary: "掌握线性方程组求解、矩阵秩的概念与逆矩阵的应用条件。", content: {
           objective: "今天你将系统学习线性方程组的求解方法、矩阵的秩和逆矩阵的概念。你会掌握用 NumPy 求解线性方程组的正确姿势，理解为什么推荐用 solve 而不是求逆矩阵。这些概念是理解最小二乘、岭回归和数值稳定性的基础。",
@@ -735,7 +735,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "动手完成线性方程组求解实战：1. 构造一个 3×3 可逆矩阵 A 和向量 b，用 np.linalg.solve 求解 x，验证 A@x ≈ b；2. 用 np.linalg.inv 求逆再乘，比较两种方法的结果差异；3. 构造一个秩亏矩阵，观察求逆时的错误信息；4. 计算矩阵的条件数 np.linalg.cond，理解条件数与数值稳定性的关系。思考：为什么岭回归中加入λI能改善条件数？",
           deep_dive: "深入理解数值稳定性与正则化：当矩阵接近奇异时，输入的微小扰动会导致解的巨大变化，这就是病态问题。条件数κ=σ_max/σ_min衡量病态程度，κ越大越不稳定。在机器学习中，当特征高度相关时，设计矩阵XᵀX可能接近奇异，此时加入L2正则化（岭回归）相当于在对角线上加λI，能有效降低条件数，提高数值稳定性和泛化能力。"
-        }, duration: "1.5小时", resources: [R_NUMPY, { title: "Khan Academy: 逆矩阵", url: "https://www.khanacademy.org/math/precalculus/x9e81a4f98389efdf:matrices/x9e81a4f98389efdf:matrix-inverses/v/inverse-matrix-part-1", required: false }, { title: "MIT OCW: 矩阵的秩与零空间", url: "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/resources/lecture-6-column-space-and-nullspace/", required: false },  { title: "matrix-inverse-calculator - 矩阵求逆计算器", url: "https://github.com/MaxWickham/matrix-inverse-calculator", required: false, type: "repo", source: "github" }], checkpoint: "能解一个 3×3 线性方程组并判断矩阵是否可逆" },
+        }, duration: "1.5小时", resources: [R_NUMPY, { title: "Khan Academy: 逆矩阵", url: "https://www.khanacademy.org/math/precalculus/x9e81a4f98389efdf:matrices/x9e81a4f98389efdf:matrix-inverses/v/inverse-matrix-part-1", required: false, type: "article", source: "official" }, { title: "MIT OCW: 矩阵的秩与零空间", url: "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/resources/lecture-6-column-space-and-nullspace/", required: false, type: "article", source: "official" },  { title: "matrix-inverse-calculator - 矩阵求逆计算器", url: "https://github.com/MaxWickham/matrix-inverse-calculator", required: false, type: "repo", source: "github" }], checkpoint: "能解一个 3×3 线性方程组并判断矩阵是否可逆" },
       { day: 5, title: "特征值与特征向量",
         summary: "掌握特征值与特征向量的概念、几何意义及在数据科学中的应用。", content: {
           objective: "今天你将系统学习特征值与特征向量的概念、几何意义和计算方法。你会理解特征分解的本质，掌握用 NumPy 计算特征值和特征向量的方法。特征分解是 PCA、谱聚类、图神经网络等众多算法的数学基础。",
@@ -748,7 +748,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "动手完成特征值分解实战：1. 构造一个 2×2 对称矩阵 A，用 np.linalg.eigh 求特征值和特征向量；2. 验证 Av = λv：对每个特征向量，计算 A@v 和 λ*v，比较是否相等；3. 验证 A = V @ diag(λ) @ V.T，重建原矩阵；4. 在二维坐标中画出特征向量方向，直观理解它们是变换的主轴。思考：为什么 PCA 中要找协方差矩阵的特征向量？",
           deep_dive: "深入理解谱定理与机器学习的联系：实对称矩阵的特征分解是众多算法的基石。在PCA中，协方差矩阵的特征向量是主成分方向，特征值是对应方向的方差；在谱聚类中，图拉普拉斯矩阵的特征向量用于数据降维后聚类；在Google的PageRank算法中，网页重要性是转移矩阵的主特征向量。理解特征分解，就能从本质上把握这些看似不相关算法的共同数学内核。"
-        }, duration: "1.5小时", resources: [R_3B1B_LIN, { title: "Khan Academy: 特征值与特征向量", url: "https://www.khanacademy.org/math/linear-algebra/alternate-bases/eigen-everything/v/linear-algebra-introduction-to-eigenvalues-and-eigenvectors", required: false }, { title: "MIT OCW: 特征值与特征向量", url: "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/resources/lecture-21-eigenvalues-and-eigenvectors/", required: false },  { title: "eigenfaces - 特征脸算法实现", url: "https://github.com/MaxWickham/eigenfaces", required: false, type: "repo", source: "github" }], checkpoint: "能数值求出 2×2 对称矩阵的特征分解并验证 Av=λv" },
+        }, duration: "1.5小时", resources: [R_3B1B_LIN, { title: "Khan Academy: 特征值与特征向量", url: "https://www.khanacademy.org/math/linear-algebra/alternate-bases/eigen-everything/v/linear-algebra-introduction-to-eigenvalues-and-eigenvectors", required: false, type: "article", source: "official" }, { title: "MIT OCW: 特征值与特征向量", url: "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/resources/lecture-21-eigenvalues-and-eigenvectors/", required: false, type: "article", source: "official" },  { title: "eigenfaces - 特征脸算法实现", url: "https://github.com/MaxWickham/eigenfaces", required: false, type: "repo", source: "github" }], checkpoint: "能数值求出 2×2 对称矩阵的特征分解并验证 Av=λv" },
       { day: 6, title: "矩阵分解：LU 与 QR",
         summary: "掌握LU分解与QR分解的原理、计算方法及在线性方程组求解中的应用。", content: {
           objective: "今天你将系统学习两种重要的矩阵分解：LU分解和QR分解。你会理解它们的几何意义、计算方法和典型应用场景。矩阵分解是数值线性代数的核心工具，理解它们能帮助你深入理解SVD、最小二乘等更高级的算法。",
@@ -761,7 +761,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "动手完成矩阵分解实战：1. 用 scipy.linalg.lu 对一个 3×3 矩阵做LU分解，验证 P@L@U ≈ A；2. 用LU分解求解线性方程组Ax=b，与np.linalg.solve结果对比；3. 用 np.linalg.qr 做QR分解，验证Q的列是正交的（QᵀQ=I）；4. 用QR分解求解最小二乘问题，与 lstsq 结果对比。思考：为什么QR分解比正规方程更稳定？",
           deep_dive: "深入理解Gram-Schmidt正交化与数值稳定性：经典Gram-Schmidt算法在数值上不稳定，浮点误差累积会导致正交性丧失。改进的Modified Gram-Schmidt通过重排计算顺序显著提高稳定性，是实际QR分解的基础。在深度学习中，正交初始化（orthogonal initialization）利用QR分解生成正交权重矩阵，能有效缓解梯度消失/爆炸问题，让深层网络更容易训练。"
-        }, duration: "1.5小时", resources: [R_NUMPY, { title: "Wikipedia: LU 分解", url: "https://zh.wikipedia.org/wiki/LU%E5%88%86%E8%A7%A3", required: false }, { title: "Wikipedia: QR 分解", url: "https://zh.wikipedia.org/wiki/QR%E5%88%86%E8%A7%A3", required: false }, { title: "MIT OCW: 矩阵分解", url: "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/resources/lecture-4-a-ax-b-row-reduced-form-r/", required: false }], checkpoint: "能完成一次 LU 与 QR 分解，并验证其数值正确性" },
+        }, duration: "1.5小时", resources: [R_NUMPY, { title: "Wikipedia: LU 分解", url: "https://zh.wikipedia.org/wiki/LU%E5%88%86%E8%A7%A3", required: false, type: "article", source: "official" }, { title: "Wikipedia: QR 分解", url: "https://zh.wikipedia.org/wiki/QR%E5%88%86%E8%A7%A3", required: false, type: "article", source: "official" }, { title: "MIT OCW: 矩阵分解", url: "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/resources/lecture-4-a-ax-b-row-reduced-form-r/", required: false, type: "article", source: "official" }], checkpoint: "能完成一次 LU 与 QR 分解，并验证其数值正确性" },
       { day: 7, title: "SVD 奇异值分解",
         summary: "掌握SVD奇异值分解的原理、几何意义及在数据科学中的核心应用。", content: {
           objective: "今天你将系统学习奇异值分解（SVD）——线性代数中最重要的矩阵分解之一。你会理解SVD的几何意义、数学性质和广泛的应用场景。SVD是PCA、推荐系统、图像压缩、潜在语义分析等众多算法的数学基础，被誉为线性代数的瑞士军刀。",
@@ -774,7 +774,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "动手完成SVD实战：1. 创建一个 5×4 的随机矩阵 A，用 np.linalg.svd 做SVD分解；2. 验证 U @ diag(S) @ Vt ≈ A（注意形状匹配，用紧凑形式）；3. 验证 U 和 V 是正交矩阵（UᵀU=I, VᵀV=I）；4. 只保留前2个奇异值重建矩阵，计算近似误差（Frobenius范数）；5. 验证误差等于被舍弃奇异值的平方和开根号（Eckart-Young定理）。",
           deep_dive: "深入理解SVD与特征分解的关系：对于对称矩阵AᵀA，其特征值就是奇异值的平方，特征向量就是V的列；同理AAᵀ的特征向量是U的列。这一联系解释了为什么SVD比特征分解更通用——它能处理非方阵。在推荐系统中，SVD用于矩阵补全，将用户-物品评分矩阵分解为用户因子和物品因子；在大语言模型中，SVD也被用于词向量降维和模型压缩。"
-        }, duration: "2小时", resources: [R_3B1B_LIN, { title: "Wikipedia: 奇异值分解", url: "https://zh.wikipedia.org/wiki/%E5%A5%87%E5%BC%82%E5%80%BC%E5%88%86%E8%A7%A3", required: false }, { title: "MIT OCW: SVD 分解", url: "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/resources/lecture-29-singular-value-decomposition/", required: false }], checkpoint: "能对一张灰度图做 SVD 低秩重建，并比较不同 k 的视觉效果" },
+        }, duration: "2小时", resources: [R_3B1B_LIN, { title: "Wikipedia: 奇异值分解", url: "https://zh.wikipedia.org/wiki/%E5%A5%87%E5%BC%82%E5%80%BC%E5%88%86%E8%A7%A3", required: false, type: "article", source: "official" }, { title: "MIT OCW: SVD 分解", url: "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/resources/lecture-29-singular-value-decomposition/", required: false, type: "article", source: "official" }], checkpoint: "能对一张灰度图做 SVD 低秩重建，并比较不同 k 的视觉效果" },
       { day: 8, title: "图像 SVD 压缩实战",
         summary: "用SVD实现图像压缩，直观理解低秩近似与信息保留的权衡。", content: {
           objective: "今天你将通过图像压缩实战深入理解SVD的低秩近似原理。你会把一张灰度图看作矩阵，用SVD分解后只保留前k个奇异值进行重建，观察不同k值下的图像质量与压缩率的权衡。这个实验能帮你建立对低秩结构和信息冗余的直观认识。",
@@ -787,7 +787,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "动手完成图像SVD压缩实验：1. 用PIL或matplotlib读取一张灰度图，转为numpy矩阵；2. 对图像矩阵做SVD分解（用full_matrices=False节省内存）；3. 分别取k=5,20,50,100重建图像，并排显示对比效果；4. 计算每个k值对应的压缩比；5. 绘制奇异值衰减曲线（semilogy图），观察前多少个奇异值贡献了95%的能量。思考：为什么自然图像的奇异值衰减这么快？",
           deep_dive: "深入理解低秩近似与深度学习的联系：SVD图像压缩揭示了自然信号的低秩结构，这也是深度学习有效的重要原因——神经网络学习的就是数据的低秩流形。在模型压缩中，SVD被用于全连接层和卷积核的低秩分解，将大权重矩阵分解为两个小矩阵的乘积，大幅减少参数量和计算量。理解低秩结构，就能从本质上理解为什么深度网络能用相对较少的参数拟合复杂的数据分布。"
-        }, duration: "2小时", resources: [R_NUMPY, { title: "SVD 图像压缩教程 (GeeksforGeeks)", url: "https://www.geeksforgeeks.org/image-compression-using-singular-value-decomposition/", required: false }, { title: "SVD and Image Processing (YouTube)", url: "https://www.youtube.com/watch?v=Cx7ZsM7UOOk", required: false }], checkpoint: "产出 3 张不同 k 值重建的图像，并说明 SVD 与低秩近似的直观意义" },
+        }, duration: "2小时", resources: [R_NUMPY, { title: "SVD 图像压缩教程 (GeeksforGeeks)", url: "https://www.geeksforgeeks.org/image-compression-using-singular-value-decomposition/", required: false, type: "article", source: "official" }, { title: "SVD and Image Processing (YouTube)", url: "https://www.youtube.com/watch?v=Cx7ZsM7UOOk", required: false, type: "video", source: "youtube" }], checkpoint: "产出 3 张不同 k 值重建的图像，并说明 SVD 与低秩近似的直观意义" },
       { day: 9, title: "主成分分析 PCA",
         summary: "掌握PCA降维算法的原理、实现步骤及在数据分析中的应用。", content: {
           objective: "今天你将系统学习主成分分析（PCA）——最经典的无监督降维算法。你会理解PCA的数学原理、实现步骤和典型应用场景。PCA是数据可视化、去噪、特征提取的基础工具，也是理解流形学习和自编码器等深度学习方法的起点。",
@@ -800,7 +800,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "动手从零实现PCA并验证：1. 生成或加载一个高维数据集（如sklearn的digits或iris）；2. 手动实现PCA：数据中心化、计算协方差矩阵、特征分解、取前k个主成分；3. 将数据投影到2D空间，用散点图可视化并着色（按类别）；4. 与sklearn的PCA结果对比（注意符号可能相反，因为特征向量方向不唯一）；5. 计算累计方差解释率，确定保留多少主成分合适。",
           deep_dive: "深入理解PCA与SVD的关系及概率视角：PCA可以从最大化方差和最小化重构误差两个角度推导，两者等价。实际中用SVD计算PCA更稳定，因为协方差矩阵XᵀX会放大条件数。概率PCA（Probabilistic PCA）将PCA表述为潜在变量模型，假设数据由低维潜在变量加高斯噪声生成，这为PCA提供了概率解释，也连接到因子分析、自编码器等更复杂的降维模型。"
-        }, duration: "2小时", resources: [{ title: "sklearn PCA", url: "https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html", required: true }, { title: "PCA 的数学原理 (StatQuest)", url: "https://www.youtube.com/watch?v=FgakZw6K1QQ", required: false }, { title: "Wikipedia: 主成分分析", url: "https://zh.wikipedia.org/wiki/%E4%B8%BB%E6%88%90%E5%88%86%E5%88%86%E6%9E%90", required: false }], checkpoint: "能从零实现 PCA 并把 5 维数据投影到 2 维可视化" },
+        }, duration: "2小时", resources: [{ title: "sklearn PCA", url: "https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html", required: true, type: "article", source: "official" }, { title: "PCA 的数学原理 (StatQuest)", url: "https://www.youtube.com/watch?v=FgakZw6K1QQ", required: false, type: "video", source: "youtube" }, { title: "Wikipedia: 主成分分析", url: "https://zh.wikipedia.org/wiki/%E4%B8%BB%E6%88%90%E5%88%86%E5%88%86%E6%9E%90", required: false, type: "article", source: "official" }], checkpoint: "能从零实现 PCA 并把 5 维数据投影到 2 维可视化" },
       { day: 10, title: "最小二乘与线性回归的矩阵形式",
         summary: "掌握最小二乘的矩阵形式与线性回归推导，理解伪逆与数值稳定性。", content: {
           objective: "今天你将系统学习最小二乘法的矩阵形式和线性回归的数学原理。你会理解正规方程的推导过程，掌握伪逆的概念，并学会用NumPy求解最小二乘问题。这些是理解神经网络全连接层、反向传播和梯度下降的数学基础。",
@@ -813,7 +813,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "动手完成线性回归矩阵形式实战：1. 生成带噪声的线性数据y=2x₁+3x₂+噪声；2. 构造设计矩阵X加一列偏置1，用正规方程手动计算w；3. 用np.linalg.lstsq求解，对比两种方法结果；4. 用np.linalg.pinv计算伪逆，验证w=X⁺y；5. 计算R²分数评估拟合优度；6. 构造特征高度相关的情况，观察条件数变化和正规方程的不稳定性。",
           deep_dive: "深入理解最小二乘的几何意义与正则化：从几何角度看，最小二乘是将y投影到X的列空间上，残差y-Xw垂直于列空间，这就是正规方程的几何解释。当特征高度相关时，XᵀX接近奇异，解对噪声极其敏感。岭回归加入L2正则项||w||²，等价于在XᵀX对角线加λI，既改善数值稳定性，又限制权重大小防止过拟合。这一思想在深度学习中演变为权重衰减。"
-        }, duration: "1.5小时", resources: [R_NUMPY, { title: "Khan Academy: 最小二乘法", url: "https://www.khanacademy.org/math/statistics-probability/describing-relationships-quantitative-data/more-on-regression/v/regression-line-example", required: false }, { title: "scipy.linalg.lstsq 文档", url: "https://docs.scipy.org/doc/scipy/reference/generated/scipy.linalg.lstsq.html", required: false }], checkpoint: "能用矩阵形式手动推导并实现一个线性回归，与库函数结果一致" },
+        }, duration: "1.5小时", resources: [R_NUMPY, { title: "Khan Academy: 最小二乘法", url: "https://www.khanacademy.org/math/statistics-probability/describing-relationships-quantitative-data/more-on-regression/v/regression-line-example", required: false, type: "article", source: "official" }, { title: "scipy.linalg.lstsq 文档", url: "https://docs.scipy.org/doc/scipy/reference/generated/scipy.linalg.lstsq.html", required: false, type: "doc", source: "official" }], checkpoint: "能用矩阵形式手动推导并实现一个线性回归，与库函数结果一致" },
       { day: 11, title: "PyTorch 中的张量与矩阵",
         summary: "掌握PyTorch张量操作与自动微分，理解计算图与梯度计算机制。", content: {
           objective: "今天你将系统学习PyTorch中张量的操作和自动微分机制。你会掌握Tensor的创建、变形、矩阵运算，以及autograd的工作原理。这些是使用PyTorch构建和训练神经网络的基础技能，理解自动微分对调试模型至关重要。",
@@ -826,7 +826,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "动手完成PyTorch张量与自动微分实验：1. 创建不同形状的Tensor并在CPU/GPU间迁移；2. 实现矩阵乘法、转置、reshape等操作，与NumPy结果对比；3. 定义一个简单函数f(x)=x²+2x，设置x.requires_grad=True，调用f(x).backward()，验证x.grad≈2x+2；4. 实现线性回归的前向传播和手动梯度计算，与autograd结果对比；5. 故意多次调用backward观察梯度累积现象，理解zero_grad的必要性。",
           deep_dive: "深入理解PyTorch的自动微分机制与计算图：PyTorch使用动态计算图（Define-by-Run），每次前向传播重新构建计算图，这与TensorFlow的静态图不同。计算图的叶子节点是用户创建的张量（requires_grad=True），内部节点是运算结果，边是函数依赖关系。反向传播时从loss出发沿图反向遍历，用链式法则计算每个叶子节点的梯度。理解计算图能帮你调试梯度消失/爆炸、自定义autograd Function、以及分析显存占用。"
-        }, duration: "2小时", resources: [R_PYTORCH_DOC, R_PYTORCH_TUT, { title: "PyTorch 张量入门教程", url: "https://pytorch.org/tutorials/beginner/basics/tensorqs_tutorial.html", required: true }], checkpoint: "能在 PyTorch 中做矩阵变形与自动求导" },
+        }, duration: "2小时", resources: [R_PYTORCH_DOC, R_PYTORCH_TUT, { title: "PyTorch 张量入门教程", url: "https://pytorch.org/tutorials/beginner/basics/tensorqs_tutorial.html", required: true, type: "article", source: "official" }], checkpoint: "能在 PyTorch 中做矩阵变形与自动求导" },
       { day: 12, title: "线性变换与神经网络的几何直觉",
         summary: "从几何角度理解神经网络：线性变换加非线性折叠构建复杂决策边界。", content: {
           objective: "今天你将从几何视角理解神经网络的工作原理。你会看到线性层如何进行旋转缩放，ReLU如何折叠空间，以及多层网络如何通过简单操作的组合逼近任意复杂函数。建立这种几何直觉，能帮你更深刻地理解深度学习为什么有效。",
@@ -840,7 +840,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "动手完成神经网络几何可视化实验：1. 生成二维二分类玩具数据（如半月形或螺旋形）；2. 用一个简单的2D输入网络：线性层(2→n)+ReLU+线性层(n→2)+Softmax；3. 可视化第一层输出的散点图，观察数据如何被变换；4. 用网格点可视化决策边界，对比不同神经元数量的效果；5. 手动设置权重和偏置，观察单个ReLU神经元如何产生一条折痕。推荐用ConvNetJS的2D分类可视化工具辅助理解。",
           deep_dive: "深入理解流形假设与深度学习的几何本质：流形假设认为高维数据实际分布在低维流形上，深度学习的过程就是逐层解开这个流形，把它映射到线性可分的空间。每一层线性变换旋转拉伸空间，每一个ReLU折叠空间，多层组合逐步将扭曲的数据流形展开。这就是为什么深层网络比浅层网络更有效——它能分步处理复杂的几何变换，每一步只做相对简单的操作，组合起来却能表达极其复杂的函数。"
-        }, duration: "1.5小时", resources: [R_3B1B_LIN, R_D2L, { title: "3Blue1Brown: 神经网络", url: "https://www.3blue1brown.com/lessons/neural-networks", required: false }, { title: "ConvNetJS 2D 可视化", url: "https://cs.stanford.edu/people/karpathy/convnetjs/demo/classify2d.html", required: false }], checkpoint: "能用一张 2D 网格图可视化说明单层线性变换 + ReLU 的几何作用" },
+        }, duration: "1.5小时", resources: [R_3B1B_LIN, R_D2L, { title: "3Blue1Brown: 神经网络", url: "https://www.3blue1brown.com/lessons/neural-networks", required: false, type: "article", source: "official" }, { title: "ConvNetJS 2D 可视化", url: "https://cs.stanford.edu/people/karpathy/convnetjs/demo/classify2d.html", required: false, type: "article", source: "official" }], checkpoint: "能用一张 2D 网格图可视化说明单层线性变换 + ReLU 的几何作用" },
       { day: 13, title: "矩阵微积分：反向传播的数学",
         summary: "掌握矩阵微积分与反向传播的数学原理，理解链式法则的矩阵形式。", content: {
           objective: "今天你将系统学习矩阵微积分和反向传播的数学原理。你会理解链式法则的矩阵形式，掌握线性层和激活函数的梯度推导，并学会用数值梯度检查验证解析梯度的正确性。这些是理解和调试深度学习模型的核心数学基础。",
@@ -853,7 +853,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "动手完成反向传播数学推导与验证：1. 手动推导线性层y=XW+b对W、b、X的梯度；2. 推导ReLU激活函数的梯度；3. 用NumPy实现一个简单线性层的前向和反向传播；4. 实现数值梯度检查函数，验证你的解析梯度是否正确；5. 构造一个小网络：线性→ReLU→线性→MSE损失，手动完成一次完整的反向传播，与PyTorch的autograd结果对比。",
           deep_dive: "深入理解雅可比矩阵与反向传播的高效性：在一般情况下，每层的雅可比矩阵（输出对输入的偏导数）可能非常大，但深度学习中的反向传播从不显式构造雅可比矩阵，而是直接计算向量-雅可比乘积（VJP），这就是为什么反向传播高效的原因。对于线性层，VJP就是矩阵乘法；对于逐元素激活函数，VJP是逐元素相乘。理解VJP视角，能帮你看懂PyTorch autograd的底层设计，也能在自定义算子时正确实现反向传播。"
-        }, duration: "2小时", resources: [R_D2L, { title: "The Matrix Calculus You Need For Deep Learning", url: "https://explained.ai/matrix-calculus/", required: true }, { title: "Stanford CS231n: 反向传播", url: "http://cs231n.github.io/optimization-2/", required: false }], checkpoint: "能手动推导线性回归 L2 损失对权重 W 的梯度，并数值验证" },
+        }, duration: "2小时", resources: [R_D2L, { title: "The Matrix Calculus You Need For Deep Learning", url: "https://explained.ai/matrix-calculus/", required: true, type: "article", source: "official" }, { title: "Stanford CS231n: 反向传播", url: "http://cs231n.github.io/optimization-2/", required: false, type: "article", source: "official" }], checkpoint: "能手动推导线性回归 L2 损失对权重 W 的梯度，并数值验证" },
       { day: 14, title: "综合：实现一个两层 MLP 的前向 + 反向传播",
         summary: "用纯NumPy实现两层MLP的前向与反向传播，融会贯通两周线性代数知识。", content: {
           objective: "今天你将用纯NumPy从零实现一个两层MLP的完整前向传播和反向传播，把两周所学的线性代数知识融会贯通。你会实现线性层、ReLU激活、Softmax、交叉熵损失以及它们的梯度，用梯度检查验证正确性，并在玩具数据上训练观察loss下降。",
@@ -866,7 +866,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "动手从零实现两层MLP并训练：1. 实现线性层的forward和backward；2. 实现ReLU和Softmax的forward和backward；3. 实现交叉熵损失函数；4. 组装成两层MLP：输入→线性(2→h)→ReLU→线性(h→C)→Softmax；5. 实现数值梯度检查函数，验证W1、b1、W2、b2的梯度正确性；6. 在二分类半月形数据上用梯度下降训练200步，绘制loss曲线和决策边界。确保loss稳定下降且梯度检查通过。",
           deep_dive: "深入理解模块化设计与计算图：实际的深度学习框架（PyTorch/TensorFlow）都是按模块（Module）组织的，每个模块实现forward和backward两个方法，前向保存中间结果用于反向。计算图自动追踪这些依赖关系。你今天实现的手动版本虽然原始，但核心思想完全一致：每层缓存前向的输入，反向时用它们计算梯度。理解这个练习，你就理解了深度学习框架80%的核心机制，剩下的主要是工程优化和自动微分的实现细节。"
-        }, duration: "3小时", resources: [R_NUMPY, R_PYTORCH_DOC, R_D2L, { title: "CS231n: 神经网络笔记", url: "http://cs231n.github.io/neural-networks-case-study/", required: true }], checkpoint: "能用纯 NumPy 实现 MLP，并通过梯度检查，loss 稳定下降" }],
+        }, duration: "3小时", resources: [R_NUMPY, R_PYTORCH_DOC, R_D2L, { title: "CS231n: 神经网络笔记", url: "http://cs231n.github.io/neural-networks-case-study/", required: true, type: "article", source: "official" }], checkpoint: "能用纯 NumPy 实现 MLP，并通过梯度检查，loss 稳定下降" }],
   },
 
   // =====================================================
@@ -885,7 +885,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["解释 loss 函数的概率意义", "评估模型的统计显著性"],
     relatedIntel: ["010-numpy-pandas", "017-metrics"],
     relatedTools: ["NumPy", "scikit-learn"],
-    relatedTerms: ["gradient-descent", "loss-function", "learning-rate"],
+    relatedTerms: ["gradient-descent", "loss-function", "learning-rate"], relatedNodes: ["math-linear-algebra", "math-information-theory"],
     dailyTasks: [
       { day: 1, title: "常见分布：均匀、正态、伯努利",
         summary: "掌握均匀、正态、伯努利三种基础分布的特性与采样方法。", content: {
@@ -899,7 +899,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "动手完成分布采样与可视化实验：1. 用np.random.uniform生成10000个U(0,1)样本，画直方图验证均匀性；2. 用np.random.normal生成N(0,1)和N(2,0.5²)样本，在同一张图上画两条密度曲线对比；3. 用np.random.binomial(n=1,p=0.3)生成伯努利样本，计算样本均值并与p比较；4. 计算每种分布样本的均值和方差，与理论值对比，观察样本量从100到10000时估计精度的变化。",
           deep_dive: "深入理解正态分布的普遍性与中心极限定理的预告：正态分布之所以无处不在，是因为中心极限定理——大量独立随机变量的和趋近于正态分布。在深度学习中，权重初始化常用正态分布（如Xavier初始化），激活值的分布也常假设为近似正态。正态分布还有优良的数学性质：两个独立正态变量的和还是正态，线性变换后仍为正态。这些性质使得它在理论分析和实际应用中都极其重要。"
-        }, duration: "1.5小时", resources: [B_ML_LIHONGYI, R_NUMPY, { title: "概率分布可视化", url: "https://scipy-lectures.org/packages/statistics/index.html", required: false }, { title: "3Blue1Brown: 贝叶斯定理", url: "https://www.youtube.com/watch?v=HZGCoVF3YvM", required: false }, { title: "Seeing Theory: 概率可视化", url: "https://seeing-theory.brown.edu/", required: false }], checkpoint: "能从均匀/正态/伯努利采样并画出直方图" },
+        }, duration: "1.5小时", resources: [B_ML_LIHONGYI, R_NUMPY, { title: "概率分布可视化", url: "https://scipy-lectures.org/packages/statistics/index.html", required: false, type: "article", source: "official" }, { title: "3Blue1Brown: 贝叶斯定理", url: "https://www.youtube.com/watch?v=HZGCoVF3YvM", required: false, type: "video", source: "youtube" }, { title: "Seeing Theory: 概率可视化", url: "https://seeing-theory.brown.edu/", required: false, type: "article", source: "official" }], checkpoint: "能从均匀/正态/伯努利采样并画出直方图" },
       { day: 2, title: "泊松、指数与 Beta",
         summary: "掌握泊松、指数、Beta三种分布的特性与贝叶斯统计中的应用。", content: {
           objective: "今天你将学习三种重要的概率分布：泊松分布、指数分布和Beta分布。你会理解它们的数学定义、参数含义和典型应用场景，特别关注Beta分布作为共轭先验在贝叶斯统计中的作用。这些分布在排队论、可靠性分析和贝叶斯机器学习中有广泛应用。",
@@ -912,7 +912,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "动手完成三种分布的实验：1. 用scipy.stats生成泊松分布λ=5的样本，画直方图验证均值≈方差≈5；2. 生成指数分布λ=2的样本，验证无记忆性P(T>3|T>1)≈P(T>2)；3. 画出Beta(1,1)、Beta(2,2)、Beta(0.5,0.5)、Beta(5,1)的概率密度曲线，观察形状差异；4. 贝叶斯更新演示：先验Beta(2,2)，观察到8次成功2次失败后，后验是Beta(10,4)，在同一张图上画出先验和后验分布，观察信念如何更新。",
           deep_dive: "深入理解共轭先验的数学美感与工程价值：共轭先验让贝叶斯推断的后验分布与先验有相同的形式，大大简化了计算。除了Beta-伯努利，还有正态-正态（均值的共轭）、Gamma-泊松（速率的共轭）等共轭对。在变分推断中，我们常选择共轭的变分分布来简化推导。虽然现代深度学习中常用MCMC或变分方法处理非共轭模型，但共轭分布仍是理解贝叶斯方法的基础，也是很多高效算法的核心。"
-        }, duration: "1.5小时", resources: [{ title: "scipy.stats 文档", url: "https://docs.scipy.org/doc/scipy/reference/stats.html", required: true }, { title: "概率分布速查表", url: "https://www.johndcook.com/distribution_chart.html", required: false }, { title: "StatQuest: 概率分布讲解", url: "https://www.youtube.com/watch?v=3v9w79NhsfI", required: false }], checkpoint: "能说明 Beta 分布先验如何影响后验" },
+        }, duration: "1.5小时", resources: [{ title: "scipy.stats 文档", url: "https://docs.scipy.org/doc/scipy/reference/stats.html", required: true, type: "doc", source: "official" }, { title: "概率分布速查表", url: "https://www.johndcook.com/distribution_chart.html", required: false, type: "article", source: "official" }, { title: "StatQuest: 概率分布讲解", url: "https://www.youtube.com/watch?v=3v9w79NhsfI", required: false, type: "video", source: "youtube" }], checkpoint: "能说明 Beta 分布先验如何影响后验" },
       { day: 3, title: "期望、方差、协方差与相关系数",
         summary: "掌握期望、方差、协方差与相关系数的定义、性质与应用。", content: {
           objective: "今天你将系统学习描述随机变量及其关系的四个核心统计量：期望、方差、协方差和相关系数。你会理解它们的数学定义、重要性质和实际意义，学会用NumPy计算样本统计量。这些概念是理解机器学习中特征关系、降维和正则化的基础。",
@@ -925,7 +925,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "动手完成统计量计算与分析实验：1. 生成两个正相关、两个负相关、两个不相关的二维数据样本；2. 用NumPy计算每对的协方差和相关系数，验证符号和大小是否符合预期；3. 构造一个明显非线性相关（如y=x²）的例子，计算相关系数，理解为什么不相关不代表独立；4. 用iris数据集计算特征间的协方差矩阵和相关系数矩阵，用热力图可视化，分析哪些特征高度相关。",
           deep_dive: "深入理解协方差矩阵与机器学习的联系：协方差矩阵Σ是多维数据的核心描述，对角线是各维度方差，非对角线是维度间协方差。在PCA中，我们对协方差矩阵做特征分解，找方差最大的方向；在马氏距离中，协方差矩阵用于归一化，考虑了特征间的相关性；在高斯判别分析中，每类数据的协方差矩阵决定了决策边界的形状。理解协方差矩阵，就能从本质上把握很多经典算法的数学原理。"
-        }, duration: "1.5小时", resources: [R_NUMPY, { title: "Khan Academy: 期望与方差", url: "https://www.khanacademy.org/math/statistics-probability/random-variables-stats-library/random-variables-discrete/v/expected-value", required: false }, { title: "协方差与相关系数详解", url: "https://www.statlect.com/fundamentals-of-probability/covariance", required: false }], checkpoint: "能计算一组样本的协方差矩阵并解释对角线含义" },
+        }, duration: "1.5小时", resources: [R_NUMPY, { title: "Khan Academy: 期望与方差", url: "https://www.khanacademy.org/math/statistics-probability/random-variables-stats-library/random-variables-discrete/v/expected-value", required: false, type: "article", source: "official" }, { title: "协方差与相关系数详解", url: "https://www.statlect.com/fundamentals-of-probability/covariance", required: false, type: "article", source: "official" }], checkpoint: "能计算一组样本的协方差矩阵并解释对角线含义" },
       { day: 4, title: "中心极限定理直观",
         summary: "通过模拟实验理解中心极限定理及其在统计推断中的核心地位。", content: {
           objective: "今天你将通过模拟实验深入理解中心极限定理（CLT）——概率论中最重要的定理之一。你会看到无论原始分布形状如何，只要样本量足够大，样本均值的分布都趋近于正态分布。这个定理解释了为什么正态分布无处不在，也是置信区间、假设检验等统计方法的理论基础。",
@@ -938,7 +938,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "动手完成中心极限定理模拟实验：1. 从均匀分布U(0,1)中抽样，每次抽n=30个样本算均值，重复10000次，画均值的直方图，观察是否接近正态；2. 换用指数分布（高度偏态，重复实验，观察需要多大n才能看起来像正态；3. 验证样本量n=5, 20, 50, 200，四张子图并排显示均值分布，直观感受n增大时分布如何变化；4. 验证样本均值的方差是否≈总体方差/n，用实验数据验证这个关系。",
           deep_dive: "深入理解中心极限定理与深度学习的联系：CLT不仅是统计推断的基础，也深刻影响着深度学习。随机梯度下降（SGD）中，每个mini-batch的梯度是全量梯度的一个有噪估计，batch size越大，梯度估计越准确（方差越小），这正是CLT的体现。在集成学习中，多个独立模型的平均能降低方差提升性能，背后也是类似思想。理解CLT，你就能从直觉上把握为什么大batch训练更稳定、为什么集成方法有效、为什么很多工程实践中很多东西在大数据量下都呈现出正态行为。"
-        }, duration: "1.5小时", resources: [R_NUMPY, { title: "3Blue1Brown: 中心极限定理", url: "https://www.youtube.com/watch?v=zeJD6dqJ5lo", required: true }, { title: "Seeing Theory: CLT 可视化", url: "https://seeing-theory.brown.edu/probability-distributions/index.html", required: false }], checkpoint: "能用模拟说明：均匀分布的样本均值渐近正态" },
+        }, duration: "1.5小时", resources: [R_NUMPY, { title: "3Blue1Brown: 中心极限定理", url: "https://www.youtube.com/watch?v=zeJD6dqJ5lo", required: true, type: "video", source: "youtube" }, { title: "Seeing Theory: CLT 可视化", url: "https://seeing-theory.brown.edu/probability-distributions/index.html", required: false, type: "article", source: "official" }], checkpoint: "能用模拟说明：均匀分布的样本均值渐近正态" },
       { day: 5, title: "贝叶斯公式与后验更新",
         summary: "掌握贝叶斯公式的原理与应用，理解先验、似然、后验的关系。", content: {
           objective: "今天你将系统学习贝叶斯公式——概率论中最重要的公式之一。你会理解先验、似然、后验三个核心概念，学会用贝叶斯公式从证据更新信念。贝叶斯思维是机器学习的重要视角，从贝叶斯分类器到变分自编码器都建立在这个基础上。",
@@ -951,7 +951,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "动手完成贝叶斯推理实验：1. 手动计算疾病检测问题：患病率1%，检测灵敏度99%，特异度99%，求检测阳性时真正患病的概率；2. 用贝叶斯更新估计硬币正面概率：先验Beta(2,2)，观察到3正1负后，后验是什么？画出先验和后验曲线；3. 继续观察10次（7正3负），更新后验，观察分布如何变化；4. 用交互式可视化工具（如setosa.io的贝叶斯演示）直观理解先验、数据量如何影响后验分布。",
           deep_dive: "深入理解频率派与贝叶斯派的哲学分歧：频率派认为概率是长期频率，参数是固定未知的，用置信区间和假设检验推断；贝叶斯派认为概率是信念程度，参数是随机变量有分布，用后验分布描述不确定性。在机器学习中，频率派对应MLE和传统统计学习，贝叶斯派对应贝叶斯机器学习和概率图模型。深度学习的发展让两种范式逐渐融合——深度集成、MC Dropout、贝叶斯神经网络都在尝试用贝叶斯思想处理深度学习的不确定性。"
-        }, duration: "2小时", resources: [ { title: "Bayes' Rule 可视化", url: "https://setosa.io/ev/conditional-probability/", required: true }, { title: "StatQuest: 贝叶斯定理", url: "https://www.youtube.com/watch?v=9wCngeo75Uo", required: false }, { title: "贝叶斯思维入门", url: "https://arbital.com/p/bayes_rule/", required: false }], checkpoint: "能算出疾病检测例子中阳性真正患病的概率（约 50%）" },
+        }, duration: "2小时", resources: [ { title: "Bayes' Rule 可视化", url: "https://setosa.io/ev/conditional-probability/", required: true, type: "article", source: "official" }, { title: "StatQuest: 贝叶斯定理", url: "https://www.youtube.com/watch?v=9wCngeo75Uo", required: false, type: "video", source: "youtube" }, { title: "贝叶斯思维入门", url: "https://arbital.com/p/bayes_rule/", required: false, type: "article", source: "official" }], checkpoint: "能算出疾病检测例子中阳性真正患病的概率（约 50%）" },
       { day: 6, title: "最大似然估计 MLE",
         summary: "掌握最大似然估计的原理与推导，理解其与损失函数的关系。", content: {
           objective: "今天你将系统学习最大似然估计（MLE）——参数估计的核心方法。你会理解似然函数的含义，掌握对数似然的技巧，学会推导常见分布的MLE。MLE是机器学习中损失函数设计的理论基础——交叉熵、MSE等常用损失本质上都是不同分布假设下的MLE。",
@@ -964,7 +964,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "动手实现MLE并验证：1. 生成正态分布N(2, 3²)的1000个样本，用NumPy手动计算MLE估计的均值和方差，与np.mean、np.var结果对比；2. 生成伯努利Bernoulli(0.7)的100个样本，计算MLE的p并验证；3. 推导均匀分布U(0,θ)的MLE，用实验验证它是有偏估计；4. 实现一个简单的线性回归MLE推导：假设高斯噪声，证明最大化似然等价于最小化MSE损失，用梯度下降验证。",
           deep_dive: "深入理解MLE与损失函数的统一视角：机器学习中各种损失函数本质上都是不同分布假设下的最大似然估计。分类任务用交叉熵损失，对应标签服从类别分布（多分类伯努利）的MLE；回归任务用MSE损失，对应噪声服从高斯分布的MLE；计数任务用Poisson损失，对应泊松分布假设。理解这个统一视角，你就不会觉得各种损失函数是随意设计的——它们都有清晰的概率解释，选择什么损失就是在做什么分布假设。"
-        }, duration: "1.5小时", resources: [R_NUMPY, { title: "MLE 详解", url: "https://www.statlect.com/fundamentals-of-statistics/maximum-likelihood", required: false }, { title: "StatQuest: MLE 讲解", url: "https://www.youtube.com/watch?v=XepXtl9YKwc", required: false }], checkpoint: "能从零用 NumPy 实现正态分布两参数的 MLE" },
+        }, duration: "1.5小时", resources: [R_NUMPY, { title: "MLE 详解", url: "https://www.statlect.com/fundamentals-of-statistics/maximum-likelihood", required: false, type: "article", source: "official" }, { title: "StatQuest: MLE 讲解", url: "https://www.youtube.com/watch?v=XepXtl9YKwc", required: false, type: "video", source: "youtube" }], checkpoint: "能从零用 NumPy 实现正态分布两参数的 MLE" },
       { day: 7, title: "置信区间",
         summary: "掌握置信区间的概念与计算方法，理解Bootstrap重采样技术。", content: {
           objective: "今天你将系统学习置信区间——统计推断的核心工具之一。你会理解置信区间的正确解释（避免常见误解），掌握正态近似和Bootstrap两种计算方法。置信区间能帮你量化估计的不确定性，在评估模型性能时至关重要。",
@@ -977,7 +977,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "动手完成置信区间实验：1. 生成正态分布N(5, 2²)的100个样本，计算样本均值的95%置信区间（用t分布）；2. 用Bootstrap法计算同样数据的均值95%置信区间，与t分布结果对比；3. 模拟验证：从同一总体重复抽样1000次，计算每次的95%置信区间，统计有多少比例包含真实均值，验证是否约为95%；4. 用不同样本量n=20, 50, 200，观察置信区间宽度如何变化。",
           deep_dive: "深入理解Bootstrap与模型评估：Bootstrap的核心思想是用样本分布近似总体分布，通过重采样来估计统计量的抽样分布。在机器学习中，Bootstrap有广泛应用：Bagging集成学习用Bootstrap采样训练多个基分类器；模型性能评估中用Bootstrap置信区间量化模型性能的不确定性；.632+ Bootstrap是评估分类器性能的黄金标准之一。理解Bootstrap，你就能从本质上把握很多集成学习和模型评估方法的统计基础。"
-        }, duration: "1.5小时", resources: [R_NUMPY, { title: "置信区间可视化", url: "https://seeing-theory.brown.edu/frequentist-inference/index.html", required: false }, { title: "Bootstrap 方法详解", url: "https://www.statlect.com/fundamentals-of-statistics/bootstrap", required: false }], checkpoint: "能用 bootstrap 法给出样本均值的 95% 置信区间" },
+        }, duration: "1.5小时", resources: [R_NUMPY, { title: "置信区间可视化", url: "https://seeing-theory.brown.edu/frequentist-inference/index.html", required: false, type: "article", source: "official" }, { title: "Bootstrap 方法详解", url: "https://www.statlect.com/fundamentals-of-statistics/bootstrap", required: false, type: "article", source: "official" }], checkpoint: "能用 bootstrap 法给出样本均值的 95% 置信区间" },
       { day: 8, title: "假设检验与 p 值",
         summary: "掌握假设检验的框架与p值的正确解读，理解t检验的应用场景。", content: {
           objective: "今天你将系统学习假设检验——统计推断的核心框架。你会理解原假设/备择假设、p值、显著性水平等概念，掌握t检验的使用方法，学会正确解读p值避免常见误解。这些是对比机器学习模型性能是否有显著差异的必备技能。",
@@ -990,7 +990,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "动手完成假设检验实验：1. 生成两组正态分布数据N(0,1)和N(0.5,1)，用scipy.stats.ttest_ind做独立样本t检验，报告p值和结论；2. 用同一组数据的两次测量（加小噪声）做配对t检验；3. 模拟p值的正确含义：在H0为真（两组同分布）时重复实验1000次，统计p<0.05的比例，验证约为5%；4. 演示多重检验问题：做100次独立检验，至少一次假阳性的概率是多少？用模拟验证。",
           deep_dive: "深入理解p值的常见误解与替代方案：p值常被误解为'H0为真的概率'，这是最常见的统计谬误。正确理解是：p值是数据的惊讶程度——如果H0为真，看到这样的数据有多奇怪。近年来学术界越来越关注p值的滥用问题，推荐补充报告效应量（如Cohen's d）和置信区间，而不仅仅是p值。在机器学习模型对比中，报告均值±标准差、置信区间和效应量，比单纯说'有显著差异'更有信息量。"
-        }, duration: "2小时", resources: [{ title: "scipy.stats.ttest_ind", url: "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_ind.html", required: true }, { title: "假设检验可视化", url: "https://seeing-theory.brown.edu/frequentist-inference/index.html", required: false }, { title: "p 值的正确解读", url: "https://www.amstat.org/asa/files/pdfs/p-valuestatement.pdf", required: false }], checkpoint: "能对两个模型在同一测试集上的 10 次运行做 t 检验并下结论" },
+        }, duration: "2小时", resources: [{ title: "scipy.stats.ttest_ind", url: "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_ind.html", required: true, type: "doc", source: "official" }, { title: "假设检验可视化", url: "https://seeing-theory.brown.edu/frequentist-inference/index.html", required: false, type: "article", source: "official" }, { title: "p 值的正确解读", url: "https://www.amstat.org/asa/files/pdfs/p-valuestatement.pdf", required: false, type: "paper", source: "official" }], checkpoint: "能对两个模型在同一测试集上的 10 次运行做 t 检验并下结论" },
       { day: 9, title: "信息熵、交叉熵、KL 散度",
         summary: "掌握信息熵、交叉熵、KL散度的定义、关系与机器学习应用。", content: {
           objective: "今天你将系统学习信息论的三个核心概念：信息熵、交叉熵和KL散度。你会理解它们的数学定义、直观含义和相互关系。这些是分类任务损失函数的理论基础——交叉熵损失是训练分类模型的标准选择。",
@@ -1003,7 +1003,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "动手完成信息论概念验证实验：1. 手动计算一个简单分布p=[0.7,0.3]的熵、与q=[0.5,0.5]的交叉熵和KL散度；2. 验证KL(p||q)≠KL(q||p)，理解不对称性；3. 验证H(p,q)=H(p)+KL(p||q)这个关系式；4. 用不同分布实验：当q越接近p时，交叉熵和KL散度如何变化？5. 思考：为什么分类任务中最小化交叉熵等价于最大化似然？",
           deep_dive: "深入理解交叉熵损失与最大似然的等价性：在分类任务中，假设真实分布是one-hot的p（正确类为1，其余为0），模型输出分布是q（Softmax概率），交叉熵损失就是H(p,q)=-log q_y，正好是负对数似然。最小化交叉熵就是最大化似然，这就是MLE的信息论表述。理解这一点能帮你从更高视角看损失函数——不是随便选的，而是有坚实的信息论和统计学基础。在GAN中，JS散度、Wasserstein距离等也是衡量分布差异的指标，是KL散度的推广。"
-        }, duration: "1.5小时", resources: [R_D2L, { title: "3Blue1Brown: 信息熵", url: "https://www.youtube.com/watch?v=2s3aJfRr9gE", required: true }, { title: "Colah: KL 散度可视化", url: "https://colah.github.io/posts/2015-09-Visual-Information/", required: false }], checkpoint: "能手写交叉熵并解释它为何可作为分类损失" },
+        }, duration: "1.5小时", resources: [R_D2L, { title: "3Blue1Brown: 信息熵", url: "https://www.youtube.com/watch?v=2s3aJfRr9gE", required: true, type: "video", source: "youtube" }, { title: "Colah: KL 散度可视化", url: "https://colah.github.io/posts/2015-09-Visual-Information/", required: false, type: "article", source: "official" }], checkpoint: "能手写交叉熵并解释它为何可作为分类损失" },
       { day: 10, title: "Softmax + Cross Entropy：分类损失的推导",
         summary: "掌握Softmax与交叉熵的数值稳定实现与梯度推导。", content: {
           objective: "今天你将深入学习分类任务中最常用的损失组合：Softmax激活加交叉熵损失。你会理解Softmax的数值稳定性问题，掌握稳定的实现方法，推导组合梯度的简洁形式。这些是实现和调试分类模型的核心技能。",
@@ -1016,7 +1016,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "动手实现并验证Softmax+交叉熵：1. 手写一个数值稳定的Softmax函数，用大数值输入测试稳定性（如z=[1000,2000,3000]）；2. 手写交叉熵损失函数，结合Softmax计算损失；3. 推导并实现梯度计算，验证dL/dz=P-Y的简洁形式；4. 与PyTorch的nn.CrossEntropyLoss对比，验证损失和梯度是否一致；5. 实验：如果分开用Softmax+NLLLoss，和直接用CrossEntropyLoss结果一样吗？为什么？",
           deep_dive: "深入理解Softmax的温度参数与Label Smoothing：Softmax的温度τ控制分布的尖锐程度——τ>1更平滑，τ<1更尖锐。在知识蒸馏中，教师模型用高温产生软标签，学生模型学习这些软标签能获得更好的泛化。Label Smoothing则是直接把硬标签0/1换成ε和1-ε，防止模型过度自信，也是一种正则化技术。理解这些变种，能帮你在实际项目中根据需要灵活调整分类损失，提升模型的泛化能力和校准性。"
-        }, duration: "2小时", resources: [R_PYTORCH_DOC, { title: "Softmax 详解", url: "https://pytorch.org/docs/stable/generated/torch.nn.Softmax.html", required: true }, { title: "Cross-Entropy Loss 图解", url: "https://ml-cheatsheet.readthedocs.io/en/latest/loss_functions.html", required: false }, { title: "CS231n: Softmax 分类器", url: "https://cs231n.github.io/linear-classify/#softmax", required: false }], checkpoint: "能手写稳定的 softmax + cross entropy，并验证其梯度与 PyTorch 一致" },
+        }, duration: "2小时", resources: [R_PYTORCH_DOC, { title: "Softmax 详解", url: "https://pytorch.org/docs/stable/generated/torch.nn.Softmax.html", required: true, type: "doc", source: "official" }, { title: "Cross-Entropy Loss 图解", url: "https://ml-cheatsheet.readthedocs.io/en/latest/loss_functions.html", required: false, type: "doc", source: "official" }, { title: "CS231n: Softmax 分类器", url: "https://cs231n.github.io/linear-classify/#softmax", required: false, type: "article", source: "official" }], checkpoint: "能手写稳定的 softmax + cross entropy，并验证其梯度与 PyTorch 一致" },
       { day: 11, title: "蒙特卡洛积分与重要性采样",
         summary: "掌握蒙特卡洛方法的原理与重要性采样技巧，理解其在AI中的应用。", content: {
           objective: "今天你将系统学习蒙特卡洛（MC）方法——通过随机采样近似计算确定性问题的一类方法。你会理解蒙特卡洛积分的原理，掌握重要性采样降低方差的技巧。蒙特卡洛是强化学习、贝叶斯推断、生成模型等众多AI领域的基础工具。",
@@ -1029,7 +1029,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "动手完成蒙特卡洛积分实验：1. 用MC方法估计π：采样10000个点在单位正方形内，统计落入单位圆内的比例×4；2. 用MC计算定积分∫₀¹e^(-x²)dx，与数值积分结果对比；3. 演示重要性采样：对一个峰值明显的被积函数，分别用均匀分布和一个更合适的proposal采样，对比两者估计的方差；4. 验证MC收敛速度：不同样本量N=100,1000,10000，估计误差如何随N变化？是否符合1/√N规律？",
           deep_dive: "深入理解蒙特卡洛与深度学习的广泛联系：蒙特卡洛思想贯穿整个AI领域。在强化学习中，MC方法用完整回合的经验估计值函数；在变分推断中，用MC采样估计ELBO的梯度（重参数化技巧）；在生成模型中，MCMC（马尔可夫链蒙特卡洛）用于从复杂分布采样；在模型集成中，MC Dropout通过多次前向传播近似贝叶斯推理。理解MC方法的核心思想——用采样平均代替精确积分/期望，能帮你从统一视角理解这些看似不同的技术。"
-        }, duration: "1.5小时", resources: [R_NUMPY, { title: "蒙特卡洛方法入门", url: "https://www.cs.ubc.ca/~arnaud/andrieu_defreitas_doucet_jordan_introduction_to_mcmc_machine_learning.pdf", required: false }, { title: "重要性采样图解", url: "https://www.rug.nl/research/portal/files/68466276/Importance_sampling.pdf", required: false }], checkpoint: "能用 MC 估计 π 到小数点后两位，并说明样本量与精度关系" },
+        }, duration: "1.5小时", resources: [R_NUMPY, { title: "蒙特卡洛方法入门", url: "https://www.cs.ubc.ca/~arnaud/andrieu_defreitas_doucet_jordan_introduction_to_mcmc_machine_learning.pdf", required: false, type: "paper", source: "official" }, { title: "重要性采样图解", url: "https://www.rug.nl/research/portal/files/68466276/Importance_sampling.pdf", required: false, type: "paper", source: "official" }], checkpoint: "能用 MC 估计 π 到小数点后两位，并说明样本量与精度关系" },
       { day: 12, title: "A/B 测试与模型对比",
         summary: "掌握A/B测试与模型对比的统计方法，学会科学评估模型优劣。", content: {
           objective: "今天你将系统学习A/B测试的方法论和机器学习模型对比的统计方法。你会理解统计显著性与实际重要性的区别，掌握用t检验和Bootstrap对比模型性能的方法。这些技能是做严谨的机器学习实验和数据驱动决策的基础。",
@@ -1042,7 +1042,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "动手完成模型对比实验：1. 用sklearn的digits数据集，训练两个不同模型（如逻辑回归和SVM）；2. 用5折交叉验证得到每个模型的5个准确率分数；3. 用配对t检验比较两个模型的性能差异，报告p值和结论；4. 用Bootstrap计算每个模型准确率的95%置信区间；5. 画箱线图对比两个模型的性能分布；6. 思考：如果模型A比B准确率高0.1%但p<0.05，你会选择哪个？为什么？",
           deep_dive: "深入理解统计功效与实验设计：统计功效（Power）是当H1为真时正确拒绝H0的概率，即发现真实差异的能力。功效=1-β，β是第二类错误概率。功效受效应量、样本量和显著性水平影响。在A/B测试和模型对比中，样本量太小可能导致即使有真实差异也检测不出来（功效不足）。做实验前应先做功效分析，确定需要多少样本才能有足够把握检测到感兴趣的效应量。这是严谨的实验设计中常被忽略但至关重要的一步。"
-        }, duration: "2小时", resources: [{ title: "Bootstrap 教程", url: "https://en.wikipedia.org/wiki/Bootstrapping_(statistics)", required: false }, { title: "A/B 测试统计指南", url: "https://www.evanmiller.org/ab-testing/", required: true }, { title: "模型对比最佳实践", url: "https://scikit-learn.org/stable/model_selection.html", required: false }], checkpoint: "能在一组实验上判断 B 是否统计显著优于 A" },
+        }, duration: "2小时", resources: [{ title: "Bootstrap 教程", url: "https://en.wikipedia.org/wiki/Bootstrapping_(statistics)", required: false, type: "article", source: "official" }, { title: "A/B 测试统计指南", url: "https://www.evanmiller.org/ab-testing/", required: true, type: "article", source: "official" }, { title: "模型对比最佳实践", url: "https://scikit-learn.org/stable/model_selection.html", required: false, type: "article", source: "official" }], checkpoint: "能在一组实验上判断 B 是否统计显著优于 A" },
       { day: 13, title: "正则化的贝叶斯视角",
         summary: "从贝叶斯视角理解正则化：L2/L1正则对应的先验分布与MAP估计。", content: {
           objective: "今天你将从贝叶斯视角重新理解正则化，建立频率派正则化与贝叶斯先验的对应关系。你会理解L2正则对应高斯先验、L1正则对应拉普拉斯先验，掌握MAP估计的概念。这种视角能帮你更深刻地理解为什么正则化有效。",
@@ -1055,7 +1055,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "动手验证正则化的贝叶斯解释：1. 生成一个小的线性回归数据集，特征有一定相关性；2. 用MLE（无正则）拟合，观察权重大小；3. 加入L2正则（岭回归），不同λ值下权重如何变化？画出权重随λ变化的路径；4. 加入L1正则（Lasso），观察权重是否趋于稀疏（很多为0）；5. 对比L2和L1的权重分布直方图，验证L1产生更稀疏的解。",
           deep_dive: "深入理解贝叶斯神经网络与不确定性估计：从MAP估计到完整的贝叶斯神经网络（BNN）是自然的延伸——BNN不给参数单点估计，而是给每个参数一个后验分布。BNN的优势是能自然地建模不确定性：预测时通过采样多个权重得到多个预测，预测的方差就是认知不确定性。但BNN计算成本高，实际中常用MC Dropout、深度集成等近似方法。理解正则化的贝叶斯视角，是通往贝叶斯深度学习和不确定性建模的桥梁。"
-        }, duration: "1.5小时", resources: [R_D2L, { title: "正则化的贝叶斯解释", url: "https://wiseodd.github.io/techblog/2017/01/12/bayesian-regularization/", required: false }, { title: "CS229: 正则化与贝叶斯", url: "https://cs229.stanford.edu/notes2022fall/main_notes.pdf", required: false }], checkpoint: "能解释 L2/L1 正则项对应哪种先验分布" },
+        }, duration: "1.5小时", resources: [R_D2L, { title: "正则化的贝叶斯解释", url: "https://wiseodd.github.io/techblog/2017/01/12/bayesian-regularization/", required: false, type: "article", source: "official" }, { title: "CS229: 正则化与贝叶斯", url: "https://cs229.stanford.edu/notes2022fall/main_notes.pdf", required: false, type: "paper", source: "official" }], checkpoint: "能解释 L2/L1 正则项对应哪种先验分布" },
       { day: 14, title: "综合：用交叉熵与 t 检验对比两个分类器",
         summary: "串联两周所学，完成一次完整的机器学习模型对比实验与统计检验。", content: {
           objective: "今天你将完成一个综合性实验，把前13天所学的概率统计知识串联起来。你会训练两个分类器，用交叉熵损失和准确率评估，用t检验判断性能差异是否统计显著，最后用可视化呈现结果。这是机器学习研究和工程中完整实验的标准流程。",
@@ -1068,7 +1068,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "动手完成完整的模型对比实验：1. 加载sklearn的digits手写数字数据集；2. 选择两个分类器（如逻辑回归和k-NN）；3. 用10折交叉验证，记录每折的交叉熵损失和准确率；4. 计算两个模型在两个指标上的均值、标准差和95%置信区间；5. 用配对t检验判断性能差异是否统计显著，报告p值；6. 画箱线图和配对散点图展示结果；7. 写一段实验结论，包含统计显著性和实际意义的讨论。",
           deep_dive: "深入理解严谨的机器学习实验方法论：在学术研究和工业实践中，模型对比是核心任务，但很多人的实验不够严谨。好的实验应注意：(1)固定随机种子保证可复现；(2)用交叉验证而不是单次分割；(3)报告置信区间而不仅是均值；(4)做统计检验并报告p值和效应量；(5)讨论实际意义而不仅是统计显著性；(6)可视化结果。建立严谨的实验习惯，能帮你在研究中避免假阳性结论，在工程中做出可靠的技术决策。"
-        }, duration: "3小时", resources: [R_NUMPY, { title: "sklearn cross_val_score", url: "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.cross_val_score.html", required: true }, { title: "sklearn digits 数据集", url: "https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_digits.html", required: false }, { title: "统计检验与机器学习", url: "https://machinelearningmastery.com/statistical-significance-tests-for-comparing-machine-learning-algorithms/", required: false }], checkpoint: "产出一次完整的实验：loss/acc 数值 + 统计检验 + 可视化结论" }],
+        }, duration: "3小时", resources: [R_NUMPY, { title: "sklearn cross_val_score", url: "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.cross_val_score.html", required: true, type: "article", source: "official" }, { title: "sklearn digits 数据集", url: "https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_digits.html", required: false, type: "article", source: "official" }, { title: "统计检验与机器学习", url: "https://machinelearningmastery.com/statistical-significance-tests-for-comparing-machine-learning-algorithms/", required: false, type: "article", source: "official" }], checkpoint: "产出一次完整的实验：loss/acc 数值 + 统计检验 + 可视化结论" }],
   },
 
   // =====================================================
@@ -1087,7 +1087,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["熟练用 PyTorch 搭建任意模型结构", "分布式训练基础"],
     relatedIntel: ["011-pytorch", "010-numpy-pandas"],
     relatedTools: ["PyTorch"],
-    relatedTerms: ["pytorch", "tensor", "cuda", "gpu", "backpropagation"],
+    relatedTerms: ["pytorch", "tensor", "cuda", "gpu", "backpropagation"], relatedNodes: ["math-linear-algebra", "cv-cnn", "nlp-rnn"],
     dailyTasks: [
       { day: 1, title: "Tensor 创建与在设备间迁移",
         summary: "掌握 Tensor 创建方法、核心属性与设备迁移，理解张量是深度学习的基础。", content: {
@@ -1101,7 +1101,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成 Tensor 创建与属性探索实验：1. 打开 Python 或 Jupyter，导入 torch；2. 用多种方式创建张量：从列表 torch.tensor([[1,2],[3,4]])、全零 torch.zeros(2,3)、全一 torch.ones(3,3)、随机正态 torch.randn(4,5)、序列 torch.arange(0, 10, 2)，每个都打印 shape、dtype、device；3. 类型转换练习：创建一个 int64 的张量，用 .float() 转 float32，用 .half() 转 float16，观察 dtype 变化和数值差异；4. 设备迁移练习：如果有 GPU，创建一个 CPU 张量，用 .to('cuda') 移到 GPU，再 .cpu() 移回来，观察 device 属性变化；如果没有 GPU，理解概念即可；5. 探索 requires_grad：创建 x = torch.randn(3, 4, requires_grad=True)，做 y = x * 2 + 1，看 y.requires_grad 是否为 True（继承自 x）；6. 常用创建函数：torch.eye(5) 单位矩阵、torch.full((3,3), 7) 填充指定值、torch.linspace(0, 1, 100) 等差数列。最后用一个表格总结你试过的创建方式和适用场景。",
           deep_dive: "深入理解 Tensor 的内存布局与深度学习中的张量维度含义：从底层来看，PyTorch 的 Tensor 本质上是一块连续的内存区域 + 形状/步长/偏移等元信息。stride（步长）是一个重要概念，表示每个维度上移动一个元素需要跨越的内存步数，理解 stride 能解释为什么 view/reshape 有时候快有时候慢（内存连续时只是改变元数据，O(1) 时间）。在深度学习中，不同类型的数据有不同的维度约定：1. 图像：通常是 (B, C, H, W) — batch、通道、高、宽，PyTorch 默认通道在前（区别于 TensorFlow 的通道在后）；2. 视频：(B, T, C, H, W) — 多一个时间维度；3. 文本/序列：(B, T, D) — batch、序列长度、特征维度；4. 权重矩阵：(out_features, in_features) — 注意输出维度在前；5. 标签分类：(B,) — 一维的类别索引。为什么 GPU 上训练更快？因为 GPU 有上千个小计算核心，非常适合并行化的张量运算（矩阵乘法、卷积等）。一个常见的误区：以为所有操作在 GPU 上都更快，其实小数据量的简单操作 CPU 可能更快，因为数据在 CPU 和 GPU 之间传输有开销。另外，张量操作的 in-place 版本（带下划线的方法，如 add_、mul_）会直接修改原张量，能节省一点内存，但会破坏计算图，在需要反向传播时要小心使用。掌握 Tensor 的这些底层知识，你就能写出更高效的 PyTorch 代码。"
-        }, duration: "1.5小时", resources: [B_PYTORCH_TUTORIAL, R_PYTORCH_DOC, R_PYTORCH_TUT, { title: "PyTorch Tensor 官方教程", url: "https://pytorch.org/tutorials/beginner/basics/tensorqs_tutorial.html", required: true }, { title: "D2L: 数据操作（Tensor 基础）", url: "https://zh.d2l.ai/chapter_preliminaries/ndarray.html", required: false }], checkpoint: "能在 CPU/GPU 上创建 tensor，并完成类型转换与 device 迁移" },
+        }, duration: "1.5小时", resources: [B_PYTORCH_TUTORIAL, R_PYTORCH_DOC, R_PYTORCH_TUT, { title: "PyTorch Tensor 官方教程", url: "https://pytorch.org/tutorials/beginner/basics/tensorqs_tutorial.html", required: true, type: "article", source: "official" }, { title: "D2L: 数据操作（Tensor 基础）", url: "https://zh.d2l.ai/chapter_preliminaries/ndarray.html", required: false, type: "article", source: "official" }], checkpoint: "能在 CPU/GPU 上创建 tensor，并完成类型转换与 device 迁移" },
       { day: 2, title: "索引、切片、reshape、permute",
         summary: "掌握张量索引切片、形状变换与维度重排，熟练操作多维数据。", content: {
           objective: "今天你将学习 PyTorch 张量的索引、切片、形状变换和维度重排操作。学完后你能灵活地取出张量的任意部分，改变张量形状，交换维度顺序。这些操作在数据预处理、模型搭建、特征提取中无处不在，是写 PyTorch 代码的基本功。",
@@ -1114,7 +1114,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成图像数据处理实战练习：1. 准备一张图片，用 PIL 读取并转成 NumPy 数组，形状是 (H, W, 3)；2. 转成 PyTorch tensor，练习索引：取第 100 行 x[100, :, :]、取绿色通道 x[:, :, 1]、取中心 100x100 区域 x[50:150, 50:150, :]、每隔 2 个像素取一个 x[::2, ::2, :]（下采样）；3. 维度变换练习：用 unsqueeze(0) 增加 batch 维度，形状变成 (1, H, W, 3)；用 permute(0, 3, 1, 2) 把通道移到前面，变成 (1, 3, H, W) — 这是 PyTorch 卷积需要的格式；4. 形状变换练习：用 view(1, 3, -1) 把 HW 展平，再用 reshape 恢复回去，观察是否可行；创建一个非连续的张量（如转置后的），试试 view 会不会报错，加上 .contiguous() 再试；5. 高级索引练习：创建一个 10 类的预测概率分布 (B, 10)，用 argmax 取出预测类别，用布尔索引找出所有概率大于 0.9 的预测；6. 综合练习：实现一个把 (B, H, W, C) NumPy 图像 batch 转成 PyTorch 标准格式 (B, C, H, W) 并归一化的函数，然后再转回去验证图像没变。思考：为什么 PyTorch 用 CHW 而 OpenCV/NumPy 常用 HWC？",
           deep_dive: "深入理解张量形状操作的内存原理与常见坑点：要真正理解 view、reshape、permute 的区别，需要先理解 stride（步长）的概念。stride 是一个元组，表示每个维度上移动一个元素需要在内存中走多少步。比如一个形状为 (2, 3) 的连续张量，stride 是 (3, 1) — 第 0 维移动一步走 3 个元素，第 1 维移动一步走 1 个元素。view 只能在 stride 能匹配的情况下工作，也就是数据在内存中是'逻辑连续'的。permute 不会改变内存布局，只是改变 stride 的顺序，所以 permute 之后张量通常变成非连续的，这时候用 view 就会报错，需要先调用 contiguous() 把数据重新排列成连续的内存。reshape 最方便，它相当于先 contiguous() 再 view，总能成功，但可能会复制数据（有额外开销）。AI 开发中最常见的维度变换场景：1. 图像数据通道顺序转换：PIL/NumPy 是 HWC，PyTorch 卷积是 CHW，permute 是标配；2. 增加 batch 维度：单张图送进模型前要 unsqueeze(0) 变成 4D；3. 展平特征：卷积层到全连接层之间要 flatten 或 view(batch_size, -1)；4. 序列模型维度变换：Transformer 里经常要交换 batch 和 seq_len 维度；5. 多 GPU 训练时张量的 gather/scatter。常见坑点：1. 把 reshape 和 permute 搞混，形状看似对了但数据顺序全乱了（这是新手常犯的严重错误，一定要注意）；2. 用 view 代替 reshape，遇到非连续张量时报错，不知道为什么；3. 维度顺序记混，导致模型输入形状错误。一个调试小技巧：不确定形状对不对时，把张量转成 NumPy 转成图像看看，或者打印每个维度的含义。熟练掌握这些操作，你就能像搭积木一样灵活地处理各种形状的张量。"
-        }, duration: "1.5小时", resources: [R_PYTORCH_TUT, R_D2L, { title: "PyTorch 索引与切片教程", url: "https://pytorch.org/tutorials/beginner/basics/data_tutorial.html", required: true },  { title: "PyTorch Tensor操作实战代码", url: "https://github.com/pytorch/examples/tree/main/mnist", required: false, type: "repo", source: "github" }, { title: "NumPy与PyTorch对比教程", url: "https://pytorch.org/tutorials/beginner/examples/numpy/tensor_power.html", required: false, type: "doc", source: "official" }], checkpoint: "能把 (B,C,H,W) 的 batch 变形为 (B,H,W,C) 并恢复回去" },
+        }, duration: "1.5小时", resources: [R_PYTORCH_TUT, R_D2L, { title: "PyTorch 索引与切片教程", url: "https://pytorch.org/tutorials/beginner/basics/data_tutorial.html", required: true, type: "article", source: "official" },  { title: "PyTorch Tensor操作实战代码", url: "https://github.com/pytorch/examples/tree/main/mnist", required: false, type: "repo", source: "github" }, { title: "NumPy与PyTorch对比教程", url: "https://pytorch.org/tutorials/beginner/examples/numpy/tensor_power.html", required: false, type: "doc", source: "official" }], checkpoint: "能把 (B,C,H,W) 的 batch 变形为 (B,H,W,C) 并恢复回去" },
       { day: 3, title: "自动微分 autograd",
         summary: "理解自动微分原理，掌握 autograd 使用，明白反向传播如何计算梯度。", content: {
           objective: "今天你将学习 PyTorch 的自动微分引擎 autograd。学完后你能理解计算图是如何构建的，用 requires_grad 追踪梯度，调用 backward() 自动计算梯度，用 torch.no_grad() 和 detach() 控制梯度计算。自动微分是深度学习框架的核心，理解它才能明白神经网络是怎么学习的。",
@@ -1127,7 +1127,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成自动微分实验与梯度验证：1. 简单函数验证：创建 x = torch.tensor(2.0, requires_grad=True)，定义 y = x ** 2 + 3 * x + 1，y.backward()，打印 x.grad，手算导数（2x+3 在 x=2 时为 7）对比验证；2. 多变量函数：x = torch.randn(2, 3, requires_grad=True)，y = torch.sum(x ** 2)，y.backward()，验证 x.grad 是否等于 2*x；3. 矩阵乘法梯度：创建 W = torch.randn(3, 4, requires_grad=True)，x = torch.randn(2, 3)，y = x @ W，loss = y.sum()，loss.backward()，观察 W.grad 的形状；4. 梯度控制实验：用 torch.no_grad() 包裹一段运算，验证输出张量的 requires_grad 为 False，理解推理时为什么要包起来；5. detach 实验：对一个计算图中间变量 y.detach()，用它继续计算，验证梯度不会传到 y 之前的部分；6. 计算图动态性：写一个带 if 条件的计算，观察 PyTorch 依然能正确求导（这是动态图的优势，对比 TensorFlow 静态图）；7. 进阶：尝试一个简单的两层线性网络，手动实现前向传播，用 autograd 计算梯度，验证梯度的正确性。思考：为什么优化器需要梯度？梯度下降是怎么工作的？",
           deep_dive: "深入理解自动微分原理与 PyTorch 计算图机制：自动微分（Automatic Differentiation）不是数值微分（用差分近似），也不是符号微分（推导公式），而是通过链式法则，把复杂运算拆分成基本运算的组合，一步步计算梯度。PyTorch 使用的是反向模式自动微分（reverse mode AD），也就是我们常说的反向传播（backpropagation），对于深度学习这种'输入多输出少'的场景特别高效——不管输入有多少参数，一次反向传播就能算出所有参数的梯度。计算图的叶子节点（leaf node）是用户直接创建的张量（如模型参数），中间节点是运算产生的张量。前向传播时，PyTorch 一边计算一边记录每个操作的 forward 和 backward 函数，构建出一张有向无环图（DAG）。调用 loss.backward() 时，从 loss 出发逆着图的方向走，一路应用每个操作的 backward 函数，把梯度乘起来（链式法则），最后累积到每个叶子节点的 .grad 属性里。为什么需要 zero_grad()？因为 PyTorch 默认会累加梯度，而不是覆盖，这样可以方便地实现梯度累积（模拟大 batch），但常规训练每 step 前要手动清零，不然梯度会越来越大。几个容易混淆的点：1. backward() 只能对标量调用，如果 loss 是张量，需要先求和或求均值；2. 计算图用完一次就释放了（动态图），想再次 backward 需要重新前向传播；3. in-place 操作可能破坏计算图，导致梯度计算错误，尽量避免在 requires_grad 的张量上用。另外，torch.autograd.grad() 可以计算某个输出对某个输入的梯度，而不用 backward 到所有叶子，在梯度惩罚、特征可视化等场景很有用。理解了 autograd 的原理，你就理解了深度学习框架最核心的魔法，以后遇到梯度相关的 bug 也能更快定位。"
-        }, duration: "1.5小时", resources: [R_PYTORCH_DOC, R_D2L, { title: "PyTorch autograd 机制详解", url: "https://pytorch.org/tutorials/beginner/blitz/autograd_tutorial.html", required: true }, { title: "自动微分的数学原理（视频）", url: "https://www.youtube.com/watch?v=tIeHLnjs5U8", required: false }, { title: " autograd 源码解析", url: "https://github.com/pytorch/pytorch/blob/main/torch/autograd/", required: false, type: "repo", source: "github" }], checkpoint: "能手算并验证一个标量 loss 对输入 tensor 的梯度" },
+        }, duration: "1.5小时", resources: [R_PYTORCH_DOC, R_D2L, { title: "PyTorch autograd 机制详解", url: "https://pytorch.org/tutorials/beginner/blitz/autograd_tutorial.html", required: true, type: "article", source: "official" }, { title: "自动微分的数学原理（视频）", url: "https://www.youtube.com/watch?v=tIeHLnjs5U8", required: false, type: "video", source: "youtube" }, { title: " autograd 源码解析", url: "https://github.com/pytorch/pytorch/blob/main/torch/autograd/", required: false, type: "repo", source: "github" }], checkpoint: "能手算并验证一个标量 loss 对输入 tensor 的梯度" },
       { day: 4, title: "nn.Module 与自定义层",
         summary: "掌握 nn.Module 使用与自定义层实现，理解 PyTorch 模块化设计。", content: {
           objective: "今天你将学习 PyTorch 的神经网络模块 nn.Module。学完后你能理解 Module 的层次结构，用 nn.Sequential 快速搭建网络，实现自定义层（继承 nn.Module，定义参数和 forward），用 model.parameters() 获取所有可学习参数。模块化设计是 PyTorch 优雅的地方，让复杂网络可以像搭积木一样组合。",
@@ -1140,7 +1140,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成自定义层与模块化网络搭建：1. 从零实现一个自定义线性层 MyLinear：继承 nn.Module，__init__ 中创建 weight 和 bias 两个 nn.Parameter，用 Kaiming 初始化，forward 中实现 x @ weight.T + bias；2. 用随机输入测试你的 MyLinear，和官方 nn.Linear 对比输出数值（需要设置相同的权重），验证正确性；3. 用 nn.Sequential 搭建一个 3 层 MLP：Linear(784, 256) → ReLU → Linear(256, 128) → ReLU → Linear(128, 10)，用于 MNIST 分类；4. 用非 Sequential 的方式搭建同一个网络（自定义一个 MLP 类，在 __init__ 中定义各层，forward 中手动串起来），两种方式对比理解；5. 模型属性探索：print(model) 打印结构，model.parameters() 看参数总数，named_parameters() 看每层参数名和形状，计算总参数量；6. 进阶：实现一个带残差连接的模块（Residual Block），输入 x，输出 x + F(x)，其中 F 是两个卷积层，注意维度匹配问题；7. 设备迁移：创建模型后，用 model.to('cuda') 把整个模型移到 GPU，验证所有参数都在 GPU 上。思考：为什么用 nn.Parameter 包装张量？直接赋值属性不行吗？",
           deep_dive: "深入理解 nn.Module 的设计原理与参数管理机制：nn.Module 是 PyTorch 最核心的抽象之一，它不仅仅是'有 forward 方法的类'，还做了很多自动化的工作：1. 参数注册：赋值为 self.xxx = nn.Parameter(...) 的张量会自动被注册为可学习参数，model.parameters() 能找到它；赋值为 self.xxx = nn.Linear(...) 的子模块，它的参数也会被递归地注册进来——这就是为什么优化器只需传入 model.parameters() 就能优化所有参数；2. 设备管理：model.to(device) 会递归地把所有参数和缓冲区（buffer）移到指定设备，不用你手动一个个移；3. 状态管理：model.train() 和 model.eval() 会递归设置所有子模块的训练/评估模式，影响 Dropout、BatchNorm 等层的行为；4. 序列化：model.state_dict() 能导出所有参数和缓冲区的字典，方便保存和加载。为什么普通 Tensor 赋值不行，必须用 nn.Parameter？因为 nn.Parameter 是 Tensor 的子类，有一个特殊的标志，Module 会识别它并自动注册。普通的张量赋值给 Module 属性不会被 parameters() 方法找到，优化器也就不会优化它。还有一个容易忽略的概念：buffer（缓冲区），用 self.register_buffer('name', tensor) 注册的张量不是参数（不更新梯度），但会被 state_dict 包含，也会跟着 to(device) 迁移，适合放那些不需要优化但需要保存的状态，比如 BatchNorm 的 running_mean。nn.Module 的 hooks 机制（forward hook、backward hook）是一个高级功能，可以在前向或反向传播时插入自定义函数，用来提取中间特征、可视化梯度、调试模型等，非常强大。理解了 Module 的这些内部机制，你就不只是'会用'PyTorch，而是'懂'PyTorch 了。以后自己写复杂模型、调试奇怪问题时，这些知识都会派上用场。"
-        }, duration: "2小时", resources: [R_PYTORCH_TUT, { title: "PyTorch nn.Module 教程", url: "https://pytorch.org/tutorials/beginner/nn_tutorial.html", required: true }, { title: "PyTorch 自定义 nn.Module 指南", url: "https://pytorch.org/docs/stable/notes/extending.html", required: false }, { title: "PyTorch官方模型实现集合", url: "https://github.com/pytorch/pytorch/blob/main/torch/nn/modules/", required: false, type: "repo", source: "github" }], checkpoint: "能从零实现一个线性层并与 nn.Linear 数值对齐" },
+        }, duration: "2小时", resources: [R_PYTORCH_TUT, { title: "PyTorch nn.Module 教程", url: "https://pytorch.org/tutorials/beginner/nn_tutorial.html", required: true, type: "article", source: "official" }, { title: "PyTorch 自定义 nn.Module 指南", url: "https://pytorch.org/docs/stable/notes/extending.html", required: false, type: "doc", source: "official" }, { title: "PyTorch官方模型实现集合", url: "https://github.com/pytorch/pytorch/blob/main/torch/nn/modules/", required: false, type: "repo", source: "github" }], checkpoint: "能从零实现一个线性层并与 nn.Linear 数值对齐" },
       { day: 5, title: "Dataset 与 DataLoader",
         summary: "掌握 Dataset 和 DataLoader 使用，构建高效的数据加载管道。", content: {
           objective: "今天你将学习 PyTorch 的数据加载机制 Dataset 和 DataLoader。学完后你能自定义数据集（实现 __len__ 和 __getitem__），用 DataLoader 批量加载数据，理解 shuffle、batch_size、num_workers 等参数的作用，学会用 collate_fn 处理变长数据。数据管道是训练 pipeline 的重要一环，高效的数据加载能让 GPU 不挨饿。",
@@ -1153,7 +1153,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成自定义数据集与 DataLoader 实践：1. 准备一个简单的自定义数据集：比如读取一个目录下的图片和对应的标签文件，实现 CustomDataset 类，__getitem__ 返回（图片 tensor, 标签），同时做一些基本的预处理（resize、转 tensor、归一化）；2. 用 DataLoader 封装你的数据集，设置 batch_size=32, shuffle=True, num_workers=2；3. 遍历 DataLoader，打印每个 batch 的形状（inputs.shape 和 labels.shape），验证数据是否正确加载；4. 观察 DataLoader 的行为：shuffle=True 时每个 epoch 顺序不同，drop_last=True 时最后不够一个 batch 的样本被丢弃；5. 变长数据实验：构造一个序列长度不一的数据集（比如 NLP 的句子），实现 collate_fn 函数，用 0 padding 把不同长度的序列对齐成相同长度，组成 batch；6. 性能实验：对比 num_workers=0 和 num_workers=4 的加载速度，观察 GPU 利用率的变化，理解并行加载的意义；7. 用 torchvision 的内置数据集练手：加载 MNIST 或 CIFAR-10，配合 transforms 做数据增强（随机裁剪、水平翻转、归一化），组成 DataLoader。思考：数据加载慢会成为训练瓶颈吗？怎么判断？",
           deep_dive: "深入理解 DataLoader 工作原理与数据加载性能优化：DataLoader 看起来简单，其实内部做了很多事情。当你设置 num_workers > 0 时，DataLoader 会启动多个子进程，每个进程独立地从 Dataset 中取数据，通过队列把数据传回主进程。这样 CPU 预处理数据和 GPU 计算可以并行，GPU 就不会因为等数据而空闲。但 num_workers 不是越大越好，太多进程会占用大量 CPU 和内存，反而变慢，一般设为 CPU 核心数的一半或和 GPU 数量相关是经验值。pin_memory=True 也是一个常用优化：把数据预先锁页（pinned memory），从 CPU 搬到 GPU 时更快。DataLoader 的工作流程：1. sampler 决定取哪些索引（shuffle 时是随机的，否则是顺序的）；2. worker 进程根据索引调用 dataset[idx] 取样本；3. 多个样本收集到一起；4. collate_fn 把它们拼成一个 batch；5. 传到主进程给模型用。AI 项目中常见的数据加载性能瓶颈和优化：1. 小文件太多（如百万张图片）导致 IO 慢：用 WebDataset、LMDB、TFRecord 等格式把数据打包成大文件，减少随机 IO；2. 数据增强太慢：把简单的增强放在 GPU 上做（如 kornia 库），或者用 DALI GPU 加速；3. 内存不够：减少 num_workers，或者用流式加载不把所有数据读进内存；4. 数据集太大放不下：用对象存储（S3/OSS）+ 流式读取。另外，IterableDataset 是另一种 Dataset，适合数据流式读取（比如从视频流、数据库、生成器），不需要 __len__，但不支持 shuffle（需要自己实现）。理解了数据加载的原理，你就能诊断和解决训练中的数据瓶颈，让 GPU 一直满载运行，充分利用算力。"
-        }, duration: "2小时", resources: [R_PYTORCH_DOC, R_PYTORCH_TUT, { title: "PyTorch 数据加载与处理教程", url: "https://pytorch.org/tutorials/beginner/basics/data_tutorial.html", required: true }, { title: "自定义 Dataset 详解", url: "https://pytorch.org/tutorials/beginner/data_loading_tutorial.html", required: false }, { title: "PyTorch DataLoader源码解析", url: "https://github.com/pytorch/pytorch/blob/main/torch/utils/data/dataloader.py", required: false, type: "repo", source: "github" }, { title: "数据加载最佳实践", url: "https://pytorch.org/docs/stable/data.html", required: false, type: "doc", source: "official" }], checkpoint: "能为一个 NumPy 数组封装 Dataset，用 DataLoader 出 batch" },
+        }, duration: "2小时", resources: [R_PYTORCH_DOC, R_PYTORCH_TUT, { title: "PyTorch 数据加载与处理教程", url: "https://pytorch.org/tutorials/beginner/basics/data_tutorial.html", required: true, type: "article", source: "official" }, { title: "自定义 Dataset 详解", url: "https://pytorch.org/tutorials/beginner/data_loading_tutorial.html", required: false, type: "article", source: "official" }, { title: "PyTorch DataLoader源码解析", url: "https://github.com/pytorch/pytorch/blob/main/torch/utils/data/dataloader.py", required: false, type: "repo", source: "github" }, { title: "数据加载最佳实践", url: "https://pytorch.org/docs/stable/data.html", required: false, type: "doc", source: "official" }], checkpoint: "能为一个 NumPy 数组封装 Dataset，用 DataLoader 出 batch" },
       { day: 6, title: "优化器与学习率调度",
         summary: "掌握优化器使用与学习率调度，写出完整训练循环。", content: {
           objective: "今天你将学习 PyTorch 的优化器和学习率调度器。学完后你能理解 SGD、Adam、AdamW 等常用优化器的区别，写出完整的训练循环（zero_grad → backward → step → scheduler.step），用学习率调度器动态调整学习率。优化器是神经网络训练的核心，选择合适的优化器和学习率直接影响模型效果。",
@@ -1166,7 +1166,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "动手实现完整训练循环并比较优化器：1. 准备一个简单的回归任务或分类任务（如用 sklearn 生成二分类数据，或用 MNIST 的小批量）；2. 搭建一个简单的 2-3 层 MLP 模型；3. 分别用三种优化器训练：SGD（带 momentum=0.9）、Adam、AdamW，其他超参数尽量一致，观察 loss 下降曲线的差异（收敛速度、稳定性、最终效果）；4. 加入学习率调度器：用 CosineAnnealingLR 或 StepLR，观察训练过程中学习率的变化和对收敛的影响；5. 完整训练循环练习：确保每个 step 都按正确顺序执行 zero_grad → forward → compute loss → backward → optimizer.step → scheduler.step，故意漏掉 zero_grad 看看会发生什么（梯度累积，loss 震荡）；6. 权重衰减实验：对比加 weight_decay=0.01 和不加的情况，观察训练集和验证集 loss 的差异，理解正则化作用；7. 学习率搜索：试几个不同的学习率（1e-2、1e-3、1e-4、1e-5），看哪个收敛最快又不发散。思考：为什么 AdamW 比 Adam 更推荐？权重衰减和 L2 正则化是什么关系？",
           deep_dive: "深入理解优化算法原理与学习率调参最佳实践：随机梯度下降（SGD）是最基础的优化算法，每次用一个 mini-batch 的梯度来更新参数。Momentum（动量）的思想是累积历史梯度的方向，像滚雪球一样越滚越快，可以加速收敛并冲过局部最小值和鞍点，通常设为 0.9。Nesterov 动量是更聪明的动量版本，先看下一步位置再算梯度。Adam（Adaptive Moment Estimation）结合了动量和自适应学习率：每个参数有自己的学习率，根据梯度的一阶矩（动量）和二阶矩（方差）来调整，这样不同参数更新步长不一样，对稀疏梯度的任务特别友好。Adam 很省心，默认学习率 1e-3 或 3e-4 在很多任务上都能用。但 Adam 有个问题：它的权重衰减实现和标准 L2 正则化不等价（因为自适应学习率会把权重衰减的效果抵消一部分），所以有了 AdamW——把权重衰减和优化器解耦，直接在每步更新时把权重乘一个衰减系数，这才是真正的 L2 正则化。现在 AdamW 是大部分 Transformer 和 CNN 训练的首选。学习率是最重要的超参数之一，太大训练会震荡甚至发散，太小收敛太慢。怎么找合适的学习率？有个很实用的方法叫 learning rate finder：从很小的学习率开始，指数增加，训练几百步，看 loss 什么时候开始上升，拐点附近就是最优学习率的大概位置。学习率调度的策略也很有讲究：1. StepLR：每 N 个 epoch 乘一个 gamma，简单常用；2. 余弦退火 CosineAnnealing：学习率按余弦曲线从高降到低，再升温再降（warm restart 版本），通常效果更好；3. ReduceLROnPlateau：监控验证集指标，指标不下降了就降学习率，很智能但需要监控验证集；4. Warmup：训练初期学习率从小慢慢升到目标值，防止初期梯度太大把模型冲坏，Transformer 训练必备。理解了这些优化算法的原理和特性，你就能根据任务选择合适的优化器，更快更好地训练模型。"
-        }, duration: "1.5小时", resources: [R_PYTORCH_TUT, { title: "PyTorch 优化器文档", url: "https://pytorch.org/docs/stable/optim.html", required: true }, { title: "常用优化算法图解", url: "https://ruder.io/optimizing-gradient-descent/", required: false }, { title: "学习率调度策略详解", url: "https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate", required: false }], checkpoint: "能写出一个完整的 epoch 训练循环，loss 每 epoch 下降" },
+        }, duration: "1.5小时", resources: [R_PYTORCH_TUT, { title: "PyTorch 优化器文档", url: "https://pytorch.org/docs/stable/optim.html", required: true, type: "doc", source: "official" }, { title: "常用优化算法图解", url: "https://ruder.io/optimizing-gradient-descent/", required: false, type: "article", source: "official" }, { title: "学习率调度策略详解", url: "https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate", required: false, type: "doc", source: "official" }], checkpoint: "能写出一个完整的 epoch 训练循环，loss 每 epoch 下降" },
       { day: 7, title: "训练/验证闭环 + TensorBoard",
         summary: "搭建完整训练验证闭环，用 TensorBoard 可视化监控训练过程。", content: {
           objective: "今天你将学习搭建完整的训练-验证闭环，并用 TensorBoard 可视化训练过程。学完后你能正确划分训练集和验证集，写出包含训练阶段和验证阶段的完整 epoch 循环，理解 train() 和 eval() 模式的区别，用 TensorBoard 记录 loss、accuracy、权重分布等指标。这是深度学习训练的标准流程。",
@@ -1179,7 +1179,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "动手搭建 MNIST 训练验证闭环并接入 TensorBoard：1. 准备 MNIST 数据集，用 random_split 把训练集分成 50000 训练 + 10000 验证；2. 搭建一个 3 层 MLP 或简单的 CNN 模型；3. 编写完整的训练函数：遍历训练 DataLoader，前向传播算 loss，反向传播更新参数，记录每个 batch 的 loss；4. 编写验证函数：model.eval() 切换评估模式，with torch.no_grad() 包裹，遍历验证集算 loss 和 accuracy，验证完再切回 train 模式；5. 主循环：训练 N 个 epoch，每个 epoch 先训练再验证，打印训练 loss、验证 loss、验证 accuracy；6. 接入 TensorBoard：创建 SummaryWriter，每个 batch 记录训练 loss，每个 epoch 记录验证 loss 和 accuracy，记录权重和梯度的直方图，记录几张样本图像和预测结果；7. 启动 tensorboard --logdir=runs，在浏览器查看各项指标，观察 loss 是否下降、accuracy 是否上升、有没有过拟合（训练 loss 持续下降但验证 loss 上升）；8. 保存最佳模型：跟踪验证集最高 accuracy，每次刷新就保存模型权重。思考：为什么需要验证集？直接在测试集上调参为什么不对？",
           deep_dive: "深入理解训练验证流程与模型选择的方法论：机器学习的核心目标是泛化——在没见过的数据上也表现好。只看训练集 loss 没有意义，因为模型可以死记硬背训练集（过拟合）但泛化很差。所以我们把数据分成三份：1. 训练集（train）：用来学习参数（权重、偏置）；2. 验证集（val）：用来调超参数（学习率、网络结构、正则化强度），选最好的模型；3. 测试集（test）：最后拿出来评测一次，报告最终泛化能力，绝对不能用来调参。为什么验证集不能当测试集？因为你用验证集调了超参，相当于模型'间接见过'验证集，所以验证集上的结果是偏乐观的，测试集才是真正的'模拟考试'。实际项目中常见的划分比例：数据多时 98/1/1，数据少时 80/10/10，或者用交叉验证（cross-validation）更充分利用数据。过拟合和欠拟合是训练中的两大问题：1. 欠拟合（underfitting）：训练集和验证集效果都差，说明模型太简单或训练不够，解决方案：增加模型容量、训练更久、调学习率；2. 过拟合（overfitting）：训练集很好，验证集很差，说明模型记住了训练数据的噪声，解决方案：更多数据、数据增强、正则化（L2、Dropout）、早停。早停（early stopping）是一个简单有效的正则化方法：监控验证集指标，连续 N 个 epoch 没有提升就停止训练，取验证集最好的那轮权重。这比手动指定 epoch 数更科学，还能防止过拟合。TensorBoard 是训练可视化的标配工具，除了 loss/accuracy 曲线，还可以看：1. 权重和梯度的分布（判断梯度消失/爆炸）；2. 图像样本和预测结果（直观看到模型错在哪）；3. 模型计算图（理解网络结构）；4. 嵌入向量可视化（高维特征降维到 2D/3D 看聚类）。训练时打开 TensorBoard 实时监控，能及时发现问题，不用等训练完才知道白跑了。理解了这套方法论，你训练模型就不再是'凭感觉炼丹'，而是有科学依据的迭代优化过程。"
-        }, duration: "2.5小时", resources: [R_PYTORCH_TUT, { title: "TensorBoard 入门教程", url: "https://pytorch.org/tutorials/intermediate/tensorboard_tutorial.html", required: true }, { title: "训练与验证的最佳实践", url: "https://pytorch.org/tutorials/beginner/introyt/trainingyt.html", required: false }, { title: "wandb可视化工具", url: "https://docs.wandb.ai/", required: false, type: "doc", source: "official" }], checkpoint: "能跑 MNIST 3 层 MLP，在 TensorBoard 看到训练 loss 下降" },
+        }, duration: "2.5小时", resources: [R_PYTORCH_TUT, { title: "TensorBoard 入门教程", url: "https://pytorch.org/tutorials/intermediate/tensorboard_tutorial.html", required: true, type: "article", source: "official" }, { title: "训练与验证的最佳实践", url: "https://pytorch.org/tutorials/beginner/introyt/trainingyt.html", required: false, type: "article", source: "official" }, { title: "wandb可视化工具", url: "https://docs.wandb.ai/", required: false, type: "doc", source: "official" }], checkpoint: "能跑 MNIST 3 层 MLP，在 TensorBoard 看到训练 loss 下降" },
       { day: 8, title: "模型保存/加载与恢复训练",
         summary: "掌握模型保存加载与断点续训，理解 state_dict 机制。", content: {
           objective: "今天你将学习 PyTorch 模型的保存、加载和断点续训。学完后你能理解 state_dict 的概念，保存和加载模型权重，保存包含优化器状态的完整 checkpoint 实现中断后恢复训练，区分推理时加载和训练时恢复的不同需求。模型持久化是训练工程化的基础。",
@@ -1192,7 +1192,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成模型保存加载与断点续训实验：1. 准备一个 MNIST 训练脚本，包含模型、优化器、训练循环；2. 实现保存 checkpoint 的功能：每个 epoch 结束后保存 latest.pth（包含 epoch、model_state_dict、optimizer_state_dict、best_acc 等），验证集准确率刷新时另外保存 best.pth；3. 训练 3 个 epoch 后手动中断（Ctrl+C），确认 latest.pth 文件已生成；4. 编写恢复训练的逻辑：启动时检查是否有 checkpoint 文件，有就加载 epoch 数、模型权重、优化器状态，从第 4 个 epoch 继续训练到第 10 个 epoch；5. 验证恢复训练的 loss 曲线是否和连续训练一致（如果一致说明恢复正确）；6. 推理加载练习：加载 best.pth 权重，在测试集上评估准确率，验证模型效果；7. 设备迁移练习：在 GPU 上训练保存的模型，用 map_location='cpu' 加载到 CPU 上推理，验证能否正常运行；8. 常见坑实验：试试加载不完全匹配的 state_dict（比如改了几层名字），观察报错信息，学会用 strict=False 加载部分参数。思考：为什么恢复训练时还要加载 optimizer 的状态？只加载模型权重不行吗？",
           deep_dive: "深入理解 state_dict 机制与模型持久化最佳实践：PyTorch 的 state_dict 是一个 Python 字典，把模型中所有可学习参数（nn.Parameter）和缓冲区（buffer）按名字映射成张量。它只存参数值，不存模型结构，所以文件很小（相对保存整个模型而言），也更灵活——你可以在代码中定义模型结构，然后把参数加载进去。保存整个模型（torch.save(model, path））虽然方便，但有很多问题：1. 文件大（包含整个类定义和序列化信息）；2. 不灵活，加载时代码里必须有完全一样的模型类定义，路径变了都不行；3. 跨 PyTorch 版本兼容性差。所以官方推荐永远用 state_dict 的方式保存。optimizer 也有 state_dict，里面存着动量（momentum）、自适应学习率的二阶矩估计等内部状态。如果恢复训练时只加载模型权重不加载优化器状态，优化器相当于从零开始，动量等状态都没了，训练曲线会有一个'跳变'，效果可能不如连续训练好。所以要无缝恢复训练，必须同时保存和加载 optimizer 的 state_dict。学习率调度器 scheduler 也有 state_dict，如果用了调度器，恢复时也要记得加载。模型保存的生产级最佳实践：1. 定期保存 checkpoint，比如每个 epoch 或每隔 N 步存一次，防止训练中断白跑；2. 保存两种文件：latest（最新 checkpoint，用于恢复）和 best（验证集最好的，用于最终推理/部署）；3. 文件名包含有用信息，比如 epoch 数、验证准确率（model_epoch05_acc0.89.pth）；4. 保存元信息：训练配置、超参数、数据集版本等，方便以后复现；5. 大模型用分布式检查点（DeepSpeed、FSDP），分片保存和加载；6. 部署时导出为 ONNX 或 TorchScript，不依赖 PyTorch 环境也能跑。另外，torch.load 默认用 pickle 序列化，有安全风险——不要加载来路不明的 .pth 文件，可能包含恶意代码。理解了这些原理和实践，你就能安全、高效地管理模型的生命周期。"
-        }, duration: "1.5小时", resources: [R_PYTORCH_DOC, R_PYTORCH_TUT, { title: "PyTorch 保存与加载模型教程", url: "https://pytorch.org/tutorials/beginner/saveloadrun_tutorial.html", required: true }, { title: "权重初始化方法详解", url: "https://pytorch.org/docs/stable/nn.init.html", required: false }], checkpoint: "能保存 checkpoint 并在中断后从第 5 轮继续训练到第 10 轮" },
+        }, duration: "1.5小时", resources: [R_PYTORCH_DOC, R_PYTORCH_TUT, { title: "PyTorch 保存与加载模型教程", url: "https://pytorch.org/tutorials/beginner/saveloadrun_tutorial.html", required: true, type: "article", source: "official" }, { title: "权重初始化方法详解", url: "https://pytorch.org/docs/stable/nn.init.html", required: false, type: "doc", source: "official" }], checkpoint: "能保存 checkpoint 并在中断后从第 5 轮继续训练到第 10 轮" },
       { day: 9, title: "混合精度 AMP",
         summary: "掌握自动混合精度训练，用更少显存更快训练大模型。", content: {
           objective: "今天你将学习 PyTorch 的自动混合精度训练（AMP）。学完后你能理解混合精度的原理，用 torch.cuda.amp 的 autocast 和 GradScaler 实现混合精度训练，在不损失精度的前提下减少显存占用、加速训练。对于大模型和大数据，AMP 几乎是标配，能让 batch size 翻倍、速度提升 50% 以上。",
@@ -1205,7 +1205,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "动手实践混合精度训练并对比性能：1. 准备一个 CNN 训练任务（如 CIFAR-10 用 ResNet18），先写好普通的 fp32 训练脚本作为 baseline；2. 加入 AMP：导入 torch.cuda.amp，创建 GradScaler() scaler，训练循环中用 torch.autocast(device_type='cuda', dtype=torch.float16) 包裹前向传播和 loss 计算，反向传播前 scaler.scale(loss).backward()，更新参数前 scaler.step(optimizer)，最后 scaler.update()；3. 对比 fp32 和混合精度的训练：记录每个 epoch 的时间、显存占用（nvidia-smi 看）、训练 loss 曲线、验证准确率，验证混合精度下精度基本不损失但速度更快；4. 实验 batch size：混合精度下尝试把 batch size 翻倍，看还能跑吗（显存够用吗），理解显存节省的意义；5. 进阶：bfloat16 混合精度（如果你的 GPU 是 Ampere 架构及以上，如 A100、3090、4090），bfloat16 比 float16 动态范围更大，不容易下溢，有时候更稳定；6. 探究 GradScaler 的作用：试试不用 scaler 只开 autocast，会不会出现 loss NaN 或梯度为 0 的情况，理解梯度缩放的必要性；7. 验证推理也能用 autocast：推理阶段开 autocast 也能加速，而且不用 scaler。思考：为什么 fp16 会有梯度下溢问题？bfloat16 为什么更好？",
           deep_dive: "深入理解混合精度训练原理与数值稳定性：FP32（单精度）有 32 位，1 位符号、8 位指数、23 位尾数，动态范围很大（约 1e-38 到 1e38），精度也足够。FP16（半精度）只有 16 位，1 位符号、5 位指数、10 位尾数，动态范围小很多（约 6e-5 到 6e4），精度也低。动态范围小意味着很小的数会变成 0（下溢 underflow），很大的数会变成无穷（上溢 overflow）。深度学习训练中，梯度通常很小，用 fp16 很容易下溢变成 0，导致模型不更新。GradScaler 的解决思路是：把 loss 乘一个大的 scale factor（比如 1024），这样反向传播时梯度也被放大了，不会下溢；更新参数前再把梯度除以 scale factor，还原回正确的梯度。scaler 会动态调整 scale factor：如果梯度没有 NaN/Inf，就放大一点；如果出现了 NaN/Inf，就缩小一点并跳过这次更新，自动找到合适的缩放比例。BF16（bfloat16）是另一种半精度格式，指数位和 FP32 一样是 8 位，尾数位只有 7 位——动态范围和 FP32 一样大，不会下溢，但精度低一些。好处是不用 GradScaler 也能稳定训练，而且 FP32 转 BF16 只需要截断（不用 round），转换开销小。Ampere 及更新的 NVIDIA GPU 都有 BF16 的 Tensor Core 加速，现在越来越流行。混合精度为什么能加速？因为 NVIDIA GPU 的 Tensor Core 专门做 fp16/bf16 的矩阵乘法和卷积，吞吐量是 fp32 的好几倍。现在的大模型训练（LLM、扩散模型等）几乎都用混合精度，因为显存太宝贵了。还有一些进阶技巧：1. 有些层（如 LayerNorm 的增益和偏置）保持 fp32 更稳定，autocast 会自动处理；2. 自定义算子如果要支持 AMP，需要注册 autocast 的类型；3. 梯度裁剪要在 scaler.unscale_(optimizer) 之后做，不然缩放后的梯度大小不对；4. 验证精度是否损失：大多数任务混合精度精度和 fp32 差不多，甚至更好（因为有轻微的正则化效果），但少数对精度敏感的任务要小心。掌握了混合精度，你就能用同样的硬件训练更大的模型、跑得更快。"
-        }, duration: "2小时", resources: [R_PYTORCH_DOC, { title: "PyTorch AMP 教程", url: "https://pytorch.org/tutorials/recipes/recipes/amp_recipe.html", required: true }, { title: "混合精度训练原理", url: "https://arxiv.org/abs/1710.03740", required: false }, { title: "APEX AMP使用指南", url: "https://nvidia.github.io/apex/amp.html", required: false, type: "doc", source: "official" }], checkpoint: "在一个 ResNet18 小任务上成功开启 AMP，loss 正常下降" },
+        }, duration: "2小时", resources: [R_PYTORCH_DOC, { title: "PyTorch AMP 教程", url: "https://pytorch.org/tutorials/recipes/recipes/amp_recipe.html", required: true, type: "article", source: "official" }, { title: "混合精度训练原理", url: "https://arxiv.org/abs/1710.03740", required: false, type: "paper", source: "academic" }, { title: "APEX AMP使用指南", url: "https://nvidia.github.io/apex/amp.html", required: false, type: "doc", source: "official" }], checkpoint: "在一个 ResNet18 小任务上成功开启 AMP，loss 正常下降" },
       { day: 10, title: "torch.compile 加速",
         summary: "掌握 torch.compile JIT 编译，进一步加速模型训练和推理。", content: {
           objective: "今天你将学习 PyTorch 2.0 引入的 torch.compile 即时编译功能。学完后你能用一行代码编译模型，理解它的加速原理，对比编译前后的性能差异，知道常见的限制和排错方法。torch.compile 是 PyTorch 2.0 最大的特性，能在不修改模型代码的情况下带来 20%-2 倍的性能提升。",
@@ -1218,7 +1218,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "动手体验 torch.compile 加速效果：1. 准备一个训练脚本（如 ResNet18 训练 CIFAR-10），先测一下未编译时的训练速度（steps/s 或 samples/s）作为 baseline；2. 加入编译：model = torch.compile(model)，放在模型创建后、优化器创建前；3. 运行训练，注意第一个 step 会比较慢（编译过程），之后速度会提升，记录稳定后的 step/s；4. 对比编译前后的速度，计算加速比（提升了百分之多少），同时验证 loss 曲线和准确率有没有变化；5. 试试不同的 mode：分别用 mode='default'、mode='reduce-overhead'、mode='max-autotune' 测试，对比速度和编译时间的差异；6. 推理速度测试：同样对比编译前后的推理延迟和吞吐量；7. 探究动态形状：如果你的输入形状是固定的（batch size、图像大小不变），编译效果最好；试试故意换不同形状的输入，观察会不会触发重新编译（速度变慢）；8. 排错练习：试试编译一个包含复杂控制流的模型，看看会不会有 warning，理解 torch.compile 的边界。思考：torch.compile 为什么能加速？它和 TorchScript 有什么区别？",
           deep_dive: "深入理解 torch.compile 原理与 PyTorch 编译技术栈：torch.compile 不是简单的代码优化，它背后有一套完整的技术栈：1. TorchDynamo：Python 级别的字节码分析，捕获计算图，不需要像 TorchScript 那样改代码或加装饰器，这是为什么 torch.compile 能做到'一行代码、几乎不用改'的原因；2. FX IR：中间表示，把 Python 代码转成符号化的计算图；3. Inductor：后端编译器，把计算图优化后生成高效的底层代码（CPU 上生成 C++/OpenMP，GPU 上生成 Triton/CUDA kernel）；4. Triton：OpenAI 开源的 GPU 编程语言，Inductor 用它生成融合算子，手写融合 kernel 一直是 CUDA 工程师的工作，现在编译器自动做了。算子融合（operator fusion）是最重要的优化之一：比如 conv + bn + relu 三个操作，正常情况下要读三次显存写三次显存，融合后只需要一次读写，大大减少显存带宽瓶颈，对小算子多的模型提升特别大。另一个优化是减少 Python 开销：eager 模式下每个算子都要从 Python 调用到 C++，有固定的开销，编译后一整段计算变成一个 kernel launch，开销大幅减少。torch.compile 的限制和挑战：1. 动态形状：输入形状变了可能需要重新编译，编译有开销，现在已有动态形状支持但还在完善；2. 副作用：有 print、assert、修改 Python 对象等副作用的代码，编译时可能行为不同；3. 自定义算子：自定义的 C++/CUDA 扩展需要注册元信息才能被编译；4. 编译时间：首次编译需要时间，小模型小任务可能编译时间比省下的时间还多。最佳实践：1. 输入形状固定的训练任务收益最大；2. 大模型（Transformer 等）收益通常比小模型好；3. 先用 default 模式，没问题再试更激进的优化；4. 推理部署时可以预先编译好，不用在生产环境编译。虽然还有限制，但 torch.compile 代表了 PyTorch 的未来方向——既保留了动态图的易用性，又能获得静态图的性能。随着版本迭代，它会越来越成熟，支持的场景越来越多。"
-        }, duration: "1.5小时", resources: [R_PYTORCH_DOC, { title: "torch.compile 详解", url: "https://pytorch.org/tutorials/intermediate/torch_compile_tutorial.html", required: true }, { title: "PyTorch 2.0 编译器介绍", url: "https://pytorch.org/get-started/pytorch.2.0/", required: false }, { title: "torch.compile 源码解析", url: "https://github.com/pytorch/pytorch/blob/main/torch/_inductor/", required: false, type: "repo", source: "github" }], checkpoint: "在一个可复现的脚本中，开启 compile 后观察到 step/s 提升" },
+        }, duration: "1.5小时", resources: [R_PYTORCH_DOC, { title: "torch.compile 详解", url: "https://pytorch.org/tutorials/intermediate/torch_compile_tutorial.html", required: true, type: "article", source: "official" }, { title: "PyTorch 2.0 编译器介绍", url: "https://pytorch.org/get-started/pytorch.2.0/", required: false, type: "article", source: "official" }, { title: "torch.compile 源码解析", url: "https://github.com/pytorch/pytorch/blob/main/torch/_inductor/", required: false, type: "repo", source: "github" }], checkpoint: "在一个可复现的脚本中，开启 compile 后观察到 step/s 提升" },
       { day: 11, title: "多卡 DataParallel（单机多卡）",
         summary: "掌握单机多卡训练，理解 DP 和 DDP 的区别与使用场景。", content: {
           objective: "今天你将学习 PyTorch 的单机多卡训练方法。学完后你能理解 DataParallel（DP）和 DistributedDataParallel（DDP）的区别，用 DDP 实现高效的多卡训练，掌握 torchrun 启动方式和基本的分布式编程概念。当单张 GPU 显存或算力不够时，多卡训练是必备技能。",
@@ -1231,7 +1231,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "动手实现 DDP 多卡训练并对比性能：1. 准备一个单卡的 MNIST/CIFAR-10 训练脚本作为 baseline；2. 改写成 DDP 版本：a) 导入 torch.distributed 和 torch.nn.parallel.DistributedDataParallel；b) 初始化进程组：dist.init_process_group(backend='nccl')；c) 设置当前设备：local_rank = int(os.environ['LOCAL_RANK'])，torch.cuda.set_device(local_rank)；d) 模型移到 GPU 后用 DDP 包装：model = DDP(model, device_ids=[local_rank])；e) 数据集用 DistributedSampler 划分，每个进程只拿自己那部分数据；f) 训练循环基本不变，但注意验证时要汇总各卡的结果；3. 用 torchrun 启动：torchrun --nproc_per_node=2 train.py（假设有 2 张卡），观察两张卡的 GPU 利用率；4. 对比单卡和双卡的训练速度（samples/s），看是否接近线性加速（理想情况 2 倍，实际会少一点因为通信开销）；5. 也试试 DP 版本（如果时间够）：model = nn.DataParallel(model).cuda()，一行代码搞定，但观察主卡显存占用更高，理解主卡瓶颈问题；6. 保存加载 checkpoint：DDP 模型要存 model.module.state_dict()，加载时也要注意；7. 验证分布式训练的收敛性：确保多卡训练和单卡训练（相同总 batch size）收敛效果一致。思考：为什么 DDP 比 DP 快？DP 的主卡瓶颈在哪里？",
           deep_dive: "深入理解分布式训练原理与多卡训练最佳实践：数据并行是最常用的分布式训练方式——每张卡上都有完整的模型，数据分成多份分别送进不同的卡，各自算梯度，然后同步梯度，再各自更新参数。梯度同步用 all-reduce 操作：所有卡的梯度加起来再除以卡数，广播回每张卡，这样所有卡的梯度都一样，参数更新也保持一致。NCCL（NVIDIA Collective Communications Library）是 NVIDIA 官方的多卡通信库，针对 GPU 通信做了深度优化，支持 NVLink、PCIe、InfiniBand 等多种互联方式，是 GPU 集群的标配。DP 和 DDP 的核心区别：1. DP 是单进程多线程，受 Python GIL 限制，而且所有卡的梯度都要汇总到主卡（device 0）计算更新，再广播回去，主卡显存和计算压力都更大，成为瓶颈；2. DDP 是多进程，每张卡一个独立进程，没有 GIL 问题，梯度同步用 ring-all-reduce 算法，每卡的通信开销是均等的，没有主卡瓶颈，速度更快，扩展性更好。现在官方推荐用 DDP，DP 已经不怎么维护了。分布式训练的重要概念：1. rank：进程的全局唯一编号，0 号通常是主进程；2. local_rank：进程在当前机器上的编号，对应第几块 GPU；3. world_size：总进程数（也就是总 GPU 数）；4. all-reduce：所有进程的数据求和再广播回来，最常用的通信原语；5. DistributedSampler：每个 epoch 给不同进程分配不同的样本，确保数据不重复。多卡训练的最佳实践：1. 总 batch size 要随卡数线性增加（比如单卡 32，4 卡就 128），学习率也要相应调整（通常线性缩放）；2. BN 层在多卡下各卡统计量不同，会有问题，可以用 SyncBN 同步 BN 统计量；3. 验证集也要分布式采样，最后把各卡的结果汇总（all-gather）；4. 保存 checkpoint 只在 rank 0 进程保存，避免多进程写冲突；5. 用 torchrun 而不是老的 launch 工具，更现代更方便。对于更大规模的训练，还有多机多卡、ZeRO（零冗余优化器）、张量并行、流水线并行等技术，但 DDP 是基础中的基础，必须先掌握。"
-        }, duration: "2小时", resources: [R_PYTORCH_DOC, { title: "PyTorch DDP 教程", url: "https://pytorch.org/tutorials/intermediate/ddp_tutorial.html", required: true }, { title: "PyTorch 多 GPU 训练最佳实践", url: "https://pytorch.org/docs/stable/notes/ddp.html", required: false }, { title: "torchrun 启动器文档", url: "https://pytorch.org/docs/stable/elastic/run.html", required: false }], checkpoint: "能在单机双卡上用 DDP 跑 MNIST，两张卡利用率都非 0" },
+        }, duration: "2小时", resources: [R_PYTORCH_DOC, { title: "PyTorch DDP 教程", url: "https://pytorch.org/tutorials/intermediate/ddp_tutorial.html", required: true, type: "article", source: "official" }, { title: "PyTorch 多 GPU 训练最佳实践", url: "https://pytorch.org/docs/stable/notes/ddp.html", required: false, type: "doc", source: "official" }, { title: "torchrun 启动器文档", url: "https://pytorch.org/docs/stable/elastic/run.html", required: false, type: "doc", source: "official" }], checkpoint: "能在单机双卡上用 DDP 跑 MNIST，两张卡利用率都非 0" },
       { day: 12, title: "Accelerate 库简化分布式",
         summary: "用 HuggingFace Accelerate 简化分布式训练，一份代码适配多种硬件。", content: {
           objective: "今天你将学习用 HuggingFace Accelerate 库简化分布式训练。学完后你能用 Accelerate 把单卡训练脚本快速改成支持多卡、多机、TPU 的版本，理解 accelerator 对象的作用，学会用 accelerate config 和 accelerate launch 配置启动。Accelerate 让你不用再写复杂的 DDP 初始化代码，一份代码适配各种硬件。",
@@ -1244,7 +1244,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "用 Accelerate 改写 DDP 训练脚本并对比：1. 先安装 accelerate：pip install accelerate；2. 拿出第 11 天的单卡训练脚本，改写成 Accelerate 版本：a) 从 accelerate 导入 Accelerator；b) 创建 accelerator = Accelerator()；c) 用 model, optimizer, train_dataloader, val_dataloader = accelerator.prepare(model, optimizer, train_dataloader, val_dataloader) 准备；d) 把 loss.backward() 改成 accelerator.backward(loss)；e) 其他训练代码基本不用变；3. 对比改写前后的代码量，看是不是比手写 DDP 简洁很多；4. 用 accelerate config 配置你的环境（选择 GPU 数量、是否用 DeepSpeed 等），生成配置文件；5. 用 accelerate launch train.py 启动训练，观察是否正常运行；6. 验证单卡也能跑：同一份脚本在只有单卡的机器上直接 python train.py 也能正常运行，不需要改代码（Accelerate 自动降级）；7. 试试混合精度：在 config 中选择 fp16 或 bf16，不用改代码就能开启混合精度；8. 进阶：试试 DeepSpeed ZeRO 训练（如果显存不够装大模型），理解 Accelerate 对大模型训练的支持。思考：Accelerate 相比于手写 DDP 有什么优势？什么时候适合用？",
           deep_dive: "深入理解 Accelerate 设计理念与大模型训练生态：Accelerate 的设计哲学是'你写正常的 PyTorch 训练代码，我们帮你处理分布式细节'。它不强制你用特定的训练框架或模型结构，侵入性极低，通常只需改 3-5 行代码就能支持分布式。Accelerate 帮你做了什么：1. 自动检测硬件环境（有几张卡、什么类型、是不是分布式）；2. 自动初始化进程组和设备设置；3. 自动用 DDP 包装模型；4. 自动处理数据加载器的分布式采样（DistributedSampler）；5. 统一的 backward 接口（自动处理梯度缩放等）；6. 统一的保存加载 API，不用管 DDP 的 model.module；7. 混合精度自动配置（AMP）；8. DeepSpeed、FSDP、TPU 等高级功能统一接口。除了 Accelerate，大模型训练还有几个重要的技术方向：1. ZeRO（Zero Redundancy Optimizer）：把优化器状态、梯度、参数分到不同 GPU 上，大大降低单卡显存占用，能训练更大的模型，DeepSpeed 和 FSDP 都是实现 ZeRO 的方案；2. 张量并行（Tensor Parallelism）：把单个矩阵运算拆到多卡上，适合超级大的层（比如大语言模型的注意力层），Megatron-LM 是代表；3. 流水线并行（Pipeline Parallelism）：把模型不同层分到不同卡上，数据像流水线一样流动，适合特别深的模型；4. 混合并行：数据并行 + 张量并行 + 流水线并行结合起来，训练千亿参数级别的大模型。对于普通开发者来说，大部分情况数据并行（DDP）就够用了，模型再大一点用 ZeRO/FSDP，Accelerate 都能很好地支持。Accelerate 还有个好用的功能：device_placement 自动管理张量设备——不用手动写 .to('cuda')，Accelerate 会自动把数据放到正确的设备上，进一步简化代码。学习曲线也很平滑：你可以先写单卡代码，需要多卡了就加几行 Accelerate，需要更大的模型了就开 DeepSpeed，一步步来，不用一次性学所有分布式知识。现在 HuggingFace 生态的大部分项目（Transformers、Diffusers 等）都基于 Accelerate，学会它能快速看懂和使用大量开源项目。"
-        }, duration: "2小时", resources: [{ title: "Accelerate 文档", url: "https://huggingface.co/docs/accelerate/", required: true }, { title: "Accelerate 快速入门教程", url: "https://huggingface.co/docs/accelerate/basic_tutorials/overview", required: true }, { title: "Accelerate GitHub 仓库", url: "https://github.com/huggingface/accelerate", required: false }, { title: "DeepSpeed 集成指南", url: "https://huggingface.co/docs/accelerate/main/en/deepspeed", required: false, type: "doc", source: "official" }], checkpoint: "能把前一天的 DDP 脚本用 accelerate 改写，代码量显著减少" },
+        }, duration: "2小时", resources: [{ title: "Accelerate 文档", url: "https://huggingface.co/docs/accelerate/", required: true, type: "doc", source: "official" }, { title: "Accelerate 快速入门教程", url: "https://huggingface.co/docs/accelerate/basic_tutorials/overview", required: true, type: "doc", source: "official" }, { title: "Accelerate GitHub 仓库", url: "https://github.com/huggingface/accelerate", required: false, type: "repo", source: "github" }, { title: "DeepSpeed 集成指南", url: "https://huggingface.co/docs/accelerate/main/en/deepspeed", required: false, type: "doc", source: "official" }], checkpoint: "能把前一天的 DDP 脚本用 accelerate 改写，代码量显著减少" },
       { day: 13, title: "训练技巧：梯度裁剪、累积、正则",
         summary: "掌握梯度裁剪、梯度累积和正则化技术，让训练更稳定效果更好。", content: {
           objective: "今天你将学习三个重要的训练技巧：梯度裁剪、梯度累积和正则化。学完后你能用梯度裁剪防止梯度爆炸，用梯度累积在小显存上模拟大 batch 训练，用 Dropout 和权重衰减防止过拟合。这些技巧在实际项目中非常常用，能显著提升训练稳定性和模型效果。",
@@ -1257,7 +1257,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "动手实践三个训练技巧并对比效果：1. 梯度裁剪实验：在你的训练脚本中加入 torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)，放在 loss.backward() 之后、optimizer.step() 之前；试试不同的 max_norm（0.1、1、10），观察梯度范数的变化和训练稳定性，特别是在深层网络或 RNN 上效果更明显；2. 梯度累积实验：假设你想要 batch_size=128 但显存不够只能跑 32，就设置 accum_steps=4，每 4 个 step 才更新一次参数；实现方法：每个 step 正常算 loss.backward()，但只有 (step+1) % accum_steps == 0 时才 optimizer.step() 和 optimizer.zero_grad()；验证梯度累积和真正大 batch 的效果是否接近；3. Dropout 实验：在你的模型中加入 nn.Dropout(p=0.5)，对比有 Dropout 和没有 Dropout 的训练集/验证集曲线，看 Dropout 是否缓解了过拟合；4. 权重衰减实验：对比 weight_decay=0 和 weight_decay=0.01 的效果，观察验证集准确率的差异；5. 早停法实践：实现 early stopping：记录最好的验证集指标，连续 patience 个 epoch 没有提升就停止训练，保存最好的权重；6. 组合使用：把梯度裁剪 + 梯度累积 + Dropout + 权重衰减 + 早停全部用上，看看效果是不是最好。思考：梯度累积和真正的大 batch 训练有什么区别？BatchNorm 会有影响吗？",
           deep_dive: "深入理解训练稳定与泛化的技术原理和最佳实践：梯度裁剪为什么能防止梯度爆炸？深层网络（尤其是 RNN、Transformer）中，梯度反向传播时经过很多层相乘，很容易指数级变大（梯度爆炸）或变小（梯度消失）。梯度裁剪就是给梯度的范数设一个上限，超过就等比例缩小，相当于给梯度装了个'安全阀'，不让它太离谱。注意是裁剪范数（norm clipping）不是裁剪每个梯度的值（value clipping），前者更常用也更合理，因为它不改变梯度的方向，只是限制步长。梯度累积为什么能模拟大 batch？SGD 的更新方向是梯度乘以学习率，梯度是多个样本梯度的平均（或求和）。把 4 个小 batch 的梯度加起来再更新，和用 4 倍大的 batch 算出来的梯度理论上是一样的（如果用的是求和损失）。但有两个重要区别：1. BatchNorm 的统计量——BatchNorm 用当前 batch 的均值方差，梯度累积时每个小 batch 各算各的，和真正的大 batch 不一样，可能影响效果；2. 梯度是累积的，但某些优化器内部状态（如 Adam 的二阶矩）每个 step 都更新，累积 4 次才 step 一次和真正大 batch 不完全一样。所以梯度累积是显存不够时的妥协方案，有条件还是尽量用真正的大 batch。正则化技术有很多，各有各的作用：1. L2 正则化（权重衰减）：惩罚大权重，让权重都比较小，防止模型对某些特征过度依赖；2. Dropout：随机丢弃神经元，每次训练相当于用不同的网络结构，近似于集成学习的效果；3. 数据增强：增加数据多样性，是最有效也是最推荐的正则化方法；4. 早停：简单粗暴，监控验证集，不涨了就停，几乎总是有用；5. Label Smoothing：把标签从 0/1 变成 0.1/0.9，防止模型过于自信，提升泛化；6. 权重衰减和 L2 正则化的关系：在标准 SGD 中两者等价，但在 Adam 中不等价，所以有了 AdamW 把权重衰减和优化器解耦，这也是为什么现在都推荐用 AdamW。实际项目中的最佳实践：1. 先不加正则把模型跑通，看看训练集能不能拟合（确认模型容量够）；2. 如果过拟合（训练好验证差），先加数据增强和早停，这两个最有效也最省事；3. 然后加权重衰减（AdamW 配 1e-4 到 1e-2）和 Dropout；4. 训练不稳定加梯度裁剪（max_norm 从 1.0 开始试）；5. 显存不够用梯度累积或混合精度。理解了这些技巧的原理和适用场景，你训练模型就会更有章法，遇到问题知道该调什么。"
-        }, duration: "1.5小时", resources: [R_PYTORCH_TUT, { title: "梯度裁剪与梯度累积详解", url: "https://pytorch.org/docs/stable/notes/amp_examples.html", required: false }, { title: "正则化技术综述", url: "https://www.deeplearningbook.org/contents/regularization.html", required: false }, { title: "PyTorch正则化文档", url: "https://pytorch.org/docs/stable/nn.html#regularization", required: false, type: "doc", source: "official" }], checkpoint: "能在脚本中同时使用 gradient clipping + 梯度累积，并观察训练稳定" },
+        }, duration: "1.5小时", resources: [R_PYTORCH_TUT, { title: "梯度裁剪与梯度累积详解", url: "https://pytorch.org/docs/stable/notes/amp_examples.html", required: false, type: "doc", source: "official" }, { title: "正则化技术综述", url: "https://www.deeplearningbook.org/contents/regularization.html", required: false, type: "book", source: "official" }, { title: "PyTorch正则化文档", url: "https://pytorch.org/docs/stable/nn.html#regularization", required: false, type: "doc", source: "official" }], checkpoint: "能在脚本中同时使用 gradient clipping + 梯度累积，并观察训练稳定" },
       { day: 14, title: "综合：从零训练 CIFAR-10",
         summary: "综合实战：从零搭建并训练 CIFAR-10 图像分类模型，串联两周所学。", content: {
           objective: "今天你将完成一个综合项目：从零搭建并训练一个 CIFAR-10 图像分类模型，串联前 13 天所学的全部知识。学完后你能独立完成从数据加载、模型搭建、训练循环、优化策略到模型保存的完整流程，达到 80% 以上的验证准确率。这是检验你 PyTorch 基本功的最佳方式。",
@@ -1270,7 +1270,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "从零开始完成 CIFAR-10 图像分类训练项目：1. 数据准备：用 torchvision.datasets.CIFAR10 加载数据，训练集做数据增强（随机水平翻转、随机裁剪、填充、归一化），验证集只做归一化，分别构建 DataLoader；2. 模型搭建：自己实现一个 ResNet-18 或类似的 CNN 模型（或者用 torchvision 的 ResNet18 修改最后一层），确保模型结构正确；3. 训练配置：优化器用 AdamW(lr=3e-4, weight_decay=1e-4)，学习率调度器用 CosineAnnealingLR，损失函数用 CrossEntropyLoss，开启 AMP 混合精度加速，加入梯度裁剪 max_norm=1.0；4. 完整训练循环：包含训练阶段（model.train()）和验证阶段（model.eval() + torch.no_grad()），每个 epoch 计算训练 loss、训练准确率、验证 loss、验证准确率；5. 接入 TensorBoard：记录每个 batch 的训练 loss、每个 epoch 的训练/验证 loss 和 accuracy、记录权重和梯度的直方图、记录几张样本图像和预测结果；6. 模型保存：保存验证集准确率最高的模型权重（best.pth）和最新 checkpoint（latest.pth，包含 epoch、model、optimizer、scheduler 状态，方便断点续训）；7. 实验与调优：训练 30-50 个 epoch，观察 loss 曲线和准确率曲线，尝试调整学习率、数据增强强度、权重衰减等超参数，让验证准确率达到 80% 以上；8. 验证与测试：用保存的最好模型在测试集上评估，输出最终的测试准确率和混淆矩阵，分析模型在哪类样本上容易错。最后整理代码，确保结构清晰、有注释、可以复现。思考：如果要进一步提升准确率，你会从哪些方面入手？",
           deep_dive: "深入理解深度学习项目的工程化与调优方法论：从零训练一个模型不只是写代码跑通，更是一套科学的实验方法论。工业界的深度学习项目通常遵循这样的流程：1. 建立 baseline：先用最简单的模型和配置跑通，看能不能过拟合小批量数据（验证模型能力足够），然后在完整训练集上训练，得到一个 baseline 指标；2. 诊断问题：看训练曲线判断是欠拟合还是过拟合——训练集都学不好是欠拟合（加容量、调优化器、训练更久），训练好验证差是过拟合（加数据、正则化、早停）；3. 逐步提升：每次只改一个变量（比如只加数据增强，或只调学习率），看效果变化，这样才能知道什么有用什么没用；4.  ablation study（消融实验）：想知道某个模块有没有用，就加和不加各跑一次对比，用数据说话，不要凭感觉。对于 CIFAR-10 这个任务，从 80% 提升到 95%+ 的进阶方向：1. 更强的模型：从简单 CNN 到 ResNet-18/50，再到 ViT，模型容量越大上限越高；2. 更好的数据增强：Cutout、Mixup、CutMix、AutoAugment、RandAugment，数据增强是提升泛化最有效的手段之一；3. 标签平滑（Label Smoothing）：把硬标签 0/1 换成 0.1/0.9，防止模型过于自信；4. 学习率调优：用 learning rate finder 找最优学习率，用 warmup + cosine annealing 调度；5. 权重初始化与优化器调参：不同的初始化、不同的优化器（SGD with momentum vs AdamW）效果不同；6. 半监督学习/自监督学习：用更多无标签数据预训练，再微调；7. 测试时增强（TTA）：推理时对同一张图做多种变换，结果取平均，提升几个点。工程化方面也很重要：1. 配置文件化：超参数不要写死在代码里，用 yaml/json 配置文件，方便实验管理；2. 实验记录：每次实验的配置、指标、日志、权重都保存好，用 W&B 或 MLflow 管理；3. 随机种子固定：设置 torch、numpy、random 的种子，保证实验可复现；4. 代码模块化：数据、模型、训练、评估分开，方便复用和修改；5. 异常处理：训练中断能恢复，出错有明确的错误信息。完成这个综合项目，你就具备了独立做深度学习训练项目的能力，后面学更复杂的模型（检测、分割、大模型）也都是在这个基础上扩展。"
-        }, duration: "3小时", resources: [R_PYTORCH_TUT, R_D2L, { title: "CIFAR-10 数据集介绍", url: "https://www.cs.toronto.edu/~kriz/cifar.html", required: false }, { title: "PyTorch 图像分类完整教程", url: "https://pytorch.org/tutorials/beginner/finetuning_torchvision_models_tutorial.html", required: false }], checkpoint: "val_acc ≥ 80%（合理基线）；训练日志/权重文件都能产出" }],
+        }, duration: "3小时", resources: [R_PYTORCH_TUT, R_D2L, { title: "CIFAR-10 数据集介绍", url: "https://www.cs.toronto.edu/~kriz/cifar.html", required: false, type: "article", source: "official" }, { title: "PyTorch 图像分类完整教程", url: "https://pytorch.org/tutorials/beginner/finetuning_torchvision_models_tutorial.html", required: false, type: "article", source: "official" }], checkpoint: "val_acc ≥ 80%（合理基线）；训练日志/权重文件都能产出" }],
   },
 
   // =====================================================
@@ -1289,7 +1289,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["理解 CNN 设计原理", "能复现经典论文架构并训练"],
     relatedIntel: ["006-cnn-basics", "004-resnet", "002-yolo"],
     relatedTools: ["Ultralytics YOLO"],
-    relatedTerms: ["cnn", "resnet", "pooling", "feature-map"],
+    relatedTerms: ["cnn", "resnet", "pooling", "feature-map"], relatedNodes: ["pytorch-core", "cv-detection"],
     dailyTasks: [
       { day: 1, title: "卷积操作与感受野",
         summary: "掌握卷积操作的数学原理与感受野计算，理解CNN特征提取的核心机制。", content: {
@@ -1303,7 +1303,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "手动构造一个3x3的Sobel边缘检测核，使用torch.nn.functional.conv2d对一张灰度图像进行卷积，观察边缘响应图中水平和垂直边缘被高亮的效果。然后计算一个5层3x3卷积网络（每层stride=1, padding=1）的感受野大小，验证是否等于11x11。最后实现一个函数，输入input_size、kernel_size、stride、padding，返回输出尺寸和感受野大小。",
           deep_dive: "转置卷积（Transposed Convolution）也称反卷积，用于上采样：通过在输入元素间插入零值再做常规卷积，实现空间尺寸放大。它不是卷积的数学逆运算，但可以学习如何将低维特征映射回高分辨率。在语义分割、图像生成、超分辨率等任务中广泛使用。另一个重要概念是空洞卷积（Dilated Convolution），通过在卷积核元素间插入空洞，在不增加参数量的情况下指数级扩大感受野，常用于实时分割网络。"
-        }, duration: "2小时", resources: [R_CS231N, R_D2L, B_CV_TUTORIAL, { title: "卷积神经网络可视化讲解", url: "https://cs231n.github.io/convolutional-networks/", required: true }, { title: "卷积动画演示", url: "https://github.com/vdumoulin/conv_arithmetic", required: false }, { title: "卷积操作PyTorch实现", url: "https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html", required: false, type: "doc", source: "official" }], checkpoint: "能手工计算给定输入 shape、kernel、stride、padding 时的输出 shape" },
+        }, duration: "2小时", resources: [R_CS231N, R_D2L, B_CV_TUTORIAL, { title: "卷积神经网络可视化讲解", url: "https://cs231n.github.io/convolutional-networks/", required: true, type: "article", source: "official" }, { title: "卷积动画演示", url: "https://github.com/vdumoulin/conv_arithmetic", required: false, type: "repo", source: "github" }, { title: "卷积操作PyTorch实现", url: "https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html", required: false, type: "doc", source: "official" }], checkpoint: "能手工计算给定输入 shape、kernel、stride、padding 时的输出 shape" },
       { day: 2, title: "多通道卷积与 1×1 卷积",
         summary: "理解多通道卷积计算过程，掌握1x1卷积的作用与FLOPs估算方法。", content: {
           objective: "今天你将学习多通道卷积的计算机制和1x1卷积的巧妙应用。学完后能计算任意Conv2d层的参数量和FLOPs，理解1x1卷积如何实现通道变换和降维。这些知识是设计高效网络架构的基础，在模型压缩和部署优化中至关重要。",
@@ -1316,7 +1316,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "手动计算一个Conv2d(3, 64, 3, padding=1)层的参数量和FLOPs（假设输入224x224），然后用torchsummary或thop库验证你的计算。接着实现一个包含1x1卷积的瓶颈模块：先1x1降维到32通道，再3x3卷积，最后1x1升维回256通道，对比直接用256通道3x3卷积的参数量差异。最后计算VGG-16和ResNet-50的总参数量，理解为什么ResNet更深但参数量更少。",
           deep_dive: "深度可分离卷积（Depthwise Separable Convolution）是MobileNet的核心，将标准卷积分解为Depthwise Conv（逐通道空间卷积）和Pointwise Conv（1x1跨通道组合），计算量可降低为标准卷积的1/8到1/9。在移动端和边缘设备部署时，这种轻量网络设计至关重要。进一步的演进包括ShuffleNet的通道混洗、EfficientNet的复合缩放策略，以及最新的MobileNetV4。理解这些轻量化设计思想，能帮你在精度和速度之间找到最佳平衡点。"
-        }, duration: "2小时", resources: [R_CS231N, R_D2L, { title: "CNN 参数量与 FLOPs 计算", url: "https://medium.com/@muhammetbolat/calculating-parameters-and-flops-of-cnits-convolutional-layers-c05ba93e0b4f", required: false }, { title: "1x1 卷积的作用详解", url: "https://iamaaditya.github.io/2016/03/one-by-one-convolution/", required: false }], checkpoint: "能计算一个 Conv2d 层的参数量与输出 shape" },
+        }, duration: "2小时", resources: [R_CS231N, R_D2L, { title: "CNN 参数量与 FLOPs 计算", url: "https://medium.com/@muhammetbolat/calculating-parameters-and-flops-of-cnits-convolutional-layers-c05ba93e0b4f", required: false, type: "article", source: "official" }, { title: "1x1 卷积的作用详解", url: "https://iamaaditya.github.io/2016/03/one-by-one-convolution/", required: false, type: "article", source: "official" }], checkpoint: "能计算一个 Conv2d 层的参数量与输出 shape" },
       { day: 3, title: "LeNet-5：第一个经典 CNN",
         summary: "复现LeNet-5经典架构，在MNIST数据集上训练手写数字识别模型。", content: {
           objective: "今天你将复现深度学习史上第一个经典CNN架构——LeNet-5，并在MNIST手写数字数据集上完成训练。学完后能理解CNN的基本组成模块，独立搭建完整的训练流程，评估模型性能。这是你从零构建CNN项目的第一步，为后续学习更复杂的网络打下基础。",
@@ -1329,7 +1329,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "从零用PyTorch实现LeNet-5网络（注意原始论文是32x32输入，需适配28x28的MNIST），使用CrossEntropyLoss和SGD优化器，训练5个epoch。记录每轮的训练损失和验证准确率，绘制学习曲线。训练完成后达到97%以上的验证准确率。最后挑选10张预测错误的样本，可视化分析模型容易混淆哪些数字对（如3和5、4和9），思考改进方向。",
           deep_dive: "对比现代训练技巧对LeNet-5性能的提升：原始1998年论文用的是lenet结构和简单梯度下降，而今天我们可以用ReLU激活、Adam优化器、数据增强、权重衰减等技术。做一组消融实验：分别测试有无数据增强、不同优化器（SGD vs Adam）、不同激活函数（tanh vs ReLU）对最终准确率的影响，你会发现即使是相同的网络架构，训练技术的进步也能带来显著的性能提升。这也解释了为什么深度学习在近年发展如此迅速。"
-        }, duration: "2小时", resources: [R_D2L, { title: "LeNet 原始论文", url: "http://yann.lecun.com/exdb/publis/pdf/lecun-01a.pdf", required: false }, { title: "PyTorch 实现 LeNet 教程", url: "https://pytorch.org/tutorials/beginner/introyt/introyt1_tutorial.html", required: true }, { title: "CS231n CNN 架构发展史", url: "https://cs231n.github.io/convolutional-networks/", required: false },  { title: "LeNet MNIST分类实战", url: "https://github.com/rasbt/deeplearning-models/blob/master/pytorch_ipynb/cnn/lenet5.ipynb", required: false, type: "repo", source: "github" }], checkpoint: "能在 MNIST 上跑自己实现的 LeNet，val_acc > 97%" },
+        }, duration: "2小时", resources: [R_D2L, { title: "LeNet 原始论文", url: "http://yann.lecun.com/exdb/publis/pdf/lecun-01a.pdf", required: false, type: "paper", source: "official" }, { title: "PyTorch 实现 LeNet 教程", url: "https://pytorch.org/tutorials/beginner/introyt/introyt1_tutorial.html", required: true, type: "article", source: "official" }, { title: "CS231n CNN 架构发展史", url: "https://cs231n.github.io/convolutional-networks/", required: false, type: "article", source: "official" },  { title: "LeNet MNIST分类实战", url: "https://github.com/rasbt/deeplearning-models/blob/master/pytorch_ipynb/cnn/lenet5.ipynb", required: false, type: "repo", source: "github" }], checkpoint: "能在 MNIST 上跑自己实现的 LeNet，val_acc > 97%" },
       { day: 4, title: "AlexNet 与 ReLU/数据增强",
         summary: "学习AlexNet架构创新点，掌握ReLU激活和数据增强技术，在CIFAR-10上训练。", content: {
           objective: "今天你将学习开启深度学习时代的里程碑模型——AlexNet，以及ReLU激活函数和数据增强技术。学完后能理解AlexNet的历史意义，实现数据增强流水线，在CIFAR-10上训练一个简化版AlexNet。这些技术至今仍是训练深度学习模型的标配。",
@@ -1342,7 +1342,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "构建一个简化版AlexNet（适配32x32的CIFAR-10输入），使用ReLU激活和Dropout层。设计两组对比实验：第一组不使用任何数据增强，第二组使用RandomCrop+RandomHorizontalFlip+Normalize的标准增强。各训练20个epoch，对比两组的训练准确率和验证准确率曲线。观察第一组是否出现明显过拟合（训练准确率远高于验证），第二组的泛化能力是否更好。最后达到70%以上的验证准确率。",
           deep_dive: "数据增强是性价比最高的正则化手段之一。高级增强技术包括：Cutout随机遮挡、Mixup线性混合两张图、CutMix用另一张图的区域替换、RandAugment自动搜索增强策略组合、AutoAugment基于强化学习搜索最优增强策略。在目标检测中还有Mosaic（四张图拼接）、MixUp、Copy-Paste等方法。数据增强的本质是在不增加真实数据的情况下，扩展训练分布的覆盖范围。最佳实践是从简单增强开始，逐步添加，并用验证集评估每种增强的实际效果。"
-        }, duration: "2小时", resources: [R_CS231N, { title: "AlexNet 原始论文", url: "https://papers.nips.cc/paper/2012/hash/c399862d3b9d6b76c8436e924a68c45b-Abstract.html", required: false }, { title: "PyTorch 数据增强文档", url: "https://pytorch.org/vision/stable/transforms.html", required: true }, { title: "数据增强技术综述", url: "https://arxiv.org/abs/1906.11837", required: false },  { title: "Albumentations数据增强库", url: "https://albumentations.ai/", required: false, type: "repo", source: "github" }], checkpoint: "能在 CIFAR-10 上训练一个小型 AlexNet，val_acc > 70%" },
+        }, duration: "2小时", resources: [R_CS231N, { title: "AlexNet 原始论文", url: "https://papers.nips.cc/paper/2012/hash/c399862d3b9d6b76c8436e924a68c45b-Abstract.html", required: false, type: "article", source: "official" }, { title: "PyTorch 数据增强文档", url: "https://pytorch.org/vision/stable/transforms.html", required: true, type: "article", source: "official" }, { title: "数据增强技术综述", url: "https://arxiv.org/abs/1906.11837", required: false, type: "paper", source: "academic" },  { title: "Albumentations数据增强库", url: "https://albumentations.ai/", required: false, type: "repo", source: "github" }], checkpoint: "能在 CIFAR-10 上训练一个小型 AlexNet，val_acc > 70%" },
       { day: 5, title: "VGG：小卷积核堆叠",
         summary: "理解VGG网络设计哲学，实现VGG-11简化版，在CIFAR-10上训练对比。", content: {
           objective: "今天你将学习VGG网络的核心设计思想——用小卷积核堆叠替代大卷积核。学完后能理解VGG的架构演进规律，从零实现VGG-11简化版，分析参数量分布。VGG的模块化设计思想影响了后续几乎所有CNN架构，是理解网络设计的关键一环。",
@@ -1355,7 +1355,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "从零实现VGG-11简化版（8个卷积层+3个全连接层），注意将输入适配为CIFAR-10的32x32尺寸（适当减少全连接层维度）。训练20个epoch，记录训练时间和最终验证准确率。与之前的AlexNet和LeNet做对比：参数量、训练速度、最终精度三个维度。分析为什么更深的网络能达到更高精度，但也更容易过拟合。最后尝试移除全连接层，改用全局平均池化，观察参数量和精度的变化。",
           deep_dive: "VGG虽然参数量巨大，但其特征提取能力至今仍被广泛使用。在风格迁移、特征感知损失（perceptual loss）、图像生成等任务中，VGG的预训练特征常被用来衡量图像之间的感知差异。这是因为VGG的特征层次清晰、语义信息丰富。另一个有趣的发现是：VGG的不同层捕获不同级别的特征——浅层是边缘和颜色，中层是纹理和图案，深层是物体部件和整体形状。这种层次化特征表示是深度学习在视觉任务上成功的关键原因之一。"
-        }, duration: "2小时", resources: [R_CS231N, { title: "VGG 原始论文", url: "https://arxiv.org/abs/1409.1556", required: false }, { title: "VGG 网络结构详解", url: "https://neurohive.io/en/popular-networks/vgg16/", required: false }, { title: "D2L: VGG 实现", url: "https://zh.d2l.ai/chapter_convolutional-modern/vgg.html", required: true },  { title: "VGG PyTorch实现代码", url: "https://github.com/pytorch/vision/blob/main/torchvision/models/vgg.py", required: false, type: "repo", source: "github" }], checkpoint: "能从零实现 VGG-11（简化版）并在 CIFAR 上训练" },
+        }, duration: "2小时", resources: [R_CS231N, { title: "VGG 原始论文", url: "https://arxiv.org/abs/1409.1556", required: false, type: "paper", source: "academic" }, { title: "VGG 网络结构详解", url: "https://neurohive.io/en/popular-networks/vgg16/", required: false, type: "article", source: "official" }, { title: "D2L: VGG 实现", url: "https://zh.d2l.ai/chapter_convolutional-modern/vgg.html", required: true, type: "article", source: "official" },  { title: "VGG PyTorch实现代码", url: "https://github.com/pytorch/vision/blob/main/torchvision/models/vgg.py", required: false, type: "repo", source: "github" }], checkpoint: "能从零实现 VGG-11（简化版）并在 CIFAR 上训练" },
       { day: 6, title: "残差连接与 ResNet",
         summary: "深入理解残差连接原理，从零实现ResNet-18，在CIFAR-10上达到高精度。", content: {
           objective: "今天你将学习深度学习史上最重要的架构创新之一——残差连接，以及ResNet网络。学完后能理解残差连接如何解决深层网络退化问题，从零实现ResNet-18，在CIFAR-10上达到85%以上准确率。残差连接的思想影响深远，后续Transformer等架构也广泛采用。",
@@ -1368,7 +1368,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "从零实现ResNet-18，包含完整的残差块、shortcut投影、BatchNorm等组件。使用Kaiming初始化方法初始化权重。在CIFAR-10数据集上训练30个epoch，使用CosineAnnealing学习率调度器。训练完成后验证准确率达到85%以上。做一个对比实验：去掉所有残差连接（即普通的18层网络），观察是否出现退化现象——训练准确率是否反而低于ResNet-18。用实验数据验证残差连接的有效性。",
           deep_dive: "残差连接的成功不仅在于缓解梯度消失，更深刻的原因是它提供了「梯度高速公路」，让梯度可以无衰减地从输出层传播到任意浅层。从动力学角度看，残差网络等效于多个不同深度的子网络的集成（ensemble）。后续的研究进一步发展出：Pre-Activation ResNet（BN和ReLU放在卷积前）、ResNeXt（分组卷积+残差）、DenseNet（密集连接，每一层都与前面所有层相连）等变体。残差连接的思想已经渗透到深度学习的各个领域，包括NLP的Transformer、语音识别、生成模型等。"
-        }, duration: "2.5小时", resources: [{ title: "ResNet 论文", url: "https://arxiv.org/abs/1512.03385", required: true }, R_D2L, { title: "ResNet 结构详解（中文）", url: "https://zh.d2l.ai/chapter_convolutional-modern/resnet.html", required: true }, { title: "残差连接的直觉解释", url: "https://towardsdatascience.com/understanding-and-visualizing-resnets-4532e3c644d1", required: false }], checkpoint: "能从零实现 ResNet-18，并在 CIFAR-10 上达到 val_acc > 85%" },
+        }, duration: "2.5小时", resources: [{ title: "ResNet 论文", url: "https://arxiv.org/abs/1512.03385", required: true, type: "paper", source: "academic" }, R_D2L, { title: "ResNet 结构详解（中文）", url: "https://zh.d2l.ai/chapter_convolutional-modern/resnet.html", required: true, type: "article", source: "official" }, { title: "残差连接的直觉解释", url: "https://towardsdatascience.com/understanding-and-visualizing-resnets-4532e3c644d1", required: false, type: "article", source: "official" }], checkpoint: "能从零实现 ResNet-18，并在 CIFAR-10 上达到 val_acc > 85%" },
       { day: 7, title: "BatchNorm / LayerNorm 与训练稳定性",
         summary: "掌握BatchNorm和LayerNorm原理与区别，理解归一化对训练的影响。", content: {
           objective: "今天你将深入学习批量归一化（BatchNorm）和层归一化（LayerNorm）的原理与应用。学完后能解释BN在训练和推理阶段的行为差异，理解各种归一化方法的适用场景。归一化是训练深度网络的关键技术，直接影响训练速度和最终精度。",
@@ -1381,7 +1381,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "设计一组对比实验来理解BatchNorm的作用：在ResNet-18上分别测试（1）完整BatchNorm、（2）移除所有BN层、（3）BN层替换为LayerNorm三种情况。使用相同的学习率和训练配置，各训练10个epoch，记录训练损失曲线和验证准确率。观察移除BN后训练是否变得不稳定、是否需要降低学习率才能收敛。最后可视化某一层BN的running_mean和running_var在训练过程中的变化曲线。",
           deep_dive: "BatchNorm虽然有效，但也有局限：batch size太小时统计不准、训练推理行为不一致、序列任务中不适用。近年来的研究提出了许多替代方案：LayerNorm适合NLP和小batch，GroupNorm将通道分组后归一化（适合检测/分割等batch小的任务），WeightNorm直接归一化权重向量（不依赖batch）。最新的研究如RMSNorm（Root Mean Square Layer Normalization）简化了LayerNorm，去掉了均值中心化，在大语言模型中广泛使用（如LLaMA、Qwen）。理解各种归一化的特性，能帮你根据任务选择最合适的方案。"
-        }, duration: "1.5小时", resources: [R_PYTORCH_DOC, { title: "BatchNorm 原始论文", url: "https://arxiv.org/abs/1502.03167", required: false }, { title: "BatchNorm vs LayerNorm 详解", url: "https://www.pinecone.io/learn/batch-layer-normalization/", required: true }, { title: "D2L: 批量归一化", url: "https://zh.d2l.ai/chapter_convolutional-modern/batch-norm.html", required: false },  { title: "GroupNorm论文", url: "https://arxiv.org/abs/1803.08494", required: false, type: "paper", source: "academic" }], checkpoint: "能解释 BN 在训练/推理阶段的行为差异" },
+        }, duration: "1.5小时", resources: [R_PYTORCH_DOC, { title: "BatchNorm 原始论文", url: "https://arxiv.org/abs/1502.03167", required: false, type: "paper", source: "academic" }, { title: "BatchNorm vs LayerNorm 详解", url: "https://www.pinecone.io/learn/batch-layer-normalization/", required: true, type: "article", source: "official" }, { title: "D2L: 批量归一化", url: "https://zh.d2l.ai/chapter_convolutional-modern/batch-norm.html", required: false, type: "article", source: "official" },  { title: "GroupNorm论文", url: "https://arxiv.org/abs/1803.08494", required: false, type: "paper", source: "academic" }], checkpoint: "能解释 BN 在训练/推理阶段的行为差异" },
       { day: 8, title: "迁移学习：预训练 ResNet",
         summary: "掌握迁移学习方法论，用预训练ResNet在自定义小数据集上快速达到高精度。", content: {
           objective: "今天你将学习迁移学习的核心思想和实践方法。学完后能加载torchvision的预训练ResNet，替换分类头适配自定义数据集，掌握冻结backbone和微调两种策略。在数据量有限的场景下，迁移学习是最有效的技术手段，能让你用少量数据达到很好的效果。",
@@ -1394,7 +1394,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "选择一个小型自定义数据集（如10类花卉或宠物图片，每类100-200张），使用torchvision的预训练ResNet-18做迁移学习。分两步实验：第一步冻结backbone，只训练最后的全连接层，训练10个epoch，观察精度快速上升的过程。第二步解冻整个网络，用很小的学习率（1e-5）微调5个epoch，观察精度进一步提升。对比两种策略的训练速度和最终精度。最后做一个对照实验：随机初始化权重从头训练，验证迁移学习的巨大优势。",
           deep_dive: "迁移学习的效果取决于源域和目标域的相似度。如果目标域与ImageNet差异很大（如医学图像、卫星图像），迁移学习的增益会减小。此时可以考虑：在目标域数据上从头预训练、或者用领域适应（Domain Adaptation）技术缩小域间差异。另一个进阶技巧是渐进式解冻：先只训分类头，然后逐步解冻后面的层，每解冻几层训练几个epoch。这种方法比一次性解冻全部层更稳定，尤其在数据集较小时能避免破坏预训练的低层特征。最新的自监督学习（如MAE、SimCLR）进一步提升了预训练特征的质量，使得迁移学习的效果更好。"
-        }, duration: "2.5小时", resources: [R_PYTORCH_TUT, { title: "PyTorch 迁移学习教程", url: "https://pytorch.org/tutorials/beginner/transfer_learning_tutorial.html", required: true }, { title: "迁移学习实战指南", url: "https://cs231n.github.io/transfer-learning/", required: true }, { title: "torchvision 预训练模型库", url: "https://pytorch.org/vision/stable/models.html", required: false }], checkpoint: "在小型自定义数据集（比如 10 类图片）上，用迁移学习 val_acc > 随机初始化" },
+        }, duration: "2.5小时", resources: [R_PYTORCH_TUT, { title: "PyTorch 迁移学习教程", url: "https://pytorch.org/tutorials/beginner/transfer_learning_tutorial.html", required: true, type: "article", source: "official" }, { title: "迁移学习实战指南", url: "https://cs231n.github.io/transfer-learning/", required: true, type: "article", source: "official" }, { title: "torchvision 预训练模型库", url: "https://pytorch.org/vision/stable/models.html", required: false, type: "article", source: "official" }], checkpoint: "在小型自定义数据集（比如 10 类图片）上，用迁移学习 val_acc > 随机初始化" },
       { day: 9, title: "可视化训练中的 filters 与特征图",
         summary: "掌握卷积核和特征图可视化技术，理解CNN各层学到的层次化特征。", content: {
           objective: "今天你将学习卷积神经网络的可视化技术，直观理解CNN各层学到了什么。学完后能可视化卷积核权重、中间层特征图，使用PyTorch的hook机制捕获中间输出。可视化是诊断模型问题、理解网络行为的重要手段，能帮助你更有直觉地设计和调试网络。",
@@ -1407,7 +1407,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "加载一个预训练的ResNet-18模型，完成以下可视化任务：1）可视化第一层卷积层的64个3x7x7卷积核，观察是否呈现边缘检测器的形态。2）使用register_forward_hook注册钩子，捕获layer1、layer2、layer3、layer4的输出特征图。3）输入一张测试图片，分别可视化4个阶段的特征图（每个阶段选前16个通道），观察特征从低级到高级的演变过程。4）统计各层激活的稀疏度（零值激活占比），分析哪些层激活稀疏可能有问题。",
           deep_dive: "除了直接可视化权重和特征图，还有更高级的特征可视化方法：激活最大化（Activation Maximization）通过梯度上升生成最大化某个神经元激活的输入图像，揭示该神经元「喜欢」什么模式；特征反演（Feature Inversion）从特征图重建原始图像，展示特征图中保留了多少信息；类激活图（CAM/Grad-CAM）定位图像中对分类最重要的区域。这些可视化技术不仅能帮助我们理解网络，还催生了许多应用：用Grad-CAM做弱监督定位、用特征可视化做网络架构搜索的辅助工具、用激活模式做模型水印等。理解CNN学到了什么，是理解深度学习为什么有效的关键。"
-        }, duration: "2小时", resources: [R_CS231N, { title: "CNN 特征可视化指南", url: "https://distill.pub/2017/feature-visualization/", required: true }, { title: "PyTorch Hook 机制详解", url: "https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module.register_forward_hook", required: true }, { title: "Zeiler & Fergus 特征可视化论文", url: "https://arxiv.org/abs/1311.2901", required: false }], checkpoint: "能画出某个卷积核组和一张图片经过它后的响应图" },
+        }, duration: "2小时", resources: [R_CS231N, { title: "CNN 特征可视化指南", url: "https://distill.pub/2017/feature-visualization/", required: true, type: "article", source: "official" }, { title: "PyTorch Hook 机制详解", url: "https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module.register_forward_hook", required: true, type: "doc", source: "official" }, { title: "Zeiler & Fergus 特征可视化论文", url: "https://arxiv.org/abs/1311.2901", required: false, type: "paper", source: "academic" }], checkpoint: "能画出某个卷积核组和一张图片经过它后的响应图" },
       { day: 10, title: "Grad-CAM：定位分类响应区域",
         summary: "实现Grad-CAM类激活映射，可视化CNN决策依据，进行可解释性分析。", content: {
           objective: "今天你将学习Grad-CAM（梯度加权类激活映射）技术，用它来可视化CNN做出分类决策时关注图像的哪些区域。学完后能从零实现Grad-CAM，生成热力图叠加在原图上，分析模型的决策依据。可解释性是AI落地的重要一环，Grad-CAM是CV领域最经典的可视化方法。",
@@ -1420,7 +1420,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "从零实现Grad-CAM算法：1）创建GradCAM类，用hook注册最后一层卷积的前向和反向钩子。2）输入一张图片，前向传播得到分类logits。3）选择目标类别，反向传播得到该类别相对于最后一层特征图的梯度。4）对梯度在空间维度取平均得到每个通道的权重alpha。5）将权重与特征图加权求和，通过ReLU激活得到热力图。6）将热力图上采样到原图尺寸，用伪彩色叠加在原图上显示。最后用3张不同类别的图片测试，观察模型关注的区域是否合理。",
           deep_dive: "Grad-CAM不仅是可视化工具，还有很多实际应用：在医学影像中，Grad-CAM可以高亮病变区域辅助医生诊断；在自动驾驶中，可以验证模型是否真的在看行人、车辆和交通标志而不是依赖背景偏见；在产品质量检测中，可以定位缺陷位置。但Grad-CAM也有局限：它只能给出大致的区域定位，精度有限；当模型有多个注意力焦点时可能模糊。最新的研究如Transformer-Attention可视化、Concept Activation Vectors（CAV）等提供了更多可解释性视角。可解释AI（XAI）是一个活跃的研究领域，对于建立用户信任、满足监管要求、发现模型偏见都至关重要。"
-        }, duration: "2.5小时", resources: [{ title: "Grad-CAM 论文", url: "https://arxiv.org/abs/1610.02391", required: true }, { title: "Grad-CAM 可视化教程", url: "https://gradcam.app/", required: false }, { title: "PyTorch Grad-CAM 实现", url: "https://github.com/jacobgil/pytorch-grad-cam", required: false }, { title: "CNN 可解释性综述", url: "https://distill.pub/2019/activation-atlas/", required: false }], checkpoint: "能对一张输入图片生成目标类别的 Grad-CAM 热图并可视化" },
+        }, duration: "2.5小时", resources: [{ title: "Grad-CAM 论文", url: "https://arxiv.org/abs/1610.02391", required: true, type: "paper", source: "academic" }, { title: "Grad-CAM 可视化教程", url: "https://gradcam.app/", required: false, type: "article", source: "official" }, { title: "PyTorch Grad-CAM 实现", url: "https://github.com/jacobgil/pytorch-grad-cam", required: false, type: "repo", source: "github" }, { title: "CNN 可解释性综述", url: "https://distill.pub/2019/activation-atlas/", required: false, type: "article", source: "official" }], checkpoint: "能对一张输入图片生成目标类别的 Grad-CAM 热图并可视化" },
       { day: 11, title: "t-SNE / UMAP 嵌入可视化",
         summary: "使用t-SNE和UMAP降维可视化特征空间，评估模型学到的表示质量。", content: {
           objective: "今天你将学习用t-SNE和UMAP等降维算法将高维特征投影到2D平面，直观评估模型学到的特征表示质量。学完后能提取模型的特征向量，绘制美观的散点图，通过聚类效果判断特征好坏。这是评估模型、分析数据集、发现问题的重要可视化手段。",
@@ -1433,7 +1433,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "使用预训练ResNet-18提取CIFAR-10测试集所有样本的512维特征向量（avgpool层的输出）。然后分别用sklearn的TSNE和umap-learn库的UMAP将512维降到2维。用不同颜色绘制10个类别的2D散点图，观察同类样本是否聚集、不同类别之间是否有清晰边界。对比t-SNE和UMAP的可视化效果差异（速度、局部结构、全局结构）。最后做一个有趣的实验：用一个随机初始化的模型提取特征再做t-SNE，与预训练模型的结果对比，直观感受预训练带来的特征质量提升。",
           deep_dive: "降维可视化不仅是好看的图，更有重要的实用价值：在新数据集上，可以快速发现标注错误（某个类的点跑到别的簇里）和类别不平衡问题；在模型训练中，可以监控特征空间的演变，判断模型是否学到了有用的表示；在领域适应任务中，可以可视化源域和目标域的特征分布差异。但t-SNE也有常见的误用：簇的大小和距离可能没有意义（只是算法的artifact）、困惑度（perplexity）参数会显著影响结果、相同数据多次运行结果可能不同。解读t-SNE图时要谨慎：看聚类趋势和相对关系，不要过度解读具体的位置和形状。推荐结合UMAP和PCA一起使用，从多个角度理解数据。"
-        }, duration: "2小时", resources: [{ title: "sklearn TSNE 文档", url: "https://scikit-learn.org/stable/modules/generated/sklearn.manifold.TSNE.html", required: true }, { title: "t-SNE 原理图解", url: "https://distill.pub/2016/misread-tsne/", required: true }, { title: "UMAP 文档（t-SNE 替代方案）", url: "https://umap-learn.readthedocs.io/", required: false }], checkpoint: "能画出 2D t-SNE 散点图，同类样本聚类明显" },
+        }, duration: "2小时", resources: [{ title: "sklearn TSNE 文档", url: "https://scikit-learn.org/stable/modules/generated/sklearn.manifold.TSNE.html", required: true, type: "article", source: "official" }, { title: "t-SNE 原理图解", url: "https://distill.pub/2016/misread-tsne/", required: true, type: "article", source: "official" }, { title: "UMAP 文档（t-SNE 替代方案）", url: "https://umap-learn.readthedocs.io/", required: false, type: "doc", source: "official" }], checkpoint: "能画出 2D t-SNE 散点图，同类样本聚类明显" },
       { day: 12, title: "MobileNet / 深度可分离卷积",
         summary: "实现深度可分离卷积，构建轻量模型，对比精度和参数量的权衡关系。", content: {
           objective: "今天你将学习移动端高效网络的核心技术——深度可分离卷积，以及MobileNet系列架构。学完后能自己实现深度可分离卷积模块，构建一个轻量级分类模型，在精度和效率之间找到平衡。边缘设备部署是AI落地的重要方向，轻量化网络设计是必备技能。",
@@ -1446,7 +1446,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "自定义实现DepthwiseSeparableConv2d模块：用groups=in_channels的Conv2d实现depthwise部分，再接一个1x1的pointwise卷积，中间加BN和ReLU。然后用这个模块构建一个小型分类网络（类似MobileNet的简化版）。在CIFAR-10上训练20个epoch，记录参数量、FLOPs、训练速度和最终精度。与相同层数的标准卷积网络做对比：参数量减少了多少？精度下降了多少？计算性价比（精度/FLOPs）哪个更高？最后尝试用torchvision的MobileNetV2预训练模型做迁移学习，看轻量模型在迁移学习下的表现。",
           deep_dive: "轻量化网络设计是学术界和工业界都非常活跃的方向。核心思路包括：1）设计更高效的算子（深度可分离卷积、分组卷积、移位卷积等）；2）神经架构搜索（NAS）用算法自动搜索最优网络结构，如MobileNetV3、EfficientNet；3）模型压缩（剪枝、量化、蒸馏）在训练后减小模型体积；4）知识蒸馏用大模型教小模型。实际项目中，往往需要多种手段结合：先用大模型得到高精度，再用蒸馏+量化+剪枝压缩到部署目标。另一个重要趋势是硬件感知的模型设计（Hardware-Aware NAS），针对特定芯片（如手机NPU、FPGA、ASIC）优化网络结构，达到最佳的实际运行效率。"
-        }, duration: "2小时", resources: [{ title: "MobileNets 论文", url: "https://arxiv.org/abs/1704.04861", required: true }, { title: "MobileNetV2 论文", url: "https://arxiv.org/abs/1801.04381", required: false }, { title: "D2L: 深度可分离卷积", url: "https://zh.d2l.ai/chapter_convolutional-modern/nin.html", required: false }, { title: "轻量级网络对比综述", url: "https://arxiv.org/abs/2102.00457", required: false }], checkpoint: "能用深度可分离卷积构建一个轻量模型，参数量显著小于 ResNet-18" },
+        }, duration: "2小时", resources: [{ title: "MobileNets 论文", url: "https://arxiv.org/abs/1704.04861", required: true, type: "paper", source: "academic" }, { title: "MobileNetV2 论文", url: "https://arxiv.org/abs/1801.04381", required: false, type: "paper", source: "academic" }, { title: "D2L: 深度可分离卷积", url: "https://zh.d2l.ai/chapter_convolutional-modern/nin.html", required: false, type: "article", source: "official" }, { title: "轻量级网络对比综述", url: "https://arxiv.org/abs/2102.00457", required: false, type: "paper", source: "academic" }], checkpoint: "能用深度可分离卷积构建一个轻量模型，参数量显著小于 ResNet-18" },
       { day: 13, title: "数据增强与 TTA",
         summary: "掌握高级数据增强技术和测试时增强（TTA），全方位提升模型泛化能力。", content: {
           objective: "今天你将学习高级数据增强技术和测试时增强（TTA）策略，系统提升模型的泛化能力。学完后能实现Cutout、Mixup、CutMix等增强方法，在推理时使用TTA获得额外精度提升。数据增强是提升模型性能性价比最高的手段之一，在竞赛和工业界都广泛使用。",
@@ -1459,7 +1459,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "实现三种数据增强并验证效果：1）Cutout：随机遮挡图像中的一个矩形区域，迫使模型关注全局而非局部特征。2）Mixup：将两张图按比例线性混合，标签也混合，平滑决策边界。3）CutMix：用另一张图的矩形区域替换当前图的对应区域。在CIFAR-10上分别训练baseline和三种增强模型，各训练20个epoch，对比验证准确率。然后实现一个简单的TTA：测试时对每张图做原始+水平翻转两个版本，取平均预测概率。对比TTA前后的准确率差异，看看能提升多少个百分点。",
           deep_dive: "数据增强的本质是在不增加真实数据的情况下，扩展训练分布，让模型学习到更鲁棒的特征。选择增强策略需要考虑任务特性：比如人脸识别中不能随意翻转（左右脸不对称有意义），医学图像中某些增强可能改变病理意义。在目标检测中，增强策略更复杂：Mosaic拼接四张图、Copy-Paste复制粘贴目标实例、MixUp检测版本等。数据增强也是解决类别不平衡的手段之一：对少数类做更强的增强（过采样）。最新的研究方向包括：用生成模型（GAN/Diffusion）合成增强数据、学习型增强（让模型自己学最好的增强策略）、针对特定任务的领域特定增强。掌握数据增强的艺术，能让你在相同数据和模型下获得显著的性能提升。"
-        }, duration: "2小时", resources: [R_PYTORCH_TUT, { title: "数据增强方法综述", url: "https://arxiv.org/abs/1906.11837", required: false }, { title: "Mixup 论文", url: "https://arxiv.org/abs/1710.09412", required: false }, { title: "RandAugment 论文", url: "https://arxiv.org/abs/1909.13719", required: false }], checkpoint: "能在推理时启用 TTA，val_acc 相对 baseline 提升" },
+        }, duration: "2小时", resources: [R_PYTORCH_TUT, { title: "数据增强方法综述", url: "https://arxiv.org/abs/1906.11837", required: false, type: "paper", source: "academic" }, { title: "Mixup 论文", url: "https://arxiv.org/abs/1710.09412", required: false, type: "paper", source: "academic" }, { title: "RandAugment 论文", url: "https://arxiv.org/abs/1909.13719", required: false, type: "paper", source: "academic" }], checkpoint: "能在推理时启用 TTA，val_acc 相对 baseline 提升" },
       { day: 14, title: "综合：图像分类小比赛",
         summary: "完成一个完整的图像分类竞赛项目，从数据处理到模型调优再到结果分析。", content: {
           objective: "今天你将综合运用前13天所学的所有知识，完成一个完整的图像分类项目。你将自选数据集、对比多种模型、系统调优、分析结果，最终产出一份完整的实验报告。这是检验你CNN学习成果的最佳方式，也是简历上的实战项目素材。",
@@ -1472,7 +1472,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "从Kaggle或其他平台选择一个10类以内的图像数据集（如花卉、食物、动物，每类200-500张）。完成以下工作：1）数据准备：划分训练验证测试集，统计类别分布，检查数据质量。2）基线模型：用ResNet-18迁移学习建立基线。3）对比实验：至少对比3种不同模型（轻量/中量/重量），统一训练策略确保公平。4）结果分析：制作模型对比表格（参数量、FLOPs、训练时间、val_acc、推理速度），绘制训练曲线，用Grad-CAM可视化典型样本。5）错误分析：挑选20个失败样本，分类错误原因（遮挡、角度、类间相似、标注错误等），提出改进方向。最后产出完整的实验报告notebook或markdown文档。",
           deep_dive: "图像分类竞赛的进阶技巧：1）模型集成（Ensemble）：训练多个不同模型，预测时加权平均或投票，通常能稳定提升1-3个点。2）5折交叉验证：更稳健的评估，用5个模型的集成做最终预测。3）伪标签（Pseudo Labeling）：用模型对无标注数据预测，选择高置信度的作为伪标签加入训练，半监督学习。4）学习率调优：用LR Finder找最优学习率范围，结合CosineAnnealing+Warmup。5）渐进式训练：先从小尺寸图片快速迭代，再逐步增大图片尺寸精细训练。6）后处理：阈值优化、标签平滑、温度缩放校准置信度。掌握这些技巧，你就能在数据科学竞赛中取得好成绩，也能在工业项目中榨干模型的每一点性能。"
-        }, duration: "3小时", resources: [R_CS231N, R_PYTORCH_TUT, { title: "Kaggle 图像数据集", url: "https://www.kaggle.com/datasets?tags=13207-Image", required: false }, { title: "PyTorch 图像分类最佳实践", url: "https://pytorch.org/tutorials/beginner/finetuning_torchvision_models_tutorial.html", required: false }], checkpoint: "产出完整实验报告：模型对比表 + 可视化 + 失败样本分析" }],
+        }, duration: "3小时", resources: [R_CS231N, R_PYTORCH_TUT, { title: "Kaggle 图像数据集", url: "https://www.kaggle.com/datasets?tags=13207-Image", required: false, type: "article", source: "official" }, { title: "PyTorch 图像分类最佳实践", url: "https://pytorch.org/tutorials/beginner/finetuning_torchvision_models_tutorial.html", required: false, type: "article", source: "official" }], checkpoint: "产出完整实验报告：模型对比表 + 可视化 + 失败样本分析" }],
   },
 
   // =====================================================
@@ -1491,7 +1491,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["训练自定义目标检测数据集", "推理优化与部署"],
     relatedIntel: ["002-yolo", "014-onnx"],
     relatedTools: ["Ultralytics YOLO", "ONNX Runtime"],
-    relatedTerms: ["yolo", "object-detection", "bounding-box", "map", "nms"],
+    relatedTerms: ["yolo", "object-detection", "bounding-box", "map", "nms"], relatedNodes: ["cv-cnn", "cv-instance-segmentation"],
     dailyTasks: [
       { day: 1, title: "目标检测任务与边界框",
         summary: "理解目标检测任务定义，掌握边界框标注格式与可视化方法。", content: {
@@ -1505,7 +1505,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "编写完整的边界框处理工具：1）实现两个转换函数：voc_to_yolo(bbox, img_w, img_h)和yolo_to_voc(bbox, img_w, img_h)，确保双向转换正确。2）编写可视化函数：读取一张图片和对应的YOLO格式标注，用OpenCV或PIL在图上绘制矩形框，在框上方标注类别名称。3）找一个公开的检测数据集（如VOC2007的子集），随机抽取几张图片验证标注是否准确。4）编写一个批量验证脚本，统计数据集中每个类别的目标数量、平均目标大小、小目标占比等统计信息，全面了解数据集特性。",
           deep_dive: "边界框表示方法除了VOC和YOLO格式，还有COCO格式（左上角x,y+宽高w,h，像素绝对值）。不同框架和数据集使用不同格式，转换时要特别小心。更深入的问题是：边界框本身就是一种粗糙的表示——真实目标形状往往是不规则的，矩形框包含了大量背景像素。这也是为什么有了更精细的分割任务（语义分割、实例分割）。但检测框简单高效，在很多场景下足够用。标注时的常见问题包括：框太松（包含太多背景）、框太紧（切掉目标部分）、目标部分可见时框定原则不一致、小目标标注困难等。建立统一的标注规范文档，对多人标注项目至关重要。标注质量检查可以用统计方法：计算标注者之间的一致性（IAA），用模型预测辅助发现可疑标注。"
-        }, duration: "1.5小时", resources: [B_CV_TUTORIAL, R_ULTRALYTICS, { title: "目标检测边界框格式详解", url: "https://albumentations.ai/docs/getting_started/bounding_boxes_augmentation/", required: false }, { title: "Pascal VOC 数据集格式说明", url: "http://host.robots.ox.ac.uk/pascal/VOC/", required: false }, { title: "YOLO 标注格式说明", url: "https://docs.ultralytics.com/datasets/detect/", required: true },  { title: "目标检测数据集标注工具", url: "https://github.com/facebookresearch/Detectron", required: false, type: "repo", source: "github" }], checkpoint: "能读取 YOLO 格式的标注并画到图片上" },
+        }, duration: "1.5小时", resources: [B_CV_TUTORIAL, R_ULTRALYTICS, { title: "目标检测边界框格式详解", url: "https://albumentations.ai/docs/getting_started/bounding_boxes_augmentation/", required: false, type: "doc", source: "official" }, { title: "Pascal VOC 数据集格式说明", url: "http://host.robots.ox.ac.uk/pascal/VOC/", required: false, type: "article", source: "official" }, { title: "YOLO 标注格式说明", url: "https://docs.ultralytics.com/datasets/detect/", required: true, type: "doc", source: "official" },  { title: "目标检测数据集标注工具", url: "https://github.com/facebookresearch/Detectron", required: false, type: "repo", source: "github" }], checkpoint: "能读取 YOLO 格式的标注并画到图片上" },
       { day: 2, title: "IoU 与 NMS",
         summary: "深入理解IoU交并比与NMS非极大值抑制，从零实现核心算法。", content: {
           objective: "今天你将学习目标检测中最核心的两个算法：IoU（交并比）和NMS（非极大值抑制）。学完后能从零实现IoU计算和朴素NMS，理解它们在检测流水线中的作用。这两个算法是目标检测的基石，从评估指标到后处理都离不开它们。",
@@ -1518,7 +1518,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "从零实现IoU和NMS并验证：1）实现bbox_iou(box1, box2)函数，输入VOC格式的两个框，返回IoU值。用几个手工构造的测试用例验证：完全重叠应得1.0、不重叠应得0.0、部分重叠手动计算验证。2）实现nms(boxes, scores, iou_threshold)函数，输入框列表和对应置信度，返回保留的框索引。3）生成合成数据测试NMS：在同一目标附近生成10个重叠的框（带不同置信度），用不同阈值（0.3/0.5/0.7）测试，观察保留框数量的变化。4）可视化NMS前后的框，直观理解去重效果。最后尝试实现Soft-NMS变体，对比两者在密集目标场景下的差异。",
           deep_dive: "IoU的概念已经发展出一整个家族：GIoU（Generalized IoU）考虑了不重叠的情况，解决了IoU=0时不可导的问题；DIoU（Distance IoU）加入了中心点距离的惩罚，收敛更快；CIoU（Complete IoU）同时考虑重叠面积、中心点距离和宽高比，是目前最完善的检测框损失函数。这些IoU变体不仅用于评估，更重要的是用作损失函数（IoU Loss）直接优化检测框的重合度，比smooth L1 loss更符合检测任务的目标。在NMS方面，除了Soft-NMS，还有许多改进：Matrix NMS用并行矩阵操作实现、Softer-NMS结合框的不确定性、Weighted NMS加权融合重叠框。理解这些进阶内容，能让你更深入地把握目标检测的核心问题。"
-        }, duration: "2小时", resources: [R_ULTRALYTICS, { title: "IoU 与 NMS 图解", url: "https://medium.com/@vennelaworkspace/understanding-iou-and-nms-in-object-detection-1a0e2a5a6a72", required: false }, { title: "NMS 算法详解", url: "https://www.coursera.org/lecture/convolutional-neural-networks/non-max-suppression-dvrpc", required: false }, { title: "Soft-NMS 论文", url: "https://arxiv.org/abs/1704.04503", required: false },  { title: "IoU NMS实现代码", url: "https://github.com/amusi/Non-Maximum-Suppression", required: false, type: "repo", source: "github" }], checkpoint: "能独立实现 IoU 与朴素 NMS，并在合成数据上跑通" },
+        }, duration: "2小时", resources: [R_ULTRALYTICS, { title: "IoU 与 NMS 图解", url: "https://medium.com/@vennelaworkspace/understanding-iou-and-nms-in-object-detection-1a0e2a5a6a72", required: false, type: "article", source: "official" }, { title: "NMS 算法详解", url: "https://www.coursera.org/lecture/convolutional-neural-networks/non-max-suppression-dvrpc", required: false, type: "article", source: "official" }, { title: "Soft-NMS 论文", url: "https://arxiv.org/abs/1704.04503", required: false, type: "paper", source: "academic" },  { title: "IoU NMS实现代码", url: "https://github.com/amusi/Non-Maximum-Suppression", required: false, type: "repo", source: "github" }], checkpoint: "能独立实现 IoU 与朴素 NMS，并在合成数据上跑通" },
       { day: 3, title: "mAP 指标理解",
         summary: "掌握目标检测标准评估指标mAP的计算原理与实践方法。", content: {
           objective: "今天你将深入理解目标检测最核心的评估指标——mAP（平均精度均值）。学完后能解释精确率召回率的概念、AP的计算方法、mAP与分类准确率的区别，能使用pycocotools进行标准化评估。正确的评估是模型改进的指南针，理解指标才能知道优化方向。",
@@ -1531,7 +1531,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "手动计算小例子+工具实践结合：1）手工计算一个简单场景的AP：假设某类别有5个真实目标，模型输出8个检测结果（带置信度和正确/错误标记），手动绘制PR曲线并计算AP值。2）安装pycocotools，将你的检测结果和标注都转换为COCO格式（JSON），使用COCOeval类计算mAP@0.5、mAP@0.5:0.95、mAP_small/medium/large（按目标大小分）等全套指标。3）理解每个指标的含义：mAP@0.5宽松（框大致对就算）、mAP@0.75严格（框要很准）、mAP_s衡量小目标检测能力。4）故意制造一些错误（如把类别搞混、把框画偏），观察mAP各指标如何变化，建立指标与问题的对应关系。",
           deep_dive: "mAP虽然是标准指标，但也有局限性：它不能完全反映用户体验。比如在实际应用中，可能更关心高置信度区间的precision（前K个结果的质量），或者更看重召回率（宁可误检不可漏检）。不同业务场景对指标的侧重不同：安防场景怕漏检→重视recall；推荐场景怕误打扰→重视precision；医疗诊断两者都重要但更不能漏。实际项目中建议补充自定义指标：比如按置信度阈值划分的FPPI（每张图假阳性数）vs Recall曲线、特定类别的单独指标、速度-精度权衡曲线等。另外，评估时还要注意测试集的质量：标注是否准确、类别分布是否合理、难易样本比例是否合适。一个好的评估体系应该是多维度的，单一mAP不能说明所有问题。"
-        }, duration: "2小时", resources: [{ title: "pycocotools GitHub", url: "https://github.com/cocodataset/cocoapi", required: true }, { title: "COCO 数据集评估指标详解", url: "https://cocodataset.org/#detection-eval", required: true }, { title: "目标检测评估指标图解", url: "https://github.com/rafaelpadilla/Object-Detection-Metrics", required: false }, { title: "mAP 计算原理视频", url: "https://www.youtube.com/watch?v=FppOzcDvaDI", required: false }], checkpoint: "能解释 mAP 与准确率的区别，并能在合成数据上跑通评估" },
+        }, duration: "2小时", resources: [{ title: "pycocotools GitHub", url: "https://github.com/cocodataset/cocoapi", required: true, type: "repo", source: "github" }, { title: "COCO 数据集评估指标详解", url: "https://cocodataset.org/#detection-eval", required: true, type: "article", source: "official" }, { title: "目标检测评估指标图解", url: "https://github.com/rafaelpadilla/Object-Detection-Metrics", required: false, type: "repo", source: "github" }, { title: "mAP 计算原理视频", url: "https://www.youtube.com/watch?v=FppOzcDvaDI", required: false, type: "video", source: "youtube" }], checkpoint: "能解释 mAP 与准确率的区别，并能在合成数据上跑通评估" },
       { day: 4, title: "Ultralytics YOLO 安装与推理 Demo",
         summary: "上手Ultralytics YOLOv8，完成安装、预训练模型加载和推理演示。", content: {
           objective: "今天你将上手工业界最流行的目标检测框架——Ultralytics YOLOv8。学完后能安装环境、加载预训练模型、对图片/视频/摄像头进行推理、解析检测结果。YOLO是目前应用最广泛的检测算法，掌握它是CV工程师的必备技能。",
@@ -1544,7 +1544,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成完整的YOLOv8推理体验：1）安装ultralytics库，验证安装成功（yolo checks命令）。2）下载一张包含多个常见物体的图片（如街道场景），用yolov8n.pt模型进行检测，查看输出结果。3）解析results对象：打印检测到的目标数量、每个目标的类别名、置信度、边界框坐标。4）使用results[0].plot()方法将检测结果绘制在图片上并保存，查看可视化效果。5）进阶测试：对一个短视频文件进行检测（model.predict('video.mp4', save=True)），观察逐帧检测的效果和速度。6）对比不同模型大小：分别用yolov8n和yolov8s检测同一张图，对比精度差异和推理速度差异。",
           deep_dive: "YOLOv8的推理接口虽然简单，但背后有很多工程优化：内置了图像预处理（缩放、归一化、letterbox填充）、自动批处理、结果后处理（NMS、坐标缩放回原图）等全套流水线。Ultralytics库不止支持检测，还支持实例分割（yolov8n-seg）、姿态估计（yolov8n-pose）、分类（yolov8n-cls）、定向边界框（OBB）等多种任务，是一个统一的多任务框架。在生产环境中，还有更多实用功能：置信度阈值和NMS阈值调整、指定检测的类别、多尺度推理、半精度推理加速、批量处理文件夹、结果导出为多种格式（JSON/CSV/COCO）。理解这些高级功能，能让你快速搭建出实用的检测系统。YOLO系列的成功不仅在于算法本身，更在于优秀的工程实现和生态系统。"
-        }, duration: "2小时", resources: [R_ULTRALYTICS, { title: "YOLOv8 快速入门", url: "https://docs.ultralytics.com/quickstart/", required: true }, { title: "YOLOv8 检测任务文档", url: "https://docs.ultralytics.com/tasks/detect/", required: true }, { title: "Ultralytics GitHub 仓库", url: "https://github.com/ultralytics/ultralytics", required: false }], checkpoint: "能用预训练 YOLOv8 对一张公开图做检测并查看输出 bbox" },
+        }, duration: "2小时", resources: [R_ULTRALYTICS, { title: "YOLOv8 快速入门", url: "https://docs.ultralytics.com/quickstart/", required: true, type: "doc", source: "official" }, { title: "YOLOv8 检测任务文档", url: "https://docs.ultralytics.com/tasks/detect/", required: true, type: "doc", source: "official" }, { title: "Ultralytics GitHub 仓库", url: "https://github.com/ultralytics/ultralytics", required: false, type: "repo", source: "github" }], checkpoint: "能用预训练 YOLOv8 对一张公开图做检测并查看输出 bbox" },
       { day: 5, title: "准备自定义 COCO/YOLO 数据集",
         summary: "掌握YOLO格式数据集构建，完成数据标注、质量检查和目录组织。", content: {
           objective: "今天你将学习如何构建一个YOLO格式的自定义检测数据集，从数据收集、标注到目录组织、质量验证。学完后能独立搭建一个可用的检测数据集，掌握标注工具的使用和数据质量检查方法。数据是模型性能的上限，高质量数据集是项目成功的关键。",
@@ -1557,7 +1557,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "从零构建一个小型自定义检测数据集：1）确定2-3个检测类别（如水杯、书本、笔等桌面物品），用手机或网络收集100-200张图片。2）划分训练集和验证集（80%/20%），按YOLO目录结构组织。3）使用LabelImg或其他标注工具标注所有图片，导出为YOLO格式。4）编写数据质量检查脚本：统计每个类别的目标数量、目标大小分布、是否有空标注文件、标注框是否超出图像边界。5）随机抽取10张图片，将标注框画在图上人工检查标注质量。6）创建data.yaml配置文件，确保路径和类别配置正确，为后续训练做好准备。",
           deep_dive: "数据集的质量和数量直接决定模型性能上限。构建数据集的最佳实践包括：1）覆盖性：确保训练数据涵盖各种场景、角度、光照、背景，避免数据偏差。2）平衡性：各目标类别数量不宜过于悬殊，严重不平衡会导致模型偏向多数类。3）一致性：标注标准要统一，特别是边界情况（如部分遮挡的目标要不要标、标多大），多人标注时要做一致性检查。4）难度分布：数据集中要有难有易，全是简单样本模型泛化不好，全是难样本学不动。5）数据增长策略：先小批量标注快速迭代，再针对模型的bad case补充数据，形成数据飞轮。对于预算有限的项目，可以巧妙利用公开数据集、数据增强、半监督学习、合成数据等方式降低标注成本。"
-        }, duration: "2.5小时", resources: [R_ULTRALYTICS, { title: "YOLO 数据集格式说明", url: "https://docs.ultralytics.com/datasets/detect/", required: true }, { title: "LabelImg 标注工具", url: "https://github.com/heartexlabs/labelImg", required: false }, { title: "Roboflow 数据标注平台", url: "https://roboflow.com/", required: false }], checkpoint: "拥有一个可被 YOLO 读取的≥100 张图的自定义数据集" },
+        }, duration: "2.5小时", resources: [R_ULTRALYTICS, { title: "YOLO 数据集格式说明", url: "https://docs.ultralytics.com/datasets/detect/", required: true, type: "doc", source: "official" }, { title: "LabelImg 标注工具", url: "https://github.com/heartexlabs/labelImg", required: false, type: "repo", source: "github" }, { title: "Roboflow 数据标注平台", url: "https://roboflow.com/", required: false, type: "article", source: "official" }], checkpoint: "拥有一个可被 YOLO 读取的≥100 张图的自定义数据集" },
       { day: 6, title: "训练 YOLOv8 自定义数据集",
         summary: "完成YOLOv8模型的完整训练流程，监控训练过程，诊断常见问题。", content: {
           objective: "今天你将使用YOLOv8在自定义数据集上完成完整的训练流程。学完后能启动训练、监控训练过程、解读训练曲线、诊断过拟合等常见问题、选择最佳模型权重。训练是检测项目的核心环节，掌握正确的训练方法和问题诊断能力至关重要。",
@@ -1570,7 +1570,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "用第5天准备好的自定义数据集完成完整训练：1）选择yolov8n.pt作为预训练权重，设置合适的epochs（如50-100）、imgsz=640、batch根据显存调整。2）启动训练，观察终端输出的各项指标（box_loss、cls_loss、dfl_loss、mAP50、mAP50-95）。3）训练完成后，查看runs/detect/train/目录下的所有输出文件：results.png训练曲线、confusion_matrix.png混淆矩阵、PR_curve.png PR曲线、val_batch*_pred.jpg验证集预测样例。4）对比best.pt和last.pt的区别，理解为什么应该用best.pt。5）如果出现过拟合，尝试调整参数（减少epochs、增加mosaic增强强度、减小模型）重新实验，观察过拟合是否改善。6）记录训练时间、最终mAP、显存占用等关键数据。",
           deep_dive: "YOLOv8训练的调参技巧和最佳实践：1）迁移学习：从COCO预训练权重开始微调，效果远好于从头训练，即使数据差异较大也有帮助。2）超参数默认值通常已经很好，但针对特定数据可以微调：学习率lr0、权重衰减weight_decay、动量momentum等。3）自动批大小：batch=-1时YOLOv8会自动测试最大的可用batch size。4）训练技巧：Cosine学习率调度、热身epochs（warmup）、标签平滑（label_smoothing）、多尺度训练（如果启用）。5）早停（Early Stopping）：patience参数控制多少轮没有提升就提前停止，避免过拟合和浪费时间。6）种子和可复现性：设置seed确保结果可复现。实际项目中，建议先跑一个快速实验（小模型、少epochs、小尺寸）验证pipeline跑通，再逐步加大投入。"
-        }, duration: "3小时", resources: [R_ULTRALYTICS, { title: "YOLOv8 训练详解", url: "https://docs.ultralytics.com/modes/train/", required: true }, { title: "YOLOv8 训练超参数说明", url: "https://docs.ultralytics.com/usage/cfg/", required: true }, { title: "目标检测训练调参指南", url: "https://docs.ultralytics.com/guides/hyperparameter-tuning/", required: false }], checkpoint: "在自定义数据集上训练完成，runs 目录下有预测样例图与 PR 曲线" },
+        }, duration: "3小时", resources: [R_ULTRALYTICS, { title: "YOLOv8 训练详解", url: "https://docs.ultralytics.com/modes/train/", required: true, type: "doc", source: "official" }, { title: "YOLOv8 训练超参数说明", url: "https://docs.ultralytics.com/usage/cfg/", required: true, type: "doc", source: "official" }, { title: "目标检测训练调参指南", url: "https://docs.ultralytics.com/guides/hyperparameter-tuning/", required: false, type: "doc", source: "official" }], checkpoint: "在自定义数据集上训练完成，runs 目录下有预测样例图与 PR 曲线" },
       { day: 7, title: "评估与错误分析",
         summary: "系统评估模型性能，进行Bad Case分析，定位问题并提出改进方向。", content: {
           objective: "今天你将学习如何系统地评估检测模型性能，并通过错误分析找到改进方向。学完后能用YOLOv8的val模式得到详细的评估报告，进行错误分类和Bad Case分析，形成结构化的分析文档。错误分析比盲目调参更有价值，是模型迭代的驱动力。",
@@ -1583,7 +1583,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "对训练好的YOLOv8模型进行系统评估和错误分析：1）运行model.val()得到完整的评估报告，重点关注：总体mAP50和mAP50-95、每个类别的AP、按目标大小（small/medium/large）分类的AP。2）查看混淆矩阵，找出最容易混淆的类别对。3）从验证集中找出20个Bad Case：包括高置信度误检、漏检的目标、定位不准的框、分类错误的样本。4）将这些Bad Case分类整理，分析每类错误的可能原因：是数据问题（训练集中这类样本少）、模型问题（感受野不够、特征不够强）、还是标注问题（标注不一致）。5）撰写Bad Case分析文档，针对Top-3问题分别提出具体的改进方案和下一步实验计划。",
           deep_dive: "错误分析是模型迭代的核心方法论，但很多人忽略它直接调参。系统化的错误分析流程包括：1）量化各类错误的比例（漏检率、误检率、分类错误率各占多少）。2）按错误类型深入挖掘：漏检是因为目标太小？还是遮挡严重？还是角度特殊？误检是因为背景中有相似物体？还是训练集中有错误标注？3）按难度分层：简单样本已经很好了吗？还是中等难度都没解决？直接优化最难的样本可能事倍功半。4）交叉分析：小目标的错误率有多高？遮挡目标呢？模糊目标呢？找到模型的短板。5）形成假设-验证闭环：每个改进都是一个假设，用实验验证是否真的有效。在工业级项目中，错误分析往往占据相当大的工作量，但它的ROI（投资回报率）是最高的——精准定位问题才能事半功倍。"
-        }, duration: "2小时", resources: [R_ULTRALYTICS, { title: "YOLOv8 验证模式文档", url: "https://docs.ultralytics.com/modes/val/", required: true }, { title: "目标检测错误分析方法", url: "https://blog.roboflow.com/how-to-evaluate-object-detection-models/", required: false }, { title: "W&B 错误分析工具", url: "https://docs.wandb.ai/guides/models", required: false }], checkpoint: "有一个自己的 Bad Case 分析文档 / notebook" },
+        }, duration: "2小时", resources: [R_ULTRALYTICS, { title: "YOLOv8 验证模式文档", url: "https://docs.ultralytics.com/modes/val/", required: true, type: "doc", source: "official" }, { title: "目标检测错误分析方法", url: "https://blog.roboflow.com/how-to-evaluate-object-detection-models/", required: false, type: "article", source: "official" }, { title: "W&B 错误分析工具", url: "https://docs.wandb.ai/guides/models", required: false, type: "doc", source: "official" }], checkpoint: "有一个自己的 Bad Case 分析文档 / notebook" },
       { day: 8, title: "数据增强与超参优化",
         summary: "掌握YOLOv8的数据增强策略和超参数调优方法，系统提升mAP。", content: {
           objective: "今天你将深入学习YOLOv8的数据增强策略和超参数调优方法，通过对比实验找到最优配置。学完后能理解各种增强的作用，根据数据特点调整增强强度，进行超参数搜索实验。调优是提升模型性能的重要手段，但要用数据驱动而非凭感觉。",
@@ -1596,7 +1596,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "设计并执行至少3组对比实验来研究增强和超参的影响：1）基线实验：使用默认增强配置训练。2）Mosaic消融实验：关闭Mosaic（mosaic=0），其他不变，对比mAP变化，理解Mosaic对小数据集是否适用。3）学习率实验：尝试不同的初始学习率（如lr0=0.01、0.001、0.0001），找到效果最好的。4）（可选）图像尺寸实验：对比imgsz=416、640、800的精度和速度权衡。5）实验记录：创建一个表格，记录每组实验的关键参数、最终mAP50、mAP50-95、训练时间、显存占用。6）分析结果：哪个参数对结果影响最大？你的数据集最佳配置是什么？形成实验结论。",
           deep_dive: "超参数优化是一门学问。常见方法包括：1）网格搜索（Grid Search）：遍历所有组合，简单但效率低，参数多了不可行。2）随机搜索（Random Search）：随机采样组合，同样预算下通常比网格搜索效果好。3）贝叶斯优化（Bayesian Optimization）：根据已探索的结果智能选择下一组参数，效率最高，适合昂贵的实验。4）遗传算法/进化搜索：用进化策略搜索参数空间。在深度学习训练中，因为每次实验成本高（几小时到几天），贝叶斯优化是最常用的。但更重要的是：先搞清楚哪些参数影响大（学习率、batch size、数据增强）、哪些影响小（权重衰减系数、优化器动量），把精力花在重要的参数上。YOLOv8甚至内置了yolo mode=trainer hpo可以做超参搜索。但请记住：数据质量和数量通常比超参微调更重要。"
-        }, duration: "2.5小时", resources: [R_ULTRALYTICS, { title: "YOLOv8 训练参数详解", url: "https://docs.ultralytics.com/usage/cfg/#train", required: true }, { title: "Weights & Biases 实验追踪", url: "https://docs.wandb.ai/", required: false }, { title: "Focal Loss 论文", url: "https://arxiv.org/abs/1708.02002", required: false }, { title: "目标检测数据增强策略", url: "https://docs.ultralytics.com/guides/data-augmentation/", required: false }], checkpoint: "至少跑 2 组对比实验（如不同 imgsz 或是否 mosaic）并记录 mAP 差异" },
+        }, duration: "2.5小时", resources: [R_ULTRALYTICS, { title: "YOLOv8 训练参数详解", url: "https://docs.ultralytics.com/usage/cfg/#train", required: true, type: "doc", source: "official" }, { title: "Weights & Biases 实验追踪", url: "https://docs.wandb.ai/", required: false, type: "doc", source: "official" }, { title: "Focal Loss 论文", url: "https://arxiv.org/abs/1708.02002", required: false, type: "paper", source: "academic" }, { title: "目标检测数据增强策略", url: "https://docs.ultralytics.com/guides/data-augmentation/", required: false, type: "doc", source: "official" }], checkpoint: "至少跑 2 组对比实验（如不同 imgsz 或是否 mosaic）并记录 mAP 差异" },
       { day: 9, title: "YOLO 系列架构直觉",
         summary: "理解YOLO系列的架构演进和设计思想，对比不同版本的差异。", content: {
           objective: "今天你将从宏观上理解YOLO系列的架构设计和演进脉络，包括Backbone、Neck、Head三大组件，以及从YOLOv5到v8再到v11的演变。学完后能讲出YOLOv8相对v5的主要改进，理解各组件的作用。理解架构才能更好地使用和定制模型。",
@@ -1609,7 +1609,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "深入YOLOv8源码理解架构：1）找到Ultralytics库中模型定义的位置（ultralytics/nn/），阅读tasks.py和modules.py的核心部分。2）用model.model打印网络结构，逐层理解：Backbone有多少层？Neck的FPN+PAN在哪里？Head有几个检测层（对应不同尺度）？3）对比v5和v8的架构差异：查资料列出至少3个主要不同点（如C3 vs C2f、anchor-based vs anchor-free、损失函数不同等）。4）计算不同尺度检测头的感受野和下采样倍率，理解为什么小目标要靠低层特征、大目标靠高层特征。5）（可选）阅读Ultralytics中C2f模块的实现代码，理解它与ResNet的BasicBlock有何不同。",
           deep_dive: "YOLO系列的演进史是目标检测技术发展的缩影。从v1的单阶段检测开山之作，到v2的BatchNorm+Anchor Box，v3的多尺度检测+FPN，v5的成熟工程化，v7的Elan结构，再到v8的Anchor-Free+C2f+解耦头，以及最新的v9/v10/v11。每次演进都在精度和速度的边界上推进。理解演进趋势能帮你预判未来方向：1）Anchor-Free逐渐成为主流，省去了anchor聚类的麻烦，泛化性更好。2）解耦检测头：分类和回归用不同分支，两者的优化目标不同，分开更好。3）更高效的特征融合：从FPN到PAN到BiFPN，不断探索最佳的多尺度融合方式。4）标签分配策略：从静态分配到动态分配（如OTA、Task-Aligned Assigner），这也是训练策略的核心创新。5）轻量化和部署优化：模型设计越来越考虑实际部署效率。"
-        }, duration: "1.5小时", resources: [R_ULTRALYTICS, { title: "YOLOv8 架构详解", url: "https://docs.ultralytics.com/models/yolov8/", required: true }, { title: "YOLO 系列发展综述", url: "https://arxiv.org/abs/2209.02976", required: false }, { title: "Ultralytics 源码（GitHub）", url: "https://github.com/ultralytics/ultralytics/tree/main/ultralytics/nn", required: true }, { title: "YOLOv8 vs YOLOv5 对比", url: "https://docs.ultralytics.com/models/yolov8/#performance-metrics", required: false }], checkpoint: "能用 3 句话讲出 YOLOv8 相对 v5 的主要变化" },
+        }, duration: "1.5小时", resources: [R_ULTRALYTICS, { title: "YOLOv8 架构详解", url: "https://docs.ultralytics.com/models/yolov8/", required: true, type: "doc", source: "official" }, { title: "YOLO 系列发展综述", url: "https://arxiv.org/abs/2209.02976", required: false, type: "paper", source: "academic" }, { title: "Ultralytics 源码（GitHub）", url: "https://github.com/ultralytics/ultralytics/tree/main/ultralytics/nn", required: true, type: "repo", source: "github" }, { title: "YOLOv8 vs YOLOv5 对比", url: "https://docs.ultralytics.com/models/yolov8/#performance-metrics", required: false, type: "doc", source: "official" }], checkpoint: "能用 3 句话讲出 YOLOv8 相对 v5 的主要变化" },
       { day: 10, title: "导出为 ONNX/TensorRT 加速推理",
         summary: "掌握模型导出与推理加速技术，将YOLOv8部署为高效的推理引擎。", content: {
           objective: "今天你将学习如何将训练好的YOLOv8模型导出为ONNX格式，并使用ONNX Runtime进行加速推理。学完后能完成模型导出、验证导出正确性、对比推理速度。模型部署是AI落地的最后一公里，推理加速直接决定了产品能否满足实时性要求。",
@@ -1622,7 +1622,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成完整的模型导出和加速推理实践：1）用你训练好的YOLOv8模型（或yolov8n.pt）导出为ONNX格式：model.export(format='onnx', simplify=True, opset=12)。2）检查导出的.onnx文件，用netron.app可视化模型结构。3）用ONNX Runtime加载模型推理：安装onnxruntime（或onnxruntime-gpu），创建InferenceSession，输入numpy数组进行推理。4）验证正确性：同一张图片分别用PyTorch和ONNX Runtime推理，比较检测结果的差异（框坐标和置信度应该非常接近）。5）速度对比：各推理100次取平均，比较PyTorch eager模式、PyTorch JIT、ONNX Runtime CPU/GPU的推理速度。6）（可选，如果GPU支持）尝试导出TensorRT格式，体验极致加速。",
           deep_dive: "模型部署是一个完整的工程领域，核心是在精度、速度、内存之间做权衡。除了ONNX和TensorRT，还有许多推理优化技术：1）量化：将FP32权重转为FP16或INT8，减少显存和计算量，TensorRT支持训练后量化PTQ和量化感知训练QAT。2）剪枝：移除冗余的权重或通道，直接减少参数量。3）知识蒸馏：用大模型教小模型，在小模型上尽量保留大模型的精度。4）算子融合：将相邻的多个算子（如Conv+BN+ReLU）合并成一个，减少内存读写和启动开销。5）内存优化：in-place操作、内存复用、张量并行等。6）服务化：用Triton、TF Serving等框架部署成高可用的推理服务，支持动态批处理、多模型并发。实际生产部署中，往往需要多种技术组合使用，才能达到最佳效果。"
-        }, duration: "2.5小时", resources: [R_ULTRALYTICS, { title: "YOLOv8 导出文档", url: "https://docs.ultralytics.com/modes/export/", required: true }, { title: "ONNX Runtime 官方文档", url: "https://onnxruntime.ai/docs/", required: true }, { title: "TensorRT 开发者指南", url: "https://developer.nvidia.com/tensorrt", required: false }, { title: "ONNX 格式规范", url: "https://onnx.ai/onnx/", required: false }], checkpoint: "能用导出的 ONNX 跑一次端到端推理，速度较 PyTorch 提升" },
+        }, duration: "2.5小时", resources: [R_ULTRALYTICS, { title: "YOLOv8 导出文档", url: "https://docs.ultralytics.com/modes/export/", required: true, type: "doc", source: "official" }, { title: "ONNX Runtime 官方文档", url: "https://onnxruntime.ai/docs/", required: true, type: "doc", source: "official" }, { title: "TensorRT 开发者指南", url: "https://developer.nvidia.com/tensorrt", required: false, type: "article", source: "official" }, { title: "ONNX 格式规范", url: "https://onnx.ai/onnx/", required: false, type: "article", source: "official" }], checkpoint: "能用导出的 ONNX 跑一次端到端推理，速度较 PyTorch 提升" },
       { day: 11, title: "封装推理 API（FastAPI）",
         summary: "用FastAPI构建目标检测推理服务，提供HTTP接口供其他系统调用。", content: {
           objective: "今天你将使用FastAPI构建一个目标检测推理服务，将模型能力封装为HTTP API供其他系统调用。学完后能写出完整的推理服务代码、测试接口、处理各种输入。API服务化是模型落地的标准方式。",
@@ -1635,7 +1635,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "构建一个完整的YOLOv8检测API服务：1）创建FastAPI应用，初始化YOLO模型（全局加载一次，避免每次请求都加载）。2）实现POST /detect接口：接收上传的图片文件（UploadFile），用PIL或OpenCV读取，调用YOLO模型推理，将结果整理为JSON格式返回（包含每个检测的bbox、class_name、confidence）。3）实现GET /health健康检查接口，返回服务状态和模型信息。4）用curl或Python requests或Postman测试接口：上传一张测试图片，验证返回结果格式正确。5）用浏览器访问http://localhost:8000/docs查看自动生成的Swagger文档，在网页上测试接口。6）进阶：添加批量检测接口（支持上传多张图）、添加置信度阈值参数让用户可调、添加类别筛选参数、添加返回标注图片的选项。",
           deep_dive: "生产级推理服务需要考虑更多工程问题：1）并发控制：GPU显存有限，需要限制并发推理数，用队列或信号量管理。2）批量处理：将多个请求攒成一个batch一起推理，提高GPU利用率，提升吞吐量。3）模型热更新：不重启服务就能更新模型版本。4）多模型管理：一台机器上部署多个模型，按需加载和卸载。5）监控告警：QPS、延迟、错误率、GPU利用率、显存使用等指标接入Prometheus+Grafana，异常时告警。6）日志追踪：每个请求有唯一ID，全链路日志方便排查问题。7）安全认证：API Key或JWT鉴权，防止滥用。8）灰度发布：新旧模型同时在线，少量流量切到新模型验证，验证通过再全量切换。这些都是ML工程师和MLOps工程师的核心技能。"
-        }, duration: "2小时", resources: [R_FASTAPI, R_ULTRALYTICS, { title: "FastAPI 文件上传教程", url: "https://fastapi.tiangolo.com/tutorial/request-files/", required: true }, { title: "YOLOv8 推理服务部署指南", url: "https://docs.ultralytics.com/guides/rest-api/", required: false }], checkpoint: "能通过 HTTP 请求获取推理结果" },
+        }, duration: "2小时", resources: [R_FASTAPI, R_ULTRALYTICS, { title: "FastAPI 文件上传教程", url: "https://fastapi.tiangolo.com/tutorial/request-files/", required: true, type: "article", source: "official" }, { title: "YOLOv8 推理服务部署指南", url: "https://docs.ultralytics.com/guides/rest-api/", required: false, type: "doc", source: "official" }], checkpoint: "能通过 HTTP 请求获取推理结果" },
       { day: 12, title: "摄像头实时推理 Demo",
         summary: "实现摄像头实时目标检测，测试推理速度，进行性能优化实践。", content: {
           objective: "今天你将实现一个基于摄像头的实时目标检测Demo，测试并优化推理速度。学完后能调用摄像头逐帧检测、实时显示结果、计算和显示FPS、对比不同模型的实时性能。实时检测是很多应用场景的需求，理解性能瓶颈和优化方法很重要。",
@@ -1648,7 +1648,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "实现完整的摄像头实时检测并做性能对比：1）编写实时检测脚本：打开摄像头→循环读取帧→YOLO推理→绘制结果→显示FPS→按q退出。2）测试不同模型的实时性能：分别用yolov8n、yolov8s、yolov8m（如果显存够）测试，记录平均FPS、延迟、GPU利用率。3）性能分析：用时间戳统计推理流水线各环节的耗时占比（图像预处理、模型推理、NMS后处理、绘制显示），找出瓶颈在哪里。4）优化尝试：如果瓶颈在推理，试试导出ONNX加速；如果瓶颈在后处理，试试降低conf阈值减少框的数量。5）进阶功能：添加保存视频的功能、添加截图功能、添加按类别筛选显示的功能、添加半精度推理加速。最后形成一份本机性能测试报告。",
           deep_dive: "实时检测系统的进阶技术：1）目标跟踪（Tracking）：检测+跟踪的混合方案，每隔N帧做一次检测，中间帧用轻量的跟踪算法（如SORT、DeepSORT、ByteTrack）维持目标轨迹，大幅提升整体速度。2）多线程/多进程：将视频读取、推理、显示放在不同线程，避免阻塞。3）硬件加速：除了TensorRT，还可以用硬件编解码、GPU直接处理视频帧（零拷贝）。4）边缘部署：在Jetson Nano/Xavier等嵌入式设备上部署，需要针对ARM架构和低功耗做专门优化。5）端侧AI：直接在手机或IoT设备上运行YOLO（如NCNN、TNN、MNN等推理框架），不需要云端。实时检测系统的设计是一个系统工程，需要在算法、工程、硬件多个层面协同优化才能达到最佳效果。"
-        }, duration: "2小时", resources: [R_ULTRALYTICS, { title: "OpenCV 视频捕获文档", url: "https://docs.opencv.org/4.x/d8/dfe/classcv_1_1VideoCapture.html", required: false }, { title: "YOLOv8 实时检测示例", url: "https://docs.ultralytics.com/modes/predict/#inference-sources", required: true }, { title: "YOLOv8 各模型性能对比", url: "https://docs.ultralytics.com/models/yolov8/#performance-metrics", required: false },  { title: "YOLOv8实时检测代码", url: "https://github.com/ultralytics/ultralytics/tree/main/examples", required: false, type: "repo", source: "github" }], checkpoint: "能用一个脚本启动电脑摄像头并实时目标检测" },
+        }, duration: "2小时", resources: [R_ULTRALYTICS, { title: "OpenCV 视频捕获文档", url: "https://docs.opencv.org/4.x/d8/dfe/classcv_1_1VideoCapture.html", required: false, type: "doc", source: "official" }, { title: "YOLOv8 实时检测示例", url: "https://docs.ultralytics.com/modes/predict/#inference-sources", required: true, type: "doc", source: "official" }, { title: "YOLOv8 各模型性能对比", url: "https://docs.ultralytics.com/models/yolov8/#performance-metrics", required: false, type: "doc", source: "official" },  { title: "YOLOv8实时检测代码", url: "https://github.com/ultralytics/ultralytics/tree/main/examples", required: false, type: "repo", source: "github" }], checkpoint: "能用一个脚本启动电脑摄像头并实时目标检测" },
       { day: 13, title: "脚本化批量处理与结果导出",
         summary: "编写批量推理脚本，处理整个文件夹的图片，导出结构化结果。", content: {
           objective: "今天你将编写一个实用的批量推理脚本，对整个文件夹的图片进行批量检测，并将结果导出为多种格式供后续分析。学完后能编写可复用的CLI工具脚本、支持批量处理、结果导出、统计分析。批量处理是实际项目中常见的需求，如批量质检、批量数据标注辅助等。",
@@ -1661,7 +1661,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "编写一个功能完整的批量检测CLI工具：1）脚本支持命令行参数：--input输入文件夹、--output输出文件夹、--model模型路径、--conf置信度阈值、--save-img是否保存标注图。2）遍历输入文件夹下所有jpg/png图片，用tqdm显示处理进度。3）对每张图片进行检测，将结果保存为JSON文件（同名.json），格式包含image_name、image_size、detections数组（每个含bbox、class_id、class_name、confidence）。4）如果指定--save-img，同时保存带标注框的图片。5）全部处理完后，生成统计报表stats.csv：每个类别的目标总数、平均置信度、最大最小目标大小等。6）测试脚本：找一个有100张以上图片的文件夹运行，验证所有功能正常，检查输出文件的完整性和格式正确性。",
           deep_dive: "批量处理的进阶优化和扩展：1）批处理推理：不是一张一张送，而是攒成batch（如batch=8/16）一起送GPU，大幅提高GPU利用率和处理速度。需要注意不同尺寸图片的padding对齐。2）多进程预处理：用multiprocessing将图片解码、预处理等CPU密集操作放在多个子进程，GPU推理和CPU预处理流水线化。3）断点续传：记录已处理的文件列表，中断后重新运行可以跳过已处理的，适合处理超大规模数据集。4）结果数据库：将检测结果存入SQLite或更专业的数据库，方便后续查询和分析。5）与标注工具集成：批量检测结果可以作为预标注导入标注工具，人工只需修正，大幅提升标注效率（这种人机协同标注是工业界常用的降本增效手段）。6）分布式处理：超大规模数据集可以用分布式任务队列（如Celery+Redis）将任务分发到多台机器并行处理。"
-        }, duration: "2小时", resources: [R_ULTRALYTICS, { title: "YOLOv8 批量推理", url: "https://docs.ultralytics.com/modes/predict/#inference-sources", required: true }, { title: "Python argparse 命令行参数", url: "https://docs.python.org/3/library/argparse.html", required: false }, { title: "Python 批处理最佳实践", url: "https://realpython.com/python-concurrency/", required: false },  { title: "YOLOv8批量处理脚本", url: "https://github.com/ultralytics/ultralytics/tree/main/examples", required: false, type: "repo", source: "github" }], checkpoint: "有一个可复用的 CLI 脚本，能在新图片文件夹下一键产出结果" },
+        }, duration: "2小时", resources: [R_ULTRALYTICS, { title: "YOLOv8 批量推理", url: "https://docs.ultralytics.com/modes/predict/#inference-sources", required: true, type: "doc", source: "official" }, { title: "Python argparse 命令行参数", url: "https://docs.python.org/3/library/argparse.html", required: false, type: "doc", source: "official" }, { title: "Python 批处理最佳实践", url: "https://realpython.com/python-concurrency/", required: false, type: "article", source: "official" },  { title: "YOLOv8批量处理脚本", url: "https://github.com/ultralytics/ultralytics/tree/main/examples", required: false, type: "repo", source: "github" }], checkpoint: "有一个可复用的 CLI 脚本，能在新图片文件夹下一键产出结果" },
       { day: 14, title: "综合：端到端的自定义检测服务",
         summary: "完成一个从数据到部署的完整目标检测项目，串联前13天所有知识。", content: {
           objective: "今天你将综合运用前13天所学，完成一个端到端的自定义目标检测项目，从场景选择、数据准备、模型训练、评估优化到服务化部署，最终产出一个可运行的Docker化检测服务。这是检验你目标检测学习成果的综合项目，也是简历上的硬核项目经验。",
@@ -1674,7 +1674,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成一个完整的端到端检测项目：1）选题：选定一个具体的检测场景，2-5个类别，有实际应用价值。2）数据：收集并标注至少200张图片，按YOLO格式组织，做好质量检查。3）训练：用YOLOv8训练，进行至少2轮优化迭代（数据增强调整+超参调优），记录实验过程。4）评估：系统评估模型性能，做Bad Case分析，达到合理的mAP。5）优化：导出ONNX并验证速度提升。6）服务：用FastAPI构建推理API，用Streamlit或Gradio做一个简易的Web UI（上传图片→显示检测结果）。7）部署：编写Dockerfile和docker-compose.yml，确保docker compose up能一键启动整个服务。8）文档：撰写完整的README，包含项目介绍、安装步骤、使用方法、性能指标、架构图、演示截图。最终交付：可运行的Docker化服务+完整文档+性能评估报告。",
           deep_dive: "一个完整的工业级目标检测项目还包含更多环节：1）数据飞轮：上线后收集用户反馈的bad case，补充标注后重新训练，形成闭环迭代。2）A/B测试：新模型上线前与旧模型并行，用真实流量验证效果，确认提升后再全量切换。3）模型监控：线上监控预测分布变化、输入数据分布变化，及时发现数据漂移和模型衰减。4）标注工具集成：将模型预测作为预标注导入标注工具，人工审核修正，大幅提升标注效率。5）多模型管理：不同场景用不同模型，根据输入自动路由。6）成本优化：根据流量自动扩缩容、用竞价实例、混合精度推理、模型蒸馏压缩等手段降低单位推理成本。从实验室原型到生产服务，中间有大量工程工作，这也是ML工程师和算法工程师的重要区别。"
-        }, duration: "3小时", resources: [R_ULTRALYTICS, R_FASTAPI, R_STREAMLIT, { title: "Docker 化 ML 服务部署", url: "https://docs.docker.com/language/python/", required: false }, { title: "Streamlit 图片上传组件", url: "https://docs.streamlit.io/library/api-reference/media/st.image", required: false }], checkpoint: "可运行的 Docker 化检测服务 + 简易 UI + 性能评估报告" }],
+        }, duration: "3小时", resources: [R_ULTRALYTICS, R_FASTAPI, R_STREAMLIT, { title: "Docker 化 ML 服务部署", url: "https://docs.docker.com/language/python/", required: false, type: "doc", source: "official" }, { title: "Streamlit 图片上传组件", url: "https://docs.streamlit.io/library/api-reference/media/st.image", required: false, type: "doc", source: "official" }], checkpoint: "可运行的 Docker 化检测服务 + 简易 UI + 性能评估报告" }],
   },
 
   // =====================================================
@@ -1693,7 +1693,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["理解序列建模核心原理", "完成文本分类任务"],
     relatedIntel: ["013-huggingface-datasets"],
     relatedTools: ["PyTorch", "Hugging Face Transformers"],
-    relatedTerms: ["rnn", "lstm", "sequence"],
+    relatedTerms: ["rnn", "lstm", "sequence"], relatedNodes: ["pytorch-core", "nlp-word-embeddings", "nlp-transformer"],
     dailyTasks: [
       { day: 1, title: "文本预处理与分词",
         summary: "掌握NLP文本预处理全流程，从原始文本到模型可用的数字序列。", content: {
@@ -1707,7 +1707,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "动手实现完整的文本预处理流水线：1）英文处理：用NLTK对一段英文新闻做分词，对比简单split()和word_tokenize的区别（特别是don't、Mr.Smith等情况）。2）中文处理：用jieba对一段中文文本分词，测试精确模式、全模式和搜索引擎模式的输出差异。3）构建词表：取一个小型语料（如IMDB的100条评论），统计词频，取前5000个高频词构建词表，加入<PAD>和<UNK>特殊token。4）编码函数：实现text_to_ids(text, word2idx, max_len)函数，将文本转为ID序列，超长截断、不足补<PAD>。5）测试：对几句测试文本进行编码，检查输出shape是否正确，<UNK>是否正确替换了OOV词。",
           deep_dive: "分词是NLP的基础问题，也是长期研究的方向。除了基于规则和词典的分词（如jieba的前缀词典+DAG路径），还有基于统计模型的分词（HMM、CRF）、基于深度学习的分词（BiLSTM+CRF）。近年来，子词分词（Subword Tokenization）成为主流：BPE（Byte-Pair Encoding）、WordPiece、Unigram等方法，通过将词拆成子词单元，既能压缩词表、又能处理未登录词，是GPT、BERT等大模型的标准做法。另外，中文分词还有特殊的难点：歧义切分（如「研究生命的起源」）、未登录词识别、命名实体识别等。工业级中文NLP系统中，分词往往和词性标注、命名实体识别联合做（如HanLP、LTP等工具）。理解分词的原理和局限，能帮你更好地选择和使用分词工具。"
-        }, duration: "1.5小时", resources: [B_ML_LIHONGYI, R_CS224N, { title: "NLTK 分词教程", url: "https://www.nltk.org/api/nltk.tokenize.html", required: false }, { title: "jieba 中文分词", url: "https://github.com/fxsjy/jieba", required: true }, { title: "HuggingFace Tokenizers", url: "https://huggingface.co/docs/tokenizers/", required: false },  { title: "NLP文本预处理代码库", url: "https://github.com/Huffon/nlp-basics", required: false, type: "repo", source: "github" }], checkpoint: "能把一段中英文句子转成 token id 序列，并构建自己的词表" },
+        }, duration: "1.5小时", resources: [B_ML_LIHONGYI, R_CS224N, { title: "NLTK 分词教程", url: "https://www.nltk.org/api/nltk.tokenize.html", required: false, type: "article", source: "official" }, { title: "jieba 中文分词", url: "https://github.com/fxsjy/jieba", required: true, type: "repo", source: "github" }, { title: "HuggingFace Tokenizers", url: "https://huggingface.co/docs/tokenizers/", required: false, type: "doc", source: "official" },  { title: "NLP文本预处理代码库", url: "https://github.com/Huffon/nlp-basics", required: false, type: "repo", source: "github" }], checkpoint: "能把一段中英文句子转成 token id 序列，并构建自己的词表" },
       { day: 2, title: "Word2Vec：从计数到预测",
         summary: "深入理解Word2Vec词向量原理，实现CBOW模型，体验语义向量的魔力。", content: {
           objective: "今天你将学习词向量的开创性工作——Word2Vec，理解它如何从上下文预测中学习词的语义表示。学完后能实现简化版CBOW模型、训练词向量、验证词向量的语义特性（类比、相似度）。词向量是深度学习NLP的基石，它的思想影响了整个领域。",
@@ -1720,7 +1720,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "从零实现一个极简版CBOW并验证语义特性：1）准备一个小型语料（可以用text8的子集或维基百科节选），构建词表（取最常见的1万个词）。2）生成CBOW训练数据：滑动窗口（如window_size=2），取上下文的4个词预测中心词。3）实现CBOW模型：两个Embedding层（输入和输出），上下文词向量求和后与输出词向量做点积。4）使用负采样损失（Negative Sampling Loss）训练，不需要计算全词表softmax。5）训练1000步后，验证词向量的语义性质：用余弦相似度找与「king」最相似的词、做类比实验king-man+woman是否接近queen。6）（可选）用gensim训练正式的Word2Vec，对比效果。",
           deep_dive: "Word2Vec虽然简单，但它的思想深刻影响了整个NLP领域。为什么词向量能学到语义？核心是分布假说（Distributional Hypothesis）：「出现在相似上下文中的词，其意义也相似」。这是无监督学习语义的基础。Word2Vec之后，词向量技术继续发展：GloVe融合了全局共现矩阵和局部窗口预测的优点；FastText用子词n-gram处理形态变化丰富的语言；ELMo、GPT、BERT则将词向量发展为上下文相关的动态表示（同一个词在不同上下文中有不同向量）。另一个有趣的话题是词向量的几何解释：词向量空间中存在语义方向（如性别、时态、国家-首都），但也存在偏见（如职业与性别的刻板印象），这引发了关于AI公平性的研究。词向量不仅是工具，也是我们理解语言和认知的窗口。"
-        }, duration: "2小时", resources: [R_D2L, { title: "Word2Vec 原始论文", url: "https://arxiv.org/abs/1301.3781", required: false }, { title: "Word2Vec 图解", url: "https://jalammar.github.io/illustrated-word2vec/", required: true }, { title: "gensim Word2Vec 教程", url: "https://radimrehurek.com/gensim/models/word2vec.html", required: false },  { title: "Word2Vec实现代码", url: "https://github.com/nicodjimenez/lstm", required: false, type: "repo", source: "github" }], checkpoint: "能实现一个极简 CBOW，并用 it/s 训练 1000 步" },
+        }, duration: "2小时", resources: [R_D2L, { title: "Word2Vec 原始论文", url: "https://arxiv.org/abs/1301.3781", required: false, type: "paper", source: "academic" }, { title: "Word2Vec 图解", url: "https://jalammar.github.io/illustrated-word2vec/", required: true, type: "article", source: "official" }, { title: "gensim Word2Vec 教程", url: "https://radimrehurek.com/gensim/models/word2vec.html", required: false, type: "article", source: "official" },  { title: "Word2Vec实现代码", url: "https://github.com/nicodjimenez/lstm", required: false, type: "repo", source: "github" }], checkpoint: "能实现一个极简 CBOW，并用 it/s 训练 1000 步" },
       { day: 3, title: "使用预训练词向量",
         summary: "加载和使用预训练词向量，应用于下游任务，体验迁移学习的威力。", content: {
           objective: "今天你将学习如何加载和使用预训练词向量（GloVe、腾讯中文词向量等），并将它们应用到下游任务中。学完后能加载预训练词向量、做词类比实验、在PyTorch模型中使用预训练Embedding。预训练词向量是NLP迁移学习的第一代，能显著提升小数据集上的效果。",
@@ -1733,7 +1733,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "加载预训练词向量并进行丰富的语义实验：1）英文部分：下载GloVe的glove.6B.100d（或用gensim下载器），加载后完成以下实验：找与「computer」最相似的10个词、词类比实验man→woman如king→?、找异类bird, car, plane, helicopter中哪个不匹配。2）中文部分：加载腾讯中文词向量（或其他预训练中文词向量），做类似实验：找与「计算机」最相似的词、类比实验北京→中国如东京→?。3）PyTorch集成：创建一个Embedding层，用预训练词向量初始化，设置freeze=True。验证前向传播输出正确。4）对比实验：在一个小型文本分类任务上，对比随机初始化Embedding和预训练词向量的效果差异，特别是训练数据少时。",
           deep_dive: "预训练词向量虽然强大，但也有局限性：1）静态词向量：一个词不管什么上下文都是同一个向量，无法处理多义词（如「苹果」可以是水果也可以是公司）。2）OOV问题：词表外的词无法处理，只能用<UNK>代替。3）词汇量限制：词表越大，Embedding矩阵越大，内存消耗越多。这些问题在后续的上下文相关表示（ELMo、BERT、GPT）中得到了解决。但预训练词向量仍然有其价值：计算轻量、可解释性较好、在简单任务上效果不错、可以作为传统ML模型的特征。另外，词向量还有许多有趣的应用：信息检索（用词向量相似度匹配查询和文档）、推荐系统（用词向量表示物品做协同过滤）、文本分类（词向量平均后作为特征）、命名实体识别（词向量作为输入特征）、图像-文本检索（将图像和文本映射到同一向量空间）。词向量的思想——将离散符号映射为连续向量——已经渗透到AI的各个领域。"
-        }, duration: "2小时", resources: [{ title: "GloVe 词向量下载", url: "https://nlp.stanford.edu/projects/glove/", required: true }, { title: "gensim 预训练词向量", url: "https://radimrehurek.com/gensim/downloader.html", required: false }, { title: "torchtext 词向量加载", url: "https://pytorch.org/text/stable/vocab.html", required: false }], checkpoint: "能在自己的模型中加载 GloVe 预训练权重并做类比实验" },
+        }, duration: "2小时", resources: [{ title: "GloVe 词向量下载", url: "https://nlp.stanford.edu/projects/glove/", required: true, type: "article", source: "official" }, { title: "gensim 预训练词向量", url: "https://radimrehurek.com/gensim/downloader.html", required: false, type: "article", source: "official" }, { title: "torchtext 词向量加载", url: "https://pytorch.org/text/stable/vocab.html", required: false, type: "article", source: "official" }], checkpoint: "能在自己的模型中加载 GloVe 预训练权重并做类比实验" },
       { day: 4, title: "RNN 前向传播",
         summary: "从零实现循环神经网络RNN，理解序列建模的核心思想。", content: {
           objective: "今天你将深入学习循环神经网络（RNN）的前向传播原理，并从零实现一个vanilla RNN。学完后能理解RNN如何处理变长序列、隐藏状态如何传递信息，能与PyTorch官方实现对齐。RNN是序列建模的基础架构，理解它对学习更复杂的LSTM和Transformer都有帮助。",
@@ -1746,7 +1746,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "从零实现vanilla RNN并验证正确性：1）实现RNNCell类：单个时间步的计算，包含W_hh、W_xh、b_h三个参数，tanh激活。2）实现完整的RNN类：循环调用RNNCell处理整个序列，返回所有时间步的隐藏状态和最终隐藏状态。3）初始化权重时与PyTorch的nn.RNN使用相同的初始化方式（uniform分布）。4）数值验证：构造相同的输入和权重，对比自己的实现与nn.RNN的输出，误差应在1e-6以内。5）双向RNN：扩展实现BiRNN，分别计算前向和后向，然后拼接结果。6）测试：用一个随机序列测试，确认输出shape正确（seq_len, batch, hidden_size*2 for BiRNN）。",
           deep_dive: "RNN看似简单，但它蕴含着深刻的计算思想：1）图灵完备性：RNN在理论上是图灵完备的，只要有足够的隐藏单元和正确的权重，它可以模拟任何算法。2）与有限状态自动机的关系：RNN的隐藏状态可以看作是自动机的状态，学习RNN就是学习状态转移规则。3）训练困难：虽然前向传播简单，但训练RNN非常困难——梯度消失和梯度爆炸问题让长序列训练几乎不可能，这也催生了LSTM、GRU等门控RNN。4）并行性限制：RNN的计算是时序依赖的（t时刻依赖t-1时刻），无法像CNN那样完全并行化，这是它在GPU上效率不高的根本原因，也是Transformer取代RNN的关键原因之一。5）通用近似定理：RNN也有通用近似能力——只要隐藏层足够大，它可以逼近任何序列到序列的函数。理解这些深层思想，能让你对序列建模有更深刻的认识。"
-        }, duration: "2小时", resources: [R_PYTORCH_DOC, { title: "Colah: RNN 详解", url: "https://colah.github.io/posts/2015-08-Understanding-LSTMs/", required: true }, { title: "CS224n: RNN 与语言模型", url: "https://web.stanford.edu/class/cs224n/index.html", required: true }, { title: "D2L: 循环神经网络", url: "https://zh.d2l.ai/chapter_recurrent-neural-networks/rnn.html", required: false }], checkpoint: "能从零实现一个 vanilla RNN，在玩具序列任务上跑通" },
+        }, duration: "2小时", resources: [R_PYTORCH_DOC, { title: "Colah: RNN 详解", url: "https://colah.github.io/posts/2015-08-Understanding-LSTMs/", required: true, type: "article", source: "official" }, { title: "CS224n: RNN 与语言模型", url: "https://web.stanford.edu/class/cs224n/index.html", required: true, type: "article", source: "official" }, { title: "D2L: 循环神经网络", url: "https://zh.d2l.ai/chapter_recurrent-neural-networks/rnn.html", required: false, type: "article", source: "official" }], checkpoint: "能从零实现一个 vanilla RNN，在玩具序列任务上跑通" },
       { day: 5, title: "梯度消失与 LSTM 门控",
         summary: "理解RNN梯度消失问题，掌握LSTM门控机制如何实现长程记忆。", content: {
           objective: "今天你将深入学习RNN的梯度消失问题以及LSTM如何通过门控机制解决这个问题。学完后能解释为什么RNN学不好长距离依赖、理解LSTM的三个门（输入/遗忘/输出）的作用、在长序列任务上验证LSTM优于RNN。LSTM是序列建模的里程碑，理解它的设计思想非常重要。",
@@ -1759,7 +1759,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "通过实验深刻理解LSTM相对于RNN的优势：1）从零实现LSTMCell：包含遗忘门、输入门、候选细胞状态、输出门，正确计算c_t和h_t。验证与PyTorch官方nn.LSTM的输出一致。2）设计长序列复制任务：输入是一个长度为T的序列，要求模型复制第1个位置的值到最后一个位置（中间都是无关的标记）。3）对比实验：分别训练vanilla RNN和LSTM，序列长度T=20、T=50、T=100三种情况。记录训练loss曲线和最终准确率。4）观察现象：T=20时两者都能学会吗？T=50时RNN是否出现学习困难？T=100时RNN是否完全学不会而LSTM仍然可以？5）绘制loss对比图，直观展示LSTM在长序列上的优势。用实验结果验证梯度消失的存在。",
           deep_dive: "LSTM的成功在于它巧妙地解决了梯度传播问题，但它的设计思想更深刻地启示了我们：1）Constant Error Carousel（恒定误差传送带）：细胞状态的线性更新路径让梯度可以长距离无损传播，这是LSTM的精髓。2）门控是通用技巧：让网络自己学会控制信息流（什么记、什么忘、什么输出），而不是人为设定，这是一种更高层次的抽象。3）GRU是LSTM的简化版：将遗忘门和输入门合并为更新门，参数更少，效果通常相当。4）LSTM之后还有许多变体：Peephole LSTM（让门也能看到细胞状态）、Layer Normalization LSTM、Projection LSTM（加投影层减小参数量）等。5）从更高的视角看，门控机制和残差连接有异曲同工之妙——都为梯度提供了「高速公路」，让深层/长程的训练成为可能。这种设计思想在后来的Transformer中也得到了继承（残差连接、门控前馈网络等）。"
-        }, duration: "2小时", resources: [R_CS224N, { title: "Colah: LSTM 详解", url: "https://colah.github.io/posts/2015-08-Understanding-LSTMs/", required: true }, { title: "LSTM 原始论文", url: "https://www.bioinf.jku.at/publications/older/2604.pdf", required: false }, { title: "Understanding LSTM Networks", url: "https://www.google.com/url?q=https%3A%2F%2Fcolah.github.io%2Fposts%2F2015-08-Understanding-LSTMs%2F", required: false }], checkpoint: "能在长序列复制任务中看到 LSTM 显著优于 vanilla RNN" },
+        }, duration: "2小时", resources: [R_CS224N, { title: "Colah: LSTM 详解", url: "https://colah.github.io/posts/2015-08-Understanding-LSTMs/", required: true, type: "article", source: "official" }, { title: "LSTM 原始论文", url: "https://www.bioinf.jku.at/publications/older/2604.pdf", required: false, type: "paper", source: "official" }, { title: "Understanding LSTM Networks", url: "https://www.google.com/url?q=https%3A%2F%2Fcolah.github.io%2Fposts%2F2015-08-Understanding-LSTMs%2F", required: false, type: "article", source: "official" }], checkpoint: "能在长序列复制任务中看到 LSTM 显著优于 vanilla RNN" },
       { day: 6, title: "序列建模：pack_padded_sequence",
         summary: "掌握变长序列的处理方法，正确使用pack_padded_sequence避免padding计算。", content: {
           objective: "今天你将学习如何在PyTorch中正确处理变长序列，使用pack_padded_sequence和pad_packed_sequence让RNN忽略padding位置。学完后能构建变长batch、正确使用pack/pad操作、确保计算效率和正确性。这是RNN实战中的重要细节，处理不当会导致结果错误或浪费计算资源。",
@@ -1772,7 +1772,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完整实现变长序列的RNN处理流水线：1）准备5个长度不同的序列（如长度分别为3、5、7、9、11），组成一个batch，用<PAD>填充到最长长度。2）手动实现pack的逻辑：理解PackedSequence内部的data和batch_sizes结构。3）使用torch.nn.utils.rnn.pack_padded_sequence将padded序列打包，注意设置enforce_sorted=True时需要先按长度降序排列。4）将PackedSequence送入LSTM，得到输出（也是PackedSequence）和最终隐藏状态。5）用pad_packed_sequence将输出还原为padded tensor，检查形状和padding位置的值是否正确（padding位置是否为零）。6）验证正确性：对一个只有1个有效token的序列，手动计算LSTM输出，与pack方式的结果对比，确认完全一致。7）常见坑：忘记排序导致报错、隐藏状态顺序不对、使用pack后忘记pad回来等。",
           deep_dive: "处理变长序列是NLP实战中的常见问题，除了pack/pad还有其他方法：1）掩码（Masking）：在计算损失时将padding位置的loss设为0，虽然计算了但不计入损失，实现简单但浪费计算。2）按长度排序分桶（BucketIterator）：将长度相近的样本放在同一个batch里，减少padding的比例，提高计算效率。3）动态计算图：PyTorch的动态图机制让你可以逐个样本处理（不需要batch），但这样利用不了GPU的并行加速。4）使用Transformer的attention mask：在Transformer中，处理变长序列更简单——只需要在attention计算时mask掉padding位置，不需要pack。在实际项目中，最佳实践是结合使用：用Bucket Sampler组织batch（减少padding）+ attention mask或pack（确保正确性）。另外，变长序列处理中还有一个容易忽略的问题：取最后一个隐藏状态时，不能直接取最后一个时间步（可能是padding），需要用真实长度来取对应的位置。这是新手常犯的错误，会导致模型效果大打折扣。"
-        }, duration: "1.5小时", resources: [R_PYTORCH_DOC, { title: "pack_padded_sequence 教程", url: "https://suzyahyah.github.io/pytorch/2019/07/01/DataLoader-Pad-Pack-Sequence.html", required: true }, { title: "变长序列处理最佳实践", url: "https://pytorch.org/tutorials/beginner/nlp/sequence_models_tutorial.html", required: false },  { title: "PyTorch动态序列处理", url: "https://github.com/pytorch/pytorch/blob/main/torch/utils/data/dataloader.py", required: false, type: "repo", source: "github" }], checkpoint: "能用 pack/pad 对变长 batch 做 LSTM，且输出正确 shape" },
+        }, duration: "1.5小时", resources: [R_PYTORCH_DOC, { title: "pack_padded_sequence 教程", url: "https://suzyahyah.github.io/pytorch/2019/07/01/DataLoader-Pad-Pack-Sequence.html", required: true, type: "article", source: "official" }, { title: "变长序列处理最佳实践", url: "https://pytorch.org/tutorials/beginner/nlp/sequence_models_tutorial.html", required: false, type: "article", source: "official" },  { title: "PyTorch动态序列处理", url: "https://github.com/pytorch/pytorch/blob/main/torch/utils/data/dataloader.py", required: false, type: "repo", source: "github" }], checkpoint: "能用 pack/pad 对变长 batch 做 LSTM，且输出正确 shape" },
       { day: 7, title: "文本分类：IMDB / 中文情感",
         summary: "构建基于RNN的文本分类模型，在IMDB和中文情感数据集上训练评估。", content: {
           objective: "今天你将构建一个基于BiLSTM的文本分类模型，在IMDB电影评论数据集和中文情感数据集上完成完整的训练评估流程。学完后能独立完成文本分类项目，掌握训练技巧和评估方法。文本分类是NLP最基础也是应用最广泛的任务之一。",
@@ -1785,7 +1785,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成完整的情感分类项目：1）数据准备：加载IMDB数据集（用torchtext或huggingface datasets），构建词表，将文本转为ID序列，构建DataLoader（支持变长padding）。2）模型搭建：Embedding（用GloVe预训练初始化）+ BiLSTM（2层，dropout）+ 取最后时间步隐藏状态 + 线性分类器。3）训练配置：Adam优化器、CrossEntropyLoss、梯度裁剪（clip_grad_norm_）、验证集评估。4）训练过程：训练5个epoch，每轮验证一次，保存最佳模型。5）结果评估：在测试集上计算准确率、F1值，绘制混淆矩阵，查看分类错误的典型样本。6）中文实验：如果时间允许，在中文情感数据集（如京东评论、酒店评论）上重复上述流程，注意使用中文分词和中文预训练词向量。7）对比实验：测试单向LSTM vs 双向LSTM、有/无预训练词向量的效果差异。",
           deep_dive: "文本分类是NLP的基础任务，方法也在不断演进：1）传统机器学习：词袋模型+TF-IDF+SVM/逻辑回归，简单可解释，但忽略了词序和语义。2）深度学习第一代：TextCNN（快速）、BiLSTM（捕捉序列依赖）、HAN（分层注意力）。3）深度学习第二代：BERT等预训练模型微调，效果大幅提升，但计算成本高。实际项目中怎么选？简单场景用传统方法就够了（如规则明显的关键词分类），要求高精度的用BERT，需要速度快的用TextCNN或蒸馏后的小模型。文本分类还有许多进阶话题：多标签分类（一个文本多个类别）、层次分类（类别有层级结构）、小样本分类（标注数据很少）、增量学习（不断加新类别）、领域适应（跨领域分类）等。文本分类看似简单，但实际工业应用中会遇到各种复杂情况，需要结合业务场景选择合适的方案。"
-        }, duration: "2.5小时", resources: [R_PYTORCH_TUT, { title: "torchtext IMDB 数据集", url: "https://pytorch.org/text/stable/datasets.html#imdb", required: true }, { title: "文本分类实战", url: "https://pytorch.org/tutorials/beginner/text_sentiment_ngrams_tutorial.html", required: true }, { title: "中文情感分析数据集", url: "https://github.com/SophonPlus/ChineseNlpCorpus", required: false }], checkpoint: "完整的文本分类脚本 + 评估 acc + 保存权重" },
+        }, duration: "2.5小时", resources: [R_PYTORCH_TUT, { title: "torchtext IMDB 数据集", url: "https://pytorch.org/text/stable/datasets.html#imdb", required: true, type: "article", source: "official" }, { title: "文本分类实战", url: "https://pytorch.org/tutorials/beginner/text_sentiment_ngrams_tutorial.html", required: true, type: "article", source: "official" }, { title: "中文情感分析数据集", url: "https://github.com/SophonPlus/ChineseNlpCorpus", required: false, type: "repo", source: "github" }], checkpoint: "完整的文本分类脚本 + 评估 acc + 保存权重" },
       { day: 8, title: "序列标注：中文 NER（BiLSTM+CRF）",
         summary: "学习命名实体识别任务，实现BiLSTM+CRF模型，在中文NER数据上训练。", content: {
           objective: "今天你将学习序列标注的经典任务——命名实体识别（NER），并实现BiLSTM+CRF模型。学完后能理解BIO标注体系、CRF层的作用、在中文NER数据集上训练模型。NER是信息抽取的基础，在医疗、金融、法律等领域有广泛应用。",
@@ -1798,7 +1798,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "实现BiLSTM+CRF模型并在中文NER数据上训练：1）数据准备：使用MSRA或人民日报中文NER数据集（或其他公开中文NER数据），包含PER、LOC、ORG三类实体。2）数据处理：将BIO标注转换为标签ID，构建词表和标签表，构建DataLoader。3）模型实现：Embedding层 + BiLSTM（输出每个token的特征） + 线性层映射到标签空间（发射分数） + CRF层。4）CRF损失：使用负对数似然损失，考虑了路径的整体合法性。5）训练：训练10-20个epoch，用验证集评估。6）评估：实现entity-level F1计算：将预测标签序列转换为实体跨度集合，与真实实体集合比较，计算精确率、召回率和F1。7）结果分析：查看识别错误的例子，分析模型容易错在哪里（是边界问题还是分类问题）。",
           deep_dive: "BiLSTM+CRF曾经是NER的最佳实践，虽然现在被BERT超越，但其设计思想仍然值得学习。CRF层的核心作用是建模标签依赖，为什么需要它？因为BiLSTM虽然能捕捉上下文，但它对每个位置的预测是独立的，没有考虑标签之间的约束（比如I-PER不能直接跟在O后面）。CRF通过转移矩阵学习这些约束，让输出序列更合法。关于CRF还有几个深入点：1）Viterbi解码：推理时用维特比算法找全局最优路径，而不是每个位置取argmax（贪心解码）。2）CRF与HMM的关系：HMM是生成模型，CRF是判别模型；HMM假设观测独立，CRF没有这个限制。3）在Transformer时代，CRF还有用吗？BERT本身已经有很强的上下文建模能力，CRF的增益变小了，但在某些数据集上仍然有提升，特别是小数据集上。NER本身也在发展：嵌套NER（实体重叠）、不连续NER、低资源NER、跨领域NER、文档级NER等，都是活跃的研究方向。"
-        }, duration: "2.5小时", resources: [R_CS224N, { title: "BiLSTM-CRF 论文", url: "https://arxiv.org/abs/1508.01991", required: true }, { title: "中文 NER 数据集", url: "https://github.com/OYE93/Chinese-NLP-Corpus", required: false }, { title: "CRF 层详解", url: "https://pytorch.org/tutorials/beginner/nlp/advanced_tutorial.html", required: true }], checkpoint: "在中文 NER 数据上训练并得到合理 entity-level F1" },
+        }, duration: "2.5小时", resources: [R_CS224N, { title: "BiLSTM-CRF 论文", url: "https://arxiv.org/abs/1508.01991", required: true, type: "paper", source: "academic" }, { title: "中文 NER 数据集", url: "https://github.com/OYE93/Chinese-NLP-Corpus", required: false, type: "repo", source: "github" }, { title: "CRF 层详解", url: "https://pytorch.org/tutorials/beginner/nlp/advanced_tutorial.html", required: true, type: "article", source: "official" }], checkpoint: "在中文 NER 数据上训练并得到合理 entity-level F1" },
       { day: 9, title: "Seq2Seq 与机器翻译",
         summary: "理解Seq2Seq序列到序列架构，实现简单的数字翻译任务验证。", content: {
           objective: "今天你将学习序列到序列（Seq2Seq）架构，它是机器翻译、文本摘要、对话系统等生成任务的基础。学完后能理解Encoder-Decoder结构、Teacher Forcing训练技巧，在数字翻译玩具任务上验证模型。Seq2Seq的思想影响深远，是后续Transformer的基础。",
@@ -1811,7 +1811,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "用数字翻译任务理解Seq2Seq的完整流程：1）任务定义：输入是数字序列（如「1 2 3」），输出是对应的英文单词序列（「one two three」）。这是一个完美的玩具任务：数据可以无限生成，规则明确，能快速验证模型是否工作。2）数据生成：写一个数据生成函数，随机生成1-10位数字，对应转换为英文单词。3）模型实现：Encoder（Embedding + LSTM）→ 上下文向量 → Decoder（Embedding + LSTM + 输出层）。4）训练：使用Teacher Forcing，每一步decoder的输入是真实的前一个词。训练1000个step，观察loss下降。5）推理：实现greedy解码（不使用teacher forcing，每一步用自己上一步的预测作为输入）。6）测试：输入几个训练集中没见过的数字序列，看模型能否正确翻译。7）（可选）测试更长的序列，观察模型是否出现长度泛化问题。",
           deep_dive: "Seq2Seq虽然简单优雅，但它有一个根本性的瓶颈——信息瓶颈：Encoder将整个源序列压缩成一个固定长度的上下文向量，源序列越长，信息损失越严重。这就是注意力机制（Attention）要解决的问题——让Decoder在每一步都能动态地关注源序列的不同部分，而不是依赖单一的固定向量。Seq2Seq的另一个问题是训练和推理的不一致（exposure bias）：训练时有正确的历史输入，推理时只能用自己的预测，一旦错了就可能越来越偏。解决方法包括：Scheduled Sampling（逐渐从teacher forcing过渡到用自己的预测）、Professor Forcing等。Seq2Seq的应用非常广泛：机器翻译、文本摘要、图像描述（Image Captioning）、语音识别、代码生成、数学题解答等等。可以说，任何输入是序列、输出也是序列的问题，都可以用Seq2Seq框架来解决。"
-        }, duration: "2.5小时", resources: [R_D2L, { title: "Seq2Seq 原始论文", url: "https://arxiv.org/abs/1409.3215", required: false }, { title: "PyTorch Seq2Seq 教程", url: "https://pytorch.org/tutorials/intermediate/seq2seq_translation_tutorial.html", required: true }, { title: "Seq2Seq 图解", url: "https://jalammar.github.io/visualizing-neural-machine-translation-mechanics-of-seq2seq-models-with-attention/", required: false }], checkpoint: "能在数字翻译玩具任务上训练并生成合理输出" },
+        }, duration: "2.5小时", resources: [R_D2L, { title: "Seq2Seq 原始论文", url: "https://arxiv.org/abs/1409.3215", required: false, type: "paper", source: "academic" }, { title: "PyTorch Seq2Seq 教程", url: "https://pytorch.org/tutorials/intermediate/seq2seq_translation_tutorial.html", required: true, type: "article", source: "official" }, { title: "Seq2Seq 图解", url: "https://jalammar.github.io/visualizing-neural-machine-translation-mechanics-of-seq2seq-models-with-attention/", required: false, type: "article", source: "official" }], checkpoint: "能在数字翻译玩具任务上训练并生成合理输出" },
       { day: 10, title: "Beam Search 解码",
         summary: "实现Beam Search束搜索解码，对比Greedy解码的效果差异。", content: {
           objective: "今天你将学习序列生成的标准解码策略——Beam Search（束搜索）。学完后能实现Beam Search解码、理解它与Greedy解码的区别、用BLEU指标评估生成质量。解码策略直接影响生成文本的质量，是NLP生成任务的关键技术。",
@@ -1824,7 +1824,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "实现Beam Search并在数字翻译任务上验证效果：1）实现BeamSearch类：初始化beam_size个候选（都是起始符<BOS>）、每步对每个候选扩展所有可能的下一个token、计算新的得分、保留得分最高的k个、遇到EOS的标记为完成。2）加入长度归一化：最终得分 = log概率之和 / length^α，α取0.7。3）在数字翻译任务上对比：用训练好的Seq2Seq模型，分别用greedy和beam search（beam_size=5）解码100个测试样本。4）用BLEU或准确率作为评估指标，对比两种解码策略的效果差异。5）研究beam size的影响：测试beam_size=1,2,5,10,20，绘制beam size vs 准确率/速度曲线，找到最佳平衡点。6）可视化：打印beam search的搜索过程，看看每一步保留了哪些候选，最终最优路径是哪条。",
           deep_dive: "Beam Search是序列生成的标准解码方法，但它也不是完美的：1）计算成本：beam_size越大质量越好但计算量线性增长，实际中常用beam_size=4-10。2）曝光偏差仍然存在：beam search虽然比greedy考虑更多候选，但仍然是自回归的，误差会累积。3）多样性问题：beam search生成的结果往往比较保守和重复，缺乏多样性。4）人类文本的分布：研究发现，beam search生成的文本往往比人类文本更「完美」，但反而不自然——人类说话会有冗余、停顿、修正。这催生了采样式的生成方法。采样类方法包括：纯随机采样（不可控）、Temperature采样（控制随机性）、Top-K采样（只从概率最高的k个中选）、Nucleus Sampling（Top-p，只从累积概率前p的token中采样）。这些方法生成的文本更多样更自然，但质量可能不稳定。实际应用中，需要根据任务特点选择：追求准确的用beam search（如翻译），追求创造性的用采样（如创意写作、对话）。"
-        }, duration: "2小时", resources: [R_CS224N, { title: "Beam Search 详解", url: "https://machinelearningmastery.com/beam-search-decoder-natural-language-processing/", required: false }, { title: "sacreBLEU 评估工具", url: "https://github.com/mjpost/sacrebleu", required: true }, { title: "NLTK BLEU 计算", url: "https://www.nltk.org/api/nltk.translate.bleu_score.html", required: false }], checkpoint: "实现 beam search，并在数字翻译任务上比 greedy 更高 BLEU" },
+        }, duration: "2小时", resources: [R_CS224N, { title: "Beam Search 详解", url: "https://machinelearningmastery.com/beam-search-decoder-natural-language-processing/", required: false, type: "article", source: "official" }, { title: "sacreBLEU 评估工具", url: "https://github.com/mjpost/sacrebleu", required: true, type: "repo", source: "github" }, { title: "NLTK BLEU 计算", url: "https://www.nltk.org/api/nltk.translate.bleu_score.html", required: false, type: "article", source: "official" }], checkpoint: "实现 beam search，并在数字翻译任务上比 greedy 更高 BLEU" },
       { day: 11, title: "注意力机制（加性 / 乘性）",
         summary: "深入理解注意力机制，实现加性注意力，应用于Seq2Seq解码器。", content: {
           objective: "今天你将学习注意力机制——NLP领域最重要的创新之一。学完后能理解加性注意力和乘性注意力的区别、实现注意力层、将注意力加入Seq2Seq解码器、可视化注意力权重对齐矩阵。注意力机制是Transformer的核心，也是现代深度学习的基石技术之一。",
@@ -1837,7 +1837,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "实现加性注意力并应用于Seq2Seq：1）实现AdditiveAttention类：输入query（解码器当前状态）和keys/values（编码器所有隐藏状态），计算注意力权重（softmax归一化），返回加权的上下文向量和注意力权重。2）修改之前的Seq2Seq Decoder：在每一步计算注意力，将上下文向量与decoder隐藏状态拼接，再预测下一个词。3）在数字翻译任务上训练带注意力的Seq2Seq，与不带注意力的版本对比：长序列上注意力版本是否更好？4）可视化注意力矩阵：对一个测试样本，画出源序列和目标序列的注意力热力图（横轴源词、纵轴目标词），观察是否出现清晰的对角线对齐模式。5）（可选）实现乘性注意力，对比两种注意力的效果差异和计算速度差异。",
           deep_dive: "注意力机制的提出是NLP发展的里程碑，它的意义远不止于提升Seq2Seq的效果：1）从「整句压缩」到「动态聚焦」：注意力让模型不再需要把所有信息压缩到一个固定向量里，而是可以根据需要随时从源序列中「查阅」相关信息。2）可解释性：注意力权重提供了一定的可解释性——我们可以看到模型在生成某个词时「看」了源句子的哪个位置。3）注意力是通用接口：Q/K/V的抽象非常灵活，几乎任何问题都可以形式化为注意力问题。4）自注意力（Self-Attention）：注意力的进一步发展——序列中的每个位置都可以关注序列中的所有其他位置，这就是Transformer的核心。5）注意力机制与认知科学的联系：人类的视觉系统也是注意力机制——我们不会同时处理整个视野，而是将注意力聚焦在感兴趣的区域。注意力机制的成功，很大程度上是因为它契合了人类处理信息的方式。从注意力出发，整个领域进入了Transformer的新时代。"
-        }, duration: "2小时", resources: [R_CS224N, { title: "Bahdanau 注意力论文", url: "https://arxiv.org/abs/1409.0473", required: true }, { title: "注意力机制图解", url: "https://jalammar.github.io/visualizing-neural-machine-translation-mechanics-of-seq2seq-models-with-attention/", required: true }, { title: "Luong 注意力论文", url: "https://arxiv.org/abs/1508.04025", required: false }], checkpoint: "能实现一个加性 attention 并加到 seq2seq decocder 中" },
+        }, duration: "2小时", resources: [R_CS224N, { title: "Bahdanau 注意力论文", url: "https://arxiv.org/abs/1409.0473", required: true, type: "paper", source: "academic" }, { title: "注意力机制图解", url: "https://jalammar.github.io/visualizing-neural-machine-translation-mechanics-of-seq2seq-models-with-attention/", required: true, type: "article", source: "official" }, { title: "Luong 注意力论文", url: "https://arxiv.org/abs/1508.04025", required: false, type: "paper", source: "academic" }], checkpoint: "能实现一个加性 attention 并加到 seq2seq decocder 中" },
       { day: 12, title: "TextCNN：用卷积做文本",
         summary: "理解TextCNN原理，实现文本分类模型，对比CNN与RNN的优劣。", content: {
           objective: "今天你将学习用卷积神经网络处理文本的经典方法——TextCNN。学完后能理解TextCNN的架构、实现文本分类模型、对比它与BiLSTM的精度和速度差异。CNN在文本任务上虽然不是当前最先进的，但它的高效性和简洁性使其在工业界仍有广泛应用。",
@@ -1850,7 +1850,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "实现TextCNN并与BiLSTM做全面对比：1）实现TextCNN模型：Embedding层→多个卷积层（不同kernel_size，如2,3,4,5，每个有100个filter）→每个卷积后接ReLU和1d最大池化→拼接所有池化结果→Dropout→线性分类层。2）在IMDB数据集上训练TextCNN，训练5-10个epoch。3）与BiLSTM对比：训练速度（每epoch耗时）、最终准确率、推理速度（单句耗时）、模型参数量。4）分析各自的优势场景：什么情况下TextCNN更好？什么情况下BiLSTM更好？5）可视化：学习训练好的卷积核，看看它们学到了什么模式（比如正向情感词「very good」、负向情感词「terrible」等n-gram特征）。6）（可选）测试不同卷积核大小和数量的影响，找到最佳配置。",
           deep_dive: "TextCNN开创了用CNN做NLP的新方向，后续衍生出许多变体：1）DCNN（Deep CNN）：更深的卷积网络，用k-max pooling保留前k个最强响应。2）Char-CNN：直接在字符级别做卷积，不需要分词，能处理拼写错误。3）VDCNN：非常深的卷积网络（可达29层），证明深度在NLP中也重要。4）ResNet for text：将残差连接引入文本CNN。在Transformer出现之前，CNN和RNN是NLP的两大主力。CNN的优势是速度快、并行性好，RNN的优势是序列建模能力强。实际项目中，在对延迟敏感的场景（如在线服务），轻量的TextCNN仍然是不错的选择。另外，CNN在NLP中的应用不限于分类：在序列标注中，CNN可以捕捉局部上下文特征；在机器翻译中，Conv2Seq（全卷积Seq2Seq）曾经是性能强劲的方案。理解CNN在文本中的应用，能拓宽你的技术视野，让你在不同场景下有更多选择。"
-        }, duration: "2小时", resources: [{ title: "Kim Yoon 2014", url: "https://arxiv.org/abs/1408.5882", required: true }, { title: "TextCNN PyTorch 实现", url: "https://github.com/Shawn1993/cnn-text-classification-pytorch", required: false }, { title: "TextCNN 详解", url: "https://colah.github.io/posts/2014-07-Conv-Nets-Modular/", required: false }], checkpoint: "TextCNN 能在文本分类上跑出与 LSTM 相当或更高的精度" },
+        }, duration: "2小时", resources: [{ title: "Kim Yoon 2014", url: "https://arxiv.org/abs/1408.5882", required: true, type: "paper", source: "academic" }, { title: "TextCNN PyTorch 实现", url: "https://github.com/Shawn1993/cnn-text-classification-pytorch", required: false, type: "repo", source: "github" }, { title: "TextCNN 详解", url: "https://colah.github.io/posts/2014-07-Conv-Nets-Modular/", required: false, type: "article", source: "official" }], checkpoint: "TextCNN 能在文本分类上跑出与 LSTM 相当或更高的精度" },
       { day: 13, title: "语言模型与困惑度 Perplexity",
         summary: "理解语言模型任务与困惑度指标，实现字符级LSTM语言模型生成文本。", content: {
           objective: "今天你将学习NLP的核心任务——语言模型，以及它的标准评估指标困惑度（Perplexity）。学完后能训练一个字符级LSTM语言模型、用它生成新文本、计算困惑度指标。语言模型是GPT等大语言模型的前身，理解它是理解大模型的基础。",
@@ -1863,7 +1863,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "训练一个字符级LSTM语言模型并生成文本：1）准备训练语料：可以用《哈利波特》的某一章、莎士比亚诗集、或者Linux内核代码等（选你感兴趣的文本，至少几十KB）。2）数据处理：字符级建模，词表就是所有出现过的字符（通常几十到上百个）。构建输入序列和目标序列（目标=输入右移一位）。3）模型实现：Embedding层 + LSTM（2-3层，带dropout） + 线性层映射到字符空间。4）训练：用交叉熵损失，训练若干epoch，观察loss下降和困惑度降低。5）生成文本：实现采样函数：以起始字符串为前缀，自回归生成后续字符。测试不同温度（如0.5, 1.0, 1.5）对生成文本多样性的影响。6）计算困惑度：在一段独立的测试文本上计算PPL，评估模型的语言建模能力。",
           deep_dive: "语言模型是NLP的核心任务，也是最成功的预训练任务。为什么？因为语言建模是「万能任务」——要很好地预测下一个词，你需要理解语法、语义、常识、推理等所有语言能力。这也是为什么GPT系列（从GPT-1到GPT-4）通过更大规模的语言模型预训练，涌现出了各种能力。语言模型的发展历程：1）n-gram语言模型（统计方法，基于计数，受维数灾难限制，n最多到3-5）。2）神经语言模型（NNLM，Bengio 2003年提出，用词向量+前馈网络）。3）RNN/LSTM语言模型（循环结构，理论上可以处理任意长上文，但实际有梯度消失问题）。4）Transformer语言模型（GPT系列，自注意力机制，并行计算+长程依赖，成为大模型的标准架构）。困惑度虽然是常用指标，但它也有局限：PPL低不代表下游任务好、不同分词器的PPL不可比、人类水平的PPL是多少其实没有定论。但作为相对指标，PPL仍然是评估语言模型的第一选择。"
-        }, duration: "2.5小时", resources: [R_D2L, { title: "语言模型教程", url: "https://pytorch.org/tutorials/beginner/transformer_tutorial.html", required: true }, { title: "Andrej Karpathy: RNN 生成", url: "https://karpathy.github.io/2015/05/21/rnn-effectiveness/", required: true }, { title: "语言模型评估", url: "https://towardsdatascience.com/perplexity-in-language-models-87a196019a94", required: false }], checkpoint: "能用字符级 LSTM 生成一段类似训练语料的文本" },
+        }, duration: "2.5小时", resources: [R_D2L, { title: "语言模型教程", url: "https://pytorch.org/tutorials/beginner/transformer_tutorial.html", required: true, type: "article", source: "official" }, { title: "Andrej Karpathy: RNN 生成", url: "https://karpathy.github.io/2015/05/21/rnn-effectiveness/", required: true, type: "article", source: "official" }, { title: "语言模型评估", url: "https://towardsdatascience.com/perplexity-in-language-models-87a196019a94", required: false, type: "article", source: "official" }], checkpoint: "能用字符级 LSTM 生成一段类似训练语料的文本" },
       { day: 14, title: "综合：中文新闻分类系统",
         summary: "完成一个完整的中文新闻分类项目，串联前13天所有NLP知识。", content: {
           objective: "今天你将综合运用前13天所学的NLP知识，完成一个完整的中文新闻分类系统项目。从文本预处理、词向量、模型构建、训练评估到结果分析，走通完整的NLP项目流程。这是检验你RNN阶段学习成果的综合项目，也是扎实的项目经验。",
@@ -1876,7 +1876,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成完整的中文新闻分类项目：1）数据准备：使用THUCNews子集（或其他中文新闻数据集），选择10个类别，每类1000-5000条。划分训练/验证/测试集（8:1:1）。2）预处理：用jieba分词，统计词频构建词表（取前5万或10万高频词），文本转ID序列。3）预训练词向量：加载腾讯中文词向量（或其他中文预训练词向量），初始化Embedding层。4）模型实现：分别实现三种模型——TextCNN（快速基线）、BiLSTM（序列建模）、BiLSTM+Attention（可解释性+精度）。5）训练调优：分别训练三个模型，使用验证集调参（学习率、dropout、隐藏层大小等），记录最佳结果。6）全面评估：在测试集上计算准确率、macro-F1、micro-F1，绘制混淆矩阵，找出最容易混淆的类别对。7）Bad Case分析：抽取50个分类错误的样本，人工分析错误原因（是歧义？是内容太短？是类别定义重叠？），提出改进方向。8）交付：撰写完整README，包含项目介绍、环境配置、使用方法、性能指标表格、典型样例。提供一个简单的预测脚本，输入新闻文本输出分类结果。",
           deep_dive: "一个工业级的文本分类系统还需要考虑更多实际问题：1）数据层面：类别不平衡怎么办？（过采样、欠采样、类别权重、focal loss）标注数据不够怎么办？（主动学习、半监督学习、预训练模型微调）2）模型层面：追求最高精度用BERT等大模型微调；追求速度和轻量用TextCNN或蒸馏小模型；多标签分类用sigmoid+多标签损失。3）工程层面：模型服务化（FastAPI+Docker）、批量处理、增量学习（定期用新数据更新模型）、模型监控（数据漂移检测、性能衰减预警）。4）业务层面：阈值优化（根据业务对precision/recall的不同偏好调整分类阈值）、人工审核兜底（高不确定性的样本转人工）、快速迭代（收集bad case→补充标注→重新训练的闭环）。实际项目中，算法往往只占20%的工作量，剩下80%是数据、工程和业务。但正是这些非算法部分，决定了项目能否真正产生价值。"
-        }, duration: "3小时", resources: [R_CS224N, R_PYTORCH_TUT, { title: "THUCNews 数据集", url: "http://thuctc.thunlp.org/", required: false }, { title: "腾讯中文词向量", url: "https://ai.tencent.com/ailab/nlp/en/embedding.html", required: false }, { title: "中文 NLP 实战", url: "https://github.com/fighting41love/funNLP", required: false }], checkpoint: "完整的训练脚本 + 评估指标 + 3 个 case 分析" }],
+        }, duration: "3小时", resources: [R_CS224N, R_PYTORCH_TUT, { title: "THUCNews 数据集", url: "http://thuctc.thunlp.org/", required: false, type: "article", source: "official" }, { title: "腾讯中文词向量", url: "https://ai.tencent.com/ailab/nlp/en/embedding.html", required: false, type: "article", source: "official" }, { title: "中文 NLP 实战", url: "https://github.com/fighting41love/funNLP", required: false, type: "repo", source: "github" }], checkpoint: "完整的训练脚本 + 评估指标 + 3 个 case 分析" }],
   },
 
   // =====================================================
@@ -1895,7 +1895,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["熟练使用 HuggingFace", "微调 BERT 做文本分类"],
     relatedIntel: ["001-transformer", "013-huggingface-datasets"],
     relatedTools: ["Hugging Face Transformers"],
-    relatedTerms: ["transformer", "self-attention", "attention-mechanism", "encoder", "decoder"],
+    relatedTerms: ["transformer", "self-attention", "attention-mechanism", "encoder", "decoder"], relatedNodes: ["nlp-rnn", "llm-fundamentals"],
     dailyTasks: [
       { day: 1, title: "缩放点积注意力",
         summary: "深入理解缩放点积注意力机制，从零实现并验证数值正确性。", content: {
@@ -1909,7 +1909,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "从零实现缩放点积注意力并进行全面验证：1）实现scaled_dot_product_attention(Q, K, V, mask=None)函数，正确计算注意力权重和输出。2）数值验证：构造一个小例子（如seq_len=3, d_k=4），手动计算前几步，与代码输出对比，误差应在1e-6以内。3）测试mask：实现causal mask（下三角矩阵），验证掩码位置的注意力权重确实为0。4）形状测试：测试不同batch_size、seq_len、d_k的输入，确认输出形状正确。5）对比PyTorch官方的nn.functional.scaled_dot_product_attention，确认结果一致。6）可视化：对一个随机输入计算注意力矩阵，用热力图展示注意力权重的分布模式。",
           deep_dive: "缩放点积注意力看似简单，但它的设计蕴含着深刻的考量：1）为什么用点积而不是其他相似度度量？点积计算高效、可矩阵化、在高维空间有良好的几何解释。2）为什么缩放？当d_k很大时，点积的方差也会变大（约为d_k），导致softmax输入绝对值很大，进入梯度为零的饱和区。除以√d_k将方差拉回到1，保证梯度健康。3）注意力的复杂度：时间和空间复杂度都是O(n²·d)，其中n是序列长度，d是维度。这是Transformer处理长序列时的主要瓶颈，也是Longformer、FlashAttention等工作要解决的问题。4）注意力与核方法的联系：注意力可以看作是核函数的一种，softmax(QK^T)就是一个核矩阵。5）注意力的表达能力：研究表明，自注意力+前馈网络在理论上可以逼近任何序列到序列的函数。理解这些深层原理，能帮你更好地把握Transformer的本质和局限。"
-        }, duration: "1.5小时", resources: [B_NLP_TUTORIAL, R_JALAMMAR, R_D2L, { title: "Attention Is All You Need 论文", url: "https://arxiv.org/abs/1706.03762", required: true }, { title: "3Blue1Brown: 注意力机制", url: "https://www.youtube.com/watch?v=eMlx5fFNoYc", required: false }, { title: "Transformer 注意力图解", url: "https://jalammar.github.io/illustrated-transformer/", required: true },  { title: "注意力机制PyTorch实现", url: "https://github.com/pytorch/pytorch/blob/main/torch/nn/functional.py", required: false, type: "repo", source: "github" }], checkpoint: "能从零实现 scaled dot-product attention，并在 toy 输入上数值正确" },
+        }, duration: "1.5小时", resources: [B_NLP_TUTORIAL, R_JALAMMAR, R_D2L, { title: "Attention Is All You Need 论文", url: "https://arxiv.org/abs/1706.03762", required: true, type: "paper", source: "academic" }, { title: "3Blue1Brown: 注意力机制", url: "https://www.youtube.com/watch?v=eMlx5fFNoYc", required: false, type: "video", source: "youtube" }, { title: "Transformer 注意力图解", url: "https://jalammar.github.io/illustrated-transformer/", required: true, type: "article", source: "official" },  { title: "注意力机制PyTorch实现", url: "https://github.com/pytorch/pytorch/blob/main/torch/nn/functional.py", required: false, type: "repo", source: "github" }], checkpoint: "能从零实现 scaled dot-product attention，并在 toy 输入上数值正确" },
       { day: 2, title: "Multi-Head Attention",
         summary: "掌握多头注意力机制，从零实现MHA并与官方实现对齐。", content: {
           objective: "今天你将学习多头注意力（Multi-Head Attention）——Transformer的另一个关键创新。学完后能理解多头的作用、为什么多头比单头好，从零实现MHA并与PyTorch官方实现数值对齐。多头注意力让模型能同时关注不同类型的关系，是Transformer强大能力的重要来源。",
@@ -1922,7 +1922,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "从零实现Multi-Head Attention并进行严格验证：1）实现MultiHeadAttention类：初始化Q/K/V三个线性变换、输出线性变换，forward方法中完成分头→缩放点积注意力→拼接→输出投影的完整流程。2）确保与PyTorch官方nn.MultiheadAttention的输出一致：手动对齐权重，将你的权重设置为与官方相同的值，输入相同的x，比较输出的差异，误差应小于1e-5。3）头数量实验：测试h=1,2,4,8的情况，确认输出形状始终为(seq_len, batch, d_model)。4）注意力权重可视化：取8头的注意力权重，分别可视化每个头的注意力模式，观察不同头是否确实在关注不同的东西。5）掩码测试：测试带key_padding_mask和causal_mask的情况，确认掩码正确生效。6）参数量统计：手动计算参数量并与实际对比，确认多头不增加参数量。",
           deep_dive: "多头注意力是Transformer最精妙的设计之一，但它的工作机制直到现在仍在被深入研究：1）头的冗余性：研究发现，很多头的作用是相似的，去掉一些头对性能影响不大，说明存在冗余。2）头的专业化：在底层，头更多关注局部和语法；在高层，头更多关注全局和语义。有些头专门处理指代消解，有些处理依存关系。3）注意力的「探针对」：研究者设计了各种探针实验来理解不同层不同头在做什么，比如词性标注探针、句法树探针等。4）MQA/GQA：Multi-Query Attention（多个查询头共享一个KV头）和Grouped-Query Attention（分组共享KV头）是大模型中的常用优化，在几乎不损失效果的前提下大幅减少KV缓存，提升推理速度。5）FlashAttention：从工程角度优化注意力的计算顺序，利用GPU的SRAM层级，实现更快更省显存的注意力计算，是大模型训练推理的标配。理解这些演进，能让你跟上大模型技术的发展步伐。"
-        }, duration: "2小时", resources: [B_NLP_TUTORIAL, R_JALAMMAR, { title: "Multi-Head Attention 图解", url: "https://jalammar.github.io/illustrated-transformer/", required: true }, { title: "PyTorch MHA 文档", url: "https://pytorch.org/docs/stable/generated/torch.nn.MultiheadAttention.html", required: false }, { title: "Transformer 代码实现", url: "https://nlp.seas.harvard.edu/annotated-transformer/", required: true },  { title: "Harvard NLP Annotated Transformer", url: "https://github.com/harvardnlp/annotated-transformer", required: false, type: "repo", source: "github" }], checkpoint: "能从零实现 MHA，并与 PyTorch 官方 MHA 的输出对齐（误差<1e-6）" },
+        }, duration: "2小时", resources: [B_NLP_TUTORIAL, R_JALAMMAR, { title: "Multi-Head Attention 图解", url: "https://jalammar.github.io/illustrated-transformer/", required: true, type: "article", source: "official" }, { title: "PyTorch MHA 文档", url: "https://pytorch.org/docs/stable/generated/torch.nn.MultiheadAttention.html", required: false, type: "doc", source: "official" }, { title: "Transformer 代码实现", url: "https://nlp.seas.harvard.edu/annotated-transformer/", required: true, type: "article", source: "official" },  { title: "Harvard NLP Annotated Transformer", url: "https://github.com/harvardnlp/annotated-transformer", required: false, type: "repo", source: "github" }], checkpoint: "能从零实现 MHA，并与 PyTorch 官方 MHA 的输出对齐（误差<1e-6）" },
       { day: 3, title: "位置编码（正弦 / 可学习）",
         summary: "理解位置编码的必要性，掌握正弦位置编码与可学习位置编码的原理与实现。", content: {
           objective: "今天你将学习位置编码——Transformer中注入位置信息的关键组件。学完后能理解为什么注意力本身不含位置信息、正弦位置编码的原理和性质、可学习位置编码的区别，能实现并可视化位置编码。位置信息是序列建模的基础，没有它Transformer就是一个词袋模型。",
@@ -1935,7 +1935,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "实现并深入理解位置编码：1）实现SinusoidalPositionalEncoding类：根据公式生成正弦位置编码矩阵，注册为buffer（不训练），forward方法将位置编码加到输入嵌入上。2）可视化：绘制位置编码矩阵的热力图（行是位置，列是维度），观察低频（高维）和高频（低维）的变化模式。3）验证相对位置性质：计算两个不同位置的位置编码的点积或差值，验证相对位置k的关系是否成立——PE(pos+k)能否用PE(pos)的线性组合表示。4）可学习位置编码：实现LearnablePositionalEmbedding类，用nn.Embedding实现。5）对比实验：在一个简单的文本分类任务上，对比三种情况——无位置编码、正弦位置编码、可学习位置编码——的效果差异，验证位置编码的重要性。6）长度外推测试：训练时用最长50的序列，推理时输入更长的序列（如100），看正弦编码和可学习编码分别会怎样。",
           deep_dive: "位置编码是一个活跃的研究方向，从早期的正弦编码发展出了许多变体：1）相对位置编码（Relative Position Embedding）：不是直接编码绝对位置，而是编码两个位置之间的相对距离，更符合直觉，在T5等模型中使用。2）旋转位置编码（RoPE, Rotary Position Embedding）：通过旋转矩阵将位置信息融入Query和Key中，应用于LLaMA、Qwen等现代大模型，具有良好的长度外推性。3）ALiBi（Attention with Linear Biases）：不加位置编码，而是在注意力分数上加上一个与距离成正比的偏置，简单高效，外推性好。4）卷积位置编码：用深度卷积来注入局部位置信息，在ConvNeXt等工作中使用。5）位置编码的重要性有多大？研究表明，对于理解型任务（如分类、问答），位置编码很重要；对于某些生成任务，可能位置编码的作用没那么关键。选择哪种位置编码，取决于任务特性和对长度外推的需求。了解这些不同的方案，能让你在设计模型时有更多选择。"
-        }, duration: "1.5小时", resources: [R_D2L, { title: "位置编码详解", url: "https://d2l.ai/chapter_attention-mechanisms/positional-encoding.html", required: true }, { title: "旋转位置编码 RoPE", url: "https://arxiv.org/abs/2104.09864", required: false }, { title: "位置编码可视化", url: "https://machinelearningmastery.com/a-gentle-introduction-to-positional-encoding-in-transformer-models-part-1/", required: false },  { title: "ALiBi位置编码", url: "https://arxiv.org/abs/2108.12462", required: false, type: "paper", source: "academic" }], checkpoint: "能实现并可视化正弦位置编码" },
+        }, duration: "1.5小时", resources: [R_D2L, { title: "位置编码详解", url: "https://d2l.ai/chapter_attention-mechanisms/positional-encoding.html", required: true, type: "article", source: "official" }, { title: "旋转位置编码 RoPE", url: "https://arxiv.org/abs/2104.09864", required: false, type: "paper", source: "academic" }, { title: "位置编码可视化", url: "https://machinelearningmastery.com/a-gentle-introduction-to-positional-encoding-in-transformer-models-part-1/", required: false, type: "article", source: "official" },  { title: "ALiBi位置编码", url: "https://arxiv.org/abs/2108.12462", required: false, type: "paper", source: "academic" }], checkpoint: "能实现并可视化正弦位置编码" },
       { day: 4, title: "构建一个 Transformer 编码器",
         summary: "从零实现Transformer编码器，理解完整架构并在文本分类任务上验证。", content: {
           objective: "今天你将从零构建一个完整的Transformer编码器，理解所有组件如何协同工作。学完后能实现EncoderLayer、完整的Encoder，在文本分类任务上训练验证。理解编码器是理解BERT等预训练模型的基础，也是面试中高频考察的内容。",
@@ -1948,7 +1948,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "从零实现完整的Transformer编码器并训练验证：1）实现EncoderLayer类：包含自注意力子层（带dropout和残差+LayerNorm）、FFN子层（同样的残差+LN结构）。2）实现TransformerEncoder类：嵌入层+位置编码+N层EncoderLayer+最终LayerNorm。3）GELU激活：实现GELU激活函数（或用nn.GELU），对比ReLU的区别。4）文本分类适配：在编码器输出上接分类头——取第一个位置（<[BOS_never_used_51bce0c785ca2f68081bfa7d91973934]>）的输出，过线性层得到logits。5）IMDB数据集训练：在IMDB情感分类数据集上训练你的Transformer编码器（小模型，如2层、4头、128维，确保能在合理时间内完成）。6）训练5个epoch，记录准确率和loss曲线，验证模型确实在学习。7）与BiLSTM对比：相同参数量下，哪个效果更好？训练速度呢？分析各自的优势。",
           deep_dive: "Transformer编码器虽然结构简洁，但背后有许多设计选择值得深入思考：1）Pre-LN vs Post-LN：原始Transformer用的是Post-LN（LN在残差外面），但后来的研究发现Pre-LN（LN在子层前面）训练更稳定，不需要warmup也能收敛。BERT用的是Post-LN，GPT-2之后大多用Pre-LN。2）为什么FFN要4倍维度？这是经验值，更大的中间维度提供更强的非线性表达能力，但参数量和计算量也线性增加。也有研究用MoE（混合专家）将FFN扩展到更大的规模。3）残差连接的作用：和ResNet中的残差连接类似，提供梯度高速公路，让深层网络能够训练。在Transformer中，残差连接还起到了「残差流」的作用——原始的嵌入信息一路直通到最后。4）注意力和FFN的分工：注意力负责「混合」不同位置的信息（token mixing），FFN负责在每个位置内部做非线性变换（channel mixing）。这两种操作交替进行，逐步构建更丰富的表示。5）层的深度：浅层更多关注语法和局部，深层更多关注语义和全局。理解这些架构设计的权衡，能帮你更好地定制和调试Transformer模型。"
-        }, duration: "2.5小时", resources: [R_D2L, { title: "Transformer 编码器实现", url: "https://nlp.seas.harvard.edu/annotated-transformer/", required: true }, { title: "GELU 激活函数详解", url: "https://arxiv.org/abs/1606.08415", required: false }, { title: "PyTorch Transformer 教程", url: "https://pytorch.org/tutorials/beginner/transformer_tutorial.html", required: true },  { title: "Transformer-Pytorch实现", url: "https://github.com/SamuraisH/Deep-Learning-Collection/tree/master/Algorithms/Transformer", required: false, type: "repo", source: "github" }], checkpoint: "能从头搭一个 Transformer 编码器，并在文本分类上训起来" },
+        }, duration: "2.5小时", resources: [R_D2L, { title: "Transformer 编码器实现", url: "https://nlp.seas.harvard.edu/annotated-transformer/", required: true, type: "article", source: "official" }, { title: "GELU 激活函数详解", url: "https://arxiv.org/abs/1606.08415", required: false, type: "paper", source: "academic" }, { title: "PyTorch Transformer 教程", url: "https://pytorch.org/tutorials/beginner/transformer_tutorial.html", required: true, type: "article", source: "official" },  { title: "Transformer-Pytorch实现", url: "https://github.com/SamuraisH/Deep-Learning-Collection/tree/master/Algorithms/Transformer", required: false, type: "repo", source: "github" }], checkpoint: "能从头搭一个 Transformer 编码器，并在文本分类上训起来" },
       { day: 5, title: "解码器与因果掩码",
         summary: "理解Transformer解码器结构与因果掩码，实现Encoder-Decoder完整架构。", content: {
           objective: "今天你将学习Transformer解码器，以及完整的Encoder-Decoder架构。学完后能理解因果掩码的作用、Cross-Attention的工作方式、Teacher Forcing训练与自回归推理的区别，能在玩具翻译任务上验证完整架构。理解解码器是理解GPT等生成模型的基础。",
@@ -1961,7 +1961,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "实现Transformer解码器并在玩具任务上验证：1）实现DecoderLayer类：三个子层——Masked Self-Attention、Cross-Attention、FFN，每个都有残差连接和LayerNorm。2）实现TransformerDecoder类：嵌入+位置编码→N层DecoderLayer→输出投影层。3）因果掩码实现：生成一个下三角的布尔掩码，mask掉未来位置的注意力分数。4）完整的Seq2Seq模型：Encoder + Decoder + 输出softmax层。5）数字翻译任务验证：和第RNN阶段的数字翻译任务一样——输入数字序列，输出英文单词序列。6）训练：使用Teacher Forcing，输入完整的目标序列（右移一位作为decoder输入），计算所有位置的交叉熵损失。7）推理：实现greedy解码，自回归逐个生成token，测试训练好的模型能否正确翻译。8）对比：对比Transformer Seq2Seq和LSTM Seq2Seq的收敛速度和最终效果。",
           deep_dive: "Transformer解码器是现代大语言模型的基础，但它的训练和推理也面临一些挑战：1）训练-推理不一致（Exposure Bias）：训练时有Teacher Forcing（用真实的历史输入），推理时只能用自己的预测，分布不匹配。解决方法有Scheduled Sampling（逐渐从teacher过渡到自己的预测）、Professor Forcing等。2）推理效率低：自回归生成只能一个一个token来，无法并行，速度慢。优化方法包括：投机采样（Speculative Decoding）用小模型猜多个token、大模型验证；KV Cache缓存历史的键值，避免重复计算；批量推理等。3）只有解码器的模型（Decoder-only）：GPT系列只用解码器，去掉了Cross-Attention，直接在大规模语料上做自回归语言模型预训练。这种「纯生成式」的架构反而在理解任务上也表现很好，成为当前的主流。4）编码器-解码器 vs 仅解码器：前者适合有明确源-目标对齐的任务（如翻译），后者更通用，通过prompt engineering来适配各种任务。5）因果掩码的意义：它不仅仅是防止数据泄露，更是让模型学会「根据已有内容预测下一个」——这正是语言建模的本质。理解这些深层问题，能让你对大语言模型的工作原理有更透彻的认识。"
-        }, duration: "2小时", resources: [R_JALAMMAR, { title: "Transformer 解码器图解", url: "https://jalammar.github.io/illustrated-transformer/", required: true }, { title: "PyTorch Transformer 文档", url: "https://pytorch.org/docs/stable/generated/torch.nn.Transformer.html", required: false }, { title: "Seq2Seq 与注意力", url: "https://pytorch.org/tutorials/intermediate/seq2seq_translation_tutorial.html", required: false },  { title: "Transformer翻译实战代码", url: "https://github.com/SamuraisH/Deep-Learning-Collection/tree/master/Projects/Transformer-Translation", required: false, type: "repo", source: "github" }], checkpoint: "能实现一个端到端的 Transformer Encoder-Decoder，并在 toy 翻译任务上收敛" },
+        }, duration: "2小时", resources: [R_JALAMMAR, { title: "Transformer 解码器图解", url: "https://jalammar.github.io/illustrated-transformer/", required: true, type: "article", source: "official" }, { title: "PyTorch Transformer 文档", url: "https://pytorch.org/docs/stable/generated/torch.nn.Transformer.html", required: false, type: "doc", source: "official" }, { title: "Seq2Seq 与注意力", url: "https://pytorch.org/tutorials/intermediate/seq2seq_translation_tutorial.html", required: false, type: "article", source: "official" },  { title: "Transformer翻译实战代码", url: "https://github.com/SamuraisH/Deep-Learning-Collection/tree/master/Projects/Transformer-Translation", required: false, type: "repo", source: "github" }], checkpoint: "能实现一个端到端的 Transformer Encoder-Decoder，并在 toy 翻译任务上收敛" },
       { day: 6, title: "BERT 直觉与 MLM",
         summary: "理解BERT的核心思想与MLM预训练任务，掌握BERT与GPT的根本区别。", content: {
           objective: "今天你将学习BERT——预训练语言模型的里程碑，理解它的双向编码思想和MLM预训练任务。学完后能讲清BERT与GPT的核心差异、MLM为什么能学习双向上下文、<[BOS_never_used_51bce0c785ca2f68081bfa7d91973934]>和[SEP]的作用。BERT开启了NLP的预训练微调范式，是理解现代NLP的关键节点。",
@@ -1974,7 +1974,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "深入理解BERT的设计并动手实验：1）MLM任务手动模拟：拿一个句子，随机mask几个词，猜猜被mask的是什么词，体验「完形填空」式的语言理解任务。2）Token级理解：对一个句子对，写出它的BERT输入格式——<[BOS_never_used_51bce0c785ca2f68081bfa7d91973934]> + 句1 + [SEP] + 句2 + [SEP]，对应的token_type_ids应该是什么样的？3）用HuggingFace加载bert-base-uncased，做一个MLM推理实验：输入一个带[MASK]的句子，用BertForMaskedLM预测被mask的词，看预测是否合理。4）多mask实验：同时mask多个位置，观察预测结果。5）可视化注意力：用bertviz工具（或自己写代码）可视化BERT某一层某一头的注意力模式，看看不同的头在关注什么。6）思考：为什么BERT不适合直接做生成任务？如果一定要用BERT做生成，可以怎么做？（提示：参考UniLM等工作）",
           deep_dive: "BERT的成功标志着NLP进入了「预训练+微调」的新时代，但它的设计也经历了不断演进：1）从BERT到RoBERTa：RoBERTa用更大的batch、更多的数据、更长的训练、去掉NSP任务、动态mask策略，在同样的架构下大幅提升效果，说明训练方法的重要性。2）从BERT到ALBERT：用参数共享（跨层共享权重）和因子化嵌入分解大幅减少参数量，让训练更大的模型成为可能。3）从BERT到ELECTRA：替换MLM为RTD（Replaced Token Detection）——用一个生成器生成假词，判别器判断每个token是真还是假，训练效率更高。4）为什么GPT路线最终胜出？虽然BERT在理解任务上表现很好，但GPT的「生成式预训练+Prompt」范式更通用——一个模型可以通过不同的prompt做所有任务，而BERT需要为每个任务单独加分类头微调。ChatGPT的成功证明了生成式路线的巨大潜力。5）但BERT的思想仍然重要：双向理解的能力是很多任务需要的，当前的大模型也在探索如何更好地结合双向理解（如Prefix-LM、Encoder-Decoder架构等）。理解这段演进史，能帮你把握NLP发展的脉络。"
-        }, duration: "1.5小时", resources: [{ title: "BERT 论文", url: "https://arxiv.org/abs/1810.04805", required: true }, { title: "BERT 原理解析", url: "https://jalammar.github.io/illustrated-bert/", required: true }, { title: "GPT vs BERT 对比", url: "https://lilianweng.github.io/posts/2019-01-31-lm/", required: false }, { title: "BERT 可视化", url: "https://jalammar.github.io/illustrated-bert/", required: false },  { title: "BERT-Pytorch实现", url: "https://github.com/lucidrains/bert-pytorch", required: false, type: "repo", source: "github" }], checkpoint: "能用 3 句话讲清 BERT 与 GPT 的核心差异" },
+        }, duration: "1.5小时", resources: [{ title: "BERT 论文", url: "https://arxiv.org/abs/1810.04805", required: true, type: "paper", source: "academic" }, { title: "BERT 原理解析", url: "https://jalammar.github.io/illustrated-bert/", required: true, type: "article", source: "official" }, { title: "GPT vs BERT 对比", url: "https://lilianweng.github.io/posts/2019-01-31-lm/", required: false, type: "article", source: "official" }, { title: "BERT 可视化", url: "https://jalammar.github.io/illustrated-bert/", required: false, type: "article", source: "official" },  { title: "BERT-Pytorch实现", url: "https://github.com/lucidrains/bert-pytorch", required: false, type: "repo", source: "github" }], checkpoint: "能用 3 句话讲清 BERT 与 GPT 的核心差异" },
       { day: 7, title: "HuggingFace Tokenizer 与加载",
         summary: "熟练使用HuggingFace Transformers库，掌握Tokenizer和模型加载的完整流程。", content: {
           objective: "今天你将系统学习HuggingFace Transformers库的核心使用方法。学完后能熟练使用Tokenizer处理文本、加载预训练模型、获取词嵌入和隐藏状态。HuggingFace是NLP工程师最重要的工具，掌握它能让你快速搭建各种NLP应用。",
@@ -1987,7 +1987,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "全面练习HuggingFace的核心API：1）安装transformers库，验证安装成功。2）Tokenizer基本使用：加载bert-base-uncased的tokenizer，对单句、句对、批量句子分别编码，查看输出的input_ids、attention_mask、token_type_ids。3）特殊token：查看tokenizer的cls_token、sep_token、pad_token、unk_token，以及它们的ID。4）编码细节：测试truncation=True、padding='max_length'、max_length=32等参数的效果，手动解码（decode）看是否还原。5）模型加载与推理：用AutoModel加载bert-base-uncased，输入一批句子，获取last_hidden_state，确认形状正确（batch, seq_len, hidden_size=768）。6）提取<[BOS_never_used_51bce0c785ca2f68081bfa7d91973934]>向量：取输出last_hidden_state[:, 0, :]作为句子的CLS向量，计算两个句子的余弦相似度。7）中文模型：加载一个中文BERT（如bert-base-chinese），编码中文句子，体验中文的字级分词。",
           deep_dive: "HuggingFace生态系统非常庞大，掌握核心后还可以深入了解更多高级特性：1）Fast Tokenizer：基于Rust实现的快速分词器，比Python版本快10-100倍，支持批量处理、偏移映射（offset mapping，能把token位置映射回原文本字符位置）。2）AutoClasses：AutoModel、AutoTokenizer、AutoConfig等自动类，能根据模型名称自动匹配正确的类，写的代码可以适配任意模型。3）Model Hub：HuggingFace Hub上有数十万个预训练模型，涵盖各种语言、任务、架构。可以用model标签、语言、任务筛选，下载量和评分帮助判断质量。4）Pipeline：高层封装好的推理接口，一句话就能做文本分类、命名实体识别、问答、摘要、翻译等任务，原型开发非常快。5）缓存机制：模型和tokenizer会自动缓存到~/.cache/huggingface/目录，下次使用直接加载。可以用HF_HOME环境变量自定义缓存位置。6）离线使用：可以预先下载模型文件到本地，然后从本地路径加载，适用于没有外网的生产环境。熟练掌握这些工具，能大幅提升你的NLP开发效率。"
-        }, duration: "2小时", resources: [R_HF_TRANSFORMERS, { title: "HuggingFace 快速入门", url: "https://huggingface.co/docs/transformers/quicktour", required: true }, { title: "BERT Tokenizer 详解", url: "https://huggingface.co/docs/transformers/model_doc/bert", required: false }, { title: "HuggingFace 课程", url: "https://huggingface.co/learn/nlp-course", required: true },  { title: "HuggingFace Transformers代码库", url: "https://github.com/huggingface/transformers", required: false, type: "repo", source: "github" }], checkpoint: "能 load 一个预训练 BERT，编码一句话拿到 [CLS] 向量" },
+        }, duration: "2小时", resources: [R_HF_TRANSFORMERS, { title: "HuggingFace 快速入门", url: "https://huggingface.co/docs/transformers/quicktour", required: true, type: "doc", source: "official" }, { title: "BERT Tokenizer 详解", url: "https://huggingface.co/docs/transformers/model_doc/bert", required: false, type: "doc", source: "official" }, { title: "HuggingFace 课程", url: "https://huggingface.co/learn/nlp-course", required: true, type: "article", source: "official" },  { title: "HuggingFace Transformers代码库", url: "https://github.com/huggingface/transformers", required: false, type: "repo", source: "github" }], checkpoint: "能 load 一个预训练 BERT，编码一句话拿到 [CLS] 向量" },
       { day: 8, title: "微调 BERT 做文本分类",
         summary: "掌握BERT微调的完整流程，在IMDB数据集上训练并达到高精度。", content: {
           objective: "今天你将学习如何微调BERT做文本分类任务，掌握完整的训练流程和最佳实践。学完后能使用Trainer API或手写训练循环微调BERT、配置学习率调度、处理数据加载。微调预训练模型是NLP工程师的核心技能，能让你用少量数据达到很好的效果。",
@@ -2000,7 +2000,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成完整的BERT微调项目：1）数据准备：加载IMDB数据集（用datasets库），取子集（如1万条训练+1千条验证）以加快实验速度。2）数据预处理：写一个预处理函数，用tokenizer对文本编码，设置truncation=True、max_length=128。用dataset.map()批量处理。3）模型构建：用AutoModelForSequenceClassification.from_pretrained加载bert-base-uncased，指定num_labels=2。4）训练配置：TrainingArguments中设置学习率（2e-5）、batch size、epoch数（3）、warmup_steps、weight_decay等。5）训练：创建Trainer，调用train()开始训练。观察训练loss和验证准确率的变化。6）评估：在验证集上计算准确率、F1、混淆矩阵，查看分类错误的典型样本。7）对比实验：做一个消融实验——随机初始化权重（不加载预训练），同样的数据和训练配置，对比效果差异，直观感受预训练的威力。8）保存模型：训练好的模型保存到本地，确认可以重新加载并推理。",
           deep_dive: "BERT微调看似简单，但其中有许多技巧和最佳实践：1）分层学习率：底层用更小的学习率（预训练特征通用，不需要大改），上层用稍大的学习率（任务特定，需要更多调整）。可以用参数组来实现。2）冻结与解冻策略：先冻结backbone，只训练分类头（收敛快，稳定），然后解冻全部层微调整个模型。数据少时特别有用。3）梯度累积：显存不够大batch时，用gradient_accumulation_steps参数，多次反向传播后再更新参数，等效于增大batch size。4）混合精度训练：fp16混合精度训练，速度几乎翻倍，显存占用减半，基本没有精度损失。5）早停：用EarlyStoppingCallback，监控验证集指标，连续多少轮不提升就停止，防止过拟合，节省时间。6）超参搜索：学习率是最重要的超参，可以用LR Finder快速找一个合适的范围。7）标签平滑（Label Smoothing）：把硬标签0/1改成0.1/0.9，防止模型过度自信，有时能提升泛化能力。8）模型选择：数据少选小模型（distilbert），数据多可以选大模型（bert-large）。掌握这些技巧，能让你在实际项目中游刃有余。"
-        }, duration: "2.5小时", resources: [R_HF_COURSE, { title: "BERT 微调教程", url: "https://huggingface.co/docs/transformers/training", required: true }, { title: "Trainer API 文档", url: "https://huggingface.co/docs/transformers/main_classes/trainer", required: false }, { title: "学习率调度策略", url: "https://huggingface.co/docs/transformers/main_classes/optimizer_schedules", required: false },  { title: "BERT微调代码库", url: "https://github.com/huggingface/transformers/tree/main/examples", required: false, type: "repo", source: "github" }], checkpoint: "在 IMDB 子集上微调 bert-base-uncased，val_acc > 90%" },
+        }, duration: "2.5小时", resources: [R_HF_COURSE, { title: "BERT 微调教程", url: "https://huggingface.co/docs/transformers/training", required: true, type: "doc", source: "official" }, { title: "Trainer API 文档", url: "https://huggingface.co/docs/transformers/main_classes/trainer", required: false, type: "doc", source: "official" }, { title: "学习率调度策略", url: "https://huggingface.co/docs/transformers/main_classes/optimizer_schedules", required: false, type: "doc", source: "official" },  { title: "BERT微调代码库", url: "https://github.com/huggingface/transformers/tree/main/examples", required: false, type: "repo", source: "github" }], checkpoint: "在 IMDB 子集上微调 bert-base-uncased，val_acc > 90%" },
       { day: 9, title: "中文 BERT 与分词",
         summary: "掌握中文BERT的使用，理解中文分词特点，在中文数据集上完成微调。", content: {
           objective: "今天你将学习中文BERT的使用方法，以及中文NLP的一些特殊问题。学完后能选择合适的中文预训练模型、处理中文文本数据、在中文数据集上完成微调。中文NLP有自己的特点和挑战，掌握这些是中文应用场景的必备技能。",
@@ -2013,7 +2013,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成中文BERT微调实战：1）中文模型探索：在HuggingFace上搜索中文BERT模型，对比几个常用模型的特点、参数量、下载量。2）加载中文Tokenizer：加载bert-base-chinese或hfl/chinese-roberta-wwm-ext的tokenizer，对几句中文句子编码，观察分词结果——确认是逐字切分的。3）中文数据准备：选择一个中文分类数据集（如THUCNews子集、ChnSentiCorp情感分析，或自己的中文数据）。4）数据预处理：用中文tokenizer编码，注意中文文本中的标点、数字、英文字母等如何被处理。5）微调训练：和第8天类似，在中文数据集上微调中文BERT。记录训练过程和最终精度。6）结果分析：查看混淆矩阵，找出最容易混淆的类别。找几个分类错误的样本，分析原因。7）对比实验：如果有时间，对比bert-base-chinese和chinese-roberta-wwm-ext的效果差异，验证WWM是否真的更好。",
           deep_dive: "中文NLP虽然和英文NLP有很多共通之处，但也有一些独特的挑战和发展方向：1）分词的必要性：在BERT之前，中文NLP的第一步总是分词（因为词是语义的基本单位）。但BERT用字符级建模，绕过了分词问题，而且效果也很好。这说明深度学习可以自动从数据中学习词的边界，不需要显式分词。2）中文大模型：中文大模型发展迅速，比如Qwen（通义千问）、Baichuan（百川）、ChatGLM（智谱）、Llama中文社区版等。它们在中文理解和生成上普遍优于英文原生模型。3）中文分词的现状：虽然端到端的模型可以不需要分词，但分词在很多场景仍然有用——搜索引擎的索引、关键词提取、文本分析、可解释性等。4）中文特殊问题：繁简体转换、拼音、网络用语/梗、方言、垂直领域术语（医疗、法律、金融等）。5）多语言模型：也可以选择多语言预训练模型（如mBERT、XLM-RoBERTa），它们同时支持多种语言，在跨语言任务上有优势，但在单一语言上通常不如专门训练的单语言模型。根据具体需求选择最合适的方案，是每个NLP工程师需要掌握的能力。"
-        }, duration: "2小时", resources: [R_HF_TRANSFORMERS, { title: "中文 BERT 模型列表", url: "https://huggingface.co/models?language=zh&sort=trending", required: true }, { title: "哈工大中文 BERT", url: "https://github.com/ymcui/Chinese-BERT-wwm", required: false }, { title: "中文 NLP 数据集", url: "https://github.com/brightmart/nlp_chinese_corpus", required: false },  { title: "RoBERTa中文预训练模型", url: "https://github.com/ymcui/Chinese-BERT-wwm", required: false, type: "repo", source: "github" }], checkpoint: "能在中文数据集上用中文 BERT 完成微调并保存权重" },
+        }, duration: "2小时", resources: [R_HF_TRANSFORMERS, { title: "中文 BERT 模型列表", url: "https://huggingface.co/models?language=zh&sort=trending", required: true, type: "article", source: "official" }, { title: "哈工大中文 BERT", url: "https://github.com/ymcui/Chinese-BERT-wwm", required: false, type: "repo", source: "github" }, { title: "中文 NLP 数据集", url: "https://github.com/brightmart/nlp_chinese_corpus", required: false, type: "repo", source: "github" },  { title: "RoBERTa中文预训练模型", url: "https://github.com/ymcui/Chinese-BERT-wwm", required: false, type: "repo", source: "github" }], checkpoint: "能在中文数据集上用中文 BERT 完成微调并保存权重" },
       { day: 10, title: "Prompt Engineering 与 Few-shot",
         summary: "学习提示工程方法论，掌握Few-shot/Zero-shot学习，用大模型完成各类任务。", content: {
           objective: "今天你将学习Prompt Engineering——使用大语言模型的新范式。学完后能设计有效的prompt、使用few-shot示例引导模型、调节采样参数控制生成质量。Prompt是与大模型对话的艺术，掌握它能让你最大化发挥大模型的能力，快速解决各种NLP任务。",
@@ -2026,7 +2026,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "系统练习Prompt Engineering的各种技巧：1）环境准备：选择一个可以本地运行的生成模型（如distilgpt2、gpt2，或更大的如果显存够），用pipeline或generate API。2）Zero-shot实验：设计prompt让模型做情感分类、文本摘要、关键词提取、翻译等任务，看零样本下效果如何。3）Few-shot实验：为每个任务准备3-5个示例，放在prompt前面，对比few-shot相比zero-shot的效果提升。4）参数调节：固定一个prompt，分别测试temperature=0.1、0.7、1.5，对比输出的差异，直观感受温度参数的作用。5）Chain-of-Thought：找一个推理题（如数学题、逻辑题），分别测试直接问答和「让我们一步步思考」两种prompt，看CoT是否提升了准确率。6）输出格式控制：指定模型输出JSON格式、表格、或特定模板，看看模型遵循指令的能力如何。7）失败案例总结：找几个模型做不好的例子，尝试通过改进prompt来提升效果。",
           deep_dive: "Prompt Engineering是一个快速发展的领域，从简单的提示发展出了系统的方法论：1）高级提示技术：思维链（Chain-of-Thought）提升推理、思维树（Tree of Thoughts）探索多条路径、自洽性（Self-Consistency）采样多个答案取多数、最少到最多（Least-to-Most）分步解决复杂问题。2）提示模式：结构化提示（用分隔符区分不同部分）、角色扮演（「你是一个XX专家」）、反思模式（让模型 critique 自己的输出并改进）、RAG（检索增强生成，从知识库检索相关文档作为上下文）。3）Prompt的局限性：Prompt虽然方便，但对于需要领域专业知识、高精度、数据隐私的场景，微调可能更合适。而且Prompt的效果受模型大小影响很大——小模型的few-shot能力很弱，大模型才有涌现的in-context learning能力。4）提示工程的未来：随着模型越来越强，prompt engineering会不会消失？一方面，模型理解自然语言的能力越来越强，简单的任务不再需要精心设计的prompt。另一方面，复杂的任务（如Agent、多步推理、工具使用）仍然需要好的提示设计。而且更高级的方向是自动提示优化（Automatic Prompt Engineering）——让模型自己去找最好的prompt。5）但更重要的能力是「问题分解」和「清晰表达」——能把复杂问题拆解成模型能理解的步骤，这才是prompt engineering的核心，而不是某些咒语式的技巧。"
-        }, duration: "2小时", resources: [R_HF_TRANSFORMERS, { title: "Prompt Engineering 指南", url: "https://www.promptingguide.ai/", required: true }, { title: "GPT-2 文本生成", url: "https://huggingface.co/docs/transformers/model_doc/gpt2", required: false }, { title: "Few-shot Learning 综述", url: "https://arxiv.org/abs/2005.14165", required: false }, { title: "OpenAI Prompt 最佳实践", url: "https://platform.openai.com/docs/guides/prompt-engineering", required: false },  { title: "Chain-of-Thought提示技术", url: "https://arxiv.org/abs/2201.11903", required: false, type: "paper", source: "academic" }], checkpoint: "能用一个预训练 Causal LM（如 distilgpt2）做 few-shot 生成式任务演示" },
+        }, duration: "2小时", resources: [R_HF_TRANSFORMERS, { title: "Prompt Engineering 指南", url: "https://www.promptingguide.ai/", required: true, type: "article", source: "official" }, { title: "GPT-2 文本生成", url: "https://huggingface.co/docs/transformers/model_doc/gpt2", required: false, type: "doc", source: "official" }, { title: "Few-shot Learning 综述", url: "https://arxiv.org/abs/2005.14165", required: false, type: "paper", source: "academic" }, { title: "OpenAI Prompt 最佳实践", url: "https://platform.openai.com/docs/guides/prompt-engineering", required: false, type: "doc", source: "official" },  { title: "Chain-of-Thought提示技术", url: "https://arxiv.org/abs/2201.11903", required: false, type: "paper", source: "academic" }], checkpoint: "能用一个预训练 Causal LM（如 distilgpt2）做 few-shot 生成式任务演示" },
       { day: 11, title: "GLUE 基准评估",
         summary: "理解GLUE基准的9个任务，在MRPC上完成训练评估并报告结果。", content: {
           objective: "今天你将学习NLP模型的标准评估基准——GLUE，理解各个任务的含义和评估指标，并在MRPC任务上完成完整的训练评估流程。学完后能理解基准评估的意义、使用datasets和evaluate库、报告标准化的评估结果。基准测试是衡量模型能力的科学方法。",
@@ -2039,7 +2039,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成MRPC任务的完整训练评估：1）环境准备：安装datasets和evaluate库。2）加载数据：load_dataset('glue', 'mrpc')加载MRPC数据集，查看数据结构——有sentence1、sentence2、label、idx四个字段。3）数据探索：看几个样本，理解任务含义——两个句子是否表达相同意思。统计训练集和验证集的大小、正负样本比例。4）数据预处理：写预处理函数，将两个句子用[SEP]连接，tokenizer编码。注意设置truncation=True。5）模型训练：加载bert-base-uncased，用Trainer API微调，训练3-5个epoch。6）评估：训练完成后，在验证集上计算准确率和F1值（用evaluate.load('glue', 'mrpc')）。7）结果对比：查看你的结果与BERT论文中的结果对比，大概在什么水平？8）（可选）尝试另一个GLUE任务，如SST-2（情感分类）或QQP（问题对匹配），体验不同任务的差异。",
           deep_dive: "基准评估是推动NLP进步的重要动力，但它也有局限性和争议：1）GLUE之后有SuperGLUE：更难的任务，包含推理、阅读理解等，当GLUE上的模型超过人类水平后，SuperGLUE成为新的基准。2）基准的「刷榜」问题：很多研究过度拟合特定基准，在基准上指标很高，但实际泛化能力并没有那么强。这就是「基准过拟合」（Benchmark Overfitting）。3）更全面的评估：除了标准基准，还应该关注：鲁棒性（对抗样本、噪声输入）、公平性（不同人群、不同领域的表现差异）、效率（速度、显存、能耗）、安全性（有害输出、偏见）等。4）中文基准：中文NLP也有自己的基准，如CLUE（中文语言理解测评基准）、CMMLU（中文多任务语言理解）、C-Eval（中文大学水平考试）等，用于衡量中文大模型的能力。5）动态基准：固定的基准容易被刷分，动态基准（如Dynabench）不断收集更难的样本，让基准随时间「进化」，更能反映真实能力。6）如何正确看待基准分数：基准是重要的参考，但不是全部。实际项目中，更重要的是在你的特定数据和场景下的表现，以及端到端的用户体验。理解这些，能让你更理性地看待各种排行榜和模型宣传。"
-        }, duration: "2小时", resources: [R_HF_COURSE, { title: "GLUE 基准介绍", url: "https://gluebenchmark.com/", required: true }, { title: "HuggingFace GLUE 教程", url: "https://huggingface.co/docs/transformers/tasks/sequence_classification", required: true }, { title: "SuperGLUE（更难的基准）", url: "https://super.gluebenchmark.com/", required: false },  { title: "自然语言推理SNLI数据集", url: "https://nlp.stanford.edu/projects/snli/", required: false, type: "repo", source: "github" }], checkpoint: "在 MRPC 上完成一次完整训练并报告 F1 指标" },
+        }, duration: "2小时", resources: [R_HF_COURSE, { title: "GLUE 基准介绍", url: "https://gluebenchmark.com/", required: true, type: "article", source: "official" }, { title: "HuggingFace GLUE 教程", url: "https://huggingface.co/docs/transformers/tasks/sequence_classification", required: true, type: "doc", source: "official" }, { title: "SuperGLUE（更难的基准）", url: "https://super.gluebenchmark.com/", required: false, type: "article", source: "official" },  { title: "自然语言推理SNLI数据集", url: "https://nlp.stanford.edu/projects/snli/", required: false, type: "repo", source: "github" }], checkpoint: "在 MRPC 上完成一次完整训练并报告 F1 指标" },
       { day: 12, title: "问答（Extractive QA / SQuAD）",
         summary: "掌握抽取式问答任务，微调BERT做SQuAD，理解任务特点与评估方法。", content: {
           objective: "今天你将学习抽取式问答（Extractive QA）任务——给定上下文和问题，从上下文中找出答案片段。学完后能理解QA任务的形式、微调BERT做QA的方法、计算Exact Match和F1指标。问答是NLP的重要应用场景，也是检验模型理解能力的好任务。",
@@ -2052,7 +2052,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成SQuAD问答模型的微调与评估：1）数据准备：加载squad数据集（或squad_v2，包含不可回答的问题），查看数据结构——context、question、answers（answer_start+text）。2）数据预处理：这是QA任务最复杂的一步——需要将context和question拼接输入，找出答案的start和end位置对应的token索引。注意：答案可能被tokenizer拆成多个token，需要用offset mapping来对齐。3）模型构建：加载BertForQuestionAnswering（或自己实现——取last_hidden_state，接两个线性层分别预测start和end logits）。4）训练：用Trainer API在SQuAD训练集上微调（可以取子集加快速度），训练2-3个epoch。5）评估：QA的后处理比较复杂——预测的start和end位置要转换回原始文本的span。使用evaluate.load('squad')计算Exact Match和F1。6）交互式测试：写一个简单的函数，输入context和question，输出预测的答案。找几个例子测试，看看模型回答得怎么样。7）失败案例分析：找几个回答错误的例子，分析是模型的问题还是数据的问题。",
           deep_dive: "问答是NLP中非常有价值的任务，也是一个很大的研究方向：1）QA的分类：抽取式QA（从原文中选片段）、生成式QA（自由生成答案，不一定在原文中）、多选式QA（从选项中选）、开放域QA（没有给定上下文，需要先检索再回答）。2）从SQuAD到更难的任务：SQuAD 2.0加入了不可回答的问题（模型需要判断「此题无解」），更贴近真实场景。还有HotpotQA（多跳推理，需要结合多个段落的信息）、CoQA（对话式问答，多轮追问）等。3）开放域QA（Open-Domain QA）：给定问题，没有上下文，需要先从海量文档中检索相关段落（Retriever），然后在段落中找答案（Reader）。这就是两阶段的「检索-阅读器」架构，也是搜索引擎、智能客服的基础技术。4）RAG（检索增强生成）：将检索到的文档作为上下文，让大语言模型生成答案，结合了检索系统的实时性和大模型的生成能力，是当前的热门方向。5）但QA系统也面临挑战：答案的准确性和可验证性、如何处理多来源冲突信息、长文档的高效处理、多语言和跨语言问答等。问答系统的终极目标是「任何问题都能给出准确、可靠、有依据的答案」，这也是通用人工智能的重要组成部分。"
-        }, duration: "2.5小时", resources: [R_HF_COURSE, { title: "SQuAD 数据集", url: "https://rajpurkar.github.io/SQuAD-explorer/", required: true }, { title: "BERT QA 微调教程", url: "https://huggingface.co/docs/transformers/tasks/question_answering", required: true }, { title: "SQuAD 2.0（含不可回答问题）", url: "https://arxiv.org/abs/1806.03822", required: false },  { title: "DrQA阅读理解论文", url: "https://arxiv.org/abs/1704.00051", required: false, type: "paper", source: "academic" }], checkpoint: "能在 SQuAD 小数据上训练一个 QA 模型，并可交互问答 demo" },
+        }, duration: "2.5小时", resources: [R_HF_COURSE, { title: "SQuAD 数据集", url: "https://rajpurkar.github.io/SQuAD-explorer/", required: true, type: "article", source: "official" }, { title: "BERT QA 微调教程", url: "https://huggingface.co/docs/transformers/tasks/question_answering", required: true, type: "doc", source: "official" }, { title: "SQuAD 2.0（含不可回答问题）", url: "https://arxiv.org/abs/1806.03822", required: false, type: "paper", source: "academic" },  { title: "DrQA阅读理解论文", url: "https://arxiv.org/abs/1704.00051", required: false, type: "paper", source: "academic" }], checkpoint: "能在 SQuAD 小数据上训练一个 QA 模型，并可交互问答 demo" },
       { day: 13, title: "模型蒸馏 / 量化与加速",
         summary: "掌握模型压缩与加速技术，理解蒸馏和量化原理，实践DistilBERT与ONNX导出。", content: {
           objective: "今天你将学习模型压缩与加速技术——知识蒸馏和量化。学完后能理解蒸馏的原理、使用DistilBERT、导出ONNX模型、对比不同方案的速度和精度。模型部署中，效率和精度同样重要，掌握压缩技术能让你在资源受限的场景下也能交付好用的AI系统。",
@@ -2065,7 +2065,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "进行模型压缩与加速的完整实验：1）DistilBERT体验：加载distilbert-base-uncased，和bert-base-uncased对比参数量（用num_parameters()方法）、模型文件大小。2）精度对比：在你之前微调过的文本分类任务上，分别用bert-base和distilbert微调，对比最终精度差异（DistilBERT应该保留97%左右的性能）。3）速度对比：写一个测速脚本——批量推理100次，取平均，对比BERT和DistilBERT的推理速度（单样本延迟和吞吐量）。4）ONNX导出：用optimum库或torch.onnx.export将微调好的模型导出为ONNX格式。用netron可视化ONNX模型结构。5）ONNX Runtime推理：安装onnxruntime，加载ONNX模型推理。对比PyTorch和ONNX Runtime的推理速度——ONNX Runtime应该更快。6）量化实验：（可选）尝试INT8量化，看模型体积能缩小多少，速度能提升多少，精度损失有多大。7）总结：制作一个对比表格——模型大小、参数量、推理延迟、吞吐量、准确率，综合评估哪个方案最适合你的部署场景。",
           deep_dive: "模型压缩和加速是一个非常广阔的领域，蒸馏和量化只是其中的两个方向：1）剪枝（Pruning）：去掉不重要的权重或通道，直接减少参数量和计算量。包括非结构化剪枝（随机删权重）和结构化剪枝（删整个通道/层）。2）神经架构搜索（NAS）：用算法自动搜索高效的网络结构，比人工设计更优，如MobileNetV3、EfficientNet。3）KV Cache优化：在生成式大模型中，KV缓存占用大量显存。优化方法包括：MQA/GQA（减少KV头数）、PagedAttention（分页管理KV缓存，如vLLM）、量化KV缓存等。4）推理服务优化：批量处理（batching）、动态批处理、模型并行、流水并行、连续批处理（continuous batching）等，提升服务吞吐量。5）硬件加速：GPU（Tensor Core）、TPU、NPU、FPGA、ASIC等专用硬件，针对深度学习运算做了专门优化。6）在实际项目中，通常是多种技术组合使用：选一个合适大小的模型 → 蒸馏进一步压缩 → 量化 → ONNX/TensorRT优化 → 服务端批处理和缓存。从模型设计到部署上线，每一个环节都有优化空间。最终目标是：在满足精度要求的前提下，用最低的成本满足业务需求。这是工程能力的重要体现。"
-        }, duration: "2小时", resources: [R_HF_TRANSFORMERS, { title: "DistilBERT 论文", url: "https://arxiv.org/abs/1910.01108", required: true }, { title: "PyTorch 量化教程", url: "https://pytorch.org/docs/stable/quantization.html", required: true }, { title: "ONNX Runtime 文档", url: "https://onnxruntime.ai/docs/", required: false }, { title: "HuggingFace Optimum（优化加速）", url: "https://huggingface.co/docs/optimum/", required: false }], checkpoint: "能把 DistilBERT 量化并在 CPU 上跑出显著加速" },
+        }, duration: "2小时", resources: [R_HF_TRANSFORMERS, { title: "DistilBERT 论文", url: "https://arxiv.org/abs/1910.01108", required: true, type: "paper", source: "academic" }, { title: "PyTorch 量化教程", url: "https://pytorch.org/docs/stable/quantization.html", required: true, type: "doc", source: "official" }, { title: "ONNX Runtime 文档", url: "https://onnxruntime.ai/docs/", required: false, type: "doc", source: "official" }, { title: "HuggingFace Optimum（优化加速）", url: "https://huggingface.co/docs/optimum/", required: false, type: "doc", source: "official" }], checkpoint: "能把 DistilBERT 量化并在 CPU 上跑出显著加速" },
       { day: 14, title: "综合：部署一个 BERT 文本分类服务",
         summary: "串联所有知识，完成从模型微调到服务部署的完整NLP项目，交付可用的产品。", content: {
           objective: "今天你将综合运用前13天所学的知识，完成一个完整的NLP项目——从数据准备、模型微调、推理优化到服务化部署，最终交付一个Docker化的、有Web界面的中文文本分类服务。这是检验你Transformer阶段学习成果的综合项目，也是非常有价值的项目经验。",
@@ -2078,7 +2078,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成完整的中文文本分类服务项目：1）选题与数据：选择一个中文分类场景（如新闻分类、情感分析、垃圾邮件检测等），准备或下载一个中文数据集。2）模型微调：选择一个合适的中文预训练模型，用Trainer API微调，调参获得较好的精度。保存最佳模型。3）推理优化：导出ONNX模型，用ONNX Runtime推理，对比PyTorch的速度提升。4）后端服务：用FastAPI构建推理API——POST /predict接收文本，返回预测类别和置信度；GET /health健康检查。加上输入校验、错误处理、日志记录。5）前端界面：用Gradio或Streamlit做一个简易Web UI——文本输入框、预测按钮、结果展示（类别、置信度、用时）。6）容器化：编写Dockerfile，将模型和服务打包成Docker镜像。编写docker-compose.yml，一键启动。7）测试验证：在本地用docker compose up启动服务，通过浏览器访问，测试功能是否正常。8）文档：撰写完整的README——项目介绍、功能特点、安装部署方法、API文档、性能指标、演示截图。9）（可选）部署到云服务器，公网可访问。",
           deep_dive: "一个生产级的NLP服务还需要考虑更多实际问题：1）模型版本管理：如何管理多个模型版本？如何平滑升级？可以用MLflow或DVC管理模型产物，用模型注册表（Model Registry）做版本管理。2）A/B测试：新模型上线前，和旧模型并行运行，用一小部分真实流量验证新模型确实更好，然后再全量切换。3）监控与告警：监控服务的QPS、延迟、错误率、模型预测分布（数据漂移检测）。异常时自动告警。4）数据飞轮：收集线上的bad case（用户反馈的错误预测），定期补充标注后重新训练，形成「上线→收集反馈→优化→再上线」的闭环，让模型越用越好。5）成本优化：根据流量自动扩缩容、用竞价实例、模型量化压缩、缓存常见请求的结果、用更便宜的推理硬件等，降低单位推理成本。6）安全与隐私：输入数据是否包含敏感信息？模型是否会输出有害内容？API鉴权（API Key）、限流（防止滥用）、输入过滤（防止注入攻击）。7）可扩展性：服务能否支持更高的并发？能否水平扩展？无状态设计、负载均衡、消息队列解耦。从实验室原型到生产服务，中间隔着大量的工程工作。但正是这些工程细节，决定了一个AI产品能否真正落地并产生价值。这也是算法工程师和ML工程师的核心价值所在。"
-        }, duration: "3小时", resources: [R_HF_TRANSFORMERS, R_FASTAPI, R_STREAMLIT, { title: "HuggingFace 模型部署", url: "https://huggingface.co/docs/transformers/serialization", required: true }, { title: "FastAPI + HuggingFace 示例", url: "https://huggingface.co/docs/transformers/quicktour", required: false }, { title: "Streamlit + ML 教程", url: "https://docs.streamlit.io/library/get-started", required: false }], checkpoint: "Docker 化的中文文本分类服务，可浏览器交互使用" }],
+        }, duration: "3小时", resources: [R_HF_TRANSFORMERS, R_FASTAPI, R_STREAMLIT, { title: "HuggingFace 模型部署", url: "https://huggingface.co/docs/transformers/serialization", required: true, type: "doc", source: "official" }, { title: "FastAPI + HuggingFace 示例", url: "https://huggingface.co/docs/transformers/quicktour", required: false, type: "doc", source: "official" }, { title: "Streamlit + ML 教程", url: "https://docs.streamlit.io/library/get-started", required: false, type: "doc", source: "official" }], checkpoint: "Docker 化的中文文本分类服务，可浏览器交互使用" }],
   },
 
   // =====================================================
@@ -2101,7 +2101,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["理解词向量的核心思想", "能用 Gensim 训练和使用词向量", "理解语义相似度计算"],
     relatedIntel: ["001-transformer"],
     relatedTools: ["HuggingFace"],
-    relatedTerms: ["word-embedding", "word2vec", "glove", "cosine-similarity"],
+    relatedTerms: ["word-embedding", "word2vec", "glove", "cosine-similarity"], relatedNodes: ["nlp-rnn", "nlp-sentiment-analysis"],
     suggestions: {
       prerequisites: ["Python 编程基础", "线性代数基础"],
       nextSteps: ["RNN 与序列模型", "Transformer 与预训练模型"],
@@ -2120,7 +2120,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "从零理解词向量：1）One-Hot 编码实验：构造一个小词汇表（10个词），为每个词生成 One-Hot 向量，用 numpy 计算任意两个词的余弦相似度——结果应该都是0，因为向量正交。2）语义相似度思考：列出10个词（猫、狗、汽车、火车、国王、女王、男人、女人、苹果、香蕉），按语义分组，思考如果用词向量表示，哪些词应该距离近。3）词向量可视化：下载一个预训练的小词向量（如 Gensim 自带的或 50维的 GloVe），用 PCA 或 t-SNE 将词向量降到2维，绘制散点图，观察语义相近的词是否聚在一起。4）向量加减法实验：选择3组词对（如 国王-男人+女人、巴黎-法国+中国），计算结果向量，找最接近的词，看是否符合预期。5）思考：词向量的维度应该选多大？维度太高或太低各有什么优缺点？",
           deep_dive: "词向量的背后有深刻的语言学和数学原理：1）分布语义学（Distributional Semantics）：这是词向量的理论基础，核心是「一个词的含义由它的上下文决定」。这个思想可以追溯到1950年代的语言学家 Harris。2）语义空间的几何解释：在词向量空间中，语义关系可以用几何操作来表达——同义词距离近，反义词距离也可能近（因为上下文相似），类比关系可以用向量平移来表达。3）从共现矩阵到词向量：最早的分布式表示是词-词共现矩阵（每个元素表示两个词共同出现的次数），然后用 SVD 降维得到低维向量（这就是 LSA/潜在语义分析）。Word2Vec 等方法则是用神经网络来学习低维向量，更高效、效果更好。4）词向量的局限性：a）无法处理多义词——一个词只有一个向量，但 polysemy 是普遍现象；b）无法表达短语和句子的含义；c）依赖训练数据，数据中的偏见会被编码进词向量；d）是静态的，不随上下文变化。这些局限性正是后续的 ELMo、BERT 等模型要解决的问题。5）评价词向量的质量：常用词类比任务（Word Analogy）、词相似度任务（Word Similarity）、下游任务性能来评估词向量的好坏。理解词向量的原理和局限，能帮你更好地使用它们，也能为学习更高级的模型打下基础。"
-        }, duration: "2小时", resources: [B_NLP_TUTORIAL, R_HF_COURSE, { title: "Gensim 官方文档", url: "https://radimrehurek.com/gensim/", required: false }, { title: "Word2Vec 论文", url: "https://arxiv.org/abs/1301.3781", required: false }], checkpoint: "能解释分布式表示的核心思想，并用预训练词向量完成词类比实验" },
+        }, duration: "2小时", resources: [B_NLP_TUTORIAL, R_HF_COURSE, { title: "Gensim 官方文档", url: "https://radimrehurek.com/gensim/", required: false, type: "doc", source: "official" }, { title: "Word2Vec 论文", url: "https://arxiv.org/abs/1301.3781", required: false, type: "paper", source: "academic" }], checkpoint: "能解释分布式表示的核心思想，并用预训练词向量完成词类比实验" },
       { day: 2, title: "Word2Vec 原理与 Skip-gram",
         summary: "深入理解 Word2Vec 的两种模型（CBOW/Skip-gram）和优化技巧", content: {
           objective: "今天你将学习 Word2Vec 的核心原理。学完后能解释 CBOW 和 Skip-gram 的区别、负采样的原理、层次 Softmax 的思想、Word2Vec 为什么效果好。Word2Vec 是词向量领域的里程碑，理解它能帮你深入理解词表示学习。",
@@ -2133,7 +2133,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "Word2Vec 深入理解与训练：1）原理推导：用自己的话解释 Skip-gram 和 CBOW 的训练目标，画出模型结构图。2）负采样理解：为什么需要负采样？负采样的概率分布为什么取 3/4 次幂？写一段代码模拟负采样过程。3）Gensim 训练：a）准备一个中文语料（如维基百科或小说文本，至少 100MB）；b）用 jieba 分词；c）用 gensim.models.Word2Vec 训练一个 Skip-gram 模型；d）调整几个关键参数：vector_size、window、min_count、negative，对比不同参数的效果。4）词向量评估：a）词相似度任务：准备 20 对词，人工打分，计算词向量余弦相似度和人工评分的相关性；b）词类比任务：准备 10 组类比（如 国王-男人+女人=？），看模型能答对多少；c）找最相似的词：选 5 个词，看模型返回的最相似的 10 个词是否合理。5）可视化：用 t-SNE 把 200 个常用词的向量降到 2 维，画散点图，观察聚类效果。6）思考：Skip-gram 和 CBOW 各自适合什么场景？窗口大小选多大合适？",
           deep_dive: "Word2Vec 虽然简单，但它的思想非常深刻，对后来的 NLP 发展影响巨大：1）为什么 Word2Vec 这么有效？Word2Vec 不是第一个词向量方法，但它是第一个真正大规模实用的。它成功的关键：a）简单高效的模型结构（只有一个隐藏层的神经网络）；b）聪明的优化技巧（负采样、层次 Softmax），让训练速度提升几个数量级；c）海量的训练数据（Google 用了 10 亿词的语料）；d）发布了预训练的词向量，大家可以直接用。2）Word2Vec 和 SVD 的关系：后来的研究表明，Word2Vec 本质上是在做矩阵分解——Skip-gram with Negative Sampling 等价于对词-上下文点互信息（PMI）矩阵做隐式分解。这把神经网络方法和传统的统计方法联系了起来。3）词向量的语言学特性：Word2Vec 学到的词向量有很多有趣的语言学性质——向量加法能表达语义组合、关系类比（king - man + woman ≈ queen）、语义聚类等。这些性质不是 Word2Vec 特有的，而是分布式表示的普遍性质，但 Word2Vec 让大家清晰地看到了这一点。4）训练技巧：a）窗口大小：小窗口（2-3）学到更多功能/语法相似性，大窗口（5-10）学到更多主题/语义相似性；b）下采样高频词：对高频词做 subsampling，减少它们的影响，相当于给了低频词更多机会；c）负采样的数量：一般取 5-25 个负例，小数据集取多些，大数据集取少些。5）局限性：Word2Vec 是静态词向量，一个词只有一个表示，无法处理多义词。这是后来 ELMo、BERT 等动态上下文表示要解决的问题。但即使在今天，Word2Vec 的思想和方法仍然有参考价值。"
-        }, duration: "2小时", resources: [B_NLP_TUTORIAL, { title: "Word2Vec 论文精读", url: "https://arxiv.org/abs/1301.3781", required: false }, { title: "Gensim Word2Vec 教程", url: "https://radimrehurek.com/gensim/models/word2vec.html", required: false }], checkpoint: "能用 Gensim 训练词向量，并完成词相似度和词类比评估" },
+        }, duration: "2小时", resources: [B_NLP_TUTORIAL, { title: "Word2Vec 论文精读", url: "https://arxiv.org/abs/1301.3781", required: false, type: "paper", source: "academic" }, { title: "Gensim Word2Vec 教程", url: "https://radimrehurek.com/gensim/models/word2vec.html", required: false, type: "article", source: "official" }], checkpoint: "能用 Gensim 训练词向量，并完成词相似度和词类比评估" },
       { day: 3, title: "GloVe 与 FastText",
         summary: "学习 GloVe 和 FastText 的原理，对比不同词向量方法的优劣", content: {
           objective: "今天你将学习另外两种重要的词向量方法：GloVe 和 FastText。学完后能解释 GloVe 的核心思想、FastText 的子词机制、三种方法的对比和适用场景。",
@@ -2146,7 +2146,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "GloVe 与 FastText 实践对比：1）GloVe 原理学习：理解 GloVe 的损失函数为什么这样设计？为什么用共现概率的比值而不是共现概率本身？2）下载预训练 GloVe 词向量，和 Word2Vec 做对比：a）在相同的词相似度任务上，哪个效果更好？b）词类比任务呢？3）FastText 实践：a）用 gensim 训练一个 FastText 模型；b）测试 OOV 词：找几个不在词汇表里的词，FastText 能给出合理的相似词吗？4）综合对比：在你的测试集上，三种方法的效果排名是怎样的？速度和内存呢？5）思考：什么时候用 Word2Vec？什么时候用 GloVe？什么时候用 FastText？",
           deep_dive: "词向量方法虽然多，但背后的思想是相通的——都是从词的上下文中学语义。1）预测 vs 计数：Word2Vec 是预测方法，GloVe 是计数方法。很长时间里大家认为这是两种不同的路线，但后来的研究表明它们本质上是相通的——Skip-gram with Negative Sampling 等价于对 PMI 矩阵做加权矩阵分解。两者各有优劣：计数方法利用全局统计信息，但对高频词有利；预测方法更灵活，但可能漏掉全局模式。2）子词表示的意义：FastText 的子词思想很重要。对于英语来说，很多词有共同的前缀后缀，子词能利用这些形态信息。子词思想后来发展到了 BPE 等更高级的分词方法，这也是 GPT、BERT 等大模型用的分词方法。3）中文词向量的特殊性：中文词向量有一些特殊问题：a）分词：中文需要先分词，分词错误会影响词向量质量；b）字 vs 词：中文也可以用字向量，不需要分词；c）成语、典故：中文有很多四字成语，语义不是简单的字组合。"
-        }, duration: "2小时", resources: [B_NLP_TUTORIAL, { title: "GloVe 项目主页", url: "https://nlp.stanford.edu/projects/glove/", required: false }, { title: "FastText 文档", url: "https://fasttext.cc/", required: false }], checkpoint: "能对比 Word2Vec/GloVe/FastText 三种方法的优劣，并完成实践对比" },
+        }, duration: "2小时", resources: [B_NLP_TUTORIAL, { title: "GloVe 项目主页", url: "https://nlp.stanford.edu/projects/glove/", required: false, type: "repo", source: "official" }, { title: "FastText 文档", url: "https://fasttext.cc/", required: false, type: "doc", source: "official" }], checkpoint: "能对比 Word2Vec/GloVe/FastText 三种方法的优劣，并完成实践对比" },
       { day: 4, title: "句向量与文档向量",
         summary: "从词向量到句向量，掌握文本表示的常用方法", content: {
           objective: "今天你将学习如何从词向量得到句子和文档的向量表示。学完后掌握平均池化/加权平均、TF-IDF 加权、Doc2Vec、Sentence-BERT 等句向量方法。",
@@ -2159,7 +2159,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "句向量方法实践与对比：1）简单平均法：a）对数据集中的每个句子，用词向量取平均得到句向量；b）用 cosine 相似度计算句子之间的相似度。2）TF-IDF 加权平均：a）计算每个词的 IDF 值；b）用 TF-IDF 作为权重，计算加权平均的句向量；c）和简单平均对比。3）Doc2Vec：a）用 gensim 的 Doc2Vec 训练一个文档向量模型；b）测试文档相似度检索效果。4）Sentence-BERT（进阶）：a）用 sentence-transformers 库加载预训练模型；b）生成句向量并对比效果。5）应用：用句向量做一个简单的语义搜索系统。",
           deep_dive: "得到好的句向量比词向量难得多，因为句子有结构、有语序、有复杂的语义组合：1）为什么简单平均效果还不错？很多人会低估简单平均的效果。实际上，在很多任务上，词向量平均的基线并没有那么容易超越。原因是：a）词向量本身已经编码了丰富的语义信息；b）很多任务（如主题分类）主要看有哪些词，语序影响不大。2）预训练模型带来的革命：Sentence-BERT 等基于预训练模型的句向量方法出现后，句向量的质量有了质的飞跃。因为预训练模型在海量数据上学到了丰富的语言知识，能更好地理解句子的语义。3）语义相似度的不同维度：「句子相似」是个模糊的概念——是主题相似？还是语义等价？还是情感相似？不同的应用需要不同的相似度。"
-        }, duration: "2小时", resources: [B_NLP_TUTORIAL, { title: "Sentence-Transformers", url: "https://www.sbert.net/", required: false }], checkpoint: "能用多种方法生成句向量，并完成简单的语义搜索应用" },
+        }, duration: "2小时", resources: [B_NLP_TUTORIAL, { title: "Sentence-Transformers", url: "https://www.sbert.net/", required: false, type: "article", source: "official" }], checkpoint: "能用多种方法生成句向量，并完成简单的语义搜索应用" },
       { day: 5, title: "词向量应用与综合实战",
         summary: "词向量的综合应用：文本分类、信息检索、可视化", content: {
           objective: "今天你将综合运用前四天学到的词向量知识，完成几个实战应用。学完后能用词向量做文本分类、信息检索、语义相似度计算。",
@@ -2192,7 +2192,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["掌握情感分析的核心方法", "能构建文本分类系统", "理解不同方法的优缺点"],
     relatedIntel: ["020-prompt-engineering"],
     relatedTools: ["HuggingFace"],
-    relatedTerms: ["sentiment-analysis", "text-classification", "naive-bayes", "svm", "bert"],
+    relatedTerms: ["sentiment-analysis", "text-classification", "naive-bayes", "svm", "bert"], relatedNodes: ["nlp-word-embeddings", "nlp-sequence-labeling"],
     suggestions: {
       prerequisites: ["词向量基础", "Python 编程基础"],
       nextSteps: ["序列标注与信息抽取", "Transformer 与预训练模型"],
@@ -2224,7 +2224,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "传统机器学习文本分类实战：1）词袋模型实现：a）用 sklearn 的 CountVectorizer 实现词袋表示；b）在情感分析数据集上，用词袋 + 朴素贝叶斯训练分类器；c）在测试集上评估准确率、F1。2）TF-IDF 实现：a）用 TfidfVectorizer 实现 TF-IDF 表示；b）对比词袋模型，哪个效果更好？为什么？3）SVM 分类：a）用 LinearSVC 或 SGDClassifier 训练 SVM 分类器；b）和朴素贝叶斯对比，哪个效果更好？速度呢？4）N-gram 特征：a）尝试加入 bi-gram、tri-gram 特征；b）效果有提升吗？为什么？5）特征分析：a）用模型的特征重要性，找出最能代表正面和负面情感的词；b）分析哪些特征是有意义的，哪些是噪音。6）错误分析：a）找出分错的样本；b）分析为什么分错？是数据问题？特征问题？还是模型问题？",
           deep_dive: "虽然现在深度学习和预训练模型是主流，但传统机器学习方法仍然有其价值：1）为什么还要学传统方法？a）简单快速，不需要 GPU，在很多场景下已经够用；b）作为基线（baseline），衡量复杂方法的提升是否值得；c）在小数据场景下，传统方法往往比深度学习效果更好；d）可解释性强，能知道哪些特征在起作用。2）TF-IDF 的直觉：TF（词频）高说明这个词在文档中重要，但如果这个词在所有文档中都出现得多（如「的」「是」），说明它没有区分度。IDF（逆文档频率）就是惩罚这些常见词。TF * IDF 综合考虑了词在文档中的重要性和在整个语料中的区分度。3）朴素贝叶斯为什么在文本分类中效果好？朴素贝叶斯的「特征独立」假设在文本中明显不成立（词和词之间是有关联的），但实际效果却不错。原因是：虽然假设不对，但分类的边界往往还是对的——概率值不准，但排序是对的。而且朴素贝叶斯训练极快，参数少，不容易过拟合。4）SVM 的优势：SVM 在文本分类中长期处于统治地位，直到深度学习出现。它的优势：a）在高维空间中效果好（文本特征维度很高）；b）泛化能力强，不容易过拟合；c）只需要支持向量，预测速度快。线性 SVM 是文本分类的首选传统方法。5）特征工程的重要性：在传统方法中，特征工程决定了效果的上限。好的特征能让简单模型也有很好的效果。除了词袋和 TF-IDF，还有很多高级特征：N-gram、词性标注、命名实体、句法依赖、情感词典、字数统计、标点符号统计等。特征组合和特征选择也很重要。6）传统方法 vs 深度学习：一个常见的误解是「深度学习一定比传统方法好」。实际上：a）数据量小的时候，传统方法往往更好；b）简单任务（如主题分类），两者效果差不多；c）复杂任务（如蕴含、推理），深度学习优势明显；d）深度学习需要更多算力和数据。在实际项目中，建议先从简单方法开始，逐步升级。"
-        }, duration: "3小时", resources: [B_NLP_TUTORIAL, { title: "sklearn 文本特征提取", url: "https://scikit-learn.org/stable/modules/feature_extraction.html#text-feature-extraction", required: false }], checkpoint: "能实现 TF-IDF + SVM 的文本分类系统，并完成错误分析" },
+        }, duration: "3小时", resources: [B_NLP_TUTORIAL, { title: "sklearn 文本特征提取", url: "https://scikit-learn.org/stable/modules/feature_extraction.html#text-feature-extraction", required: false, type: "article", source: "official" }], checkpoint: "能实现 TF-IDF + SVM 的文本分类系统，并完成错误分析" },
       { day: 3, title: "深度学习方法：TextCNN 与 BiLSTM",
         summary: "掌握基于深度学习的文本分类方法，理解 CNN 和 RNN 在文本中的应用", content: {
           objective: "今天你将学习深度学习在文本分类中的应用。学完后掌握 TextCNN、BiLSTM 等经典模型，能用 PyTorch 实现一个深度学习文本分类器，理解深度学习方法和传统方法的区别。",
@@ -2237,7 +2237,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "深度学习文本分类实战：1）TextCNN 实现：a）用 PyTorch 实现 TextCNN 模型；b）用预训练词向量初始化嵌入层；c）在情感分析数据集上训练；d）和 SVM 对比效果。2）BiLSTM 实现：a）用 PyTorch 实现 BiLSTM + 全连接层的分类模型；b）和 TextCNN 对比效果和速度；c）试不同的层数和隐藏维度。3）Attention 机制（进阶）：a）在 BiLSTM 基础上加入 Attention 层；b）可视化 attention 权重，看模型关注哪些词；c）效果有提升吗？4）训练技巧实验：a）用预训练词向量 vs 随机初始化，效果差多少？b）加 Dropout，观察过拟合是否改善；c）用不同的学习率，对比收敛速度和最终效果。5）模型对比：把你做过的所有方法（关键词、朴素贝叶斯、SVM、TextCNN、BiLSTM）的效果整理成表格，分析：a）哪些方法效果最好？b）哪些方法最快？c）哪些方法最容易调试？d）在你的场景下，你会选哪个方法？",
           deep_dive: "深度学习给文本分类带来了质的飞跃，但也带来了新的挑战：1）TextCNN 的直觉：很多人觉得 CNN 是做图像的，怎么能用在文本上？其实，文本是一维序列，用一维卷积就可以。每个卷积核可以看作一个「特征探测器」，扫描整个句子，提取特定模式。不同大小的卷积核相当于捕捉不同长度的短语（2-gram、3-gram 等）。Max pooling 则是提取「这个模式有没有出现」，忽略出现的位置。TextCNN 简单、快速、效果也不错，是很好的基线模型。2）RNN vs CNN：RNN 天然适合处理序列，可以建模长距离依赖，但计算慢（不能并行），容易梯度消失。CNN 计算快（可以并行），但建模长距离依赖的能力弱。两者各有优劣，也可以结合用（如 CNN 提取局部特征，RNN 整合全局）。3）预训练词向量的作用：在深度学习的早期，用预训练词向量初始化嵌入层是标准操作，能显著提升效果，尤其是在小数据集上。预训练词向量相当于提供了丰富的先验知识。但自从有了 BERT 等预训练模型后，大家不再单独训练词向量了，直接用预训练模型的表示。4）过拟合与正则化：深度学习模型参数量大，很容易过拟合。常用的正则化方法：a）Dropout：随机失活神经元，强制模型学习冗余表示；b）权重衰减（L2 正则化）：限制权重大小；c）早停（Early Stopping）：验证集效果不再提升就停止训练；d）数据增强：回译、同义词替换、随机删除等；e）预训练+微调：用大规模预训练提供的先验知识。5）可解释性：深度学习模型通常被认为是「黑箱」。但我们可以通过一些方法来理解它：a）Attention 权重可视化：看模型关注哪些词；b）梯度分析：看哪些词对分类结果影响最大；c）遮挡测试：遮住某些词，看预测怎么变；d）LIME / SHAP：通用的可解释性方法。可解释性在很多实际场景中很重要。"
-        }, duration: "3小时", resources: [B_NLP_TUTORIAL, R_D2L, { title: "TextCNN 论文", url: "https://arxiv.org/abs/1408.5882", required: false }], checkpoint: "能用 PyTorch 实现 TextCNN 和 BiLSTM 分类器，并对比效果" },
+        }, duration: "3小时", resources: [B_NLP_TUTORIAL, R_D2L, { title: "TextCNN 论文", url: "https://arxiv.org/abs/1408.5882", required: false, type: "paper", source: "academic" }], checkpoint: "能用 PyTorch 实现 TextCNN 和 BiLSTM 分类器，并对比效果" },
       { day: 4, title: "预训练模型：BERT 微调文本分类",
         summary: "掌握用预训练语言模型（BERT等）微调文本分类的方法", content: {
           objective: "今天你将学习如何用预训练语言模型做文本分类。学完后能用 HuggingFace Transformers 库加载预训练模型、在自己的数据集上微调、处理长文本、进行模型蒸馏。预训练模型是当前 NLP 的主流方法。",
@@ -2250,7 +2250,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "BERT 微调文本分类实战：1）环境准备：安装 transformers、datasets、accelerate 库。2）数据准备：a）用 datasets 库加载你之前用的情感分析数据集；b）用 tokenizer 做数据预处理；c）注意 padding 和 truncation 的处理。3）模型加载与训练：a）用 AutoModelForSequenceClassification 加载预训练模型（如 bert-base-chinese 或 distilbert-base-uncased）；b）用 Trainer API 训练；c）配置训练参数：学习率、batch size、epoch 数、warmup steps 等。4）效果评估：a）在测试集上评估效果；b）和之前的传统方法、TextCNN 对比；c）训练速度和推理速度呢？5）长文本处理（进阶）：a）如果文本很长（超过 512 token），怎么处理？b）试试截断、滑动窗口、分层编码等方法。6）模型蒸馏（可选）：a）用 DistilBERT 看看效果和速度的权衡；b）或者自己做简单的知识蒸馏。7）错误分析：a）BERT 还会分错哪些样本？b）这些样本有什么特点？c）是数据问题还是模型能力问题？",
           deep_dive: "预训练模型彻底改变了 NLP 的格局，现在几乎所有 NLP 任务都用预训练+微调的范式：1）为什么预训练这么有效？预训练相当于在做「通用语言理解」的预训练——模型在海量文本上学到了语法、语义、世界知识。然后在下游任务上微调，只需要少量数据就能达到很好的效果。这是一种「迁移学习」，把通用语料上学到的知识迁移到具体任务上。2）BERT 为什么用 <[BOS_never_used_51bce0c785ca2f68081bfa7d91973934]> 做分类？BERT 是双向的，<[BOS_never_used_51bce0c785ca2f68081bfa7d91973934]> 是一个特殊的 token，放在句子开头。因为 BERT 的自注意力机制让 <[BOS_never_used_51bce0c785ca2f68081bfa7d91973934]> 可以 attend 到所有其他 token，所以 <[BOS_never_used_51bce0c785ca2f68081bfa7d91973934]> 的表示可以看作整个句子的「摘要」。用它做分类很方便。但要注意，<[BOS_never_used_51bce0c785ca2f68081bfa7d91973934]> 的表示可能不是最优的句子表示——有时候用所有 token 的平均或 max pooling 效果更好。3）微调的技巧：微调预训练模型看起来简单，但有很多细节影响效果：a）学习率：比从头训练小得多，通常 2e-5 到 5e-5，太大容易把预训练知识「覆盖」掉；b）学习率预热（warmup）：先线性增加学习率，再线性衰减，有助于稳定训练；c）优化器：通常用 AdamW（Adam + 权重衰减修正）；d）冻结层数：数据少的时候可以冻住底层，只微调顶层，防止过拟合；e）batch size 和 epoch 数：小数据集少训几轮，防止过拟合。4）数据效率：预训练模型最大的优势之一是数据效率高——只需要很少的标注数据就能达到很好的效果。在传统方法需要几万条标注数据的任务上，BERT 可能只需要几百条就够了。这极大地降低了 NLP 应用的门槛。5）模型选择：现在有各种各样的预训练模型，怎么选？考虑因素：a）效果：一般来说模型越大效果越好；b）速度：模型越小越快；c）语言：中文任务用中文预训练模型（如 bert-base-chinese、chinese-roberta-wwm）效果更好；d）部署环境：能不能用 GPU？内存够不够？选最合适的，而不是最大的。6）未来方向：预训练模型还在快速发展，从 BERT 到 GPT 系列，从编码器-only 到解码器-only 到编码器-解码器，从单模态到多模态。但基本范式是一样的：大规模预训练 + 下游微调/提示。理解这个范式，就能跟上 NLP 的发展。"
-        }, duration: "3小时", resources: [R_HF_COURSE, { title: "HuggingFace 教程", url: "https://huggingface.co/learn/nlp-course", required: false }, { title: "BERT 论文", url: "https://arxiv.org/abs/1810.04805", required: false }], checkpoint: "能用 HuggingFace 微调 BERT 做文本分类，并和传统方法对比" },
+        }, duration: "3小时", resources: [R_HF_COURSE, { title: "HuggingFace 教程", url: "https://huggingface.co/learn/nlp-course", required: false, type: "article", source: "official" }, { title: "BERT 论文", url: "https://arxiv.org/abs/1810.04805", required: false, type: "paper", source: "academic" }], checkpoint: "能用 HuggingFace 微调 BERT 做文本分类，并和传统方法对比" },
       { day: 5, title: "进阶话题与项目实战",
         summary: "多标签分类、不平衡数据、半监督学习、模型部署，综合实战", content: {
           objective: "今天你将学习文本分类的进阶话题，并完成一个综合实战项目。学完后能处理多标签分类、类别不平衡、少样本等实际问题，能把模型部署成可用的服务。",
@@ -2263,7 +2263,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "文本分类进阶与综合实战：1）多标签分类实战：a）准备或找一个多标签分类数据集（如新闻主题多标签）；b）修改模型和损失函数（BCEWithLogitsLoss）；c）训练并评估。2）不平衡数据处理：a）人为制造一个不平衡数据集（如 9:1）；b）试试几种处理方法：加权损失、过采样、欠采样、Focal Loss；c）对比效果，注意用 F1 而不是准确率评估。3）模型部署：a）用 FastAPI 写一个分类 API；b）接收文本输入，返回预测结果和置信度；c）用 curl 或 Postman 测试；d）（可选）写一个简单的前端页面或 Gradio Demo。4）少样本学习（可选）：a）只用 100 条标注数据训练；b）试试半监督学习（用未标注数据做自训练）；c）试试少样本提示（用大模型做 zero-shot / few-shot 分类）。5）综合项目：把这一周学的所有内容整理成一个完整的项目——a）完整的 README 文档；b）数据预处理脚本；c）多种模型的训练代码；d）模型评估和对比；e）部署好的 Demo。6）总结复盘：写一份学习总结——文本分类的完整方法论是什么？从数据到模型到部署，每一步的最佳实践是什么？还有什么疑问？",
           deep_dive: "文本分类是 NLP 最基础的任务，但要做好并不简单，有很多进阶话题：1）多标签 vs 多分类：很多人混淆这两个概念。多分类（Multi-class）是互斥的——每个样本只能属于一个类别。多标签（Multi-label）是不互斥的——每个样本可以属于多个类别，也可以一个都不属于。多标签分类更复杂，评估也更复杂（每个标签算一个二分类，然后算平均）。实际场景中多标签很常见，比如文章可以同时属于「科技」和「财经」。2）类别不平衡是常态：实际项目中，类别几乎都是不平衡的。处理不平衡的方法很多，但没有银弹：a）加权损失：最简单，改改 loss weight 就行；b）过采样：重复少数类样本，但容易过拟合；c）欠采样：丢掉多数类样本，浪费数据；d）Focal Loss：让模型更关注难分的样本，在不平衡数据上效果不错；e）数据增强：给少数类做更多增强；f）收集更多数据：这是最根本的解决办法。建议先从简单的方法（加权损失）开始，然后逐步尝试。3）标注数据太贵怎么办？实际项目中，标注数据往往是瓶颈。解决思路：a）主动学习：让模型选最有价值的样本给人标注，用最少的标注达到最好的效果；b）半监督学习：用大量未标注数据辅助训练，如伪标签、一致性正则化；c）弱监督：用弱标签（如规则、远程监督）代替人工标注，再清洗；d）少样本学习：用大模型的 in-context learning，只需要几个示例；e）提示学习：把任务转化为语言模型能理解的提示。4）部署中的性能优化：模型训好了只是第一步，部署中还要考虑性能：a）模型压缩：蒸馏、量化、剪枝；b）推理优化：ONNX、TensorRT、vLLM 等；c）批量处理：一次处理多个请求，提升吞吐量；d）缓存：对常见查询缓存结果。5）文本分类的「天花板」：文本分类能解决很多问题，但也有局限。需要深度理解、推理、常识的任务，单纯的文本分类很难做好。这时候需要更高级的方法，如问答系统、对话系统、知识图谱等。但文本分类仍然是很多复杂系统的基础组件。"
-        }, duration: "3小时", resources: [B_NLP_TUTORIAL, { title: "FastAPI 文档", url: "https://fastapi.tiangolo.com/", required: false }], checkpoint: "完成一个完整的文本分类项目，包含数据、模型、评估、部署" },
+        }, duration: "3小时", resources: [B_NLP_TUTORIAL, { title: "FastAPI 文档", url: "https://fastapi.tiangolo.com/", required: false, type: "doc", source: "official" }], checkpoint: "完成一个完整的文本分类项目，包含数据、模型、评估、部署" },
     ],
   },
 
@@ -2283,7 +2283,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["掌握 NER 等序列标注任务", "实现 BiLSTM-CRF 模型", "能从非结构化文本中抽取结构化信息"],
     relatedIntel: ["001-transformer"],
     relatedTools: ["HuggingFace"],
-    relatedTerms: ["named-entity-recognition", "crf", "sequence-labeling", "part-of-speech", "information-extraction"],
+    relatedTerms: ["named-entity-recognition", "crf", "sequence-labeling", "part-of-speech", "information-extraction"], relatedNodes: ["nlp-rnn", "nlp-transformer"],
     suggestions: {
       prerequisites: ["RNN 与序列模型", "词向量基础"],
       nextSteps: ["Transformer 与预训练模型", "机器翻译与文本生成"],
@@ -2315,7 +2315,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "HMM 与 CRF 实践：1）HMM 原理理解：a）用一个简单的例子（如词性标注）解释 HMM 的三个假设；b）手动计算一个小例子的 Viterbi 解码。2）CRF 原理学习：a）理解为什么 CRF 比 HMM 更适合序列标注；b）CRF 的特征函数是什么意思？c）CRF 的损失函数怎么理解？3）CRF 实现 NER：a）用 sklearn-crfsuite 或 pytorch-crf 库；b）在 CoNLL-2003 或 MSRA NER 数据集上训练；c）提取特征：词本身、词性、前缀后缀、大小写等；d）训练 CRF 模型。4）效果评估：a）计算实体级的 P/R/F1；b）和规则基线对比，提升了多少？c）分析 CRF 还会犯哪些错误。5）错误分析：a）找出 CRF 分错的实体；b）分析错误类型：边界错误？类型错误？完全漏了？c）怎么改进？6）思考：CRF 和 HMM 各自的优缺点是什么？在什么场景下你会选哪个？",
           deep_dive: "虽然现在深度学习是主流，但理解传统方法能帮你更好地理解序列标注问题的本质：1）生成式 vs 判别式：HMM 是生成式模型，建模 P(x,y) = P(y)P(x|y)——先假设标签序列的分布，再看每个标签生成对应观测的概率。CRF 是判别式模型，直接建模 P(y|x)。判别式模型通常效果更好，因为它不需要建模观测的分布，可以利用任意复杂的特征。2）CRF 的特征工程：在深度学习流行之前，CRF 的效果很大程度上取决于特征工程。常用的特征包括：词本身、词性、词的形状（大小写、数字、标点）、前缀后缀、词典匹配特征、周围的词和词性（上下文特征）等。好的特征工程能带来显著的提升。3）为什么 CRF 比 Softmax 好？在序列标注中，如果每个位置独立预测（如用 BiLSTM + Softmax），就没有考虑标签之间的依赖关系。比如，B-PER 后面应该跟着 I-PER 而不是 I-LOC。CRF 增加了一个转移矩阵来建模标签之间的转移概率，让输出的标签序列更「合理」。这就是 BiLSTM-CRF 比单纯 BiLSTM 效果好的原因。4）序列标注的解码：预测时，我们需要找到概率最大的标签序列。如果每个位置独立，直接取 argmax 就行。但如果有 CRF 层，就需要用 Viterbi 算法来动态规划求解最优路径。Viterbi 算法的时间复杂度是 O(n * k^2)，其中 n 是序列长度，k 是标签数。5）传统方法的价值：虽然现在 BiLSTM-CRF 和 BERT-CRF 效果更好，但 CRF 仍然有其价值：a）小数据场景下，CRF + 好的特征工程可能比深度学习效果好；b）CRF 可解释性强，能知道哪些特征在起作用；c）CRF 训练快、预测快、资源占用少。而且，CRF 的思想（转移矩阵、Viterbi 解码）在深度学习中仍然被广泛使用。6）从 CRF 到深度学习：BiLSTM-CRF 可以理解为：用 BiLSTM 自动学习特征（代替人工特征工程），然后用 CRF 层建模标签依赖。这是传统方法和深度学习结合的经典例子。理解了 CRF，就能更好地理解 BiLSTM-CRF 架构。"
-        }, duration: "3小时", resources: [R_CS224N, B_NLP_TUTORIAL, { title: "sklearn-crfsuite", url: "https://sklearn-crfsuite.readthedocs.io/", required: false }], checkpoint: "能用 CRF 实现 NER，并理解和 HMM 的区别" },
+        }, duration: "3小时", resources: [R_CS224N, B_NLP_TUTORIAL, { title: "sklearn-crfsuite", url: "https://sklearn-crfsuite.readthedocs.io/", required: false, type: "doc", source: "official" }], checkpoint: "能用 CRF 实现 NER，并理解和 HMM 的区别" },
       { day: 3, title: "BiLSTM-CRF 模型实现",
         summary: "实现基于 BiLSTM-CRF 的序列标注模型，理解深度学习方法", content: {
           objective: "今天你将学习 BiLSTM-CRF 模型的原理和实现。学完后能用 PyTorch 实现一个 BiLSTM-CRF 模型，理解每个组件的作用，在 NER 数据集上训练并评估。",
@@ -2328,7 +2328,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "BiLSTM-CRF 实现与训练：1）数据预处理：a）构建词表和标签表；b）把文本和标签转换成 ID；c）处理变长序列（padding、mask）。2）BiLSTM 部分实现：a）实现 Embedding 层 + BiLSTM；b）输出每个位置的隐藏状态；c）用 Linear 层映射到标签维度。3）CRF 层实现：a）实现 CRF 的前向算法（计算所有路径的分数和）；b）实现损失函数（真实路径分数 - 所有路径的 log sum exp）；c）实现 Viterbi 解码（找最优路径）。或者直接用 pytorch-crf 等库。4）模型训练：a）在 NER 数据集上训练 BiLSTM-CRF；b）用什么优化器？学习率多少？c）用什么指标监控训练过程？5）效果评估：a）在测试集上评估实体级 P/R/F1；b）和 CRF（传统方法）对比，提升了多少？c）分析哪些类型的实体提升最大，为什么？6）消融实验（可选）：a）去掉 CRF 层，只用 BiLSTM + Softmax，效果差多少？b）只用单向 LSTM，效果差多少？c）用预训练词向量 vs 随机初始化，效果差多少？",
           deep_dive: "BiLSTM-CRF 是深度学习时代序列标注的经典架构，理解它很重要：1）为什么需要 CRF 层？很多人会问：BiLSTM 已经能捕捉上下文了，为什么还要 CRF？答案是：BiLSTM 捕捉的是输入的上下文，但输出标签之间的依赖关系并没有被显式建模。比如，B-PER 后面应该接 I-PER 而不是 I-LOC，BiLSTM 可能学到这个规律，但 CRF 显式地把它编码进转移矩阵里，效果更稳定。而且，CRF 能保证输出的标签序列是合法的（比如不会出现 I-LOC 在 O 后面的情况）。2）CRF 损失的直觉：CRF 的损失函数是「真实路径的分数」减去「所有可能路径的分数的对数和」（log-sum-exp）。直觉是：我们希望真实路径的分数越高越好，其他路径的分数越低越好。这和多分类的 Softmax + Cross Entropy 本质上是一样的——只是 Softmax 是对单个位置的所有类别，CRF 是对整个序列的所有可能标签路径。3）Viterbi 算法：Viterbi 是动态规划的经典应用。核心思想是：到第 i 个位置、状态为 k 的最优路径分数 = max(到第 i-1 个位置、所有可能状态 j 的最优路径分数 + 从 j 转移到 k 的分数) + 第 i 个位置状态 k 的发射分数。从前往后算一遍，再从后往前回溯，就能得到全局最优路径。4）BiLSTM-CRF 的变体：a）CNN-BiLSTM-CRF：先用 CNN 提取字符级特征，和词向量拼接，再喂给 BiLSTM，对中文和形态丰富的语言效果好；b）Transformer-CRF：用 Transformer 代替 BiLSTM，捕捉更长距离的依赖；c）BERT-CRF：用 BERT 等预训练模型初始化，然后加 CRF 层，这是现在效果最好的方法之一。5）训练技巧：a）学习率：CRF 层的学习率通常可以比 LSTM 层高一些；b）梯度裁剪：RNN 容易梯度爆炸，梯度裁剪很重要；c）学习率调度：用 ReduceLROnPlateau 或 CosineAnnealing；d）正则化：Dropout、权重衰减；e）早停：验证集 F1 不再提升就停止。6）和文本分类的对比：序列标注可以看作「每个 token 的多分类」，但因为有标签依赖，比文本分类更复杂。理解了文本分类，再学序列标注会容易很多——相当于把分类器应用到每个位置，再加上序列约束。"
-        }, duration: "3小时", resources: [R_CS224N, B_NLP_TUTORIAL, { title: "BiLSTM-CRF 论文", url: "https://arxiv.org/abs/1508.01991", required: false }], checkpoint: "能用 PyTorch 实现 BiLSTM-CRF，并在 NER 数据集上达到合理效果" },
+        }, duration: "3小时", resources: [R_CS224N, B_NLP_TUTORIAL, { title: "BiLSTM-CRF 论文", url: "https://arxiv.org/abs/1508.01991", required: false, type: "paper", source: "academic" }], checkpoint: "能用 PyTorch 实现 BiLSTM-CRF，并在 NER 数据集上达到合理效果" },
       { day: 4, title: "基于预训练模型的序列标注",
         summary: "用 BERT 等预训练模型做序列标注，掌握微调方法", content: {
           objective: "今天你将学习如何用预训练模型做序列标注。学完后能用 HuggingFace Transformers 微调 BERT 做 NER，理解 BERT 做序列标注的要点，处理子词对齐等问题。",
@@ -2341,7 +2341,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "BERT 微调 NER 实战：1）环境准备：安装 transformers、datasets、accelerate、seqeval 库。2）数据准备：a）用 datasets 加载 NER 数据集（如 conll2003 或 msra_ner）；b）理解数据格式和标签集。3）子词对齐实现：a）用 tokenizer 分词后，一个词可能被拆成多个子词；b）实现标签对齐——只给第一个子词打标签，其他子词特殊处理（如 -100 忽略）；c）实现 attention mask。4）模型定义：a）用 AutoModelForTokenClassification 加载预训练模型；b）或者手动加载 BERT + 分类头 + CRF。5）训练与评估：a）用 Trainer API 或自定义训练循环；b）训练时用什么评估指标？（seqeval 的 classification_report）；c）调整超参数（学习率、batch size、epoch 数）。6）效果对比：a）和 BiLSTM-CRF 对比，效果提升了多少？b）训练速度和推理速度呢？c）用小数据（如只用 10% 训练数据）对比，两种方法差距更大还是更小？7）错误分析：a）BERT 还会犯哪些错误？b）哪些类型的实体识别不好？c）和 BiLSTM-CRF 的错误类型有什么不同？",
           deep_dive: "预训练模型给序列标注带来了质的飞跃，但也有一些细节需要注意：1）子词对齐是个坑：BERT 的分词和原始标注的分词粒度不一样——原始数据是按词标注的，但 BERT 是按子词（subword）分词的。这就需要做对齐。常见的对齐策略：a）只给第一个子词打标签，其余子词的 loss 忽略（最常用）；b）给所有子词打相同的标签，然后预测时取第一个子词的预测；c）用特殊的方式聚合子词表示（平均、max）。方法 a 最简单也最有效。2）为什么 BERT 效果这么好？BERT 在大规模语料上做了 Masked Language Modeling 和 Next Sentence Prediction 的预训练，学到了丰富的语言知识——语法、语义、世界知识。这些知识可以迁移到下游任务，所以只需要少量标注数据就能达到很好的效果。对于 NER 来说，BERT 学到的上下文表示能更好地理解实体的上下文，从而更准确地识别实体。3）要不要加 CRF？BERT + Softmax 已经很不错了，加 CRF 通常还能再提升 0.5-1 个点。加不加取决于你的需求：a）差几个点的 F1 对你的业务影响大吗？b）加 CRF 会增加一些复杂度和计算量；c）CRF 能保证输出序列的合法性。大多数情况下，加上 CRF 是值得的。4）数据效率：预训练模型最大的优势之一是数据效率高。在传统方法需要几万条标注的任务上，BERT 可能只需要几百条就够了。这极大地降低了 NLP 应用的门槛。但数据少的时候也要注意过拟合：a）用更小的学习率；b）少训几轮；c）冻住底层，只微调顶层；d）用更多的正则化。5）中文 NER 的特殊性：中文 NER 和英文有一些不同：a）分词：NER 可以基于词做，也可以基于字做。字级 NER 不需要分词，避免了分词错误的传播，现在更常用；b）中文实体特点：中文人名、地名、机构名的规律和英文不一样；c）中文预训练模型：用专门的中文预训练模型（如 BERT-wwm、RoBERTa-zh）效果更好。6）实用技巧：a）用领域数据继续预训练（domain-adaptive pretraining），如果你的领域很特殊；b）远程监督生成弱标签，再人工清洗；c）主动学习，选最有价值的样本标注；d）集成多个模型，投票决定最终结果。"
-        }, duration: "3小时", resources: [R_HF_COURSE, B_NLP_TUTORIAL, { title: "HuggingFace Token Classification", url: "https://huggingface.co/docs/transformers/tasks/token_classification", required: false }], checkpoint: "能用 HuggingFace 微调 BERT 做 NER，并和 BiLSTM-CRF 对比效果" },
+        }, duration: "3小时", resources: [R_HF_COURSE, B_NLP_TUTORIAL, { title: "HuggingFace Token Classification", url: "https://huggingface.co/docs/transformers/tasks/token_classification", required: false, type: "doc", source: "official" }], checkpoint: "能用 HuggingFace 微调 BERT 做 NER，并和 BiLSTM-CRF 对比效果" },
       { day: 5, title: "信息抽取与实战项目",
         summary: "关系抽取、事件抽取、实体链接，综合实战", content: {
           objective: "今天你将学习序列标注的进阶应用——信息抽取。学完后理解关系抽取、事件抽取、实体链接等任务，能完成一个端到端的信息抽取系统。",
@@ -2366,7 +2366,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "1）实体关系抽取：用 spaCy 或 HuggingFace 模型做简单的关系抽取。2）知识图谱构建：从几篇文章中抽取实体关系，用 NetworkX 或 Neo4j 构建小图谱。3）可视化：用可视化工具展示知识图谱。4）大模型抽取（可选）：用 LLM 的 Function Calling 或结构化输出抽取关系。",
           deep_dive: "信息抽取是 NLP 的核心任务之一——把非结构化文本变成结构化知识。知识图谱是信息抽取的重要应用，让机器理解实体之间的关系。早期是规则和模板，后来用监督学习，现在大模型让零样本/少样本抽取成为可能。知识图谱在搜索、问答、推荐中都有应用。"
-        }, duration: "2.5小时", resources: [B_NLP_TUTORIAL, { title: "spaCy 文档", url: "https://spacy.io/", required: false }], checkpoint: "能实现实体关系抽取，构建简单知识图谱" },
+        }, duration: "2.5小时", resources: [B_NLP_TUTORIAL, { title: "spaCy 文档", url: "https://spacy.io/", required: false, type: "doc", source: "official" }], checkpoint: "能实现实体关系抽取，构建简单知识图谱" },
       { day: 7, title: "信息抽取实战项目",
         summary: "做一个完整的信息抽取项目", content: {
           objective: "完成信息抽取实战项目。选择一个垂直领域（医疗、金融、法律等），做实体识别 + 关系抽取 + 可视化。",
@@ -2402,7 +2402,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "1）LDA 主题模型：用 Gensim 在新闻/论文数据集上训练 LDA，看每个主题的关键词。2）主题数选择：试不同主题数，用困惑度或一致性选最优。3）文本聚类：用 BERT + K-Means 对文本聚类。4）可视化：用 pyLDAvis 或 t-SNE 可视化主题和聚类。",
           deep_dive: "主题模型是无监督学习在 NLP 中的经典应用——不需要标注，就能发现大量文档中的主题结构。LDA 是最经典的主题模型，基于概率图模型。词嵌入时代，也常用 Embedding + 聚类的方式做文本分组。这些技术在文档管理、内容分析、用户研究中很有用。"
-        }, duration: "2.5小时", resources: [B_NLP_TUTORIAL, { title: "Gensim 文档", url: "https://radimrehurek.com/gensim/", required: false }], checkpoint: "能用 LDA 做主题建模，用聚类做文本分组" },
+        }, duration: "2.5小时", resources: [B_NLP_TUTORIAL, { title: "Gensim 文档", url: "https://radimrehurek.com/gensim/", required: false, type: "doc", source: "official" }], checkpoint: "能用 LDA 做主题建模，用聚类做文本分组" },
       { day: 10, title: "NLP 综合项目与前沿展望",
         summary: "完成综合项目，了解 NLP 前沿方向", content: {
           objective: "完成 NLP 综合项目并了解前沿。把两周学到的 NLP 知识整合到一个项目中，了解大模型时代 NLP 的发展方向。",
@@ -2434,7 +2434,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["实现基于 Transformer 的机器翻译", "掌握文本生成的解码策略", "理解 NMT 的评估方法"],
     relatedIntel: ["001-transformer", "020-prompt-engineering"],
     relatedTools: ["HuggingFace"],
-    relatedTerms: ["machine-translation", "seq2seq", "beam-search", "text-generation", "bleu"],
+    relatedTerms: ["machine-translation", "seq2seq", "beam-search", "text-generation", "bleu"], relatedNodes: ["nlp-transformer", "llm-pretraining"],
     suggestions: {
       prerequisites: ["Transformer 与预训练模型", "深度学习基础"],
       nextSteps: ["大语言模型", "对话系统"],
@@ -2466,7 +2466,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "Seq2Seq + Attention 实现：1）数据准备：a）准备一个小型双语平行语料（如 IWSLT 的英德或中英翻译数据）；b）构建源语言和目标语言词表；c）数值化和批处理。2）编码器实现：a）用 Embedding + LSTM 实现编码器；b）返回所有时间步的隐藏状态和最终隐藏状态。3）解码器实现（无 Attention）：a）用 Embedding + LSTM + Linear 实现解码器；b）训练时用 Teacher Forcing；c）推理时用自回归生成。4）加入 Attention：a）实现 Additive Attention（Bahdanau Attention）或 Multiplicative Attention；b）在解码器中加入 Attention 机制，每一步计算上下文向量；c）和隐藏状态拼接，再输出预测。5）模型训练：a）用交叉熵损失训练；b）用什么优化器？学习率怎么设？c）怎么监控训练过程？6）简单翻译测试：a）写一个翻译函数，输入源句子，输出目标句子；b）找几个简单的句子测试，看翻译结果是否合理；c）和没有 Attention 的版本对比，Attention 版本是不是更好？",
           deep_dive: "Seq2Seq + Attention 是深度学习 NLP 的里程碑，理解它很重要：1）Seq2Seq 的革命性：在 Seq2Seq 出现之前，机器翻译系统是非常复杂的流水线——语言模型、翻译模型、调序模型、重排序模型，一大堆组件。Seq2Seq 用一个端到端的神经网络就搞定了，大大简化了系统，而且效果更好。这是深度学习在 NLP 领域的第一次重大胜利。2）Attention 的意义：原始 Seq2Seq 有一个致命问题——编码器把整个源句子压缩成一个固定长度的向量，长句子的信息会丢失。Attention 解决了这个问题：解码器在生成每个词的时候，都可以「看」源句子的所有位置，而且知道该看哪里。Attention 不仅大幅提升了翻译质量，更重要的是，它为后来的 Transformer 和自注意力机制铺平了道路。可以说，Attention 是过去十年 NLP 最重要的思想之一。3）Attention 的直觉：人类翻译的时候，不是先把整个句子背下来再翻译，而是一边看源句子一边翻译——生成某个词的时候，主要关注源句子中对应的那几个词。Attention 机制就是模仿这个过程。Attention 权重的可视化也给了模型一定的可解释性——我们可以看到模型在生成某个词的时候在「看」源句子的哪个位置。4）Teacher Forcing 的利弊：Teacher Forcing 是训练 Seq2Seq 的标准技巧——训练时，解码器的输入用真实的前一个词，而不是模型自己预测的前一个词。好处是训练更快、更稳定，因为模型不会被自己的错误带偏。但缺点是「训练-推理不匹配」（Exposure Bias）——训练时总是看到正确的历史，推理时却要基于自己的预测。缓解方法：Scheduled Sampling（逐渐从用真实词过渡到用预测词）、Curriculum Learning 等。5）Beam Search vs Greedy Search：推理时，Greedy Search 每一步选概率最大的词，简单但可能不是全局最优。Beam Search 每一步保留 top-k 个候选，最后选总体概率最高的序列，效果更好但计算量更大。k 是 beam size，越大效果越好但越慢，通常取 2-10。6）从 Seq2Seq 到 Transformer：Seq2Seq + Attention 用的是 RNN，RNN 有两个问题：一是不能并行计算（每个时间步依赖前一个时间步），训练慢；二是长距离依赖还是有问题。Transformer 用纯 Attention 取代了 RNN，解决了这两个问题，成为了现在的主流架构。理解 Seq2Seq + Attention 能帮你更好地理解 Transformer。"
-        }, duration: "3小时", resources: [R_CS224N, B_NLP_TUTORIAL, { title: "Seq2Seq 论文", url: "https://arxiv.org/abs/1409.3215", required: false }, { title: "Attention 论文", url: "https://arxiv.org/abs/1409.0473", required: false }], checkpoint: "能用 PyTorch 实现 Seq2Seq + Attention 模型，并完成简单翻译测试" },
+        }, duration: "3小时", resources: [R_CS224N, B_NLP_TUTORIAL, { title: "Seq2Seq 论文", url: "https://arxiv.org/abs/1409.3215", required: false, type: "paper", source: "academic" }, { title: "Attention 论文", url: "https://arxiv.org/abs/1409.0473", required: false, type: "paper", source: "academic" }], checkpoint: "能用 PyTorch 实现 Seq2Seq + Attention 模型，并完成简单翻译测试" },
       { day: 3, title: "Transformer 与机器翻译",
         summary: "基于 Transformer 的神经机器翻译，用 HuggingFace 微调", content: {
           objective: "今天你将学习基于 Transformer 的机器翻译。学完后能用 HuggingFace Transformers 加载预训练翻译模型并微调，理解 BPE 分词和数据处理，掌握翻译模型的评估方法。",
@@ -2479,7 +2479,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "Transformer 翻译模型实战：1）子词分词学习：a）理解 BPE 的原理和算法；b）用 HuggingFace Tokenizers 库在你的数据上训练一个 BPE tokenizer；c）测试分词效果——常见词和罕见词分别怎么分？2）预训练模型推理：a）用 transformers 库加载一个预训练翻译模型（如 Helsinki-NLP/opus-mt-en-zh 或类似的）；b）翻译几个测试句子，看效果；c）试试不同的解码策略（Greedy、Beam Search），对比结果。3）数据准备与微调：a）准备一个小型平行语料（或用 IWSLT 数据）；b）用预训练模型的 tokenizer 处理数据；c）用 Trainer API 微调模型。4）效果评估：a）在测试集上计算 BLEU 分数；b）和微调前的模型对比，提升了多少？c）人工评估：找 20 个句子，对比微调前后的翻译质量。5）解码策略实验：a）对比 Greedy Search 和不同 beam size 的 Beam Search；b）试试长度惩罚（length penalty）；c）试试采样解码（Top-k、Top-p、Temperature），看生成结果有什么不同。6）错误分析：a）找出翻译质量差的句子；b）分析错误类型：漏译？错译？语序不对？术语错误？c）怎么改进？",
           deep_dive: "Transformer 彻底改变了机器翻译，现在所有的翻译系统都是基于 Transformer 的：1）为什么 Transformer 比 RNN 好？三个主要原因：a）并行计算：RNN 是顺序的，每个时间步依赖前一个，无法并行；Transformer 的 Self-Attention 可以同时计算所有位置的表示，训练速度快很多；b）长距离依赖：RNN 处理长序列时，信息需要一步步传递，容易丢失；Transformer 中任意两个位置的距离都是 1，长距离依赖更容易捕捉；c）注意力可视化：Attention 权重给了模型一定的可解释性。这些优势让 Transformer 很快取代了 RNN，成为 NLP 的主流架构。2）BPE 的重要性：子词分词是神经机器翻译的关键技术之一。它解决了两个问题：a）OOV（未登录词）：罕见词可以拆成子词，不会完全没见过；b）词汇表大小：如果用词级别的话，词汇表会非常大，Embedding 层参数太多。BPE 通过合并频率高的字符对，在词汇表大小和序列长度之间取得平衡。现在几乎所有的预训练模型（BERT、GPT 等）都用 BPE 或类似的子词分词方法。3）翻译模型的选择：现在有很多预训练翻译模型可以选择：a）MarianMT：Helsinki-NLP 训练的，支持 100+ 语言对，每个语言对一个模型，体积小，速度快；b）mBART：Meta 训练的多语言预训练模型，支持 50+ 语言，一个模型搞定所有方向，需要更多资源；c）M2M-100：Meta 训练的多对多翻译模型，支持 100 种语言互译；d）大模型：GPT-4、Claude 等大模型也能做翻译，效果很好，但速度慢、成本高。选哪个取决于你的需求——效果、速度、成本、语言对。4）领域适配：通用翻译模型在特定领域（如医疗、法律、专利）效果往往不好，因为术语和表达方式不一样。领域适配的方法：a）微调：在领域平行数据上继续训练；b）术语表约束：强制某些词按指定方式翻译；c）提示学习：给大模型加领域提示。5）翻译评估的挑战：自动评估指标（如 BLEU）和人工评分的相关性并不高，尤其是在高质量区间。更好的自动评估指标：a）chrF：基于字符 n-gram，对形态变化更鲁棒；b）COMET：基于预训练模型的评估指标，和人工相关性更高；c）BERTScore：用 BERT 的上下文嵌入计算相似度。但人工评估仍然是金标准——尤其是重要的项目，一定要有人工评估。6）机器翻译的现状与未来：现在的神经机器翻译已经在很多语言对上达到或接近人类水平（尤其是高资源语言对），但仍然有挑战：a）低资源语言：数据少，效果不好；b）领域适配：通用模型在专业领域效果下降；c）可解释性：为什么这么翻译？不知道；d）翻译腔：翻译出来的文本不够「地道」。未来的方向：大模型翻译、多语言统一模型、更好的领域适配、更准确的评估指标等。"
-        }, duration: "3小时", resources: [R_HF_COURSE, B_NLP_TUTORIAL, { title: "HuggingFace 翻译教程", url: "https://huggingface.co/docs/transformers/tasks/translation", required: false }, { title: "SacreBLEU", url: "https://github.com/mjpost/sacrebleu", required: false }], checkpoint: "能用 HuggingFace 微调翻译模型，并计算 BLEU 进行评估" },
+        }, duration: "3小时", resources: [R_HF_COURSE, B_NLP_TUTORIAL, { title: "HuggingFace 翻译教程", url: "https://huggingface.co/docs/transformers/tasks/translation", required: false, type: "doc", source: "official" }, { title: "SacreBLEU", url: "https://github.com/mjpost/sacrebleu", required: false, type: "repo", source: "github" }], checkpoint: "能用 HuggingFace 微调翻译模型，并计算 BLEU 进行评估" },
       { day: 4, title: "文本生成与解码策略",
         summary: "深入理解文本生成的各种解码策略，掌握文本生成的评估", content: {
           objective: "今天你将学习文本生成的核心技术——解码策略。学完后理解 Greedy Search、Beam Search、Top-k/Top-p 采样、Temperature 等方法的区别和适用场景，能调整解码参数控制生成质量。",
@@ -2492,7 +2492,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "解码策略实验与对比：1）基础解码方法：a）用一个预训练生成模型（如 GPT-2、Qwen、或翻译模型）；b）实现 Greedy Search 生成；c）实现 Beam Search 生成，试试不同的 beam size（1、2、5、10）；d）对比结果：beam size 越大，效果越好吗？速度呢？2）随机采样方法：a）实现纯随机采样（从整个词表按概率采样）；b）试试不同的 Temperature（0.5、1.0、2.0），观察生成结果的变化；c）实现 Top-k 采样，试试不同的 k 值（10、50、100）；d）实现 Top-p（Nucleus）采样，试试不同的 p 值（0.5、0.9、0.95）。3）对比实验：设计一个评测表，对比各种解码策略的：a）生成质量（通顺度、相关性）；b）多样性（重复度、变化度）；c）速度。4）控制生成：a）怎么让生成更有创造性？b）怎么让生成更保守、更确定？c）怎么减少重复生成？（试试 repetition penalty、no_repeat_ngram_size）d）怎么控制生成长度？5）文本生成评估（可选）：a）理解困惑度（Perplexity）的含义；b）计算测试集上的困惑度；c）思考：困惑度越低，生成质量一定越高吗？为什么？6）应用：用你学到的解码策略，写一个简单的文本生成应用（如故事生成、邮件助手、代码补全等），调整参数直到你满意。",
           deep_dive: "文本生成是现在大模型时代最核心的技术之一，理解解码策略很重要：1）为什么解码策略这么重要？同样的模型，用不同的解码策略，生成结果可以天差地别。好的解码策略能让模型输出通顺、多样、有创造性的文本，不好的解码策略可能产出重复、不通顺、甚至无意义的内容。理解各种解码策略的原理和权衡，能帮你更好地使用大模型。2）Beam Search 的局限：Beam Search 是机器翻译的标准解码方法，因为它能找到概率较高的序列。但它也有问题：a）生成的文本偏保守、缺乏多样性；b）倾向于生成短句子（因为越长分数乘的概率项越多，总分越低，所以需要长度惩罚）；c）容易重复。对于翻译这种「有标准答案」的任务，Beam Search 很合适；但对于创意写作、对话等需要多样性的任务，就不太合适了。3）采样方法的革命：Top-k 和 Top-p 采样的出现改变了文本生成。它们的核心思想是：不要每次都选概率最大的，从概率高的候选里随机选，这样生成的文本更自然、更多样。Temperature 控制「随机性」——温度越低，分布越尖锐，越倾向于选概率高的；温度越高，分布越平缓，越多样化。Top-k 固定候选数量，Top-p 固定累积概率阈值，Top-p 通常更灵活（因为不同位置的概率分布形状不一样）。4）重复生成问题：自回归生成有一个常见问题——容易陷入重复循环，反复说同样的话。缓解方法：a）repetition penalty：惩罚已经生成过的词的概率；b）no_repeat_ngram_size：不允许生成重复的 n-gram；c）Contrastive Search：对比搜索，在考虑概率的同时考虑和之前生成内容的差异。5）解码和模型能力：很多人把生成质量不好都怪模型，但有时候问题出在解码策略上。比如：a）觉得模型输出太死板？试试调高 Temperature 或用 Top-p 采样；b）觉得模型输出太天马行空？试试调低 Temperature 或用 Beam Search；c）觉得模型总是重复？加 repetition penalty。调整解码参数往往能显著改善生成效果。6）更高级的生成方法：除了这些基础解码方法，还有更高级的生成控制方法：a）引导生成（Constrained Decoding）：强制模型生成包含特定词或遵循特定格式；b）对比解码（Contrastive Decoding）：对比大模型和小模型的预测，减少幻觉；c）Speculative Decoding：用小模型「猜」，大模型「验证」，加速生成；d）链式思维（Chain-of-Thought）：让模型一步步思考，提升复杂推理能力。理解这些基础的解码策略，是理解更高级生成技术的基础。"
-        }, duration: "2.5小时", resources: [B_NLP_TUTORIAL, R_HF_COURSE, { title: "The Art of Decoding", url: "https://huggingface.co/blog/how-to-generate", required: false }], checkpoint: "能对比各种解码策略的优缺点，并能调整参数控制生成质量" },
+        }, duration: "2.5小时", resources: [B_NLP_TUTORIAL, R_HF_COURSE, { title: "The Art of Decoding", url: "https://huggingface.co/blog/how-to-generate", required: false, type: "article", source: "official" }], checkpoint: "能对比各种解码策略的优缺点，并能调整参数控制生成质量" },
       { day: 5, title: "翻译系统构建与实战",
         summary: "构建完整的翻译系统，后端 API + 前端界面 + 部署", content: {
           objective: "今天你将构建一个完整的机器翻译系统，从后端 API 到前端界面再到部署。学完后能用 FastAPI 构建翻译服务 API，用 Gradio/Streamlit 做前端，用 Docker 容器化部署。",
@@ -2505,7 +2505,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "构建完整翻译系统：1）后端 API：a）用 FastAPI 写一个翻译 API；b）提供两个端点：/translate（单句翻译）和 /batch_translate（批量翻译）；c）错误处理和参数验证；d）用 uvicorn 启动服务，用 curl 或 Postman 测试。2）前端界面：a）用 Gradio 或 Streamlit 做一个简单的翻译界面；b）左边输入源文本，右边显示翻译结果；c）可以选择翻译方向、调整解码参数；d）加上历史记录功能。3）优化性能：a）实现批量处理，一次处理多个请求提升吞吐量；b）添加缓存（如 Redis），相同的文本直接返回缓存结果；c）试试模型量化（如 8-bit 量化），看速度和显存的变化；d）（可选）用 vLLM 或 Text Generation Inference 加速推理。4）容器化部署：a）写一个 Dockerfile，把翻译服务打包成 Docker 镜像；b）构建镜像并运行容器；c）测试容器内的服务是否正常工作。5）生产级增强（可选）：a）添加日志（用 logging 或 loguru）；b）添加请求限流（防止滥用）；c）添加健康检查端点；d）添加 Prometheus 监控指标。6）总结与复盘：a）整理你这两周学到的机器翻译知识；b）写一份总结报告——从统计翻译到神经翻译到现在的大模型翻译，技术演进的脉络是什么？c）思考：机器翻译还有哪些挑战？未来会怎么发展？",
           deep_dive: "做一个 Demo 容易，但做一个生产级的翻译系统有很多工程挑战：1）延迟和吞吐量的权衡：翻译系统有两个关键指标——延迟（单个请求多久返回）和吞吐量（单位时间能处理多少请求）。两者往往是矛盾的：a）要低延迟，就不能等批量，单个请求立即处理，GPU 利用率低；b）要高吞吐量，就攒一批一起处理，延迟高。实际系统中需要根据业务需求找到平衡点。动态批处理（dynamic batching）是常用的优化——在一定时间窗口内攒请求，攒够了或者时间到了就一起处理。2）模型部署的工程化：把模型从「能跑」到「好用」中间有很多工作：a）模型优化：量化（FP16、INT8、INT4）、剪枝、蒸馏，减小模型体积，提升速度；b）推理框架：vLLM、TensorRT-LLM、Text Generation Inference 等专用推理框架，比原生 PyTorch 快很多；c）服务框架：Triton Inference Server、TorchServe、BentoML 等，提供批处理、多模型、弹性伸缩等功能。3）成本控制：大模型时代，推理成本是个大问题。降低成本的方法：a）选合适的模型：能用小模型就不用大模型；b）模型压缩：量化、蒸馏；c）缓存：相同的请求直接返回缓存；d）批处理：提高 GPU 利用率；e）弹性伸缩：流量低的时候减少实例，流量高的时候扩容。4）质量保障：生产系统中，怎么保证翻译质量？a）自动评估：定期计算 BLEU/COMET 等指标，监控质量变化；b）人工抽检：定期抽一些翻译结果人工评估；c）用户反馈：让用户可以举报翻译错误，收集 bad case 持续优化；d）A/B 测试：上新模型时做 A/B 测试，确认效果真的更好再全量。5）翻译系统的更多功能：一个完整的翻译系统通常还有很多高级功能：a）术语库：专业术语按指定方式翻译；b）翻译记忆（TM）：相同或相似的句子直接复用之前的翻译；c）音译：专有名词的音译规则；d）格式保留：翻译时保留原文的格式（如 HTML、Markdown）；e）多语言支持：支持多种语言互译。6）大模型时代的翻译：大模型（GPT-4、Claude、Gemini 等）的翻译效果已经非常好了，尤其是低资源语言和创意类文本。但大模型也有问题：a）成本高：比专门的翻译模型贵很多；b）速度慢：生成速度慢，不适合高吞吐量场景；c）稳定性：有时候会「自由发挥」，加很多原文没有的内容；d）数据隐私：把数据发给第三方大模型有隐私风险。所以实际中往往是「大模型 + 小模型」混合——普通翻译用小模型，复杂翻译用大模型，或者用大模型润色小模型的翻译结果。"
-        }, duration: "3.5小时", resources: [R_FASTAPI, R_STREAMLIT, { title: "vLLM 项目", url: "https://github.com/vllm-project/vllm", required: false }], checkpoint: "完成一个包含 API、前端界面、Docker 部署的完整翻译系统" },
+        }, duration: "3.5小时", resources: [R_FASTAPI, R_STREAMLIT, { title: "vLLM 项目", url: "https://github.com/vllm-project/vllm", required: false, type: "repo", source: "github" }], checkpoint: "完成一个包含 API、前端界面、Docker 部署的完整翻译系统" },
       { day: 6, title: "Subword 分词与 BPE",
         summary: "学习子词分词算法 BPE/WordPiece/Unigram", content: {
           objective: "学习子词分词技术。理解 BPE、WordPiece、Unigram 等算法的原理，掌握 SentencePiece 和 HuggingFace Tokenizer 的使用。",
@@ -2517,7 +2517,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "1）BPE 原理理解：手动模拟 BPE 的几次合并过程。2）Tokenizer 使用：用 HuggingFace Tokenizers 库加载预训练 tokenizer。3）自定义训练：用自己的语料训练一个 BPE tokenizer。4）对比：不同分词算法对同一句话的分词结果对比。",
           deep_dive: "子词分词是 NLP 预训练的基石——它解决了传统词表的 OOV 问题，也让词表大小可控。BERT 用 WordPiece，GPT 用 BPE，T5 用 Unigram，各有优劣。SentencePiece 把分词和解码都封装好了，还支持多种算法，是实际项目中常用的工具。理解分词原理，对理解大模型的行为（为什么会拼错、为什么不理解某些词）很有帮助。"
-        }, duration: "2小时", resources: [B_NLP_TUTORIAL, { title: "SentencePiece", url: "https://github.com/google/sentencepiece", required: false }], checkpoint: "理解子词分词原理，能用 SentencePiece 和 HuggingFace Tokenizer" },
+        }, duration: "2小时", resources: [B_NLP_TUTORIAL, { title: "SentencePiece", url: "https://github.com/google/sentencepiece", required: false, type: "repo", source: "github" }], checkpoint: "理解子词分词原理，能用 SentencePiece 和 HuggingFace Tokenizer" },
       { day: 7, title: "预训练模型做翻译与微调",
         summary: "使用 mBART、M2M-100 等预训练翻译模型做微调", content: {
           objective: "使用预训练翻译模型并做微调。能用 HuggingFace 加载 mBART、M2M-100 等多语言翻译模型，在自己的数据集上做微调。",
@@ -2529,7 +2529,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "1）预训练模型推理：用 HuggingFace 加载 M2M-100 或 mBART，做中英互译。2）数据准备：准备一个小的平行语料（或用公开数据集）。3）微调：用 LoRA 微调翻译模型（数据量小的话）。4）评估：算 BLEU 分数，对比微调前后。",
           deep_dive: "大模型时代，机器翻译的做法完全变了——以前要自己从零训练 Seq2Seq 模型，现在直接用预训练翻译模型微调就很好。Facebook 的 M2M-100 支持 100 种语言互译，Meta 的 NLLB 支持 200+ 种。微调策略也很重要——数据多用全参数微调，数据少用 LoRA/Adapter。评估除了 BLEU（基于 n-gram 匹配），还有 COMET 等基于预训练模型的指标，更接近人工评价。"
-        }, duration: "3小时", resources: [B_NLP_TUTORIAL, R_HF_COURSE, { title: "M2M-100", url: "https://huggingface.co/facebook/m2m100_418M", required: false }], checkpoint: "能用预训练翻译模型做推理和微调，会用 BLEU 评估" },
+        }, duration: "3小时", resources: [B_NLP_TUTORIAL, R_HF_COURSE, { title: "M2M-100", url: "https://huggingface.co/facebook/m2m100_418M", required: false, type: "book", source: "official" }], checkpoint: "能用预训练翻译模型做推理和微调，会用 BLEU 评估" },
       { day: 8, title: "翻译系统架构与服务化",
         summary: "构建生产级翻译服务，了解翻译系统架构", content: {
           objective: "了解生产级翻译系统的架构。能构建一个简单的翻译 API 服务，理解生产环境的考量（性能、成本、质量、缓存）。",
@@ -2581,7 +2581,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["能在消费级 GPU 上微调一个 7B 模型", "搭建聊天 demo"],
     relatedIntel: ["003-lora-qlora", "015-rlhf", "013-huggingface-datasets"],
     relatedTools: ["Hugging Face Transformers", "LangChain"],
-    relatedTerms: ["lora", "fine-tuning", "pre-training", "rlhf", "qlora"],
+    relatedTerms: ["lora", "fine-tuning", "pre-training", "rlhf", "qlora"], relatedNodes: ["llm-pretraining", "llm-rag"],
     dailyTasks: [
       { day: 1, title: "LLM 生态与模型规模",
         summary: "了解大语言模型生态，掌握模型选择方法，成功加载并运行一个开源LLM。", content: {
@@ -2595,7 +2595,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成LLM探索与环境搭建：1）HuggingFace探索：浏览Open LLM Leaderboard，了解当前主流开源模型的排名和特点。选择3个你感兴趣的7B级模型，查看它们的模型卡，了解架构、训练数据、许可协议、评测成绩。2）硬件评估：查看你的GPU型号和显存，计算你能跑多大的模型（fp16、8bit、4bit分别估算）。3）模型加载：选择一个小模型（如TinyLlama-1.1B或更大的如果显存够），用AutoModelForCausalLM.from_pretrained加载。4）推理测试：输入一个prompt，让模型生成一段文本，观察输出质量和速度。5）生成参数：测试max_new_tokens、temperature、top_p等参数对输出的影响。6）中文能力测试：如果模型支持中文，测试中文问答和生成效果。7）记录：写下你的硬件配置、加载的模型、显存占用、生成速度，建立基线。",
           deep_dive: "大语言模型的发展速度非常快，理解它们的演进脉络能帮你把握趋势：1）模型规模的缩放定律（Scaling Laws）：在一定范围内，模型效果与参数量、训练数据量、计算量呈幂律关系。这推动了模型越来越大。但最近的研究表明，缩放定律可能遇到瓶颈，质量比数量更重要。2）从Base到Chat：基础模型（Base）只是续写文本，经过指令微（SFT）后能遵循指令，再经过RLHF/DPO对齐后更符合人类偏好。不同阶段的模型用途不同。3）开源vs闭源：GPT-4、Claude等闭源模型效果最好，但需要API调用、有数据隐私问题、成本高。开源模型可以本地部署、数据可控、可定制，但效果可能稍差。选择哪种取决于业务需求。4）小模型的崛起：近年来，小模型（1B-7B）通过更好的训练数据和方法，效果提升很快。在很多垂直场景，小模型微调后可以接近甚至超过大模型的效果，而且部署成本低得多。5）中文大模型：国内大模型发展迅速，Qwen、Baichuan、ChatGLM、DeepSeek等在中文能力上往往优于国外模型。中文场景优先考虑国产大模型。6）模型选择策略：没有「最好」的模型，只有「最合适」的。根据你的任务类型、数据量、部署资源、延迟要求、预算来综合选择。"
-        }, duration: "1.5小时", resources: [B_LLM_FINETUNE, R_HF_TRANSFORMERS, { title: "HuggingFace Open LLM Leaderboard", url: "https://huggingface.co/spaces/open-llm-leaderboard/open_llm_leaderboard", required: false }, { title: "LLM 模型参数量与显存计算指南", url: "https://huggingface.co/docs/transformers/perf_train_gpu_one", required: false }], checkpoint: "能在 HuggingFace 上找到 ≤ 3B 的开源中文/英文模型，并成功 AutoModelForCausalLM.from_pretrained 加载" },
+        }, duration: "1.5小时", resources: [B_LLM_FINETUNE, R_HF_TRANSFORMERS, { title: "HuggingFace Open LLM Leaderboard", url: "https://huggingface.co/spaces/open-llm-leaderboard/open_llm_leaderboard", required: false, type: "article", source: "official" }, { title: "LLM 模型参数量与显存计算指南", url: "https://huggingface.co/docs/transformers/perf_train_gpu_one", required: false, type: "doc", source: "official" }], checkpoint: "能在 HuggingFace 上找到 ≤ 3B 的开源中文/英文模型，并成功 AutoModelForCausalLM.from_pretrained 加载" },
       { day: 2, title: "LoRA：Low-Rank Adaptation",
         summary: "深入理解LoRA低秩适配原理，用PEFT库实现LoRA微调包装。", content: {
           objective: "今天你将学习LoRA（Low-Rank Adaptation）——大模型高效微调的核心技术。学完后能理解LoRA的原理、为什么能大幅减少参数量、如何用PEFT库给模型加LoRA适配器。LoRA让消费级GPU也能微调大模型，是LLM时代最具革命性的技术之一。",
@@ -2608,7 +2608,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "从零理解并实现LoRA：1）手动模拟LoRA：构造一个100×100的权重矩阵W，初始化两个低秩矩阵B(100×r)和A(r×100)，r=4。计算W'=W+BA，验证W'的秩最多为r+原秩。手动计算参数量对比。2）PEFT库安装与使用：安装peft库，加载一个预训练模型（如gpt2或TinyLlama）。3）LoRA配置：创建LoraConfig，设置r=8、lora_alpha=16、target_modules（如['q_proj', 'v_proj']）、task_type='CAUSAL_LM'。4）包装模型：用get_peft_model(model, lora_config)得到LoRA包装的模型。5）参数量对比：打印可训练参数量和总参数量，计算比例，确认只有不到1%的参数可训练。6）前向传播验证：输入一个样本，确认前向传播正常，loss可以反向传播。7）消融实验：测试不同r值（4/8/16/32）的参数量变化，理解秩的大小如何影响模型容量。8）（可选）手动实现一个简易LoRA线性层，加深理解。",
           deep_dive: "LoRA虽然简单，但它背后的思想深刻影响了整个领域：1）为什么LoRA有效？直觉解释：大模型的权重是低秩的——权重矩阵的有效秩远小于其维度。微调时，权重的更新量ΔW也是低秩的。所以用低秩矩阵来近似ΔW是合理的。2）LoRA的变体和扩展：AdaLoRA（自适应分配秩给不同模块）、LoRA-FA（冻结A只训B）、DoRA（Weight-Decomposed Low-Rank，将权重分解为幅度和方向，LoRA只学方向）、LoKr（用Kronecker积进一步压缩）等。3）LoRA不止用于线性层：还可以扩展到Conv2d（卷积层）、Embedding层，甚至Transformer的其他组件。4）LoRA与全参数微调的差距：在很多任务上，LoRA的效果可以接近甚至达到全参数微调的水平，特别是当r足够大、目标模块足够多时。但在某些需要全面调整的任务（如继续预训练）上，全参数微调仍然更好。5）LoRA的模块化优势：可以为不同任务训练不同的LoRA适配器，使用时切换适配器即可，不需要存储多个完整模型。这在多任务场景下非常有用。6）LoRA的局限：如果r太小，表达能力不足；r太大，参数优势不明显。而且LoRA在某些需要修改底层特征的任务上可能效果不好。理解LoRA的原理和边界，能让你在实际项目中做出正确的选择。"
-        }, duration: "2小时", resources: [R_HF_PEFT, R_LORA_PAPER, { title: "HuggingFace PEFT 示例代码", url: "https://github.com/huggingface/peft/tree/main/examples", required: false }, { title: "LoRA 直觉解释（英文博客）", url: "https://magazine.sebastianraschka.com/p/lora-and-dora-from-scratch", required: false }], checkpoint: "能把任何一个 HF CausalLM 用 PEFT LoRA 包装，打印 trainable params < 1%" },
+        }, duration: "2小时", resources: [R_HF_PEFT, R_LORA_PAPER, { title: "HuggingFace PEFT 示例代码", url: "https://github.com/huggingface/peft/tree/main/examples", required: false, type: "article", source: "github" }, { title: "LoRA 直觉解释（英文博客）", url: "https://magazine.sebastianraschka.com/p/lora-and-dora-from-scratch", required: false, type: "article", source: "official" }], checkpoint: "能把任何一个 HF CausalLM 用 PEFT LoRA 包装，打印 trainable params < 1%" },
       { day: 3, title: "4-bit 量化 + QLoRA",
         summary: "掌握4位量化与QLoRA技术，在消费级GPU上微调7B模型。", content: {
           objective: "今天你将学习4-bit量化和QLoRA——让消费级GPU也能微调7B甚至更大模型的关键技术。学完后能理解量化原理、用bitsandbytes加载4-bit模型、配置QLoRA训练。QLoRA是LLM微调的里程碑，它大大降低了大模型微调的硬件门槛。",
@@ -2621,7 +2621,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完整的QLoRA环境搭建与验证：1）安装bitsandbytes库，验证安装成功（注意Windows上的安装可能需要额外配置）。2）4-bit模型加载：用AutoModelForCausalLM.from_pretrained加载模型，配置load_in_4bit=True、bnb_4bit_compute_dtype=torch.bfloat16、bnb_4bit_use_double_quant=True、bnb_4bit_quant_type='nf4'。3）显存对比：对比fp16和4-bit加载同一个模型的显存占用差异，记录具体数值。4）推理验证：用4-bit量化模型做推理，生成一段文本，对比fp16模型的输出——质量应该接近。5）QLoRA训练配置：将4-bit量化模型与LoRA结合——用PEFT包装4-bit模型，设置LoRA配置。6）训练测试：在一个小数据集上跑几步训练，确认不会OOM，loss在下降。7）优化器配置：使用paged_adamw_8bit优化器（来自bitsandbytes），进一步节省显存。8）显存账单：详细计算7B模型QLoRA训练的显存构成——模型权重（4-bit约4GB）、LoRA参数（很小）、激活（取决于batch和seq_len）、优化器状态（paged）、梯度等。",
           deep_dive: "量化是一个很深的技术领域，QLoRA只是其中的一个应用：1）量化的基本原理：将连续的高精度浮点数映射到离散的低比特整数，减少存储和计算。核心是尽量减少精度损失。2）量化类型：按量化时机分——训练后量化（PTQ，训练完再量化，简单但精度损失大）、量化感知训练（QAT，训练时就模拟量化，精度更高）。按位宽分——8-bit、4-bit、3-bit、2-bit、1-bit（极端压缩）。3）量化方法：对称量化vs非对称量化、逐通道量化vs逐张量量化、KL散度校准、AWQ（Activation-aware Weight Quantization，考虑激活分布的权重量化）、GPTQ（基于二阶信息的量化）等。4）QLoRA vs 其他量化训练方法：之前的方法如8-bit Adam、Zero-Redundancy Optimizer等各有局限。QLoRA的创新在于NF4量化、双重量化、分页优化器的结合，在4-bit下也能达到接近全精度的微调效果。5）量化的实际效果：4-bit量化在大多数任务上精度损失很小（<1%），但在某些对精度敏感的任务（如数学推理）上可能下降较多。6）推理时的量化：除了训练，量化对推理也很重要——量化后的模型更小、更快。GPTQ、AWQ等方法专门为推理优化，在4-bit下也能很快。7）未来趋势：随着模型越来越大，量化的重要性只会增加。更低的比特数（3-bit、2-bit）、混合精度量化、硬件感知的量化等都是研究热点。理解量化的底层原理，能让你更好地使用这些工具。"
-        }, duration: "2小时", resources: [R_HF_PEFT, { title: "QLoRA 论文", url: "https://arxiv.org/abs/2305.14314", required: true }, { title: "bitsandbytes 文档", url: "https://huggingface.co/docs/bitsandbytes/index", required: false }, { title: "HuggingFace 量化指南", url: "https://huggingface.co/docs/transformers/quantization", required: false }], checkpoint: "能在 24GB GPU 上成功 4bit 量化加载一个 7B 模型并跑一次 generate" },
+        }, duration: "2小时", resources: [R_HF_PEFT, { title: "QLoRA 论文", url: "https://arxiv.org/abs/2305.14314", required: true, type: "paper", source: "academic" }, { title: "bitsandbytes 文档", url: "https://huggingface.co/docs/bitsandbytes/index", required: false, type: "doc", source: "official" }, { title: "HuggingFace 量化指南", url: "https://huggingface.co/docs/transformers/quantization", required: false, type: "doc", source: "official" }], checkpoint: "能在 24GB GPU 上成功 4bit 量化加载一个 7B 模型并跑一次 generate" },
       { day: 4, title: "聊天数据格式 ChatML",
         summary: "掌握聊天数据格式ChatML，理解对话模板与损失掩码策略。", content: {
           objective: "今天你将学习聊天数据格式ChatML以及对话模板的重要性。学完后能理解多轮对话的组织方式、不同模型的聊天模板差异、训练时为什么只计算assistant的损失。正确的数据格式是微调效果的关键，格式不对可能导致训练完全失败。",
@@ -2634,7 +2634,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "深入理解并实践聊天数据格式：1）ChatML格式学习：构造一个3轮对话的例子——system设定「你是一个编程助手」、user问第一个问题、assistant回答、user追问、assistant再回答。2）不同模板对比：查看2-3个不同模型（如Qwen、Mistral、Llama）的chat_template，对比它们的特殊token和格式差异。3）apply_chat_template练习：加载一个带chat_template的tokenizer，用apply_chat_template()方法将你的对话列表转换为模型输入文本。打印输出，观察特殊token是如何插入的。4）token级分析：将格式化后的文本编码为token IDs，逐个token标注它属于哪个角色（system/user/assistant）。5）损失掩码实现：手动实现一个生成labels的函数——将system和user部分的token设为-100（PyTorch中忽略的索引），只保留assistant部分的token ID。确认只有assistant的token会被计算损失。6）边界情况处理：思考多轮对话中，每一轮的边界在哪里？最后一轮没有assistant回复怎么办？7）数据清洗原则：列出5点高质量聊天数据的标准（如格式正确、回复完整、角色一致、无截断、无错误标签）。",
           deep_dive: "聊天数据格式看起来简单，但它是微调成功的关键，有很多深层问题值得思考：1）为什么模板必须严格匹配？因为模型是在特定格式的数据上训练的，如果你的微调数据格式与预训练/对齐时的格式不一致，模型会「困惑」——它不认识新的格式，效果会大打折扣。这也是为什么不同模型要严格遵守各自的模板。2）System prompt的作用：system消息设定了模型的行为准则和身份。它的影响很大——同样的用户输入，不同的system prompt会导致完全不同的回复风格。但注意：不是所有模型都同样重视system prompt，有的模型更倾向于遵循最近的指令。3）多轮对话的上下文管理：真实的聊天是多轮的，上下文越长，信息越丰富，但计算成本也越高。训练时如何处理超长对话？常用方法：截断（从前面截断，保留最近的）、滑动窗口、按对话轮次切分等。4）数据质量远重于数量：1000条高质量的精心筛选的对话数据，效果往往优于10万条低质量的爬取数据。质量体现在：指令的多样性、回复的准确性、格式的正确性、无有害内容等。5）数据格式的标准化：虽然不同模型模板不同，但ChatML提供了一种统一的表示方式。HuggingFace的chat template机制让我们可以用同一份数据，通过不同的模板适配不同的模型。6）未来趋势：随着模型的发展，可能会有更标准化的对话格式出现。理解当前的格式和它们的设计逻辑，能帮你快速适配新模型。"
-        }, duration: "1.5小时", resources: [R_HF_TRANSFORMERS, { title: "HuggingFace Chat 模板指南", url: "https://huggingface.co/docs/transformers/chat_templating", required: true }, { title: "OpenAI ChatML 格式说明", url: "https://github.com/openai/openai-python/blob/main/chatml.md", required: false }], checkpoint: "能用 apply_chat_template 把一组对话转为模型可训练的 text" },
+        }, duration: "1.5小时", resources: [R_HF_TRANSFORMERS, { title: "HuggingFace Chat 模板指南", url: "https://huggingface.co/docs/transformers/chat_templating", required: true, type: "doc", source: "official" }, { title: "OpenAI ChatML 格式说明", url: "https://github.com/openai/openai-python/blob/main/chatml.md", required: false, type: "article", source: "github" }], checkpoint: "能用 apply_chat_template 把一组对话转为模型可训练的 text" },
       { day: 5, title: "准备一个自定义微调数据集",
         summary: "构建高质量的自定义微调数据集，掌握数据准备与分析的完整流程。", content: {
           objective: "今天你将学习如何准备一个高质量的自定义微调数据集，从场景定义、数据收集到清洗分析。学完后能定义微调目标、收集/合成数据、清洗质检、做数据分析。数据质量决定微调效果的上限，准备数据的时间往往比训练时间更有价值。",
@@ -2647,7 +2647,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "从零构建一个自定义微调数据集：1）场景定义：选择一个你感兴趣的垂直场景——如编程助手、影评生成、客服机器人、数学题讲解、知识问答等。场景越具体越好。2）数据量规划：根据场景和模型大小，规划数据量——至少100条起步，1k-10k条效果较好，更多不一定更好。3）数据收集：选择2-3种数据来源方式——可以从公开数据集筛选、用API合成（如果有条件）、自己人工编写一部分。目标至少100-500条高质量样本。4）数据清洗：编写清洗脚本，检查并过滤：a）格式错误（缺字段、角色不对）；b）回复过短或过长（比如<10个token或>2000个token）；c）重复或高度相似的样本（去重）；d）低质量回复（如「我无法回答」、废话、错误信息）；e）有害或不当内容。5）数据分析：统计并可视化：a）总样本数、每轮对话的消息数分布；b）user和assistant消息的token长度分布直方图；c）整体对话长度分布，确定合适的max_seq_len（覆盖80-90%的样本）；d）按指令类型分类统计。6）数据集构建：将数据保存为JSONL格式，按95/5比例划分为train和validation集。7）质量抽样：随机抽取20条，人工评分（1-5分），估算整体质量。",
           deep_dive: "数据是LLM微调中最重要也最容易被忽视的环节，很多有经验的从业者认为「数据决定一切」：1）合成数据的艺术：用更强的模型（如GPT-4）来生成训练数据，是现在非常常用的方法。关键在于：设计好的prompt让输出质量高、多样性足。技巧包括：给示例、设定角色、分步生成、让模型自我反思改进等。2）数据配比的艺术：不同类型的数据比例很重要。比如在通用对话模型中，推理类数据、创意写作类、知识问答类的比例会影响模型的性格和能力偏向。3）数据污染与数据泄露：要确保验证集和测试集的数据没有出现在训练集中。也要注意数据是否来自模型的训练数据（如果是，效果会虚高）。4）从课程学习中获得启发：先给模型简单的样本，再逐渐增加难度，有时候比随机混合效果更好。5）数据飞轮：上线后收集用户的真实对话数据，筛选出有价值的，经过人工审核后加入训练集，再微调——模型越用越好，形成正向循环。这是很多成功产品的秘诀。6）数据标注的质量控制：如果需要人工标注或审核，建立质量控制流程——双人标注+一致性检查、抽样质检、标注指南文档、定期培训等。7）成本与收益的平衡：收集和清洗数据需要时间和成本，不是越多越好。建议从小数据集开始（几百条），先验证pipeline和效果，再逐步增加数据。很多时候，1k条高质量数据就足够看到明显的效果了。"
-        }, duration: "2小时", resources: [{ title: "HuggingFace Datasets", url: "https://huggingface.co/docs/datasets/", required: true }, { title: "Alpaca 数据集（指令微调经典数据）", url: "https://huggingface.co/datasets/tatsu-lab/alpaca", required: false }, { title: "BELLE 中文指令数据", url: "https://github.com/LianjiaTech/BELLE", required: false }], checkpoint: "有一个自定义的对话数据集被加载成 Dataset，并能 tokenize 成 features" },
+        }, duration: "2小时", resources: [{ title: "HuggingFace Datasets", url: "https://huggingface.co/docs/datasets/", required: true, type: "doc", source: "official" }, { title: "Alpaca 数据集（指令微调经典数据）", url: "https://huggingface.co/datasets/tatsu-lab/alpaca", required: false, type: "article", source: "official" }, { title: "BELLE 中文指令数据", url: "https://github.com/LianjiaTech/BELLE", required: false, type: "repo", source: "github" }], checkpoint: "有一个自定义的对话数据集被加载成 Dataset，并能 tokenize 成 features" },
       { day: 6, title: "SFTTrainer 训练循环",
         summary: "使用TRL的SFTTrainer完成监督微调，掌握完整训练流程与常见问题诊断。", content: {
           objective: "今天你将学习使用TRL库的SFTTrainer来完成LLM的监督微调（SFT）。学完后能配置SFTTrainer、启动训练、监控训练过程、诊断常见问题。SFT是LLM微调的第一步，也是最基础的技术，掌握它你就能定制自己的大模型了。",
@@ -2660,7 +2660,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成一次完整的SFT训练：1）环境准备：确保安装了transformers、datasets、peft、trl、accelerate、bitsandbytes等库。2）数据加载：用load_dataset加载你第5天准备的数据集（或一个公开数据集如timdettmers/openassistant-guanaco）。3）模型加载：用4-bit量化加载基座模型（选择7B或更小的，根据你的显存）。4）LoRA配置：创建LoraConfig，r=8、lora_alpha=16、target_modules根据模型架构设置（如q_proj,v_proj,k_proj,o_proj,gate_proj等）、lora_dropout=0.05、bias='none'、task_type='CAUSAL_LM'。5）SFTTrainer配置：设置TrainingArguments——output_dir、per_device_train_batch_size（如1-4）、gradient_accumulation_steps（如4-8）、learning_rate（2e-4）、num_train_epochs（3）、logging_steps（10）、save_strategy='epoch'、fp16=True、optim='paged_adamw_8bit'、lr_scheduler_type='cosine'、warmup_ratio=0.03。6）启动训练：创建SFTTrainer实例，设置model、train_dataset、eval_dataset、peft_config、tokenizer、max_seq_length（如1024）。调用train()开始训练。7）监控训练：观察终端输出的loss——应该逐渐下降。如果有wandb或tensorboard，查看曲线图。8）验证：每训练一段时间在验证集上评估，验证loss也应该下降。9）保存：训练完成后，保存LoRA适配器（默认只保存adapter，很小）。",
           deep_dive: "训练LLM是一项工程实践，有很多技巧和经验：1）学习率的选择：这是最重要的超参。LoRA微调的学习率通常比全参数微调大（因为参数少，不容易过拟合）。常用范围1e-4到5e-5。可以用LR Finder来快速找到一个合适的范围。2）Batch size与学习率的关系：更大的batch size通常可以用更大的学习率（线性缩放规则）。如果显存不够，用梯度累积来等效增大batch size。3）训练多少轮合适？对于SFT，通常2-5轮就够了。太多轮会过拟合（模型记住训练数据但泛化变差）。监控验证loss，验证loss开始上升时就该停了。4）数据集打包（Packing）：SFTTrainer支持packing——将多个短序列拼接成一个长序列，提高计算效率，减少padding浪费。但会丢失一些序列边界信息。5）梯度裁剪：LLM训练中梯度可能爆炸，设置max_grad_norm（如1.0）可以防止梯度爆炸。6）数据打乱：一定要在每个epoch打乱训练数据顺序，否则模型可能学到虚假的模式。7）可复现性：设置随机种子（42），确保每次训练结果可复现。8）训练日志的重要性：详细记录每次实验的配置、数据、结果、观察。用表格对比不同实验，找到最优配置。这比盲目试错高效得多。9）当训练效果不好时，按这个顺序排查：数据质量 > 格式正确性 > 学习率 > batch size > epoch数 > LoRA配置 > 模型选择。"
-        }, duration: "3小时", resources: [{ title: "TRL 文档", url: "https://huggingface.co/docs/trl/", required: true }, { title: "HuggingFace Trainer 参数文档", url: "https://huggingface.co/docs/transformers/main_classes/trainer", required: false }, { title: "SFTTrainer 微调实战教程", url: "https://huggingface.co/docs/trl/sft_trainer", required: true }], checkpoint: "成功运行一次微调（1 epoch 即可），loss 曲线下降" },
+        }, duration: "3小时", resources: [{ title: "TRL 文档", url: "https://huggingface.co/docs/trl/", required: true, type: "doc", source: "official" }, { title: "HuggingFace Trainer 参数文档", url: "https://huggingface.co/docs/transformers/main_classes/trainer", required: false, type: "doc", source: "official" }, { title: "SFTTrainer 微调实战教程", url: "https://huggingface.co/docs/trl/sft_trainer", required: true, type: "doc", source: "official" }], checkpoint: "成功运行一次微调（1 epoch 即可），loss 曲线下降" },
       { day: 7, title: "模型合并与保存",
         summary: "掌握LoRA适配器的合并与导出方法，获得独立可用的完整模型。", content: {
           objective: "今天你将学习如何处理训练好的LoRA适配器——合并回基座模型得到完整模型，以及各种保存和导出方式。学完后能合并adapter与base model、保存为独立模型、推送到HuggingFace Hub。模型的管理和交付是项目的重要环节。",
@@ -2673,7 +2673,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成模型合并、验证和导出：1）加载训练好的LoRA适配器：用PeftModel.from_pretrained加载基座模型和你的LoRA权重。确认加载成功，查看adapter是否正确应用。2）合并模型：调用model = model.merge_and_unload()将LoRA权重合并到基座模型中，得到一个完整的普通模型。3）验证合并效果：非常重要！用合并前的adapter模型和合并后的完整模型，对同一个prompt生成文本，对比输出是否一致。如果差异很大，说明合并有问题。4）显存对比：合并前后模型显存占用的变化——合并后不能再用4-bit，应该是fp16。5）保存完整模型：用model.save_pretrained()保存合并后的模型权重，同时用tokenizer.save_pretrained()保存tokenizer和配置。检查输出目录的文件结构。6）格式转换（可选）：如果需要部署，可以导出为GGUF格式（用于llama.cpp，CPU推理）、AWQ/GPTQ格式（量化推理）。7）模型卡编写：创建README.md模型卡，包含：模型介绍、训练数据、训练配置、使用方法（如何加载、如何推理）、性能评估、局限性、许可协议。8）推送Hub（可选）：如果合适，将模型推送到HuggingFace Hub，设置好模型卡和标签。9）版本管理：思考如何管理多个版本的模型——v1、v2，每次迭代的改动和效果对比。",
           deep_dive: "模型管理是MLOps的重要组成部分，随着模型迭代次数增多，管理会变得越来越重要：1）模型版本控制：就像代码有Git，模型也需要版本控制。工具包括DVC（Data Version Control）、MLflow Model Registry、HuggingFace Hub的版本功能等。每个版本应该有：版本号、训练数据版本、训练配置、评估结果、发布时间。2）模型选择的「兼容性矩阵」：LoRA适配器与基座模型是强绑定的——基座模型的版本、类型甚至训练步骤不同，同一个adapter的效果都可能不同。所以保存LoRA时一定要记录对应的基座模型版本（如commit hash）。3）模型格式的生态：现在有很多模型格式——PyTorch原生（.bin/.safetensors）、GGUF（llama.cpp用，CPU/移动端）、GPTQ/AWQ（量化推理）、ONNX（跨框架）、TensorRT（NVIDIA推理加速）。不同格式用于不同场景。4）Safetensors：推荐使用.safetensors格式替代传统的.bin/pytorch_model.bin，它更安全（没有执行任意代码的风险）、加载更快、跨框架。5）模型质量验证：每次合并或转换格式后，都要做基本的质量验证——用一组固定的测试prompt，检查输出质量和风格是否符合预期。最好有自动化的评估pipeline。6）模型瘦身：有时候模型太大，可以只保存需要的部分。比如只保存fp16权重（不保存优化器状态）、用量化格式、用蒸馏压缩等。7）法律与合规：发布模型时要注意许可协议——基座模型的许可证是否允许衍生和商用？训练数据是否有版权问题？这些都是实际项目中必须考虑的。"
-        }, duration: "1.5小时", resources: [R_HF_PEFT, { title: "PEFT 模型合并指南", url: "https://huggingface.co/docs/peft/tutorial/peft_model_config", required: false }, { title: "HuggingFace Hub 模型上传指南", url: "https://huggingface.co/docs/hub/uploading", required: false }], checkpoint: "能产出一个可以独立加载的合并模型，并与原始 base 模型生成对比样本" },
+        }, duration: "1.5小时", resources: [R_HF_PEFT, { title: "PEFT 模型合并指南", url: "https://huggingface.co/docs/peft/tutorial/peft_model_config", required: false, type: "doc", source: "official" }, { title: "HuggingFace Hub 模型上传指南", url: "https://huggingface.co/docs/hub/uploading", required: false, type: "doc", source: "official" }], checkpoint: "能产出一个可以独立加载的合并模型，并与原始 base 模型生成对比样本" },
       { day: 8, title: "推理 pipeline 与采样参数",
         summary: "掌握LLM推理的各种采样策略与参数调节，优化生成质量与多样性。", content: {
           objective: "今天你将深入学习LLM推理的采样策略和参数调优。学完后能理解各种采样方法的原理、根据任务选择合适的参数、调试生成效果。生成质量不仅取决于模型本身，也和采样策略密切相关。掌握这些参数能让你更好地控制模型输出。",
@@ -2686,7 +2686,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "系统地实验各种采样参数的效果：1）准备3-5个不同类型的测试prompt：开放问答、创意写作、推理题、代码生成、对话。2）Greedy基线：设置do_sample=False（greedy），对每个prompt生成结果，作为基线。观察输出特点——是否有重复？是否很死板？3）Temperature实验：固定top_p=0.9，分别测试temperature=0.1、0.3、0.7、1.0、1.5、2.0。对同一个prompt，每个参数生成3次。记录：温度如何影响输出的确定性、多样性、质量？什么温度范围最适合什么类型的任务？4）Top-K实验：固定temperature=0.7，测试top_k=1（等价greedy）、5、20、50、100、全词表。观察top_k大小如何影响输出。5）Top-P实验：测试top_p=0.5、0.7、0.9、0.95、0.99。对比top-p和top-k的效果差异。6）重复惩罚：故意生成一段容易重复的文本（如「写一篇关于春天的文章」），测试repetition_penalty=1.0（无惩罚）、1.1、1.2、1.5的效果。惩罚太大有什么副作用？7）最佳参数总结：根据你的实验，为不同类型的任务推荐最佳参数组合——如代码生成、创意写作、聊天对话、事实问答各用什么参数。8）流式输出：实现streaming输出（TextIteratorStreamer），逐token打印，体验实时生成的效果。",
           deep_dive: "采样策略是一个研究热点，看似简单的生成过程背后有很多学问：1）为什么纯greedy不好？因为局部最优不等于全局最优——每步选最优的，整体不一定最优。而且greedy容易陷入重复循环（比如反复说同样的话），因为模型在某些模式下自我强化。2）Beam Search：维护top-k个候选序列，每步扩展后保留最好的k个，最后选总分最高的。比greedy质量高，但计算量也更大。常用于翻译、摘要等追求准确性的任务。但beam search的输出往往更「无聊」（缺乏多样性）。3）采样策略的发展历史：从greedy到beam search，再到随机采样（纯随机质量不稳定），然后是top-k、top-p等改进的采样方法。现在top-p（nucleus sampling）是最常用的。4）解码策略的副作用：温度太高会导致输出胡言乱语（token概率被拉平，低概率词也可能被选中）。重复惩罚太大可能导致语法错误。top-p太小可能导致输出过于保守。5）对比搜索（Contrastive Search）：一种较新的解码方法，同时考虑模型预测概率和与前面生成的token的相似度（惩罚重复），在生成多样性和一致性之间取得很好的平衡，特别适合中文长文本生成。6）典型采样（Typical Sampling）：选择「最典型」的token（即信息熵接近平均值的），而不是选概率最高的，生成的文本更自然。7）为什么LLM生成会有随机性？因为采样过程本身是随机的（即使固定种子，不同环境下可能也有细微差异，因为浮点运算的顺序可能不同）。8）实际项目中的调参：没有通用的「最佳参数」，需要根据具体任务和模型来调。建议从默认值开始（temperature=0.7, top_p=0.9），根据生成的实际问题来调整——太保守就升温，太发散就降温，重复就加惩罚。"
-        }, duration: "2小时", resources: [R_HF_TRANSFORMERS, { title: "HuggingFace 生成策略文档", url: "https://huggingface.co/docs/transformers/generation_strategies", required: true }, { title: "TextIteratorStreamer 使用示例", url: "https://huggingface.co/docs/transformers/internal/generation_utils", required: false }], checkpoint: "写一个交互式 generate 脚本，支持系统提示 + 用户多轮输入" },
+        }, duration: "2小时", resources: [R_HF_TRANSFORMERS, { title: "HuggingFace 生成策略文档", url: "https://huggingface.co/docs/transformers/generation_strategies", required: true, type: "doc", source: "official" }, { title: "TextIteratorStreamer 使用示例", url: "https://huggingface.co/docs/transformers/internal/generation_utils", required: false, type: "doc", source: "official" }], checkpoint: "写一个交互式 generate 脚本，支持系统提示 + 用户多轮输入" },
       { day: 9, title: "评估：BLEU / ROUGE / 人工成对比较",
         summary: "掌握LLM微调效果的评估方法，从自动指标到人工评估。", content: {
           objective: "今天你将学习如何评估LLM微调的效果，包括自动指标和人工评估。学完后能用BLEU/ROUGE等自动指标快速评估、设计科学的人工评估方案、对比base和微调模型的差异。评估是模型迭代的指南针，没有评估就不知道改进方向。",
@@ -2699,7 +2699,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "设计并执行一次完整的微调效果评估：1）测试集准备：准备30-50条测试prompt，覆盖你的目标场景的各种情况。确保测试集的数据没有出现在训练集中。2）生成结果：分别用base模型（未微调）和你的微调模型，对每个测试prompt生成回答。设置相同的采样参数，确保公平对比。保存所有结果。3）自动指标计算：根据你的任务类型选择合适的指标。如果是摘要/翻译类：用ROUGE/BLEU计算生成文本与参考答案的相似度。如果是通用对话：用BERTScore计算语义相似度。4）自动指标分析：计算base模型和微调模型的平均指标分。指标提升了多少？自动指标能反映真实效果的提升吗？5）人工评估设计：设计一个成对比较的评估方案——对每个测试样本，随机展示base和微调模型的回答（不告诉你哪个是哪个，双盲），评估者从几个维度打分：整体质量、有用性、正确性、风格符合度。6）执行人工评估：至少自己做20-30条的人工对比，记录每条的胜者（base赢/微调赢/平局）和原因。7）结果统计：计算微调模型的胜率（win rate）、平局率、败率。分维度统计各维度的提升情况。8）Bad Case分析：找出微调模型表现不好的例子，分析原因——是训练数据不够？还是指令没学好？还是其他问题？9）改进建议：根据评估结果，提出下一步的改进方向。",
           deep_dive: "评估是LLM研究和应用中最困难也最重要的问题之一，至今没有完美的解决方案：1）为什么评估难？因为语言是开放的——同一个问题可以有很多好的回答方式，不像分类任务有唯一正确答案。而且「好」的定义是主观的，取决于具体场景和用户偏好。2）自动指标的发展：从早期的BLEU/ROUGE（词汇重叠），到BERTScore/BLANC/MoverScore（基于预训练模型的语义相似度），再到LLM-as-a-Judge（用更强的大模型当评委）。自动指标在不断进步，但仍然不能完全替代人类评估。3）用LLM当评委：现在常用的方法是用GPT-4等强模型来评估两个回答的好坏。它的优点是快、成本低、一致性好，而且可以给出详细的评分理由。研究表明，LLM评分与人类评分的相关性可以达到80-90%。但它也有偏见（比如偏好更长的回答、偏好自己风格的回答）。4）评估维度的细化：不要只问「哪个好」，要分解成多个维度——准确性、相关性、完整性、连贯性、风格、安全性、创造性等。不同维度的权重可能不同。5）评估集的重要性：评估集的质量直接决定评估的可信度。好的评估集应该：有代表性（覆盖各种场景和难度）、没有数据泄露（不在训练集中）、数量足够（30-100条起步，越多越可靠）、有标注或参考答案。6）A/B测试：在线评估的金标准。真实用户分成两组，分别用不同模型，统计用户的真实反馈（如点击率、对话轮次、用户满意度）。线上真实行为比离线评估更有说服力。7）但最终，什么是「好」的模型？这取决于你的产品和用户——用户喜欢用、愿意付费、能解决实际问题的就是好模型。技术指标只是手段，用户价值才是目的。理解这一点，能让你在评估时不迷失在数字里。"
-        }, duration: "2小时", resources: [{ title: "sacreBLEU", url: "https://github.com/mjpost/sacrebleu", required: false }, { title: "rouge-score Python 库", url: "https://pypi.org/project/rouge-score/", required: false }, { title: "Chatbot Arena 评估方法参考", url: "https://chat.lmsys.org/", required: false }], checkpoint: "能在测试集上得到一份 base vs 微调的评估表（BLEU/ROUGE + 人工比例）" },
+        }, duration: "2小时", resources: [{ title: "sacreBLEU", url: "https://github.com/mjpost/sacrebleu", required: false, type: "repo", source: "github" }, { title: "rouge-score Python 库", url: "https://pypi.org/project/rouge-score/", required: false, type: "article", source: "official" }, { title: "Chatbot Arena 评估方法参考", url: "https://chat.lmsys.org/", required: false, type: "article", source: "official" }], checkpoint: "能在测试集上得到一份 base vs 微调的评估表（BLEU/ROUGE + 人工比例）" },
       { day: 10, title: "数据质量与超参搜索",
         summary: "系统学习数据质量优化和超参数调优方法，迭代提升微调效果。", content: {
           objective: "今天你将学习如何系统地提升微调效果——从数据质量优化到超参数调优。学完后能诊断常见问题、设计对比实验、通过迭代不断提升模型效果。模型调优是一个科学的过程，需要「假设-实验-验证」的闭环思维，而不是瞎调参数。",
@@ -2712,7 +2712,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "设计并执行一轮系统的超参数实验：1）基线确定：选择你目前最好的配置作为基线（baseline），记录所有超参数和效果指标。2）实验计划：设计4-5组对比实验，每次只改一个参数。建议实验：a）学习率实验：测试lr=5e-5、1e-4、2e-4、5e-4；b）LoRA秩实验：测试r=4、8、16、32（保持alpha=2r）；c）目标模块实验：只加q/v vs 加q/k/v/o vs 加q/k/v/o+gate/up/down MLP层；d）数据量实验：用1/4、1/2、全部数据，看效果随数据量的变化曲线。3）执行实验：按照计划逐一训练，每次实验用相同的随机种子，确保其他条件完全一致。如果算力有限，减少epoch数或用子集，先看趋势。4）结果记录：创建实验记录表格，列包括：实验ID、改动参数、具体值、训练loss、验证loss、评估指标（胜率/分数）、训练时间、备注。5）结果分析：学习率对效果有什么影响？最优lr是多少？LoRA秩越大越好吗？什么时候收益递减？多加目标模块提升明显吗？数据量翻倍效果提升多少？6）最优配置：根据实验结果，推荐一个最优配置。7）验证实验：用最优配置跑一次完整训练，验证效果确实最好。8）下一步计划：基于实验发现，提出下一步的改进方向——是该增加数据？还是调模型？还是换基座？",
           deep_dive: "调参是一门学问，背后有科学的方法论：1）超参数优化（HPO）算法：当参数很多时，手动试太慢了。可以用更高效的方法：网格搜索（遍历所有组合，参数少时可以）、随机搜索（随机采样，比网格搜索高效）、贝叶斯优化（根据已有结果智能选择下一组参数，如Optuna、Weights & Biases的sweep）。但LLM训练成本高，通常只能做少量实验，所以贝叶斯优化比较适合。2）但比HPO更重要的是：你的模型真的有在学习吗？训练前先做「小数据过拟合测试」——用极少的数据（如10条）训练，看模型能不能完全过拟合（loss接近0）。如果连这个都做不到，说明代码或数据有问题，先debug再做其他实验。3）误差分析的优先级：当效果不好时，按这个顺序排查：a）数据问题（数据质量差、格式错、分布不对）；b）训练问题（学习率不对、没有收敛、欠拟合/过拟合）；c）模型问题（基座模型不合适、LoRA容量不够）；d）评估问题（评估方法不对、测试集有问题）。数据和训练问题占了80%。4）消融实验（Ablation Study）：要知道某个组件有没有用，就把它去掉对比——比如想知道MLP层加LoRA有没有用，就做一组加和不加的对比。这是科学研究的基本方法。5）收益递减规律：模型效果提升不是线性的。从60分到80分容易，从80分到90分难，从90分到95分非常难。要判断投入产出比——当前效果是否已经满足需求？继续提升的成本有多高？6）但最有效的提升往往不是调参，而是：更好的基座模型、更多更高质量的数据、更清晰的指令格式。这三个是最大的杠杆。超参优化只是在这个基础上锦上添花。"
-        }, duration: "2小时", resources: [R_HF_PEFT, { title: "Weights & Biases 文档", url: "https://docs.wandb.ai/", required: false }, { title: "LoRA 超参调优经验（英文博客）", url: "https://magazine.sebastianraschka.com/p/lora-and-dora-from-scratch", required: false }], checkpoint: "有至少 2 组实验（不同 r 或不同 lr）的对比记录" },
+        }, duration: "2小时", resources: [R_HF_PEFT, { title: "Weights & Biases 文档", url: "https://docs.wandb.ai/", required: false, type: "doc", source: "official" }, { title: "LoRA 超参调优经验（英文博客）", url: "https://magazine.sebastianraschka.com/p/lora-and-dora-from-scratch", required: false, type: "article", source: "official" }], checkpoint: "有至少 2 组实验（不同 r 或不同 lr）的对比记录" },
       { day: 11, title: "DPO：直接偏好优化",
         summary: "理解DPO直接偏好优化原理，用偏好数据进一步对齐模型。", content: {
           objective: "今天你将学习DPO（Direct Preference Optimization）——一种简单高效的人类偏好对齐方法。学完后能理解RLHF和DPO的区别、DPO的核心原理、准备偏好数据、用TRL跑DPO训练。DPO是RLHF的简化版，效果好且实现简单，现在已经成为对齐的标配。",
@@ -2725,7 +2725,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成一次DPO偏好对齐训练：1）理解RLHF vs DPO：先从概念上理清——RLHF有三步：SFT→训练奖励模型→用PPO强化学习。DPO只有一步：直接用偏好数据优化，绕过了奖励模型和PPO。为什么DPO可以这么做？推导它的损失函数。2）偏好数据准备：构造或找一个偏好数据集。可以从你的SFT数据中，对同一个prompt，生成一个好回答（chosen）和一个差回答（rejected）。或者用公开的偏好数据集（如Anthropic/hh-rlhf）。至少准备50-200对。3）数据格式：DPO需要的格式——prompt、chosen、rejected三个字段。确保chosen确实比rejected更好（质量更高、更符合要求）。4）模型准备：用你之前SFT训练好的模型作为DPO的起点（DPO通常在SFT之后做）。5）DPOTrainer配置：使用TRL的DPOTrainer，设置beta=0.1、学习率（比SFT小一些，如5e-5）、训练轮数（1-3轮）。同样可以结合QLoRA。6）启动训练：运行DPO训练，观察loss的变化。DPO的loss通常比SFT低，而且下降比较平稳。7）效果对比：评估DPO前后的模型变化。重点看：风格是否更符合预期？回答是否更有帮助？有害输出是否减少？8）人工对比：做一次盲测——随机展示SFT模型和DPO模型的回答，看看哪个更「讨人喜欢」。DPO应该在人类偏好上有提升。",
           deep_dive: "对齐（Alignment）是LLM从「有用」到「好用」的关键步骤，也是一个活跃的研究方向：1）为什么需要对齐？预训练模型只是在预测下一个词，它不知道什么是「好」的回答——它可能生成正确但没用的话、可能生成有害内容、可能不愿意帮助用户。对齐就是让模型的行为符合人类的价值观和偏好。2）RLHF的三段式：RLHF（Reinforcement Learning from Human Feedback）是InstructGPT/GPT提出的方法——SFT（监督微调教它做任务）→ RM（训练奖励模型学习人类偏好）→ PPO（用强化学习根据奖励优化模型）。效果好，但实现复杂、训练不稳定、成本高。3）DPO为什么能取代RLHF？DPO从理论上证明了：奖励模型和策略优化可以合并为一步——直接从偏好数据中优化策略。它的损失函数很简洁，训练更稳定，效果和RLHF相当甚至更好。DPO的提出者认为：既然我们最终要的是策略，为什么还要中间的奖励模型呢？4）DPO的变体和后续：IPO（Identity Policy Optimization，改进了DPO的某些问题）、KTO（Preference Optimization with unpaired data，可以用未配对的偏好数据）、ORPO（将SFT和DPO合并为一个阶段）等。对齐方法在快速演进。5）对齐的维度：对齐不是单一维度的。包括：有用性（Helpful）、诚实性（Honest）、无害性（Harmless）——这就是HHH原则。还有公平性、透明性、可控性等。不同维度之间可能有trade-off（比如太无害可能导致 refusals，降低有用性）。6）对齐税（Alignment Tax）：对齐往往会导致模型在某些基准测试上的分数下降，就像交了「税」。因为对齐改变了模型的输出分布，可能偏离了它的「自然」行为。如何在对齐的同时尽量保持能力，是一个重要的研究问题。7）对齐的未来：随着模型越来越强，对齐也越来越重要。现在的方法还比较初级，未来可能会有更先进的对齐技术——比如可扩展监督、过程监督、AI辅助对齐等。"
-        }, duration: "2小时", resources: [{ title: "TRL DPO 文档", url: "https://huggingface.co/docs/trl/dpo_trainer", required: true }, { title: "DPO 论文", url: "https://arxiv.org/abs/2305.18290", required: true }, { title: "Anthropic HH-RLHF 偏好数据", url: "https://huggingface.co/datasets/Anthropic/hh-rlhf", required: false }], checkpoint: "能在一个小偏好数据集上跑通一次 DPO，并能看出偏好倾向变化" },
+        }, duration: "2小时", resources: [{ title: "TRL DPO 文档", url: "https://huggingface.co/docs/trl/dpo_trainer", required: true, type: "doc", source: "official" }, { title: "DPO 论文", url: "https://arxiv.org/abs/2305.18290", required: true, type: "paper", source: "academic" }, { title: "Anthropic HH-RLHF 偏好数据", url: "https://huggingface.co/datasets/Anthropic/hh-rlhf", required: false, type: "article", source: "official" }], checkpoint: "能在一个小偏好数据集上跑通一次 DPO，并能看出偏好倾向变化" },
       { day: 12, title: "vLLM / TGI 推理加速（概念）",
         summary: "了解高性能LLM推理引擎vLLM与TGI，掌握核心优化技术原理。", content: {
           objective: "今天你将学习LLM推理的高性能引擎——vLLM和TGI，理解它们的核心优化技术。学完后能讲清楚为什么vLLM比原生HF快、理解PagedAttention机制、知道什么时候用什么推理框架。推理服务的性能直接决定用户体验和成本，是LLM落地的关键环节。",
@@ -2738,7 +2738,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "深入理解vLLM等推理引擎的工作原理：1）KV缓存的理解：手动模拟推理过程——生成第1个token时需要计算所有token的K和V；生成第2个token时，只需要计算新token的K和V，之前的可以复用。KV缓存就是保存这些中间结果。2）显存计算：估算一个模型的KV缓存大小——公式：2×层数×头数×头维×序列长度×batch_size（以字节为单位，取决于精度）。对一个7B模型（32层、128头、128维、fp16），2048上下文、batch=32，KV缓存需要多少显存？3）内存碎片化问题：为什么朴素的KV缓存会有内存浪费？因为每个请求的长度不同，有的先结束有的还在生成，留下很多空洞。画图理解这个问题。4）PagedAttention原理：学习操作系统的分页思想——将KV缓存分成固定大小的块（page），每个请求的KV缓存由逻辑块组成，物理块可以不连续。用页表记录映射关系。这样就不会有外部碎片了。5）vLLM架构了解：vLLM的核心组件——LLMEngine（主引擎）、Scheduler（调度器）、BlockManager（块管理器）、Worker（执行计算）。理解请求是怎么被调度和处理的。6）TGI了解：Text Generation Inference是HuggingFace的产品，特点是：与HF生态深度集成、支持很多模型、内置很多优化（FlashAttention、动态批处理、量化支持）。7）对比总结：制作一个对比表，比较原生HF generate、vLLM、TGI三个方案的特点、性能、易用性、适用场景。8）（可选，有GPU资源）安装vLLM并启动一个服务，测试吞吐量和延迟。如果没有GPU，就重点理解原理和概念。",
           deep_dive: "LLM推理是一个系统工程问题，涉及算法、系统、硬件多个层面的优化：1）推理优化的层次：从底向上——硬件层（GPU/TPU/NPU、HBM带宽）、算子层（FlashAttention、PagedAttention、融合算子）、模型层（量化、蒸馏、稀疏化、MoE）、服务层（批处理、连续批处理、推测解码、缓存）、调度层（请求调度、优先级队列）。每一层都有优化空间。2）FlashAttention：IO感知的注意力算法，通过分块计算减少GPU HBM和SRAM之间的数据搬运，既快又省显存。是现在大模型推理和训练的标配。FlashAttention-2、FlashAttention-3持续改进。3）推测解码（Speculative Decoding）：用一个小的「草稿模型」快速生成多个候选token，然后用大模型「验证」这些候选是否正确——如果正确就接受，错了就回退。因为大部分时候小模型猜的是对的，所以平均速度可以提升2-3倍。这是「用计算换延迟」的思路。4）连续批处理（Continuous Batching）：不是等整个batch都生成完再处理下一批，而是哪个请求完成了就立刻补新的进来，像流水线一样。大幅提升了吞吐量，特别是在请求长度差异大的场景。5）KV缓存的量化：KV缓存占了很大显存，把它从fp16量化到8-bit甚至4-bit，可以显著增加并发量，而且精度损失很小。6）多轮对话的缓存复用：用户与模型多轮对话时，前面历史的KV缓存其实是一样的，不需要每次都重新计算。可以缓存之前的对话历史，新请求只需要增量计算。7）成本视角：LLM推理成本主要是GPU成本。优化推理就是在降本增效。一个好的推理系统，能在相同的硬件上服务更多用户，单位成本更低。这在大规模部署时非常重要——有时候推理优化的效果比算法改进的业务价值更大。"
-        }, duration: "1.5小时", resources: [{ title: "vLLM 文档", url: "https://docs.vllm.ai/", required: false }, { title: "vLLM PagedAttention 论文", url: "https://arxiv.org/abs/2309.06180", required: false }, { title: "HuggingFace TGI 文档", url: "https://huggingface.co/docs/text-generation-inference/", required: false }], checkpoint: "能解释为什么 vLLM 比原生 HF generate 更高效" },
+        }, duration: "1.5小时", resources: [{ title: "vLLM 文档", url: "https://docs.vllm.ai/", required: false, type: "doc", source: "official" }, { title: "vLLM PagedAttention 论文", url: "https://arxiv.org/abs/2309.06180", required: false, type: "paper", source: "academic" }, { title: "HuggingFace TGI 文档", url: "https://huggingface.co/docs/text-generation-inference/", required: false, type: "doc", source: "official" }], checkpoint: "能解释为什么 vLLM 比原生 HF generate 更高效" },
       { day: 13, title: "聊天 Demo：Gradio / Streamlit",
         summary: "用Gradio快速搭建聊天机器人Demo，实现多轮对话与流式输出。", content: {
           objective: "今天你将用Gradio或Streamlit快速搭建一个聊天机器人Demo，把你微调好的模型变成一个可交互的Web应用。学完后能创建聊天界面、实现多轮对话历史管理、流式输出展示。一个直观的Demo是展示模型效果的最佳方式，也是产品原型的第一步。",
@@ -2751,7 +2751,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "从零搭建一个完整的聊天机器人Demo：1）Gradio安装：安装gradio库。2）基本聊天界面：用gr.Chatbot()创建聊天框，gr.Textbox()创建输入框，gr.Button()创建发送按钮。实现最基本的聊天功能——输入文字，模型回复，显示在聊天框里。3）模型集成：将你的微调模型（或base模型）接入。初始化模型和tokenizer（全局只加载一次）。写一个回复函数：接收用户输入和历史对话，构建prompt，调用模型生成，返回回复。4）多轮对话：正确管理对话历史——将历史消息拼接成正确的chat template格式，每次都把完整的对话历史传给模型。注意控制总长度，超长时可以截断前面的历史。5）流式输出：使用transformers的TextIteratorStreamer，让回复逐字显示，而不是等全部生成完才显示。这会大幅提升用户体验。在Gradio中用yield实现流式更新。6）参数面板：添加侧边栏，包含可调参数：a）system prompt文本框；b）temperature滑块（0.1-2.0）；c）top_p滑块（0.5-1.0）；d）max_new_tokens数字输入；e）repetition_penalty滑块。修改参数后立即生效。7）高级功能：添加「清空对话」按钮、「重新生成」按钮（重新生成最后一条回复）、「停止生成」按钮（中断生成）。8）美化界面：设置标题、描述、示例问题、favicon、主题（gr.themes）。9）测试和体验：自己和它聊10轮，测试各种情况——问问题、闲聊、要求它做任务、长文本输入。体验流畅吗？响应够快吗？",
           deep_dive: "搭建一个Demo很简单，但要做一个体验好的聊天应用，需要考虑很多细节：1）响应速度是第一用户体验：用户发送消息后，越快看到回复越好。流式输出虽然没有变快，但「看起来更快」——用户看到在动，就不会觉得慢。所以流式输出几乎是标配。2）打字机效果的实现：除了TextIteratorStreamer，还可以用server-sent events（SSE）、WebSocket等方式实现。前端负责逐字渲染，控制显示节奏。3）对话历史的管理策略：当对话很长时，怎么办？常见策略：a）截断：保留最近的N轮或N个token；b）摘要：用模型把之前的对话总结成一段摘要，保留摘要+最近几轮；c）滑动窗口：只保留最近的K个token的上下文。不同场景用不同策略。4）错误处理：模型生成失败怎么办？网络异常怎么办？超时怎么办？用户输入为空/太长/不合法怎么办？好的应用应该有友好的错误提示，而不是崩溃或卡死。5）输入预处理：用户输入要做清洗和预处理——去除首尾空白、控制最大长度、敏感词过滤（如果需要）、特殊字符转义等。6）安全与 moderation：公开访问的Demo需要内容安全——防止用户输入有害prompt，也防止模型输出有害内容。可以接入内容审核API，或者自己做简单的过滤。7）用户体验细节：输入框按回车发送、Shift+回车换行、发送后输入框清空并自动聚焦、消息时间戳、复制消息按钮、深色/浅色模式切换、移动端适配等。细节决定品质。8）Demo的目的：Demo不是产品，但它是验证想法、收集反馈、展示成果的好工具。快速做出Demo，然后根据反馈迭代，是创业和产品开发的最佳实践之一。"
-        }, duration: "2小时", resources: [R_GRADIO, { title: "Gradio Chatbot 组件文档", url: "https://www.gradio.app/docs/gradio/chatbot", required: true }, { title: "Streamlit Chat 文档", url: "https://docs.streamlit.io/library/api-reference/chat", required: false }], checkpoint: "有一个浏览器可打开的聊天 Demo，能多轮对话" },
+        }, duration: "2小时", resources: [R_GRADIO, { title: "Gradio Chatbot 组件文档", url: "https://www.gradio.app/docs/gradio/chatbot", required: true, type: "doc", source: "official" }, { title: "Streamlit Chat 文档", url: "https://docs.streamlit.io/library/api-reference/chat", required: false, type: "doc", source: "official" }], checkpoint: "有一个浏览器可打开的聊天 Demo，能多轮对话" },
       { day: 14, title: "综合：构建一个垂直领域小助手",
         summary: "完成一个端到端的垂直领域LLM微调项目，串联所有知识。", content: {
           objective: "今天你将综合运用前13天所学的所有知识，完成一个端到端的垂直领域大模型助手项目。从选题、数据准备、SFT微调、评估优化、到DPO对齐和聊天Demo，走通完整的LLM定制化流程。这是检验你LLM微调学习成果的综合项目，也是非常硬核的简历项目。",
@@ -2764,7 +2764,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成一个完整的垂直领域小助手项目：1）选题与规划：选择一个你感兴趣且有数据可得的垂直领域。定义清楚：目标用户是谁？解决什么问题？成功标准是什么？写一个简单的项目计划。2）数据准备：收集/合成至少200-500条高质量的指令-回答对或多轮对话数据。做详细的数据分析和清洗。划分训练/验证/测试集。3）基座模型选择：根据你的硬件和场景，选择合适的基座模型（如TinyLlama-1.1B/Qwen-1.8B/Mistral-7B等）。4）SFT微调：配置QLoRA，启动SFT训练。监控训练过程，调整超参数，保存最佳模型。5）评估：建立评估集，从自动指标和人工评估两个维度，对比基座模型和微调模型的效果。至少做20对人工对比，计算胜率。6）迭代优化：根据评估结果，迭代改进——如果数据不够就加数据，如果格式不对就改格式，如果超参不好就调参。至少做2轮迭代，看到明显进步。7）（可选）DPO对齐：准备偏好数据，做一轮DPO，让模型的回答更符合人类偏好。8）Demo搭建：用Gradio做一个聊天Demo，支持多轮对话、流式输出、参数调节。确保体验流畅。9）部署打包：编写Dockerfile和docker-compose.yml，让整个服务可以一键启动。10）文档撰写：写一份详细的README.md，包含：项目介绍、功能特点、架构图、安装步骤、使用方法、训练过程、评估结果（附对比图表）、演示截图、局限性、未来改进方向、许可证。11）最终演示：录一个2-3分钟的演示视频，展示你的小助手的能力。",
           deep_dive: "完成一个项目只是开始，真正的价值在于从项目中学习和成长。以下是从「做项目」到「做好项目」的进阶建议：1）结果思维 vs 过程思维：不要只追求「做完了」，更要关注「学到了什么」。每做一个决策，都记录下你的理由和结果，事后复盘——哪些决策对了，哪些错了，为什么。2）数据飞轮的设计：一个好的项目应该有自我改进的机制。设计数据飞轮：用户使用→收集反馈→筛选高质量数据→重新训练→模型更好→更多用户。这是产品级项目和玩具项目的本质区别。3）消融实验的价值：不要只跑一个模型就完事了。做几组对比实验——不同数据量、不同模型大小、不同方法。用数据回答问题：数据量翻倍能提升多少？大模型比小模型好多少？DPO比SFT好多少？这些都是非常有价值的洞察。4）Bad Case驱动的迭代：不要盯着平均指标，要深入具体的失败案例。每个bad case都是一个改进机会。分类统计bad case的原因，按频率排序，优先解决最多的那类问题。这比盲目调参高效得多。5）从实验室到产品的Gap：一个能跑通的Demo离一个真正的产品还有很远。产品需要考虑：稳定性（99.9%的时间可用）、安全性（没有有害输出）、性能（响应够快、并发够高）、成本（每个请求多少钱）、用户体验（界面好用）、运维监控（出了问题能发现）。这些都是工程能力的体现。6）简历和作品集：这个项目可以作为你简历上的硬核项目。但不要只写「微调了大模型」，要写清楚：用了什么技术栈、解决了什么问题、达到了什么效果（用数据说话）、你的贡献是什么、有什么亮点（创新点、工程复杂度、业务价值）。7）持续学习：LLM领域发展太快了，今天的最佳实践可能半年后就过时了。保持好奇心，持续关注新的论文、工具、框架，不断更新你的知识体系。这是AI从业者的终身修行。"
-        }, duration: "3小时", resources: [R_HF_PEFT, R_HF_TRANSFORMERS, R_GRADIO, { title: "HuggingFace 微调最佳实践", url: "https://huggingface.co/docs/transformers/training", required: false }], checkpoint: "一个可运行的聊天小助手 + 评估报告 + 部署说明" }],
+        }, duration: "3小时", resources: [R_HF_PEFT, R_HF_TRANSFORMERS, R_GRADIO, { title: "HuggingFace 微调最佳实践", url: "https://huggingface.co/docs/transformers/training", required: false, type: "doc", source: "official" }], checkpoint: "一个可运行的聊天小助手 + 评估报告 + 部署说明" }],
   },
 
   // =====================================================
@@ -2783,7 +2783,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["独立完成可演示项目", "产出简历可用作品集"],
     relatedIntel: ["002-yolo", "003-lora-qlora", "007-docker", "018-mlflow"],
     relatedTools: ["Docker", "MLflow", "Streamlit", "Gradio"],
-    relatedTerms: ["mlops", "deployment", "monitoring"],
+    relatedTerms: ["mlops", "deployment", "monitoring"], relatedNodes: ["devops-mlops", "llm-evaluation"],
     dailyTasks: [
       { day: 1, title: "选题与需求文档",
         summary: "完成项目选题、需求分析和PRD文档，搭建项目仓库基础框架。", content: {
@@ -2797,7 +2797,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成选题与项目启动：1）头脑风暴：列出3-5个你感兴趣的项目想法，可以是CV方向（如图像分类、目标检测、OCR）、NLP方向（如文本分类、智能问答、摘要生成）、多模态方向（如图文检索、图像描述）。2）可行性评估：对每个想法从三个维度打分（1-5分）——数据可得性（能否拿到足够数据）、技术难度（2周内能否完成）、个人兴趣（你有多感兴趣）。选总分最高的那个。3）PRD撰写：写一份PRD.md，包含：a）项目背景和目标（解决什么问题，为谁解决）；b）功能列表（核心功能+次要功能+未来功能）；c）MVP范围（第一版做什么，不做什么，明确边界）；d）技术栈选型（前端/后端/模型/部署）；e）里程碑计划（按周或按天拆分）；f）风险与应对（可能遇到的问题和备选方案）。4）仓库搭建：创建GitHub仓库（或本地Git仓库），初始化项目结构。至少包含：README.md、LICENSE（选MIT或Apache 2.0）、.gitignore、requirements.txt、docs/目录、scripts/目录、models/目录（放模型相关）、data/目录（.gitignore掉数据文件）。5）README初稿：写一版README，包含项目简介、功能特点、技术栈、安装使用方法（占位符也行）、项目结构、路线图。6）提交第一个commit，打tag v0.1.0。",
           deep_dive: "做项目和做作业是完全不同的——项目是开放的、没有标准答案的，更接近真实工作。以下是一些项目管理的深层建议：1）为什么要写PRD？很多人做项目上来就写代码，结果做着做着就偏了，或者不知道什么时候算做完。PRD的作用是「先想清楚再动手」——明确做什么、不做什么、做到什么程度算完成。花1天写PRD，能省后面10天的返工。2）MVP思维：Minimum Viable Product，最小可行产品。不要追求完美，先做一个能跑通的最小版本，然后再迭代。很多人一开始就想做一个大而全的系统，结果最后做不完。做减法比做加法更难，但也更重要。3）时间管理：14天说长不长说短不短。建议按「7-2-1」分配——70%时间做核心功能，20%做优化和润色，10%留作缓冲。一定要留出buffer，因为实际开发中总会有各种意外。4）风险预判：提前想清楚可能会遇到什么问题，比如数据拿不到、模型训不出来、某个技术不会用。准备好Plan B。5）版本控制：Git不是只有提交代码的功能。善用分支（feature分支开发）、tag（里程碑版本）、commit message规范。这不仅是多人协作的需要，一个人做项目也能让你更有条理。6）文档的重要性：代码写给机器看，文档写给人看——包括两周后的你自己。好的文档让项目的价值翻倍——别人能看懂、能用、能复现，你的项目才真正有影响力。7）从「作业思维」切换到「产品思维」：作业是老师布置的、有标准答案的，做完就完了。产品是给用户用的、没有标准答案的，需要不断迭代。试着用做产品的心态来做这个项目，你的收获会大很多。"
-        }, duration: "2小时", resources: [B_D2L_LIMU, { title: "产品经理 PRD 模板", url: "https://www.productplan.com/glossary/product-requirements-document/", required: false }, { title: "GitHub README 最佳实践", url: "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes", required: false }, { title: "选择开源许可证", url: "https://choosealicense.com/", required: false }], checkpoint: "产出一份 PRD.md 与 GitHub 仓库（含 MIT/Apache 协议 + README）" },
+        }, duration: "2小时", resources: [B_D2L_LIMU, { title: "产品经理 PRD 模板", url: "https://www.productplan.com/glossary/product-requirements-document/", required: false, type: "article", source: "official" }, { title: "GitHub README 最佳实践", url: "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes", required: false, type: "repo", source: "github" }, { title: "选择开源许可证", url: "https://choosealicense.com/", required: false, type: "article", source: "official" }], checkpoint: "产出一份 PRD.md 与 GitHub 仓库（含 MIT/Apache 协议 + README）" },
       { day: 2, title: "数据收集与标注方案",
         summary: "完成数据来源规划、数据标注方案设计和数据质量保障体系建立。", content: {
           objective: "今天你将完成项目的数据准备阶段——规划数据来源、设计标注方案、建立质量保障体系。学完后能评估不同数据来源的优劣、选择合适的标注工具、制定标注规范和质检流程。数据是AI项目的基石，数据质量直接决定模型效果的上限。",
@@ -2810,7 +2810,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成数据准备方案设计与初步实施：1）数据来源调研：针对你的项目，列出3-5种可能的数据来源。评估每个来源的：数据量、数据质量、获取难度、许可证、成本。选择1-2个主要来源，制定获取计划。2）数据规模估算：你需要多少数据才能让模型达到可用的效果？考虑到时间和资源，目标数据量是多少？（如CV检测至少200张图，NLP分类至少1000条，LLM微调至少200条对话）3）标注方案设计：如果你的数据需要标注：a）选择标注工具（推荐Label Studio，支持多种任务）；b）写一份标注规范文档（annotation_guide.md），定义清楚：标注什么、不标注什么、边界情况怎么处理、标签体系是什么；c）设计标注流程：数据上传→标注→质检→入库。4）质量控制方案：怎么保证标注质量？至少包含：a）标注者培训（先看规范、试标10个、通过考核才能正式标）；b）抽样质检（每个标注者抽10%检查）；c）一致性检查（如果多人标注，计算IAA）；d）错误反馈机制（发现错误及时纠正并更新规范）。5）数据探索：如果已经有数据了，做一次EDA（探索性数据分析）——统计类别分布、样本大小分布、数据质量问题（模糊、噪声、缺失值等）。6）数据目录规划：设计数据存储的目录结构（如data/raw、data/interim、data/processed），规划数据版本管理（用DVC或简单的文件命名版本）。7）合规性检查：数据来源是否合法？是否有版权问题？是否包含个人隐私？",
           deep_dive: "数据工作往往是AI项目中耗时最长、最琐碎，但也最影响最终效果的部分。深入理解数据的价值：1）数据>模型>调参：很多人痴迷于调参和换模型，但数据质量的提升往往带来最大的收益。Andrew Ng说过「以数据为中心的AI」——把注意力从模型转移到数据上，这是行业的大趋势。2）数据飞轮：一个好的项目应该有数据飞轮效应——上线后收集用户反馈的bad case，补充到训练集中，模型越来越好，吸引更多用户，产生更多数据。这是正向循环。3）标注成本的真相：很多人低估了标注的成本和难度。实际上，标注往往是项目中最贵的部分之一——不仅是金钱成本，还有时间成本和质量控制成本。能用公开数据就用公开数据，能合成的数据就合成，尽量减少人工标注量。4）弱监督与半监督：如果标注数据不够，可以用弱监督（用规则或启发式方法生成伪标签）、半监督（少量标注+大量未标注）、主动学习（选择最有价值的样本去标注）等方法来降低标注成本。5）数据偏差与公平性：数据集中容易有各种偏差——选择偏差（某些类型的样本过多或过少）、测量偏差（标注方式有系统性错误）、确认偏差（标注者只看自己想看的）。这些偏差会被模型学习并放大，导致不公平的结果。6）数据版本管理：就像代码有Git，数据也需要版本控制。DVC（Data Version Control）是常用工具，可以追踪数据版本、复现实验、协作共享。7）数据安全与隐私：如果数据包含个人信息，要注意合规（如GDPR、个人信息保护法）。该脱敏的脱敏，该加密的加密。数据泄露的后果很严重。8）从小处着手：不要一开始就追求海量数据。先拿小批量数据（100-200个）跑通整个流程，验证pipeline的可行性，然后再逐步增加数据量。这比先收集几个月数据再发现方法不对高效得多。"
-        }, duration: "2小时", resources: [{ title: "Label Studio", url: "https://labelstud.io/", required: false }, { title: "CVAT 标注平台", url: "https://www.cvat.ai/", required: false }, { title: "Argilla 数据标注", url: "https://docs.argilla.io/", required: false }, { title: "HuggingFace Datasets", url: "https://huggingface.co/docs/datasets/", required: false }], checkpoint: "至少 200 条（CV/NLP）或 1000 条（LLM）已标注样本 + 标注规范文档" },
+        }, duration: "2小时", resources: [{ title: "Label Studio", url: "https://labelstud.io/", required: false, type: "article", source: "official" }, { title: "CVAT 标注平台", url: "https://www.cvat.ai/", required: false, type: "article", source: "official" }, { title: "Argilla 数据标注", url: "https://docs.argilla.io/", required: false, type: "doc", source: "official" }, { title: "HuggingFace Datasets", url: "https://huggingface.co/docs/datasets/", required: false, type: "doc", source: "official" }], checkpoint: "至少 200 条（CV/NLP）或 1000 条（LLM）已标注样本 + 标注规范文档" },
       { day: 3, title: "技术选型与 Baseline",
         summary: "完成技术选型、环境搭建和基线模型训练，建立项目基准。", content: {
           objective: "今天你将完成项目的技术选型并跑通第一个基线模型。学完后能根据项目需求选择合适的技术栈、搭建可复现的实验环境、训练第一个基线模型并记录基线指标。基线是迭代的起点，没有基线就不知道有没有进步。",
@@ -2823,7 +2823,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成技术选型与基线模型建立：1）技术栈确认：最终确定你的技术选型，包括：a）深度学习框架（PyTorch/TensorFlow/PaddlePaddle）；b）模型库（torchvision/transformers/ultralytics等）；c）辅助工具（数据处理、训练、评估、可视化等）。把选择理由写下来。2）环境搭建：创建独立的Python环境（conda或venv），安装所有依赖。生成requirements.txt，固定每个包的版本号（pip freeze > requirements.txt）。如果有GPU，确认CUDA版本和PyTorch版本匹配。3）项目结构搭建：建立标准的项目目录结构，至少包含：a）configs/ —— YAML/JSON配置文件；b）scripts/ —— 训练、评估、预处理等脚本；c）src/或项目名/ —— 核心代码（模型、数据、工具函数）；d）notebooks/ —— 探索性分析用的Jupyter notebook；e）data/ —— 数据（.gitignore）；f）outputs/或runs/ —— 训练输出（.gitignore）；g）tests/ —— 单元测试；h）docs/ —— 文档。4）基线模型选择：选一个「最简单、最快、最经典」的模型作为baseline。比如：图像分类用ResNet-18，目标检测用YOLOv8n，文本分类用DistilBERT，LLM用TinyLlama + LoRA。为什么选最简单的？因为基线的意义是「最差应该也有这个水平」，而且简单模型跑得快，能快速迭代。5）数据准备脚本：写一个预处理脚本（preprocess.py），把原始数据处理成模型能直接用的格式。确保这个脚本是可重复运行的。6）训练基线模型：跑通第一个baseline训练。不用调参，用默认参数就行。记录：a）训练loss和验证指标曲线；b）最终的评价指标（准确率/mAP/F1等）；c）训练时间、显存占用、参数量。7）基线评估：在测试集上全面评估基线模型。保存评估结果，作为后续对比的基准。8）记录：把所有信息记录到experiment.md里——baseline实验编号、配置、结果、观察到的现象。这是你的第1号实验。",
           deep_dive: "技术选型和基线实验是项目中非常关键的一步，很多人要么轻视要么拖延。深入理解基线的价值：1）基线的本质：基线不是「随便跑一个模型」，而是建立一个「锚点」——所有后续的改进都要和这个锚点比较，才知道有没有进步、进步了多少。没有基线，你就是在瞎折腾。2）基线为什么要用简单模型？两个原因：a）简单模型跑得快，能快速验证pipeline通不通；b）如果简单模型就够了，为什么要用复杂模型？先看baseline离目标有多远，如果已经满足需求，就不需要优化了——这才是工程思维。3）技术选型的「不对齐」陷阱：很多人选技术的时候只看「哪个最先进」，不看「哪个最适合我」。选技术的优先级应该是：你最熟悉的 > 社区最活跃的 > 有现成实现的 > 最先进的。记住：用你不熟的新技术，大概率会花很多时间踩坑，最后效果还不如用你熟的老技术。4）可复现性有多重要？深度学习实验如果不能复现，等于白做——你不知道这次的提升是真的有效还是运气好。保证可复现性要做的：固定所有随机种子（Python、NumPy、PyTorch、CUDA）、固定依赖版本、记录所有超参、保存训练代码的版本（Git commit hash）。5）配置管理：随着实验增多，你会发现参数越来越多，记不住哪个实验用了什么参数。好的做法是用配置文件（YAML/JSON），每个实验一个配置文件，连同结果一起保存。Hydra是个不错的配置管理工具。6）实验记录的习惯：一定要记录实验！哪怕只是简单的表格。记录内容至少包括：实验ID、日期、改动了什么、为什么改、结果如何、结论是什么。没有记录的实验是无效实验——你会忘记之前试过什么，重复踩坑。7）尽早失败，快速失败：baseline的另一个价值是验证可行性。如果baseline效果特别差，或者数据根本不可用，或者技术方案有问题，越早发现越好。前3天发现问题还能改方向，第10天才发现就来不及了。所以baseline实验要尽早做，不要等「数据都准备好了」再做。"
-        }, duration: "2.5小时", resources: [{ title: "PyTorch 官方教程", url: "https://pytorch.org/tutorials/", required: true }, { title: "HuggingFace Transformers", url: "https://huggingface.co/docs/transformers/", required: false }, { title: "ResNet 论文", url: "https://arxiv.org/abs/1512.03385", required: false }], checkpoint: "baseline 模型跑通并产出 metrics.json + logs" },
+        }, duration: "2.5小时", resources: [{ title: "PyTorch 官方教程", url: "https://pytorch.org/tutorials/", required: true, type: "article", source: "official" }, { title: "HuggingFace Transformers", url: "https://huggingface.co/docs/transformers/", required: false, type: "doc", source: "official" }, { title: "ResNet 论文", url: "https://arxiv.org/abs/1512.03385", required: false, type: "paper", source: "academic" }], checkpoint: "baseline 模型跑通并产出 metrics.json + logs" },
       { day: 4, title: "数据增强与数据版本",
         summary: "设计数据增强策略，构建标准化数据流水线，建立数据版本管理机制。", content: {
           objective: "今天你将为你的项目设计数据增强策略，构建标准化的数据处理流水线，并建立数据版本管理机制。学完后能根据任务特点选择合适的增强方法、编写可复现的数据处理脚本、用DVC管理数据版本。好的数据流水线能大幅提升模型效果和开发效率。",
@@ -2836,7 +2836,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成数据增强设计与数据流水线构建：1）数据增强方案：针对你的任务，设计一套数据增强策略。CV方向：Albumentations库，选5-8种增强（如随机裁剪、水平翻转、颜色抖动、模糊、噪声、CutOut、MixUp等）；NLP方向：nlpaug库，选3-5种增强（如同义词替换、回译、随机插入/删除/交换）；LLM方向：通过多样化的prompt模板和改写来扩充数据。对每种增强，明确：适用场景、概率/强度、注意事项。2）增强可视化：写一个可视化脚本，对同一样本应用不同的增强，展示前后对比效果。确保增强没有引入语义错误（比如CV中不能把数字翻转，NLP中不能改变情感极性）。3）数据流水线脚本化：把数据处理的所有步骤写成一个统一的脚本（pipeline.py或run_preprocessing.sh），一键执行就能从原始数据得到训练数据。确保：a）幂等性——跑多次结果一样；b）可配置——增强强度、划分比例等通过参数控制；c）有日志——每一步处理了多少数据、过滤了多少、输出在哪里。4）数据集划分：将数据划分为训练集、验证集、测试集（比例根据数据量定，如8:1:1）。注意：a）分层抽样，确保每个集合的类别分布一致；b）随机洗牌但固定种子，可复现；c）检查数据泄露——确保验证集和测试集的数据没有出现在训练集中（尤其是做了数据增强或去重后）。5）数据版本管理：初始化DVC（Data Version Control）：a）安装dvc，dvc init；b）设置远程存储（可以是本地文件夹、S3等）；c）用dvc add追踪数据目录；d）提交.dvc文件到Git；e）打一个数据版本标签（如data-v1.0）。6）数据质量报告：生成一份数据质量报告（data_report.md），包括：总样本数、各类别数量/比例、平均大小/长度、质量问题统计、增强策略说明、划分情况。7）验证：在新的数据流水线上重新训练baseline，确认数据处理正确，指标在预期范围内。",
           deep_dive: "数据处理看似琐碎，实则是模型性能提升的关键杠杆。深入理解数据工程的价值：1）数据增强的本质：数据增强是在不增加真实数据的情况下，扩展训练数据的分布，让模型见过更多变体，从而提升泛化能力。但增强不是越强越好——太强的增强会改变数据的语义分布，反而伤害效果。最佳增强强度是「刚好让模型学不到捷径，但又不改变真实标签」。2）从「数据增强」到「数据策展」：数据增强只是数据工作的一小部分。更广泛的概念是「数据策展」（Data Curation）——包括数据收集、清洗、去重、质量筛选、标注、增强、划分等全流程。高质量的数据集是精心「策展」出来的，不是随便堆出来的。3）数据泄露的各种坑：数据泄露是机器学习项目中最常见的错误之一，而且往往隐蔽不易发现。常见的泄露场景：验证集数据混入训练集、数据增强不当导致信息泄露、特征工程时用了全局统计量（应该用训练集的统计量来变换验证集）、时间序列打乱顺序导致未来信息泄露。4）为什么测试集只能碰一次？测试集的作用是「模拟真实场景下的模型性能」。如果你反复在测试集上调整模型，其实就是在「过拟合」测试集，最终的测试指标会虚高。正确的做法是：测试集在项目最后只用来测一次，作为最终结果。平时迭代只用验证集。5）数据版本管理的意义：DVC不仅仅是存数据，更重要的是「代码版本和数据版本一一对应」——每个Git commit都对应一个数据版本，你可以复现历史上任何一次实验的完整环境。这对于团队协作和项目可维护性至关重要。6）数据流水线的工程化：在工业界，数据流水线（Data Pipeline）是一个专门的岗位（数据工程师）。好的流水线应该是：自动化（一键运行）、幂等性（重复运行结果不变）、可监控（每一步有日志有指标）、容错性（出错了能断点重跑）、可扩展（加新的数据源方便）。7）数据质量是长期工程：不是第一天把数据处理好就完事了。随着项目迭代，你会不断发现新的数据问题，需要持续清洗和补充数据。把数据质量当成长期运营的事情，而不是一次性任务。"
-        }, duration: "2.5小时", resources: [{ title: "DVC 官方文档", url: "https://dvc.org/", required: false }, { title: "Albumentations 数据增强库", url: "https://albumentations.ai/", required: false }, { title: "NLP 数据增强 (nlpaug)", url: "https://github.com/makcedward/nlpaug", required: false }, { title: "Mosaic 数据增强详解", url: "https://docs.ultralytics.com/guides/yolo-data-augmentation/", required: false }], checkpoint: "scripts/preprocess.py 可重复运行；DVC 已追踪 data 目录" },
+        }, duration: "2.5小时", resources: [{ title: "DVC 官方文档", url: "https://dvc.org/", required: false, type: "doc", source: "official" }, { title: "Albumentations 数据增强库", url: "https://albumentations.ai/", required: false, type: "article", source: "official" }, { title: "NLP 数据增强 (nlpaug)", url: "https://github.com/makcedward/nlpaug", required: false, type: "repo", source: "github" }, { title: "Mosaic 数据增强详解", url: "https://docs.ultralytics.com/guides/yolo-data-augmentation/", required: false, type: "doc", source: "official" }], checkpoint: "scripts/preprocess.py 可重复运行；DVC 已追踪 data 目录" },
       { day: 5, title: "基线训练与实验管理",
         summary: "搭建实验管理系统，完成多轮基线实验，建立系统化的实验记录与分析流程。", content: {
           objective: "今天你将搭建实验管理系统，进行系统化的基线实验，并建立实验记录和分析流程。学完后能用MLflow/W&B追踪实验、设计对比实验、分析实验结果、形成可迭代的闭环。实验管理是算法工程师的核心能力之一。",
@@ -2849,7 +2849,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "搭建实验管理体系并完成基线实验矩阵：1）实验工具选型：选择一个实验管理工具并搭建。推荐：a）MLflow：开源，本地就能用，功能全；b）Weights & Biases：云端服务，UI好看，协作方便；c）如果都不想装，至少用一个markdown表格或CSV文件记录。2）实验框架整合：把实验追踪集成到你的训练脚本里。至少要自动记录：a）所有超参数（学习率、batch size、模型架构、增强强度等）；b）训练过程中的指标（train loss、val loss、val accuracy/mAP/F1等）；c）环境信息（Python版本、PyTorch版本、GPU型号、CUDA版本）；d）Git commit hash（当前代码版本）；e）数据版本（DVC版本号或数据路径）。3）随机种子实验：验证实验的可复现性——用完全相同的配置和种子，跑两次训练，看结果是否一致（应该几乎完全一样）。如果差异大，说明还有没控制住的随机源。4）基线实验矩阵：设计并完成至少3组基线实验（注意：每次只改一个变量！）：a）不同模型大小：比如小模型 vs 中模型；b）不同学习率：比如lr=1e-3, 1e-4, 1e-5；c）不同数据增强强度：无增强 vs 标准增强 vs 强增强。记录每组实验的结果。5）实验记录模板：创建一个实验记录模板（experiment_template.md），每次实验都填写：a）实验ID和日期；b）实验目的（为什么做这个实验）；c）改动了什么（和baseline比有哪些不同）；d）结果（关键指标、训练曲线观察）；e）分析和结论（有效/无效、为什么、下一步做什么）。6）实验看板：搭建一个「实验看板」——用表格列出所有实验，按指标排序，方便横向对比。标出目前的最佳结果（SOTA，State of the Art）。7）最佳基线：从这些实验中选出当前最好的配置，作为你的「当前最佳基线」。后续所有改进都和它比。8）复盘：今天的实验中，哪个超参影响最大？哪个实验结果出乎你的意料？你学到了什么？",
           deep_dive: "实验管理是区分「炼丹」和「科学研究」的关键。很多人做实验就是瞎试——今天改这个明天改那个，试了一堆也说不清哪个有效为什么有效。建立科学的实验方法论：1）假设驱动的实验：每个实验都应该有一个明确的假设。比如「我假设增大batch size会提升精度」，然后设计实验来验证这个假设。没有假设的实验就是瞎试。2）控制变量的重要性：一次只改一个参数，这是科学实验的基本原则。如果你同时改了学习率和batch size，结果变好了，你知道是哪个因素导致的吗？不知道。这样的实验没有信息量。3）如何判断改进是真实的？深度学习训练有随机性，两次跑同一个配置结果也会有小差异。怎么确定某次提升是真的有效而不是运气？方法：a）多次实验取平均（至少3次，越多越可信）；b）看差距大小（差距大大概率是真的，差距小可能是噪音）；c）统计显著性检验（如t检验，计算p值）。4）实验日志的价值：不仅记录成功的实验，失败的实验也要记录！知道什么方法没用，和知道什么方法有用一样有价值。可以避免以后重复踩坑。5）实验的「投资回报率」：每个实验都有成本（时间、算力）。优先做那些「成本低、信息量大」的实验——比如学习率搜索成本低但影响大，性价比很高；而换一个完全不同的架构成本高但不一定有效，性价比低。6）从「实验」到「洞察」：做实验不是为了刷指标，而是为了获得洞察——理解为什么某个方法有效、在什么条件下有效、有什么副作用。这些洞察比一次实验的指标提升更有价值，因为它们可以迁移到其他项目。7）实验管理工具的本质：不管用MLflow还是W&B，本质都是「降低记录实验的成本」——记录越容易，你就越愿意记录，实验就越系统。工具是服务于流程的，不要为了用工具而用工具。8）项目中的实验节奏：建议的节奏是「快速迭代」——先做很多小实验（少几轮、用子集、小模型）快速找到方向，然后在有希望的方向上做完整的大实验。这样效率最高。"
-        }, duration: "2.5小时", resources: [{ title: "MLflow 官方文档", url: "https://mlflow.org/", required: false }, { title: "Weights & Biases 快速入门", url: "https://docs.wandb.ai/quickstart", required: false }, { title: "实验可复现性指南", url: "https://pytorch.org/docs/stable/notes/randomness.html", required: false }], checkpoint: "有 ≥ 3 次 baseline 实验的完整记录，并能复现" },
+        }, duration: "2.5小时", resources: [{ title: "MLflow 官方文档", url: "https://mlflow.org/", required: false, type: "doc", source: "official" }, { title: "Weights & Biases 快速入门", url: "https://docs.wandb.ai/quickstart", required: false, type: "doc", source: "official" }, { title: "实验可复现性指南", url: "https://pytorch.org/docs/stable/notes/randomness.html", required: false, type: "doc", source: "official" }], checkpoint: "有 ≥ 3 次 baseline 实验的完整记录，并能复现" },
       { day: 6, title: "Bad Case 分析",
         summary: "系统化分析模型错误案例，定位问题根源，提出改进方案。", content: {
           objective: "今天你将学习系统化的错误分析（Error Analysis）方法，对当前最好的模型进行深度Bad Case分析。学完后能收集和分类错误样本、定位问题根源、提出针对性的改进方案。错误分析比盲目调参更有价值——它告诉你该往哪个方向努力。",
@@ -2862,7 +2862,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成一次系统的Bad Case分析：1）准备分析样本：用你当前最好的模型，在验证集上跑一遍预测。找出所有预测错误的样本（或者置信度很低的样本）。2）错误分类体系：设计一个错误分类的 taxonomy（分类法）。根据你的任务来定，比如：CV检测——漏检（为什么漏？太小/遮挡/模糊/新类别）、误检（背景误判、类别混淆）、定位不准（框偏移）；文本分类——类别混淆（哪两类容易混？）、内容太短/太长、语义歧义、标注错误；LLM——回答不相关、事实错误、格式错误、长度问题、风格不对。3）批量统计：对所有错误样本进行分类统计，算出每类错误的占比。用表格或饼图展示。找出占比最高的Top 3错误类型。4）抽样深度分析：从每类错误中，随机抽取3-5个典型样本，进行「解剖」。对每个样本：a）展示输入和模型输出；b）描述错误是什么；c）你认为为什么会错（是数据问题？模型问题？还是标注错了？）；d）如果是你，你能正确预测吗？（判断是简单样本还是难样本）5）混淆矩阵/类别分析：如果是分类任务，画出混淆矩阵，找出最容易混淆的类别对。分析为什么这两类容易混——是视觉/语义上真的很像吗？还是标注边界模糊？6）难度分层：把样本按难度分层（简单/中等/困难），看模型在各层的准确率。模型是在简单样本上就不行，还是只是难样本不行？这能告诉你是模型容量问题还是数据问题。7）标注质量检查：随机抽查20-50个样本，看看标注有没有错误。标注错误率大概是多少？如果标注错误率很高（比如>10%），那模型效果的上限就被限制了。8）改进方案：基于分析结果，提出至少3个改进方向。每个改进方向写明：针对什么错误、具体怎么做、预期效果、实施成本。按「预期收益/实施成本」排序，确定下一步实验的优先级。9）撰写分析报告：把以上所有内容整理成一份bad_case_analysis.md报告。",
           deep_dive: "错误分析是机器学习项目中最有价值的工作之一，但也是最容易被忽视的。很多人宁愿调10次参也不愿意花一天分析错误。这是短视的——错误分析能让你的努力用在刀刃上。深入理解错误分析的方法论：1）Andrew Ng的「错误分析优先」原则：Andrew Ng说过，如果你只能做一件事来提升模型，那就做错误分析。因为它直接告诉你最大的提升空间在哪里。盲目调参就像蒙着眼睛射箭，错误分析就是帮你睁开眼睛。2）错误分析的「天花板效应」：你首先要知道人类水平（Human Level Performance）是多少。如果模型已经接近人类水平了，再提升就很难了，边际收益递减。如果模型比人类水平差很多，说明还有很大提升空间。3）偏差与方差分析（Bias-Variance Analysis）：这是更宏观的错误分析——训练误差高说明偏差大（模型欠拟合），训练误差低但验证误差高说明方差大（模型过拟合）。偏差大就加大模型/增加训练，方差大就加数据/加正则/数据增强。4）从「错误」到「机会」：每个错误类型都是一个改进机会。但机会有大小之分——占比1%的错误再怎么优化，最多也只能提升1%；占比30%的错误，哪怕只改善一半，也能提升15%。所以优先解决大头。5）失败样本的价值：不要只看准确率这个数字，要深入到具体的失败样本里。每个失败样本都在告诉你模型的弱点在哪。读懂这些信号，你就能精准地优化模型。6）错误分析的粒度：太粗了没用（比如只知道「分类错误」），太细了又太费时间。找到合适的粒度——既能指导行动，又不至于分析不过来。通常5-10个错误类别是比较合适的。7）持续的错误分析：不是做一次就完了。每轮大的改进之后，都应该再做一次错误分析，看看错误分布有没有变化——原来的大头问题解决了吗？有没有新的问题冒出来？这是一个迭代的过程。8）错误分析驱动的迭代：理想的项目节奏是：训练模型 → 错误分析 → 针对最大的问题改进 → 再训练 → 再分析 → 循环往复。每一轮都解决最突出的问题，这样进步最快。"
-        }, duration: "2小时", resources: [{ title: "错误分析最佳实践", url: "https://stanford-cs329s.github.io/syllabus.html", required: false }, { title: "混淆矩阵与错误分析", url: "https://scikit-learn.org/stable/modules/model_evaluation.html#confusion-matrix", required: false }, { title: "ML 错误分析方法论", url: "https://eugeneyan.com/writing/error-analysis/", required: false }], checkpoint: "产出一份 2-3 页的 Bad Case 分析文档" },
+        }, duration: "2小时", resources: [{ title: "错误分析最佳实践", url: "https://stanford-cs329s.github.io/syllabus.html", required: false, type: "article", source: "official" }, { title: "混淆矩阵与错误分析", url: "https://scikit-learn.org/stable/modules/model_evaluation.html#confusion-matrix", required: false, type: "article", source: "official" }, { title: "ML 错误分析方法论", url: "https://eugeneyan.com/writing/error-analysis/", required: false, type: "article", source: "official" }], checkpoint: "产出一份 2-3 页的 Bad Case 分析文档" },
       { day: 7, title: "架构与训练优化",
         summary: "实施针对性的模型优化与训练调优，通过至少两轮迭代提升模型性能。", content: {
           objective: "今天你将基于昨天的Bad Case分析结果，实施有针对性的模型优化和训练调优。学完后能根据问题类型选择合适的优化手段、设计消融实验验证效果、通过多轮迭代稳步提升性能。优化不是瞎调参，是有方向、有假设、有验证的科学过程。",
@@ -2875,7 +2875,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "实施至少两轮模型优化迭代：1）制定优化计划：基于第6天的Bad Case分析，列出你要尝试的Top 3优化方向。每个方向写清楚：a）要验证的假设；b）具体怎么改；c）预期效果；d）优先级排序。2）第一轮优化：从优先级最高的开始。例如：a）如果数据问题是大头——那就补充某类数据、调整数据增强强度、处理类别不平衡（加权损失/过采样/欠采样）；b）如果模型容量不够——换更大的模型、加深/加宽、加注意力模块；c）如果训练不好——调学习率、换优化器、加学习率调度、加正则化（权重衰减、Dropout）。3）实验验证：跑第一轮优化实验。和当前最佳基线对比，看效果提升了多少。记录到实验看板。4）分析结果：有效还是无效？提升/下降了多少？符合预期吗？为什么？如果有效，把它纳入你的「最佳配置」中。如果无效，分析为什么——是假设错了？还是实现有问题？5）第二轮优化：在第一轮的基础上，尝试第二个优化方向。注意：是在「当前最佳」的基础上叠加，还是分别独立测试？建议：先独立测试每个改动（确认它本身有效），然后再把有效的组合起来。6）组合验证：如果有多个独立有效的改进，把它们组合起来，看看有没有叠加效应。注意：1+1不一定等于2，有时候会有增益，有时候会边际递减。7）消融实验表格：做一个消融实验（Ablation Study）表格，清晰展示每个改动的贡献。行是实验配置，列是指标，最后一列是相对baseline的提升。比如：baseline → 75%；+数据增强 → 78%（+3%）；+更大模型 → 80%（+2%）；+两者都加 → 82%（+2%）。8）当前最佳：经过这几轮优化，你的当前最佳结果是多少？相比第一天的baseline提升了多少？9）复盘与下一步：今天的优化中，哪个改动收益最大？哪个最让你意外？下一轮你打算优化什么？",
           deep_dive: "模型优化是一个很大的话题，从学术到工业界都在不断探索。但核心不是知道多少技巧，而是有没有科学的方法论。深入理解优化的艺术：1）「没有免费午餐」定理：没有哪种方法在所有任务上都最好。某个方法在A任务上有效，在B任务上可能没用甚至有害。所以每个优化都要通过实验验证，不能想当然。2）收益递减规律：模型性能的提升不是线性的。从60分到80分很容易，从80分到90分要难一些，从90分到95分非常难，从95分到98分可能需要巨大的投入。要知道什么时候「够好了」——满足业务需求就可以停止优化了，不要追求极致的小数点后几位。3）「数据为王」再强调一次：当你遇到瓶颈时，先问自己三个问题：数据够吗？数据质量高吗？数据分布对吗？大多数时候，问题出在数据上，而不是模型上。加更多更好的数据，通常比调参换模型收益更大。4）调参的「奥卡姆剃刀」：能用简单方法解决的，就不要用复杂方法。比如效果不好，先试试调学习率（最简单），不行再换优化器，再不行换架构，最后才考虑改模型结构本身。简单的方法更容易调试、更容易复现、风险更低。5）正则化的选择：过拟合了怎么办？不要只会加Dropout。正则化手段很多：数据增强（最强的正则）、权重衰减、Dropout、早停、标签平滑、模型集成、半监督学习。优先用数据增强和早停，最简单有效。6）学习率是最重要的超参：没有之一。学习率不对，其他参数调得再好也白搭。找学习率的好方法是LR Finder——用递增的学习率训练几百步，看loss什么时候下降最快，那个范围就是最优学习率区间。7）不要忽视训练技巧的价值：很多时候，同样的模型和数据，用更好的训练技巧就能提升好几个点。比如：学习率预热（warmup）、余弦退火调度、梯度裁剪、梯度累积、混合精度训练、标签平滑、权重衰减、EMA（指数移动平均）等。这些都是「免费」的提升——不需要改模型，只要改训练策略。8）优化的尽头是什么？当你把能试的都试了，指标还是上不去怎么办？这时候可能就到了当前方法的上限。要突破，可能需要范式级的改变——比如换完全不同的技术路线、引入外部知识、改变问题定义等。但在那之前，先确认你把简单的方法都试过了。"
-        }, duration: "3小时", resources: [{ title: "学习率调度策略", url: "https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate", required: false }, { title: "LoRA 论文", url: "https://arxiv.org/abs/2106.09685", required: false }, { title: "消融实验设计指南", url: "https://machinelearningmastery.com/ablation-study/", required: false }, { title: "测试时增强 (TTA)", url: "https://docs.ultralytics.com/guides/test-time-augmentation/", required: false }], checkpoint: "有至少 2 轮对比实验（baseline → 改进1 → 改进2）的表格" },
+        }, duration: "3小时", resources: [{ title: "学习率调度策略", url: "https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate", required: false, type: "doc", source: "official" }, { title: "LoRA 论文", url: "https://arxiv.org/abs/2106.09685", required: false, type: "paper", source: "academic" }, { title: "消融实验设计指南", url: "https://machinelearningmastery.com/ablation-study/", required: false, type: "article", source: "official" }, { title: "测试时增强 (TTA)", url: "https://docs.ultralytics.com/guides/test-time-augmentation/", required: false, type: "doc", source: "official" }], checkpoint: "有至少 2 轮对比实验（baseline → 改进1 → 改进2）的表格" },
       { day: 8, title: "推理优化：量化/剪枝/蒸馏",
         summary: "学习模型推理优化技术，完成模型导出与性能基准测试。", content: {
           objective: "今天你将学习模型推理优化技术——量化、剪枝、知识蒸馏，并对最终模型进行导出和基准测试。学完后能将模型导出为部署格式、对比优化前后的速度和精度、根据部署场景选择最优方案。模型训练好了只是第一步，推理效率决定了它能不能落地。",
@@ -2888,7 +2888,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成模型推理优化与基准测试：1）模型导出：将你训练好的PyTorch模型导出为标准格式。CV/NLP模型导出为ONNX格式（torch.onnx.export）；LLM模型可以导出为GGUF格式（llama.cpp用）或GPTQ/AWQ量化格式。导出后验证：用导出的模型推理几个样本，和PyTorch的输出对比，确保精度一致或差异在可接受范围内。2）量化实验：尝试至少一种量化方法。a）PTQ（训练后量化）：直接对训练好的模型量化，最简单。CV用TensorRT或ONNX Runtime的量化；NLP用bitsandbytes或GPTQ；LLM用GPTQ/AWQ。b）记录量化后的：模型文件大小、推理速度、精度变化。3）（可选）知识蒸馏：如果时间充裕，且你用的是大模型，可以尝试蒸馏一个小模型。用大模型（教师）的软标签来训练小模型（学生）。简单版：温度T软化softmax，MSE或KL散度作为蒸馏损失。对比直接训练小模型的效果。4）基准测试脚本：写一个benchmark.py脚本，测试模型的推理性能。至少测量：a）延迟（Latency）：单样本推理时间，统计P50、P95、P99（分别是50%、95%、99%的请求在多少时间内完成）；b）吞吐量（Throughput）：每秒能处理多少样本；c）资源占用：GPU显存利用率、CPU利用率、内存占用。5）多方案对比：制作一个对比表格，比较不同方案的：模型大小、P50延迟、P95延迟、吞吐量、精度、显存占用。比如：PyTorch FP32 vs PyTorch FP16 vs ONNX Runtime vs TensorRT INT8。6）最佳方案选择：根据你的部署场景（延迟要求、精度要求、资源限制），选择最合适的方案。比如：如果是在线服务，延迟和吞吐量很重要；如果是离线批处理，吞吐量优先，延迟可以放宽。7）部署包准备：将最终的模型（最优方案）和推理代码打包成一个独立的「部署包」——包含模型文件、推理代码、依赖、配置、README。确保别人拿到这个包就能直接用，不需要重新训练。8）（可选）模型压缩挑战赛：看看你能把模型压到多小、跑多快，同时保持95%以上的精度。压缩率是多少？",
           deep_dive: "推理优化是工程能力的重要体现。训练出模型只是实验室里的成果，能高效部署才是生产环境的真功夫。深入理解推理优化的体系：1）推理优化的层次结构：从底层到上层——硬件层（GPU/NPU/TPU/FPGA）、算子层（融合、量化、手写优化kernel）、模型层（量化、剪枝、蒸馏、NAS）、架构层（更高效的模型设计，如MobileNet、Transformer的高效变体）、服务层（批处理、缓存、并发）、算法层（更高效的范式，比如检索替代部分计算）。每一层都有优化空间，真正的高手会全栈优化。2）量化为什么有效？神经网络的权重往往分布在一个很小的范围内，而且对噪声不鲁棒。用低精度表示（如INT8）虽然会损失一些信息，但网络的「容错能力」很强，最终精度下降很小，但速度和体积收益很大。3）量化的两种路线：PTQ（Post-Training Quantization，训练后量化）最简单，不需要重新训练，直接量化，但精度损失可能大一些；QAT（Quantization-Aware Training，量化感知训练）在训练时就模拟量化的影响，精度更高，但需要重新训练，更复杂。实际项目中，先试PTQ，如果精度够就用，不够再考虑QAT。4）知识蒸馏的深层原理：为什么大模型能教小模型？因为大模型的软标签（概率分布）比硬标签（0/1）包含更多信息——它不仅告诉你正确答案是什么，还告诉你其他选项有多接近正确。这些「暗知识」（Dark Knowledge）是小模型能学到精髓的关键。5）模型越小越好吗？不一定。要看你的约束是什么。如果是服务端部署，GPU充足，可能用大模型直接跑更省事；如果是端侧部署（手机、嵌入式），资源有限，就必须做模型压缩。一切以场景需求为准。6）推理优化的成本：优化也是有成本的——开发时间、维护复杂度、精度风险。不要为了优化而优化。如果当前方案已经满足性能要求，就没必要花时间进一步优化。把时间花在更有价值的事情上。7）生产环境的推理服务：真实的推理服务比「加载模型跑一下」复杂得多——要考虑并发、批处理、负载均衡、弹性扩缩容、监控告警、灰度发布、A/B测试、模型版本管理等等。这是MLOps的范畴。8）效率的价值：推理优化在大规模部署时价值巨大——如果你的服务每天有100万次请求，每次推理省10ms，每天就能省下约2.8小时的GPU时间，换算成钱就是实实在在的成本节约。大公司专门有团队做推理优化，因为在规模效应下，一点点提升都能省很多钱。"
-        }, duration: "2.5小时", resources: [R_ULTRALYTICS, { title: "ONNX Runtime 文档", url: "https://onnxruntime.ai/docs/", required: false }, { title: "GPTQ 量化详解", url: "https://arxiv.org/abs/2210.17323", required: false }, { title: "AWQ 量化方法", url: "https://arxiv.org/abs/2306.00978", required: false }], checkpoint: "产出一份 benchmark.md：模型大小、p50/p95 延迟、精度" },
+        }, duration: "2.5小时", resources: [R_ULTRALYTICS, { title: "ONNX Runtime 文档", url: "https://onnxruntime.ai/docs/", required: false, type: "doc", source: "official" }, { title: "GPTQ 量化详解", url: "https://arxiv.org/abs/2210.17323", required: false, type: "paper", source: "academic" }, { title: "AWQ 量化方法", url: "https://arxiv.org/abs/2306.00978", required: false, type: "paper", source: "academic" }], checkpoint: "产出一份 benchmark.md：模型大小、p50/p95 延迟、精度" },
       { day: 9, title: "API 服务开发",
         summary: "使用FastAPI构建模型推理服务，实现规范的API接口与工程化特性。", content: {
           objective: "今天你将使用FastAPI构建一个生产级别的模型推理API服务。学完后能设计RESTful API、实现推理接口、添加输入校验、错误处理、日志记录等工程特性。API服务化是模型落地的标准方式，也是后端工程能力的体现。",
@@ -2901,7 +2901,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成推理API服务的开发与测试：1）服务框架搭建：创建FastAPI应用，初始化模型（全局加载一次，不要每次请求都加载）。基本结构：app = FastAPI() → 启动事件中加载模型 → 定义接口。2）核心接口实现：a）POST /predict：接收输入数据（图片/文本/JSON），调用模型推理，返回结果。注意：输入输出格式要清晰定义，用Pydantic模型做数据校验。b）GET /health：健康检查接口，返回服务状态（如{\"status\": \"ok\"}），用于负载均衡和监控。c）GET /info：返回模型信息——模型名称、版本、输入输出格式、加载时间、部署时间等。3）数据模型定义：用Pydantic定义请求体和响应体的结构。比如：PredictRequest（输入字段、类型约束）、PredictResponse（结果字段、置信度、耗时）。利用Pydantic的验证功能——必填项、类型、范围限制、默认值等。4）错误处理：设计统一的错误响应格式。添加异常处理器：a）400 Bad Request —— 输入格式错误；b）422 Unprocessable Entity —— 验证失败；c）500 Internal Server Error —— 服务内部错误；d）自定义业务错误。每个错误返回统一的格式：{\"code\": 错误码, \"message\": 错误信息, \"detail\": 详细信息}。5）日志系统：集成loguru或标准logging模块。记录：请求到来（时间、IP、接口、参数大小）、推理耗时、推理结果概要、错误异常（附堆栈）。6）配置管理：把配置（模型路径、阈值、服务端口、日志级别等）放在配置文件里（.env或config.py），用pydantic-settings或python-dotenv管理。不要硬编码在代码里。7）单元测试：写至少3个测试用例（用pytest + FastAPI的TestClient）：a）健康检查接口测试；b）正常输入的推理测试（验证返回格式和类型）；c）异常输入测试（验证错误处理是否正确）。运行测试，确保都通过。8）性能测试：用工具简单压一下（比如用siege、wrk，或者Python的httpx并发请求），看看服务能扛多少QPS，延迟分布如何。9）启动与验证：用uvicorn启动服务，用curl或Postman或浏览器访问/docs，测试所有接口，确保功能正常。",
           deep_dive: "写一个能跑的API很简单，写一个生产级别的API很难。从Demo到生产，中间隔着巨大的工程鸿沟。理解API服务的工程深度：1）模型加载的坑：模型加载时机——是服务启动时加载，还是第一次请求时懒加载？各有利弊。启动时加载，服务启动慢但第一次请求快；懒加载，服务启动快但第一次请求慢。生产环境一般用启动时加载，配合就绪探针（Readiness Probe）——没加载完就不让流量进来。2）并发与GPU调度：GPU是串行的，同一时刻只能跑一个推理。如果有多个并发请求，就会排队。怎么处理？a）用队列（Queue）管理请求，一个worker从队列取任务推理；b）用批处理（Batching）——攒一批一起推理，提高GPU利用率；c）多实例部署——跑多个服务实例，前面加负载均衡。这些都是生产环境要考虑的。3）输入输出的设计哲学：接口设计是艺术。好的API应该是：向前兼容（加新字段不破坏老客户端）、字段名清晰、命名风格统一、有版本号（/v1/predict）、文档完善。差的API让人骂娘。4）安全问题：API如果暴露在公网上，必须考虑安全：a）认证鉴权——API Key、JWT Token等，不是谁都能调；b）速率限制——防止恶意刷接口；c）输入校验与过滤——防止注入攻击（虽然不像SQL注入那么常见，但也要小心）；d）数据隐私——用户上传的数据会不会被存储？敏感信息要不要脱敏？5）可观测性（Observability）：服务上线后出了问题怎么排查？靠日志、指标、链路追踪「三驾马车」。日志（Logs）：记录发生了什么；指标（Metrics）：统计QPS、延迟、错误率等时间序列数据；链路追踪（Tracing）：追踪一个请求经过的所有服务，定位瓶颈。这三样是微服务的基础。6）优雅停机：服务重启或关闭时，要处理完正在进行的请求再退出，不能粗暴杀掉导致用户失败。FastAPI支持优雅停机，但需要正确配置。7）部署的其他细节：CORS配置（跨域）、Gzip压缩、请求体大小限制、超时时间、中间件的使用等等。8）文档的重要性：API是给别人用的，文档很重要。FastAPI自动生成的Swagger/Redoc已经很好了，但最好再补充：使用示例、常见错误码说明、限流策略、版本变更日志。好的文档能省掉大量沟通成本。"
-        }, duration: "2.5小时", resources: [R_FASTAPI, { title: "Pydantic 文档", url: "https://docs.pydantic.dev/", required: false }, { title: "pytest 测试框架", url: "https://docs.pytest.org/en/stable/", required: false }, { title: "loguru 日志库", url: "https://loguru.readthedocs.io/", required: false }], checkpoint: "可运行的 FastAPI 服务 + 至少 1 个测试" },
+        }, duration: "2.5小时", resources: [R_FASTAPI, { title: "Pydantic 文档", url: "https://docs.pydantic.dev/", required: false, type: "doc", source: "official" }, { title: "pytest 测试框架", url: "https://docs.pytest.org/en/stable/", required: false, type: "doc", source: "official" }, { title: "loguru 日志库", url: "https://loguru.readthedocs.io/", required: false, type: "doc", source: "official" }], checkpoint: "可运行的 FastAPI 服务 + 至少 1 个测试" },
       { day: 10, title: "前端 UI 开发",
         summary: "使用Streamlit或Gradio快速搭建交互式Web前端，完成端到端Demo。", content: {
           objective: "今天你将使用Streamlit或Gradio快速搭建一个交互式的Web前端，让你的模型有一个直观的用户界面。学完后能实现输入交互、结果展示、可视化、文件上传下载等功能。一个好看好用的Demo能让你的项目价值翻倍——别人看得见、摸得着、用得上。",
@@ -2914,7 +2914,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成前端UI开发与端到端联调：1）框架选择：决定用Streamlit还是Gradio。如果追求简单快速，选Gradio；如果想要更多控制和灵活性，选Streamlit。2）页面布局设计：规划你的界面布局。通常包含：a）标题和简介——项目名称、一句话介绍；b）输入区域——用户输入数据的地方（文本框、文件上传、摄像头、麦克风等）；c）参数控制面板（可选）——调整模型参数的滑块/下拉框，如置信度阈值、temperature等；d）输出展示区——显示模型结果（文字、图片、表格、可视化图表等）；e）侧边栏/底部——额外信息、模型版本、联系方式、GitHub链接。3）核心功能实现：a）输入处理：支持用户输入（文本/图片/文件上传），做简单的输入校验；b）调用模型：直接调用模型推理（或调用你第9天写的API）；c）结果展示：以友好的方式展示结果。CV任务可以画框/标注；NLP任务可以高亮关键词、显示置信度；LLM任务可以打字机效果显示。4）交互增强：a）示例输入——放几个「试试看」的例子，用户点一下就能填充输入，降低使用门槛；b）状态反馈——推理中显示加载动画、进度条、「正在分析...」提示，不要让用户傻等；c）错误处理——模型出错了显示友好的错误提示，而不是抛一堆堆栈信息；d）结果解释——不仅告诉用户结果是什么，还解释为什么（如Grad-CAM可视化、置信度、相似案例等）。5）前后端联调：如果是前后端分离架构，确保前端能正确调用后端API。处理跨域问题（CORS）。6）美化与细节：a）设置页面标题、favicon、主题颜色；b）添加项目logo或icon（如果有）；c）用Markdown写一些说明文字，告诉用户这个项目是做什么的、怎么用；d）响应式——在手机上也能正常显示；e）添加页脚——项目链接、作者、许可证等。7）完整走查：自己从头到尾用一遍，模拟真实用户的操作流程。记录遇到的问题和可以改进的点。8）可用性测试：找一个朋友（最好是非技术的）来用一下，观察他会不会用、哪里困惑、会不会出错。用户反馈是最好的改进方向。9）截图与录屏：截几张好看的界面图，录一个简短的演示视频（30秒到2分钟）。这些后面写README和做展示的时候要用。",
           deep_dive: "很多算法工程师看不起前端UI，觉得「这不重要」。这是非常错误的观念——UI是你项目的「脸面」，也是大多数人感知项目价值的唯一途径。深入理解UI/UX的价值：1）「Demo or it didn't happen」：在工业界，如果你做了一个模型但没有Demo，很多人会觉得你什么都没做。因为非技术的老板、产品经理、客户看不懂指标、看不懂代码，但他们能通过Demo直观感受到你的工作成果。Demo的质量直接影响别人对你项目价值的判断。2）用户体验是隐形的竞争力：两个功能一样的项目，一个界面精美、交互流畅，一个粗糙简陋、bug频出，用户会认为前者技术更强——即使模型效果其实差不多。这就是用户体验的价值。3）从Demo到产品的距离：一个能跑的Demo和一个能用的产品，中间差着10倍的工作量。但即使只是Demo，也要在你能力范围内做到最好。这体现了你的工程素养和对质量的追求。4）快速原型的价值：Streamlit/Gradio这类工具的最大价值是「快速验证想法」——半天就能搭出一个可交互的原型，拿去给用户试用，收集反馈，然后迭代。这比你闭门造车做三个月然后拿出来发现没人用强太多了。5）「够用就好」的平衡：虽然UI很重要，但也不要本末倒置——花太多时间在UI上而忽略了模型本身。找到平衡点：核心功能（模型+推理）做扎实，UI做到「能用、好看、不丢人」的程度就可以了。6）设计感的培养：不是设计出身的人，怎么把UI做好？简单的方法：a）留白——不要塞满，多留空白；b）对齐——元素左右对齐、上下对齐；c）配色——用1-2个主色调，不要花里胡哨；d）字体——用系统默认的无衬线字体，别用奇怪的字体；e）一致性——同样的元素同样的样式。做到这几点，UI就不会太丑。7）前端是「算法工程师的加分项」：如果你既懂算法又能做前后端，那你就是「全栈算法工程师」，市场价值比纯算法高很多。因为大多数算法工程师工程能力弱，而项目落地需要工程能力。补上工程这块短板，你的竞争力会大大增强。8）从用户视角思考：做UI的时候，别想「我想展示什么」，要想「用户想看到什么、用户想怎么用」。切换到用户视角，你会做出不一样的设计。比如用户不想看一堆技术指标，用户只想知道「结果是什么、对不对、我该怎么做」。"
-        }, duration: "2.5小时", resources: [R_STREAMLIT, R_GRADIO, { title: "Streamlit 组件库", url: "https://docs.streamlit.io/library/api-reference", required: false }, { title: "Gradio 自定义组件", url: "https://www.gradio.app/guides/custom-components", required: false }], checkpoint: "浏览器可用的 UI，能完成一次端到端演示" },
+        }, duration: "2.5小时", resources: [R_STREAMLIT, R_GRADIO, { title: "Streamlit 组件库", url: "https://docs.streamlit.io/library/api-reference", required: false, type: "doc", source: "official" }, { title: "Gradio 自定义组件", url: "https://www.gradio.app/guides/custom-components", required: false, type: "article", source: "official" }], checkpoint: "浏览器可用的 UI，能完成一次端到端演示" },
       { day: 11, title: "Docker 化与一键部署",
         summary: "编写生产级Dockerfile，用Docker Compose编排多服务，实现一键部署。", content: {
           objective: "今天你将把整个项目Docker化——编写Dockerfile、用Docker Compose编排服务、实现一键部署。学完后能构建优化的Docker镜像、管理多容器应用、确保环境一致性。Docker化是项目交付的标准方式，也是MLOps的基础技能。",
@@ -2927,7 +2927,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成项目Docker化与一键部署：1）后端API的Dockerfile：为你的FastAPI服务写一个Dockerfile。注意：a）基础镜像选python:3.10-slim或pytorch/pytorch:xxx（如果需要CUDA）；b）使用多阶段构建（multi-stage build）——第一阶段安装依赖、构建，第二阶段只复制必要的文件，减小最终镜像体积；c）创建非root用户，用非root用户运行应用（安全最佳实践）；d）设置工作目录、复制文件、安装依赖、暴露端口、设置启动命令；e）添加.healthcheck或在FastAPI里实现健康检查端点。2）.dockerignore：写一个.dockerignore文件，排除不需要复制进镜像的文件——比如.git、__pycache__、.venv、data/、notebooks/、*.md等。减小构建上下文，加快构建速度。3）前端UI的Dockerfile（如果前后端分离）：为你的Streamlit/Gradio前端也写一个Dockerfile。或者如果前后端在一起，就放到同一个镜像里。4）docker-compose.yml：编写docker-compose.yml，编排整个应用。至少包含：a）api服务（后端）；b）web服务（前端，如果分离的话）；c）（可选）nginx反向代理；d）volume挂载（如果有需要持久化的数据）；e）网络配置；f）环境变量配置；g）restart政策（如always或unless-stopped）。5）环境变量：用.env文件管理环境变量（模型路径、端口、日志级别等），不要硬编码。.env文件不要提交到Git（加到.gitignore里），提供.env.example作为模板。6）本地构建与测试：a）docker compose build 构建镜像；b）docker compose up -d 后台启动服务；c）测试服务是否能正常访问——前端页面、后端API、健康检查；d）用docker compose logs看日志，确认没有错误；e）做一次完整的端到端测试，确保全链路通。7）部署验证：在「干净环境」中验证部署。如果你有第二台机器或云服务器，把代码和镜像传过去，用docker compose up启动，看看能不能跑起来。如果只有一台机器，至少确保删掉本地环境后（用Docker）完全依赖Docker能跑。8）部署文档：写一份deploy.md，详细说明：a）环境要求（Docker版本、硬件要求、GPU驱动等）；b）如何启动服务（docker compose up -d）；c）如何停止/重启；d）如何查看日志；e）如何升级版本；f）端口说明、配置说明；g）常见问题排查。9）镜像体积优化：看一下你的镜像有多大？能不能再减小？试试多阶段构建、用更小的基础镜像、清理apt缓存、删掉不需要的依赖，尽量压缩镜像体积。",
           deep_dive: "Docker已经成为软件部署的标配，AI项目也不例外。但很多人写的Dockerfile只是「能跑」，离「生产级」还差很远。理解Docker在生产环境的深度实践：1）镜像安全：生产环境的镜像不能太随意。要注意：a）用官方或可信的基础镜像，不要随便从Docker Hub拉不知名的镜像；b）定期更新基础镜像，修复安全漏洞；c）不要在镜像里放敏感信息（密钥、密码），用环境变量或secret管理；d）用非root用户运行，减少攻击面；e）镜像扫描——用Trivy之类的工具扫描镜像的安全漏洞。2）镜像大小为什么重要？镜像越小，拉取越快、部署越快、占用存储越少、攻击面越小。优化镜像体积是工程能力的体现。常用手段：多阶段构建、alpine/slim基础镜像、合并RUN指令、安装完就清理缓存、只复制需要的文件、.dockerignore排除无用文件。3）容器编排：如果只是单个容器，用docker run就够了。但如果是多个容器、多台机器，就需要容器编排。Docker Compose适合单机多容器；Kubernetes（K8s）适合集群级别的容器编排——自动扩缩容、滚动更新、服务发现、负载均衡等。K8s是现在云原生的标配，虽然复杂但非常强大。4）有状态 vs 无状态：API服务是无状态的——任何请求都不依赖之前的请求，可以随便扩缩容、随便重启。数据库、文件存储是有状态的——数据不能丢，重启后要还在。设计架构时要尽量把服务做成无状态的，有状态的部分交给专门的存储系统。5）CI/CD与Docker：Docker和CI/CD是绝配。代码提交后，CI自动构建镜像、运行测试、推送到镜像仓库，然后CD自动部署到生产环境。整个流程自动化，不需要人工干预。这就是DevOps的核心思想。6）GPU容器化：AI项目常常需要GPU。nvidia-docker（现在叫NVIDIA Container Toolkit）让Docker容器也能使用GPU。但要注意：宿主的驱动版本要和容器里的CUDA版本兼容。7）配置的最佳实践：12 Factor App建议——配置严格分离于代码，通过环境变量注入。不要把配置写死在代码里，也不要打进镜像里。不同环境（开发/测试/生产）用不同的配置，但镜像只有一个。8）Docker不是银弹：Docker解决了环境一致性的问题，但它不是万能的。性能损失（虽然很小）、安全问题、存储网络复杂度增加。要用它的好处，也要知道它的代价。"
-        }, duration: "2.5小时", resources: [{ title: "Dockerfile 最佳实践", url: "https://docs.docker.com/develop/develop-images/dockerfile_best-practices/", required: false }, { title: "Docker Compose 文档", url: "https://docs.docker.com/compose/", required: false }, { title: "NVIDIA Container Toolkit", url: "https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/", required: false }, { title: "Docker 多阶段构建", url: "https://docs.docker.com/build/building/multi-stage/", required: false }], checkpoint: "可在干净环境用 docker compose up 一键部署" },
+        }, duration: "2.5小时", resources: [{ title: "Dockerfile 最佳实践", url: "https://docs.docker.com/develop/develop-images/dockerfile_best-practices/", required: false, type: "doc", source: "official" }, { title: "Docker Compose 文档", url: "https://docs.docker.com/compose/", required: false, type: "doc", source: "official" }, { title: "NVIDIA Container Toolkit", url: "https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/", required: false, type: "doc", source: "official" }, { title: "Docker 多阶段构建", url: "https://docs.docker.com/build/building/multi-stage/", required: false, type: "doc", source: "official" }], checkpoint: "可在干净环境用 docker compose up 一键部署" },
       { day: 12, title: "监控与上线",
         summary: "接入监控体系，撰写部署运维文档，完成生产环境上线准备。", content: {
           objective: "今天你将为你的服务接入监控体系，撰写运维文档，完成上线前的最后准备。学完后能接入Prometheus+Grafana监控、编写运维手册、进行上线前检查。监控是生产服务的眼睛——没有监控，出了问题你都不知道。",
@@ -2940,7 +2940,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成监控接入与上线准备：1）指标接口开发：在FastAPI服务中添加/metrics端点，暴露Prometheus格式的指标。至少包含：a）请求计数（http_requests_total）——按接口、状态码分类；b）请求延迟（http_request_duration_seconds）——直方图或摘要；c）业务指标——如推理结果的类别分布、平均置信度等（可选）。可以用prometheus_fastapi_instrumentator库快速接入。2）监控栈搭建：用Docker Compose把Prometheus和Grafana也编排进去。a）prometheus.yml配置——配置抓取你API服务的/metrics端点，设置抓取间隔（如15s）；b）Grafana配置——添加Prometheus数据源，导入或创建仪表盘。3）仪表盘制作：在Grafana中创建一个服务监控仪表盘，至少包含以下图表：a）QPS趋势图（每秒请求数，按状态码区分2xx/4xx/5xx）；b）延迟分布图——P50、P95、P99延迟随时间的变化；c）错误率——5xx错误占比；d）GPU利用率和显存使用（如果有GPU）；e）业务指标（可选）。4）告警规则（可选）：配置几条关键的告警规则，比如：a）错误率>5%持续1分钟——告警；b）P99延迟>2秒持续2分钟——告警；c）服务挂了（健康检查失败）——告警。告警可以发邮件、钉钉、企业微信等。5）上线检查清单（Go-Live Checklist）：写一份上线前检查清单，逐项确认：a）功能测试过了吗？核心路径都走通了吗？b）性能达标吗？预期QPS下延迟和资源占用满足要求吗？c）安全检查做了吗？有没有敏感信息泄露、有没有鉴权、有没有CORS配置？d）监控告警配齐了吗？出问题能发现吗？e）日志正常吗？有没有记录关键信息、级别对不对？f）回滚方案有吗？出问题怎么快速回滚到上一版本？g）文档齐了吗？部署文档、运维文档、API文档都有吗？h）负责人明确了吗？出问题找谁？6）运维手册：写一份运维手册ops.md，内容包括：a）服务架构图（文字描述或画图）；b）各组件的作用和端口；c）如何部署/启动/停止/重启；d）如何查看日志、日志位置；e）常见问题和排查步骤（如服务起不来怎么办、推理变慢怎么办、显存不够怎么办）；f）紧急联系人；g）版本记录和变更历史。7）压力测试与容量评估：用压测工具简单测一下服务的极限——最大能扛多少QPS？在多少QPS下延迟开始飙升？根据这个估算你的服务能支撑多少用户量。8）灰度发布计划（可选）：如果要给真实用户用，计划怎么做灰度——先切10%流量、没问题再50%、最后全量。确保出了问题影响面可控。",
           deep_dive: "从「能跑」到「稳定运行」是两个完全不同的概念。玩具项目可以没有监控，但生产服务不行。深入理解生产级服务的运维体系：1）为什么需要监控？「没有监控的服务就像闭着眼睛开车」——你不知道跑没跑偏、有没有油、引擎有没有故障。等用户投诉了才知道出问题，那就太晚了。好的监控应该能在用户发现之前就告警，让工程师有时间处理。2）监控的层次：系统级（CPU、内存、磁盘、网络）→ 服务级（QPS、延迟、错误率）→ 业务级（注册用户数、订单量、转化率）。越上层越贴近业务价值，越下层越基础。都要有。3）告警的艺术：告警不是越多越好。告警太多人会麻木，真正重要的告警反而被淹没在噪音里（「告警疲劳」）。好的告警应该：a）严重级别分明——P0（紧急，半夜叫起来）、P1（重要，工作时间马上处理）、P2（一般，当天处理）；b）可操作——收到告警就知道该做什么，而不是「啊好像有问题但不知道怎么办」；c）宁缺毋滥——宁可少几条告警，也不要天天狼来了。4）On-Call（值班）：生产服务需要有人7×24小时盯着吗？不一定，但至少要有值班机制——出了告警有人响应。小团队可以轮流值班，大团队有专门的SRE团队。5）故障管理：出了故障怎么办？不是修好了就完了。好的做法是：a）故障应急——先恢复服务再说，排查根因放后面；b）根因分析（RCA，Root Cause Analysis）——故障到底是怎么发生的，深层原因是什么；c）事后复盘（Postmortem）——写复盘报告，总结原因、影响、处理过程、改进措施；d）改进落地——把改进项落地，防止同类故障再次发生。复盘的目的不是追责，而是防止下次再犯。6）SLA/SLO/SLI：服务等级协议（SLA）是你对用户的承诺（如99.9%可用性）；服务等级目标（SLO）是你内部的目标（如99.95%，比SLA高一点留点余量）；服务等级指标（SLI）是你衡量的具体指标（如请求成功率、延迟）。这一套是Google SRE提出来的，很成熟。7）成本优化：上线后还要关注成本——一台GPU机器很贵的。怎么优化？a）自动扩缩容——高峰扩容、低峰缩容；b）潮汐调度——在线业务和离线任务错峰用；c）竞价实例——用云厂商的抢占式实例，便宜很多但可能被回收；d）模型优化——量化、蒸馏，用更小的模型跑。8）DevOps和MLOps：DevOps是开发和运维的融合，MLOps是DevOps在机器学习领域的延伸——把机器学习特有的东西（数据、模型、实验、特征）也纳入到工程化体系里。这是一个很大的领域，也是AI工程师进阶的方向。"
-        }, duration: "2.5小时", resources: [{ title: "Prometheus 官方文档", url: "https://prometheus.io/docs/", required: false }, { title: "Grafana 入门指南", url: "https://grafana.com/docs/grafana/latest/getting-started/", required: false }, { title: "Nginx 反向代理配置", url: "https://nginx.org/en/docs/http/ngx_http_proxy_module.html", required: false }, { title: "Let's Encrypt 使用指南", url: "https://letsencrypt.org/getting-started/", required: false }], checkpoint: "一份 deploy.md 说明 + Grafana 面板截图" },
+        }, duration: "2.5小时", resources: [{ title: "Prometheus 官方文档", url: "https://prometheus.io/docs/", required: false, type: "doc", source: "official" }, { title: "Grafana 入门指南", url: "https://grafana.com/docs/grafana/latest/getting-started/", required: false, type: "doc", source: "official" }, { title: "Nginx 反向代理配置", url: "https://nginx.org/en/docs/http/ngx_http_proxy_module.html", required: false, type: "doc", source: "official" }, { title: "Let's Encrypt 使用指南", url: "https://letsencrypt.org/getting-started/", required: false, type: "article", source: "official" }], checkpoint: "一份 deploy.md 说明 + Grafana 面板截图" },
       { day: 13, title: "文档与答辩准备",
         summary: "完善项目文档与代码，准备答辩演示材料，打磨项目最终呈现。", content: {
           objective: "今天你将完善项目文档和代码，准备答辩和演示材料。学完后能写出专业的项目README、制作清晰的演示PPT、准备常见问题和回答。项目不仅要做得好，还要讲得好——你的工作价值需要通过展示来传递。",
@@ -2953,7 +2953,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成文档完善与答辩准备：1）README打磨：花时间把README打磨成专业水准。结构建议：a）项目名称和一句话介绍（要醒目）；b）🎯 项目简介——解决什么问题、有什么特点、为什么值得做；c）✨ 功能特性——列3-5个核心功能（用emoji图标增加可读性）；d）🖼️ 演示截图/视频——一张图胜过千言万语，放最抓眼球的效果展示；e）🚀 快速开始——三步五步法，复制粘贴就能跑起来；f）📊 性能指标——用表格展示你的模型效果，和基线对比，提升了多少；g）🛠️ 技术栈——前端、后端、模型框架、部署工具等；h）📁 项目结构——目录树，让别人一眼看懂代码组织；i）📈 实验结果——简述你的实验过程和主要发现；j）🤝 贡献指南（可选）——欢迎别人贡献代码；k）📝 许可证；l）🙋‍♂️ 作者/联系方式。2）文档补全：检查所有文档是否齐全、更新：a）PRD.md —— 需求文档；b）docs/ 目录下的技术文档；c）deploy.md —— 部署文档；d）ops.md —— 运维手册；e）experiment.md —— 实验记录；f）bad_case_analysis.md —— 错误分析报告。3）代码整理：a）代码注释：关键部分有没有注释？不是越多越好，但复杂逻辑要有说明；b）命名规范：变量、函数、类名是否清晰一致？c）删除无用代码、调试代码、注释掉的代码；d）README中的示例代码能直接跑通吗？e）requirements.txt是最新的吗？f）有没有单元测试？覆盖率多少？4）演示PPT制作：准备一份5-10分钟的答辩PPT。结构建议：a）第1页：项目名称、作者、日期；b）第2页：背景与问题——为什么做这个项目？要解决什么痛点？c）第3页：你的方案——整体架构、技术选型、核心思路；d）第4-5页：实现细节——你做了哪些有技术含量的工作（挑2-3个重点讲，不要面面俱到）；e）第6页：效果展示——数据指标（和baseline的对比表）、Demo截图或视频；f）第7页：项目亮点——你的项目有什么特别的地方？创新点在哪里？你最得意的部分是什么？g）第8页：不足与展望——项目还有什么缺点？如果继续做你会怎么改进？h）第9页：总结与致谢。5）演示视频：录一个2-3分钟的项目演示视频。内容：a）快速介绍项目是做什么的；b）展示核心功能——操作一遍给观众看；c）展示效果——和基线对比、数据指标；d）最后可以说一下技术亮点。视频可以放到README里，也可以答辩时播放。6）FAQ准备：列出可能被问到的问题，准备好答案。常见问题：a）为什么选这个技术方案？有没有考虑其他方案？b）做这个项目遇到的最大困难是什么？怎么解决的？c）你的项目的创新点/亮点是什么？d）如果给你更多时间，你会怎么改进？e）这个项目最难的部分是什么？你从中学到了什么？f）模型的效果还能再提升吗？怎么做？g）部署遇到了什么问题？怎么解决的？h）数据从哪来？质量如何？7）模拟答辩：找个人当听众，讲一遍，计时。看看时间够不够、逻辑清不清楚、对方能不能听懂。根据反馈调整。8）最终检查：GitHub仓库最终检查——代码提交了吗？README好看吗？链接都对吗？Release打好了吗？",
           deep_dive: "很多技术人觉得「东西做出来就行了，文档和展示不重要」。这是非常错误的想法——你的工作的价值，需要通过沟通和展示来传递。做得好但说不出来，就像锦衣夜行。深入理解技术沟通的重要性：1）为什么技术沟通很重要？在真实工作中，你的代码不是写给自己看的，是给同事看的；你的工作成果不是做出来就完了，要让别人知道、理解、认可。不会沟通的技术人，职业天花板会很低。2）README的重要性怎么强调都不过分：对开源项目来说，README就是你的「门面」——别人点进来3秒内决定要不要继续看。好的README能让项目Stars翻倍，差的README没人愿意看。对公司内部项目来说，README就是交接文档——你走了之后别人能不能接盘，全看文档写得好不好。3）好技术 vs 好演讲：技术做得好是基础，但讲得好能放大你的价值。同样的工作，A能讲得清清楚楚，让老板觉得「这个项目很有价值，这个人很厉害」；B只会说「就是做了个模型嘛效果还可以」。你觉得谁晋升更快？4）技术演讲的技巧：a）先讲为什么（Why），再讲是什么（What），最后讲怎么做（How）。听众首先关心的是「这东西和我有什么关系」；b）用故事和例子，不要干巴巴讲技术细节；c）突出亮点，不要面面俱到——10分钟讲10个点不如讲透2个重点；d）诚实面对不足——被问到不会的很正常，直接说「这个我没深入研究过，下来我再看看」，别瞎编；e）控制时间——准备的内容比时间少一点，留点余量，别超时。5）代码质量的意义：代码是写给人看的，顺便能跑。你写的代码，半年后你自己还能看懂吗？别人接手要花多久？好的代码应该像好的散文——清晰、简洁、意图明确。命名是最难的也是最重要的。6）文档不是一次性的：很多人项目做完写个文档就完了。但文档是需要持续维护的——代码改了文档也要更，接口变了文档也要同步。过时的文档比没有文档还坑人。7）个人品牌：在这个时代，GitHub就是你的技术简历。维护一个高质量的GitHub主页，有几个漂亮的项目，比你面试时吹半天管用多了。认真对待你的每一个项目，它们都是你能力的证明。8）从「完成任务」到「打造作品」：做作业的心态是「完成就行，交差了事」；做作品的心态是「这是我的代表作，要做到我能力的最好」。两种心态，收获天差地别。建议你用「做作品」的心态来做这个项目——它会是你简历上的亮点，是你技术能力的证明。"
-        }, duration: "3小时", resources: [{ title: "技术演讲技巧", url: "https://www.presentationgo.com/2021/09/tips-for-technical-presentations.html", required: false }, { title: "Mermaid 图表语法", url: "https://mermaid.js.org/intro/", required: false }, { title: "GitHub Pages 部署", url: "https://pages.github.com/", required: false }], checkpoint: "README + docs/ 完整，可作为简历项目链接展示" },
+        }, duration: "3小时", resources: [{ title: "技术演讲技巧", url: "https://www.presentationgo.com/2021/09/tips-for-technical-presentations.html", required: false, type: "article", source: "official" }, { title: "Mermaid 图表语法", url: "https://mermaid.js.org/intro/", required: false, type: "article", source: "official" }, { title: "GitHub Pages 部署", url: "https://pages.github.com/", required: false, type: "repo", source: "github" }], checkpoint: "README + docs/ 完整，可作为简历项目链接展示" },
       { day: 14, title: "复盘、迭代与发布",
         summary: "完成最终Live Demo、项目复盘、版本发布，规划后续迭代方向。", content: {
           objective: "今天是项目的最后一天——你将完成最终的Live Demo、项目复盘总结、版本发布，并规划未来的迭代路线。学完后能系统性地复盘项目、从经验中学习、制定清晰的后续计划。收尾工作的质量，决定了项目最终的价值和你能带走多少成长。",
@@ -2966,7 +2966,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "完成最终复盘与版本发布：1）Live Demo录制/执行：a）完整地跑一遍项目，从启动服务到使用所有核心功能；b）录屏保存下来，作为项目的永久记录；c）记录演示中遇到的所有问题——不管多小，都是改进的机会。2）项目复盘（Retrospective）：认真写一份复盘文档retrospective.md，按照下面的框架：a）回顾目标——当初立项时的目标是什么？现在回头看，完成了多少？b）评估结果——哪些超出预期？哪些没达到？为什么？c）亮点与不足：🌟 3做得好的地方（Keep）——值得下次继续保持的；⚠️ 3个做得不好的地方（Problem）——下次要改进的；💡 3个意外收获（Try）——没想到但有价值的，下次可以多用。d）经验教训——技术上、项目管理上、沟通协作上，你学到了什么最重要的经验？e）如果重新来一遍——你会在哪些地方做得不一样？3）技术收获清单：列一下你在这个项目中学到的东西，越具体越好。比如：a）新学的技术（FastAPI、DVC、MLflow、Docker等等）；b）解决过的难题（每一个都是宝贵的经验）；c）新的方法论（错误分析、实验管理、数据优先的思维）；d）工程能力的提升（代码质量、文档能力、项目管理）。4）成果整理：a）整理所有实验结果，做成一张总表——从baseline到最终best，每一步的提升是多少，什么改动带来的；b）整理所有文档，确保都在docs/目录下，结构清晰；c）整理代码，确保主分支是干净的、可运行的；d）把演示视频、截图、PPT都放到release或docs里。5）版本发布：a）在GitHub上创建一个v1.0.0的Release；b）写Release Notes：📋 版本概述、✨ 新功能、🔧 技术细节、📊 性能指标、🐛 已知问题、📦 下载链接（如果有）；c）附上演示视频或截图；d）打tag，正式发布。6）后续路线图（Roadmap）：规划项目的未来。分三个层次：a）短期（接下来1-2周）——修复已知问题、优化小细节、完善文档和测试；b）中期（1-2个月）——增加重要功能、更大的模型/更多数据、性能优化、用户体验提升；c）长期（半年以上）——架构升级、新的技术方向、产品化运营。每个阶段写清楚目标和交付物。7）分享出去（可选）：如果你愿意，把项目分享出去——a）发一条朋友圈/技术社区（知乎、V2EX、GitHub trending等）；b）写一篇技术博客，讲讲你做这个项目的过程和收获；c）邀请朋友试用，收集反馈。8）庆祝一下：14天不容易！你完成了一个从零到一的完整项目，值得给自己一点奖励。9）最后：翻回第一天写的PRD和计划，对比一下——哪些实现了？哪些变了？你变成了更好的工程师吗？",
           deep_dive: "项目结束了，但成长才刚开始。很多人做完项目就扔在一边了，这很可惜——复盘和反思是从经验中学习的最佳时机。深入理解如何从项目中获得最大成长：1）经验≠成长：不是做了项目就一定会成长。同样是做一个项目，有的人做完了能力上一个台阶，有的人做完了还是老样子。差别就在于「复盘」——有没有停下来思考，从经历中提炼出经验和规律。2）费曼学习法：学完一个东西，能不能用自己的话讲给别人听，让小白也能听懂？如果能，说明你真的理解了。写技术博客、做分享、教别人，都是最好的学习方式。3）建立你的「知识体系」：这个项目中学到的东西，不要零散地记着，要把它们纳入你已有的知识体系里。比如：Docker是「运维/部署」这块的，FastAPI是「后端开发」这块的，错误分析是「机器学习方法论」这块的。知识有了结构，用的时候才能想起来。4）从项目到作品集：一个项目只是一个点，多做几个项目，连成线、铺成面，就是你的作品集。好的作品集应该：a）有深度——至少一个你深入做过的、能讲清楚来龙去脉的项目；b）有广度——覆盖不同的方向（CV/NLP/工程化等），展示你的综合能力；c）有亮点——每个项目都要有拿得出手的东西，不一定是新技术，也可以是巧妙的解决方案、严谨的实验、优秀的工程质量。5）持续迭代的心态：v1.0不是终点，只是一个里程碑。好的产品是迭代出来的——从1.0到2.0到3.0，越来越好。个人能力也是如此。保持「迭代思维」——永远有改进空间，永远在变得更好。6）技术深度vs技术广度：新人容易陷入两个极端——要么什么都想学一点但都不深（广度有余深度不足），要么只钻一个方向对其他一无所知（深度有余广度不足）。理想的T型人才——有一个很深的专长（竖线），同时知识面很广（横线）。做项目是拓展广度同时加深深度的好方法。7）找到你的「比较优势」：不是说你技术最好就最厉害，而是你有别人没有的独特组合。比如：既懂算法又懂工程的人，比纯算法或纯工程的人更稀缺；既懂技术又懂业务的人，价值更高。8）最后，恭喜你完成了14天的综合项目！这14天里你做的事情——从选题、数据、模型到部署、文档、发布——就是一个真实AI项目的完整生命周期。这段经历会成为你宝贵的财富。未来的路还很长，但你已经迈出了坚实的第一步。继续加油！"
-        }, duration: "2.5小时", resources: [{ title: "GitHub Releases 使用指南", url: "https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository", required: false }, { title: "HuggingFace Model Hub", url: "https://huggingface.co/docs/hub/en/models", required: false }, { title: "技术博客写作指南", url: "https://github.com/readme/guides/writing-on-github", required: false }, { title: "Markdown 写作技巧", url: "https://www.markdownguide.org/basic-syntax/", required: false }], checkpoint: "GitHub Release v1.0 + 一篇技术博客 + demo 录像链接" }],
+        }, duration: "2.5小时", resources: [{ title: "GitHub Releases 使用指南", url: "https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository", required: false, type: "repo", source: "github" }, { title: "HuggingFace Model Hub", url: "https://huggingface.co/docs/hub/en/models", required: false, type: "doc", source: "official" }, { title: "技术博客写作指南", url: "https://github.com/readme/guides/writing-on-github", required: false, type: "repo", source: "github" }, { title: "Markdown 写作技巧", url: "https://www.markdownguide.org/basic-syntax/", required: false, type: "article", source: "official" }], checkpoint: "GitHub Release v1.0 + 一篇技术博客 + demo 录像链接" }],
   },
 
   // =====================================================
@@ -2983,7 +2983,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "围绕 YOLOv8-seg 的实例分割实战。重点讲解如何将标注好的多边形数据集转化为 YOLO 格式并进行模型微调训练。",
     outcomes: ["掌握多边形标注到 YOLO 格式的转换流程", "完成 YOLOv8-seg 微调训练并推理"],
     relatedIntel: ["002-yolo"], relatedTools: ["Ultralytics YOLO", "Label Studio", "OpenCV", "Segment Anything"],
-    relatedTerms: ["yolo", "instance-segmentation", "coco-format"],
+    relatedTerms: ["yolo", "instance-segmentation", "coco-format"], relatedNodes: ["cv-detection", "cv-pose-estimation"],
     dailyTasks: [
       {
         day: 1,
@@ -3003,9 +3003,9 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2小时",
         resources: [B_CV_TUTORIAL,
-          { title: "Ultralytics YOLO 数据格式文档", url: "https://docs.ultralytics.com/datasets/segment/", required: true },
-          { title: "COCO Dataset 官方标注格式", url: "https://cocodataset.org/#format-data", required: false },
-          { title: "COCO格式转YOLO格式脚本", url: "https://github.com/ultralytics/ultralytics/blob/main/ultralytics/data/converter.py", required: false },
+          { title: "Ultralytics YOLO 数据格式文档", url: "https://docs.ultralytics.com/datasets/segment/", required: true, type: "doc", source: "official" },
+          { title: "COCO Dataset 官方标注格式", url: "https://cocodataset.org/#format-data", required: false, type: "article", source: "official" },
+          { title: "COCO格式转YOLO格式脚本", url: "https://github.com/ultralytics/ultralytics/blob/main/ultralytics/data/converter.py", required: false, type: "article", source: "github" },
           { title: "多边形标注工具labelme", url: "https://github.com/wkentaro/labelme", required: false, type: "repo", source: "github" }
         ],
         checkpoint: "用 Labelme 标注 3 张图片（多边形），运行脚本转换后，用 yolo val 验证标注是否正确（mAP>0 即说明格式有效）"
@@ -3027,9 +3027,9 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2小时",
         resources: [
-          { title: "Ultralytics YOLOv8 训练教程", url: "https://docs.ultralytics.com/modes/train/", required: true },
-          { title: "YOLO 数据集配置 YAML 示例", url: "https://github.com/ultralytics/ultralytics/blob/main/ultralytics/cfg/datasets/coco8-seg.yaml", required: true },
-          { title: "YOLOv8-seg模型文档", url: "https://docs.ultralytics.com/models/yolov8/#segmentation", required: false },
+          { title: "Ultralytics YOLOv8 训练教程", url: "https://docs.ultralytics.com/modes/train/", required: true, type: "doc", source: "official" },
+          { title: "YOLO 数据集配置 YAML 示例", url: "https://github.com/ultralytics/ultralytics/blob/main/ultralytics/cfg/datasets/coco8-seg.yaml", required: true, type: "article", source: "github" },
+          { title: "YOLOv8-seg模型文档", url: "https://docs.ultralytics.com/models/yolov8/#segmentation", required: false, type: "doc", source: "official" },
           
           { title: "YOLOv8-seg训练示例代码", url: "https://github.com/ultralytics/ultralytics/tree/main/examples", required: false, type: "repo", source: "github" }
         ],
@@ -3052,9 +3052,9 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2.5小时",
         resources: [
-          { title: "YOLO 超参数文档", url: "https://docs.ultralytics.com/hyp/", required: true },
-          { title: "迁移学习微调策略", url: "https://cs231n.github.io/transfer-learning/", required: false },
-          { title: "YOLOv8微调最佳实践", url: "https://docs.ultralytics.com/guides/hyperparameter-tuning/", required: false },
+          { title: "YOLO 超参数文档", url: "https://docs.ultralytics.com/hyp/", required: true, type: "doc", source: "official" },
+          { title: "迁移学习微调策略", url: "https://cs231n.github.io/transfer-learning/", required: false, type: "article", source: "official" },
+          { title: "YOLOv8微调最佳实践", url: "https://docs.ultralytics.com/guides/hyperparameter-tuning/", required: false, type: "doc", source: "official" },
           
           { title: "YOLO超参数优化代码", url: "https://github.com/ultralytics/ultralytics/tree/main/ultralytics/cfg", required: false, type: "repo", source: "github" }
         ],
@@ -3078,8 +3078,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "1.5小时",
         resources: [
-          { title: "YOLO 推理文档", url: "https://docs.ultralytics.com/modes/predict/", required: true },
-          { title: "OpenCV 绘图函数", url: "https://docs.opencv.org/4.x/d/d00/sche", required: false },
+          { title: "YOLO 推理文档", url: "https://docs.ultralytics.com/modes/predict/", required: true, type: "doc", source: "official" },
+          { title: "OpenCV 绘图函数", url: "https://docs.opencv.org/4.x/d/d00/sche", required: false, type: "doc", source: "official" },
           
           { title: "YOLOv8分割结果可视化代码", url: "https://github.com/ultralytics/ultralytics/tree/main/examples", required: false, type: "repo", source: "github" },
           { title: "Mask R-CNN论文", url: "https://arxiv.org/abs/1703.06870", required: false, type: "paper", source: "academic" }
@@ -3104,7 +3104,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "3小时",
         resources: [
-          { title: "YOLOv8-seg 完整示例", url: "https://docs.ultralytics.com/tasks/segment/", required: true },
+          { title: "YOLOv8-seg 完整示例", url: "https://docs.ultralytics.com/tasks/segment/", required: true, type: "doc", source: "official" },
           
           { title: "YOLOv8完整训练推理代码", url: "https://github.com/ultralytics/ultralytics/tree/main/examples", required: false, type: "repo", source: "github" },
           { title: "Python多进程处理", url: "https://realpython.com/python-concurrency/", required: false, type: "doc", source: "official" }
@@ -3128,7 +3128,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "围绕软硬件结合的数据链路打通。重点讲解如何使用 ESP32 采集传感器数据，并通过 WiFi 发送 HTTP 请求到 FastAPI 构建的后端接收端点。",
     outcomes: ["ESP32 传感器数据采集与 WiFi HTTP 上报", "FastAPI 接收端点 + 数据持久化"],
     relatedIntel: ["007-docker"], relatedTools: ["FastAPI", "ESP-IDF"],
-    relatedTerms: ["esp32", "wifi", "http", "rest-api", "uart"],
+    relatedTerms: ["esp32", "wifi", "http", "rest-api", "uart"], relatedNodes: ["embedded-hal", "embedded-driver"],
     dailyTasks: [
       {
         day: 1,
@@ -3147,8 +3147,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "1.5小时",
         resources: [B_LINUX_TUTORIAL, 
-          { title: "ESP32 WiFi 库文档", url: "https://docs.espressif.com/projects/arduino-esp32/en/latest/api/wifi.html", required: true },
-          { title: "Arduino ESP32 安装指南", url: "https://docs.espressif.com/projects/arduino-esp32/en/latest/installing.html", required: true }
+          { title: "ESP32 WiFi 库文档", url: "https://docs.espressif.com/projects/arduino-esp32/en/latest/api/wifi.html", required: true, type: "doc", source: "official" },
+          { title: "Arduino ESP32 安装指南", url: "https://docs.espressif.com/projects/arduino-esp32/en/latest/installing.html", required: true, type: "doc", source: "official" }
         ],
         checkpoint: "串口监视器显示 ESP32 获取到局域网 IP（如 192.168.1.100）"
       },
@@ -3169,8 +3169,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "1.5小时",
         resources: [
-          { title: "DHT Sensor Library", url: "https://github.com/adafruit/DHT-sensor-library", required: true },
-          { title: "BMP280 驱动文档", url: "https://github.com/adafruit/Adafruit_BMP280_Library", required: true }
+          { title: "DHT Sensor Library", url: "https://github.com/adafruit/DHT-sensor-library", required: true, type: "repo", source: "github" },
+          { title: "BMP280 驱动文档", url: "https://github.com/adafruit/Adafruit_BMP280_Library", required: true, type: "repo", source: "github" }
         ],
         checkpoint: "串口输出正确格式的 JSON，每组数据在合理范围内（温度 15-35°C，湿度 30-80%）"
       },
@@ -3191,8 +3191,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2小时",
         resources: [
-          { title: "ArduinoJson 库文档", url: "https://arduinojson.org/", required: true },
-          { title: "ESP32 HTTP Client 示例", url: "https://docs.espressif.com/projects/arduino-esp32/en/latest/api/wificient.html", required: false }
+          { title: "ArduinoJson 库文档", url: "https://arduinojson.org/", required: true, type: "doc", source: "official" },
+          { title: "ESP32 HTTP Client 示例", url: "https://docs.espressif.com/projects/arduino-esp32/en/latest/api/wificient.html", required: false, type: "doc", source: "official" }
         ],
         checkpoint: "ESP32 串口显示 HTTP/1.1 201 Created 或 200 OK，服务器端收到数据"
       },
@@ -3213,8 +3213,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "1.5小时",
         resources: [
-          { title: "FastAPI 官方教程", url: "https://fastapi.tiangolo.com/tutorial/", required: true },
-          { title: "Pydantic 数据验证", url: "https://docs.pydantic.dev/", required: true }
+          { title: "FastAPI 官方教程", url: "https://fastapi.tiangolo.com/tutorial/", required: true, type: "article", source: "official" },
+          { title: "Pydantic 数据验证", url: "https://docs.pydantic.dev/", required: true, type: "doc", source: "official" }
         ],
         checkpoint: "curl 返回 {\"status\": \"ok\"}，服务器终端打印出完整的 SensorData"
       },
@@ -3235,8 +3235,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2小时",
         resources: [
-          { title: "SQLite Python 文档", url: "https://docs.python.org/3/library/sqlite3.html", required: true },
-          { title: "FastAPI SQL 教程", url: "https://fastapi.tiangolo.com/tutorial/sql-databases/", required: false }
+          { title: "SQLite Python 文档", url: "https://docs.python.org/3/library/sqlite3.html", required: true, type: "doc", source: "official" },
+          { title: "FastAPI SQL 教程", url: "https://fastapi.tiangolo.com/tutorial/sql-databases/", required: false, type: "article", source: "official" }
         ],
         checkpoint: "sqlite3 命令行查询到历史记录，GET 端点返回正确 JSON"
       },
@@ -3257,7 +3257,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2小时",
         resources: [
-          { title: "ESP32 低功耗指南", url: "https://docs.espressif.com/projects/esp-idf/en/latest/api-reference/system/deep_sleep.html", required: false }
+          { title: "ESP32 低功耗指南", url: "https://docs.espressif.com/projects/esp-idf/en/latest/api-reference/system/deep_sleep.html", required: false, type: "doc", source: "official" }
         ],
         checkpoint: "拔掉 WiFi 路由器的网线，ESP32 重试 3 次后进入深度睡眠，插回网线后自动恢复上报"
       },
@@ -3278,8 +3278,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2.5小时",
         resources: [
-          { title: "FastAPI 静态文件挂载", url: "https://fastapi.tiangolo.com/tutorial/static-files/", required: true },
-          { title: "Chart.js 入门", url: "https://www.chartjs.org/docs/latest/", required: true }
+          { title: "FastAPI 静态文件挂载", url: "https://fastapi.tiangolo.com/tutorial/static-files/", required: true, type: "article", source: "official" },
+          { title: "Chart.js 入门", url: "https://www.chartjs.org/docs/latest/", required: true, type: "doc", source: "official" }
         ],
         checkpoint: "浏览器页面显示两条实时更新的折线图，数据来自真实 ESP32 上报"
       }
@@ -3300,7 +3300,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "围绕本地知识库构建。重点讲如何使用脚本自动化解析学术文献或网页内容，并结合向量数据库搭建一个轻量级的本地 RAG（检索增强生成）系统。",
     outcomes: ["自动化文档解析与分块", "向量数据库存储与相似度检索", "本地 LLM 生成回答"],
     relatedIntel: ["005-rag", "001-transformer"], relatedTools: ["LangChain", "ChromaDB", "vLLM"],
-    relatedTerms: ["rag", "vector-database", "embedding", "chunking", "llm"],
+    relatedTerms: ["rag", "vector-database", "embedding", "chunking", "llm"], relatedNodes: ["llm-rag", "llm-inference"],
     dailyTasks: [
       {
         day: 1,
@@ -3319,8 +3319,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "1.5小时",
         resources: [B_NLP_TUTORIAL, 
-          { title: "PyPDF2 文档", url: "https://pypdf.readthedocs.io/", required: true },
-          { title: "PDF 论文示例 (arXiv)", url: "https://arxiv.org/pdf/2303.08774.pdf", required: true }
+          { title: "PyPDF2 文档", url: "https://pypdf.readthedocs.io/", required: true, type: "doc", source: "official" },
+          { title: "PDF 论文示例 (arXiv)", url: "https://arxiv.org/pdf/2303.08774.pdf", required: true, type: "paper", source: "academic" }
         ],
         checkpoint: "输出的 JSONL 文件行数 > 50，每条记录包含 text、source、page 三个字段"
       },
@@ -3341,8 +3341,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "1.5小时",
         resources: [
-          { title: "BeautifulSoup 文档", url: "https://www.crummy.com/software/BeautifulSoup/bs4/doc/", required: true },
-          { title: "requests 库文档", url: "https://docs.python-requests.org/", required: true }
+          { title: "BeautifulSoup 文档", url: "https://www.crummy.com/software/BeautifulSoup/bs4/doc/", required: true, type: "doc", source: "official" },
+          { title: "requests 库文档", url: "https://docs.python-requests.org/", required: true, type: "doc", source: "official" }
         ],
         checkpoint: "输出 JSONL 中每条记录正文无 HTML 标签，无导航菜单内容"
       },
@@ -3363,8 +3363,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2小时",
         resources: [
-          { title: "Sentence-Transformers 文档", url: "https://www.sbert.net/", required: true },
-          { title: "HuggingFace MTEB 榜单", url: "https://huggingface.co/spaces/mteb/leaderboard", required: false }
+          { title: "Sentence-Transformers 文档", url: "https://www.sbert.net/", required: true, type: "doc", source: "official" },
+          { title: "HuggingFace MTEB 榜单", url: "https://huggingface.co/spaces/mteb/leaderboard", required: false, type: "article", source: "official" }
         ],
         checkpoint: "Top-5 返回结果与查询语义相关（可用肉眼判断），相似度数值合理（0.3-0.9 之间）"
       },
@@ -3385,8 +3385,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "1.5小时",
         resources: [
-          { title: "ChromaDB 快速入门", url: "https://docs.trychroma.com/getting-started", required: true },
-          { title: "ChromaDB Python 客户端", url: "https://docs.trychroma.com/api-reference", required: true }
+          { title: "ChromaDB 快速入门", url: "https://docs.trychroma.com/getting-started", required: true, type: "doc", source: "official" },
+          { title: "ChromaDB Python 客户端", url: "https://docs.trychroma.com/api-reference", required: true, type: "doc", source: "official" }
         ],
         checkpoint: "输入「论文作者是谁」能返回包含作者信息的文本块"
       },
@@ -3407,8 +3407,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2.5小时",
         resources: [
-          { title: "Ollama 官方文档", url: "https://github.com/ollama/ollama", required: true },
-          { title: "Ollama API 参考", url: "https://github.com/ollama/ollama/blob/main/docs/api.md", required: true }
+          { title: "Ollama 官方文档", url: "https://github.com/ollama/ollama", required: true, type: "repo", source: "github" },
+          { title: "Ollama API 参考", url: "https://github.com/ollama/ollama/blob/main/docs/api.md", required: true, type: "doc", source: "github" }
         ],
         checkpoint: "提出一个文档相关的问题，能得到基于文档内容的回答（不是通用回答）"
       },
@@ -3429,7 +3429,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2小时",
         resources: [
-          { title: "RAG 系统评估方法", url: "https://github.com/run-llama/llama-hub", required: false }
+          { title: "RAG 系统评估方法", url: "https://github.com/run-llama/llama-hub", required: false, type: "repo", source: "github" }
         ],
         checkpoint: "5 个测试问题中至少 4 个能正确引用文档内容生成回答"
       },
@@ -3450,8 +3450,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2小时",
         resources: [
-          { title: "Gradio 快速入门", url: "https://gradio.app/quickstart/", required: true },
-          { title: "Streamlit 快速入门", url: "https://docs.streamlit.io/get-started", required: false }
+          { title: "Gradio 快速入门", url: "https://gradio.app/quickstart/", required: true, type: "article", source: "official" },
+          { title: "Streamlit 快速入门", url: "https://docs.streamlit.io/get-started", required: false, type: "doc", source: "official" }
         ],
         checkpoint: "浏览器打开 Web UI，输入问题得到完整 RAG 回答和来源展示"
       },
@@ -3544,7 +3544,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "围绕模型服务化部署。重点讲如何编写 Dockerfile，将一个包含了深度学习推理逻辑的 Python/FastAPI 服务打包成体积优化的镜像。",
     outcomes: ["Dockerfile 多阶段构建优化", "FastAPI 模型推理服务容器化", "镜像体积控制 < 2GB"],
     relatedIntel: ["007-docker"], relatedTools: ["Docker", "Triton Inference Server", "vLLM"],
-    relatedTerms: ["docker", "dockerfile", "multi-stage-build", "uvicorn", "fastapi"],
+    relatedTerms: ["docker", "dockerfile", "multi-stage-build", "uvicorn", "fastapi"], relatedNodes: ["docker-basic", "devops-kubernetes", "devops-monitoring"],
     dailyTasks: [
       {
         day: 1,
@@ -3563,8 +3563,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2小时",
         resources: [B_DOCKER_TUTORIAL, 
-          { title: "FastAPI 官方教程", url: "https://fastapi.tiangolo.com/tutorial/", required: true },
-          { title: "PyTorch 模型推理", url: "https://pytorch.org/tutorials/beginner/saving_loading_models.html", required: true }
+          { title: "FastAPI 官方教程", url: "https://fastapi.tiangolo.com/tutorial/", required: true, type: "article", source: "official" },
+          { title: "PyTorch 模型推理", url: "https://pytorch.org/tutorials/beginner/saving_loading_models.html", required: true, type: "article", source: "official" }
         ],
         checkpoint: "curl 上传一张图片，返回包含 ImageNet 类别的 Top-5 预测"
       },
@@ -3587,8 +3587,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "1.5小时",
         resources: [
-          { title: "Dockerfile 官方参考", url: "https://docs.docker.com/engine/reference/builder/", required: true },
-          { title: "pip requirements 文件格式", url: "https://pip.pypa.io/en/stable/reference/requirements-file-format/", required: true }
+          { title: "Dockerfile 官方参考", url: "https://docs.docker.com/engine/reference/builder/", required: true, type: "doc", source: "official" },
+          { title: "pip requirements 文件格式", url: "https://pip.pypa.io/en/stable/reference/requirements-file-format/", required: true, type: "article", source: "official" }
         ],
         checkpoint: "docker images 查看镜像大小，通常 > 5GB"
       },
@@ -3609,8 +3609,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2小时",
         resources: [
-          { title: "Docker 多阶段构建文档", url: "https://docs.docker.com/build/building/multi-stage/", required: true },
-          { title: "Python slim 镜像优化", url: "https://pythonspeed.com/articles/base-image-python/", required: false }
+          { title: "Docker 多阶段构建文档", url: "https://docs.docker.com/build/building/multi-stage/", required: true, type: "doc", source: "official" },
+          { title: "Python slim 镜像优化", url: "https://pythonspeed.com/articles/base-image-python/", required: false, type: "article", source: "official" }
         ],
         checkpoint: "v2 镜像大小 < v1 的 60%（通常可从 6GB 降到 2-3GB）"
       },
@@ -3631,7 +3631,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "1小时",
         resources: [
-          { title: ".dockerignore 官方文档", url: "https://docs.docker.com/engine/reference/builder/#dockerignore-file", required: true }
+          { title: ".dockerignore 官方文档", url: "https://docs.docker.com/engine/reference/builder/#dockerignore-file", required: true, type: "doc", source: "official" }
         ],
         checkpoint: "构建日志显示 COPY . . 时传输的文件列表中不包含 .git 和 __pycache__"
       },
@@ -3653,8 +3653,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "1.5小时",
         resources: [
-          { title: "Docker Compose 文件参考", url: "https://docs.docker.com/compose/compose-file/", required: true },
-          { title: "Docker 健康检查", url: "https://docs.docker.com/engine/reference/builder/#healthcheck", required: true }
+          { title: "Docker Compose 文件参考", url: "https://docs.docker.com/compose/compose-file/", required: true, type: "doc", source: "official" },
+          { title: "Docker 健康检查", url: "https://docs.docker.com/engine/reference/builder/#healthcheck", required: true, type: "doc", source: "official" }
         ],
         checkpoint: "docker compose up -d 后 docker compose ps 显示 healthy 状态"
       },
@@ -3675,8 +3675,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "1.5小时",
         resources: [
-          { title: "Docker 安全最佳实践", url: "https://docs.docker.com/develop/security/", required: true },
-          { title: "Docker CIS Benchmark", url: "https://www.cisecurity.org/benchmark/docker", required: false }
+          { title: "Docker 安全最佳实践", url: "https://docs.docker.com/develop/security/", required: true, type: "doc", source: "official" },
+          { title: "Docker CIS Benchmark", url: "https://www.cisecurity.org/benchmark/docker", required: false, type: "doc", source: "official" }
         ],
         checkpoint: "docker run --read-only 启动成功，USER 为 www-data，非 root 运行"
       },
@@ -3697,8 +3697,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2.5小时",
         resources: [
-          { title: "GitHub Actions Docker 构建", url: "https://github.com/docker/build-push-action", required: true },
-          { title: "GitHub Actions 缓存优化", url: "https://docs.docker.com/build/cache/backend/buildkit/", required: false }
+          { title: "GitHub Actions Docker 构建", url: "https://github.com/docker/build-push-action", required: true, type: "repo", source: "github" },
+          { title: "GitHub Actions 缓存优化", url: "https://docs.docker.com/build/cache/backend/buildkit/", required: false, type: "doc", source: "official" }
         ],
         checkpoint: "GitHub Actions 显示构建成功，Docker Hub 仓库有对应 tag 的镜像"
       }
@@ -3719,7 +3719,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "围绕深度学习中的矩阵运算。重点解析 PyTorch 中的高维张量乘法（如 torch.matmul）与广播机制（Broadcasting）在实际神经网络前向传播中的应用。",
     outcomes: ["理解高维张量的维度语义", "掌握 matmul / mm / bmm 差异", "熟练运用广播机制避免显式维度扩展"],
     relatedIntel: ["010-numpy-pandas", "011-pytorch"], relatedTools: ["PyTorch", "NumPy"],
-    relatedTerms: ["tensor", "matrix-multiplication", "broadcasting", "torch.matmul", "reshape"],
+    relatedTerms: ["tensor", "matrix-multiplication", "broadcasting", "torch.matmul", "reshape"], relatedNodes: ["math-linear-algebra", "pytorch-core"],
     dailyTasks: [
       {
         day: 1,
@@ -3738,8 +3738,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "1.5小时",
         resources: [B_LINEAR_ALGEBRA, 
-          { title: "PyTorch 张量文档", url: "https://pytorch.org/docs/stable/tensors.html", required: true },
-          { title: "张量维度约定 (NCHW vs NHWC)", url: "https://pytorch.org/docs/stable/generated/torch.randn.html", required: false }
+          { title: "PyTorch 张量文档", url: "https://pytorch.org/docs/stable/tensors.html", required: true, type: "doc", source: "official" },
+          { title: "张量维度约定 (NCHW vs NHWC)", url: "https://pytorch.org/docs/stable/generated/torch.randn.html", required: false, type: "doc", source: "official" }
         ],
         checkpoint: "能清晰解释 x[:, i:i+2, :].shape == (8, 2, 128) 的含义"
       },
@@ -3760,8 +3760,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2小时",
         resources: [
-          { title: "torch.matmul 官方文档", url: "https://pytorch.org/docs/stable/generated/torch.matmul.html", required: true },
-          { title: "torch.einsum 文档", url: "https://pytorch.org/docs/stable/generated/torch.einsum.html", required: true }
+          { title: "torch.matmul 官方文档", url: "https://pytorch.org/docs/stable/generated/torch.matmul.html", required: true, type: "doc", source: "official" },
+          { title: "torch.einsum 文档", url: "https://pytorch.org/docs/stable/generated/torch.einsum.html", required: true, type: "doc", source: "official" }
         ],
         checkpoint: "能解释为什么 Linear 层权重 (W: [out_features, in_features]) 用 weight.t() 后可以用 matmul 直接计算 batch 推理"
       },
@@ -3782,8 +3782,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "1.5小时",
         resources: [
-          { title: "NumPy 广播官方文档", url: "https://numpy.org/doc/stable/user/basics.broadcasting.html", required: true },
-          { title: "PyTorch broadcasting 语义", url: "https://pytorch.org/docs/stable/generated/torch.broadcast_shapes.html", required: true }
+          { title: "NumPy 广播官方文档", url: "https://numpy.org/doc/stable/user/basics.broadcasting.html", required: true, type: "article", source: "official" },
+          { title: "PyTorch broadcasting 语义", url: "https://pytorch.org/docs/stable/generated/torch.broadcast_shapes.html", required: true, type: "doc", source: "official" }
         ],
         checkpoint: "能用广播实现层归一化：layer_norm(x) = (x - mean) / std，其中 mean shape 为 (B, N, 1) 能正确广播到 (B, N, D)"
       },
@@ -3804,8 +3804,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "1.5小时",
         resources: [
-          { title: "tensor.view vs reshape", url: "https://pytorch.org/docs/stable/generated/torch.Tensor.view.html", required: true },
-          { title: "PyTorch contiguous 文档", url: "https://pytorch.org/docs/stable/generated/torch.Tensor.contiguous.html", required: true }
+          { title: "tensor.view vs reshape", url: "https://pytorch.org/docs/stable/generated/torch.Tensor.view.html", required: true, type: "doc", source: "official" },
+          { title: "PyTorch contiguous 文档", url: "https://pytorch.org/docs/stable/generated/torch.Tensor.contiguous.html", required: true, type: "doc", source: "official" }
         ],
         checkpoint: "assert torch.allclose(original, reconstructed)，说明多头 reshape + 还原是无损操作"
       },
@@ -3826,8 +3826,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2小时",
         resources: [
-          { title: "nn.Linear 源码实现", url: "https://pytorch.org/docs/stable/generated/torch.nn.Linear.html", required: true },
-          { title: "F.gelu 实现", url: "https://pytorch.org/docs/stable/generated/nn.functional.gelu.html", required: true }
+          { title: "nn.Linear 源码实现", url: "https://pytorch.org/docs/stable/generated/torch.nn.Linear.html", required: true, type: "doc", source: "official" },
+          { title: "F.gelu 实现", url: "https://pytorch.org/docs/stable/generated/nn.functional.gelu.html", required: true, type: "doc", source: "official" }
         ],
         checkpoint: "ManualMLP 与 nn.Sequential 输出差值 < 1e-6（浮点误差范围内相等）"
       },
@@ -3848,8 +3848,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2.5小时",
         resources: [
-          { title: "PyTorch scaled_dot_product_attention（官方实现）", url: "https://pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html", required: true },
-          { title: "Attention Is All You Need", url: "https://arxiv.org/abs/1706.03762", required: true }
+          { title: "PyTorch scaled_dot_product_attention（官方实现）", url: "https://pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html", required: true, type: "doc", source: "official" },
+          { title: "Attention Is All You Need", url: "https://arxiv.org/abs/1706.03762", required: true, type: "paper", source: "academic" }
         ],
         checkpoint: "与 F.scaled_dot_product_attention 的输出差值 < 1e-5，mask 正确屏蔽了 padding 位置"
       },
@@ -3871,8 +3871,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "3小时",
         resources: [
-          { title: "minGPT 实现参考", url: "https://github.com/karpathy/minGPT", required: false },
-          { title: "LayerNorm broadcasting", url: "https://pytorch.org/docs/stable/generated/torch.nn.LayerNorm.html", required: true }
+          { title: "minGPT 实现参考", url: "https://github.com/karpathy/minGPT", required: false, type: "repo", source: "github" },
+          { title: "LayerNorm broadcasting", url: "https://pytorch.org/docs/stable/generated/torch.nn.LayerNorm.html", required: true, type: "doc", source: "official" }
         ],
         checkpoint: "Forward 成功运行，输出 logits shape 正确，参数量约 700K（< 1M），loss 有下降趋势"
       }
@@ -3894,7 +3894,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "基于 YOLOv8-pose / HRNet 的关键点检测与行为识别。从 COCO 17 点标注格式到实时摄像头动作告警。",
     outcomes: ["掌握关键点数据集标注与模型训练", "实现基于骨架序列的简单动作分类"],
     relatedIntel: ["002-yolo"], relatedTools: ["Ultralytics YOLO", "OpenCV"],
-    relatedTerms: ["keypoint", "pose-estimation", "hrnet", "coco-format", "action-recognition"],
+    relatedTerms: ["keypoint", "pose-estimation", "hrnet", "coco-format", "action-recognition"], relatedNodes: ["cv-detection"],
     dailyTasks: [
       {
         day: 1,
@@ -3914,8 +3914,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2小时",
         resources: [B_CV_TUTORIAL, 
-          { title: "Ultralytics YOLO Pose 文档", url: "https://docs.ultralytics.com/tasks/pose/", required: true },
-          { title: "COCO Keypoints 任务说明", url: "https://cocodataset.org/#keypoints-2020", required: false }
+          { title: "Ultralytics YOLO Pose 文档", url: "https://docs.ultralytics.com/tasks/pose/", required: true, type: "doc", source: "official" },
+          { title: "COCO Keypoints 任务说明", url: "https://cocodataset.org/#keypoints-2020", required: false, type: "article", source: "official" }
         ],
         checkpoint: "pred_pose.jpg 上关键点与骨架连线清晰合理"
       },
@@ -3937,8 +3937,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2.5小时",
         resources: [
-          { title: "YOLOv8 Pose 训练指南", url: "https://docs.ultralytics.com/modes/train/", required: true },
-          { title: "HRNet 论文", url: "https://arxiv.org/abs/1902.09212", required: false }
+          { title: "YOLOv8 Pose 训练指南", url: "https://docs.ultralytics.com/modes/train/", required: true, type: "doc", source: "official" },
+          { title: "HRNet 论文", url: "https://arxiv.org/abs/1902.09212", required: false, type: "paper", source: "academic" }
         ],
         checkpoint: "训练结束后 mAP50 > 0.6，对未见过的测试图推理能给出合理的骨架"
       },
@@ -3960,7 +3960,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2小时",
         resources: [
-          { title: "OpenCV VideoWriter 文档", url: "https://docs.opencv.org/4.x/dd/d43/tutorial_py_video_display.html", required: true }
+          { title: "OpenCV VideoWriter 文档", url: "https://docs.opencv.org/4.x/dd/d43/tutorial_py_video_display.html", required: true, type: "doc", source: "official" }
         ],
         checkpoint: "output_pose.mp4 播放时，人物动作的骨架连线跟随自然移动"
       },
@@ -3982,8 +3982,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2.5小时",
         resources: [
-          { title: "scikit-learn 分类器文档", url: "https://scikit-learn.org/stable/supervised_learning.html", required: true },
-          { title: "ST-GCN 基于图的动作识别（进阶）", url: "https://arxiv.org/abs/1801.07455", required: false }
+          { title: "scikit-learn 分类器文档", url: "https://scikit-learn.org/stable/supervised_learning.html", required: true, type: "article", source: "official" },
+          { title: "ST-GCN 基于图的动作识别（进阶）", url: "https://arxiv.org/abs/1801.07455", required: false, type: "paper", source: "academic" }
         ],
         checkpoint: "在 3 类动作的 3 段留出视频上，分类准确率 > 80%"
       },
@@ -4005,7 +4005,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "3小时",
         resources: [
-          { title: "OpenCV VideoCapture 文档", url: "https://docs.opencv.org/4.x/dd/d43/tutorial_py_video_display.html", required: true }
+          { title: "OpenCV VideoCapture 文档", url: "https://docs.opencv.org/4.x/dd/d43/tutorial_py_video_display.html", required: true, type: "doc", source: "official" }
         ],
         checkpoint: "python live_pose_app.py 能无延迟地显示带骨架的画面，并能正确识别到 2~3 种自定义动作"
       }
@@ -4027,7 +4027,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "从 PaddleOCR 开箱使用到自定义 DBNet 检测 + CRNN/TrOCR 识别的全流程，覆盖文档版面分析与票据结构化。",
     outcomes: ["能在中文票据场景下达到可用的 OCR 精度", "理解 DBNet 检测与 CRNN 序列识别原理"],
     relatedIntel: ["002-yolo"], relatedTools: ["OpenCV", "PyTorch"],
-    relatedTerms: ["ocr", "paddleocr", "dbnet", "crnn", "trocr", "layout-analysis"],
+    relatedTerms: ["ocr", "paddleocr", "dbnet", "crnn", "trocr", "layout-analysis"], relatedNodes: ["cv-cnn"],
     dailyTasks: [
       {
         day: 1,
@@ -4047,8 +4047,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2小时",
         resources: [B_CV_TUTORIAL, 
-          { title: "PaddleOCR GitHub 仓库", url: "https://github.com/PaddlePaddle/PaddleOCR", required: true },
-          { title: "PaddleOCR 快速上手", url: "https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.7/doc/doc_ch/quickstart.md", required: true }
+          { title: "PaddleOCR GitHub 仓库", url: "https://github.com/PaddlePaddle/PaddleOCR", required: true, type: "repo", source: "github" },
+          { title: "PaddleOCR 快速上手", url: "https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.7/doc/doc_ch/quickstart.md", required: true, type: "article", source: "github" }
         ],
         checkpoint: "至少在一张清晰中文图上获得多数文字的正确识别"
       },
@@ -4070,8 +4070,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2.5小时",
         resources: [
-          { title: "DBNet 论文", url: "https://arxiv.org/abs/1911.08947", required: false },
-          { title: "PaddleOCR 检测模型训练", url: "https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.7/doc/doc_ch/detection.md", required: true }
+          { title: "DBNet 论文", url: "https://arxiv.org/abs/1911.08947", required: false, type: "paper", source: "academic" },
+          { title: "PaddleOCR 检测模型训练", url: "https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.7/doc/doc_ch/detection.md", required: true, type: "article", source: "github" }
         ],
         checkpoint: "自定义检测模型在 val 的 hmean > 0.75"
       },
@@ -4093,9 +4093,9 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2.5小时",
         resources: [
-          { title: "CRNN 论文", url: "https://arxiv.org/abs/1507.05717", required: false },
-          { title: "TrOCR 论文 / HF 模型", url: "https://arxiv.org/abs/2109.10282", required: false },
-          { title: "PaddleOCR 识别训练", url: "https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.7/doc/doc_ch/recognition.md", required: true }
+          { title: "CRNN 论文", url: "https://arxiv.org/abs/1507.05717", required: false, type: "paper", source: "academic" },
+          { title: "TrOCR 论文 / HF 模型", url: "https://arxiv.org/abs/2109.10282", required: false, type: "paper", source: "academic" },
+          { title: "PaddleOCR 识别训练", url: "https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.7/doc/doc_ch/recognition.md", required: true, type: "article", source: "github" }
         ],
         checkpoint: "CRNN 在 val 的字符/整句准确率分别 > 0.90 / > 0.70；TrOCR 在手写测试上显著优于 CRNN"
       },
@@ -4117,9 +4117,9 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2小时",
         resources: [
-          { title: "LayoutLM 论文", url: "https://arxiv.org/abs/1912.13318", required: false },
-          { title: "HF LayoutLM 文档", url: "https://huggingface.co/docs/transformers/model_doc/layoutlm", required: true },
-          { title: "Paddle Structure 表格识别", url: "https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.7/doc/doc_ch/structure.md", required: true }
+          { title: "LayoutLM 论文", url: "https://arxiv.org/abs/1912.13318", required: false, type: "paper", source: "academic" },
+          { title: "HF LayoutLM 文档", url: "https://huggingface.co/docs/transformers/model_doc/layoutlm", required: true, type: "doc", source: "official" },
+          { title: "Paddle Structure 表格识别", url: "https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.7/doc/doc_ch/structure.md", required: true, type: "article", source: "github" }
         ],
         checkpoint: "至少有一张表格成功以 HTML 表格形式完整呈现；LayoutLM NER 在 FUNSD test 的 F1 > 0.6"
       },
@@ -4141,7 +4141,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "3小时",
         resources: [
-          { title: "公开票据数据集（中文 OCR 任务常用）", url: "https://aistudio.baidu.com/aistudio/datasetdetail/127958", required: false }
+          { title: "公开票据数据集（中文 OCR 任务常用）", url: "https://aistudio.baidu.com/aistudio/datasetdetail/127958", required: false, type: "article", source: "official" }
         ],
         checkpoint: "pipeline 在 5 张发票上跑通并输出完整 JSON；至少 3 张的所有关键字段正确"
       }
@@ -4163,7 +4163,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "从 DDPM 数学直觉到 Stable Diffusion / FLUX 实战：LoRA 微调、ControlNet 条件控制、ComfyUI 工作流、产品图自动生成 Pipeline。",
     outcomes: ["理解扩散模型前向/反向过程", "能独立做 LoRA 微调 + ControlNet 条件生成", "搭建一个可复用的图像生成工作流"],
     relatedIntel: ["006-cnn-basics"], relatedTools: ["PyTorch"],
-    relatedTerms: ["diffusion", "stable-diffusion", "lora", "controlnet", "comfyui", "flux", "image-generation"],
+    relatedTerms: ["diffusion", "stable-diffusion", "lora", "controlnet", "comfyui", "flux", "image-generation"], relatedNodes: ["cv-cnn", "llm-pretraining"],
     dailyTasks: [
       {
         day: 1,
@@ -4184,9 +4184,9 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2.5小时",
         resources: [B_D2L_LIMU, 
-          { title: "DDPM 论文（必读）", url: "https://arxiv.org/abs/2006.11239", required: true },
-          { title: "What are Diffusion Models（英文图解讲解）", url: "https://lilianweng.github.io/posts/2021-07-11-diffusion-models/", required: false },
-          { title: "PyTorch 参考实现（用于调试对照）", url: "https://github.com/lucidrains/denoising-diffusion-pytorch", required: false }
+          { title: "DDPM 论文（必读）", url: "https://arxiv.org/abs/2006.11239", required: true, type: "paper", source: "academic" },
+          { title: "What are Diffusion Models（英文图解讲解）", url: "https://lilianweng.github.io/posts/2021-07-11-diffusion-models/", required: false, type: "article", source: "official" },
+          { title: "PyTorch 参考实现（用于调试对照）", url: "https://github.com/lucidrains/denoising-diffusion-pytorch", required: false, type: "repo", source: "github" }
         ],
         checkpoint: "训练 30 epochs 后，采样图像能看出手写数字轮廓，不再是纯噪声"
       },
@@ -4208,9 +4208,9 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2小时",
         resources: [
-          { title: "Stable Diffusion WebUI GitHub", url: "https://github.com/AUTOMATIC1111/stable-diffusion-webui", required: true },
-          { title: "ComfyUI（节点化工作流）", url: "https://github.com/comfyanonymous/ComfyUI", required: false },
-          { title: "SD 官方博客：Stable Diffusion 解读", url: "https://stability.ai/news/stable-diffusion-public-release", required: false }
+          { title: "Stable Diffusion WebUI GitHub", url: "https://github.com/AUTOMATIC1111/stable-diffusion-webui", required: true, type: "repo", source: "github" },
+          { title: "ComfyUI（节点化工作流）", url: "https://github.com/comfyanonymous/ComfyUI", required: false, type: "repo", source: "github" },
+          { title: "SD 官方博客：Stable Diffusion 解读", url: "https://stability.ai/news/stable-diffusion-public-release", required: false, type: "article", source: "official" }
         ],
         checkpoint: "产出 9 张（3 任务 x 3 变体）由自己 prompt 生成的图像，并建立一份可复用的 prompt 模板"
       },
@@ -4232,9 +4232,9 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "3小时",
         resources: [
-          { title: "LoRA 论文（必读）", url: "https://arxiv.org/abs/2106.09685", required: true },
-          { title: "kohya-ss sd-scripts", url: "https://github.com/kohya-ss/sd-scripts", required: true },
-          { title: "DreamBooth + LoRA 教程（Colab 可跑）", url: "https://github.com/ShivamShrirao/diffusers/tree/main/examples/dreambooth", required: false }
+          { title: "LoRA 论文（必读）", url: "https://arxiv.org/abs/2106.09685", required: true, type: "paper", source: "academic" },
+          { title: "kohya-ss sd-scripts", url: "https://github.com/kohya-ss/sd-scripts", required: true, type: "repo", source: "github" },
+          { title: "DreamBooth + LoRA 教程（Colab 可跑）", url: "https://github.com/ShivamShrirao/diffusers/tree/main/examples/dreambooth", required: false, type: "article", source: "github" }
         ],
         checkpoint: "产出可在 WebUI 加载的 .safetensors LoRA 文件，trigger word 能稳定唤起目标概念"
       },
@@ -4256,9 +4256,9 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2.5小时",
         resources: [
-          { title: "ControlNet 论文 / 官方仓库", url: "https://github.com/lllyasviel/ControlNet", required: true },
-          { title: "IP-Adapter 项目页", url: "https://ip-adapter.github.io/", required: false },
-          { title: "diffusers ControlNet 文档", url: "https://huggingface.co/docs/diffusers/using-diffusers/controlnet", required: true }
+          { title: "ControlNet 论文 / 官方仓库", url: "https://github.com/lllyasviel/ControlNet", required: true, type: "repo", source: "github" },
+          { title: "IP-Adapter 项目页", url: "https://ip-adapter.github.io/", required: false, type: "repo", source: "official" },
+          { title: "diffusers ControlNet 文档", url: "https://huggingface.co/docs/diffusers/using-diffusers/controlnet", required: true, type: "doc", source: "official" }
         ],
         checkpoint: "4 个实验均产出符合输入条件的图像；diffusers 小脚本可独立运行"
       },
@@ -4279,8 +4279,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2.5小时",
         resources: [
-          { title: "ComfyUI 官方示例工作流合集", url: "https://comfyanonymous.github.io/ComfyUI_examples/", required: true },
-          { title: "AnimateDiff 官方仓库", url: "https://github.com/guoyww/AnimateDiff", required: false }
+          { title: "ComfyUI 官方示例工作流合集", url: "https://comfyanonymous.github.io/ComfyUI_examples/", required: true, type: "article", source: "official" },
+          { title: "AnimateDiff 官方仓库", url: "https://github.com/guoyww/AnimateDiff", required: false, type: "repo", source: "github" }
         ],
         checkpoint: "有 3 个可复现的 ComfyUI json 工作流文件 + 1 段生成的短视频"
       },
@@ -4302,9 +4302,9 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2小时",
         resources: [
-          { title: "FLUX.1 官方项目与模型下载", url: "https://blackforestlabs.ai/", required: false },
-          { title: "SDXL 论文 / 模型卡", url: "https://stability.ai/news/stable-diffusion-sdxl-1-announcement", required: false },
-          { title: "HF Diffusers 对 FLUX 支持", url: "https://huggingface.co/docs/diffusers/api/pipelines/flux", required: true }
+          { title: "FLUX.1 官方项目与模型下载", url: "https://blackforestlabs.ai/", required: false, type: "repo", source: "official" },
+          { title: "SDXL 论文 / 模型卡", url: "https://stability.ai/news/stable-diffusion-sdxl-1-announcement", required: false, type: "paper", source: "official" },
+          { title: "HF Diffusers 对 FLUX 支持", url: "https://huggingface.co/docs/diffusers/api/pipelines/flux", required: true, type: "doc", source: "official" }
         ],
         checkpoint: "产出一份至少 2 页的横向对比报告（含生成图像与评分表）"
       },
@@ -4326,8 +4326,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "3小时",
         resources: [
-          { title: "rembg 快速抠图", url: "https://github.com/danielgatis/rembg", required: true },
-          { title: "IP-Adapter + diffusers 中文教程", url: "https://huggingface.co/docs/diffusers/using-diffusers/ip_adapter", required: true }
+          { title: "rembg 快速抠图", url: "https://github.com/danielgatis/rembg", required: true, type: "repo", source: "github" },
+          { title: "IP-Adapter + diffusers 中文教程", url: "https://huggingface.co/docs/diffusers/using-diffusers/ip_adapter", required: true, type: "doc", source: "official" }
         ],
         checkpoint: "产品图 Pipeline 对 5 张白底图成功生成每种风格各 3 张变体，人工验收：10/15 张以上图可直接用于电商场景"
       },
@@ -4342,7 +4342,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "1）Stable Diffusion 推理：用 Diffusers 加载 SD 1.5 或 SDXL，文生图生成图片。2）参数实验：调 CFG scale、步数、采样器，看效果变化。3）提示词实验：试不同风格描述、权重语法，对比结果。4）LoRA 微调（可选）：用小数据集训练一个风格 LoRA。",
           deep_dive: "Stable Diffusion 是最流行的开源图像生成模型。提示词是控制生成的关键——正向提示词描述想要的，负向提示词排除不想要的。LoRA 微调是定制化的利器——只需要很少的图片就能训练出特定风格或角色，而且 LoRA 文件很小（几十 MB），可以快速切换。"
-        }, duration: "3小时", resources: [{ title: "Diffusers 文档", url: "https://huggingface.co/docs/diffusers/index", required: false }], checkpoint: "能用 Stable Diffusion 生成图像，掌握提示词和参数调节" },
+        }, duration: "3小时", resources: [{ title: "Diffusers 文档", url: "https://huggingface.co/docs/diffusers/index", required: false, type: "doc", source: "official" }], checkpoint: "能用 Stable Diffusion 生成图像，掌握提示词和参数调节" },
       { day: 9, title: "扩散模型进阶与应用拓展",
         summary: "了解 ControlNet、Inpainting 等高级应用，探索更多扩散模型能力", content: {
           objective: "了解扩散模型的高级应用。知道 ControlNet、Inpainting、Outpainting、图像编辑等能力，理解扩散模型的应用边界。",
@@ -4354,7 +4354,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "1）ControlNet 实验（可选）：试 ControlNet 的 Canny/Depth/Pose 控制生成。2）Inpainting：遮罩部分区域，让模型重绘。3）图像编辑：用 InstructPix2Pix 或 SDXL 编辑图片。4）调研：了解视频生成模型（Sora、Runway 等）。",
           deep_dive: "扩散模型的能力远超文生图——ControlNet 让生成可控（指定姿势、结构、构图）；Inpainting 让局部修改变得容易；图像编辑让文字描述就能改图。这些技术组合起来，可以做很多产品：AI 绘画、设计辅助、照片编辑、游戏素材生成等。视频生成是下一个前沿，进展很快。"
-        }, duration: "3小时", resources: [{ title: "ControlNet", url: "https://github.com/lllyasviel/ControlNet", required: false }], checkpoint: "了解扩散模型的多种高级应用，能使用 ControlNet 和 Inpainting" },
+        }, duration: "3小时", resources: [{ title: "ControlNet", url: "https://github.com/lllyasviel/ControlNet", required: false, type: "repo", source: "github" }], checkpoint: "了解扩散模型的多种高级应用，能使用 ControlNet 和 Inpainting" },
       { day: 10, title: "项目实战与前沿展望",
         summary: "完成一个扩散模型项目，了解前沿方向", content: {
           objective: "完成扩散模型项目并了解前沿。做一个完整的图像生成应用，了解最新进展（Sora、视频生成、3D 生成等），总结学习收获。",
@@ -4384,7 +4384,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "围绕大模型推理加速与生产级部署。重点讲 vLLM / SGLang 等推理引擎的原理，以及量化、批处理、长上下文等核心优化技术。",
     outcomes: ["掌握 KV Cache / PagedAttention 原理", "部署生产级 vLLM 推理服务", "GPTQ/AWQ 量化压缩模型"],
     relatedIntel: ["001-transformer", "005-rag"], relatedTools: ["vLLM", "Triton Inference Server"],
-    relatedTerms: ["vllm", "quantization", "pagedattention", "kv-cache", "batch-inference"],
+    relatedTerms: ["vllm", "quantization", "pagedattention", "kv-cache", "batch-inference"], relatedNodes: ["llm-pretraining", "llm-local-rag"],
     dailyTasks: [
       {
         day: 1,
@@ -4403,8 +4403,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2小时",
         resources: [B_LLM_FINETUNE, 
-          { title: "KV Cache 原理图解", url: "https://kipp.mreg.io/llm-inference/", required: true },
-          { title: "FastAPI + transformers 生成服务", url: "https://huggingface.co/docs/transformers/main/en/generation_strategies", required: true }
+          { title: "KV Cache 原理图解", url: "https://kipp.mreg.io/llm-inference/", required: true, type: "article", source: "official" },
+          { title: "FastAPI + transformers 生成服务", url: "https://huggingface.co/docs/transformers/main/en/generation_strategies", required: true, type: "doc", source: "official" }
         ],
         checkpoint: "能估算给定模型的 KV Cache 显存占用，代码验证：batch=4, seq=512 时 qwen2.5-0.5B 的 KV Cache 显存"
       },
@@ -4425,8 +4425,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2.5小时",
         resources: [
-          { title: "vLLM 官方文档", url: "https://docs.vllm.ai/en/latest/", required: true },
-          { title: "PagedAttention 论文", url: "https://arxiv.org/abs/2309.06180", required: true }
+          { title: "vLLM 官方文档", url: "https://docs.vllm.ai/en/latest/", required: true, type: "doc", source: "official" },
+          { title: "PagedAttention 论文", url: "https://arxiv.org/abs/2309.06180", required: true, type: "paper", source: "academic" }
         ],
         checkpoint: "vLLM 服务启动成功，curl 返回正确 JSON 格式推理结果，QPS 比纯 transformers 提升 2x+"
       },
@@ -4447,9 +4447,9 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "3小时",
         resources: [
-          { title: "SGLang GitHub", url: "https://github.com/sgl-project/sglang", required: true },
-          { title: "LMDeploy 文档", url: "https://lmdeploy.readthedocs.io/", required: true },
-          { title: "TensorRT-LLM 文档", url: "https://nvidia.github.io/TensorRT-LLM/", required: false }
+          { title: "SGLang GitHub", url: "https://github.com/sgl-project/sglang", required: true, type: "repo", source: "github" },
+          { title: "LMDeploy 文档", url: "https://lmdeploy.readthedocs.io/", required: true, type: "doc", source: "official" },
+          { title: "TensorRT-LLM 文档", url: "https://nvidia.github.io/TensorRT-LLM/", required: false, type: "doc", source: "official" }
         ],
         checkpoint: "输出包含 3 个引擎对比的 CSV，QPS 最高者应比最慢者快 50%+"
       },
@@ -4470,8 +4470,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2.5小时",
         resources: [
-          { title: "AutoGPTQ GitHub", url: "https://github.com/AutoGPTQ/AutoGPTQ", required: true },
-          { title: "AWQ 论文与代码", url: "https://arxiv.org/abs/2306.00978", required: true }
+          { title: "AutoGPTQ GitHub", url: "https://github.com/AutoGPTQ/AutoGPTQ", required: true, type: "repo", source: "github" },
+          { title: "AWQ 论文与代码", url: "https://arxiv.org/abs/2306.00978", required: true, type: "paper", source: "academic" }
         ],
         checkpoint: "INT4 量化模型显存 < FP16 的 40%，速度提升 > 2x，精度下降 < 5%（用 hellaswag 评测）"
       },
@@ -4492,7 +4492,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2小时",
         resources: [
-          { title: "vLLM 批量推理文档", url: "https://docs.vllm.ai/en/latest/generation/parameters.html", required: true }
+          { title: "vLLM 批量推理文档", url: "https://docs.vllm.ai/en/latest/generation/parameters.html", required: true, type: "doc", source: "official" }
         ],
         checkpoint: "连续批处理 Throughput 比 non-batch 高 5x+，GPU 利用率 > 70%"
       },
@@ -4513,9 +4513,9 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2.5小时",
         resources: [
-          { title: "RoPE 原始论文", url: "https://arxiv.org/abs/2104.09864", required: true },
-          { title: "YaRN 论文", url: "https://arxiv.org/abs/2309.00071", required: true },
-          { title: "FlashAttention-2 论文", url: "https://arxiv.org/abs/2307.08691", required: false }
+          { title: "RoPE 原始论文", url: "https://arxiv.org/abs/2104.09864", required: true, type: "paper", source: "academic" },
+          { title: "YaRN 论文", url: "https://arxiv.org/abs/2309.00071", required: true, type: "paper", source: "academic" },
+          { title: "FlashAttention-2 论文", url: "https://arxiv.org/abs/2307.08691", required: false, type: "paper", source: "academic" }
         ],
         checkpoint: "能回答文章中间位置的问题，准确率 > 80%（可通过提取特定句子验证）"
       },
@@ -4536,8 +4536,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "3小时",
         resources: [
-          { title: "vLLM 生产部署指南", url: "https://docs.vllm.ai/en/latest/serving/deploy.html", required: true },
-          { title: "Locust 压测工具", url: "https://locust.io/", required: true }
+          { title: "vLLM 生产部署指南", url: "https://docs.vllm.ai/en/latest/serving/deploy.html", required: true, type: "doc", source: "official" },
+          { title: "Locust 压测工具", url: "https://locust.io/", required: true, type: "tool", source: "official" }
         ],
         checkpoint: "压测 QPS > 30，99% 请求 < 2s，systemd 服务 crash 后自动重启"
       },
@@ -4552,7 +4552,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "1）llama.cpp 入门：下载 llama.cpp 编译，下载 GGUF 小模型，命令行推理。2）性能测试：测不同量化（Q4/Q5/Q8）的 tokens/秒和质量。3）本地 API：用 server 模式启动，OpenAI 客户端调用。4）移动端调研：了解手机跑大模型的现状。",
           deep_dive: "本地推理越来越重要——隐私、成本、可用性是三大驱动力。llama.cpp 让普通人在自己电脑上就能跑大模型。量化是关键：Q4_K_M 通常是甜点——体积只有 FP16 的 1/4，质量损失不大。苹果芯片尤其适合本地推理，统一内存+Metal 加速。"
-        }, duration: "2.5小时", resources: [{ title: "llama.cpp", url: "https://github.com/ggerganov/llama.cpp", required: false }], checkpoint: "能用 llama.cpp 本地运行大模型，理解本地推理适用场景" },
+        }, duration: "2.5小时", resources: [{ title: "llama.cpp", url: "https://github.com/ggerganov/llama.cpp", required: false, type: "repo", source: "github" }], checkpoint: "能用 llama.cpp 本地运行大模型，理解本地推理适用场景" },
       { day: 9, title: "推理成本分析与优化实战",
         summary: "系统化分析推理成本，制定优化策略和方案", content: {
           objective: "系统化分析推理成本并制定优化策略。能建模推理成本，找出成本瓶颈，设计端到端优化方案，量化评估优化效果。",
@@ -4594,7 +4594,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "围绕大模型提示工程与 Agent 系统设计。重点讲 Prompt 结构化输出、ReAct 模式、Function Calling 与工具调用。",
     outcomes: ["掌握结构化 Prompt 设计", "实现 ReAct Agent", "Function Calling 集成工具"],
     relatedIntel: ["001-transformer", "005-rag"], relatedTools: ["LangChain"],
-    relatedTerms: ["prompt", "chain-of-thought", "function-calling", "react", "agent", "structured-output"],
+    relatedTerms: ["prompt", "chain-of-thought", "function-calling", "react", "agent", "structured-output"], relatedNodes: ["llm-rag", "llm-agent"],
     dailyTasks: [
       {
         day: 1,
@@ -4612,8 +4612,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2小时",
         resources: [B_LLM_FINETUNE, 
-          { title: "OpenAI Prompt Engineering Guide", url: "https://platform.openai.com/docs/guides/prompt-engineering", required: true },
-          { title: "Anthropic Prompt Engineering Guide", url: "https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering", required: true }
+          { title: "OpenAI Prompt Engineering Guide", url: "https://platform.openai.com/docs/guides/prompt-engineering", required: true, type: "doc", source: "official" },
+          { title: "Anthropic Prompt Engineering Guide", url: "https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering", required: true, type: "doc", source: "official" }
         ],
         checkpoint: "有 few-shot 的 Prompt 质量评分比无 few-shot 高 20% 以上"
       },
@@ -4634,8 +4634,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2小时",
         resources: [
-          { title: "Self-Consistency 论文", url: "https://arxiv.org/abs/2203.11171", required: true },
-          { title: "Tree of Thoughts", url: "https://arxiv.org/abs/2305.10601", required: false }
+          { title: "Self-Consistency 论文", url: "https://arxiv.org/abs/2203.11171", required: true, type: "paper", source: "academic" },
+          { title: "Tree of Thoughts", url: "https://arxiv.org/abs/2305.10601", required: false, type: "paper", source: "academic" }
         ],
         checkpoint: "Self-Consistency 在 MATH 数据集上比 Zero-shot CoT 准确率提升 10%+"
       },
@@ -4655,8 +4655,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2小时",
         resources: [
-          { title: "Instructor 库文档", url: "https://jxnl.github.io/instructor/", required: true },
-          { title: "OpenAI Function Calling 文档", url: "https://platform.openai.com/docs/guides/function-calling", required: true }
+          { title: "Instructor 库文档", url: "https://jxnl.github.io/instructor/", required: true, type: "doc", source: "official" },
+          { title: "OpenAI Function Calling 文档", url: "https://platform.openai.com/docs/guides/function-calling", required: true, type: "doc", source: "official" }
         ],
         checkpoint: "10 条测试数据中至少 9 条正确解析，JSON 格式错误率 < 5%"
       },
@@ -4677,8 +4677,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2.5小时",
         resources: [
-          { title: "ReAct 论文", url: "https://arxiv.org/abs/2210.03629", required: true },
-          { title: "LangChain Agents 文档", url: "https://python.langchain.com/docs/concepts/agents/", required: false }
+          { title: "ReAct 论文", url: "https://arxiv.org/abs/2210.03629", required: true, type: "paper", source: "academic" },
+          { title: "LangChain Agents 文档", url: "https://python.langchain.com/docs/concepts/agents/", required: false, type: "doc", source: "official" }
         ],
         checkpoint: "Agent 在 20 个问题中至少 15 个给出正确答案，且工具调用序列合理"
       },
@@ -4699,8 +4699,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2小时",
         resources: [
-          { title: "LLM-as-Judge", url: "https://arxiv.org/abs/2306.05685", required: true },
-          { title: "RAGAS 评估框架", url: "https://docs.ragas.io/", required: false }
+          { title: "LLM-as-Judge", url: "https://arxiv.org/abs/2306.05685", required: true, type: "paper", source: "academic" },
+          { title: "RAGAS 评估框架", url: "https://docs.ragas.io/", required: false, type: "doc", source: "official" }
         ],
         checkpoint: "自动化评测报告能清晰展示两版 Prompt 的差异，Rouge/Prompt Score/Judge Score 均有统计"
       }
@@ -4721,7 +4721,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "围绕 Kubernetes 容器编排核心技术与 GPU 调度。重点讲 Pod/Deployment/Service/Helm 等核心概念，以及在 K8s 上部署 AI 推理服务。",
     outcomes: ["掌握 K8s 核心概念与 kubectl 操作", "在 K8s 上部署有状态服务", "GPU 调度与 HPA 自动扩缩容"],
     relatedIntel: ["007-docker", "016-server-setup"], relatedTools: ["Kubernetes", "Docker"],
-    relatedTerms: ["kubernetes", "kubectl", "helm", "pod", "deployment", "service", "gpu-scheduling"],
+    relatedTerms: ["kubernetes", "kubectl", "helm", "pod", "deployment", "service", "gpu-scheduling"], relatedNodes: ["docker-basic", "devops-docker-api", "devops-monitoring"],
     dailyTasks: [
       {
         day: 1,
@@ -4740,9 +4740,9 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2小时",
         resources: [B_KUBERNETES_TUTORIAL, B_DOCKER_TUTORIAL, 
-          { title: "K8s 官方教程", url: "https://kubernetes.io/zh-cn/docs/tutorials/", required: true },
-          { title: "kubectl 常用命令", url: "https://kubernetes.io/zh-cn/docs/reference/kubectl/quick-reference/", required: true },
-          { title: "minikube 安装", url: "https://minikube.sigs.k8s.io/docs/start/", required: false }
+          { title: "K8s 官方教程", url: "https://kubernetes.io/zh-cn/docs/tutorials/", required: true, type: "doc", source: "official" },
+          { title: "kubectl 常用命令", url: "https://kubernetes.io/zh-cn/docs/reference/kubectl/quick-reference/", required: true, type: "doc", source: "official" },
+          { title: "minikube 安装", url: "https://minikube.sigs.k8s.io/docs/start/", required: false, type: "doc", source: "official" }
         ],
         checkpoint: "minikube/kind 集群运行正常，Pod/Service/Deployment 生命周期操作无报错"
       },
@@ -4763,8 +4763,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2小时",
         resources: [
-          { title: "K8s Deployment 文档", url: "https://kubernetes.io/zh-cn/docs/concepts/workloads/controllers/deployment/", required: true },
-          { title: "K8s Service 文档", url: "https://kubernetes.io/zh-cn/docs/concepts/services-networking/service/", required: true }
+          { title: "K8s Deployment 文档", url: "https://kubernetes.io/zh-cn/docs/concepts/workloads/controllers/deployment/", required: true, type: "doc", source: "official" },
+          { title: "K8s Service 文档", url: "https://kubernetes.io/zh-cn/docs/concepts/services-networking/service/", required: true, type: "doc", source: "official" }
         ],
         checkpoint: "kubectl rollout status deployment/fastapi 显示滚动更新成功，2 个 Pod 同时在线"
       },
@@ -4785,8 +4785,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "1.5小时",
         resources: [
-          { title: "ConfigMap 使用文档", url: "https://kubernetes.io/zh-cn/docs/tasks/configure-pod-container/configure-pod-configmap/", required: true },
-          { title: "Ingress 文档", url: "https://kubernetes.io/zh-cn/docs/concepts/services-networking/ingress/", required: true }
+          { title: "ConfigMap 使用文档", url: "https://kubernetes.io/zh-cn/docs/tasks/configure-pod-container/configure-pod-configmap/", required: true, type: "doc", source: "official" },
+          { title: "Ingress 文档", url: "https://kubernetes.io/zh-cn/docs/concepts/services-networking/ingress/", required: true, type: "doc", source: "official" }
         ],
         checkpoint: "容器内环境变量正确注入，Secret 的 value 在 pod exec 中 base64 解码正确"
       },
@@ -4807,7 +4807,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "1.5小时",
         resources: [
-          { title: "K8s 存储文档", url: "https://kubernetes.io/zh-cn/docs/concepts/storage/persistent-volumes/", required: true }
+          { title: "K8s 存储文档", url: "https://kubernetes.io/zh-cn/docs/concepts/storage/persistent-volumes/", required: true, type: "doc", source: "official" }
         ],
         checkpoint: "PVC bound 成功，Pod 重启后 /models 目录数据不丢失"
       },
@@ -4828,7 +4828,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2小时",
         resources: [
-          { title: "Helm 官方文档", url: "https://helm.sh/zh/docs/", required: true }
+          { title: "Helm 官方文档", url: "https://helm.sh/zh/docs/", required: true, type: "doc", source: "official" }
         ],
         checkpoint: "helm install 成功，helm list 显示 RELEASE 和 STATUS"
       },
@@ -4849,8 +4849,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "1.5小时",
         resources: [
-          { title: "NVIDIA GPU Operator", url: "https://docs.nvidia.com/datacenter/cloud-native/kubernetes/latest/", required: true },
-          { title: "K8s GPU 调度文档", url: "https://kubernetes.io/zh-cn/docs/tasks/manage-gpus/scheduling-gpus/", required: true }
+          { title: "NVIDIA GPU Operator", url: "https://docs.nvidia.com/datacenter/cloud-native/kubernetes/latest/", required: true, type: "doc", source: "official" },
+          { title: "K8s GPU 调度文档", url: "https://kubernetes.io/zh-cn/docs/tasks/manage-gpus/scheduling-gpus/", required: true, type: "doc", source: "official" }
         ],
         checkpoint: "Pod 调度到 GPU 节点，容器内 nvidia-smi 显示正确 GPU 型号和驱动版本"
       },
@@ -4871,8 +4871,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "3小时",
         resources: [
-          { title: "K8s HPA 文档", url: "https://kubernetes.io/zh-cn/docs/tasks/run-application/horizontal-pod-autoscale/", required: true },
-          { title: "KEDA 文档", url: "https://keda.sh/docs/", required: false }
+          { title: "K8s HPA 文档", url: "https://kubernetes.io/zh-cn/docs/tasks/run-application/horizontal-pod-autoscale/", required: true, type: "doc", source: "official" },
+          { title: "KEDA 文档", url: "https://keda.sh/docs/", required: false, type: "doc", source: "official" }
         ],
         checkpoint: "压测时 HPA 自动扩容到 maxReplicas，空载时缩回 minReplicas，扩容延迟 < 2 分钟"
       },
@@ -4887,7 +4887,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "1）Helm 安装：安装 Helm 客户端，配置 repo。2）常用应用安装：用 Helm 安装 Nginx Ingress、Prometheus 等常用组件。3）自定义 Chart：创建一个简单的 Helm Chart（比如你自己的应用）。4）升级回滚：改配置升级，出问题回滚。",
           deep_dive: "Kubernetes 的 YAML 文件多了之后很难管理——每个环境一套配置，复制粘贴很容易出错。Helm 解决了这个问题——把模板和值分开，不同环境用不同的值文件，模板复用。Helm Hub 上有大量现成的 Chart（MySQL、Redis、Prometheus 等），不用自己从零写。掌握 Helm 是 K8s 运维的必备技能。"
-        }, duration: "2.5小时", resources: [B_DOCKER_TUTORIAL, { title: "Helm 文档", url: "https://helm.sh/docs/", required: false }], checkpoint: "能用 Helm 安装和管理应用，会写简单的 Chart" },
+        }, duration: "2.5小时", resources: [B_DOCKER_TUTORIAL, { title: "Helm 文档", url: "https://helm.sh/docs/", required: false, type: "doc", source: "official" }], checkpoint: "能用 Helm 安装和管理应用，会写简单的 Chart" },
       { day: 9, title: "Kubernetes 监控与运维",
         summary: "Prometheus + Grafana 监控 K8s 集群", content: {
           objective: "学习 Kubernetes 监控和运维。能用 Prometheus + Grafana 监控集群，了解日志收集（ELK/Loki），掌握常见故障排查方法。",
@@ -4899,7 +4899,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "1）监控栈部署：用 Helm 安装 kube-prometheus-stack（Prometheus + Grafana + Alertmanager）。2）仪表盘：导入 Node Exporter 和 K8s 仪表盘，看集群状态。3）告警配置：配置几个常用告警（节点宕机、Pod 重启频繁、磁盘空间不足）。4）日志（可选）：部署 Loki + Promtail 做日志收集。5）故障排查练习：故意制造几个问题（镜像不存在、端口冲突、资源不足），练习排查。",
           deep_dive: "生产环境的 K8s 集群，监控和运维是头等大事——没有监控，出了问题都不知道。Prometheus + Grafana 是 K8s 监控的事实标准。监控的三个支柱：指标（Metrics，Prometheus）、日志（Logs，ELK/Loki）、链路追踪（Tracing，Jaeger/Zipkin）。三者结合才能全面掌握系统状态。故障排查能力是运维工程师的核心——要懂原理，知道从哪入手、看什么日志、用什么命令。"
-        }, duration: "3小时", resources: [B_DOCKER_TUTORIAL, { title: "Prometheus 文档", url: "https://prometheus.io/docs/", required: false }], checkpoint: "能部署监控栈，配置告警，排查常见 K8s 故障" },
+        }, duration: "3小时", resources: [B_DOCKER_TUTORIAL, { title: "Prometheus 文档", url: "https://prometheus.io/docs/", required: false, type: "doc", source: "official" }], checkpoint: "能部署监控栈，配置告警，排查常见 K8s 故障" },
       { day: 10, title: "K8s 生产实践与总结",
         summary: "生产级 K8s 最佳实践与课程总结", content: {
           objective: "了解生产级 K8s 最佳实践并总结。知道生产环境要考虑的安全、高可用、成本等问题，完成课程总结。",
@@ -4935,7 +4935,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["掌握 CI/CD 核心概念和流水线设计", "能用 GitHub Actions 构建完整的 CI/CD 流水线", "理解自动化测试和部署策略"],
     relatedIntel: ["008-git", "043-mlops-engineering"],
     relatedTools: ["Docker"],
-    relatedTerms: ["ci-cd", "github-actions", "jenkins", "continuous-integration", "devops"],
+    relatedTerms: ["ci-cd", "github-actions", "jenkins", "continuous-integration", "devops"], relatedNodes: ["git-github", "docker-basic", "devops-mlops"],
     suggestions: {
       prerequisites: ["Git & GitHub", "Docker 基础"],
       nextSteps: ["Kubernetes 容器编排", "云服务与部署"],
@@ -4954,7 +4954,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "CI/CD 概念理解与工具探索：1）思考你之前的项目中，集成和部署是怎么做的？有哪些痛点？2）列出 3-5 个你知道的 CI/CD 工具，对比它们的优缺点。3）设计一个理想的 CI/CD 流水线应该包含哪些阶段？4）了解 GitHub Actions 的基本概念：Workflow、Job、Step、Action、Runner。5）找一个开源项目，看看它的 CI/CD 配置是怎样的。",
           deep_dive: "CI/CD 不仅仅是工具，它是一种文化和实践。它的核心思想是：小步快跑、频繁集成、自动化一切。在传统的开发模式中，开发人员各自在分支上工作很长时间，最后合并时会遇到大量的集成问题——「集成地狱」。CI 通过频繁集成（每天多次）来解决这个问题，让问题尽早暴露。CD 则进一步将部署自动化，让软件可以随时安全地发布。对于 AI 项目，CI/CD 同样重要，但也有特殊性——除了代码，还要考虑数据、模型、实验的版本管理和自动化测试。"
-        }, duration: "2小时", resources: [B_DOCKER_TUTORIAL, { title: "GitHub Actions 文档", url: "https://docs.github.com/en/actions", required: false }], checkpoint: "能解释 CI/CD 的核心概念和价值，并描述一个典型的 CI/CD 流水线" },
+        }, duration: "2小时", resources: [B_DOCKER_TUTORIAL, { title: "GitHub Actions 文档", url: "https://docs.github.com/en/actions", required: false, type: "repo", source: "github" }], checkpoint: "能解释 CI/CD 的核心概念和价值，并描述一个典型的 CI/CD 流水线" },
       { day: 2, title: "GitHub Actions 入门与基础流水线",
         summary: "掌握 GitHub Actions 的核心概念，构建第一个 CI 流水线", content: {
           objective: "今天你将学习 GitHub Actions 的核心概念并构建你的第一个 CI 流水线。学完后能解释 Workflow、Job、Step、Action、Runner 等概念，写一个简单的 CI workflow，实现代码提交后自动运行测试。",
@@ -4967,7 +4967,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "GitHub Actions 入门实战：1）学习 GitHub Actions 核心概念：a）Workflow：一个完整的工作流，对应一个 YAML 文件；b）Job：工作流中的一个任务，可以并行或串行执行；c）Step：Job 中的一个步骤；d）Action：可复用的步骤单元；e）Runner：运行 Job 的机器（GitHub 托管或自托管）。2）创建你的第一个 Workflow：a）在你的项目中创建 .github/workflows/ci.yml；b）配置触发条件：push 到 main 分支和 PR 时触发；c）第一个 Job：运行测试——checkout 代码、设置 Python 环境、安装依赖、运行 pytest。3）测试你的 Workflow：a）提交代码并 push；b）在 GitHub 的 Actions 标签页查看运行结果；c）如果失败了，查看日志，修复问题。4）多 Job 流水线：a）添加一个 lint Job（用 flake8 或 eslint 做代码检查）；b）让 test Job 依赖 lint Job（lint 通过了才跑测试）；c）用 needs 关键字配置依赖。5）缓存优化：a）用 actions/cache 缓存 pip/npm 依赖；b）对比缓存前后的运行时间，看提升了多少。6）矩阵构建（可选）：a）用 strategy.matrix 在多个 Python/Node 版本上测试；b）观察多个 Job 并行执行。",
           deep_dive: "CI/CD 不只是工具，更是文化和实践。GitHub Actions 是最流行的 CI/CD 工具之一，但理解它的设计哲学很重要：1）为什么选择 GitHub Actions？a）和 GitHub 深度集成：PR、Issue、Release 等都能触发；b）免费额度够用：公开仓库无限免费，私有仓库每月有 2000 分钟免费额度；c）生态丰富：GitHub Marketplace 有上万现成的 Action 可以用；d）灵活强大：支持矩阵构建、并行作业、条件执行、自定义 Runner 等。2）YAML 的陷阱：GitHub Actions 用 YAML 配置，YAML 看起来简单但有很多坑：a）缩进错误：YAML 对缩进敏感，要用空格不要用 Tab；b）特殊字符：冒号、&、* 等特殊字符要加引号；c）多行字符串：用 | 或 > 有不同的换行处理方式；d）变量替换：${{ }} 语法，注意和 shell 变量的区别。3）CI 流水线的最佳实践：a）速度要快：CI 应该在几分钟内跑完，太长了大家就不想等了。可以用缓存、并行、增量构建来加速；b）结果要可靠：CI 应该稳定，不能时好时坏（flaky test）。不稳定的 CI 比没有 CI 还糟——大家会忽略失败；c）反馈要及时：失败了要尽快通知相关人，最好在 PR 里就能看到结果；d）从简单开始：不要一开始就搭一个超级复杂的流水线，先跑通最简单的（安装依赖+跑测试），再逐步加东西。4）CI 流水线的常见阶段：一个典型的 CI 流水线可能包含这些阶段：a）Checkout：拉取代码；b）Setup：配置环境（语言版本、依赖）；c）Lint：代码风格检查；d）Test：单元测试、集成测试、端到端测试；e）Build：构建产物（Docker 镜像、静态文件等）；f）Security：安全扫描（依赖漏洞、代码漏洞）；g）Deploy：部署到测试/生产环境。不一定都要有，根据项目情况来。5）PR 工作流：CI 和 PR 结合是最佳实践——每个 PR 都会自动跑 CI，CI 绿了才能合并。这样可以保证主分支的质量，也让 Code Review 更有信心。配合主分支保护（Branch Protection），可以强制要求 CI 通过才能合并。6）CI 文化：CI/CD 不只是技术，更是文化。它的核心是「小步快跑、持续集成、快速反馈」。团队需要养成习惯：频繁提交、小步提交、写测试、重视 CI 结果。CI 失败了应该立即修复，而不是放着不管。"
-        }, duration: "3小时", resources: [B_DOCKER_TUTORIAL, { title: "GitHub Actions 官方文档", url: "https://docs.github.com/en/actions", required: false }, { title: "GitHub Actions 入门教程", url: "https://docs.github.com/en/actions/quickstart", required: false }], checkpoint: "能写出一个包含 lint 和 test 的 CI 流水线，并成功运行" },
+        }, duration: "3小时", resources: [B_DOCKER_TUTORIAL, { title: "GitHub Actions 官方文档", url: "https://docs.github.com/en/actions", required: false, type: "repo", source: "github" }, { title: "GitHub Actions 入门教程", url: "https://docs.github.com/en/actions/quickstart", required: false, type: "repo", source: "github" }], checkpoint: "能写出一个包含 lint 和 test 的 CI 流水线，并成功运行" },
       { day: 3, title: "持续部署与发布策略",
         summary: "掌握 CD 持续部署，理解常见的发布策略和最佳实践", content: {
           objective: "今天你将学习持续部署和发布策略。学完后能配置自动化部署流水线，理解蓝绿部署、金丝雀发布、滚动发布等发布策略，知道如何安全地发布软件。",
@@ -4980,7 +4980,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "持续部署实战：1）部署一个前端项目：a）用 GitHub Pages 部署一个静态网站；b）配置 GitHub Actions，每次 push 到 main 自动构建并部署；c）验证部署结果。2）Docker 镜像构建与推送：a）写一个 Workflow，构建 Docker 镜像；b）推送到 Docker Hub 或 GitHub Container Registry；c）打标签（用 git tag 或 commit hash）。3）部署到服务器（可选）：a）用 SSH Action 部署到一台云服务器；b）或者用 rsync 同步文件；c）部署后重启服务。4）学习发布策略：a）理解滚动发布、蓝绿部署、金丝雀发布的区别；b）各自的优缺点是什么？c）分别适合什么场景？5）回滚机制设计：a）如果发布后出问题了，怎么快速回滚？b）设计你的回滚方案——是回退代码？还是切流量？c）怎么知道需要回滚？（监控告警、用户反馈）6）功能开关（可选）：a）理解什么是 Feature Flag（功能开关）；b）为什么说功能开关和持续部署是绝配？c）尝试在你的项目中加一个简单的功能开关。",
           deep_dive: "持续部署看起来美好，但真正做好并不容易，有很多需要考虑的问题：1）为什么不是所有团队都做持续部署？持续部署很酷，但不是所有团队都适合：a）监管要求：金融、医疗等行业有严格的发布审批要求，不能随便自动部署；b）业务特性：如果用户对 downtime 零容忍，发布就要非常谨慎；c）团队成熟度：如果测试覆盖不够、监控不完善，盲目上持续部署只会搞出更多线上问题。持续交付（随时可以部署，但发布需要人工点一下）是更务实的选择。2）发布策略详解：a）滚动发布（Rolling Update）：逐个实例更新新版本，老版本逐步退出。优点是不需要额外资源，平滑过渡；缺点是发布过程中两个版本同时存在，可能有兼容性问题，回滚慢。K8s 的默认发布策略就是滚动发布。b）蓝绿部署（Blue/Green）：有两套完全一样的环境，一套跑当前版本（蓝），一套准备新版本（绿）。验证通过后，一次性把流量切到绿环境。优点是切换快、回滚快（切回去就行）；缺点是需要双倍资源。c）金丝雀发布（Canary Release）：先把一小部分流量（如 1%、5%）切到新版本，观察没问题再逐步放量。优点是风险小，有问题只影响少量用户；缺点是发布过程慢，需要流量控制能力，多版本共存有兼容性问题。d）功能开关（Feature Flag）：代码已经部署了，但新功能用开关控制，只有特定用户能看到。优点是发布和功能解耦，可以随时开关，方便做 A/B 测试；缺点是代码里有很多开关逻辑，增加复杂度，要记得清理旧开关。3）环境管理：成熟的团队通常有多个环境：a）开发环境（Dev）：开发人员日常用的，随便折腾；b）测试环境（QA/Test）：测试人员测功能的；c）预发布环境（Staging）：和生产环境配置一样，发布前最后验证的；d）生产环境（Production）：给用户用的，最稳定最重要。不同环境有不同的权限和发布频率。4）发布质量保障：持续部署不等于乱发布，质量保障是前提：a）自动化测试：单元测试、集成测试、端到端测试，测试覆盖度要够；b）灰度发布：先放少量流量验证；c）监控告警：发布后密切关注指标（错误率、延迟、业务指标），有问题立即告警；d）自动回滚：检测到问题自动回滚，减少影响范围；e）发布 Checklist：发布前检查清单，确保该验证的都验证了。5）安全地发布：发布是有风险的，目标是把风险降到最低：a）小步发布：每次发布变更小，风险也小；b）频繁发布：发布越频繁，每次发布的变更越少，风险越低；c）可回滚：任何发布都要能快速回滚；d）可观测：发布后能看到系统状态；e）灰度：先小范围验证再全量。记住：发布不是目的，稳定地交付价值才是目的。"
-        }, duration: "3小时", resources: [B_DOCKER_TUTORIAL, { title: "GitHub Pages 部署", url: "https://pages.github.com/", required: false }], checkpoint: "能配置自动化部署流水线，并理解各种发布策略的优缺点" },
+        }, duration: "3小时", resources: [B_DOCKER_TUTORIAL, { title: "GitHub Pages 部署", url: "https://pages.github.com/", required: false, type: "repo", source: "github" }], checkpoint: "能配置自动化部署流水线，并理解各种发布策略的优缺点" },
       { day: 4, title: "CI/CD 进阶与最佳实践",
         summary: "CI/CD 进阶技巧：缓存、矩阵、并行、安全、可观测", content: {
           objective: "今天你将学习 CI/CD 的进阶技巧和最佳实践。学完后能优化 CI/CD 流水线的速度和成本，理解 CI/CD 中的安全问题，知道怎么设计高质量的流水线。",
@@ -4993,7 +4993,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "CI/CD 进阶优化实战：1）流水线性能优化：a）分析你的 CI 每一步花了多少时间；b）找出最慢的步骤，想办法优化；c）试试缓存依赖、并行 Job、优化构建命令等方法；d）记录优化前后的对比数据。2）安全扫描集成：a）在 CI 中加一个依赖漏洞扫描（如 pip-audit、npm audit、Dependabot）；b）加一个代码质量检查（如 SonarQube、CodeQL）；c）加一个密钥检测（如 gitleaks），防止把密钥提交到代码里。3）Secrets 管理实践：a）在 GitHub 仓库中配置 Secrets；b）在 Workflow 中使用 Secrets（${{ secrets.SECRET_NAME }}）；c）注意：不要在日志中打印敏感信息；d）了解什么是 OIDC，为什么它比长期 Token 好。4）矩阵构建实战：a）用 strategy.matrix 在多个 OS（Ubuntu、Windows、macOS）和多个语言版本上测试；b）观察并行执行的效果；c）理解 fail-fast 的含义。5）CI/CD 设计练习：a）为你做过的一个项目设计一套完整的 CI/CD 方案；b）画出流程图，包含哪些阶段、每个阶段做什么、触发条件是什么；c）考虑：怎么保证质量？怎么保证安全？怎么快速回滚？成本大概多少？6）学习资源：a）浏览 GitHub Marketplace，找找有趣的 Action；b）看看知名开源项目的 CI/CD 配置（如 React、Vue、TensorFlow），学习它们的做法。",
           deep_dive: "初级和高级 DevOps 的区别，往往在于流水线的质量和效率：1）流水线的成本问题：GitHub Actions 虽然有免费额度，但如果用得多了，账单也会很可观。优化成本的方法：a）缓存：缓存依赖、缓存构建产物，减少重复工作；b）并行：把大 Job 拆成小 Job 并行跑，虽然总时长可能更长，但 wall time 更短，用户体验更好；c）取消冗余运行：如果同一个分支连续 push，只跑最新的那个（用 concurrency 配置）；d）按需运行：不是每次 push 都跑全量测试，PR 只跑相关测试，合并后再跑全量；e）自托管 Runner：如果用量大，自己搭 Runner 可能更便宜（但要考虑维护成本）。2）CI/CD 的安全问题：CI/CD 系统有很高的权限（能部署、能访问代码、能访问云资源），是安全防护的重点：a）Secrets 泄露：不要在日志里打印敏感信息，GitHub 会自动屏蔽 secrets，但也要小心；b）第三方 Action 的风险：Marketplace 里的 Action 质量参差不齐，尽量用官方的或知名的，或者固定版本号，不要用 @latest；c）PR 中的安全风险：外部贡献者的 PR 能不能访问 secrets？默认是不能的，但要注意 pull_request_target 事件可能有安全隐患；d）依赖供应链安全：CI 里用的依赖也可能有漏洞，要定期扫描。3）「安全左移」（Shift Left）：这是 DevOps 里的一个重要思想——把安全检查往「左」移，也就是在开发周期的早期就做安全检查。传统的安全检查在上线前才做，发现问题要改已经很晚了。安全左移就是在编码阶段、CI 阶段就做安全检查，问题越早发现，修复成本越低。4）流水线的可观测性：CI/CD 流水线失败了，怎么快速定位原因？a）好的日志：每一步输出清晰的日志，错误信息要明确；b）结构化的结果：哪些步骤失败了？失败原因分类（测试失败、构建失败、超时等）；c）指标和趋势：平均运行时间、失败率、最常失败的步骤，这些数据能帮你发现瓶颈；d）告警：流水线失败了要通知到人，不能没人管。5）CI/CD 不是银弹：很多团队以为上了 CI/CD 就万事大吉了，其实不是——CI/CD 只是工具，关键还是团队的文化和工程能力。如果代码质量差、测试写得烂、没人管 CI 结果，再牛逼的 CI/CD 也没用。CI/CD 要和代码评审、单元测试、监控告警等实践结合起来，才能真正发挥价值。6）持续改进：好的 CI/CD 流水线不是一次设计好就不变的，要持续优化：a）定期回顾：流水线是不是太慢了？失败率是不是太高了？b）收集反馈：开发人员觉得 CI 好用吗？有什么痛点？c）逐步迭代：一点点优化，不要想着一步到位。"
-        }, duration: "3小时", resources: [B_DOCKER_TUTORIAL, { title: "GitHub Actions 安全指南", url: "https://docs.github.com/en/actions/security-guides", required: false }], checkpoint: "能优化 CI/CD 流水线性能，并理解 CI/CD 中的安全最佳实践" },
+        }, duration: "3小时", resources: [B_DOCKER_TUTORIAL, { title: "GitHub Actions 安全指南", url: "https://docs.github.com/en/actions/security-guides", required: false, type: "repo", source: "github" }], checkpoint: "能优化 CI/CD 流水线性能，并理解 CI/CD 中的安全最佳实践" },
       { day: 5, title: "CI/CD 综合实战项目",
         summary: "从零搭建一个完整项目的 CI/CD 流水线，综合应用所学知识", content: {
           objective: "今天你将完成一个 CI/CD 综合实战项目——从零为一个项目搭建完整的 CI/CD 流水线。学完后能独立设计和实现一个完整的 CI/CD 方案，包含测试、构建、部署、安全检查等环节。",
@@ -5006,7 +5006,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "CI/CD 综合实战项目：1）项目选择：选择一个你之前做的项目（或新建一个示例项目），可以是前端项目、后端 API、Python 库、Docker 镜像等。2）方案设计：a）为这个项目设计一套完整的 CI/CD 方案；b）画出流程图：哪些阶段？每个阶段做什么？触发条件？c）考虑：测试策略、构建方式、部署目标、回滚方案、安全检查。3）CI 流水线实现：a）配置代码风格检查（lint）；b）配置单元测试；c）配置构建（如果需要）；d）配置安全扫描（至少一种）；e）配置缓存优化速度。4）CD 流水线实现：a）配置部署流程（部署到哪里？怎么部署？）；b）配置多环境（可选，如 dev/staging/prod）；c）配置发布策略（滚动？蓝绿？金丝雀？）；d）配置回滚机制。5）增强功能（可选）：a）配置 PR 模板和 Issue 模板；b）配置自动打标签和生成 Release Notes；c）配置代码覆盖率报告；d）配置 Slack/钉钉/飞书通知，流水线结果推送到群里。6）文档与总结：a）写一份 CI/CD 文档，说明流程、怎么触发、怎么排查问题；b）总结你在这个项目中学到了什么；c）遇到了哪些坑？怎么解决的？d）还有什么可以改进的地方？",
           deep_dive: "做项目和学知识点是完全不同的体验——只有真正动手做过，才能理解其中的坑和权衡：1）从「能用」到「好用」中间差很远：搭一个能跑的流水线很简单，但搭一个团队愿意天天用的流水线很难。好用的流水线应该：a）快：5-10 分钟内出结果，太慢了大家就不想等了；b）稳：不要时好时坏，flaky CI 比没有 CI 还糟糕；c）准：失败了能明确告诉你哪里错了，怎么修；d）简单：配置不要太复杂，新人也能看懂；e）灵活：能适应不同的需求，不要太僵化。2）常见的坑和反模式：a）巨型 Job：什么都塞在一个 Job 里，失败了不知道是哪部分的问题，也不能并行。应该拆成多个小 Job；b）把所有东西都放 CI 里：CI 应该快，太重的任务（如性能测试、全量 E2E 测试）可以定时跑或者手动触发，不要每次提交都跑；c）忽略 CI 失败：CI 红了没人管，大家都习惯了，那 CI 就失去意义了。CI 失败必须立即修复；d）过度工程化：一开始就搞超级复杂的流水线，结果维护成本很高。应该从简单开始，逐步迭代；e）硬编码配置：把服务器地址、账号密码等直接写在 YAML 里，不安全也不灵活。应该用 Secrets 和变量。3）怎么衡量 CI/CD 的效果？可以关注这些指标：a）部署频率：多久部署一次？越高频说明越成熟；b）变更前置时间（Lead Time）：从代码提交到上线需要多久？越短越好；c）变更失败率：发布后出问题的比例有多高？越低越好；d）平均恢复时间（MTTR）：出问题了多久能恢复？越快越好。这四个是 DevOps 研究（DORA）里的核心指标，被称为「四个关键指标」。4）团队采用的挑战：引入 CI/CD 不只是技术问题，更是人的问题：a）老员工可能习惯了旧方式，不愿意改；b）大家可能觉得写测试、配 CI 是「浪费时间」；c）CI 经常失败会让人有挫败感。怎么推动？a）以身作则，自己先做好；b）从痛点切入：解决大家最痛的点（比如部署麻烦、容易出 bug）；c）小步快跑：先从一个项目、一个功能开始，做出效果了再推广；d）培训和分享：让大家理解为什么要这么做，而不只是怎么做。5）CI/CD 的未来：CI/CD 也在不断演进：a）GitOps：用 Git 来管理基础设施和应用配置，Git 是唯一真相来源；b）Platform Engineering：构建内部开发者平台，让自助式部署更容易；c）AI 辅助：用 AI 来自动生成 CI 配置、自动排查失败原因、自动优化流水线；d）安全集成：DevSecOps，安全深度集成到 CI/CD 流程中。技术在变，但核心思想不变——更快、更稳、更安全地交付价值。"
-        }, duration: "4小时", resources: [B_DOCKER_TUTORIAL, { title: "DORA 四个关键指标", url: "https://cloud.google.com/blog/products/devops-sre/the-2019-accelerate-state-of-devops-elite-performance", required: false }], checkpoint: "完成一个完整项目的 CI/CD 流水线搭建，包含 CI 和 CD 全流程" },
+        }, duration: "4小时", resources: [B_DOCKER_TUTORIAL, { title: "DORA 四个关键指标", url: "https://cloud.google.com/blog/products/devops-sre/the-2019-accelerate-state-of-devops-elite-performance", required: false, type: "article", source: "official" }], checkpoint: "完成一个完整项目的 CI/CD 流水线搭建，包含 CI 和 CD 全流程" },
       { day: 6, title: "GitHub Actions 进阶与工作流优化",
         summary: "深入学习 GitHub Actions 高级功能", content: {
           objective: "深入学习 GitHub Actions 高级功能。掌握矩阵构建、缓存优化、自定义 Action、环境管理等进阶用法。",
@@ -5018,7 +5018,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "1）矩阵构建：写一个工作流，在不同 Node/Python 版本下跑测试。2）缓存优化：给 npm/pip 加缓存，看构建时间减少多少。3）自定义 Action（可选）：写一个简单的 JavaScript 或 Docker Action。4）环境管理：配置 dev/staging/prod 环境，不同环境用不同的 secrets。",
           deep_dive: "CI/CD 不只是跑测试和部署——优化工作流能大幅提升开发效率。矩阵构建让你一次配置，多环境验证。缓存是性价比最高的优化——依赖安装经常占 CI 时间的一半以上，缓存后能省几分钟。自定义 Action 让你把重复逻辑封装起来，团队内共享。好的 CI/CD 应该是：快（反馈及时）、稳（很少挂）、安全（密钥不泄露）。"
-        }, duration: "2.5小时", resources: [{ title: "GitHub Actions 文档", url: "https://docs.github.com/en/actions", required: false }], checkpoint: "掌握 GitHub Actions 进阶用法，能优化工作流" },
+        }, duration: "2.5小时", resources: [{ title: "GitHub Actions 文档", url: "https://docs.github.com/en/actions", required: false, type: "repo", source: "github" }], checkpoint: "掌握 GitHub Actions 进阶用法，能优化工作流" },
       { day: 7, title: "CI/CD 最佳实践与安全",
         summary: "CI/CD 最佳实践、流水线安全与质量门禁", content: {
           objective: "学习 CI/CD 最佳实践和安全。了解流水线设计原则、质量门禁、安全扫描等实践，能设计可靠的 CI/CD 流程。",
@@ -5042,7 +5042,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "1）多阶段构建：把一个 Node.js/Python 应用从单阶段改成多阶段，对比镜像大小。2）镜像优化：用 Alpine 基础镜像、清理包缓存、减少层数，看看能把镜像缩到多小。3）安全扫描：用 Trivy 扫描镜像，看看有多少漏洞。4）最佳实践：写一份 Dockerfile 最佳实践清单。",
           deep_dive: "Docker 镜像质量直接影响部署速度、安全性和成本——镜像小拉得快、占存储少、攻击面也小。多阶段构建是最重要的优化技巧——构建时用带编译器的大镜像，运行时用只有运行时的小镜像。优化原则：a）层数越少越好；b）变化慢的层放前面（利用缓存）；c）不要把密钥构建进镜像；d）用非 root 用户运行；e）定期扫描漏洞。镜像从 1GB 优化到 100MB 是很常见的，收益巨大。"
-        }, duration: "2.5小时", resources: [B_DOCKER_TUTORIAL, { title: "Trivy", url: "https://github.com/aquasecurity/trivy", required: false }], checkpoint: "能写优化的 Dockerfile，掌握多阶段构建和镜像瘦身" },
+        }, duration: "2.5小时", resources: [B_DOCKER_TUTORIAL, { title: "Trivy", url: "https://github.com/aquasecurity/trivy", required: false, type: "repo", source: "github" }], checkpoint: "能写优化的 Dockerfile，掌握多阶段构建和镜像瘦身" },
       { day: 9, title: "GitOps 与 ArgoCD",
         summary: "了解 GitOps 理念和 ArgoCD 工具", content: {
           objective: "了解 GitOps 理念和 ArgoCD。理解 GitOps 的核心思想，能用 ArgoCD 做应用的声明式部署，知道它和传统 CI/CD 的区别。",
@@ -5054,7 +5054,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "1）概念学习：理解 GitOps 和传统 CI/CD 的区别（推 vs 拉）。2）ArgoCD 部署：在 K3s/Minikube 上安装 ArgoCD。3）应用部署：把一个应用的 K8s 配置放到 Git 仓库，用 ArgoCD 部署。4）同步体验：改 Git 里的配置，看 ArgoCD 自动同步。",
           deep_dive: "GitOps 是云原生时代的运维理念——核心是「Git 作为唯一真相来源」。传统 CI/CD 是「推」模式：CI 跑完了 kubectl apply 推到集群。GitOps 是「拉」模式：集群里的 Agent（如 ArgoCD）不断拉 Git 上的配置，发现不一致就自动同步。GitOps 的好处：a）所有变更都有 Git 历史，可审计可回滚；b）不需要把集群凭证给 CI 系统，更安全；c）声明式，最终状态一致；d）开发者不用学 K8s 命令，改 Git 就行。ArgoCD 是 GitOps 的事实标准工具。"
-        }, duration: "2.5小时", resources: [B_DOCKER_TUTORIAL, { title: "ArgoCD", url: "https://argo-cd.readthedocs.io/", required: false }], checkpoint: "理解 GitOps 理念，能用 ArgoCD 做简单的应用部署" },
+        }, duration: "2.5小时", resources: [B_DOCKER_TUTORIAL, { title: "ArgoCD", url: "https://argo-cd.readthedocs.io/", required: false, type: "doc", source: "official" }], checkpoint: "理解 GitOps 理念，能用 ArgoCD 做简单的应用部署" },
       { day: 10, title: "CI/CD 综合项目与总结",
         summary: "完成一个完整的 CI/CD 项目并总结", content: {
           objective: "完成 CI/CD 综合项目并总结。把两周学到的东西整合到一个完整项目中，包含代码检查、测试、构建镜像、部署、监控全流程。",
@@ -5086,7 +5086,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["掌握 MLOps 核心概念", "能用 MLflow 管理实验和模型", "理解模型监控和持续训练"],
     relatedIntel: ["018-mlflow", "043-mlops-engineering", "028-server-ops"],
     relatedTools: ["Docker", "Kubernetes"],
-    relatedTerms: ["mlops", "mlflow", "model-registry", "experiment-tracking", "model-monitoring"],
+    relatedTerms: ["mlops", "mlflow", "model-registry", "experiment-tracking", "model-monitoring"], relatedNodes: ["devops-cicd", "devops-kubernetes", "project-capstone"],
     suggestions: {
       prerequisites: ["CI/CD 基础", "Kubernetes 基础"],
       nextSteps: ["综合实战项目"],
@@ -5105,7 +5105,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "MLOps 入门与 MLflow 实验：1）理解 MLOps 的三大支柱：数据版本管理、模型版本管理、实验可复现。2）安装 MLflow。3）实现一个简单的训练脚本（如 sklearn 的分类模型），用 mlflow.log_param() 记录超参数，用 mlflow.log_metric() 记录指标，用 mlflow.sklearn.log_model() 保存模型。4）运行多次实验，使用不同的超参数。5）启动 mlflow ui，查看实验对比界面，比较不同实验的结果。6）思考：为什么实验可复现性很重要？你之前做实验时遇到过不可复现的问题吗？",
           deep_dive: "MLOps 是近年来快速发展的领域，它解决的是机器学习项目从实验室到生产的「最后一公里」问题。传统的软件项目有成熟的 DevOps 方法论，但机器学习项目更复杂——除了代码，还有数据、模型、超参数、实验等更多需要管理的东西。MLOps 的目标是让机器学习系统的开发、部署、监控、迭代更加高效和可靠。一个成熟的 MLOps 体系应该包括：数据版本管理（DVC、LakeFS）、实验跟踪（MLflow、Weights & Biases）、模型注册（MLflow Model Registry）、特征存储（Feast）、模型服务（TorchServe、TFServing）、模型监控（Prometheus + Grafana、Evidently AI）、CI/CD for ML（GitHub Actions、Kubeflow Pipelines）等。"
-        }, duration: "2小时", resources: [B_DOCKER_TUTORIAL, { title: "MLflow 官方文档", url: "https://mlflow.org/docs/latest/index.html", required: false }], checkpoint: "能用 MLflow 跟踪实验，并在 UI 中对比不同实验的结果" },
+        }, duration: "2小时", resources: [B_DOCKER_TUTORIAL, { title: "MLflow 官方文档", url: "https://mlflow.org/docs/latest/index.html", required: false, type: "doc", source: "official" }], checkpoint: "能用 MLflow 跟踪实验，并在 UI 中对比不同实验的结果" },
       { day: 2, title: "模型注册与版本管理",
         summary: "掌握 MLflow Model Registry，实现模型版本化管理", content: {
           objective: "今天你将学习模型注册和版本管理。学完后能用 MLflow Model Registry 管理模型生命周期，理解模型版本、阶段（Staging/Production/Archived），实现模型审批流程。",
@@ -5118,7 +5118,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "模型注册与版本管理实战：1）注册模型：a）把之前训练的模型注册到 Model Registry；b）添加模型描述和标签；c）理解 Registered Model 和 Model Version 的关系。2）版本管理：a）训练同一个模型的多个版本（用不同超参数）；b）比较不同版本的指标；c）理解版本号和阶段的关系。3）阶段转换：a）把一个版本从 None 转到 Staging；b）模拟审批流程；c）把 Staging 版本转到 Production；d）把旧版本归档。4）模型加载：a）用 mlflow.pyfunc.load_model 加载指定版本的模型；b）用 models:/model-name/Production 加载生产版本；c）理解不同加载方式的区别。5）CI/CD 集成思考：a）怎么把模型注册集成到 CI/CD 流水线？b）训练完自动注册、测试通过自动转 Staging、审批后转 Production。6）对比思考：MLflow Model Registry 和 DVC、Weights & Biases 的模型管理有什么区别？",
           deep_dive: "模型管理是 MLOps 的核心环节，它解决的是「哪个模型该上线」的问题：1）为什么需要模型注册？没有模型注册时，模型文件散落在各处——本地机器、服务器、云存储，没人知道哪个模型效果最好、用的什么数据、什么超参数。模型注册就像代码的 Git，给模型一个「身份证」，记录它的全部信息。2）模型阶段的本质：Staging 相当于「候选模型」，经过验证后才能升到 Production。这和软件的 dev/staging/prod 环境是类似的思想——不能直接把新模型扔到生产，要先验证。3）模型审批流程：在严肃的场景中，模型上线需要审批——数据科学家提交模型，QA 验证效果，审批通过后才能转 Production。MLflow 支持这种流程，但更复杂的审批可能需要自定义。4）多模型管理：实际项目中可能有多个模型——不同版本、不同场景、不同地区的模型。Model Registry 可以统一管理这些模型，知道哪个模型在哪个环境运行。5）模型 lineage：追踪模型的「血统」——用什么数据训练、什么代码、什么超参数、什么环境。这对于模型审计和复现非常重要。如果模型出了问题，可以追溯到源头。6）和其他工具的对比：a）MLflow：开源、简单、够用；b）Weights & Biases：更强大的可视化和协作，但收费；c）DVC：侧重数据和管道版本管理；d）Kubeflow：K8s 原生，更重。根据团队需求选择。"
-        }, duration: "3小时", resources: [B_DOCKER_TUTORIAL, { title: "MLflow Model Registry", url: "https://mlflow.org/docs/latest/model-registry.html", required: false }], checkpoint: "能用 MLflow Model Registry 管理模型版本和阶段转换" },
+        }, duration: "3小时", resources: [B_DOCKER_TUTORIAL, { title: "MLflow Model Registry", url: "https://mlflow.org/docs/latest/model-registry.html", required: false, type: "doc", source: "official" }], checkpoint: "能用 MLflow Model Registry 管理模型版本和阶段转换" },
       { day: 3, title: "模型部署与服务化",
         summary: "掌握模型部署的常见方式，实现模型在线服务", content: {
           objective: "今天你将学习模型部署和服务化。学完后能用多种方式部署模型（FastAPI、TorchServe、BentoML），理解在线推理和批量推理的区别，掌握模型部署的最佳实践。",
@@ -5131,7 +5131,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "模型部署实战：1）FastAPI 部署：a）用 FastAPI 写一个模型推理 API；b）加载 MLflow 注册的模型；c）实现 /predict 端点，接收输入返回预测；d）用 uvicorn 启动，测试 API。2）模型优化：a）把 PyTorch 模型转成 ONNX 格式，对比推理速度；b）试试 FP16 半精度推理；c）（可选）试试 INT8 量化。3）Docker 部署：a）写 Dockerfile 打包模型服务；b）构建镜像并运行；c）测试容器内的服务。4）负载测试：a）用 locust 或 ab 做压力测试；b）测量 QPS、延迟、资源占用；c）找到性能瓶颈。5）多实例部署（可选）：a）用 docker-compose 启动多个实例；b）用 nginx 做负载均衡；c）测试并发性能。6）对比不同部署方案：a）FastAPI vs TorchServe vs BentoML，各自优缺点？b）什么场景用什么方案？",
           deep_dive: "模型部署是 MLOps 中连接「训练」和「使用」的桥梁，有很多工程细节：1）部署方式的选择：a）FastAPI/Flask：最简单灵活，适合小规模和原型；b）TorchServe/Triton：专用推理服务，支持动态批处理、多模型管理、GPU 共享，适合大规模生产；c）Serverless（AWS Lambda/Cloud Run）：按需启动，适合低流量场景，但有冷启动延迟；d）边缘部署：在手机、IoT 设备上运行，需要模型压缩。2）动态批处理（Dynamic Batching）：推理服务的关键优化——在一定时间窗口内收集多个请求，组成一个 batch 一起推理，大幅提升 GPU 利用率和吞吐量。Triton 和 TorchServe 都支持。3）GPU 调度：GPU 是稀缺资源，多个模型共享 GPU 需要合理调度。技术：a）多模型共享 GPU（MPS）；b）时间片轮转；c）按需加载/卸载模型。4）模型优化的层次：a）算法层：用更高效的模型架构（如 DistilBERT 代替 BERT）；b）框架层：用 ONNX Runtime、TensorRT 等优化推理引擎；c）硬件层：量化、剪枝降低计算量；d）系统层：批处理、缓存、异步。5）A/B 测试和灰度发布：模型上线不是一锤子买卖——a）先在 Staging 环境验证；b）灰度发布：5% 流量到新模型，观察指标；c）A/B 测试：对比新旧模型的效果；d）全量发布或回滚。6）成本优化：推理是大头成本，优化方法：a）选合适的模型大小（能用小模型就不用大模型）；b）量化压缩；c）批处理提高利用率；d）自动扩缩容（流量低时减少实例）；e）Spot Instance（用低价闲置算力）。"
-        }, duration: "3小时", resources: [B_DOCKER_TUTORIAL, R_FASTAPI, { title: "TorchServe", url: "https://pytorch.org/serve/", required: false }, { title: "ONNX Runtime", url: "https://onnxruntime.ai/", required: false }], checkpoint: "能用 FastAPI + Docker 部署模型服务，并完成压力测试" },
+        }, duration: "3小时", resources: [B_DOCKER_TUTORIAL, R_FASTAPI, { title: "TorchServe", url: "https://pytorch.org/serve/", required: false, type: "article", source: "official" }, { title: "ONNX Runtime", url: "https://onnxruntime.ai/", required: false, type: "article", source: "official" }], checkpoint: "能用 FastAPI + Docker 部署模型服务，并完成压力测试" },
       { day: 4, title: "模型监控与持续训练",
         summary: "掌握模型监控指标和持续训练（CT）机制", content: {
           objective: "今天你将学习模型监控和持续训练。学完后能监控模型的在线表现，检测数据漂移和概念漂移，设计持续训练（CT）流水线，实现模型的自动迭代。",
@@ -5144,7 +5144,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "模型监控与持续训练实战：1）模型监控设计：a）设计你的模型监控方案——监控哪些指标？阈值多少？告警怎么发？b）在 FastAPI 服务中添加监控指标收集；c）用 Prometheus 收集指标，Grafana 可视化。2）数据漂移检测：a）用 Evidently AI 或 alibi-detect 库；b）准备一份「参考数据」（训练时的数据分布）和「当前数据」（线上新数据）；c）计算分布差异，检测是否漂移；d）可视化漂移报告。3）概念漂移检测（可选）：a）如果有线上标注数据，检测模型准确率是否下降；b）用 ADWIN、DDM 等算法检测概念漂移。4）持续训练流水线设计：a）设计 CT 流水线——什么时候触发重训练？用什么数据？怎么验证？怎么部署？b）画出完整流程图。5）自动化触发实现（可选）：a）用 GitHub Actions 定时检查数据漂移；b）如果漂移超过阈值，自动触发重训练；c）训练完成后自动评估，效果达标自动部署。6）思考：a）持续训练和 CI/CD 有什么相似之处？b）为什么说 CT 是 MLOps 的最高阶段？",
           deep_dive: "模型上线不是结束，而是开始。模型会「老化」，需要持续监控和更新：1）为什么模型会变差？这是机器学习系统和传统软件最大的区别——传统软件不会因为时间推移而变差，但 ML 模型会。原因：a）数据漂移：用户行为变了、市场环境变了、季节性变化等，导致输入分布和训练时不一致；b）概念漂移：输入和输出的关系变了，比如疫情改变了消费模式；c）上游数据变化：数据源格式变了、特征工程 pipeline 有 bug 等。2）数据漂移 vs 概念漂移：数据漂移是 P(X) 变了，概念漂移是 P(Y|X) 变了。数据漂移不一定影响效果（如果决策边界没变），但概念漂移一定影响效果。检测方法：a）统计检验：KS 检验、卡方检验、PSI（Population Stability Index）；b）距离度量：Wasserstein 距离、KL 散度；c）基于模型的方法：训练一个判别器区分新旧数据。3）持续训练的挑战：CT 听起来很美好，但实现有很多挑战：a）数据质量：新数据可能有噪音、标注延迟；b）训练成本：每次重训练都要消耗算力；c）效果验证：怎么确认新模型比旧模型好？A/B 测试需要时间；d）回滚机制：新模型效果不好要能快速回滚；e）数据版本管理：每次训练用的数据要可追溯。4）监控的层次：a）系统监控：CPU/GPU 利用率、内存、延迟、吞吐量（和传统软件一样）；b）ML 监控：预测分布、输入分布、特征分布、模型置信度；c）业务监控：业务指标（如点击率、转化率），这是最终目标。三层监控要结合看。5）告警设计：a）什么情况告警？阈值多少？b）告警给谁？怎么告警？（Slack/钉钉/邮件）；c）告警频率不能太高，否则大家会忽略（告警疲劳）；d）区分紧急和非紧急告警。6）MLOps 的成熟度模型：Google 定义了 MLOps 的三个级别——a）Level 0：手动训练、手动部署，没有 CI/CD；b）Level 1：有 ML pipeline，自动化训练，但部署是手动的；c）Level 2：CI/CD + CT，完全自动化的训练和部署。大多数团队在 Level 0 和 Level 1 之间，Level 2 是目标。"
-        }, duration: "3小时", resources: [B_DOCKER_TUTORIAL, { title: "Evidently AI", url: "https://www.evidentlyai.com/evidently", required: false }, { title: "Google MLOps 指南", url: "https://cloud.google.com/architecture/mlops-continuous-delivery-and-automation-pipelines-in-machine-learning", required: false }], checkpoint: "能实现模型监控和数据漂移检测，设计持续训练流水线" },
+        }, duration: "3小时", resources: [B_DOCKER_TUTORIAL, { title: "Evidently AI", url: "https://www.evidentlyai.com/evidently", required: false, type: "article", source: "official" }, { title: "Google MLOps 指南", url: "https://cloud.google.com/architecture/mlops-continuous-delivery-and-automation-pipelines-in-machine-learning", required: false, type: "article", source: "official" }], checkpoint: "能实现模型监控和数据漂移检测，设计持续训练流水线" },
       { day: 5, title: "MLOps 综合实战与最佳实践",
         summary: "综合运用 MLOps 知识，搭建端到端 ML 系统", content: {
           objective: "今天你将综合运用 MLOps 的全部知识，搭建一个端到端的 ML 系统。学完后能设计完整的 MLOps 架构，理解各组件如何协作，掌握 MLOps 的最佳实践。",
@@ -5157,7 +5157,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "MLOps 综合实战项目：1）项目规划：选择一个 ML 项目（如情感分析、图像分类），设计完整的 MLOps 方案。2）数据管理：a）用 DVC 做数据版本管理；b）设计数据 pipeline（采集 → 清洗 → 特征工程）；c）（可选）用 Feast 搭建简单的 Feature Store。3）实验管理：a）用 MLflow 跟踪所有实验；b）记录超参数、指标、模型；c）对比不同实验，选最优模型。4）CI/CD 流水线：a）用 GitHub Actions 搭建 ML pipeline；b）代码提交 → 数据验证 → 训练 → 评估 → 注册；c）模型注册到 MLflow Model Registry。5）部署与监控：a）用 FastAPI + Docker 部署模型；b）添加 Prometheus 监控；c）实现简单的漂移检测。6）文档与总结：a）写一份 MLOps 架构文档；b）画出完整流程图；c）总结你这两周学到的 MLOps 知识；d）思考：你的团队在 MLOps 的哪个级别？怎么提升？",
           deep_dive: "MLOps 是一个系统工程，不是单个工具或技术，而是一套方法论：1）MLOps 的本质：MLOps 的目标不是用最多的工具，而是用最少的工具解决问题。很多团队一上来就想用 Kubeflow、MLflow、Feast、Seldon 全家桶，结果维护成本太高。正确的做法是：从最痛的点开始，用最简单的工具解决，逐步迭代。2）Feature Store 的价值：Feature Store 解决「训练-服务偏差」问题——训练时用的特征和线上推理时用的特征不一致，导致效果下降。Feature Store 统一管理特征，保证离线训练和在线推理用同一套特征逻辑。知名工具：Feast、Tecton、Hopsworks。3）可复现性是基石：MLOps 的核心是可复现——任何人、任何时候、用同样的代码和数据，应该得到同样的结果。这需要：a）代码版本管理（Git）；b）数据版本管理（DVC）；c）环境版本管理（Docker）；d）实验记录（MLflow）。四者缺一不可。4）自动化是目标：MLOps 的最终目标是自动化——从数据到模型到部署，尽量减少人工干预。但自动化是逐步实现的：a）先自动化训练 pipeline；b）再自动化部署；c）最后自动化监控和重训练。每一步都要验证可靠性。5）团队协作：MLOps 涉及多个角色——a）数据科学家：负责模型和实验；b）ML 工程师：负责 pipeline 和部署；c）DevOps/SRE：负责基础设施；d）数据工程师：负责数据管道。好的 MLOps 让每个角色专注于自己的部分，通过自动化流水线协作。6）MLOps 的未来：a）AutoML：自动选择模型和超参数；b）LLM Ops：大模型的运维（prompt 版本管理、A/B 测试、成本控制）；c）实时 ML：流式数据处理和实时推理；d） Responsible AI：公平性、可解释性、隐私保护的工程化。MLOps 是一个快速发展的领域，保持学习和实践很重要。"
-        }, duration: "4小时", resources: [B_DOCKER_TUTORIAL, { title: "Feast Feature Store", url: "https://docs.feast.dev/", required: false }, { title: "DVC 文档", url: "https://dvc.org/doc", required: false }], checkpoint: "完成一个端到端的 MLOps 项目，包含数据管理、实验跟踪、CI/CD、部署和监控" },
+        }, duration: "4小时", resources: [B_DOCKER_TUTORIAL, { title: "Feast Feature Store", url: "https://docs.feast.dev/", required: false, type: "doc", source: "official" }, { title: "DVC 文档", url: "https://dvc.org/doc", required: false, type: "doc", source: "official" }], checkpoint: "完成一个端到端的 MLOps 项目，包含数据管理、实验跟踪、CI/CD、部署和监控" },
       { day: 6, title: "Feature Store 与特征工程平台",
         summary: "学习特征存储和特征平台概念", content: {
           objective: "学习 Feature Store 和特征工程平台。理解特征存储的作用，了解 Feast 等开源工具，知道训练/服务一致性问题。",
@@ -5169,7 +5169,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "1）概念学习：理解 Feature Store 解决什么问题。2）Feast 入门（可选）：安装 Feast，跑官方示例。3）架构设计：为你的 ML 系统设计特征平台架构。4）思考：你做过的项目中，有没有训练服务不一致的问题？",
           deep_dive: "Feature Store 是 MLOps 的重要组件——它解决了「训练服务偏差」这个经典问题。训练时用批量数据算特征，推理时用实时数据算特征，两者的计算逻辑如果有差异，模型效果就会下降。Feature Store 统一定义和计算特征，离线训练和在线推理都用同一套，从根源上避免偏差。Feast 是最流行的开源 Feature Store，适合中小团队。大公司通常自研特征平台。"
-        }, duration: "2小时", resources: [B_DOCKER_TUTORIAL, { title: "Feast", url: "https://docs.feast.dev/", required: false }], checkpoint: "理解 Feature Store 的作用和训练服务一致性问题" },
+        }, duration: "2小时", resources: [B_DOCKER_TUTORIAL, { title: "Feast", url: "https://docs.feast.dev/", required: false, type: "doc", source: "official" }], checkpoint: "理解 Feature Store 的作用和训练服务一致性问题" },
       { day: 7, title: "ML 流水线与 Kubeflow/Airflow",
         summary: "学习 ML 流水线编排工具", content: {
           objective: "学习 ML 流水线编排。了解 Kubeflow 和 Airflow，能设计和实现 ML pipeline，知道数据→训练→评估→部署的全流程自动化。",
@@ -5181,7 +5181,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "1）流水线设计：为一个 ML 项目设计完整的流水线，画出每个步骤和依赖。2）Airflow 入门（可选）：安装 Airflow，写一个简单 DAG。3）Kubeflow 了解（概念）：了解 Kubeflow Pipelines 的组件和架构。4）对比：Airflow 和 Kubeflow 各适合什么场景？",
           deep_dive: "ML 流水线是 MLOps 的骨架——把数据、训练、评估、部署串起来，实现端到端自动化。流水线编排工具分两类：a）通用编排器：Airflow、Prefect、Dagster，灵活但需要自己封装 ML 逻辑；b）ML 专用编排：Kubeflow Pipelines、MLflow Pipelines，专为 ML 设计，和 ML 工具集成好。选型取决于团队技术栈和 K8s 使用程度。流水线的目标是：任何人、任何时候，一键就能从原始数据得到模型。"
-        }, duration: "2.5小时", resources: [B_DOCKER_TUTORIAL, { title: "Kubeflow", url: "https://www.kubeflow.org/", required: false }], checkpoint: "能设计 ML 流水线，了解 Kubeflow 和 Airflow 的区别" },
+        }, duration: "2.5小时", resources: [B_DOCKER_TUTORIAL, { title: "Kubeflow", url: "https://www.kubeflow.org/", required: false, type: "article", source: "official" }], checkpoint: "能设计 ML 流水线，了解 Kubeflow 和 Airflow 的区别" },
       { day: 8, title: "模型监控与数据漂移检测",
         summary: "深入学习模型监控和漂移检测", content: {
           objective: "深入学习模型监控和数据漂移检测。掌握数据漂移、概念漂移的检测方法，能用 Evidently AI 等工具监控模型，设计告警机制。",
@@ -5193,7 +5193,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "1）漂移检测实验：生成模拟数据，制造数据漂移，用统计方法检测。2）Evidently AI 使用（可选）：安装并跑一个示例，生成漂移报告。3）监控设计：设计一个模型监控方案——监控什么指标？阈值多少？怎么告警？4）应对策略：检测到漂移后怎么办？（重训练、人工检查、降级）",
           deep_dive: "模型上线不是结束，而是开始——模型效果会随时间下降，这叫「模型腐烂」（Model Decay）。主要原因是数据漂移和概念漂移。数据漂移是输入分布变了（比如用户行为变了），概念漂移是关系变了（比如疫情改变了消费模式）。检测漂移是第一步，更重要的是应对——自动重训练？人工审核？降级到规则？这需要根据业务场景设计。Evidently AI、Arize、WhyLabs 是专门的 ML 监控工具。"
-        }, duration: "2.5小时", resources: [B_DOCKER_TUTORIAL, { title: "Evidently AI", url: "https://www.evidentlyai.com/", required: false }], checkpoint: "理解漂移检测方法，能设计模型监控方案" },
+        }, duration: "2.5小时", resources: [B_DOCKER_TUTORIAL, { title: "Evidently AI", url: "https://www.evidentlyai.com/", required: false, type: "article", source: "official" }], checkpoint: "理解漂移检测方法，能设计模型监控方案" },
       { day: 9, title: "AutoML 与超参数优化",
         summary: "了解 AutoML 和超参数优化技术", content: {
           objective: "了解 AutoML 和超参数优化。掌握超参数搜索方法（网格搜索、随机搜索、贝叶斯优化），了解 AutoML 工具和适用场景。",
@@ -5205,7 +5205,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "1）超参优化：用 Optuna 或 scikit-learn 的 GridSearchCV/RandomizedSearchCV 优化一个模型。2）对比实验：网格搜索 vs 随机搜索 vs 贝叶斯优化，哪种效率高？3）AutoML 了解（概念）：了解 AutoML 工具（AutoGluon、H2O）。4）思考：AutoML 会取代数据科学家吗？还是辅助工具？",
           deep_dive: "超参数优化是 ML 工程的重要环节——超参数选得好，模型效果能提升一大截。网格搜索简单但低效（维度灾难），随机搜索 surprisingly 有效，贝叶斯优化更智能（利用历史结果指导下一次尝试）。Optuna 是现在最流行的超参优化框架，支持 pruning（早停差的实验）、多种采样器、可视化。AutoML 更进一步——自动做特征工程、模型选择、超参调优，甚至自动清洗数据。但 AutoML 不是银弹——它能找到「还不错」的解，但很难找到「最优」解，而且计算资源消耗大。人类专家的价值在于理解问题、设计正确的评估指标、做特征工程。"
-        }, duration: "2.5小时", resources: [{ title: "Optuna", url: "https://optuna.org/", required: false }], checkpoint: "能用 Optuna 做超参数优化，了解 AutoML 的能力和局限" },
+        }, duration: "2.5小时", resources: [{ title: "Optuna", url: "https://optuna.org/", required: false, type: "article", source: "official" }], checkpoint: "能用 Optuna 做超参数优化，了解 AutoML 的能力和局限" },
       { day: 10, title: "MLOps 综合实战与职业发展",
         summary: "MLOps 综合项目与职业发展路径", content: {
           objective: "完成 MLOps 综合项目并规划职业发展。整合两周学到的 MLOps 知识，做一个端到端项目，了解 MLOps 工程师的技能栈和成长路径。",
@@ -5231,7 +5231,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "围绕 AI 服务监控体系搭建。重点讲 Prometheus 指标采集、Grafana 可视化仪表盘构建，以及模型训练与服务监控的最佳实践。",
     outcomes: ["搭建 Prometheus + Grafana 监控栈", "设计 Grafana 仪表盘", "配置告警规则"],
     relatedIntel: ["017-metrics", "007-docker"], relatedTools: ["Prometheus", "Grafana"],
-    relatedTerms: ["prometheus", "grafana", "metrics", "alerting", "observability"],
+    relatedTerms: ["prometheus", "grafana", "metrics", "alerting", "observability"], relatedNodes: ["docker-basic", "devops-kubernetes"],
     dailyTasks: [
       {
         day: 1,
@@ -5250,8 +5250,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2小时",
         resources: [B_LINUX_TUTORIAL, 
-          { title: "Prometheus 数据模型", url: "https://prometheus.io/docs/concepts/data_model/", required: true },
-          { title: "PromQL 常用函数", url: "https://prometheus.io/docs/prometheus/latest/querying/functions/", required: true }
+          { title: "Prometheus 数据模型", url: "https://prometheus.io/docs/concepts/data_model/", required: true, type: "doc", source: "official" },
+          { title: "PromQL 常用函数", url: "https://prometheus.io/docs/prometheus/latest/querying/functions/", required: true, type: "doc", source: "official" }
         ],
         checkpoint: "Prometheus UI 能查到 http_requests_total 和 http_request_duration_seconds 的数据"
       },
@@ -5272,8 +5272,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2小时",
         resources: [
-          { title: "Grafana 文档", url: "https://grafana.com/docs/grafana/latest/", required: true },
-          { title: "Grafana Provisioning", url: "https://grafana.com/docs/grafana/latest/administration/provisioning/", required: true }
+          { title: "Grafana 文档", url: "https://grafana.com/docs/grafana/latest/", required: true, type: "doc", source: "official" },
+          { title: "Grafana Provisioning", url: "https://grafana.com/docs/grafana/latest/administration/provisioning/", required: true, type: "doc", source: "official" }
         ],
         checkpoint: "仪表盘可正常显示实时 QPS、Latency P99、GPU 利用率，刷新延迟 < 5s"
       },
@@ -5293,8 +5293,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "1.5小时",
         resources: [
-          { title: "Prometheus Alerting 文档", url: "https://prometheus.io/docs/alerting/latest/", required: true },
-          { title: "Alertmanager 配置", url: "https://prometheus.io/docs/alerting/latest/configuration/", required: true }
+          { title: "Prometheus Alerting 文档", url: "https://prometheus.io/docs/alerting/latest/", required: true, type: "doc", source: "official" },
+          { title: "Alertmanager 配置", url: "https://prometheus.io/docs/alerting/latest/configuration/", required: true, type: "doc", source: "official" }
         ],
         checkpoint: "触发测试告警后 Alertmanager 成功发送通知（email/slack/webhook 任一）"
       },
@@ -5315,8 +5315,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2小时",
         resources: [
-          { title: "MLflow 文档", url: "https://mlflow.org/docs/latest/index.html", required: true },
-          { title: "WandB 文档", url: "https://docs.wandb.ai/", required: false }
+          { title: "MLflow 文档", url: "https://mlflow.org/docs/latest/index.html", required: true, type: "doc", source: "official" },
+          { title: "WandB 文档", url: "https://docs.wandb.ai/", required: false, type: "doc", source: "official" }
         ],
         checkpoint: "MLflow UI 中能查看多个 run 的 loss 曲线并排对比，所有 metric 有时间戳记录"
       },
@@ -5337,7 +5337,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "3小时",
         resources: [
-          { title: "cAdvisor 文档", url: "https://github.com/google/cadvisor", required: true }
+          { title: "cAdvisor 文档", url: "https://github.com/google/cadvisor", required: true, type: "repo", source: "github" }
         ],
         checkpoint: "docker compose up 成功后，Grafana 大盘显示 QPS/Latency/GPU/容器资源全部正常"
       }
@@ -5358,7 +5358,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "围绕信息论核心概念及其在机器学习中的应用。重点讲熵、交叉熵、KL 散度与损失函数的内在联系，以及 MLE/MAP 估计的理论基础。",
     outcomes: ["理解熵与互信息的定义", "掌握交叉熵作为损失函数的数学推导", "理解 MLE / MAP 估计的等价性"],
     relatedIntel: ["010-numpy-pandas", "011-pytorch"], relatedTools: ["NumPy"],
-    relatedTerms: ["entropy", "cross-entropy", "kl-divergence", "mutual-information", "mle", "map"],
+    relatedTerms: ["entropy", "cross-entropy", "kl-divergence", "mutual-information", "mle", "map"], relatedNodes: ["math-probability", "math-optimization"],
     dailyTasks: [
       {
         day: 1,
@@ -5377,8 +5377,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "1.5小时",
         resources: [B_ML_LIHONGYI, 
-          { title: "信息论教程（Stanford CS229 补充材料）", url: "https://cs.stanford.edu/~rvarun/github.github.com/clients/doc/statistics/supplemental_linalg.pdf", required: true },
-          { title: "Information Theory 书籍（Cover & Thomas）", url: "https://www.goodreads.com/book/show/1796510.Elements_of_Information_Theory", required: false }
+          { title: "信息论教程（Stanford CS229 补充材料）", url: "https://cs.stanford.edu/~rvarun/github.github.com/clients/doc/statistics/supplemental_linalg.pdf", required: true, type: "repo", source: "github" },
+          { title: "Information Theory 书籍（Cover & Thomas）", url: "https://www.goodreads.com/book/show/1796510.Elements_of_Information_Theory", required: false, type: "book", source: "official" }
         ],
         checkpoint: "Bernoulli(p=0.5) 熵=1 bit，Bernoulli(p=0.1) 熵≈0.47 bit，验证正确"
       },
@@ -5399,7 +5399,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "1.5小时",
         resources: [
-          { title: "Cross-Entropy Loss 数学推导", url: "https://pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html", required: true }
+          { title: "Cross-Entropy Loss 数学推导", url: "https://pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html", required: true, type: "doc", source: "official" }
         ],
         checkpoint: "手动实现的 BCE 与 torch.nn.functional.binary_cross_entropy_with_logits 差值 < 1e-5"
       },
@@ -5420,7 +5420,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2小时",
         resources: [
-          { title: "MLE vs MAP 对比", url: "https://sgfin.github.io/learning/must-reads/", required: true }
+          { title: "MLE vs MAP 对比", url: "https://sgfin.github.io/learning/must-reads/", required: true, type: "article", source: "official" }
         ],
         checkpoint: "n=10 时 MAP 和 MLE 差异显著；n=1000 时差异 < 1%，验证理论预测"
       },
@@ -5441,7 +5441,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "1.5小时",
         resources: [
-          { title: "AIC/BIC 论文", url: "https://www.cs.ubc.ca/~murphyk/Papers/aic-bic.pdf", required: false }
+          { title: "AIC/BIC 论文", url: "https://www.cs.ubc.ca/~murphyk/Papers/aic-bic.pdf", required: false, type: "paper", source: "official" }
         ],
         checkpoint: "degree=3 时 BIC 最低，对应验证 MSE 最低，验证奥卡姆剃刀原则"
       },
@@ -5462,8 +5462,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2小时",
         resources: [
-          { title: "Attention is all you need 论文", url: "https://arxiv.org/abs/1706.03762", required: true },
-          { title: "Information Bottleneck in Transformers", url: "https://arxiv.org/abs/2002.09770", required: false }
+          { title: "Attention is all you need 论文", url: "https://arxiv.org/abs/1706.03762", required: true, type: "paper", source: "academic" },
+          { title: "Information Bottleneck in Transformers", url: "https://arxiv.org/abs/2002.09770", required: false, type: "paper", source: "academic" }
         ],
         checkpoint: "浅层 attention 熵 > 深层 attention 熵（信息逐层压缩），与 IB 理论一致"
       }
@@ -5484,7 +5484,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "围绕凸优化理论与深度学习优化器的数学原理。重点讲凸集/凸函数/梯度下降收敛性，以及 Adam/SGD 等优化器的数学推导。",
     outcomes: ["理解凸优化问题与局部最优的关系", "推导 Adam / SGD+Momentum 的更新公式", "理解正则化与优化问题的联系"],
     relatedIntel: ["010-numpy-pandas", "011-pytorch"], relatedTools: ["NumPy"],
-    relatedTerms: ["convex-optimization", "gradient-descent", "adam", "sgd", "lagrangian", "kkt", "regularization"],
+    relatedTerms: ["convex-optimization", "gradient-descent", "adam", "sgd", "lagrangian", "kkt", "regularization"], relatedNodes: ["math-linear-algebra", "math-probability"],
     dailyTasks: [
       {
         day: 1,
@@ -5503,8 +5503,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2小时",
         resources: [B_ML_LIHONGYI, 
-          { title: "CVXPY 文档", url: "https://www.cvxpylayers.readthedocs.io/", required: true },
-          { title: "Convex Optimization (Boyd) 免费PDF", url: "https://web.stanford.edu/~boyd/cvxbook/", required: true }
+          { title: "CVXPY 文档", url: "https://www.cvxpylayers.readthedocs.io/", required: true, type: "doc", source: "official" },
+          { title: "Convex Optimization (Boyd) 免费PDF", url: "https://web.stanford.edu/~boyd/cvxbook/", required: true, type: "book", source: "official" }
         ],
         checkpoint: "CVXPY 求解结果与拉格朗日解析解一致（误差 < 1e-6）"
       },
@@ -5525,7 +5525,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2小时",
         resources: [
-          { title: "SGD 收敛性分析", url: "https://arxiv.org/abs/1909.08520", required: true }
+          { title: "SGD 收敛性分析", url: "https://arxiv.org/abs/1909.08520", required: true, type: "paper", source: "academic" }
         ],
         checkpoint: "GD loss 曲线符合 O(1/T)，T=1000 时 loss < 1e-6（达到最优解附近）"
       },
@@ -5546,8 +5546,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2.5小时",
         resources: [
-          { title: "Adam 原始论文", url: "https://arxiv.org/abs/1412.6980", required: true },
-          { title: "AdamW 论文", url: "https://arxiv.org/abs/1711.05101", required: true }
+          { title: "Adam 原始论文", url: "https://arxiv.org/abs/1412.6980", required: true, type: "paper", source: "academic" },
+          { title: "AdamW 论文", url: "https://arxiv.org/abs/1711.05101", required: true, type: "paper", source: "academic" }
         ],
         checkpoint: "手写 Adam 训练 MLP，10 epochs 后准确率与 torch.optim.Adam 差值 < 0.5%"
       },
@@ -5568,7 +5568,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "1.5小时",
         resources: [
-          { title: "Proximal Gradient Descent", url: "https://www.stat.cmu.edu/~ryantibs/convexopt/", required: false }
+          { title: "Proximal Gradient Descent", url: "https://www.stat.cmu.edu/~ryantibs/convexopt/", required: false, type: "article", source: "official" }
         ],
         checkpoint: "Lasso 非零系数数量 < Ridge 的 20%，验证 L1 稀疏性"
       },
@@ -5589,8 +5589,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "3小时",
         resources: [
-          { title: "PyTorch 优化器文档", url: "https://pytorch.org/docs/stable/optim.html", required: true },
-          { title: "SGDR 论文", url: "https://arxiv.org/abs/1608.03983", required: true }
+          { title: "PyTorch 优化器文档", url: "https://pytorch.org/docs/stable/optim.html", required: true, type: "doc", source: "official" },
+          { title: "SGDR 论文", url: "https://arxiv.org/abs/1608.03983", required: true, type: "paper", source: "academic" }
         ],
         checkpoint: "SGD + Cosine 在 CIFAR-10 上 test accuracy > Adam（LSTM 泛化差距的经验验证）"
       }
@@ -5617,7 +5617,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["掌握 RAG 核心原理与实现", "能构建完整的知识库问答系统", "理解向量检索与 Prompt 工程"],
     relatedIntel: ["020-prompt-engineering", "021-rag-intro"],
     relatedTools: ["LangChain", "HuggingFace", "Streamlit"],
-    relatedTerms: ["rag", "vector-database", "embedding", "retrieval", "langchain"],
+    relatedTerms: ["rag", "vector-database", "embedding", "retrieval", "langchain"], relatedNodes: ["llm-rag", "llm-local-rag"],
     suggestions: {
       prerequisites: ["Python 编程基础", "LLM 基础"],
       nextSteps: ["LLM Agent 应用开发", "综合实战项目"],
@@ -5636,7 +5636,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "RAG 项目设计与技术选型：1）深入理解 RAG 的核心思想——为什么检索 + 生成比单纯生成效果好？2）设计一个完整的 RAG 系统架构，画出数据流向图。3）技术选型调研：a）Embedding 模型：OpenAI text-embedding、BGE、M3E、GTE 等，对比效果和速度；b）向量数据库：Chroma、FAISS、Pinecone、Milvus、Qdrant 等，对比优缺点和适用场景；c）LLM：选择一个适合的模型（如 GPT-3.5/4、Claude、Qwen、Llama 等）；d）应用框架：LangChain、LlamaIndex，或者自己实现。4）确定你的项目主题：比如「个人笔记问答」「技术文档助手」「书籍内容问答」「客服知识库」等。5）准备数据集：收集你要用来构建知识库的文档（PDF、Markdown、网页等）。6）搭建项目仓库结构，初始化 Git 和虚拟环境。",
           deep_dive: "RAG 是目前 LLM 落地最成功的技术方向之一，几乎所有企业级 LLM 应用都用到了 RAG 或其变体。理解 RAG 的本质很重要——它不是简单的「搜索 + 拼接」，而是一个系统工程。好的 RAG 系统需要在多个环节做优化：1）数据处理环节：文档解析质量、分块策略（Chunking）直接影响检索效果。分块太大包含噪音，太小缺少上下文。常见策略：按固定长度分块、按语义分块、按结构分块（标题/段落）、递归分块等。2）检索环节：不仅仅是向量相似度检索，还可以结合关键词检索（混合检索）、重排序（Rerank）、查询改写（Query Rewriting）、多查询（Multi-Query）等技术来提升召回率。3）生成环节：Prompt 设计很重要——如何组织检索到的上下文、如何引导模型基于上下文回答、如何处理上下文不足的情况（避免幻觉）。4）评估环节：RAG 的评估比传统模型更复杂，需要评估检索质量（Recall@k、MRR）和生成质量（准确性、相关性、完整性），常用工具有 Ragas、TruLens 等。5）进阶方向：图 RAG（GraphRAG）、多模态 RAG、Agentic RAG、自适应 RAG 等是当前研究热点。做 RAG 项目，重点不是把各个组件拼起来，而是深入理解每个环节的优化空间，做出真正好用的系统。"
-        }, duration: "3小时", resources: [{ title: "LangChain 官方文档", url: "https://python.langchain.com/", required: false }, { title: "RAG Survey 论文", url: "https://arxiv.org/abs/2312.10997", required: false }], checkpoint: "完成项目架构设计和技术选型，搭建好项目框架" },
+        }, duration: "3小时", resources: [{ title: "LangChain 官方文档", url: "https://python.langchain.com/", required: false, type: "doc", source: "official" }, { title: "RAG Survey 论文", url: "https://arxiv.org/abs/2312.10997", required: false, type: "paper", source: "academic" }], checkpoint: "完成项目架构设计和技术选型，搭建好项目框架" },
       { day: 2, title: "文档处理与向量化",
         summary: "实现文档解析、分块、Embedding 和向量存储", content: {
           objective: "今天你将实现 RAG 系统的核心——文档处理和向量化。学完后能解析多种格式的文档、设计分块策略、生成 Embedding、存入向量数据库，完成知识库的构建。",
@@ -5649,7 +5649,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "文档处理与向量化实战：1）文档解析：a）用 LangChain 的 DocumentLoader 或 Unstructured 库解析 PDF/Markdown/HTML；b）处理表格、图片等复杂内容；c）清洗文本（去除多余空行、特殊字符）。2）分块策略实验：a）固定长度分块（如 500 字符，重叠 50）；b）按段落分块；c）递归分块（先按段落，太长再按句子）；d）对比不同分块策略对检索效果的影响。3）Embedding 生成：a）选择 Embedding 模型（如 BGE、M3E、OpenAI text-embedding-3）；b）批量生成 Embedding；c）测试 Embedding 质量（语义相似的句子向量是否接近）。4）向量数据库：a）用 Chroma 或 FAISS 存储向量；b）构建索引；c）实现相似度搜索——输入查询，返回 top-k 最相关的 chunk。5）检索质量评估：a）准备 10 个查询和人工标注的相关文档；b）计算 Recall@k 和 MRR；c）分析检索失败的原因。6）优化迭代：a）调整分块大小和重叠；b）尝试不同的 Embedding 模型；c）添加元数据过滤。",
           deep_dive: "文档处理和向量化是 RAG 系统的基础，质量直接决定最终效果：1）分块是 RAG 最重要的环节之一：分块太大——包含太多无关信息，检索精度下降；分块太小——丢失上下文，生成质量下降。好的分块策略应该：a）保持语义完整性（不要把一句话切断）；b）大小适中（通常 200-500 token）；c）有重叠（通常 50-100 token），避免边界信息丢失。2）高级分块策略：a）按结构分块：尊重文档的标题、段落、列表结构；b）语义分块：用模型判断语义边界，在主题转换处分块；c）父子分块：小块检索、大块生成——检索时用小 chunk 精准匹配，生成时返回包含上下文的大 chunk。3）Embedding 模型的选择：a）多语言：BGE-M3、multilingual-e5；b）中文：BGE-zh、M3E；c）英文：text-embedding-3、all-MiniLM；d）考虑维度、速度、效果的平衡。4）向量数据库选型：a）Chroma：轻量，适合原型；b）FAISS：Facebook 开源，单机高性能；c）Milvus：分布式，适合大规模；d）Qdrant：Rust 写的，高性能；e）Pinecone：云服务，免运维。5）混合检索：纯向量检索可能漏掉关键词匹配很重要的场景。混合检索 = 向量检索 + 关键词检索（BM25），效果通常更好。6）重排序（Rerank）：检索阶段先召回 top-20，然后用 Cross-Encoder 重排序，取 top-5。Rerank 模型（如 BGE-Reranker）比双塔模型更准确，但速度慢，所以用在第二阶段。"
-        }, duration: "3小时", resources: [{ title: "LangChain 文档加载", url: "https://python.langchain.com/docs/modules/data_connection/document_loaders/", required: false }, { title: "Chroma 文档", url: "https://docs.trychroma.com/", required: false }], checkpoint: "完成文档解析、分块、向化和向量存储，实现基本的检索功能" },
+        }, duration: "3小时", resources: [{ title: "LangChain 文档加载", url: "https://python.langchain.com/docs/modules/data_connection/document_loaders/", required: false, type: "doc", source: "official" }, { title: "Chroma 文档", url: "https://docs.trychroma.com/", required: false, type: "doc", source: "official" }], checkpoint: "完成文档解析、分块、向化和向量存储，实现基本的检索功能" },
       { day: 3, title: "检索增强生成与 Prompt 工程",
         summary: "实现完整的 RAG 流程，优化 Prompt 和生成质量", content: {
           objective: "今天你将实现完整的 RAG 流程并优化生成质量。学完后能把检索和生成串联起来，设计好的 Prompt，处理上下文不足的情况，评估 RAG 系统的效果。",
@@ -5662,7 +5662,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "RAG 核心实现与优化：1）基础 RAG 实现：a）把检索和生成串联起来；b）设计基础 Prompt：「基于以下上下文回答问题：{context}\n问题：{question}」；c）用 LLM 生成答案；d）测试几个问题，看效果。2）Prompt 优化：a）明确指示模型「只基于上下文回答，不知道就说不知道」；b）要求模型标注引用来源；c）设计不同类型的 Prompt（简洁版、详细版、思维链版）；d）对比不同 Prompt 的效果。3）查询改写：a）实现查询扩展——用 LLM 把用户查询改写成多个变体；b）实现 HyDE（Hypothetical Document Embeddings）——先让 LLM 生成假设答案，用假设答案检索；c）对比改写前后的检索效果。4）上下文处理：a）如果检索到的 chunk 太多，怎么选择和裁剪？b）如果多个 chunk 信息冲突，怎么处理？c）如果没有检索到相关知识，怎么回答？5）答案溯源：a）在答案中标注每个信息来自哪个文档的哪个部分；b）在前端展示来源链接。6）效果评估：a）准备 20 个问题和标准答案；b）评估答案的准确性、完整性、相关性；c）分析 bad case，找出改进方向。",
           deep_dive: "RAG 的核心不在检索或生成，而在于两者的结合——怎么让检索到的信息最好地辅助生成：1）Prompt 是连接检索和生成的桥梁：好的 Prompt 应该：a）明确角色和任务：「你是一个知识库问答助手，请基于提供的上下文回答问题」；b）提供清晰的结构：上下文、问题、要求分开；c）防止幻觉：「如果上下文中没有相关信息，请说不知道」；d）要求溯源：「请在答案中标注信息来源」。2）查询改写的重要性：用户的查询往往不是最优的检索 query——可能太短、太模糊、有歧义。查询改写技术：a）查询扩展：用同义词、相关词扩展查询；b）查询分解：把复杂问题分解成子问题；c）HyDE：先生成假设答案再检索，因为答案和文档的语义更接近；d）多查询：生成多个查询变体，分别检索后合并结果。3）上下文窗口管理：大模型的上下文窗口有限（4K-128K token），需要合理管理：a）检索 top-k 个 chunk，但不要全塞进去——筛选最相关的；b）按相关性排序，最重要的放前面；c）如果超长，截断或压缩；d）用 Long Context 模型（如 Claude 200K）可以放更多上下文，但成本更高。4）处理「不知道」的情况：RAG 系统最重要但最容易被忽略的功能——当知识库中没有相关信息时，应该说「我不知道」而不是编造答案。实现方法：a）Prompt 约束；b）检索置信度阈值——如果检索分数太低，直接返回「不知道」；c）生成后验证——检查答案是否真的来自上下文。5）RAG 的评估：RAG 评估比传统模型复杂，需要评估检索和生成两个环节：a）检索指标：Recall@k、MRR、NDCG；b）生成指标：答案准确性、相关性、完整性、幻觉率；c）端到端指标：用户满意度；d）工具：Ragas、TruLens 等专门评估 RAG 的工具。6）高级 RAG 技巧：a）Self-RAG：模型自己决定要不要检索、检索结果相不相关；b）Corrective RAG：检索后先评估质量，质量差的话用 web 搜索补充；c）Adaptive RAG：根据问题复杂度选择不同策略。这些是 RAG 的前沿研究方向。"
-        }, duration: "3小时", resources: [{ title: "LangChain RAG 教程", url: "https://python.langchain.com/docs/use_cases/question_answering/", required: false }, { title: "Ragas 评估框架", url: "https://github.com/explodinggradients/ragas", required: false }], checkpoint: "实现完整的 RAG 流程，包含查询改写、Prompt 优化和答案溯源" },
+        }, duration: "3小时", resources: [{ title: "LangChain RAG 教程", url: "https://python.langchain.com/docs/use_cases/question_answering/", required: false, type: "doc", source: "official" }, { title: "Ragas 评估框架", url: "https://github.com/explodinggradients/ragas", required: false, type: "repo", source: "github" }], checkpoint: "实现完整的 RAG 流程，包含查询改写、Prompt 优化和答案溯源" },
       { day: 4, title: "RAG 系统优化与进阶",
         summary: "深入优化 RAG 系统：混合检索、重排序、多模态、评估", content: {
           objective: "今天你将深入优化 RAG 系统。学完后能实现混合检索、重排序、多轮对话、多模态 RAG 等进阶功能，建立完整的 RAG 评估体系。",
@@ -5675,7 +5675,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "RAG 进阶优化实战：1）混合检索：a）用 BM25 做关键词检索；b）用向量做语义检索；c）融合两路结果（RRF 或加权融合）；d）对比混合检索和纯向量检索的效果。2）重排序：a）用 BGE-Reranker 或 Cohere Rerank 对 top-20 结果重排；b）取 top-5 给生成模型；c）对比重排前后的效果。3）多轮对话：a）维护对话历史；b）用 LLM 把当前问题和历史结合，生成检索 query；c）测试多轮对话场景。4）多模态 RAG（可选）：a）用多模态 Embedding 模型（如 CLIP）编码图片；b）实现图文混合检索；c）测试图片问答。5）评估体系：a）用 Ragas 评估——faithfulness（忠实度）、answer relevancy（答案相关性）、context precision（上下文精度）、context recall（上下文召回）；b）对比优化前后的指标。6）性能优化：a）缓存常见查询的结果；b）异步检索和生成；c）流式输出，让用户更快看到部分结果。",
           deep_dive: "RAG 优化是一个系统工程，需要在多个环节同时发力：1）混合检索的原理：向量检索擅长语义匹配（「怎么训练狗」能匹配到「犬类训练方法」），但不擅长精确匹配（搜「Error 404」可能搜不到）。BM25 关键词检索擅长精确匹配，但不理解语义。两者结合可以取长补短。融合方法：a）RRF（Reciprocal Rank Fusion）：按排名的倒数融合，简单有效；b）加权融合：把两路的分数归一化后加权求和。2）Rerank 的价值：检索阶段用的是双塔模型（Bi-Encoder），查询和文档独立编码，速度快但精度有限。Rerank 阶段用 Cross-Encoder，查询和文档一起编码，精度更高但速度慢。两阶段策略：Bi-Encoder 召回 top-20，Cross-Encoder 精排 top-5，兼顾速度和精度。3）多轮对话的挑战：用户可能在后续问题中用代词或省略——「他的出生日期是什么？」中的「他」指谁？解决方法：a）用 LLM 做查询改写，把代词替换成具体实体；b）把对话历史也作为上下文检索。4）多模态 RAG：很多文档包含图片、表格、图表，纯文本 RAG 会丢失这些信息。多模态 RAG 的方法：a）用多模态 Embedding（CLIP、Unified-VLP）编码图片；b）用多模态 LLM（GPT-4V、Claude 3）理解图片；c）表格可以用 Text-to-SQL 或专门表格理解模型。5）RAG 评估的维度：a）检索环节：上下文精度（检索到的有多少是相关的）、上下文召回（相关的有多少被检索到）；b）生成环节：忠实度（答案是否基于上下文，有没有幻觉）、答案相关性（答案是否回答了问题）；c）端到端：用户满意度、任务完成率。Ragas 框架提供了这些指标的自动化评估方法。6）RAG 的成本优化：RAG 系统的成本主要来自 LLM 调用——a）用小模型做简单任务（如查询改写），大模型做复杂任务；b）缓存常见查询；c）控制上下文长度，减少 token 消耗；d）用开源模型替代 API 模型。"
-        }, duration: "3小时", resources: [{ title: "Cohere Rerank", url: "https://docs.cohere.com/docs/reranking", required: false }, { title: "BGE Reranker", url: "https://huggingface.co/BAAI/bge-reranker-large", required: false }], checkpoint: "实现混合检索、重排序和多轮对话，建立 RAG 评估体系" },
+        }, duration: "3小时", resources: [{ title: "Cohere Rerank", url: "https://docs.cohere.com/docs/reranking", required: false, type: "doc", source: "official" }, { title: "BGE Reranker", url: "https://huggingface.co/BAAI/bge-reranker-large", required: false, type: "article", source: "official" }], checkpoint: "实现混合检索、重排序和多轮对话，建立 RAG 评估体系" },
       { day: 5, title: "RAG 项目部署与展示",
         summary: "部署 RAG 系统，构建前端界面，完成项目展示", content: {
           objective: "今天你将完成 RAG 项目的部署和展示。学完后能用 FastAPI 构建 RAG 后端 API，用 Streamlit/Gradio 构建前端界面，用 Docker 容器化部署，产出可展示的作品。",
@@ -5700,7 +5700,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "1）混合检索：实现 BM25（用 rank_bm25）和向量检索的融合（RRF 或加权）。2）重排序：加一个 BGE-Reranker 精排，对比重排前后 Recall 提升。3）查询改写：实现多查询改写（让 LLM 生成 3 个变体分别检索）或 HyDE。4）消融实验：每个优化点单独测效果，看贡献最大的是哪个。",
           deep_dive: "基础 RAG 的检索质量往往是瓶颈——检索错了，生成再强也没用。高级检索优化能大幅提升效果：a）混合检索：向量检索擅长语义匹配，BM25 擅长关键词精确匹配，两者结合效果通常比单一路好 10-20%；b）重排序：第一阶段用双塔模型（快）召回 top-20，第二阶段用 Cross-Encoder（慢但准）精排 top-5，兼顾速度和精度；c）查询改写：用户的 query 往往不是最优的，改写一下召回率能提升不少。这些技术组合起来，检索质量可能从 60% 提到 90%+。"
-        }, duration: "3小时", resources: [{ title: "BGE Reranker", url: "https://huggingface.co/BAAI/bge-reranker-large", required: false }], checkpoint: "实现混合检索和重排序，量化检索质量提升" },
+        }, duration: "3小时", resources: [{ title: "BGE Reranker", url: "https://huggingface.co/BAAI/bge-reranker-large", required: false, type: "article", source: "official" }], checkpoint: "实现混合检索和重排序，量化检索质量提升" },
       { day: 7, title: "多轮对话与记忆系统",
         summary: "实现多轮对话 RAG 和记忆管理", content: {
           objective: "学习多轮对话 RAG 和记忆系统。能处理多轮对话中的指代消解和上下文传递，设计短期和长期记忆策略。",
@@ -5712,7 +5712,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "1）查询重构：实现一个独立查询生成器——输入对话历史 + 当前问题，输出重构后的独立查询。2）对话管理：实现滑动窗口（保留最近 N 轮）和摘要式记忆。3）长期记忆：把重要信息存入记忆库，对话时检索相关记忆加入上下文。4）测试：设计多轮对话场景，测试系统是否能正确理解指代和上下文。",
           deep_dive: "多轮对话 RAG 比单轮问答复杂很多——用户不会每次都把话说完整，会用「他」「这个」「那个」，还会切换话题。核心技术是查询重构（Query Rewriting）——让 LLM 把不完整的问题改写成完整的、独立的查询。记忆系统也是关键：短期记忆（当前对话）保证连贯性，长期记忆（用户画像、历史偏好）让系统更懂用户。记忆的存储和检索本身就是一个 RAG 问题——把记忆当作文档，当前对话当作查询，检索相关的记忆片段。"
-        }, duration: "3小时", resources: [{ title: "LangChain Memory", url: "https://python.langchain.com/docs/modules/memory/", required: false }], checkpoint: "实现多轮对话 RAG，包含查询重构和记忆系统" },
+        }, duration: "3小时", resources: [{ title: "LangChain Memory", url: "https://python.langchain.com/docs/modules/memory/", required: false, type: "doc", source: "official" }], checkpoint: "实现多轮对话 RAG，包含查询重构和记忆系统" },
       { day: 8, title: "RAG 评估体系与质量保证",
         summary: "建立完整的 RAG 评估和质量保证体系", content: {
           objective: "建立 RAG 评估体系。掌握检索评估和生成评估的方法，用 Ragas 等工具自动化评估，设计质量监控和告警机制。",
@@ -5724,7 +5724,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "1）构建评估集：准备 30-50 个问答对，标注标准答案和相关文档。2）Ragas 评估：用 Ragas 算 faithfulness、answer_relevancy、context_precision、context_recall。3）人工评估：抽样 10 个，人工评分，和自动评估对比。4）监控设计：设计线上质量监控方案——怎么发现 bad case？怎么告警？",
           deep_dive: "没有评估，就没有优化。RAG 评估分为两部分——检索评估和生成评估。检索评估相对客观，Recall/MRR 就能说明问题。生成评估比较难——答案是开放的，怎么算好？Ragas 提出了几个指标：faithfulness（答案是否基于上下文，有没有幻觉）、answer_relevancy（答案和问题相关吗）、context_precision（检索到的上下文精准吗）、context_recall（相关的上下文检索到了吗）。这些指标都是用 LLM 当评委来算的，虽然不完全准确，但成本低、速度快，适合做自动化监控。再加上定期人工抽检，就能形成比较完整的质量保证体系。"
-        }, duration: "2.5小时", resources: [{ title: "Ragas", url: "https://docs.ragas.io/", required: false }], checkpoint: "建立 RAG 评估体系，能用 Ragas 自动化评估" },
+        }, duration: "2.5小时", resources: [{ title: "Ragas", url: "https://docs.ragas.io/", required: false, type: "doc", source: "official" }], checkpoint: "建立 RAG 评估体系，能用 Ragas 自动化评估" },
       { day: 9, title: "性能优化与生产部署",
         summary: "RAG 系统的性能优化和生产级部署", content: {
           objective: "学习 RAG 系统的性能优化和生产部署。优化检索和生成速度，构建高可用服务，考虑成本、安全、监控。",
@@ -5768,7 +5768,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["掌握图像分类完整流程", "能训练并优化分类模型", "实现模型部署与 Demo 展示"],
     relatedIntel: ["002-yolo", "015-cv-tricks"],
     relatedTools: ["PyTorch", "Streamlit", "Docker"],
-    relatedTerms: ["image-classification", "transfer-learning", "data-augmentation", "model-deployment", "grad-cam"],
+    relatedTerms: ["image-classification", "transfer-learning", "data-augmentation", "model-deployment", "grad-cam"], relatedNodes: ["cv-cnn", "cv-detection"],
     suggestions: {
       prerequisites: ["PyTorch 基础", "计算机视觉基础"],
       nextSteps: ["目标检测项目", "综合实战项目"],
@@ -5787,7 +5787,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "CV 项目选题与数据探索：1）项目选题：选择一个图像分类场景——可以是垃圾分类、花卉识别、宠物品种分类、医学影像分类、工业缺陷检测等。2）数据集准备：收集或下载对应数据集——可以使用 Kaggle 数据集、Roboflow 公开数据集、或自己爬取/标注。目标：至少 5 个类别，每类至少 200 张图。3）深入数据分析：a）类别分布统计（是否不平衡？）；b）图像尺寸分布（需要统一 resize 吗？）；c）图像质量检查（有没有模糊、过曝、损坏的图片？）；d）颜色分布统计（各通道均值方差，用于标准化）；e）可视化每个类别的样本图片，观察类间差异和类内变化。4）数据增强设计：设计一套适合你的数据的增强方案——翻转、旋转、裁剪、色彩变化等各用什么参数？为什么？5）构建数据 pipeline：用 PyTorch 的 Dataset 和 DataLoader 实现完整的数据加载流程，包括预处理、增强、批处理。6）验证 pipeline：写一个脚本，从 DataLoader 中取一批数据，可视化增强后的图片，确认 pipeline 正确。",
           deep_dive: "做 CV 项目，很多人一上来就想跑模型，但实际上数据和数据处理的重要性远大于模型。「Garbage in, garbage out」在 CV 领域同样适用。1）数据比模型更重要：在实际项目中，数据质量和数据量对效果的影响往往比模型架构大得多。同样的 ResNet50，用高质量数据和用低质量数据，效果可能差 20% 以上。2）数据不平衡处理：实际项目中数据几乎都是不平衡的。处理方法：a）重采样：过采样少数类、欠采样多数类；b）加权损失：给少数类更高的权重；c）数据增强：对少数类做更多增强；d）合成数据：用 GAN 或其他方法生成少数类样本。没有最好的方法，需要结合具体情况尝试。3）数据增强是免费的性能提升：数据增强不仅能防止过拟合，还能提升模型的泛化能力。而且它是「免费」的——不需要额外收集数据。高级的数据增强技术：Mixup（两张图混合）、CutMix（裁剪一块区域替换）、AutoAugment（自动搜索增强策略）、RandAugment（随机增强组合）、TrivialAugment 等。4）数据泄漏陷阱：做 CV 项目时很容易踩数据泄漏的坑——比如先做了全局标准化再划分数据集、数据增强用了验证集的信息、测试集数据混入训练等。一定要先划分数据集，再各自做预处理。5）小样本分类：如果数据很少（每类只有几十张），可以用迁移学习——在大数据集上预训练的模型上微调。但要注意：a）冻结哪些层？b）学习率怎么设？c）要不要训整个模型？这些都需要实验。6）项目的完整性：一个好的 CV 项目不只是训个模型就完了——还包括：错误分析（模型在哪些样本上错了？为什么？）、模型可解释性（Grad-CAM 看看模型关注哪里）、模型优化（剪枝、量化、蒸馏）、模型部署（转 ONNX/TensorRT、做 API 服务）、前端 Demo 展示。把这些都做了，项目才完整，放在简历上才有说服力。"
-        }, duration: "3小时", resources: [{ title: "Kaggle 数据集", url: "https://www.kaggle.com/datasets", required: false }, { title: "Roboflow Universe", url: "https://universe.roboflow.com/", required: false }], checkpoint: "完成项目选题、数据集准备和数据分析，构建好数据加载 pipeline" },
+        }, duration: "3小时", resources: [{ title: "Kaggle 数据集", url: "https://www.kaggle.com/datasets", required: false, type: "article", source: "official" }, { title: "Roboflow Universe", url: "https://universe.roboflow.com/", required: false, type: "article", source: "official" }], checkpoint: "完成项目选题、数据集准备和数据分析，构建好数据加载 pipeline" },
       { day: 2, title: "模型训练与迁移学习",
         summary: "使用迁移学习训练图像分类模型，掌握训练技巧", content: {
           objective: "今天你将训练图像分类模型。学完后能用预训练模型做迁移学习，掌握训练技巧（学习率调度、早停、数据增强），理解过拟合的诊断和处理。",
@@ -5800,7 +5800,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "模型训练实战：1）迁移学习基线：a）用 torchvision.models 加载预训练 ResNet50；b）替换最后的分类层；c）用默认超参数训练，建立基线。2）训练技巧实验：a）学习率预热（前 5 epoch 线性增加）；b）余弦退火学习率调度；c）差异化学习率（backbone 1e-4，分类头 1e-3）；d）对比效果。3）数据增强：a）基础增强（翻转、旋转、裁剪）；b）高级增强（Mixup、CutMix、Random Erasing）；c）对比有增强和无增强的效果。4）过拟合处理：a）观察训练曲线，判断是否过拟合；b）加 Dropout、增加权重衰减；c）早停——验证集效果不再提升就停止；d）冻结底层，只训练顶层。5）模型对比：a）ResNet50 vs EfficientNet-B0 vs ViT；b）对比效果、速度、显存占用；c）选最适合你的场景的模型。6）实验记录：用 MLflow 或简单的日志记录每次实验的超参数和结果，方便对比。",
           deep_dive: "训练一个好模型需要理解很多细节，不是简单调参：1）迁移学习为什么有效？ImageNet 预训练模型已经学会了通用的视觉特征（边缘、纹理、形状、物体部件），这些特征对大多数视觉任务都有用。迁移学习相当于「站在巨人的肩膀上」，用少量数据就能达到好效果。2）微调策略的选择：a）全部微调：解冻所有层，用较小学习率训练。效果通常最好，但容易过拟合（小数据集）；b）冻结 backbone，只训练分类头：最安全，但效果可能不如全部微调；c）渐进式解冻：先训练分类头几轮，再逐层解冻。建议从简单策略开始，根据效果调整。3）学习率是最重要的超参数：a）太大：训练不稳定，效果差；b）太小：收敛慢，可能困在局部最优；c）迁移学习的经验值：backbone 1e-4 到 1e-3，分类头 1e-3 到 1e-2；d）用学习率查找器（LR Finder）找最优范围。4）数据增强的哲学：数据增强不只是「加噪音」，而是「模拟真实场景中可能的变化」——翻转（物体可能朝左或朝右）、旋转（相机可能倾斜）、色彩变化（光照条件不同）。好的增强让模型学到不变性特征。5）过拟合的全面诊断：a）训练集准确率远高于验证集 → 过拟合；b）训练损失还在降但验证损失开始升 → 过拟合；c）处理方法优先级：先加数据（或增强）→ 再加正则化（Dropout、权重衰减）→ 最后考虑简化模型。6）模型选择的艺术：不是模型越大越好——a）ResNet50：经典可靠，部署友好；b）EfficientNet：参数效率高，但训练慢；c）ViT：效果最好，但需要大数据集；d）MobileNet：轻量级，适合边缘部署。根据你的数据量、算力、部署环境选择。"
-        }, duration: "3小时", resources: [R_PYTORCH_TUT, R_CS231N, { title: "PyTorch 迁移学习教程", url: "https://pytorch.org/tutorials/beginner/transfer_learning_tutorial.html", required: false }], checkpoint: "训练出效果合理的分类模型，掌握训练技巧和过拟合处理" },
+        }, duration: "3小时", resources: [R_PYTORCH_TUT, R_CS231N, { title: "PyTorch 迁移学习教程", url: "https://pytorch.org/tutorials/beginner/transfer_learning_tutorial.html", required: false, type: "article", source: "official" }], checkpoint: "训练出效果合理的分类模型，掌握训练技巧和过拟合处理" },
       { day: 3, title: "模型评估与错误分析",
         summary: "全面评估模型效果，深入分析错误，找到改进方向", content: {
           objective: "今天你将全面评估模型并做错误分析。学完后能使用多种评估指标，分析模型在哪些类别/样本上出错，理解模型的可解释性（Grad-CAM），找到具体的改进方向。",
@@ -5813,7 +5813,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "模型评估与错误分析实战：1）全面评估：a）计算整体准确率、每类 P/R/F1；b）画混淆矩阵，找出容易混淆的类别对；c）分析类别不平衡的影响。2）错误分析：a）收集所有分类错误的样本；b）按错误类型分类——是类间相似？还是样本质量问题？还是标注错误？c）可视化错误样本，找规律。3）Grad-CAM 可视化：a）用 grad-cam 库生成热力图；b）看模型关注图片的哪个区域做决策；c）对比正确和错误样本的 Grad-CAM，看有什么不同。4）困难样本分析：a）找出模型预测置信度低（如 0.4-0.6）的样本；b）找出模型高置信度但预测错误的样本（最危险）；c）分析这些样本的特点。5）改进方案设计：a）针对混淆类——增加这些类的训练数据或增强；b）针对困难样本——重新标注或删除噪声样本；c）针对模型弱点——调整损失函数（如 Focal Loss）。6）实验验证：a）实施你的改进方案；b）对比改进前后的效果；c）记录实验结果。",
           deep_dive: "错误分析是提升模型效果最有效的方法之一，但很多人忽略它：1）为什么错误分析比调参更重要？很多人花大量时间调超参数，效果提升有限。而错误分析能直接告诉你问题在哪——是数据问题？还是模型问题？还是标注问题？针对性地解决，效果提升往往更显著。2）混淆矩阵的解读：混淆矩阵不仅看对角线（正确分类），更要看非对角线（错误分类）——哪些类别最容易混淆？为什么混淆？是视觉相似（猫和狗）？还是数据不平衡导致少数类被忽略？3）Grad-CAM 的直觉：Grad-CAM 通过反向梯度计算每个像素对预测结果的贡献，生成热力图。如果模型关注的是物体的关键部位（如狗的脸），说明学到了有意义的特征；如果关注的是背景（如草地），可能是学到了捷径（shortcut learning），泛化能力差。4）困难样本的价值：困难样本是模型提升的空间——a）模型不确定的样本：可能是边界样本或标注模糊，值得重点关注；b）高置信度错误：最危险，可能是数据有标注错误或模型有系统性偏差；c）主动学习：选最有价值的困难样本给专家标注，提升数据效率。5）数据质量 vs 模型能力：很多「模型问题」其实是「数据问题」——a）标注不一致：不同标注者标准不同；b）标注错误：人工标注有 5-10% 的错误率；c）数据偏差：某些场景的样本太少。花时间提升数据质量，往往比换更大的模型更有效。6）可解释性的价值：在医疗、安全等关键场景，可解释性是必须的——a）合规要求：GDPR 要求解释自动决策；b）用户信任：医生需要知道模型为什么这么判断；c）调试：通过可解释性发现模型的弱点。Grad-CAM 只是入门，更高级的方法：SHAP、LIME、Attention 可视化等。"
-        }, duration: "3小时", resources: [R_CS231N, { title: "Grad-CAM 项目", url: "https://github.com/jacobgil/pytorch-grad-cam", required: false }], checkpoint: "完成全面的模型评估和错误分析，找到至少 3 个具体改进方向" },
+        }, duration: "3小时", resources: [R_CS231N, { title: "Grad-CAM 项目", url: "https://github.com/jacobgil/pytorch-grad-cam", required: false, type: "repo", source: "github" }], checkpoint: "完成全面的模型评估和错误分析，找到至少 3 个具体改进方向" },
       { day: 4, title: "模型优化与部署",
         summary: "模型压缩、推理优化和部署上线", content: {
           objective: "今天你将优化和部署模型。学完后能做模型量化、ONNX 转换、推理优化，用 FastAPI 构建推理服务，用 Docker 部署，用 Gradio 做前端 Demo。",
@@ -5826,7 +5826,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "模型优化与部署实战：1）模型导出：a）把 PyTorch 模型转成 ONNX 格式；b）用 ONNX Runtime 推理，对比速度和效果；c）验证 ONNX 模型和 PyTorch 模型输出一致。2）模型量化：a）FP16 半精度量化，对比显存和速度；b）INT8 量化（用 PyTorch 量化或 ONNX 量化）；c）对比量化前后的准确率和推理速度。3）推理服务：a）用 FastAPI 写推理 API；b）支持单张图片预测和批量预测；c）返回 top-5 预测结果和置信度；d）添加图片预处理 pipeline。4）前端 Demo：a）用 Gradio 做一个图片上传 + 分类结果展示的界面；b）支持拖拽上传；c）展示 Grad-CAM 可视化（可选）。5）Docker 部署：a）写 Dockerfile（包含模型、API、依赖）；b）构建镜像，测试容器；c）估算部署成本。6）性能测试：a）测量单张图片推理延迟；b）测量批量推理吞吐量；c）对比优化前后的性能。",
           deep_dive: "模型部署是连接 AI 和产品的关键环节，有很多工程考量：1）为什么需要模型优化？训练时用 PyTorch + GPU，但部署时可能资源有限——a）推理速度：用户等不了 5 秒，需要 < 200ms；b）显存限制：GPU 显存有限，模型太大会 OOM；c）成本：更快的推理 = 更少的 GPU = 更低的成本。2）量化的权衡：INT8 量化可以把模型体积减半、速度翻倍，但可能有 1-2% 的精度损失。要评估：a）精度损失对你的业务影响大吗？b）速度提升值多少钱？c）用 QAT（量化感知训练）可以减少精度损失。3）ONNX 的价值：ONNX 是模型的「通用格式」——a）跨框架：PyTorch、TensorFlow 都能导出 ONNX；b）跨平台：ONNX Runtime 支持 CPU、GPU、移动端；c）优化：ONNX Runtime 有图优化、算子融合等优化；d）部署友好：很多推理框架支持 ONNX。4）推理服务的架构：a）同步 vs 异步：低延迟用同步，高吞吐用异步；b）批处理：攒一批一起推理，提高 GPU 利用率；c）模型预热：服务启动时先推理一次，避免冷启动延迟；d）健康检查：定期检查模型是否正常。5）前端 Demo 的设计：好的 Demo 应该：a）简单易用——拖拽上传就行；b）即时反馈——上传后立即看到结果；c）展示亮点——如 Grad-CAM 可视化让用户看到模型在看哪里；d）有对比——可以切换不同模型看结果。6）从 Demo 到生产：Demo 和生产系统差距很大——a）稳定性：Demo 能跑就行，生产需要 99.9% 可用；b）性能：Demo 不在乎延迟，生产需要低延迟高吞吐；c）监控：Demo 不需要监控，生产需要全面监控；d）安全：Demo 不需要认证，生产需要认证、限流、审计。但好的 Demo 是走向生产的第一步。"
-        }, duration: "3小时", resources: [R_FASTAPI, R_GRADIO, { title: "ONNX Runtime", url: "https://onnxruntime.ai/", required: false }], checkpoint: "完成模型优化、推理服务和前端 Demo 的部署" },
+        }, duration: "3小时", resources: [R_FASTAPI, R_GRADIO, { title: "ONNX Runtime", url: "https://onnxruntime.ai/", required: false, type: "article", source: "official" }], checkpoint: "完成模型优化、推理服务和前端 Demo 的部署" },
       { day: 5, title: "项目总结与作品集",
         summary: "完善项目文档，总结技术亮点，准备作品集展示", content: {
           objective: "今天你将完善项目文档和总结。学完后能写出专业的 README 和技术文档，准备项目展示，理解 CV 项目的完整生命周期，为简历添加有力作品。",
@@ -5839,7 +5839,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "项目总结与作品集准备：1）完善 README：a）项目简介——一句话说清楚做什么；b）功能特点——列出 3-5 个亮点；c）技术栈——用了什么模型、框架、工具；d）效果展示——准确率、速度、Demo 截图；e）安装使用——一键运行；f）项目结构——清晰的目录说明。2）技术文档：a）数据处理流程；b）模型训练方案和实验对比；c）模型优化和部署方案；d）架构图（用 draw.io 或 Mermaid）。3）实验报告：a）整理所有实验结果（表格或图表）；b）分析每个优化点的效果；c）写结论和建议。4）Demo 录制：a）准备几个好的 Demo 案例；b）录制演示视频或 GIF；c）放在 README 里。5）简历项目描述：a）用 STAR 法式描述（Situation-Task-Action-Result）；b）突出技术亮点和量化成果；c）准备面试中可能被问的问题。6）总结复盘：a）这两周学到了什么？b）遇到了哪些坑？c）如果重做会怎么改进？d）下一步学习方向？",
           deep_dive: "一个好的项目作品集，比任何证书都有说服力：1）面试官怎么看项目？面试官看项目主要看几点：a）技术深度——你只是调包还是理解原理？b）工程能力——你能不能把模型部署成产品？c）问题解决——遇到问题怎么分析和解决？d）学习能力——你能不能快速学习新技术？好的项目作品集能同时展示这四点。2）README 是第一印象：很多面试官第一眼看 README，如果写得好，会留下好印象。好的 README 应该：a）开头有 GIF/截图，直观展示效果；b）有清晰的项目简介；c）有量化的效果指标；d）有一键运行的说明；e）不要有错别字和格式问题。3）技术亮点的呈现：不要只是列举「用了 ResNet、用了数据增强」，要说明：a）为什么选这个方案？（对比过什么？）b）做了什么优化？（效果提升了多少？）c）解决了什么问题？（遇到了什么坑，怎么解决的？）4）量化成果的重要性：不要说「效果不错」，要说「准确率从 85% 提升到 93%」。不要说「速度很快」，要说「推理延迟从 500ms 降到 50ms」。量化的数据比形容词有说服力得多。5）面试中怎么讲项目：a）先讲背景和目标——为什么做这个？b）再讲方案——怎么做的？c）重点讲难点和创新——有什么亮点？d）最后讲结果——效果如何？e）准备被追问——为什么不用 X？如果数据更多会怎样？6）持续改进：项目不是做完就完了——a）关注新技术，定期更新；b）收集用户反馈，持续优化；c）把项目扩展到更多场景；d）写技术博客分享经验。一个持续维护的项目，比 10 个半成品更有价值。"
-        }, duration: "3小时", resources: [{ title: "GitHub README 最佳实践", url: "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes", required: false }], checkpoint: "产出完整的项目文档、Demo 和作品集描述" },
+        }, duration: "3小时", resources: [{ title: "GitHub README 最佳实践", url: "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes", required: false, type: "repo", source: "github" }], checkpoint: "产出完整的项目文档、Demo 和作品集描述" },
       { day: 6, title: "高级数据增强与正则化",
         summary: "深入学习数据增强和正则化技术，进一步提升模型效果", content: {
           objective: "今天你将深入学习高级数据增强和正则化技术。学完后能使用 AutoAugment、RandAugment 等自动增强策略，掌握 Mixup/CutMix、标签平滑、权重衰减等正则化方法，系统性地防止过拟合。",
@@ -5852,7 +5852,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "高级增强与正则化实战：1）高级数据增强实验：a）实现 Mixup 和 CutMix；b）实现 Random Erasing；c）用 torchvision 的 AutoAugment/RandAugment；d）对比基础增强 vs 高级增强的效果。2）正则化方法实验：a）标签平滑（Label Smoothing）；b）权重衰减（Weight Decay）调优；c）Dropout 比例实验；d）对比有无正则化的过拟合情况。3）训练技巧：a）学习率预热（Linear Warmup）；b）余弦退火学习率调度（CosineAnnealingLR）；c）梯度裁剪（Gradient Clipping）；d）EMA（Exponential Moving Average）模型权重。4）消融实验：a）设计一个完整的 ablation study；b）每次只改一个变量，看效果变化；c）记录每个组件的贡献；d）找出对你的数据集最有效的组合。5）超参数优化：a）用 Optuna 或 WandB 做超参搜索；b）搜索学习率、batch size、权重衰减、增强强度等；c）找到最优超参数组合。6）模型集成：a）训练多个不同初始化的模型；b）用简单平均或加权平均集成；c）对比单模型和集成的效果差异。",
           deep_dive: "数据增强和正则化是提升模型泛化能力的核心手段，也是 CV 工程师的基本功：1）为什么数据增强这么有效？数据增强本质上是「免费增加数据」——通过对现有数据做各种变换，生成更多样化的训练样本，让模型学到更鲁棒的特征。好的数据增强能带来 5-10% 的效果提升，比换模型架构还划算。2）自动增强的思想：传统增强策略是人工设计的，AutoAugment 用强化学习自动搜索最优增强策略。RandAugment 简化了这个思路——随机选择 N 个增强操作，每个操作有 M 的强度，虽然简单但效果接近 AutoAugment。3）Mixup / CutMix 的直觉：Mixup 把两张图按比例混合，标签也按比例混合。CutMix 把一张图的一块区域裁剪下来贴到另一张图上，标签按面积比例混合。为什么有效？a）增加样本多样性；b）让模型关注更多区域，而不只是最有区分度的部分；c）正则化效果，防止过拟合。4）正则化的「天下没有免费的午餐」：所有正则化方法都是「以训练准确率换测试准确率」——训练准确率会下降一些，但测试准确率（泛化能力）会提升。关键是找到平衡点——正则化不够会过拟合，正则化太强会欠拟合。5）EMA 的价值：EMA（指数移动平均）维护一份模型权重的滑动平均版本，最终测试时用 EMA 权重而不是最终权重。为什么有效？a）平滑训练过程中的波动；b）相当于一种模型集成（不同时间步的模型）；c）几乎没有额外计算成本，却能稳定提升 1-2%。强烈建议每个项目都用。6）实验设计的科学性：做深度学习实验很容易陷入「瞎调参」的误区。科学的方法：a）控制变量：每次只改一个东西；b）记录完整：所有超参数、代码版本、数据版本都要记录；c）多次运行：随机性存在，至少跑 3 次取平均；d）消融实验：证明每个组件确实有用。7）从 90% 到 95% 比从 80% 到 90% 难得多：越往后提升越难。前期靠换模型、调参就能快速提升，后期需要精细的数据分析、错误分析、集成学习等方法。知道什么时候该停、什么时候该继续投入，也是工程师的重要能力。"
-        }, duration: "3小时", resources: [{ title: "timm 数据增强", url: "https://timm.fast.ai/训练技巧#数据增强", required: false }, { title: "AutoAugment 论文", url: "https://arxiv.org/abs/1805.09501", required: false }], checkpoint: "掌握高级数据增强和正则化技术，完成消融实验并量化各组件效果" },
+        }, duration: "3小时", resources: [{ title: "timm 数据增强", url: "https://timm.fast.ai/训练技巧#数据增强", required: false, type: "article", source: "official" }, { title: "AutoAugment 论文", url: "https://arxiv.org/abs/1805.09501", required: false, type: "paper", source: "academic" }], checkpoint: "掌握高级数据增强和正则化技术，完成消融实验并量化各组件效果" },
       { day: 7, title: "模型可解释性与错误分析深化",
         summary: "深入模型可解释性，进行系统化的错误分析和改进", content: {
           objective: "今天你将深入学习模型可解释性和错误分析。学完后能用 Grad-CAM、SHAP 等方法理解模型决策，进行系统化的错误分类和根因分析，制定针对性的改进策略。",
@@ -5865,7 +5865,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "可解释性与错误分析深化：1）可解释性工具包：a）实现 Grad-CAM++ 和 Score-CAM，对比不同 CAM 方法的差异；b）用 SHAP 做图像分类的特征重要性分析；c）可视化多个层的激活，理解不同层学到了什么。2）错误分类系统：a）把所有错误样本分类：i）类间相似（两个类别本身就像）；ii）视角/姿态问题；iii）遮挡/模糊；iv）标注错误；v）数据偏差；b）每类错误占比多少？c）哪类最容易改进？3）深度错误分析：a）选 20 个典型错误样本；b）逐个分析：为什么模型会错？是模型的问题还是数据的问题？c）针对每种错误类型，提出具体的改进方案。4）困难样本挖掘：a）找出模型最不确定的样本（预测概率 0.4-0.6）；b）找出高置信度错误的样本（最危险）；c）分析这些样本的共同点；d）如果可以增加标注，优先标注哪些样本？（主动学习）5）改进实验：a）针对最主要的错误类型，实施一个改进方案；b）比如：混淆类增加数据、相似类增加判别性特征、标注错误修正数据；c）对比改进前后的效果；d）计算 ROI（投入产出比）。6）分析报告：a）写一份完整的错误分析报告；b）包含：错误分布、典型案例、根因分析、改进建议、优先级排序；c）这是你项目文档中最有价值的部分之一。",
           deep_dive: "错误分析是模型优化的「导航系统」——没有它，你就是在黑暗中摸索：1）可解释性不是花架子：很多人觉得可解释性是「论文里的东西」，实际项目没用。错！可解释性是调试模型的工具：a）模型关注的区域对吗？如果关注背景而不是目标，说明学到了捷径；b）为什么错了？通过可视化看模型在看什么，推断出错原因；c）建立信任：给客户/产品经理看，模型不是黑箱。2）Grad-CAM 的原理和局限：Grad-CAM 通过反向传播梯度，计算每个特征图通道的权重，加权组合得到热力图。优点：不需要修改模型、适用于各种 CNN 架构。局限：a）分辨率低（和最后一层特征图一样大）；b）只能定位大致区域，不够精细；c）有时候会「撒胡椒面」——大片区域都高亮。3）错误分析的方法论：错误分析不是「看看错了哪些图」，而是系统性的分析流程：a）分类：把错误归类，找到主要问题；b）量化：每类错误有多少？占比多少？c）根因：为什么会有这类错误？d）方案：怎么改进？e）优先级：先改哪个？（投入产出比）4）数据问题 vs 模型问题：很多「模型问题」本质是「数据问题」：a）标注错误：数据集中有 5-10% 的标注错误很正常；b）数据偏差：训练数据分布和真实场景不一致；c）类内差异大：同一个类别内部差异太大；d）标注标准不一致：不同标注者的标准不同。发现并解决数据问题，往往比调模型更有效。5）主动学习的思想：标注数据很贵，主动学习就是「让模型告诉你该标注什么」。策略：a）不确定度采样：标模型最不确定的样本；b）多样性采样：标和现有数据最不一样的样本；c）错误驱动：标模型认错的样本。主动学习能用 1/3 的标注成本达到 90% 的效果。6）从错误分析到产品决策：错误分析不只是技术问题，还影响产品决策：a）哪些错误是用户能容忍的？b）哪些错误是致命的？c）为了减少 1% 的错误率，值得增加 50% 的计算成本吗？这些问题需要和产品、业务一起讨论。好的 CV 工程师不只是调模型，还能从业务角度思考问题。"
-        }, duration: "3小时", resources: [{ title: "Grad-CAM 库", url: "https://github.com/jacobgil/pytorch-grad-cam", required: false }, { title: "SHAP", url: "https://shap.readthedocs.io/", required: false }], checkpoint: "完成系统化的错误分析报告，实施至少一个针对性改进并验证效果" },
+        }, duration: "3小时", resources: [{ title: "Grad-CAM 库", url: "https://github.com/jacobgil/pytorch-grad-cam", required: false, type: "repo", source: "github" }, { title: "SHAP", url: "https://shap.readthedocs.io/", required: false, type: "doc", source: "official" }], checkpoint: "完成系统化的错误分析报告，实施至少一个针对性改进并验证效果" },
       { day: 8, title: "模型压缩与推理加速",
         summary: "学习模型压缩和推理优化技术，让模型更快更小", content: {
           objective: "今天你将学习模型压缩和推理加速技术。学完后能进行模型剪枝、量化、知识蒸馏，使用 ONNX Runtime 和 TensorRT 优化推理，在速度和精度之间找到最佳平衡。",
@@ -5878,7 +5878,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "模型压缩与推理加速实战：1）模型量化：a）FP16 半精度推理，对比速度和显存；b）INT8 量化（用 PyTorch 量化或 ONNX 量化）；c）PTQ（训练后量化）vs QAT（量化感知训练）；d）对比量化前后的精度和速度。2）模型剪枝：a）用 torch.nn.utils.prune 做非结构化剪枝；b）用 timm 或 torch-pruning 做结构化剪枝（剪通道）；c）不同剪枝比例（30%、50%、70%）对精度的影响；d）剪枝后微调恢复精度。3）知识蒸馏：a）选一个大模型当教师（如 ViT 或 ResNet101）；b）训练一个小模型当学生（如 MobileNet 或 ResNet18）；c）实现蒸馏损失（KL 散度）；d）对比：直接训小模型 vs 蒸馏训小模型，效果差多少？4）推理引擎对比：a）PyTorch eager mode vs TorchScript vs ONNX Runtime vs TensorRT；b）测量：延迟（单张）、吞吐量（批量）、显存占用；c）哪个方案最适合你的场景？5）部署方案设计：a）如果要部署在手机上，选什么方案？b）如果要部署在服务器 GPU 上，选什么方案？c）如果要部署在边缘设备（如 Jetson），选什么方案？d）精度、速度、成本的权衡。6）性能基准测试：a）写一个完整的 benchmark 脚本；b）测试不同 batch size、不同输入尺寸；c）生成性能报告（延迟、吞吐量、资源占用）；d）找出性能瓶颈。",
           deep_dive: "模型部署的核心矛盾是「精度 vs 速度 vs 成本」，模型压缩就是在这三者之间找平衡点：1）为什么模型压缩这么重要？训练时你可以用最大的模型、最好的 GPU，但部署时：a）成本：GPU 很贵，推理速度越快，需要的 GPU 越少；b）延迟：用户不想等，实时应用要求 < 100ms；c）资源：边缘设备（手机、IoT）算力和内存有限；d）能耗：数据中心的电费也是成本。2）量化是性价比最高的优化：INT8 量化可以把模型体积减小 4 倍，速度提升 2-4 倍，精度损失通常只有 0.5-2%。为什么有效？a）模型权重通常分布在很小的范围内（如 -1 到 1），用 INT8 表示损失不大；b）很多硬件（GPU、NPU）有专门的 INT8 计算单元；c）实现简单，PTQ 几乎不需要重新训练。3）剪枝的两种思路：a）非结构化剪枝：剪掉单个不重要的权重，稀疏化。优点是压缩率高，缺点是需要特殊的稀疏推理库才能加速，实际加速有限；b）结构化剪枝：剪掉整个通道/层。优点是可以直接在普通硬件上加速，缺点是压缩率低一些，精度损失大一些。实际项目中结构化剪枝更常用。4）知识蒸馏的魅力：知识蒸馏让小模型学到大模型的「暗知识」——不只是标签，还有大模型的概率分布。为什么有效？a）大模型的 soft label 包含更多信息（比如猫和狗的相似性）；b）相当于正则化，让小模型更鲁棒；c）可以用「更深更宽」的教师教「又浅又窄」的学生。5）推理优化的层次：从模型到部署，优化是层层递进的：a）算法层：选更高效的模型架构（MobileNet、EfficientNet）；b）模型层：剪枝、量化、蒸馏；c）框架层：ONNX Runtime、TensorRT 做图优化、算子融合；d）系统层：批处理、多线程、内存优化；e）硬件层：GPU、NPU、ASIC。每一层都能带来一些提升，叠加起来效果显著。6）部署的常见陷阱：a）精度掉点：训练和推理的预处理不一样、量化误差、框架差异；b）结果不一致：不同框架、不同硬件的结果有细微差异；c）冷启动：模型加载时间长；d）内存泄漏：长时间运行内存增长。部署前一定要做充分的验证和测试。7）从 Demo 到生产的差距：很多人以为模型训完就完了，实际上部署和优化才是真正占时间的部分——训练可能花 1 周，部署和优化可能花 1 个月。生产系统需要考虑：稳定性、监控、告警、回滚、扩缩容、灰度发布等工程问题。"
-        }, duration: "3小时", resources: [{ title: "ONNX Runtime", url: "https://onnxruntime.ai/", required: false }, { title: "TensorRT", url: "https://developer.nvidia.com/tensorrt", required: false }], checkpoint: "掌握至少 3 种模型压缩/优化技术，完成性能基准测试报告" },
+        }, duration: "3小时", resources: [{ title: "ONNX Runtime", url: "https://onnxruntime.ai/", required: false, type: "article", source: "official" }, { title: "TensorRT", url: "https://developer.nvidia.com/tensorrt", required: false, type: "article", source: "official" }], checkpoint: "掌握至少 3 种模型压缩/优化技术，完成性能基准测试报告" },
       { day: 9, title: "CV 应用拓展与技术选型",
         summary: "拓展 CV 应用方向，理解不同任务的技术选型和最佳实践", content: {
           objective: "今天你将拓展 CV 应用视野，理解目标检测、语义分割、OCR、多模态等方向的技术选型，学会根据任务特点选择合适的技术方案。",
@@ -5891,7 +5891,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "CV 应用拓展与技术选型：1）目标检测入门：a）用 YOLOv8 跑一个预训练模型，测试检测效果；b）理解目标检测的核心概念：边界框、IoU、NMS、mAP；c）对比：YOLO（一阶段）vs Faster R-CNN（两阶段），速度和精度的权衡。2）图像分割初探：a）用 SAM（Segment Anything）做交互式分割；b）理解语义分割 vs 实例分割 vs 全景分割；c）什么场景需要分割，而不是检测？3）OCR 实践（可选）：a）用 PaddleOCR 或 EasyOCR 测试文字识别；b）理解 OCR 的 pipeline：检测 → 识别 → 后处理；c）什么场景需要 OCR？4）多模态体验：a）用 CLIP 做零样本图像分类（不用训练，直接文字描述类别）；b）用 BLIP 或 GPT-4V 做图像描述（看图说话）；c）思考：多模态大模型会改变 CV 吗？5）技术选型分析：a）选一个你感兴趣的应用场景（如智能监控、自动驾驶、医学影像、电商搜图）；b）分析这个场景的需求：精度要求？速度要求？数据量？算力预算？c）推荐技术方案：用什么模型？什么框架？什么部署方案？d）给出方案对比表。6）行业调研：a）了解 CV 在几个行业的应用现状（医疗、安防、零售、自动驾驶、工业质检）；b）每个行业的核心痛点是什么？c）技术难点在哪里？d）你对哪个方向最感兴趣？",
           deep_dive: "图像分类是 CV 的基础，但真实世界的 CV 应用要丰富得多：1）CV 任务的全景图：CV 不是只有分类——a）图像分类：这张图是什么？（入门基础）；b）目标检测：图中有什么？在哪里？（最常用）；c）语义分割：每个像素属于什么类别？（自动驾驶、医学影像）；d）实例分割：每个物体的精确轮廓？（更精细的检测）；e）姿态估计：人体/物体的关键点位置？（动作识别、人机交互）；f）OCR：文字检测和识别？（文档理解、金融）；g）视频理解：跟踪、动作识别、视频分类？（监控、短视频）；h）图像生成：GAN、扩散模型？（AIGC、设计）。每个方向都有很深的技术栈。2）目标检测的演进：目标检测是 CV 中最成熟的方向之一，经历了几代演进：a）传统方法：HOG + SVM（2010 年代初）；b）两阶段：Faster R-CNN 系列（2015-2018），精度高但慢；c）一阶段：YOLO、SSD 系列（2016-至今），速度快，逐渐成为主流；d）Transformer 检测：DETR 系列（2020-至今），简化了 pipeline，但速度还在优化。现在工业界大部分场景用 YOLO 系列，追求极致精度用两阶段或大模型检测。3）分割的三种粒度：a）语义分割：只分类别，不分个体（比如「所有的人」）；b）实例分割：既分类又分个体（比如「每个人」）；c）全景分割：语义 + 实例，所有像素都有标签。不同场景需要不同粒度，比如自动驾驶需要全景分割，医疗影像只需要语义分割。SAM（Segment Anything）的出现改变了分割的格局——零样本就能分割任意物体，大大降低了分割的使用门槛。4）多模态是大趋势：CV 不是孤立的，和 NLP 的结合越来越紧密：a）CLIP：图像和文本对齐，零样本分类、图文检索；b）BLIP / Flamingo：视觉问答、图像描述；c）GPT-4V / Gemini：通用多模态大模型，能理解图像并回答复杂问题。未来的 CV 系统可能都是「视觉 + 语言」的多模态系统。5）技术选型的艺术：做项目不是越新越好、越大越好，要根据实际情况选择：a）考虑因素：精度要求、速度要求、数据量、算力预算、开发周期、团队技术栈；b）原则：先用最简单的方案（比如 ResNet + 迁移学习），不够再升级；c）避免过度设计：不要一上来就用大模型，小模型能解决就用小模型；d）快速原型 + 渐进优化：先跑通 baseline，再逐步优化。6）CV 工程师的成长路径：a）入门：掌握分类、检测的基础；b）进阶：理解各种任务的原理，能独立完成项目；c）高级：能做技术选型、方案设计、优化部署；d）专家：在某个细分方向深入（如医学影像、自动驾驶），有创新能力。CV 是一个很广的领域，找到自己感兴趣的方向深入下去，比「什么都会一点」更有价值。"
-        }, duration: "3小时", resources: [{ title: "YOLOv8", url: "https://docs.ultralytics.com/", required: false }, { title: "SAM", url: "https://segment-anything.com/", required: false }], checkpoint: "了解 CV 各主要应用方向，能针对具体场景做技术选型分析" },
+        }, duration: "3小时", resources: [{ title: "YOLOv8", url: "https://docs.ultralytics.com/", required: false, type: "doc", source: "official" }, { title: "SAM", url: "https://segment-anything.com/", required: false, type: "article", source: "official" }], checkpoint: "了解 CV 各主要应用方向，能针对具体场景做技术选型分析" },
       { day: 10, title: "项目收官与职业发展",
         summary: "完善项目作品集，总结学习路径，规划 CV 职业发展", content: {
           objective: "今天你将完成项目收官并规划职业发展。学完后能产出高质量的 CV 项目作品集，掌握面试技巧，了解 CV 工程师的成长路径和行业趋势，为下一步学习明确方向。",
@@ -5904,7 +5904,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "项目收官与职业规划：1）项目最终打磨：a）完善 README：项目简介、功能截图、技术栈、效果指标、安装使用、架构图；b）代码质量：加注释、写 docstring、模块化、类型标注；c）错误处理和边界情况：空输入、异常图片、并发请求；d）性能优化：再检查一遍，还有没有优化空间？2）技术文档：a）写一篇技术博客：你做这个项目的过程、遇到的坑、学到的东西；b）项目演示视频或 GIF；c）FAQ：常见问题解答。3）简历项目描述：a）用 STAR 格式写项目经历；b）用量化数据：准确率从 X 提升到 Y、速度提升 Z 倍、成本降低 W%；c）突出技术亮点：数据增强策略、模型优化方法、部署方案创新；d）准备 3 分钟和 10 分钟两个版本的项目讲解。4）面试模拟：a）基础题：CNN 的原理、ResNet 的创新点、BatchNorm 的作用、过拟合怎么办；b）项目题：为什么选这个模型？遇到的最大挑战？怎么解决的？如果再做一遍会怎么改进？c）场景题：给一个具体场景（如「电商商品图片分类」），怎么设计方案？5）职业规划：a）你对 CV 的哪个方向最感兴趣？（检测、分割、生成、多模态、三维、医疗...）b）你想做算法还是工程？还是都做？c）未来 1-2 年的学习目标是什么？d）怎么达成目标？（项目、课程、论文、比赛）6）社区参与：a）关注 CV 社区：arXiv、Twitter/X、知乎、GitHub；b）尝试读一篇最新的 CV 论文（如 CVPR/ICCV 的 best paper）；c）给开源项目贡献代码或文档；d）写技术博客，输出倒逼输入。",
           deep_dive: "完成项目只是起点，真正的成长在于持续学习和职业规划：1）作品集的重要性：在 CV 行业，作品集比学历和证书更有说服力。面试官通过你的项目判断：a）技术深度：你是只会调库还是真的理解？b）工程能力：能不能把东西做出来、做好？c）问题解决：遇到困难怎么分析和解决？d）学习能力：能不能快速掌握新技术？一个高质量的项目，比 10 个凑数的项目有用得多。2）简历怎么写才吸引人？a）量化一切：不要说「效果不错」，要说「准确率从 85.3% 提升到 93.7%」；不要说「速度很快」，要说「推理延迟从 450ms 优化到 60ms」。数据比形容词有说服力。b）突出亮点：你的项目有什么不一样的地方？是用了什么创新方法？还是解决了什么难的问题？还是效果特别好？c）技术栈匹配：看岗位要求，简历里突出相关的技能和项目。3）CV 面试考什么？a）基础：深度学习基础 + CV 基础（CNN、ResNet、Transformer、各种损失函数、优化器）；b）项目：你做的项目的每一个细节——为什么这么设计？遇到了什么问题？怎么解决的？效果怎么样？面试官会挖得很深，不要在简历里写你不懂的东西；c）编程：Python 编程、PyTorch/TensorFlow 熟练程度、算法题（LeetCode）；d）场景设计：给一个业务场景，让你设计方案，考察系统性思维。4）算法 vs 工程怎么选？CV 岗位大致分三类：a）算法工程师：偏模型创新、算法优化，需要读论文、做实验，要求高学历（硕士以上常见）；b）应用工程师：偏落地、部署、系统集成，需要工程能力强，懂模型又懂开发；c）研究科学家：偏前沿研究，发论文，博士起步。没有好坏之分，看你的兴趣和背景。如果你喜欢动手做东西、喜欢把技术变成产品，可能应用工程师更适合；如果你喜欢研究、喜欢追前沿，可以往算法或研究方向走。5）持续学习的方法：CV 技术发展很快，不学习就会被淘汰：a）论文：每周读 1-2 篇论文，保持对前沿的敏感度；b）项目：保持做项目的习惯，用实践巩固知识；c）社区：加入技术社区，和同行交流；d）输出：写博客、做分享，输出是最好的学习方式。6）AI 时代的 CV 工程师：大模型时代，CV 工程师的价值在哪里？a）不会被淘汰，但要求变了：只会调模型的人会越来越不值钱；b）更看重系统能力：能端到端解决问题，从数据到部署全链路；c）更看重业务理解：能把技术和业务结合，创造实际价值；d）快速学习能力：技术变化快，能快速掌握新东西最重要。保持好奇心，持续学习，就不会被时代抛弃。"
-        }, duration: "4小时", resources: [{ title: "CS231n 课程", url: "http://cs231n.stanford.edu/", required: false }, { title: "paperswithcode", url: "https://paperswithcode.com/", required: false }], checkpoint: "完成高质量 CV 项目作品集，制定个人学习和职业发展规划" },
+        }, duration: "4小时", resources: [{ title: "CS231n 课程", url: "http://cs231n.stanford.edu/", required: false, type: "article", source: "official" }, { title: "paperswithcode", url: "https://paperswithcode.com/", required: false, type: "paper", source: "official" }], checkpoint: "完成高质量 CV 项目作品集，制定个人学习和职业发展规划" },
     ],
   },
 
@@ -5924,7 +5924,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["掌握 Agent 核心原理", "能构建多工具 Agent 系统", "理解 ReAct/规划等高级模式"],
     relatedIntel: ["022-agent-intro", "021-rag-intro"],
     relatedTools: ["LangChain", "HuggingFace", "Streamlit"],
-    relatedTerms: ["agent", "tool-calling", "react", "function-calling", "auto-gpt"],
+    relatedTerms: ["agent", "tool-calling", "react", "function-calling", "auto-gpt"], relatedNodes: ["llm-agent", "llm-prompt-engineering"],
     suggestions: {
       prerequisites: ["RAG 应用开发", "LLM 基础"],
       nextSteps: ["综合实战项目"],
@@ -5943,7 +5943,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "Agent 项目设计与工具开发：1）深入理解 Agent 与普通 LLM 应用的区别——为什么需要 Agent？Agent 能解决什么普通 RAG 解决不了的问题？2）项目选题：确定你的 Agent 要做什么——比如「研究助手」（能搜索、读论文、写报告）、「数据分析助手」（能写代码、跑分析、画图）、「多模态助手」（能处理文字和图片）、「个人助理」（能管理日程、发邮件、查资料）。3）架构设计：设计你的 Agent 架构图——包含哪些模块？它们之间如何交互？4）工具设计：设计 3-5 个你的 Agent 会用到的工具——比如：a）网页搜索工具（调用 SerpAPI / Tavily / 自己实现）；b）代码执行工具（Python REPL）；c）知识库检索工具（基于 RAG）；d）文件读写工具；e）数学计算工具。5）工具实现：用 LangChain 的 Tool 接口（或自己实现）实现这些工具，每个工具都要有清晰的描述和输入输出 schema。6）基础 Agent 搭建：用 ReAct 模式实现一个最简单的 Agent，能根据用户问题选择调用工具、观察结果、继续推理，直到给出最终答案。7）测试：准备几个测试用例，验证你的 Agent 能否正确选择工具并完成任务。",
           deep_dive: "Agent 被认为是 LLM 应用的下一个重要方向，它让大模型从「问答机器」变成「能做事的智能体」。但做好 Agent 并不容易，有很多挑战：1）Agent 的本质：Agent 的核心是「LLM + 工具 + 反馈循环」。LLM 作为大脑，负责推理和决策；工具扩展了 LLM 的能力边界（获取实时信息、执行操作、与外部世界交互）；反馈循环让 Agent 能从结果中学习和调整。这个「思考-行动-观察」的循环是人解决问题的基本模式。2）推理模式的演进：从最简单的 Chain-of-Thought（让模型一步步想），到 ReAct（边想边做），到 Plan-and-Execute（先规划再执行），到更复杂的 Multi-Agent（多个 Agent 协作）。没有最好的模式，只有最适合场景的模式。简单任务用 ReAct，复杂任务用 Plan-and-Execute 或多 Agent。3）工具调用的可靠性：Agent 最大的痛点之一是工具调用不可靠——模型可能选择错误的工具、传入错误的参数、不会修正错误。提升可靠性的方法：a）好的工具描述（清晰说明工具用途、输入输出、使用场景）；b）提供示例（Few-shot）；c）错误处理机制（调用失败后给模型反馈，让它重试）；d）结构化输出（让模型输出 JSON，减少解析错误）；e）使用专门微调过的模型（如 GPT-4、Claude 3 等工具调用能力强的模型）。4）记忆的重要性：高级的 Agent 需要多种记忆：a）短期记忆：当前对话的上下文，通常就是 Prompt 里的对话历史；b）长期记忆：用户的偏好、历史对话摘要等，存在向量数据库里；c）工作记忆：Agent 在完成当前任务过程中产生的中间结果。记忆的组织和检索对 Agent 的表现影响很大。5）评估 Agent：Agent 的评估比普通 LLM 应用更难，因为任务是开放的、步骤是动态的。评估维度包括：任务成功率、步骤效率（有没有绕弯路）、工具使用准确率、错误恢复能力等。常用方法：构建 benchmark 任务集、人工评估、轨迹分析。6）当前的局限：现在的 Agent 还很初级——容易陷入死循环、容易跑偏、复杂任务完不成、速度慢、成本高。但发展很快，新的架构和技术层出不穷。做 Agent 项目，重点是理解它的能力边界，在合适的场景用合适的复杂度。"
-        }, duration: "3小时", resources: [{ title: "LangChain Agents 文档", url: "https://python.langchain.com/docs/modules/agents/", required: false }, { title: "ReAct 论文", url: "https://arxiv.org/abs/2210.03629", required: false }], checkpoint: "完成 Agent 架构设计，实现基础工具集和 ReAct Agent" },
+        }, duration: "3小时", resources: [{ title: "LangChain Agents 文档", url: "https://python.langchain.com/docs/modules/agents/", required: false, type: "doc", source: "official" }, { title: "ReAct 论文", url: "https://arxiv.org/abs/2210.03629", required: false, type: "paper", source: "academic" }], checkpoint: "完成 Agent 架构设计，实现基础工具集和 ReAct Agent" },
       { day: 2, title: "Agent 核心实现与工具调用",
         summary: "深入实现 Agent 的推理-行动循环，完善工具系统", content: {
           objective: "今天你将深入实现 Agent 的核心逻辑。学完后能实现完整的 ReAct 循环，设计可靠的工具调用机制，处理工具调用失败的情况，让 Agent 能完成多步任务。",
@@ -5956,7 +5956,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "Agent 核心实现实战：1）ReAct 循环完善：a）实现完整的 Thought-Action-Observation 循环；b）用 LangChain 的 AgentExecutor 或自己实现；c）测试多步任务（如「搜索 X，然后总结，然后翻译」）。2）工具可靠性增强：a）给每个工具加参数验证（用 Pydantic）；b）实现错误处理——工具调用失败时给模型反馈，让它重试或换方法；c）加超时控制，防止工具卡住。3）多步任务测试：a）设计需要 3-5 步的任务（如「查找 2024 年 AI 领域的重大事件，按时间排序，生成摘要」）；b）观察 Agent 的推理过程；c）分析 Agent 在哪一步容易出错。4）上下文管理：a）对话历史太长时怎么截断或摘要？b）工具调用的结果怎么组织？c）中间结果怎么传递给下一步？5）停止条件设计：a）模型输出 Final Answer 时停止；b）最大步数限制（如 10 步）；c）检测死循环（连续重复相同的 Action）。6）调试与可视化：a）打印每一步的 Thought、Action、Observation；b）用 LangSmith 或 Langfuse 追踪完整调用链；c）分析 Agent 的决策是否合理。",
           deep_dive: "Agent 的核心挑战是让 LLM 做出可靠的决策，这比看起来难得多：1）ReAct 的本质：ReACT = Reasoning + Acting。LLM 先「想」要做什么（Thought），然后「做」（Action/调用工具），「看」结果（Observation），再「想」下一步。这个循环模仿了人类解决问题的方式——边想边做，根据反馈调整。2）工具调用的可靠性是最大痛点：LLM 经常在工具调用上出错——a）选错工具：明明该搜索，却去查知识库；b）参数错误：参数类型不对、必填参数缺失、参数值不合理；c）不会纠正：工具调用失败后，不知道怎么调整。提升方法：好的工具描述（清晰说明用途和参数）、参数验证（Pydantic schema）、错误反馈（把错误信息返回给模型让它重试）、Few-shot 示例。3）多步推理的挑战：a）目标遗忘：做着做着忘了最终目标；b）步骤遗漏：跳过必要的步骤；c）死循环：重复执行相同的操作。缓解方法：在每一步提醒最终目标、维护任务清单（TODO list）、检测重复操作。4）上下文窗口管理：Agent 的上下文会快速膨胀——每一步都有 Thought、Action、Observation，几步就可能超出窗口。管理方法：a）摘要：定期对历史做摘要；b）截断：只保留最近几步；c）外部存储：把中间结果存到外部，需要时再检索。5）Agent 的「个性」：不同的 Prompt 会产生不同的「个性」——a）谨慎型：每步都反复确认；b）激进型：快速行动，不太验证；c）探索型：喜欢尝试不同方法。通过 Prompt 设计可以调整 Agent 的行为风格。6）从 ReAct 到更高级的模式：ReAct 是基础，还有更高级的模式：a）Plan-and-Execute：先制定完整计划再执行，适合复杂任务；b）Multi-Agent：多个 Agent 分工协作；c）Tree of Thoughts：树形搜索，探索多种可能。不同模式适合不同场景。"
-        }, duration: "3小时", resources: [{ title: "LangChain Agents", url: "https://python.langchain.com/docs/modules/agents/", required: false }, { title: "LangSmith", url: "https://docs.smith.langchain.com/", required: false }], checkpoint: "实现可靠的 Agent 核心循环，能完成 3-5 步的复杂任务" },
+        }, duration: "3小时", resources: [{ title: "LangChain Agents", url: "https://python.langchain.com/docs/modules/agents/", required: false, type: "doc", source: "official" }, { title: "LangSmith", url: "https://docs.smith.langchain.com/", required: false, type: "doc", source: "official" }], checkpoint: "实现可靠的 Agent 核心循环，能完成 3-5 步的复杂任务" },
       { day: 3, title: "记忆系统与高级推理",
         summary: "实现 Agent 记忆系统，掌握高级推理模式", content: {
           objective: "今天你将学习 Agent 的记忆系统和高级推理模式。学完后能实现短期记忆和长期记忆，掌握 Plan-and-Execute、Reflection 等高级模式，让 Agent 更智能。",
@@ -5969,7 +5969,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "记忆系统与高级推理实战：1）短期记忆实现：a）维护对话历史；b）当历史过长时做摘要；c）实现滑动窗口（只保留最近 N 轮对话）。2）长期记忆实现：a）把重要的对话内容存到向量数据库；b）用相关性检索历史记忆；c）测试：Agent 能否记住之前对话中提到的信息？3）工作记忆设计：a）为当前任务维护一个状态对象；b）记录已完成和待完成的步骤；c）在每一步更新状态。4）Plan-and-Execute 实现：a）先用 LLM 制定完整计划（分解成子任务）；b）然后逐步执行每个子任务；c）如果执行中发现计划不合理，动态调整。5）Reflection 实现：a）每完成一个任务后，让 Agent 反思——哪些做得好？哪些可以改进？b）把反思结果存入记忆，指导后续任务。6）对比实验：a）ReAct vs Plan-and-Execute，哪个效果更好？b）有记忆 vs 无记忆，用户满意度差多少？c）有反思 vs 无反思，任务完成率有提升吗？",
           deep_dive: "记忆和推理是让 Agent 从「能用」到「好用」的关键：1）记忆的三个层次借鉴了人类认知科学：a）短期记忆（工作记忆）：当前对话的上下文，容量有限，相当于人的「脑子里正在想的事」；b）长期记忆：过去的经验和知识，容量大但需要检索，相当于人的「记忆」；c）外部记忆：笔记、文档、数据库，需要主动查找，相当于人的「参考资料」。好的 Agent 系统需要三种记忆协同工作。2）长期记忆的实现：a）存储：把重要信息（用户偏好、关键事实、历史决策）存到向量数据库；b）检索：用当前任务的相关性检索历史记忆；c）更新：新信息要更新到记忆中，过时信息要遗忘；d）挑战：什么信息值得记住？什么时候该遗忘？这些都是开放问题。3）Plan-and-Execute 的优势：ReAct 是「走一步看一步」，Plan-and-Execute 是「先想好再动手」。对于复杂任务，先规划再执行通常更高效——a）减少不必要的步骤；b）可以并行执行独立的子任务；c）更容易追踪进度。但规划本身也需要能力，如果 LLM 规划不好，反而会更差。4）Reflection 的力量：Reflection 让 Agent 具备「自我改进」的能力——a）任务完成后评估自己的表现；b）分析哪些步骤做得好、哪些可以改进；c）把经验教训存入记忆。这类似人的「复盘」，能让 Agent 在后续任务中表现更好。研究表明，加了 Reflection 的 Agent 任务完成率提升 10-20%。5）多 Agent 协作：复杂任务可以拆分给多个 Agent——a）分工：不同 Agent 负责不同子任务；b）讨论：Agent 之间可以讨论和辩论；c）监督：一个 Agent 监督其他 Agent 的工作。像 AutoGPT、MetaGPT 等项目就是多 Agent 系统。6）Agent 的未来：a）更长的任务：现在的 Agent 只能做几分钟的任务，未来希望能做几小时甚至几天的任务；b）更强的工具使用：不只是 API 调用，还能操作浏览器、代码执行、文件管理；c）更好的安全性：防止 Agent 做危险操作；d）个性化：每个用户有自己的专属 Agent。Agent 是 AI 应用的前沿方向，机会很多。"
-        }, duration: "3小时", resources: [{ title: "LangChain Memory", url: "https://python.langchain.com/docs/modules/memory/", required: false }, { title: "Reflection 论文", url: "https://arxiv.org/abs/2303.11366", required: false }], checkpoint: "实现 Agent 记忆系统（短期+长期）和至少一种高级推理模式" },
+        }, duration: "3小时", resources: [{ title: "LangChain Memory", url: "https://python.langchain.com/docs/modules/memory/", required: false, type: "doc", source: "official" }, { title: "Reflection 论文", url: "https://arxiv.org/abs/2303.11366", required: false, type: "paper", source: "academic" }], checkpoint: "实现 Agent 记忆系统（短期+长期）和至少一种高级推理模式" },
       { day: 4, title: "Agent 部署与评估",
         summary: "部署 Agent 应用，建立评估体系，确保可靠性", content: {
           objective: "今天你将部署 Agent 应用并建立评估体系。学完后能用 FastAPI 部署 Agent 服务，设计 Agent 评估方案，处理安全性和成本控制，产出可用的 Agent 应用。",
@@ -5982,7 +5982,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "Agent 部署与评估实战：1）Agent 服务化：a）用 FastAPI 封装 Agent；b）支持流式输出（SSE）；c）会话管理——每个用户独立的对话和记忆；d）错误处理和超时控制。2）前端界面：a）用 Gradio 或 Streamlit 做聊天界面；b）展示 Agent 的思考过程（Thought/Action/Observation）；c）显示工具调用详情；d）支持中断和重试。3）评估方案设计：a）准备 20 个测试任务（不同难度）；b）评估指标：任务成功率、步骤数、工具调用准确率、Token 消耗；c）手动评估 + 自动评估结合。4）安全性实现：a）工具白名单——只允许调用预定义的工具；b）参数验证——防止恶意参数；c）Prompt 注入防护——过滤用户输入中的恶意指令；d）操作确认——危险操作需要用户确认。5）成本控制：a）监控每次任务的 Token 消耗；b）简单任务用小模型，复杂任务用大模型；c）缓存常见查询结果；d）设置每次任务的最大步数和 Token 上限。6）可观测性：a）用 LangSmith 或 Langfuse 追踪完整调用链；b）记录每次 Agent 运行的详细信息；c）设置异常告警。",
           deep_dive: "Agent 部署比传统模型部署复杂得多，因为 Agent 是动态的、多步的、不可预测的：1）Agent 部署的独特挑战：a）不可预测性：Agent 的行为是不确定的，同样的输入可能走完全不同的路径；b）长延迟：一个任务可能需要多轮 LLM 调用，延迟可能几十秒；c）高成本：每一步都要调用 LLM，Token 消耗大；d）状态管理：Agent 需要维护对话、记忆、任务状态。2）流式输出的重要性：Agent 任务通常需要较长时间，用户等待体验差。流式输出让用户看到：a）Agent 正在想什么；b）正在调用什么工具；c）工具返回了什么；d）逐步生成最终答案。这大大改善了用户体验。3）Agent 评估的困难：传统模型评估有标准答案，Agent 评估很难——a）任务是开放的，没有标准答案；b）同一个任务有多种完成路径；c）步骤的合理性很难自动判断。评估方法：a）任务成功率：最终是否完成了任务？b）效率：用了多少步？多少 Token？c）轨迹质量：步骤是否合理？有没有绕弯路？d）人工评估：最可靠但成本高。4）安全性是重中之重：Agent 能调用工具意味着它能执行实际操作——a）Prompt 注入：用户输入中嵌入恶意指令，让 Agent 执行非预期操作；b）工具滥用：Agent 调用工具删除文件、发送邮件等；c）信息泄露：Agent 可能把敏感信息传给外部 API。防护措施：工具白名单、参数验证、操作确认、沙箱执行、审计日志。5）成本优化：Agent 的成本主要是 LLM 调用——a）一次复杂任务可能调用 LLM 10+ 次；b）每次调用的上下文越来越长，Token 消耗递增；c）用 GPT-4 可能一次任务花费几美元。优化方法：a）简单步骤用 GPT-3.5/4o-mini；b）上下文压缩和摘要；c）缓存工具结果；d）限制最大步数。6）Agent 的可靠性：Agent 的可靠性远低于传统软件——a）LLM 有幻觉；b）工具调用可能失败；c）多步推理容易出错。提升可靠性的方法：a）每步验证——检查工具返回是否合理；b）重试机制——失败自动重试；c）回退机制——如果一条路走不通，换一条；d）人工兜底——Agent 不确定时交给人工。"
-        }, duration: "3小时", resources: [R_FASTAPI, R_GRADIO, { title: "Langfuse", url: "https://langfuse.com/", required: false }], checkpoint: "完成 Agent 部署，建立评估体系，实现安全性和成本控制" },
+        }, duration: "3小时", resources: [R_FASTAPI, R_GRADIO, { title: "Langfuse", url: "https://langfuse.com/", required: false, type: "article", source: "official" }], checkpoint: "完成 Agent 部署，建立评估体系，实现安全性和成本控制" },
       { day: 5, title: "Agent 项目总结与前沿探索",
         summary: "完善项目，探索 Agent 前沿方向，准备作品展示", content: {
           objective: "今天你将完善 Agent 项目并探索前沿方向。学完后能产出完整的 Agent 应用作品，了解 Multi-Agent、AutoGPT 等前沿方向，为简历添加有竞争力的作品。",
@@ -5995,7 +5995,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "Agent 项目总结与前沿探索：1）项目完善：a）完善 README——功能介绍、架构图、使用说明、Demo；b）整理代码——注释、类型标注、错误处理；c）准备 Demo 脚本——3-5 个展示场景。2）Multi-Agent 实验（可选）：a）用 CrewAI 或 AutoGen 搭建一个简单的 Multi-Agent 系统；b）设计不同角色的 Agent（如研究员、写手、审核员）；c）测试协作完成复杂任务。3）前沿方向探索：a）阅读 AutoGPT、BabyAGI、MetaGPT 的文档/代码；b）了解 Agent 操作系统（如 LangGraph）；c）思考这些技术和你的项目有什么关系。4）应用场景拓展：a）你的 Agent 还能用在什么场景？b）怎么从 Demo 变成产品？c）商业化需要考虑什么？5）作品集准备：a）写项目描述（STAR 格式）；b）准备技术亮点（如记忆系统、安全机制、成本优化）；c）准备面试问题。6）总结复盘：a）这两周学到了什么？b）Agent 技术的现状和未来？c）你的项目在什么水平？还有什么可以改进？",
           deep_dive: "Agent 是 AI 应用的最前沿，这个领域正在快速发展：1）为什么 Agent 是下一个大方向？当前的 LLM 应用主要是「问答」——用户问，AI 答。Agent 让 AI 从「回答问题」变成「完成任务」——从「告诉我怎么做」到「帮我做」。这是质的飞跃。想象一下：你说「帮我研究一下竞品，写一份分析报告」，Agent 就自动搜索、整理、分析、写报告。2）Multi-Agent 的愿景：单个 Agent 能力有限，多个 Agent 协作能完成更复杂的任务——a）分工：不同 Agent 负责不同领域；b）讨论：Agent 之间可以讨论和辩论，提升质量；c）监督：防止单个 Agent 犯错。MetaGPT 模拟软件开发团队（产品经理、架构师、程序员、测试），CrewAI 让定义 Agent 团队变得简单。3）Agent 框架的演进：a）LangChain：通用框架，功能全但复杂；b）AutoGPT：最早的自主 Agent，目标导向；c）CrewAI：专注 Multi-Agent，简单易用；d）AutoGen：微软出品，支持复杂对话模式；e）LangGraph：状态机式 Agent，更可控。框架在快速迭代，核心思想是相通的。4）Agent 的应用场景：a）个人助理：管理日程、回复邮件、整理笔记；b）数据分析：自动分析数据、生成报告、画图表；c）代码生成：理解需求、写代码、测试、部署；d）研究助手：搜索文献、总结论文、写综述；e）客服：处理复杂查询、调用后端系统、升级人工。每个场景都有巨大的商业价值。5）Agent 面临的挑战：a）可靠性：LLM 不可靠，Agent 更不可靠；b）成本：多步推理的 Token 消耗很高；c）安全性：Agent 能执行操作，风险更大；d）评估：没有好的自动评估方法；e）法律：Agent 做错了谁负责？这些挑战也是机会——谁能解决这些问题，谁就能做出成功的 Agent 产品。6）给学习者的建议：a）动手做：不要只看论文，自己实现一个 Agent；b）从简单开始：先做单 Agent + 2-3 个工具，再逐步增加复杂度；c）关注可靠性：花时间在错误处理、边界情况上；d）理解局限：知道 Agent 能做什么不能做什么，不要过度承诺；e）保持学习：这个领域每个月都有新进展。Agent 是 AI 应用的未来，现在入局正是时候。"
-        }, duration: "4小时", resources: [{ title: "CrewAI", url: "https://docs.crewai.com/", required: false }, { title: "AutoGen", url: "https://microsoft.github.io/autogen/", required: false }, { title: "LangGraph", url: "https://langchain-ai.github.io/langgraph/", required: false }], checkpoint: "完成 Agent 项目，产出可展示的作品和完整文档" },
+        }, duration: "4小时", resources: [{ title: "CrewAI", url: "https://docs.crewai.com/", required: false, type: "doc", source: "official" }, { title: "AutoGen", url: "https://microsoft.github.io/autogen/", required: false, type: "article", source: "official" }, { title: "LangGraph", url: "https://langchain-ai.github.io/langgraph/", required: false, type: "article", source: "official" }], checkpoint: "完成 Agent 项目，产出可展示的作品和完整文档" },
       { day: 6, title: "多工具集成与自定义工具开发",
         summary: "扩展 Agent 工具集，开发自定义工具，增强 Agent 能力边界", content: {
           objective: "今天你将学习 Agent 的多工具集成和自定义工具开发。学完后能为 Agent 添加更多类型的工具（代码执行、网页浏览、数据库查询等），掌握工具设计的最佳实践，让 Agent 能完成更复杂的任务。",
@@ -6008,7 +6008,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "多工具集成与开发实战：1）代码执行工具：a）实现一个 Python REPL 工具，让 Agent 能执行 Python 代码；b）添加沙箱限制（禁用危险操作、限制执行时间、限制资源使用）；c）测试：让 Agent 用代码解决数学问题、数据分析问题。2）搜索工具集成：a）集成 Tavily 或 SerpAPI 搜索工具；b）实现网页内容抓取和提取（去除导航、广告等噪音）；c）测试：让 Agent 回答需要实时信息的问题（如「今天的天气」「最新新闻」）。3）数据库查询工具：a）实现一个 SQL 查询工具，让 Agent 能用自然语言查询数据库；b）添加安全控制：只允许 SELECT、限制返回行数、防止 SQL 注入；c）测试：让 Agent 查数据、做统计分析。4）文件操作工具：a）实现文件读写、目录浏览工具；b）添加权限控制（只能在指定目录操作）；c）版本管理（修改前备份）。5）工具设计最佳实践：a）给每个工具写清晰的描述和使用场景；b）用 Pydantic 定义严格的参数 schema；c）完善的错误处理和友好的错误信息；d）超时和重试机制。6）复杂任务测试：a）设计一个需要 3+ 个工具配合的任务；b）观察 Agent 如何选择和组合工具；c）分析工具调用的错误类型和改进空间。",
           deep_dive: "工具是 Agent 的「手和脚」，工具的丰富程度决定了 Agent 的能力边界：1）工具为什么重要？LLM 本身有很多局限——a）知识截止：训练数据有截止日期，不知道最新信息；b）计算能力差：数学计算、逻辑推理容易错；c）无法与外部世界交互：不能查数据库、不能发邮件、不能操作文件；d）容易幻觉：一本正经地胡说八道。工具就是用来弥补这些缺陷的——让 LLM 能搜索、能计算、能操作。2）好工具的设计原则：a）单一职责：一个工具只做一件事，做好它；b）清晰的描述：LLM 是通过读描述来决定要不要用这个工具的，描述不清楚就会用错；c）明确的输入输出：用 schema 定义好参数类型、格式、含义；d）容错性：输入不对时给出清晰的错误提示，让 LLM 知道怎么改；e）安全性：工具能操作外部世界，必须有安全限制。3）代码执行是最强大的工具之一：让 Agent 能执行代码，相当于给了它一个「万能工具」——数学计算、数据处理、图表生成、文件操作、API 调用，都能通过代码实现。但代码执行也是最危险的——a）安全风险：恶意代码可以删除文件、窃取数据；b）资源耗尽：死循环、内存泄漏；c）依赖问题：缺少库、环境不一致。所以代码执行必须在沙箱里跑，限制权限和资源。4）搜索 + 代码的组合威力：搜索提供信息，代码处理信息，两者结合非常强大。比如「分析 2024 年 AI 领域的融资情况」——Agent 可以先搜索找到融资数据，然后用 Python 代码做数据分析和可视化。这是 Agent 相对于普通搜索的优势——不只是给你链接，还能帮你处理和分析信息。5）工具使用的常见错误：a）工具选择错误：该搜索的时候去查知识库；b）参数错误：参数类型不对、必填参数缺失；c）不会重试：工具调用失败了就放弃，不知道调整参数重试；d）过度使用：明明不需要工具，也要调一下；e）结果理解错误：不会正确解读工具返回的结果。减少这些错误的方法：更好的工具描述、更多的示例、更好的错误反馈、Reflection 机制。6）从工具到能力：单个工具是原子操作，多个工具组合起来形成「能力」。比如「研究能力」= 搜索 + 阅读 + 总结 + 写作。高级的 Agent 框架（如 AutoGen、CrewAI）就是在工具之上，通过角色分工和协作，形成更高级的能力。7）Agent 的「工具使用能力」本身也是一种能力：不同的 LLM 工具使用能力差异很大——GPT-4、Claude 3 很强，开源模型相对弱一些。怎么提升？a）好的 Prompt 和工具描述；b）Few-shot 示例；c）Fine-tuning（如果有足够数据）；d）更智能的调度（比如用一个小模型先做工具路由）。"
-        }, duration: "3小时", resources: [{ title: "LangChain Tools", url: "https://python.langchain.com/docs/modules/agents/tools/", required: false }, { title: "Tavily 搜索", url: "https://tavily.com/", required: false }], checkpoint: "为 Agent 添加至少 3 类新工具，完成复杂任务的端到端测试" },
+        }, duration: "3小时", resources: [{ title: "LangChain Tools", url: "https://python.langchain.com/docs/modules/agents/tools/", required: false, type: "doc", source: "official" }, { title: "Tavily 搜索", url: "https://tavily.com/", required: false, type: "article", source: "official" }], checkpoint: "为 Agent 添加至少 3 类新工具，完成复杂任务的端到端测试" },
       { day: 7, title: "多 Agent 系统与协作模式",
         summary: "学习多 Agent 系统设计，实现多个 Agent 协作完成复杂任务", content: {
           objective: "今天你将学习多 Agent 系统。学完后能理解多 Agent 的协作模式，用 CrewAI 或 AutoGen 搭建多 Agent 系统，设计角色分工和协作流程，解决单个 Agent 难以完成的复杂任务。",
@@ -6021,7 +6021,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "多 Agent 系统实战：1）多 Agent 框架入门：a）选择一个多 Agent 框架（推荐 CrewAI 或 AutoGen）；b）跟着官方教程跑一个简单例子；c）理解框架的核心概念：Agent、Task、Crew/GroupChat。2）角色分工设计：a）设计一个 3 人 Agent 团队来完成一个复杂任务（如「写一份行业研究报告」）；b）角色 1：研究员——负责搜索信息、整理资料；c）角色 2：分析师——负责数据分析、提炼洞察；d）角色 3：写作者——负责撰写报告、排版润色；e）每个角色的能力、工具、目标是什么？3）协作流程实现：a）定义任务和依赖关系（谁先做、谁后做）；b）实现顺序式协作（研究员 → 分析师 → 写作者）；c）观察每个 Agent 的输出和交接；d）对比：单个 Agent 做 vs 多 Agent 做，质量差多少？4）辩论与评审（可选）：a）增加一个「评审员」Agent，负责审核报告质量；b）实现反馈循环：评审员提出修改意见 → 写作者修改 → 再评审；c）观察多轮修改后的质量提升。5）并行任务处理：a）设计可以并行的子任务（如同时搜索不同来源的信息）；b）实现并行执行，等所有子任务完成后汇总；c）对比串行和并行的时间效率。6）多 Agent 评估：a）多 Agent 系统有什么优势？（质量、速度、复杂度处理）b）有什么挑战？（协调成本、通信开销、一致性、成本）c）什么场景适合用多 Agent？什么场景用单 Agent 就够了？",
           deep_dive: "多 Agent 是当前 Agent 研究的热点，它借鉴了人类社会的分工协作思想：1）为什么需要多 Agent？单个 Agent 有局限性——a）能力有限：一个 Agent 不可能什么都擅长；b）注意力有限：上下文窗口有限，处理不了太复杂的任务；c）视角单一：容易钻牛角尖，缺乏自我纠错能力；d）效率瓶颈：只能一件一件做。多 Agent 通过分工协作来解决这些问题——就像人类社会，每个人做自己擅长的事，协作完成复杂任务。2）多 Agent 的经典模式：a）流水线模式：A 做完给 B，B 做完给 C。适合有明确步骤的任务；b）团队协作模式：不同角色的 Agent 并行工作，有一个协调者。适合复杂项目；c）辩论模式：两个 Agent 对一个问题展开辩论，第三方仲裁或取共识。适合需要深思熟虑的决策问题；d）层级模式：老板 Agent 分配任务，员工 Agent 执行，汇报结果。适合大型任务。3）角色设计的艺术：好的角色设计是多 Agent 系统成功的关键：a）角色要明确：每个 Agent 有清晰的职责和专长；b）角色要互补：技能不重叠，覆盖任务的各个方面；c）角色要有性格：不同的角色可以有不同的「性格」——谨慎的、创新的、批判性的；d）避免角色过载：一个 Agent 不要承担太多角色。4）多 Agent 的挑战：听起来美好，但做起来难：a）协调成本：Agent 之间的沟通和协调需要时间和 Token；b）一致性：多个 Agent 得出的结论可能矛盾，怎么统一？c）成本：多 Agent = 多倍 LLM 调用，费用更高；d）可靠性：链路更长，出错概率更高；e）可观测性：调试和追踪更复杂。所以不要为了多 Agent 而多 Agent——简单任务用单 Agent，复杂任务才考虑多 Agent。5）主流多 Agent 框架对比：a）CrewAI：角色 + 任务 + Crew 的抽象，简单易用，适合快速上手；b）AutoGen：微软出品，灵活强大，支持复杂对话模式，但学习曲线陡；c）LangGraph：基于状态机的 Agent 编排，可控性好，和 LangChain 生态集成；d）MetaGPT：模拟软件公司，专门做软件开发场景。选择哪个？新手推荐 CrewAI，需要灵活选 AutoGen，用 LangChain 生态选 LangGraph。6）多 Agent 的未来：a）Agent 生态：未来可能有「Agent 市场」，你可以雇佣专门的 Agent 来完成特定任务；b）Agent OS：围绕 Agent 的操作系统，管理 Agent 的生命周期、资源、权限；c）人机协作：不是 Agent 取代人，而是人和 Agent 一起工作，Agent 是助手，人做决策；d）涌现行为：足够多的 Agent 协作，会不会出现更高级的智能？这还是一个开放问题。7）给实践者的建议：a）从单 Agent 开始：先把单 Agent 做好，再考虑多 Agent；b）从小团队开始：2-3 个 Agent 就够了，不是越多越好；c）明确场景：找到真正需要多 Agent 的场景，而不是为了炫技；d）关注成本：多 Agent 很贵，要算清楚 ROI。"
-        }, duration: "3.5小时", resources: [{ title: "CrewAI 文档", url: "https://docs.crewai.com/", required: false }, { title: "AutoGen", url: "https://microsoft.github.io/autogen/", required: false }], checkpoint: "搭建一个 3 Agent 协作系统，完成一个单 Agent 难以完成的复杂任务" },
+        }, duration: "3.5小时", resources: [{ title: "CrewAI 文档", url: "https://docs.crewai.com/", required: false, type: "doc", source: "official" }, { title: "AutoGen", url: "https://microsoft.github.io/autogen/", required: false, type: "article", source: "official" }], checkpoint: "搭建一个 3 Agent 协作系统，完成一个单 Agent 难以完成的复杂任务" },
       { day: 8, title: "Agent 可靠性与安全性增强",
         summary: "提升 Agent 的可靠性和安全性，处理各种边界情况和风险", content: {
           objective: "今天你将学习 Agent 的可靠性和安全性。学完后能实现错误恢复、人机协作、安全防护机制，让你的 Agent 更稳定、更安全、更可控，从 Demo 级走向生产级。",
@@ -6034,7 +6034,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "Agent 可靠性与安全性实战：1）错误恢复机制：a）实现工具调用失败的自动重试（指数退避）；b）实现自我纠错：Agent 调用工具出错后，分析错误原因，调整参数重试；c）实现回退策略：一条路走不通，试试别的方法；d）测试：故意制造一些错误，看 Agent 能不能恢复。2）Prompt 注入防护：a）了解 Prompt 注入的各种类型：直接注入、间接注入（在检索结果中植入指令）、工具注入；b）实现基础防护：输入过滤、指令强化、系统提示优先；c）测试：尝试攻击你的 Agent，看能不能被注入；d）进阶：用 LL Guard 或类似的安全检查层。3）权限与安全控制：a）工具分级：不同工具有不同的安全等级；b）危险操作确认：删除文件、发送邮件等操作需要用户确认；c）沙箱隔离：代码执行在沙箱中，文件操作在指定目录；d）审计日志：记录 Agent 的所有操作，便于追溯。4）人机协作设计：a）设计人工介入机制：Agent 不确定时可以请求人类帮助；b）实现「暂停 - 确认 - 继续」的流程；c）设计 Escalation 策略：什么情况升级给人处理？d）测试：Agent 遇到困难时，能不能正确求助？5）可观测性增强：a）用 LangSmith 或 Langfuse 做完整追踪；b）记录每一步的 Thought、Action、Observation、耗时、Token 消耗；c）添加业务指标：任务成功率、平均步骤数、工具使用分布；d）设置告警：异常情况（如任务失败率升高、成本突增）及时告警。6）压力测试：a）设计各种边界 case：超长输入、恶意输入、模糊需求、矛盾指令；b）测试 Agent 在这些情况下的表现；c）找出脆弱点，进行加固。",
           deep_dive: "Agent 最大的问题是不可靠——它会犯错、会跑偏、会被攻击。提升可靠性和安全性是 Agent 从 Demo 到生产的必经之路：1）为什么 Agent 这么容易出错？a）LLM 本身就不可靠：幻觉、逻辑错误、遗忘目标；b）多步放大：每一步都有一定概率出错，步骤越多，出错概率越大（误差累积）；c）环境不确定：外部工具可能失败、网络可能断、数据可能变；d）恶意攻击：有人会故意诱导 Agent 做坏事。2）可靠性提升的层次：a）防御式编程：假设每一步都可能出错，做好处理；b）重试与回退：错了就重试，不行就换方法；c）验证与检查：每步做完检查一下对不对（Reflection / Self-Critique）；d）人工兜底：实在不行就找人。提升可靠性的本质是「用工程方法弥补模型的不足」。3）Prompt 注入比你想的更严重：很多人觉得 Prompt 注入是「小问题」，实际上它可能造成严重后果：a）数据泄露：让 Agent 把系统提示、对话历史发给攻击者；b）越权操作：诱导 Agent 执行危险操作；c）身份冒充：让 Agent 假装成别人。更可怕的是「间接注入」——攻击者把恶意指令藏在网页、PDF、邮件里，Agent 读取这些内容时就会被注入。防御方法：a）输入输出过滤；b）指令强化（system prompt 优先级）；c）安全检查层（用另一个模型检查）；d）最小权限原则。4）人机协作是最实用的方案：不要指望 Agent 完全自主完成所有事情，那既不现实也不安全。更好的模式是「Human-in-the-loop」——a）Agent 做简单重复的工作；b）遇到不确定的、高风险的、需要决策的事情，交给人；c）人做决策，Agent 执行。这才是当前技术水平下最靠谱的模式。5）可观测性是调试 Agent 的前提：Agent 是动态的、不确定的，出了问题很难复现。没有好的可观测性，你根本不知道哪里出了问题。要记录：a）每一步的完整状态（Thought、Action、Observation）；b）输入输出、Token 消耗、耗时；c）错误和异常。工具：LangSmith、Langfuse、Phoenix，或者自己实现。6）安全的「最小权限」原则：给 Agent 的权限越少越好——a）文件操作：只能在指定目录读写；b）API 调用：用最小权限的 API Key；c）代码执行：在沙箱里跑，限制网络和资源；d）危险操作：必须用户确认。记住：Agent 可能被攻破，所以不要给它你承受不起失去的权限。7）从 Demo 到 Production 的差距：Demo 级的 Agent 和生产级的 Agent，差距可能是 10 倍的工作量。生产级需要考虑：可靠性、安全性、性能、成本、监控、告警、回滚、灰度发布、多租户、权限管理... 这也是为什么很多 Agent 产品看起来简单，实际上背后有大量的工程工作。"
-        }, duration: "3.5小时", resources: [{ title: "OWASP LLM Top 10", url: "https://owasp.org/www-project-top-10-for-large-language-model-applications/", required: false }, { title: "Langfuse", url: "https://langfuse.com/", required: false }], checkpoint: "为 Agent 添加错误恢复、安全防护、人工介入和可观测性，达到生产级可靠性" },
+        }, duration: "3.5小时", resources: [{ title: "OWASP LLM Top 10", url: "https://owasp.org/www-project-top-10-for-large-language-model-applications/", required: false, type: "article", source: "official" }, { title: "Langfuse", url: "https://langfuse.com/", required: false, type: "article", source: "official" }], checkpoint: "为 Agent 添加错误恢复、安全防护、人工介入和可观测性，达到生产级可靠性" },
       { day: 9, title: "Agent 性能优化与成本控制",
         summary: "优化 Agent 的性能和成本，让它更快、更便宜、更高效", content: {
           objective: "今天你将学习 Agent 的性能优化和成本控制。学完后能诊断性能瓶颈，优化延迟和吞吐量，控制 Token 成本，在效果和成本之间找到最佳平衡。",
@@ -6047,7 +6047,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "Agent 性能优化与成本控制：1）性能基准测试：a）写一个 benchmark 脚本，测试典型任务的端到端延迟；b）分解各阶段耗时：LLM 调用占多少？工具执行占多少？网络占多少？c）找到瓶颈在哪里。2）延迟优化：a）流式输出：让用户尽早看到结果，减少等待感知；b）并行工具调用：如果有多个独立的工具调用，并行执行；c）异步处理：工具调用异步化，不阻塞 LLM 推理；d）对比优化前后的延迟。3）成本分析：a）统计一个任务的 Token 消耗：输入多少？输出多少？总共多少钱？b）分析 Token 都花在哪里了：系统提示？对话历史？工具结果？c）计算 1000 次任务要花多少钱？能不能承受？4）成本优化实验：a）模型路由：简单任务用小模型（如 GPT-3.5/4o-mini），复杂任务用大模型；b）上下文压缩：用 LLM 或摘要模型把工具结果压缩后再给 LLM；c）缓存：相同或相似的查询直接返回缓存结果；d）每一项能省多少钱？5）Token 高效利用：a）优化系统提示词：在保证效果的前提下尽量短；b）记忆管理：历史对话太长就摘要或截断；c）工具结果裁剪：只返回最相关的部分，不要全塞进去；d）用更高效的 Prompt 格式。6）成本监控与告警：a）实现 Token 使用统计和成本计算；b）设置每日/每月预算上限，超了就告警或降级；c）监控单任务成本，异常高的任务及时发现；d）生成成本报告：每天花了多少、每个任务平均成本、成本趋势。",
           deep_dive: "Agent 的成本和性能是生产落地的关键考量——效果再好，如果太贵太慢，也没法大规模用：1）Agent 为什么这么贵？普通的 LLM 调用可能就几美分，但 Agent 可能要几美元——因为：a）多轮调用：一个任务可能调用 LLM 5-10 次甚至更多；b）上下文膨胀：每加一轮对话、每加一个工具结果，上下文就更长，Token 更多；c）用大模型：为了工具调用和推理能力，往往需要用 GPT-4 级别的模型，更贵；d）工具成本：搜索 API、代码执行环境等也要钱。成本控制是 Agent 工程的核心挑战之一。2）性能优化的几个维度：a）首字延迟（Time to First Token）：用户多久能看到第一个字？影响用户体验；b）总延迟：整个任务做完要多久？影响效率；c）吞吐量：单位时间能处理多少任务？影响成本；d）资源利用率：GPU/CPU 利用率高不高？影响成本。不同场景优化的重点不一样——聊天场景重首字延迟，批处理重吞吐量。3）流式输出的心理学意义：流式输出不改变总延迟，但用户感知的等待时间更短——因为用户可以边看边等，而不是盯着加载转圈圈。这是提升用户体验性价比最高的优化，几乎所有 Chatbot 都做了。4）成本优化的「三板斧」：a）模型选择：能用小模型就不用大模型。小模型的成本可能只有大模型的 1/10 甚至 1/100。很多任务（如分类、摘要、简单工具调用）用小模型就够了；b）缓存：相同或相似的问题，直接返回缓存结果。缓存命中率高的话，能省 50% 以上的成本；c）上下文优化：减少输入 Token。方法：压缩历史、裁剪工具结果、优化 Prompt、用更短的系统提示。5）模型路由的艺术：模型路由就是「把合适的任务分配给合适的模型」——a）简单任务（分类、提取、翻译）→ 小模型（GPT-3.5、Qwen-7B）；b）中等任务（写作、一般推理）→ 中模型（GPT-4o-mini、Claude 3 Haiku）；c）复杂任务（复杂推理、多步规划）→ 大模型（GPT-4o、Claude 3 Opus）。怎么判断任务复杂度？可以用一个小模型先做分类，或者用置信度——如果小模型的答案置信度高就直接用，低就升级到大模型。6）成本与效果的权衡：成本优化不是「越省越好」，而是「在可接受的成本内达到最好的效果」。关键问题：a）你的预算是多少？b）效果下降多少是可以接受的？c）每提升 1% 的效果，愿意多花多少钱？这是产品和业务决策，不是纯技术决策。7）Agent 经济学会越来越重要：随着 Agent 的应用越来越广，成本会成为最重要的考量因素之一。未来的 Agent 系统会有更智能的成本优化——自动选择模型、动态调整策略、预测成本、优化资源分配。懂成本优化的工程师会更有价值。"
-        }, duration: "3小时", resources: [{ title: "Prompt 压缩指南", url: "https://www.promptingguide.ai/zh/techniques/compression", required: false }, { title: "LLM 成本计算器", url: "https://llm-calculator.com/", required: false }], checkpoint: "完成 Agent 性能基准测试，实施至少 3 项成本优化措施并量化节省" },
+        }, duration: "3小时", resources: [{ title: "Prompt 压缩指南", url: "https://www.promptingguide.ai/zh/techniques/compression", required: false, type: "article", source: "official" }, { title: "LLM 成本计算器", url: "https://llm-calculator.com/", required: false, type: "article", source: "official" }], checkpoint: "完成 Agent 性能基准测试，实施至少 3 项成本优化措施并量化节省" },
       { day: 10, title: "Agent 前沿探索与项目收官",
         summary: "探索 Agent 前沿方向，完善项目，规划长期学习路径", content: {
           objective: "今天你将探索 Agent 的前沿方向，并完成项目收官。学完后了解 Agentic Workflow、自主 Agent、AI Agent 生态等前沿趋势，完善你的 Agent 项目作品集，规划长期学习和职业发展方向。",
@@ -6060,7 +6060,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           ],
           practice: "前沿探索与项目收官：1）前沿论文/项目速览：a）选 1-2 个你感兴趣的前沿方向深入了解：Agentic Workflow（如 Devin、OpenDevin）、World Model（如 Voyager、Genie）、多模态 Agent、具身智能机器人；b）读一篇相关的论文或技术博客；c）思考：这些技术和你的项目有什么关系？怎么应用？2）项目最终完善：a）完善 README：项目简介、架构图、功能特性、效果展示、快速开始；b）代码整理：模块化、加注释、写测试、加错误处理；c）Demo 准备：准备 3-5 个能展示项目亮点的演示场景；d）录一个 2-3 分钟的演示视频。3）技术博客：a）写一篇技术博客，分享你的 Agent 开发经验；b）内容可以是：踩过的坑、学到的东西、架构设计思考、效果对比；c）发布到知乎/博客/GitHub。4）面试准备：a）基础题：什么是 Agent？ReAct 的原理？RAG 和 Agent 的区别？b）项目题：你的 Agent 架构是怎样的？遇到最大的挑战是什么？怎么解决的？c）设计题：如果让你设计一个「智能客服 Agent」，你会怎么设计？d）开放题：你觉得 Agent 技术未来会怎么发展？最大的挑战是什么？5）职业规划思考：a）你对 AI Agent 这个方向感兴趣吗？为什么？b）你想在 Agent 领域做什么？（应用开发？框架建设？算法研究？）c）未来 1 年的学习目标是什么？d）怎么达成目标？（项目、课程、论文、社区）6）社区参与：a）关注 Agent 领域的优秀项目和研究者；b）加入相关的技术社区和讨论群；c）考虑给开源 Agent 项目贡献代码或文档；d）参加一些 Hackathon，实战锻炼。",
           deep_dive: "Agent 是 AI 最激动人心的方向之一，它代表了从「AI 工具」到「AI 伙伴」的演进：1）Agent 为什么是大趋势？a）从工具到助手：现在的 AI 是「你问我答」的工具，未来的 Agent 是「你交待任务，它帮你完成」的助手；b）解放生产力：Agent 能承担大量重复性工作，让人专注于创造性的事；c）能力延伸：Agent 可以 24 小时工作、同时处理多件事、调用各种工具，能力远超个人；d）新的交互范式：从「人学习使用软件」变成「Agent 理解人的需求并操作软件」。2）Agent 技术的演进路线：a）第一代：单 Agent + 少量工具，ReAct 模式，能完成简单任务（当前阶段）；b）第二代：多 Agent 协作，有规划和反思能力，能完成复杂任务（正在到来）；c）第三代：自主 Agent，能自己设定目标、主动学习、长期执行任务（研究中）；d）第四代：具身 Agent，有物理身体，能在真实世界行动（更遥远）。我们现在大概在第一代末期、第二代初期。3）Agent 会改变什么？a）软件交互：未来你可能不再需要学习使用各种软件，直接告诉 Agent 你想做什么；b）工作方式：很多重复性工作会被 Agent 取代，人类更多做决策、创意、人际工作；c）编程：程序员的角色会从「写代码」变成「设计和审查 Agent 写的代码」；d）创业：小团队可以借助 Agent 做到以前大团队才能做的事，创业门槛降低。4）Agent 面临的核心挑战：a）可靠性：Agent 会犯错、会跑偏，怎么保证它做正确的事？b）安全性：Agent 有能力执行操作，怎么防止它做坏事？c）可解释性：Agent 的决策过程是黑箱，怎么知道它为什么这么做？d）评估：怎么衡量一个 Agent 好不好？e）成本：现在 Agent 还很贵，什么时候能普及？这些挑战既是难题，也是机会——谁能解决这些问题，谁就能做出成功的 Agent 产品。5）AI 时代的个人发展：a）不要害怕 AI 取代你，要学会用 AI 增强你；b）培养 AI 做不了的能力：创造力、批判性思维、人际沟通、复杂决策；c）成为「AI 增强人」：用 AI 工具提升你的效率和能力；d）保持学习：AI 技术发展很快，持续学习才能不被淘汰。6）给学习者的建议：a）动手实践：Agent 是做出来的，不是看出来的。亲手做一个项目，比读 10 篇论文都有用；b）从小处着手：不要一开始就想做一个「通用人工智能 Agent」，先做一个能解决具体问题的专用 Agent；c）关注真实需求：做真正有用的东西，而不是炫技的 Demo；d）保持好奇：这个领域每天都有新东西，保持探索的热情。Agent 的黄金时代才刚刚开始，现在入局正是时候！"
-        }, duration: "4小时", resources: [{ title: "Awesome AI Agents", url: "https://github.com/e2b-dev/awesome-ai-agents", required: false }, { title: "Lilian Weng 的 Agent 博客", url: "https://lilianweng.github.io/posts/2023-06-23-agent/", required: false }], checkpoint: "完善 Agent 项目作品集，了解前沿方向，制定个人学习规划" },
+        }, duration: "4小时", resources: [{ title: "Awesome AI Agents", url: "https://github.com/e2b-dev/awesome-ai-agents", required: false, type: "repo", source: "github" }, { title: "Lilian Weng 的 Agent 博客", url: "https://lilianweng.github.io/posts/2023-06-23-agent/", required: false, type: "article", source: "official" }], checkpoint: "完善 Agent 项目作品集，了解前沿方向，制定个人学习规划" },
     ],
   },
 {
@@ -6074,7 +6074,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "围绕数据采集、清洗、标注、版本管理与定时调度。重点讲构建一条从原始数据到训练-ready 数据的完整端到端 Pipeline。",
     outcomes: ["掌握爬虫/API 数据采集", "数据清洗与质量验证", "DVC 数据版本管理", "Airflow 定时任务编排"],
     relatedIntel: ["009-linux", "010-numpy-pandas"], relatedTools: ["Apache Airflow", "Dask", "pandas"],
-    relatedTerms: ["etl", "web-scraping", "dvc", "airflow", "data-quality", "pandas"],
+    relatedTerms: ["etl", "web-scraping", "dvc", "airflow", "data-quality", "pandas"], relatedNodes: ["devops-mlops"],
     dailyTasks: [
       {
         day: 1,
@@ -6093,8 +6093,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2小时",
         resources: [B_DOCKER_TUTORIAL, 
-          { title: "Wikipedia API 文档", url: "https://www.mediawiki.org/wiki/API:Main_page", required: true },
-          { title: "Scrapy 官方文档", url: "https://docs.scrapy.org/", required: false }
+          { title: "Wikipedia API 文档", url: "https://www.mediawiki.org/wiki/API:Main_page", required: true, type: "doc", source: "official" },
+          { title: "Scrapy 官方文档", url: "https://docs.scrapy.org/", required: false, type: "doc", source: "official" }
         ],
         checkpoint: "100 条 Wikipedia 文章 JSONL 文件，大小 > 100KB，字段完整率 > 90%"
       },
@@ -6115,8 +6115,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2小时",
         resources: [
-          { title: "Great Expectations 文档", url: "https://docs.greatexpectations.io/", required: true },
-          { title: "Pandas 数据清洗技巧", url: "https://pandas.pydata.org/pandas-docs/stable/user_guide/missing_data.html", required: true }
+          { title: "Great Expectations 文档", url: "https://docs.greatexpectations.io/", required: true, type: "doc", source: "official" },
+          { title: "Pandas 数据清洗技巧", url: "https://pandas.pydata.org/pandas-docs/stable/user_guide/missing_data.html", required: true, type: "article", source: "official" }
         ],
         checkpoint: "GE 报告显示 > 80% 数据通过全部契约，失败条目有明确原因记录"
       },
@@ -6137,8 +6137,8 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2.5小时",
         resources: [
-          { title: "Label Studio GitHub", url: "https://github.com/HumanSignal/label-studio", required: true },
-          { title: "Label Studio API 文档", url: "https://labelstud.io/sdk/", required: true }
+          { title: "Label Studio GitHub", url: "https://github.com/HumanSignal/label-studio", required: true, type: "repo", source: "github" },
+          { title: "Label Studio API 文档", url: "https://labelstud.io/sdk/", required: true, type: "doc", source: "official" }
         ],
         checkpoint: "50 条标注数据成功导出，格式与原始文本正确合并，人工抽检标注一致性 > 80%"
       },
@@ -6159,7 +6159,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "1.5小时",
         resources: [
-          { title: "DVC 官方文档", url: "https://dvc.org/doc/start", required: true }
+          { title: "DVC 官方文档", url: "https://dvc.org/doc/start", required: true, type: "doc", source: "official" }
         ],
         checkpoint: "修改 preprocess.py 后 dvc repro 只重跑 preprocess 和 train（不重跑 featurize），依赖图正确"
       },
@@ -6180,7 +6180,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
         },
         duration: "2.5小时",
         resources: [
-          { title: "Airflow 官方文档", url: "https://airflow.apache.org/docs/apache-airflow/stable/index.html", required: true }
+          { title: "Airflow 官方文档", url: "https://airflow.apache.org/docs/apache-airflow/stable/index.html", required: true, type: "doc", source: "official" }
         ],
         checkpoint: "DAG 手动触发成功，所有 4 个任务完成，Airflow UI 显示 success 状态"
       }
@@ -6203,7 +6203,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["熟练分析代码复杂度", "掌握常见算法设计范式", "能用数据结构解决实际问题"],
     relatedIntel: ["050-cs-algo", "133-pitfall-algorithm"],
     relatedTools: ["NumPy", "pandas"],
-    relatedTerms: ["algorithm", "data-structure", "complexity"],
+    relatedTerms: ["algorithm", "data-structure", "complexity"], relatedNodes: ["cs-os", "cs-network"],
     dailyTasks: [
       { day: 1, title: "复杂度分析：时间与空间",
         summary: "掌握时间与空间复杂度分析方法，学会用Big O notation评价算法优劣。", content: {
@@ -6563,7 +6563,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["理解进程与线程的区别", "掌握内存管理基本原理", "理解文件系统与IO模型"],
     relatedIntel: ["009-linux"],
     relatedTools: ["GCC"],
-    relatedTerms: ["process", "thread", "memory", "filesystem", "io"],
+    relatedTerms: ["process", "thread", "memory", "filesystem", "io"], relatedNodes: ["cs-algo", "cs-network"],
     dailyTasks: [
       { day: 1, title: "操作系统概述与体系结构",
         summary: "理解操作系统的核心功能与设计哲学，掌握Linux内核架构特点。", content: {
@@ -6780,7 +6780,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["掌握C语言核心语法", "深入理解指针和内存管理", "能编写嵌入式级别的高效代码"],
     relatedIntel: ["052-embedded-c", "140-pitfall-c-pointer-out-of-bounds"],
     relatedTools: ["GCC"],
-    relatedTerms: ["c-language", "pointer", "memory", "embedded"],
+    relatedTerms: ["c-language", "pointer", "memory", "embedded"], relatedNodes: ["embedded-rtos", "embedded-driver"],
     dailyTasks: [
       { day: 1, title: "C语言基础与开发环境",
         summary: "理解C语言特点与编译流程，搭建开发环境并完成第一个C程序。", content: {
@@ -6996,7 +6996,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["掌握FreeRTOS核心API", "理解任务调度与优先级", "能用信号量和队列实现任务间通信"],
     relatedIntel: ["009-linux"],
     relatedTools: ["FreeRTOS", "STM32CubeMX"],
-    relatedTerms: ["rtos", "freertos", "task", "semaphore", "queue"],
+    relatedTerms: ["rtos", "freertos", "task", "semaphore", "queue"], relatedNodes: ["embedded-c", "embedded-hal"],
     dailyTasks: [
       { day: 1, title: "实时操作系统概述",
         summary: "理解RTOS与通用OS的区别，掌握FreeRTOS的特点与实时系统基本概念。", content: {
@@ -7212,7 +7212,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["理解电路基本定律", "掌握常用电子器件特性", "能看懂和设计基础电路"],
     relatedIntel: ["054-elec-circuit", "070-elec-components", "111-pitfall-circuit"],
     relatedTools: ["LTspice"],
-    relatedTerms: ["circuit", "analog", "op-amp", "transistor"],
+    relatedTerms: ["circuit", "analog", "op-amp", "transistor"], relatedNodes: ["elec-signals", "elec-digital"],
     dailyTasks: [
       { day: 1, title: "电路基本定律",
         summary: "掌握电路基本组成与欧姆定律、基尔霍夫定律，建立电路分析的基础框架。", content: {
@@ -7463,7 +7463,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["理解信号分类与性质", "掌握傅里叶分析方法", "理解系统频率响应特性"],
     relatedIntel: ["055-elec-signals", "066-signals-basics"],
     relatedTools: ["MATLAB"],
-    relatedTerms: ["signal", "fourier", "laplace", "filter"],
+    relatedTerms: ["signal", "fourier", "laplace", "filter"], relatedNodes: ["elec-circuit", "signals-comm"],
     dailyTasks: [
       { day: 1, title: "信号与系统概述",
         summary: "掌握信号与系统的分类方法，理解LTI系统的核心特性与工程意义。", content: {
@@ -7714,7 +7714,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["理解通信系统基本模型", "掌握调制解调原理", "理解信道编码技术"],
     relatedIntel: ["056-signals-comm", "082-signals-wireless"],
     relatedTools: ["MATLAB"],
-    relatedTerms: ["modulation", "demodulation", "coding", "channel"],
+    relatedTerms: ["modulation", "demodulation", "coding", "channel"], relatedNodes: ["signals-dsp", "signals-wireless"],
     dailyTasks: [
       { day: 1, title: "通信系统基本模型", summary: "学习通信系统基本概念与架构，理解模拟通信和数字通信的特点差异。", content: {
           objective: "掌握通信系统的基本组成和主要性能指标，理解模拟通信与数字通信的区别，了解通信系统的发展历程和主要应用场景，建立通信系统的整体认知框架，为后续深入学习调制解调、信道编码等内容打下基础。",
@@ -7997,7 +7997,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["理解控制系统基本组成", "掌握PID控制器原理", "能分析系统稳定性"],
     relatedIntel: ["057-ctrl-pid", "068-ctrl-state-space", "142-pitfall-pid-tuning-oscillation"],
     relatedTools: ["MATLAB", "NumPy"],
-    relatedTerms: ["control", "pid", "feedback", "stability"],
+    relatedTerms: ["control", "pid", "feedback", "stability"], relatedNodes: ["ctrl-ros", "ctrl-servo"],
     dailyTasks: [
       { day: 1, title: "控制系统概述", summary: "学习自动控制基本概念与系统组成，理解开环与闭环控制的区别与特点。", content: {
           objective: "掌握自动控制系统的基本组成和工作原理，理解开环控制与闭环控制的本质区别，学会用框图表示控制系统，了解控制系统的基本性能要求（稳、准、快），建立控制理论的基本认知框架，为后续PID控制和系统分析打下基础。",
@@ -8214,7 +8214,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["掌握ROS2核心概念", "理解机器人导航原理", "能实现基本的机器人控制"],
     relatedIntel: ["058-ctrl-ros", "144-pitfall-h-bridge-shoot-through"],
     relatedTools: ["ROS2"],
-    relatedTerms: ["ros", "robot", "navigation", "slam"],
+    relatedTerms: ["ros", "robot", "navigation", "slam"], relatedNodes: ["ctrl-pid", "ctrl-plc"],
     dailyTasks: [
       { day: 1, title: "ROS2概述与安装",
         summary: "学习ROS2的基本概念、系统架构与安装方法，建立机器人软件开发的整体认知。", content: {
@@ -8441,7 +8441,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["理解电机工作原理", "掌握FOC矢量控制", "理解电力电子变换技术"],
     relatedIntel: ["059-elec-motor", "144-pitfall-h-bridge-shoot-through"],
     relatedTools: ["LTspice", "STM32CubeMX"],
-    relatedTerms: ["motor", "foc", "inverter", "pwm"],
+    relatedTerms: ["motor", "foc", "inverter", "pwm"], relatedNodes: ["electrical-power", "ctrl-servo"],
     dailyTasks: [
       { day: 1, title: "电机分类与工作原理",
         summary: "掌握电机的基本分类与工作原理，理解电磁转矩的产生机制与应用场景。", content: {
@@ -8732,7 +8732,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["理解TCP/IP协议栈", "掌握网络编程基础", "理解分布式系统概念"],
     relatedIntel: ["075-cs-network", "108-pitfall-network"],
     relatedTools: [],
-    relatedTerms: ["tcp-ip", "socket", "http", "dns", "routing"],
+    relatedTerms: ["tcp-ip", "socket", "http", "dns", "routing"], relatedNodes: ["cs-os", "cs-database"],
     dailyTasks: [
       { day: 1, title: "计算机网络概述",
         summary: "理解计算机网络的基本概念、分类和拓扑结构，掌握网络核心功能。", content: {
@@ -8949,7 +8949,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["理解关系数据库模型", "掌握SQL语言", "理解事务和并发控制"],
     relatedIntel: ["076-cs-database", "107-pitfall-db"],
     relatedTools: [],
-    relatedTerms: ["sql", "database", "transaction", "index", "nosql"],
+    relatedTerms: ["sql", "database", "transaction", "index", "nosql"], relatedNodes: ["cs-network"],
     dailyTasks: [
       { day: 1, title: "数据库系统概述",
         summary: "理解数据库系统的组成与数据模型演进，掌握关系数据库的核心概念。", content: {
@@ -9166,7 +9166,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["掌握常用通信协议", "理解驱动架构设计", "能编写外设驱动程序"],
     relatedIntel: ["077-embedded-driver", "097-pitfall-embedded"],
     relatedTools: ["STM32CubeMX"],
-    relatedTerms: ["gpio", "i2c", "spi", "uart", "driver"],
+    relatedTerms: ["gpio", "i2c", "spi", "uart", "driver"], relatedNodes: ["embedded-c", "embedded-hal"],
     dailyTasks: [
       { day: 1, title: "嵌入式驱动概述",
         summary: "理解嵌入式驱动的作用与分类，掌握驱动开发的核心原则和不同环境差异。", content: {
@@ -9382,7 +9382,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["理解HAL架构设计", "掌握跨平台移植方法", "能设计可复用的驱动框架"],
     relatedIntel: ["078-embedded-hal", "069-embedded-arduino"],
     relatedTools: ["STM32CubeMX"],
-    relatedTerms: ["hal", "bsp", "porting", "abstraction"],
+    relatedTerms: ["hal", "bsp", "porting", "abstraction"], relatedNodes: ["embedded-c", "embedded-rtos", "embedded-driver"],
     dailyTasks: [
       { day: 1, title: "硬件抽象层概述",
         summary: "理解HAL的设计思想与层次结构，掌握硬件抽象层在嵌入式系统中的作用。", content: {
@@ -9533,7 +9533,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["理解逻辑门和布尔代数", "掌握组合逻辑和时序逻辑设计", "能设计简单的数字系统"],
     relatedIntel: ["079-elec-digital", "111-pitfall-circuit"],
     relatedTools: ["LTspice"],
-    relatedTerms: ["logic-gate", "boolean", "flip-flop", "counter", "fsm"],
+    relatedTerms: ["logic-gate", "boolean", "flip-flop", "counter", "fsm"], relatedNodes: ["elec-circuit", "elec-pcb"],
     dailyTasks: [
       { day: 1, title: "数字电路概述",
         summary: "学习数字电路基本概念与分类，理解数字信号的特点和数字系统的优势。", content: {
@@ -9794,7 +9794,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["掌握原理图绘制", "理解PCB布局布线", "了解PCB设计规范"],
     relatedIntel: ["080-elec-pcb", "098-pitfall-hardware"],
     relatedTools: [],
-    relatedTerms: ["pcb", "schematic", "layout", "routing", "gerber"],
+    relatedTerms: ["pcb", "schematic", "layout", "routing", "gerber"], relatedNodes: ["elec-digital"],
     dailyTasks: [
       { day: 1, title: "PCB概述",
         summary: "学习PCB基本概念、结构组成与分类，了解PCB在电子系统中的核心作用。", content: {
@@ -9954,7 +9954,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["掌握数字滤波器设计", "理解FFT算法应用", "能实现实时信号处理"],
     relatedIntel: ["081-signals-dsp", "067-signals-filter-design", "143-pitfall-fft-spectral-leakage"],
     relatedTools: ["MATLAB", "NumPy"],
-    relatedTerms: ["dsp", "digital-filter", "fft", "convolution", "real-time"],
+    relatedTerms: ["dsp", "digital-filter", "fft", "convolution", "real-time"], relatedNodes: ["signals-comm", "signals-wireless"],
     dailyTasks: [
       { day: 1, title: "DSP概述", summary: "学习DSP基本概念、系统组成与核心优势，了解其在各领域的广泛应用场景。", content: {
           objective: "掌握DSP（数字信号处理）的基本概念与系统架构，理解ADC采样、数字处理、DAC输出的完整流程，认识DSP相比模拟处理的核心优势，并能举例说明DSP在音频、图像、通信、雷达、医疗等领域的实际应用，为后续深入学习建立整体认知框架。",
@@ -10237,7 +10237,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["理解无线信道特性", "掌握天线基本原理", "了解常见无线协议"],
     relatedIntel: ["082-signals-wireless", "056-signals-comm"],
     relatedTools: ["MATLAB"],
-    relatedTerms: ["antenna", "wireless", "wifi", "bluetooth", "channel"],
+    relatedTerms: ["antenna", "wireless", "wifi", "bluetooth", "channel"], relatedNodes: ["signals-comm", "signals-dsp"],
     dailyTasks: [
       { day: 1, title: "无线通信概述", summary: "学习无线通信系统概述与发展历程，掌握各代移动通信技术特点。", content: {
           objective: "理解无线通信的基本概念和系统组成，了解从1G到5G的移动通信发展历程和各代技术特点，掌握无线通信的关键技术领域和主要应用场景，建立对无线通信系统的整体认知，为后续深入学习各专项技术打下基础。",
@@ -10520,7 +10520,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["理解PLC工作原理", "掌握梯形图编程", "能设计简单的工业控制系统"],
     relatedIntel: ["083-ctrl-plc", "110-pitfall-control"],
     relatedTools: [],
-    relatedTerms: ["plc", "ladder", "industrial", "automation", "scada"],
+    relatedTerms: ["plc", "ladder", "industrial", "automation", "scada"], relatedNodes: ["ctrl-ros"],
     dailyTasks: [
       { day: 1, title: "PLC概述",
         summary: "学习PLC基本概念、组成结构与工作原理，了解PLC在工业自动化中的核心地位。", content: {
@@ -10747,7 +10747,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["理解伺服系统原理", "掌握伺服电机控制", "能设计运动控制系统"],
     relatedIntel: ["084-ctrl-servo", "110-pitfall-control"],
     relatedTools: ["MATLAB"],
-    relatedTerms: ["servo", "motion", "encoder", "position", "trajectory"],
+    relatedTerms: ["servo", "motion", "encoder", "position", "trajectory"], relatedNodes: ["ctrl-pid", "ctrl-ros"],
     dailyTasks: [
       { day: 1, title: "伺服系统概述",
         summary: "伺服系统：精确控制位置、速度、加速度的闭环控制系统。", content: {
@@ -10954,7 +10954,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["理解电力系统组成", "掌握电力生产原理", "了解配电系统结构"],
     relatedIntel: ["071-elec-power-systems", "070-elec-components"],
     relatedTools: ["LTspice", "MATLAB"],
-    relatedTerms: ["power-system", "generation", "transmission", "distribution", "grid"],
+    relatedTerms: ["power-system", "generation", "transmission", "distribution", "grid"], relatedNodes: ["elec-motor", "electrical-safety"],
     dailyTasks: [
       { day: 1, title: "电力系统概述",
         summary: "掌握电力系统基本组成与运行原理，理解从发电到用电的完整电能传输链条。", content: {
@@ -11244,7 +11244,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["理解电气安全规范", "掌握接地技术", "了解防雷保护方法"],
     relatedIntel: ["085-electrical-safety", "098-pitfall-hardware"],
     relatedTools: [],
-    relatedTerms: ["grounding", "earthing", "lightning", "safety", "protection"],
+    relatedTerms: ["grounding", "earthing", "lightning", "safety", "protection"], relatedNodes: ["electrical-power"],
     dailyTasks: [
       { day: 1, title: "电气安全概述",
         summary: "掌握电气安全基本概念与规范，理解触电类型与安全电压标准。", content: {
@@ -11442,7 +11442,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["理解 Self-Attention 和 Multi-Head Attention", "掌握 GPT/BERT/T5 三大预训练范式", "理解 Scaling Law 和涌现能力"],
     relatedIntel: ["001-transformer", "029-moe-mixture-of-experts", "033-long-context-rope"],
     relatedTools: ["HuggingFace"],
-    relatedTerms: ["transformer", "attention", "pre-training"],
+    relatedTerms: ["transformer", "attention", "pre-training"], relatedNodes: ["nlp-transformer", "llm-pretraining"],
     suggestions: {
       prerequisites: ["Transformer 架构理解", "深度学习基础"],
       nextSteps: ["LLM 预训练与数据配比", "LLM 微调与对齐"],
@@ -11587,7 +11587,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["理解预训练数据流水线", "掌握数据清洗和配比策略", "了解分布式训练（DDP/FSDP/DeepSpeed）"],
     relatedIntel: ["037-distributed-training", "040-data-annotation", "034-cuda-programming"],
     relatedTools: ["HuggingFace", "PyTorch"],
-    relatedTerms: ["pre-training", "tokenization", "distributed-training"],
+    relatedTerms: ["pre-training", "tokenization", "distributed-training"], relatedNodes: ["llm-fundamentals", "llm-finetune"],
     suggestions: {
       prerequisites: ["LLM 基础原理", "PyTorch 框架"],
       nextSteps: ["LLM 微调与对齐", "LLM 推理加速与部署"],
@@ -11732,7 +11732,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["理解 RAG 架构和流程", "掌握向量数据库和检索策略", "能独立构建 RAG 知识库系统"],
     relatedIntel: ["005-rag", "035-advanced-rag", "042-vector-database"],
     relatedTools: ["LangChain", "HuggingFace"],
-    relatedTerms: ["rag", "embedding", "vector-database"],
+    relatedTerms: ["rag", "embedding", "vector-database"], relatedNodes: ["llm-finetune", "llm-local-rag"],
     suggestions: {
       prerequisites: ["LLM 基础原理", "Python 编程基础"],
       nextSteps: ["Agent 与工具调用", "LLM 评估与安全"],
@@ -11877,7 +11877,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["理解 Agent 架构和 ReAct 范式", "掌握 Function Calling 和工具调用", "能构建多 Agent 协作系统"],
     relatedIntel: ["031-agentic-ai", "036-code-generation", "020-prompt-engineering"],
     relatedTools: ["LangChain", "HuggingFace"],
-    relatedTerms: ["agent", "function-calling", "react"],
+    relatedTerms: ["agent", "function-calling", "react"], relatedNodes: ["llm-prompt-engineering", "llm-evaluation"],
     suggestions: {
       prerequisites: ["RAG 检索增强生成", "提示工程基础"],
       nextSteps: ["LLM 评估与安全", "综合实战项目"],
@@ -12022,7 +12022,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     outcomes: ["掌握 LLM 评估指标和方法", "理解幻觉检测和缓解策略", "了解 LLM 安全防护和对齐技术"],
     relatedIntel: ["038-llm-security", "039-model-evaluation", "027-rlhf-alignment"],
     relatedTools: ["HuggingFace", "MLflow"],
-    relatedTerms: ["evaluation", "hallucination", "alignment"],
+    relatedTerms: ["evaluation", "hallucination", "alignment"], relatedNodes: ["llm-finetune", "llm-agent"],
     suggestions: {
       prerequisites: ["LLM 微调与对齐", "LLM 基础原理"],
       nextSteps: ["综合实战项目"],

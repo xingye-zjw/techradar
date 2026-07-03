@@ -173,6 +173,8 @@ export interface RoadmapNode {
   relatedTools?: string[];
   /** 关联术语 slug 列表 */
   relatedTerms?: string[];
+  /** 关联节点 ID 列表（用于导航） */
+  relatedNodes?: string[];
   /** 学习建议 */
   suggestions?: LearningSuggestion;
 }
