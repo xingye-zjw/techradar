@@ -1,4 +1,11 @@
 import dynamic from "next/dynamic";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "学习路线图 - TechRadar 极客雷达",
+  description: "AI 驱动的可视化技术学习路线图，覆盖 CV、NLP、LLM、DevOps、数学、嵌入式、电子等 12 个技术方向。",
+  keywords: ["技术路线图", "学习路径", "AI学习", "计算机视觉", "自然语言处理", "大语言模型"],
+};
 
 const RoadmapGraph = dynamic(
   () => import("@/components/radar/RoadmapGraph").then((mod) => mod.RoadmapGraph),

@@ -1,8 +1,21 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { RecentList } from "@/components/RecentList";
+import { ProgressOverview } from "@/components/ProgressOverview";
 import { getAllTerms } from "@/lib/glossary";
 import { getAllProjects } from "@/lib/practice";
 import { getAllIntelCards } from "@/lib/intel";
+
+export const metadata: Metadata = {
+  title: "TechRadar 极客雷达 - AI 驱动的硬核技术学习导航",
+  description: "为大学生和 AI 开发者打造的开源实战导航系统：可视化学习路线图、深度技术情报、精选工具箱、踩坑避雷指南、专业术语表和实战项目。",
+  keywords: ["TechRadar", "AI学习", "技术路线图", "开源实战", "深度学习", "大语言模型", "LLM", "CV", "NLP"],
+  openGraph: {
+    title: "TechRadar 极客雷达",
+    description: "AI 驱动的硬核技术学习导航",
+    type: "website",
+  },
+};
 
 // 首页展示的热门术语（精选 6 个）
 const FEATURED_TERMS = ["transformer", "docker", "lora", "cnn", "pytorch", "git"];
@@ -50,6 +63,11 @@ export default function Home() {
       </section>
 
       <section className="max-w-[860px] mx-auto px-4 sm:px-6 py-12">
+        {/* 学习进度概览 */}
+        <div className="mb-8">
+          <ProgressOverview />
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Link
             href="/roadmap"
