@@ -1,3 +1,24 @@
+---
+title: "计算机视觉踩坑合集"
+category: computer-vision
+difficulty: intermediate
+duration: 30分钟
+summary: 涵盖 4 个常见踩坑：YOLO 训练时数据标注格式错误、图像增强导致标注错位、预训练模型在自定义数据上效果差、小目标检测效果差，每个均附快速修复与排查步骤。
+takeaways:
+  - 掌握「计算机视觉踩坑合集」中各问题的快速识别方法
+  - 理解每个踩坑的根因分析和排查步骤
+  - 学会标准化的修复流程和预防措施
+relatedIntel:
+  - 006-cnn-basics
+  - 002-yolo
+  - 014-onnx
+tags:
+  - 踩坑
+  - 计算机视觉
+  - 训练
+  - 部署
+---
+
 [计算机视觉]
 
 ## YOLO 训练时数据标注格式错误

@@ -3,12 +3,15 @@ title: 多进程 DataLoader (num_workers > 0) 卡死
 category: deep-learning
 difficulty: intermediate
 duration: 30分钟
-summary: 设置 num_workers > 0 后程序卡死无响应，这是 Windows 用户的高频问题。根本原因是 Windows 的多进程启动方式与 Linux 不同，需要特殊处理。
+summary: 聚焦单点问题：PyTorch DataLoader 多进程卡死，涵盖 Windows spawn 启动方式、num_workers=0、if __name__=='__main__' 保护、CUDA 不支持 fork 等排查与修复方案。
 takeaways:
   - 快速识别「多进程 DataLoader (num_workers > 0) 卡死」的典型症状
-  - 掌握根因分析：Windows 默认使用 spawn 方式启动子进程，而 CUDA 不支持 fork。多进程 Dat...
+  - 理解该问题的根因分析和标准排查步骤
   - 学会分步排查和解决问题的标准化流程
   - 了解预防措施，避免下次踩同样的坑
+relatedIntel:
+  - 011-pytorch
+  - 092-pitfall-python
 tags:
   - 踩坑
   - 避坑指南

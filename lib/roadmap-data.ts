@@ -7891,6 +7891,69 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
   },
 
   // =====================================================
+  // Node: signals-basics - 信号与系统基础
+  // =====================================================
+  {
+    id: "signals-basics",
+    name: "信号与系统基础",
+    track: "signals",
+    duration: "2周",
+    difficulty: "beginner",
+    prerequisites: ["math-linear-algebra"],
+    status: "available",
+    position: { x: 50, y: 0 },
+    description: "连续/离散信号 / 采样定理 / 卷积 / LTI系统 / 傅里叶变换入门",
+    outcomes: ["理解连续和离散信号的区别", "掌握采样定理和奈奎斯特频率", "能用卷积运算分析LTI系统"],
+    relatedIntel: ["066-signals-basics", "055-elec-signals"],
+    relatedTools: ["matlab"],
+    relatedTerms: ["signal-processing", "sampling-theorem", "convolution", "lti-system", "fourier-transform"], relatedNodes: ["signals-comm", "signals-dsp", "math-linear-algebra"],
+    suggestions: {
+      prerequisites: ["线性代数基础"],
+      nextSteps: ["通信原理", "DSP数字信号处理"],
+      learningPath: ["信号处理路径"],
+    },
+
+    dailyTasks: [
+      { day: 1, title: "连续与离散信号基础", summary: "学习连续信号与离散信号的基本概念、分类与典型信号，建立信号时域描述的直观认识。", content: {
+          objective: "掌握连续信号和离散信号的基本概念与分类，理解确定信号与随机信号、周期信号与非周期信号的区别，熟悉典型信号（正弦、指数、阶跃、冲激）的数学表示与物理意义，建立信号时域分析的基础认知框架。",
+          key_points: [
+            "连续信号与离散信号：连续信号自变量取值连续（如模拟电压），离散信号自变量取离散（如采样序列），两者是信号处理的基本分类",
+            "确定信号与随机信号：确定信号可用确定函数表示，随机信号需用统计量描述，工程中噪声多为随机信号",
+            "周期信号：满足 x(t)=x(t+T) 的信号，周期 T 是基本参数，正弦信号是最典型的周期信号",
+            "典型信号：正弦信号（通信载波基础）、指数信号（系统响应常见）、阶跃信号（电路开关）、冲激信号（系统冲激响应分析）",
+            "信号运算：时移、尺度变换、反褶、相加相乘，是分析复杂信号的基础工具",
+            "与AI关联：AI中的时序数据本质上可看作离散信号，理解信号运算有助于处理时间序列、音频等数据"
+          ],
+          practice: "动手练习：1）用 Python（numpy+matplotlib）生成并画出连续正弦信号、离散正弦序列、指数衰减信号、单位阶跃信号、单位冲激信号的波形；2）对一个正弦信号进行时移、尺度压缩（频率升高）和反褶操作，画出变换前后的波形对比；3）构造两个信号相加和相乘的例子，观察合成信号的波形特征。"
+        }, duration: "2小时", resources: [{ title: "信号与系统导论", url: "https://www.allaboutcircuits.com/textbook/alternating-current/chpt-1/what-is-alternating-current-ac/", required: true, type: "doc", source: "official" }, { title: "3Blue1Brown 傅里叶变换可视化", url: "https://www.youtube.com/watch?v=spUNpyF58BY", required: false, type: "video", source: "youtube" }, { title: "numpy 信号生成教程", url: "https://numpy.org/doc/stable/reference/generated/numpy.sin.html", required: false, type: "doc", source: "official" }], checkpoint: "能画出5种典型信号的波形，并解释连续信号与离散信号的区别" },
+      { day: 2, title: "采样定理与卷积运算", summary: "学习采样定理与奈奎斯特频率，掌握卷积运算的定义、性质及在 LTI 系统分析中的应用。", content: {
+          objective: "理解采样定理的物理意义和奈奎斯特频率的概念，掌握卷积运算的定义、图解法和基本性质（交换律、结合律、分配律），能用卷积分析线性时不变（LTI）系统的零状态响应，建立信号通过系统的卷积分析思想。",
+          key_points: [
+            "采样定理（奈奎斯特采样定理）：采样频率必须大于信号最高频率的2倍（fs > 2*fmax），否则会发生频谱混叠，这是连续信号数字化的核心约束",
+            "奈奎斯特频率：fs/2，是采样系统能无混叠恢复的最高频率，超过该频率的成分会混叠到基带造成失真",
+            "卷积定义：x(t)*h(t) = ∫x(τ)h(t-τ)dτ，离散卷积 x[n]*h[n] = Σx[k]h[n-k]，是信号与系统分析的核心运算",
+            "卷积性质：交换律、结合律、分配律，与冲激函数卷积等于原信号（x*δ=x），冲激函数是卷积运算的单位元",
+            "LTI系统：线性（满足叠加原理）+ 时不变（参数不随时间变化），其零状态响应等于输入与冲激响应的卷积 y=x*h",
+            "抗混叠滤波：采样前用低通滤波器滤除高于奈奎斯特频率的成分，是 ADC 系统的必备环节"
+          ],
+          practice: "动手练习：1）用 Python 生成一个包含 50Hz 和 200Hz 成分的信号，分别用 500Hz 和 100Hz 采样，画出频谱观察 200Hz 成分在 100Hz 采样下的混叠现象；2）手动计算两个矩形脉冲 [1,1,1] 和 [1,1] 的离散卷积，并用 numpy.convolve 验证结果；3）给定一个 LTI 系统的冲激响应 h[n]=0.5^n（n≥0），计算输入 x[n]=δ[n]+δ[n-1] 的输出 y[n]，画出输出波形。"
+        }, duration: "2.5小时", resources: [{ title: "采样定理详解", url: "https://en.wikipedia.org/wiki/Nyquist%E2%80%93Shannon_sampling_theorem", required: true, type: "article", source: "official" }, { title: "卷积运算可视化", url: "https://commons.wikimedia.org/wiki/File:Convolution_of_box_signal_with_itself2.gif", required: false, type: "article", source: "official" }, { title: "MATLAB 信号处理工具箱", url: "https://www.mathworks.com/help/signal/ug/convolution-and-correlation.html", required: false, type: "doc", source: "official" }], checkpoint: "能解释采样定理和奈奎斯特频率，手算简单序列的卷积结果" },
+      { day: 3, title: "LTI系统与傅里叶变换入门", summary: "学习 LTI 系统的频域分析思想，理解傅里叶变换的基本概念及其在信号频谱分析中的作用。", content: {
+          objective: "理解线性时不变系统的频域分析思想，掌握傅里叶变换的基本概念（时域到频域的映射），理解幅度谱和相位谱的物理意义，了解傅里叶变换在信号频谱分析和滤波中的应用，为后续通信原理和 DSP 学习打下频域基础。",
+          key_points: [
+            "LTI系统频域分析：正弦信号通过LTI系统后频率不变，仅幅度和相位改变，因此可用频率响应 H(jω) 描述系统特性",
+            "傅里叶变换：将时域信号分解为不同频率正弦分量的叠加，X(f)=∫x(t)e^{-j2πft}dt，是信号频域分析的核心工具",
+            "幅度谱与相位谱：|X(f)| 反映各频率分量的强度，arg(X(f)) 反映各分量的相位，两者共同完整描述信号",
+            "常用变换对：冲激↔常数、正弦↔冲激对、矩形脉冲↔sinc函数、掌握这些基本对应关系是频域分析的基础",
+            "傅里叶变换性质：线性、时移（相位谱线性变化）、频移、卷积定理（时域卷积↔频域相乘），卷积定理是系统分析的关键",
+            "频谱分析应用：通过FFT观察信号的频率成分，是音频处理、振动分析、通信调制识别等领域的通用手段"
+          ],
+          practice: "动手练习：1）用 Python 的 numpy.fft 对一个 50Hz+120Hz 叠加的信号做FFT，画出幅度谱，验证频率分量位置；2）构造一个矩形脉冲信号，计算其傅里叶变换，画出幅度谱（应为sinc形状），观察脉冲宽度与频谱宽度的反比关系；3）给定低通滤波器频率响应 H(f)=1（|f|<100Hz），用频域相乘的方法滤除信号中的高频成分，验证卷积定理。"
+        }, duration: "2.5小时", resources: [{ title: "傅里叶变换入门", url: "https://www.allaboutcircuits.com/textbook/alternating-current/chpt-7/fourier-analysis/", required: true, type: "doc", source: "official" }, { title: "3Blue1Brown 傅里叶级数", url: "https://www.youtube.com/watch?v=r6sGWTCMzi2", required: false, type: "video", source: "youtube" }, { title: "numpy.fft 官方文档", url: "https://numpy.org/doc/stable/reference/routines.fft.html", required: false, type: "doc", source: "official" }], checkpoint: "能用 FFT 分析信号的频谱，解释幅度谱和相位谱的物理意义" }
+    ]
+  },
+
+  // =====================================================
   // Node: signals-comm - 通信原理
   // =====================================================
   {
@@ -11511,6 +11574,69 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
   },
 
   // =====================================================
+  // Node: electrical-power-electronics - 电力电子技术
+  // =====================================================
+  {
+    id: "electrical-power-electronics",
+    name: "电力电子技术",
+    track: "electrical",
+    duration: "2周",
+    difficulty: "advanced",
+    prerequisites: ["elec-motor"],
+    status: "locked",
+    position: { x: 340, y: 0 },
+    description: "整流器 / 逆变器 / PWM / 开关电源 / 功率因数校正 / 电力电子器件",
+    outcomes: ["掌握整流和逆变原理", "理解PWM调制技术", "能分析开关电源拓扑"],
+    relatedIntel: ["059-elec-motor"],
+    relatedTools: ["matlab", "ltspice"],
+    relatedTerms: ["power-electronics", "pwm", "inverter", "rectifier", "switching-power"], relatedNodes: ["elec-motor", "electrical-power", "electrical-safety"],
+    suggestions: {
+      prerequisites: ["电机控制与电力电子"],
+      nextSteps: ["电力系统基础", "电气安全"],
+      learningPath: ["电气工程路径"],
+    },
+
+    dailyTasks: [
+      { day: 1, title: "电力电子器件与整流电路", summary: "学习晶闸管、MOSFET、IGBT等功率器件特性，掌握不可控、半控、全控整流电路原理。", content: {
+          objective: "掌握电力电子器件（二极管、晶闸管、MOSFET、IGBT）的工作原理与开关特性，理解不可控、半控、全控整流电路的工作原理与波形分析，建立电力电子变流的基本概念，为后续逆变和PWM技术学习打下基础。",
+          key_points: [
+            "功率二极管：不可控器件，正向导通反向截止，用于整流，开关频率低，恢复时间影响高频应用",
+            "晶闸管（SCR）：半控型器件，门极触发导通后需电流过零关断，用于相控整流、交流调压，大功率低频应用",
+            "MOSFET与IGBT：全控型器件，MOSFET开关频率高适合低压高频，IGBT兼顾功率与频率用于中高压大功率场合",
+            "不可控整流（二极管整流）：单相桥式、三相桥式，输出直流电压固定不可调，结构简单谐波大",
+            "相控整流（晶闸管整流）：通过控制触发角α调节输出直流电压，α越大输出越低，但功率因数随α增大而下降",
+            "整流谐波：相控整流产生5、7、11次等谐波，污染电网，需要滤波器或PFC电路治理"
+          ],
+          practice: "动手练习：1）用 LTspice 仿真单相桥式二极管整流电路，输入220V交流，输出接阻性负载，观察输出电压波形和纹波；2）仿真单相桥式晶闸管全控整流电路，分别设置触发角 α=30°、60°、90°，观察输出直流电压平均值的变化，验证 Vd=0.9*U2*(1+cosα)/2；3）对比二极管整流和晶闸管整流的输入电流波形，用 FFT 分析谐波含量差异。"
+        }, duration: "2.5小时", resources: [{ title: "电力电子技术基础", url: "https://www.allaboutcircuits.com/textbook/semiconductors/chpt-2/rectifier-circuits/", required: true, type: "doc", source: "official" }, { title: "IGBT 工作原理", url: "https://www.infineon.com/cms/en/product/power/igbt/", required: false, type: "article", source: "official" }, { title: "LTspice 仿真教程", url: "https://www.analog.com/en/resources/technical-articles/ltspice-getting-started.html", required: false, type: "doc", source: "official" }], checkpoint: "能仿真单相整流电路，解释晶闸管触发角与输出电压的关系" },
+      { day: 2, title: "逆变电路与PWM调制技术", summary: "学习逆变电路拓扑与PWM调制方法，掌握SPWM、SVPWM原理及其在电机驱动与新能源并网中的应用。", content: {
+          objective: "理解逆变电路（直流变交流）的工作原理和电压型/电流型逆变器的区别，掌握PWM调制技术（SPWM、SVPWM）的原理与实现，理解死区时间设置和谐波抑制方法，能够分析逆变器在电机驱动、UPS、新能源并网中的典型应用。",
+          key_points: [
+            "逆变原理：直流→交流，通过功率器件的高频开关组合输出交流波形，是电机驱动、UPS、光伏并网的核心",
+            "电压型逆变器（VSI）：直流侧接大电容电压稳定，输出方波或PWM波，应用最广；电流型逆变器（CSI）直流侧接大电感",
+            "SPWM（正弦脉宽调制）：用正弦波作为调制波与三角载波比较生成开关信号，输出电压基波幅值与调制比成正比",
+            "SVPWM（空间矢量PWM）：将三相电压合成空间矢量，利用6个有效矢量+零矢量合成任意参考矢量，直流利用率比SPWM高15%",
+            "死区时间：上下桥臂开关切换间设置死区防止直通短路，但会引入输出电压畸变，需要补偿",
+            "并网逆变器：需锁相环（PLL）跟踪电网相位，控制输出电流与电网电压同频同相，实现单位功率因数并网"
+          ],
+          practice: "动手练习：1）用 MATLAB/Simulink 搭建单相全桥逆变器，采用双极性 SPWM 调制（载波频率5kHz，调制比0.8），观察输出电压波形和频谱；2）搭建三相电压型逆变器，分别用 SPWM 和 SVPWM 调制，对比输出线电压基波幅值（SVPWM应高约15%）；3）设置死区时间2μs，观察输出电压畸变，尝试加入死区补偿算法改善波形质量。"
+        }, duration: "3小时", resources: [{ title: "PWM 技术详解", url: "https://www.ti.com/lit/an/slua079/slua079.pdf", required: true, type: "doc", source: "official" }, { title: "SVPWM 原理动画", url: "https://www.mathworks.com/help/sps/ref/svpwm.html", required: false, type: "article", source: "official" }, { title: "MATLAB 电力电子仿真", url: "https://www.mathworks.com/help/sps/power-electronics.html", required: false, type: "doc", source: "official" }], checkpoint: "能用 SPWM/SVPWM 调制仿真三相逆变器，解释 SVPWM 直流利用率更高的原因" },
+      { day: 3, title: "开关电源与功率因数校正", summary: "学习 Buck/Boost/Buck-Boost 等开关电源拓扑与 PFC 技术，掌握软开关与效率优化方法。", content: {
+          objective: "掌握 Buck、Boost、Buck-Boost 三种基本 DC-DC 开关电源拓扑的工作原理、电感伏秒平衡分析与参数设计，理解功率因数校正（PFC）的必要性及 Boost PFC 电路原理，了解软开关技术（ZVS/ZCS）在提升效率降低 EMI 中的作用。",
+          key_points: [
+            "Buck 降压：输出电压低于输入，D=Vo/Vi（D为占空比），电感伏秒平衡是分析的核心工具",
+            "Boost 升压：输出电压高于输入，Vo=Vi/(1-D)，常用于PFC和光伏MPPT前级",
+            "Buck-Boost 极性反相：Vo=-D/(1-D)*Vi，可升可降但输出极性反转，常用于反激式电源",
+            "CCM与DCM：连续电流模式纹波小、器件应力大，断续电流模式纹波大但二极管无反向恢复损耗",
+            "PFC功率因数校正：整流后加 Boost PFC 迫使输入电流跟踪输入电压正弦波形，将功率因数从0.6提升到0.99以上，满足谐波标准",
+            "软开关：ZVS零电压开通、ZCS零电流关断，利用LC谐振实现开关管在零电压/零电流下切换，降低开关损耗和EMI，LLC谐振变换器是典型应用"
+          ],
+          practice: "动手练习：1）用 LTspice 仿真 Buck 变换器：输入24V、输出12V/1A、开关频率100kHz，计算电感量和电容量，观察电感电流连续与断续两种模式；2）仿真 Boost PFC 电路，输入220V交流整流后接 Boost PFC，控制环让输入电流跟踪输入电压正弦，观察校正前后输入电流波形和功率因数变化；3）对比硬开关和 ZVS 软开关电路的开关管电压电流波形和开关损耗，量化效率提升。"
+        }, duration: "3小时", resources: [{ title: "开关电源拓扑详解", url: "https://www.ti.com/power-management/dc-dc-converters/overview.html", required: true, type: "doc", source: "official" }, { title: "PFC 技术应用笔记", url: "https://www.onsemi.com/pub/Collateral/HBD853-D.PDF", required: false, type: "book", source: "official" }, { title: "LLC 谐振变换器教程", url: "https://www.infineon.com/dgdl/Infineon-LLC_resonant_converter-ApplicationNotes-v01_00-EN.pdf", required: false, type: "article", source: "official" }], checkpoint: "能仿真 Buck/Boost 变换器，用伏秒平衡法计算占空比，解释 PFC 的作用" }
+    ]
+  },
+
+  // =====================================================
   // Node: electrical-safety - 电气安全与保护
   // =====================================================
   {
@@ -12438,6 +12564,267 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
           deep_dive: "深入理解实战：评估一个开源 LLM的进阶话题：从原理到实践，实战：评估一个开源 LLM是LLM开发中的重要环节。让我们深入探索：1）技术演进：了解实战：评估一个开源 LLM技术的发展历程和最新进展；2）最佳实践：总结行业内实战：评估一个开源 LLM的成熟方法论和常见模式；3）踩坑经验：认识实战：评估一个开源 LLM实践中常见的陷阱和解决方案；4）与AI结合：思考实战：评估一个开源 LLM如何与其他AI技术协同工作，创造更大价值。持续学习和实践是掌握实战：评估一个开源 LLM的关键。"
         }, duration: "3小时", resources: [R_HF_COURSE, R_HF_TRANSFORMERS], checkpoint: "能完成 LLM 评估并生成报告" },
     ],
+  },  {
+    id: "signals-antenna",
+    name: "天线原理与设计",
+    track: "signals",
+    duration: "2-3周",
+    prerequisites: ["signals-comm", "signals-wireless"],
+    status: "locked",
+    difficulty: "intermediate",
+    description: "天线是无线通信系统的关键接口，本节点涵盖天线基础参数、类型选择、辐射模型与设计方法，帮助你理解从理论到工程实践的天线设计全流程。",
+    outcomes: ["理解天线增益、方向图、驻波比、带宽等核心参数", "掌握偶极子、单极子、贴片、阵列天线等常见类型", "学会使用 NEC/S参数 进行天线仿真", "能根据频段和应用场景选择合适天线"],
+    dailyTasks: [
+      {
+        day: 1,
+        title: "电磁辐射基础与天线参数",
+        summary: "理解电磁波辐射原理，掌握增益、方向图、驻波比等核心参数定义",
+        content: {
+          objective: "本节学习麦克斯韦方程组与电磁辐射原理，掌握天线核心参数（增益、方向图、驻波比、带宽、极化）的物理意义与计算方法。",
+          key_points: ["电磁辐射机理与近场/远场区别", "增益(dBi/dBd)与方向性系数", "驻波比(VSWR)与回波损耗", "极化方式与带宽定义"],
+          practice: "计算半波偶极子天线的增益和方向性系数，绘制 E 面和 H 面方向图。",
+          deep_dive: "天线增益不仅取决于方向性，还与效率有关；实际工程中 VSWR<2 通常被视为可接受范围。",
+        },
+        duration: "2小时",
+        checkpoint: "能独立计算天线增益和 VSWR，正确绘制方向图",
+      },
+      {
+        day: 2,
+        title: "常见天线类型与特性",
+        summary: "掌握偶极子、单极子、贴片、喇叭、阵列天线的结构与辐射特性",
+        content: {
+          objective: "本节学习各类天线的结构原理、辐射特性和适用频段，理解不同天线类型在通信系统中的选型依据。",
+          key_points: ["半波偶极子与单极子天线", "微带贴片天线设计", "喇叭天线与抛物面天线", "阵列天线与波束扫描"],
+          practice: "针对 2.4GHz WiFi 应用，比较偶极子、贴片和八木天线的优缺点并给出选型建议。",
+          deep_dive: "阵列天线通过调节各单元相位实现波束扫描，是 5G Massive MIMO 的技术基础。",
+        },
+        duration: "2小时",
+        checkpoint: "能说出 4 种天线类型的结构和适用场景，完成选型练习",
+      },
+      {
+        day: 3,
+        title: "天线仿真与 S 参数分析",
+        summary: "使用 NEC 或 CST/HFSS 进行天线建模仿真，分析 S11、远场方向图",
+        content: {
+          objective: "本节使用天线仿真工具建立天线模型，运行仿真并分析 S 参数、远场方向图、增益等关键指标。",
+          key_points: ["NEC/CST/HFSS 工具基础", "天线几何建模与馈电设置", "S11 参数与谐振频率分析", "远场方向图与增益提取"],
+          practice: "在仿真工具中建模一个 2.4GHz 贴片天线，仿真 S11<-10dB 带宽和方向图。",
+          deep_dive: "仿真中网格密度和边界设置直接影响精度，FDTD 与 FEM 方法在宽带仿真中各有优势。",
+        },
+        duration: "3小时",
+        checkpoint: "独立完成贴片天线仿真，S11 谐振频率偏差<5%",
+      },
+      {
+        day: 4,
+        title: "阻抗匹配与天线测量",
+        summary: "掌握天线阻抗匹配网络设计，使用网络分析仪测量天线参数",
+        content: {
+          objective: "本节学习天线阻抗匹配原理（LC 网络、巴伦、阻抗变换器），并使用矢量网络分析仪测量天线的 S 参数和辐射特性。",
+          key_points: ["阻抗匹配网络设计（L型、π型）", "巴伦与平衡-不平衡转换", "矢量网络分析仪校准与测量", "远场测量与暗室基础"],
+          practice: "设计一个 LC 匹配网络将天线阻抗匹配到 50Ω，用网络分析仪验证 VSWR。",
+          deep_dive: "实际天线受周围环境和地平面影响显著，测量时需考虑人体效应和近场干扰。",
+        },
+        duration: "3小时",
+        checkpoint: "完成阻抗匹配设计，实测 VSWR<2 且与仿真结果一致",
+      },
+      {
+        day: 5,
+        title: "天线系统综合设计",
+        summary: "完成一个完整的天线系统设计项目，从需求分析到仿真验证",
+        content: {
+          objective: "本节综合运用所学知识，完成一个面向实际通信需求的天线系统设计，包含选型、仿真、匹配和性能评估。",
+          key_points: ["需求分析与天线选型", "全链路仿真与优化", "匹配网络设计与验证", "设计报告撰写"],
+          practice: "设计一个 5.8GHz 数据链路天线，要求增益>8dBi、VSWR<2、带宽>200MHz，完成仿真报告。",
+          deep_dive: "实际工程中天线设计需考虑封装效应、温度漂移和量产一致性，这是从原型到产品的关键差距。",
+        },
+        duration: "4小时",
+        checkpoint: "设计报告完整，仿真指标达标，能独立回答设计决策理由",
+      },
+    ],
+    relatedIntel: ["082-signals-wireless", "066-signals-basics"],
+    relatedTools: ["matlab"],
+    relatedTerms: ["antenna", "电磁波", "辐射方向图", "阻抗匹配"],
+    relatedNodes: ["signals-wireless", "signals-comm", "signals-dsp"],
+    suggestions: {
+      prerequisites: ["通信原理", "DSP 数字信号处理"],
+      nextSteps: ["软件无线电 SDR", "射频电路设计"],
+      learningPath: ["signals-basics → signals-comm → signals-wireless → signals-antenna"],
+    },
   },
+  {
+    id: "electrical-relay",
+    name: "继电保护与电力系统自动化",
+    track: "electrical",
+    duration: "2-3周",
+    prerequisites: ["electrical-power", "electrical-safety"],
+    status: "locked",
+    difficulty: "advanced",
+    description: "继电保护是电力系统安全运行的最后一道防线，本节点涵盖保护原理、继电器配置、故障检测、自动化装置与 SCADA 系统，帮助你掌握电力系统保护与监控全链路。",
+    outcomes: ["理解过流、差动、距离、方向保护原理", "掌握继电器整定计算与配置方法", "学会故障分析与保护配合", "了解 SCADA/EMS 电力监控系统"],
+    dailyTasks: [
+      {
+        day: 1,
+        title: "继电保护基础与保护原理",
+        summary: "理解电力系统故障类型，掌握过流、差动、距离、方向保护原理",
+        content: {
+          objective: "本节学习电力系统短路故障分类，掌握四种基本保护原理（过流、差动、距离、方向）的动作逻辑与整定原则。",
+          key_points: ["短路故障类型与分析", "过流保护（瞬时/限时/反时限）", "差动保护原理与制动特性", "距离保护与阻抗测量"],
+          practice: "计算一条 10kV 线路过流保护的整定值，确定动作时间和灵敏度系数。",
+          deep_dive: "差动保护利用基尔霍夫电流定律实现保护区内外故障判别，是变压器和母线的主保护。",
+        },
+        duration: "2小时",
+        checkpoint: "能独立完成过流保护整定计算，解释差动保护制动比含义",
+      },
+      {
+        day: 2,
+        title: "继电器配置与保护配合",
+        summary: "掌握继电器选型、整定计算与保护区间配合方法",
+        content: {
+          objective: "本节学习微机继电保护装置的硬件架构，掌握保护配合原则（时间配合、电流配合、逻辑配合）和整定流程。",
+          key_points: ["微机保护装置硬件架构", "保护配合原则（阶梯原则）", "CT/PT 选型与误差分析", "整定计算实例"],
+          practice: "为一个三段式辐射状网络配置过流保护，绘制时间-电流配合曲线。",
+          deep_dive: "保护配合的核心是确保故障由最近的保护装置切除，上游装置作为后备保护，需考虑级差时间和灵敏度配合。",
+        },
+        duration: "2小时",
+        checkpoint: "完成三段式保护配合方案，时间级差 0.3-0.5s，灵敏度≥1.5",
+      },
+      {
+        day: 3,
+        title: "故障分析与仿真验证",
+        summary: "使用 MATLAB/ETAP 仿真电力系统故障，验证保护方案正确性",
+        content: {
+          objective: "本节使用仿真工具建立电力系统模型，模拟各类故障，验证保护方案的动作正确性和选择性。",
+          key_points: ["MATLAB Simulink 电力系统建模", "故障注入与暂态分析", "保护动作时序验证", "仿真结果与整定对比"],
+          practice: "在 Simulink 中搭建一个含 3 条线路的 35kV 系统，模拟单相接地和三相短路故障，验证保护动作。",
+          deep_dive: "暂态故障中的谐波分量和直流分量会影响 CT 传变特性，仿真时需考虑 CT 饱和对保护的影响。",
+        },
+        duration: "3小时",
+        checkpoint: "仿真中保护装置正确动作，故障切除时间<100ms，选择性满足要求",
+      },
+      {
+        day: 4,
+        title: "SCADA 与电力系统自动化",
+        summary: "掌握 SCADA/EMS 系统架构，了解远程监控与自动重合闸",
+        content: {
+          objective: "本节学习 SCADA 系统在电力监控中的应用，掌握自动重合闸、备自投、低频减载等自动装置原理。",
+          key_points: ["SCADA 系统架构与通信协议（IEC 61850）", "自动重合闸(ARC)原理与配置", "备用电源自动投入(BZT)", "低频减载(UFLS)方案"],
+          practice: "配置一个架空线路的三相重合闸方案，设置重合闸时间和闭锁逻辑。",
+          deep_dive: "IEC 61850 标准实现了变电站设备的互操作性，GOOSE 报文可实现毫秒级保护信息传输。",
+        },
+        duration: "3小时",
+        checkpoint: "能设计重合闸方案，解释 SCADA 系统的四遥功能",
+      },
+      {
+        day: 5,
+        title: "综合项目：变电站保护设计",
+        summary: "完成一个完整变电站的保护方案设计，含主保护、后备保护和自动化",
+        content: {
+          objective: "本节综合运用所学知识，完成一个 110kV 变电站的保护方案设计，涵盖主变保护、线路保护和自动化装置配置。",
+          key_points: ["变电站一次系统分析", "主变保护配置（差动+瓦斯+过流）", "线路保护与自动重合闸", "整定计算书与设计报告"],
+          practice: "完成 110kV 变电站保护配置图、整定计算书，包含主变差动保护、110kV 线路距离保护和 10kV 出线过流保护。",
+          deep_dive: "实际工程中保护方案需通过动模试验和现场传动验证，智能化变电站还涉及数字采样和光纤通信。",
+        },
+        duration: "4小时",
+        checkpoint: "设计报告完整，保护配置合理，整定计算正确，方案能通过审查",
+      },
+    ],
+    relatedIntel: ["071-elec-power-systems", "085-electrical-safety"],
+    relatedTools: ["matlab"],
+    relatedTerms: ["scada", "power-system", "signal", "control-system"],
+    relatedNodes: ["electrical-power", "electrical-safety", "electrical-power-electronics"],
+    suggestions: {
+      prerequisites: ["电力系统基础", "电气安全与保护"],
+      nextSteps: ["智能电网", "微电网技术"],
+      learningPath: ["electrical-power → electrical-safety → electrical-relay"],
+    },
+  },
+  {
+    id: "elec-fpga",
+    name: "FPGA 与数字系统设计",
+    track: "electronics",
+    duration: "3-4周",
+    prerequisites: ["elec-digital", "elec-pcb"],
+    status: "locked",
+    difficulty: "advanced",
+    description: "FPGA 是高性能数字系统的核心，本节点涵盖 Verilog/VHDL 硬件描述语言、时序约束、状态机设计、IP 核集成与仿真验证，帮助你掌握从 RTL 到比特流的 FPGA 全流程开发。",
+    outcomes: ["掌握 Verilog/SystemVerilog 硬件描述语言", "理解时序约束、时钟域交叉、亚稳态处理", "学会状态机、流水线、FIFO 等常用设计模式", "能使用 Vivado/Quartus 完成 FPGA 综合与调试"],
+    dailyTasks: [
+      {
+        day: 1,
+        title: "FPGA 架构与 Verilog 入门",
+        summary: "理解 FPGA 内部结构（LUT/FF/BRAM/DSP），掌握 Verilog 基本语法",
+        content: {
+          objective: "本节学习 FPGA 芯片内部架构（LUT、触发器、BRAM、DSP 单元），掌握 Verilog 模块化设计和组合/时序逻辑描述方法。",
+          key_points: ["FPGA 与 ASIC 区别及内部结构", "Verilog 模块/端口/数据类型", "always 块与时序/组合逻辑", "RTL 设计入门"],
+          practice: "安装 Vivado，编写一个 Verilog 计数器模块，通过仿真验证功能。",
+          deep_dive: "FPGA 的 LUT 本质是查找表而非逻辑门，这使得同一硬件可灵活重构，但也带来面积和功耗开销。",
+        },
+        duration: "2小时",
+        checkpoint: "能描述 FPGA 内部结构，独立编写并仿真一个计数器模块",
+      },
+      {
+        day: 2,
+        title: "状态机与流水线设计",
+        summary: "掌握有限状态机（FSM）设计模式与流水线优化技术",
+        content: {
+          objective: "本节学习 Moore/Mealy 状态机设计方法，掌握流水线设计原理，理解时序约束和最大频率分析。",
+          key_points: ["Moore/Mealy 状态机与状态编码", "三段式状态机写法", "流水线设计与吞吐率分析", "时序约束基础（setup/hold）"],
+          practice: "设计一个 UART 接收器的状态机，并改为 2 级流水线版本，对比最大工作频率。",
+          deep_dive: "流水线通过插入寄存器降低组合逻辑深度来提升频率，但会增加延迟和面积，需权衡 pipeline 级数。",
+        },
+        duration: "2小时",
+        checkpoint: "完成 UART 接收器 FSM 设计，流水线版本 Fmax 提升 30%+",
+      },
+      {
+        day: 3,
+        title: "时序约束与时钟域交叉",
+        summary: "掌握 XDC 约束文件编写，处理跨时钟域同步与亚稳态",
+        content: {
+          objective: "本节学习 SDC/XDC 时序约束编写，掌握跨时钟域设计（CDC）方法，理解亚稳态及其缓解策略。",
+          key_points: ["XDC 约束：时钟/IO/假路径/多周期", "建立时间/保持时间违例分析", "跨时钟域同步器（2FF/握手/FIFO）", "亚稳态 MTBF 计算"],
+          practice: "为一个双时钟域设计编写 XDC 约束，添加 2 级同步器处理 CDC 路径，查看时序报告。",
+          deep_dive: "异步 FIFO 是处理跨时钟域数据传输的标准方案，Gray 码指针确保了指针比较的原子性。",
+        },
+        duration: "3小时",
+        checkpoint: "XDC 约束无违例，CDC 路径正确处理，时序报告 WNS≥0",
+      },
+      {
+        day: 4,
+        title: "IP 核集成与板级调试",
+        summary: "集成 Xilinx IP 核（PLL/FIFO/AXI），使用 JTAG 在线调试",
+        content: {
+          objective: "本节学习 IP 核集成方法（PLL、FIFO、AXI 总线），掌握 ILA 在线逻辑分析和板级调试流程。",
+          key_points: ["PLL/MMCM 时钟管理 IP", "FIFO/BRAM IP 配置", "AXI4-Lite/Stream 总线协议", "ILA 在线逻辑分析仪调试"],
+          practice: "搭建一个含 PLL + FIFO + AXI-Lite 的 SoC 框架，用 ILA 抓取关键信号波形。",
+          deep_dive: "AXI 总线的 burst 传输和 out-of-order 特性使其适合高带宽场景，但也增加了协议复杂性。",
+        },
+        duration: "3小时",
+        checkpoint: "SoC 框架功能正确，ILA 能抓取信号并定位问题",
+      },
+      {
+        day: 5,
+        title: "综合项目：FPGA 信号处理系统",
+        summary: "完成一个 FPGA 实时信号处理系统，含 ADC 采集、FIR 滤波和输出",
+        content: {
+          objective: "本节综合运用所学知识，完成一个 FPGA 实时信号处理系统，包含 ADC 接口、FIR 滤波器、状态机和数据输出。",
+          key_points: ["ADC 接口时序设计", "FIR 滤波器 IP 集成", "系统级时序收敛与资源优化", "综合/实现/比特流生成全流程"],
+          practice: "实现一个 16 位 ADC 采集 + 64 阶 FIR 滤波 + UART 输出的完整系统，生成比特流并下载验证。",
+          deep_dive: "实际 FPGA 项目中，资源利用率（LUT/BRAM/DSP）、功耗和时序裕量是需要平衡的三大指标，过度优化某项可能导致其他指标恶化。",
+        },
+        duration: "4小时",
+        checkpoint: "系统功能正确，时序收敛，资源利用率<80%，板级验证通过",
+      },
+    ],
+    relatedIntel: ["079-elec-digital", "080-elec-pcb"],
+    relatedTools: [],
+    relatedTerms: ["fpga", "verilog", "digital-circuit", "signal"],
+    relatedNodes: ["elec-digital", "elec-pcb", "elec-circuit"],
+    suggestions: {
+      prerequisites: ["数字电子技术", "PCB 设计基础"],
+      nextSteps: ["SoC 设计", "硬件加速器"],
+      learningPath: ["elec-digital → elec-pcb → elec-fpga"],
+    },
+  }
+
 ];
 

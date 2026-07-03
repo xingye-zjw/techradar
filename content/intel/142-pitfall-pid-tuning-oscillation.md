@@ -3,12 +3,15 @@ title: PID参数整定不当导致系统振荡
 category: embedded
 difficulty: intermediate
 duration: 30分钟
-summary: PID控制器参数设置不当导致系统输出剧烈振荡或响应迟缓，是自动化控制中最常见的问题。
+summary: 聚焦单点问题：PID 参数整定不当导致系统振荡，涵盖 Z-N 整定法、积分抗饱和、微分先行、奈奎斯特准则等排查与修复方案。
 takeaways:
   - 快速识别「PID参数整定不当导致系统振荡」的典型症状
-  - 掌握根因分析：比例增益Kp过大导致系统超调振荡，积分时间Ti过小导致积分饱和，微分时间Td过大对噪声过于敏感。实际...
+  - 理解该问题的根因分析和标准排查步骤
   - 学会分步排查和解决问题的标准化流程
   - 了解预防措施，避免下次踩同样的坑
+relatedIntel:
+  - 057-ctrl-pid
+  - 110-pitfall-control
 tags:
   - 踩坑
   - 避坑指南

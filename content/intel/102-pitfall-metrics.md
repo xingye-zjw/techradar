@@ -1,3 +1,23 @@
+---
+title: "模型评估指标踩坑合集"
+category: machine-learning
+difficulty: intermediate
+duration: 30分钟
+summary: 涵盖 4 个常见踩坑：用准确率评估类别不平衡数据、只看 AUC 不看 PRC 导致误判、回归任务用 MSE 评估被异常值主导、在测试集上调参导致过拟合测试集，每个均附快速修复与排查步骤。
+takeaways:
+  - 掌握「模型评估指标踩坑合集」中各问题的快速识别方法
+  - 理解每个踩坑的根因分析和排查步骤
+  - 学会标准化的修复流程和预防措施
+relatedIntel:
+  - 017-metrics
+  - 039-model-evaluation
+tags:
+  - 踩坑
+  - 评估指标
+  - 准确率
+  - 交叉验证
+---
+
 [模型评估]
 
 ## 用准确率评估类别不平衡数据

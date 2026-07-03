@@ -1,3 +1,22 @@
+---
+title: "RTOS 实时操作系统踩坑合集"
+category: embedded
+difficulty: advanced
+duration: 30分钟
+summary: 涵盖 4 个常见踩坑：FreeRTOS 任务优先级配置不当导致系统响应差、中断与任务通信不同步导致数据错乱、临界区内调用阻塞 API 导致死锁、内存分配失败导致系统崩溃，每个均附快速修复与排查步骤。
+takeaways:
+  - 掌握「RTOS 实时操作系统踩坑合集」中各问题的快速识别方法
+  - 理解每个踩坑的根因分析和排查步骤
+  - 学会标准化的修复流程和预防措施
+relatedIntel:
+  - 053-embedded-rtos
+tags:
+  - 踩坑
+  - RTOS
+  - 任务调度
+  - 中断
+---
+
 [嵌入式RTOS]
 
 ## FreeRTOS 任务优先级配置不当导致系统响应差
@@ -48,11 +67,11 @@
 
 [嵌入式RTOS]
 
-## 临界区嵌套导致系统死锁
+## 临界区内调用阻塞 API 导致死锁
 
 // 快速修复
 
-避免在临界区中调用可能阻塞的API函数，尽量减少临界区范围，使用互斥量替代递归临界区。
+避免在临界区中调用 vTaskDelay/xQueueReceive 等阻塞 API，尽量减少临界区范围，需要等待时改用带超时的 API 或将临界区拆分。
 
 // 现象表现
 
@@ -62,9 +81,10 @@
 
 // 排查步骤
 
-- 01 检查 `taskENTER_CRITICAL` 与 `taskEXIT_CRITICAL` 配对是否正确
-- 02 检查代码是否存在递归进入临界区的情况
-- 03 使用互斥量（`xSemaphoreCreateMutex`）替代直接临界区操作
+- 01 检查 `taskENTER_CRITICAL` 与 `taskEXIT_CRITICAL` 配对是否正确（FreeRTOS 临界区支持嵌套计数，嵌套本身不会死锁）
+- 02 检查临界区内是否调用了 vTaskDelay、xQueueReceive 等阻塞 API（这才是死锁的真实根因）
+- 03 临界区内只做极短的共享变量操作，需要等待时退出临界区再用带超时的 API
+- 04 使用互斥量（`xSemaphoreCreateMutex`）替代临界区，互斥量支持优先级继承且可阻塞等待
 
 #FreeRTOS#死锁#嵌入式
 

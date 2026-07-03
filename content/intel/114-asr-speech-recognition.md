@@ -11,6 +11,9 @@ takeaways:
   - 用 Whisper 跑通一个完整的语音识别 demo，计算 WER 评估效果
   - 知道中文语音识别的特殊挑战（声调、方言、同音字）
 relatedTools: whisper
+relatedIntel:
+  - 115-tts-speech-synthesis
+  - 001-transformer
 tags:
   - asr
   - speech recognition
@@ -33,7 +36,7 @@ tags:
 2. **深度学习时代**（2012-2020）：端到端模型（CTC/Attention/Transducer），WER 大幅下降
 3. **大模型时代**（2022~）：Whisper 用 68 万小时数据训练，多语言、多口音、鲁棒性拉满
 
-理解 ASR 你会发现：它是少有的"传统方法完全被深度学习彻底替代的领域。今天你不再需要懂 HMM、GMM、决策树状态绑定这些复杂概念，但你仍然需要理解声音信号的物理特性——因为语音和文本/图像是完全不同的数据形态。
+理解 ASR 你会发现：它是少有的"传统方法完全被深度学习彻底替代"的领域。今天你不再需要懂 HMM、GMM、决策树状态绑定这些复杂概念，但你仍然需要理解声音信号的物理特性——因为语音和文本/图像是完全不同的数据形态。
 
 而且语音技术栈正在爆发：语音克隆（TTS）、说话人识别、声纹识别、语音情感识别、语音增强……ASR 是这一切的入口。
 
@@ -291,7 +294,7 @@ mel = whisper.log_mel_spectrogram(audio).to(model.device)
 
 # 检测语言
 _, probs = model.detect_language(mel)
-print(f"检测到语言: {max(probs, key=probs.get)}
+print(f"检测到语言: {max(probs, key=probs.get)}")
 
 # 解码
 options = whisper.DecodingOptions(
@@ -324,7 +327,7 @@ I = 插入错误数
 N = 参考词数
 ```
 
-**第五步：批量处理长音频
+**第五步：批量处理长音频**
 
 ```python
 import whisper

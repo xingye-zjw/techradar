@@ -1,3 +1,23 @@
+---
+title: "Kubernetes 踩坑合集"
+category: devops
+difficulty: advanced
+duration: 30分钟
+summary: 涵盖 4 个常见踩坑：Kubernetes Pod 无法调度/Pending 状态、Kubernetes Service 无法访问、Deployment 滚动更新时服务中断、PVC 挂载失败导致 Pod 无法启动，每个均附快速修复与排查步骤。
+takeaways:
+  - 掌握「Kubernetes 踩坑合集」中各问题的快速识别方法
+  - 理解每个踩坑的根因分析和排查步骤
+  - 学会标准化的修复流程和预防措施
+relatedIntel:
+  - 021-kubernetes
+  - 022-prometheus-grafana
+tags:
+  - 踩坑
+  - Kubernetes
+  - Pod
+  - 集群
+---
+
 [容器编排]
 
 ## Kubernetes Pod 无法调度/Pending 状态
@@ -67,7 +87,7 @@
 - 01 检查 Deployment 的 rollingUpdate 策略配置，确认 maxUnavailable 和 maxSurge 值合理
 - 02 检查 Pod spec 中是否配置了 readinessProbe，确保流量只发送到就绪的 Pod
 - 03 验证 livenessProbe 配置正确，避免因探测失败导致 Pod 重启
-- 04 如业务允许，可将 maxUnavailable 设为 0、maxSurge 设为 1 实现蓝绿发布
+- 04 如业务允许，可将 maxUnavailable 设为 0、maxSurge 设为 1 实现零停机滚动更新（注意：这不是蓝绿发布，蓝绿发布需要两套独立环境通过流量切换实现）
 
 #Kubernetes#容器#部署
 

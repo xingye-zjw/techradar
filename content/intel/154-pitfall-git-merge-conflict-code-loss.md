@@ -3,12 +3,15 @@ title: Git 合并冲突处理不当导致代码丢失
 category: best-practices
 difficulty: intermediate
 duration: 30分钟
-summary: 多人协作开发时，git merge 冲突处理不当导致本地修改被覆盖或代码丢失。这是团队协作中最常见的版本控制问题。
+summary: 聚焦单点问题：Git 合并冲突处理不当导致代码丢失，涵盖 git stash 保护本地修改、git reflog 找回误操作、pull --rebase、冲突标记解析等排查与修复方案。
 takeaways:
   - 快速识别「Git 合并冲突处理不当导致代码丢失」的典型症状
-  - 掌握根因分析：在未提交本地修改的情况下执行 git pull/merge，或解决冲突时误删了他人代码。缺乏 sta...
+  - 理解该问题的根因分析和标准排查步骤
   - 学会分步排查和解决问题的标准化流程
   - 了解预防措施，避免下次踩同样的坑
+relatedIntel:
+  - 008-git
+  - 105-pitfall-git
 tags:
   - 踩坑
   - 避坑指南

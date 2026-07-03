@@ -1,3 +1,24 @@
+---
+title: "RAG 系统踩坑合集"
+category: llm
+difficulty: intermediate
+duration: 30分钟
+summary: 涵盖 4 个常见踩坑：RAG 检索到了但回答不对 / 幻觉严重、向量数据库检索结果与预期不匹配、RAG 系统延迟高/响应慢、知识库内容切分不合理导致关键信息丢失，每个均附快速修复与排查步骤。
+takeaways:
+  - 掌握「RAG 系统踩坑合集」中各问题的快速识别方法
+  - 理解每个踩坑的根因分析和排查步骤
+  - 学会标准化的修复流程和预防措施
+relatedIntel:
+  - 005-rag
+  - 035-advanced-rag
+  - 042-vector-database
+tags:
+  - 踩坑
+  - RAG
+  - 检索
+  - 幻觉
+---
+
 [RAG]
 
 ## RAG 检索到了但回答不对 / 幻觉严重

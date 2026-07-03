@@ -3,12 +3,15 @@ title: SSH 端口被防火墙拦截 / 服务器无法访问
 category: devops
 difficulty: intermediate
 duration: 30分钟
-summary: SSH 无法连接远程服务器，即使服务正常运行。通常是云服务器安全组配置错误或网络防火墙拦截所致。
+summary: 聚焦单点问题：SSH 端口被防火墙拦截导致服务器无法访问，涵盖安全组规则、改用高位端口、fail2ban、frp/nps 内网穿透、Tailscale/WireGuard VPN 等排查与修复方案。
 takeaways:
   - 快速识别「SSH 端口被防火墙拦截 / 服务器无法访问」的典型症状
-  - 掌握根因分析：云服务器安全组未开放 SSH 端口、家用宽带封禁 22 端口、或防火墙规则配置错误。也可能是 ISP...
+  - 理解该问题的根因分析和标准排查步骤
   - 学会分步排查和解决问题的标准化流程
   - 了解预防措施，避免下次踩同样的坑
+relatedIntel:
+  - 009-linux
+  - 016-server-setup
 tags:
   - 踩坑
   - 避坑指南

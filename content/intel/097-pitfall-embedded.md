@@ -1,10 +1,30 @@
+---
+title: "嵌入式开发踩坑合集"
+category: embedded
+difficulty: intermediate
+duration: 30分钟
+summary: 涵盖 4 个常见踩坑：C语言指针越界访问导致段错误、RTOS任务栈溢出、GPIO配置错误导致外设不工作、串口通信乱码或数据丢失，每个均附快速修复与排查步骤。
+takeaways:
+  - 掌握「嵌入式开发踩坑合集」中各问题的快速识别方法
+  - 理解每个踩坑的根因分析和排查步骤
+  - 学会标准化的修复流程和预防措施
+relatedIntel:
+  - 052-embedded-c
+  - 053-embedded-rtos
+tags:
+  - 踩坑
+  - 嵌入式
+  - C语言
+  - RTOS
+---
+
 [嵌入式]
 
 ## C语言指针越界访问导致段错误
 
 // 快速修复
 
-Valgrind检测 + 安全字符串函数（strncpy/safe_strcpy）+ 指针释放后置NULL + 嵌入式启用MPU限制访问范围
+Valgrind检测 + 安全字符串函数（strncpy/snprintf）+ 指针释放后置NULL + 嵌入式启用MPU限制访问范围
 
 // 现象表现
 
@@ -47,7 +67,7 @@ Valgrind检测 + 安全字符串函数（strncpy/safe_strcpy）+ 指针释放后
 - 02 任务初始化时设置较大栈空间（建议至少2KB，留20-30%余量）
 - 03 避免在栈上分配大局部数组/结构体，改为静态或全局分配
 - 04 减少函数调用嵌套深度，优化递归调用
-- 05 启用MPU栈溢出检测：configCHECK_FOR_STACK_OVERFLOW=2
+- 05 启用 FreeRTOS 软件栈溢出检测：configCHECK_FOR_STACK_OVERFLOW=2（基于栈哨兵检测）；MPU 硬件栈保护需单独配置 MPU 区域
 - 06 使用静态分析工具检查函数最大栈深度
 
 #FreeRTOS#栈溢出#嵌入式#HardFault

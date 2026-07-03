@@ -1,3 +1,23 @@
+---
+title: "GPU 与 CUDA 环境踩坑合集"
+category: deep-learning
+difficulty: intermediate
+duration: 30分钟
+summary: 涵盖 4 个常见踩坑：CUDA 版本与 PyTorch 不匹配、Docker 容器中无法使用 GPU (nvidia-smi 报错)、多 GPU 训练时显存分配不均、GPU 温度过高导致降频/崩溃，每个均附快速修复与排查步骤。
+takeaways:
+  - 掌握「GPU 与 CUDA 环境踩坑合集」中各问题的快速识别方法
+  - 理解每个踩坑的根因分析和排查步骤
+  - 学会标准化的修复流程和预防措施
+relatedIntel:
+  - 034-cuda-programming
+  - 011-pytorch
+tags:
+  - 踩坑
+  - GPU
+  - CUDA
+  - 环境配置
+---
+
 [环境配置]
 
 ## CUDA 版本与 PyTorch 不匹配

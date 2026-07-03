@@ -1,3 +1,23 @@
+---
+title: "Python 开发常见踩坑合集"
+category: devops
+difficulty: beginner
+duration: 30分钟
+summary: 涵盖 5 个常见踩坑：Python 环境依赖冲突导致 import 失败、pandas inplace=True 链式赋值警告、可变默认参数导致函数行为异常、循环变量闭包捕获导致预期外结果、整数缓存导致 == 和 is 行为不一致，每个均附快速修复与排查步骤。
+takeaways:
+  - 掌握「Python 开发常见踩坑合集」中各问题的快速识别方法
+  - 理解每个踩坑的根因分析和排查步骤
+  - 学会标准化的修复流程和预防措施
+relatedIntel:
+  - 010-numpy-pandas
+  - 009-linux
+tags:
+  - 踩坑
+  - Python
+  - 依赖
+  - 虚拟环境
+---
+
 [环境配置]
 
 ## Python 环境依赖冲突导致 import 失败
@@ -34,15 +54,15 @@ conda create 独立环境 → pip install 分批安装 → freeze 导出依赖
 // 现象表现
 
 - × SettingWithCopyWarning 警告
-- × FutureWarning 关于 inplace 参数已废弃
+- × FutureWarning 关于链式赋值可能产生副本视图歧义
 - × 链式赋值值未正确设置
 - × 数据清洗后部分值未按预期修改
 
 // 排查步骤
 
 - 01 永远不使用链式赋值，改用 df.loc 或 df.iloc 条件索引
-- 02 避免使用 inplace=True 参数（Pandas 已将其标记为 deprecated）
-- 03 使用 df._is_view 判断是否为视图或副本
+- 02 显式使用 df = df.assign(...) 或 df = df.copy() 后再修改，避免视图副本歧义（inplace=True 虽有废弃讨论但 pandas 2.x 仍支持，关键是不链式赋值）
+- 03 判断副本时用 pd.util.infer_option('mode.copy_on_write') 或直接 df.copy() 显式复制
 - 04 优先使用链式操作返回值而非 inplace 修改
 
 #Pandas#Python#数据处理

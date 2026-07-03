@@ -3,12 +3,15 @@ title: RTOS任务栈溢出
 category: embedded
 difficulty: intermediate
 duration: 30分钟
-summary: FreeRTOS等RTOS中任务栈空间不足导致栈溢出，表现为 HardFault 或任务异常行为。这是嵌入式多任务开发中最隐蔽的错误之一。
+summary: 聚焦单点问题：FreeRTOS 任务栈溢出导致 HardFault，涵盖 uxTaskGetStackHighWaterMark 监控、configCHECK_FOR_STACK_OVERFLOW 检测、栈大小配置、避免大局部变量等排查与修复方案。
 takeaways:
   - 快速识别「RTOS任务栈溢出」的典型症状
-  - 掌握根因分析：任务栈大小设置过小、函数调用嵌套过深、局部数组过大、或中断嵌套消耗额外栈空间。RTOS任务栈通常只有...
+  - 理解该问题的根因分析和标准排查步骤
   - 学会分步排查和解决问题的标准化流程
   - 了解预防措施，避免下次踩同样的坑
+relatedIntel:
+  - 053-embedded-rtos
+  - 097-pitfall-embedded
 tags:
   - 踩坑
   - 避坑指南

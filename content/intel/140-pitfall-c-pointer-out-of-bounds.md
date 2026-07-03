@@ -3,12 +3,15 @@ title: C语言指针越界访问导致段错误
 category: embedded
 difficulty: intermediate
 duration: 30分钟
-summary: C语言中指针越界访问是最常见的运行时错误，会导致段错误（Segmentation Fault）或数据损坏。在嵌入式系统中，这类错误可能导致系统崩溃或硬件损坏。
+summary: 聚焦单点问题：C 语言指针越界访问导致段错误，涵盖根因（指针算术错误、数组越界、野指针）、Valgrind/-fsanitize=address 检测、strncpy/snprintf 安全函数、MPU 限制访问范围等排查与修复方案。
 takeaways:
   - 快速识别「C语言指针越界访问导致段错误」的典型症状
-  - 掌握根因分析：指针算术错误、数组索引越界、字符串操作未检查长度、或使用已释放的内存（野指针）。嵌入式系统中直接操作...
+  - 理解该问题的根因分析和标准排查步骤
   - 学会分步排查和解决问题的标准化流程
   - 了解预防措施，避免下次踩同样的坑
+relatedIntel:
+  - 052-embedded-c
+  - 097-pitfall-embedded
 tags:
   - 踩坑
   - 避坑指南

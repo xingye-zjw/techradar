@@ -3,12 +3,16 @@ title: RAG 检索到了但回答不对 / 幻觉严重
 category: llm
 difficulty: intermediate
 duration: 30分钟
-summary: RAG 系统检索到了相关文档，但 LLM 生成的回答与检索内容不符，甚至凭空捏造事实。这是 RAG 项目中最常见的质量问题，直接影响系统可用性。
+summary: 聚焦单点问题：RAG 检索到了相关文档但回答仍幻觉严重，涵盖 BGE-M3 embedding、bge-reranker 重排、chunk 切分策略、HyDE 查询扩展等排查与修复方案。
 takeaways:
   - 快速识别「RAG 检索到了但回答不对 / 幻觉严重」的典型症状
-  - 掌握根因分析：检索阶段：embedding 模型对中文语义理解不足，或 chunk 切分不合理导致关键信息丢失。生...
+  - 理解该问题的根因分析和标准排查步骤
   - 学会分步排查和解决问题的标准化流程
   - 了解预防措施，避免下次踩同样的坑
+relatedIntel:
+  - 005-rag
+  - 035-advanced-rag
+  - 096-pitfall-rag
 tags:
   - 踩坑
   - 避坑指南

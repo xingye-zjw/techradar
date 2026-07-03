@@ -1,3 +1,23 @@
+---
+title: "数据工程踩坑合集"
+category: data-processing
+difficulty: intermediate
+duration: 30分钟
+summary: 涵盖 4 个常见踩坑：数据标注质量差导致模型无法收敛、pandas inplace=True 链式赋值警告、数据泄露 (Data Leakage) 导致模型评估虚高、大规模数据处理内存不足，每个均附快速修复与排查步骤。
+takeaways:
+  - 掌握「数据工程踩坑合集」中各问题的快速识别方法
+  - 理解每个踩坑的根因分析和排查步骤
+  - 学会标准化的修复流程和预防措施
+relatedIntel:
+  - 023-data-pipeline-etl
+  - 040-data-annotation
+tags:
+  - 踩坑
+  - 数据工程
+  - 数据质量
+  - ETL
+---
+
 [数据处理]
 
 ## 数据标注质量差导致模型无法收敛
@@ -41,7 +61,7 @@ df.loc[mask, 'col'] = value 而非 df[mask]['col'] = value
 // 排查步骤
 
 - 01 永远不用链式赋值，改为df.loc/df.iloc按位置赋值
-- 02 避免使用inplace=True参数（Pandas已deprecated该参数）
+- 02 避免链式赋值，改用 df.loc[] 单步赋值（inplace=True 不是 deprecated 根因，链式赋值才是）
 - 03 使用复制操作df.copy()避免视图问题
 
 #Pandas#Python#数据处理
@@ -91,7 +111,7 @@ df.loc[mask, 'col'] = value 而非 df[mask]['col'] = value
 
 - 01 用pd.read_csv(chunksize=)分块读取，控制每批数据量
 - 02 使用dask处理大数据集，支持懒加载和计算
-- 03 避免用apply改用vectorize向量化操作
+- 03 避免用 df.apply，改用 numpy 原生向量化运算（np.vectorize 本质仍是 Python 循环，无性能收益）
 - 04 只读取需要的列，减少内存占用
 - 05 及时释放不需要的变量，让GC回收
 

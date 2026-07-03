@@ -1,3 +1,23 @@
+---
+title: "自动控制踩坑合集"
+category: embedded
+difficulty: advanced
+duration: 30分钟
+summary: 涵盖 4 个常见踩坑：PID 积分饱和导致系统超调过大、离散控制系统采样频率设置不当、状态空间控制器极点位置选择不当、传感器噪声导致微分项失效，每个均附快速修复与排查步骤。
+takeaways:
+  - 掌握「自动控制踩坑合集」中各问题的快速识别方法
+  - 理解每个踩坑的根因分析和排查步骤
+  - 学会标准化的修复流程和预防措施
+relatedIntel:
+  - 057-ctrl-pid
+  - 068-ctrl-state-space
+tags:
+  - 踩坑
+  - PID
+  - 控制
+  - 振荡
+---
+
 [控制理论]
 
 ## PID 积分饱和导致系统超调过大

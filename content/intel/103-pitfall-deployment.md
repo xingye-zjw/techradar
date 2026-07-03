@@ -1,3 +1,24 @@
+---
+title: "模型部署踩坑合集"
+category: devops
+difficulty: advanced
+duration: 30分钟
+summary: 涵盖 4 个常见踩坑：ONNX 导出后推理结果与 PyTorch 不一致、模型推理延迟高/吞吐量低、服务器多并发时模型加载慢、容器化部署模型文件缺失，每个均附快速修复与排查步骤。
+takeaways:
+  - 掌握「模型部署踩坑合集」中各问题的快速识别方法
+  - 理解每个踩坑的根因分析和排查步骤
+  - 学会标准化的修复流程和预防措施
+relatedIntel:
+  - 014-onnx
+  - 026-onnx-deployment
+  - 019-vllm-inference
+tags:
+  - 踩坑
+  - 部署
+  - ONNX
+  - 量化
+---
+
 [模型部署]
 
 ## ONNX 导出后推理结果与 PyTorch 不一致

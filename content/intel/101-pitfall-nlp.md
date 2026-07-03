@@ -1,3 +1,23 @@
+---
+title: "NLP 踩坑合集"
+category: nlp
+difficulty: intermediate
+duration: 30分钟
+summary: 涵盖 4 个常见踩坑：Tokenizer 处理中文分词错误、文本分类标签不平衡导致模型偏向多数类、RNN/LSTM 梯度消失导致长序列信息丢失、文本数据泄露导致评估指标虚高，每个均附快速修复与排查步骤。
+takeaways:
+  - 掌握「NLP 踩坑合集」中各问题的快速识别方法
+  - 理解每个踩坑的根因分析和排查步骤
+  - 学会标准化的修复流程和预防措施
+relatedIntel:
+  - 064-nlp-rnn
+  - 001-transformer
+tags:
+  - 踩坑
+  - NLP
+  - 分词
+  - 训练
+---
+
 [NLP]
 
 ## Tokenizer 处理中文分词错误
@@ -69,7 +89,7 @@
 
 - 01 可视化 Attention 权重，观察是否集中在特定位置
 - 02 在训练过程中监控梯度范数，使用梯度裁剪（gradient clipping，clip_norm=1.0）
-- 03 尝试截断反向传播（BPTT，truncated_backpropagation_length），限制时间步展开深度
+- 03 尝试截断反向传播（TBPTT）：PyTorch 需手动实现 detach() 截断梯度链；TensorFlow/Keras 可用 truncated_backpropagation_length 参数
 - 04 改用 BiLSTM 让模型同时学习前后文信息，或评估切换至 BERT/Transformer 的可行性
 
 #RNN#LSTM#梯度#长序列

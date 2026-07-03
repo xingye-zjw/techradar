@@ -1,3 +1,23 @@
+---
+title: "电路设计踩坑合集"
+category: embedded
+difficulty: intermediate
+duration: 30分钟
+summary: 涵盖 4 个常见踩坑：电容选型不当导致滤波效果差、运放电路自激振荡、分压电阻选择不当导致测量误差大、功率器件散热设计不足导致过热保护，每个均附快速修复与排查步骤。
+takeaways:
+  - 掌握「电路设计踩坑合集」中各问题的快速识别方法
+  - 理解每个踩坑的根因分析和排查步骤
+  - 学会标准化的修复流程和预防措施
+relatedIntel:
+  - 054-elec-circuit
+  - 079-elec-digital
+tags:
+  - 踩坑
+  - 电路
+  - H桥
+  - 运放
+---
+
 [电子电路]
 
 ## 电容选型不当导致滤波效果差

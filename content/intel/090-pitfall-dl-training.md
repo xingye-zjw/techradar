@@ -1,3 +1,26 @@
+---
+title: "深度学习训练常见踩坑合集"
+category: deep-learning
+difficulty: intermediate
+duration: 30分钟
+summary: 涵盖 6 个常见踩坑：显存不足 (CUDA out of memory)、Loss NaN / 梯度爆炸、多进程 DataLoader 卡死、模型训练收敛慢/几乎不收敛、CUDA 隐式同步导致推理速度异常慢、训练用 GPU 卡与推理用卡架构不一致，每个均附快速修复与排查步骤。
+takeaways:
+  - 掌握「深度学习训练常见踩坑合集」中各问题的快速识别方法
+  - 理解每个踩坑的根因分析和排查步骤
+  - 学会标准化的修复流程和预防措施
+relatedIntel:
+  - 011-pytorch
+  - 034-cuda-programming
+  - 017-metrics
+tags:
+  - 踩坑
+  - 深度学习
+  - 训练
+  - OOM
+  - NaN
+  - CUDA
+---
+
 [深度学习]
 
 ## 显存不足 (CUDA out of memory)

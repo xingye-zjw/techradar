@@ -3,12 +3,15 @@ title: Docker 容器中无法使用 GPU (nvidia-smi 报错)
 category: devops
 difficulty: intermediate
 duration: 30分钟
-summary: Docker 容器内无法访问 GPU，nvidia-smi 报 No devices were found。这是容器化部署 GPU 任务时的必经之路，需要正确配置 NVIDIA Container Toolkit。
+summary: 聚焦单点问题：Docker 容器内无法使用 GPU，涵盖 NVIDIA Container Toolkit 安装、--gpus all 参数、nvidia/cuda 基础镜像、驱动版本兼容等排查与修复方案。
 takeaways:
   - 快速识别「Docker 容器中无法使用 GPU (nvidia-smi 报错)」的典型症状
-  - 掌握根因分析：Docker 默认不暴露 GPU 设备。需要安装 NVIDIA Container Toolkit ...
+  - 理解该问题的根因分析和标准排查步骤
   - 学会分步排查和解决问题的标准化流程
   - 了解预防措施，避免下次踩同样的坑
+relatedIntel:
+  - 007-docker
+  - 034-cuda-programming
 tags:
   - 踩坑
   - 避坑指南
@@ -51,7 +54,7 @@ Docker 默认不暴露 GPU 设备。需要安装 NVIDIA Container Toolkit 并在
 
 按照以下步骤逐一排查，通常能在几分钟内定位并解决问题：
 
-01. 安装 NVIDIA Container Toolkit：curl -fsSL https://nvidia.github.io/nvidia-docker/gpgkey | sudo gpg --dearmor 后续步骤
+01. 安装 NVIDIA Container Toolkit（Ubuntu 示例）：curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg && curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list && sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit && sudo nvidia-ctk runtime configure --runtime=docker && sudo systemctl restart docker
 02. 基础镜像必须使用带 CUDA 的官方镜像（nvidia/cuda:*-runtime-* 或 *-devel-*）
 03. 运行容器时加 --gpus all 参数：docker run --gpus all ...
 04. 确认宿主机 NVIDIA Driver 版本与容器内 CUDA 版本兼容

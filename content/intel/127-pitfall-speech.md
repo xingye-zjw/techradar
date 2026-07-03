@@ -1,3 +1,23 @@
+---
+title: "语音处理踩坑合集"
+category: speech
+difficulty: intermediate
+duration: 30分钟
+summary: 涵盖 4 个常见踩坑：音频采样率不匹配导致识别错误、TTS中文多音字发音错误、背景噪声导致ASR识别率骤降、说话人识别中声纹漂移导致误识别，每个均附快速修复与排查步骤。
+takeaways:
+  - 掌握「语音处理踩坑合集」中各问题的快速识别方法
+  - 理解每个踩坑的根因分析和排查步骤
+  - 学会标准化的修复流程和预防措施
+relatedIntel:
+  - 114-asr-speech-recognition
+  - 115-tts-speech-synthesis
+tags:
+  - 踩坑
+  - 语音
+  - ASR
+  - TTS
+---
+
 [语音技术]
 
 ## 音频采样率不匹配导致识别错误
@@ -15,7 +35,7 @@
 
 // 排查步骤
 
-- 01 使用 `librosa.get_sr()` 或 `ffprobe` 检查输入音频的原始采样率，确认是否符合模型要求（Whisper系列要求16kHz）
+- 01 使用 `librosa.get_samplerate(path)` 或通过 `y, sr = librosa.load(path, sr=None)` 获取原始采样率，确认是否符合模型要求（Whisper系列要求16kHz）
 - 02 用 `librosa.resample(y, orig_sr, target_sr=16000)` 或 `torchaudio.transforms.Resample` 进行重采样
 - 03 确认音频格式，优先使用16bit PCM WAV格式，避免MP3等压缩格式引入的编码损失
 - 04 验证重采样后的音频，通过 `soundfile.write` 保存并回放确认音质正常
@@ -36,7 +56,7 @@
 
 - × 常见多音字读错，如"重"（zhòng/chóng）、"长"（cháng/zhǎng）、"行"（xíng/háng）
 - × 专业术语发音错误，如"卷积"读成juàn jī而非正确的juǎn jī
-- × 数字和日期读法不对，如"2024年"读成"二零二四年"而非"两千零二十四年"
+- × 数字和日期读法不对，如金额"2024元"读成"二零二四元"而非"两千零二十四元"
 - × 姓氏发音错误，如"单"姓应读shàn却读成dān
 
 // 排查步骤

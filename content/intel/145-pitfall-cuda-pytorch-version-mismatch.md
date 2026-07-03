@@ -3,12 +3,15 @@ title: CUDA 版本与 PyTorch 不匹配
 category: devops
 difficulty: intermediate
 duration: 30分钟
-summary: 安装 PyTorch 时未根据本机 CUDA 版本选择对应的 wheel 包，导致 CUDA 无法正常工作。这是新手最容易踩的第一个环境坑，常见于 Windows 和 Ubuntu 系统。
+summary: 聚焦单点问题：CUDA 与 PyTorch 版本不匹配导致算子不可用或运行时崩溃，涵盖 nvidia-smi 驱动版本核对、pytorch.org 官方安装命令、cuDNN 兼容性、conda 环境隔离等排查与修复方案。
 takeaways:
   - 快速识别「CUDA 版本与 PyTorch 不匹配」的典型症状
-  - 掌握根因分析：CUDA Toolkit、NVIDIA 驱动、PyTorch CUDA wheel 三者版本不兼容。...
+  - 理解该问题的根因分析和标准排查步骤
   - 学会分步排查和解决问题的标准化流程
   - 了解预防措施，避免下次踩同样的坑
+relatedIntel:
+  - 011-pytorch
+  - 034-cuda-programming
 tags:
   - 踩坑
   - 避坑指南
@@ -32,7 +35,7 @@ tags:
 
 核心要点：
 - **现象**：RuntimeError: CUDA error: no kernel image is available
-- **根因**：CUDA Toolkit、NVIDIA 驱动、PyTorch CUDA wheel 三者版本不兼容。pytorch.org 官方安装命令是根据特定 CUDA 版
+- **根因**：CUDA Toolkit、NVIDIA 驱动、PyTorch CUDA wheel 三者版本不兼容。pytorch.org 官方安装命令是根据特定 CUDA 版本生成的
 - **解决**：按照下方 5 步标准流程排查
 
 ## 核心拆解
@@ -55,7 +58,7 @@ CUDA Toolkit、NVIDIA 驱动、PyTorch CUDA wheel 三者版本不兼容。pytorc
 02. 前往 pytorch.org/get-started/locally/ 选择匹配版本，不要自己拼版本号
 03. 使用官方给出的 pip install 命令安装对应 CUDA 版本的 PyTorch
 04. 用 conda 虚拟环境隔离不同项目的 CUDA 依赖，避免混用
-05. 确认 cuDNN 版本与 CUDA 兼容（cuDNN 8.x 匹配 CUDA 11.x，cuDNN 9.x 匹配 CUDA 12.x）
+05. 确认 cuDNN 版本与 CUDA 兼容（cuDNN 8.x 同时支持 CUDA 11.x 和 12.x；cuDNN 9.x 主要匹配 CUDA 12.x）
 
 ### 快速修复（救急用）
 

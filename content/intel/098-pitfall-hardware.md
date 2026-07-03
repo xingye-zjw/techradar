@@ -1,3 +1,23 @@
+---
+title: "硬件设计踩坑合集"
+category: embedded
+difficulty: advanced
+duration: 30分钟
+summary: 涵盖 4 个常见踩坑：H桥驱动电机时的直通短路、PCB设计中的EMI/EMC问题、电源设计压降/纹波过大、晶振不起振/频率偏移，每个均附快速修复与排查步骤。
+takeaways:
+  - 掌握「硬件设计踩坑合集」中各问题的快速识别方法
+  - 理解每个踩坑的根因分析和排查步骤
+  - 学会标准化的修复流程和预防措施
+relatedIntel:
+  - 054-elec-circuit
+  - 080-elec-pcb
+tags:
+  - 踩坑
+  - 硬件
+  - PCB
+  - 信号完整性
+---
+
 [电气工程]
 
 ## H桥驱动电机时的直通短路

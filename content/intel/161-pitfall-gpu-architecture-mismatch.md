@@ -3,12 +3,15 @@ title: 训练用 GPU 卡与推理用卡架构不一致
 category: deep-learning
 difficulty: intermediate
 duration: 30分钟
-summary: 在一种 GPU 架构上训练的模型，部署到不同架构的 GPU 上出现兼容性问题或性能下降。这是模型部署到生产环境时的常见挑战。
+summary: 聚焦单点问题：训练用 GPU 与推理用 GPU 架构不一致导致模型不可用，涵盖 Ampere/Ada/Hopper 架构差异、CUDA Compute Capability、ONNX 跨架构验证、torch.jit 导出等排查与修复方案。
 takeaways:
   - 快速识别「训练用 GPU 卡与推理用卡架构不一致」的典型症状
-  - 掌握根因分析：NVIDIA GPU 不同架构（Ampere/Ada/Hopper）的 CUDA Compute C...
+  - 理解该问题的根因分析和标准排查步骤
   - 学会分步排查和解决问题的标准化流程
   - 了解预防措施，避免下次踩同样的坑
+relatedIntel:
+  - 034-cuda-programming
+  - 011-pytorch
 tags:
   - 踩坑
   - 避坑指南
@@ -30,7 +33,7 @@ tags:
 > **快速修复：训练推理同架构 GPU，或导出 ONNX 跨架构验证**
 
 核心要点：
-- **现象**：在 A100 上训练成功，部署到 RTX 3090 上报 CUDA 架构不兼容错误
+- **现象**：在 H100 上训练成功，部署到 RTX 3090 上报 CUDA 架构不兼容错误
 - **根因**：NVIDIA GPU 不同架构（Ampere/Ada/Hopper）的 CUDA Compute Capability 不同，某些算子在旧架构上可能不支持或行为
 - **解决**：按照下方 5 步标准流程排查
 
@@ -38,7 +41,7 @@ tags:
 
 ### 🔑 典型症状
 
-- × 在 A100 上训练成功，部署到 RTX 3090 上报 CUDA 架构不兼容错误
+- × 在 H100 上训练成功，部署到 RTX 3090 上报 CUDA 架构不兼容错误
 - × PyTorch 模型权重在两台机器之间迁移后出现 NaN
 - × 混合精度（AMP）在不同架构 GPU 上行为不一致
 
@@ -52,7 +55,7 @@ NVIDIA GPU 不同架构（Ampere/Ada/Hopper）的 CUDA Compute Capability 不同
 
 01. NVIDIA GPU 架构分几代：Ampere(A100/3090) / Ada(4090) / Hopper(H100)，PTX/SM 兼容但性能不同
 02. 训练和推理尽量使用相同系列 GPU，或确保 CUDA Compute Capability 兼容
-03. 导出模型时设置 _torchscript_itrace 或保存完整计算图避免架构依赖
+03. 导出模型时使用 torch.jit.trace / torch.jit.script 保存完整计算图避免架构依赖
 04. ONNX 导出后验证在不同 GPU 上推理输出一致
 05. 确认 PyTorch 版本一致：torch.__version__ + torch.version.cuda
 

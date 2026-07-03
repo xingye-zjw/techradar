@@ -1,3 +1,23 @@
+---
+title: "项目管理踩坑合集"
+category: best-practices
+difficulty: beginner
+duration: 30分钟
+summary: 涵盖 4 个常见踩坑：需求模糊导致反复返工、时间估算过于乐观导致延期、技术债积累导致开发越来越慢、沟通不畅导致信息差，每个均附快速修复与排查步骤。
+takeaways:
+  - 掌握「项目管理踩坑合集」中各问题的快速识别方法
+  - 理解每个踩坑的根因分析和排查步骤
+  - 学会标准化的修复流程和预防措施
+relatedIntel:
+  - 043-mlops-engineering
+  - 039-model-evaluation
+tags:
+  - 踩坑
+  - 项目管理
+  - 需求
+  - 沟通
+---
+
 [项目管理]
 
 ## 需求模糊导致反复返工

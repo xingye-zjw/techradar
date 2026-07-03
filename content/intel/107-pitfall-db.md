@@ -1,3 +1,22 @@
+---
+title: "数据库踩坑合集"
+category: cs
+difficulty: intermediate
+duration: 30分钟
+summary: 涵盖 4 个常见踩坑：SQL 查询全表扫描导致数据库卡死、数据库连接池耗尽导致应用无响应、事务未提交导致锁等待超时、数据库主从延迟导致读写分离失效，每个均附快速修复与排查步骤。
+takeaways:
+  - 掌握「数据库踩坑合集」中各问题的快速识别方法
+  - 理解每个踩坑的根因分析和排查步骤
+  - 学会标准化的修复流程和预防措施
+relatedIntel:
+  - 076-cs-database
+tags:
+  - 踩坑
+  - 数据库
+  - SQL
+  - 索引
+---
+
 [数据库]
 
 ## SQL 查询全表扫描导致数据库卡死
@@ -69,7 +88,7 @@
 - 01 检查未提交的事务，定位长时间运行的事务
 - 02 使用 SHOW PROCESSLIST 查看锁状态
 - 03 确保 finally 块正确释放连接和提交事务
-- 04 设置合理的 lock_wait_timeout 参数
+- 04 设置合理的 innodb_lock_wait_timeout 参数（行锁等待，默认 50s）；lock_wait_timeout 是元数据锁超时，两者不同
 - 05 拆分长事务为多个短事务
 
 #数据库#事务#并发

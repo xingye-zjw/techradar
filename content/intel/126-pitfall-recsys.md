@@ -1,3 +1,22 @@
+---
+title: "推荐系统踩坑合集"
+category: machine-learning
+difficulty: intermediate
+duration: 30分钟
+summary: 涵盖 4 个常见踩坑：推荐系统马太效应导致头部内容越推越多、线上线下指标不一致、冷启动问题处理不当导致新用户体验差、特征穿越导致线上效果急剧下降，每个均附快速修复与排查步骤。
+takeaways:
+  - 掌握「推荐系统踩坑合集」中各问题的快速识别方法
+  - 理解每个踩坑的根因分析和排查步骤
+  - 学会标准化的修复流程和预防措施
+relatedIntel:
+  - 116-recommender-systems
+tags:
+  - 踩坑
+  - 推荐系统
+  - 冷启动
+  - A/B测试
+---
+
 [推荐系统]
 
 ## 推荐系统马太效应导致头部内容越推越多

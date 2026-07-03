@@ -1,3 +1,22 @@
+---
+title: "强化学习踩坑合集"
+category: machine-learning
+difficulty: advanced
+duration: 30分钟
+summary: 涵盖 4 个常见踩坑：奖励函数设计不当导致Agent走捷径、探索与利用失衡导致训练不稳定、策略梯度方差过大导致训练崩溃、经验回放缓冲区样本质量差，每个均附快速修复与排查步骤。
+takeaways:
+  - 掌握「强化学习踩坑合集」中各问题的快速识别方法
+  - 理解每个踩坑的根因分析和排查步骤
+  - 学会标准化的修复流程和预防措施
+relatedIntel:
+  - 112-rl-basics
+tags:
+  - 踩坑
+  - 强化学习
+  - 奖励
+  - 训练
+---
+
 [强化学习]
 
 ## 奖励函数设计不当导致Agent走捷径

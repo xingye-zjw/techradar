@@ -355,10 +355,13 @@ export const NODE_NAMES: Record<string, string> = {
   "elec-signals": "信号与系统",
   "elec-digital": "数字电子技术",
   "elec-pcb": "PCB 设计基础",
+  "elec-fpga": "FPGA 与数字系统设计",
   // Signals
+  "signals-basics": "信号与系统基础",
   "signals-comm": "通信原理",
   "signals-dsp": "DSP 数字信号处理",
   "signals-wireless": "无线通信技术",
+  "signals-antenna": "天线原理与设计",
   // Control
   "ctrl-pid": "自动控制原理",
   "ctrl-ros": "机器人技术与 ROS2",
@@ -366,8 +369,10 @@ export const NODE_NAMES: Record<string, string> = {
   "ctrl-servo": "伺服控制系统",
   // Electrical
   "elec-motor": "电机控制与电力电子",
+  "electrical-power-electronics": "电力电子技术",
   "electrical-power": "电力系统基础",
   "electrical-safety": "电气安全与保护",
+  "electrical-relay": "继电保护与电力系统自动化",
   // CV
   "pytorch-core": "PyTorch 框架",
   "cv-cnn": "CNN 经典架构",
@@ -400,6 +405,7 @@ export const NODE_NAMES: Record<string, string> = {
   "project-data-pipeline": "数据管道与 ETL",
   "project-iot-fastapi": "ESP32 传感器数据链路",
   "project-capstone": "综合实战项目",
+
 };
 
 // ============ 工具 ID 到名称映射 ============

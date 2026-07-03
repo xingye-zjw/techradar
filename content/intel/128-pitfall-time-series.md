@@ -1,3 +1,22 @@
+---
+title: "时间序列踩坑合集"
+category: data-processing
+difficulty: intermediate
+duration: 30分钟
+summary: 涵盖 4 个常见踩坑：随机打乱时序数据导致数据泄露、过度差分导致ARIMA模型失效、LSTM处理长序列时梯度消失、MAPE在数据接近0时无限大，每个均附快速修复与排查步骤。
+takeaways:
+  - 掌握「时间序列踩坑合集」中各问题的快速识别方法
+  - 理解每个踩坑的根因分析和排查步骤
+  - 学会标准化的修复流程和预防措施
+relatedIntel:
+  - 117-time-series
+tags:
+  - 踩坑
+  - 时间序列
+  - 预测
+  - ARIMA
+---
+
 [时间序列]
 
 ## 随机打乱时序数据导致数据泄露

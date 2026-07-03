@@ -3,12 +3,15 @@ title: Loss NaN / 梯度爆炸
 category: deep-learning
 difficulty: intermediate
 duration: 30分钟
-summary: 训练过程中 Loss 突然变为 NaN 或 inf，通常是学习率过大或数据中存在异常值导致的。梯度爆炸会导致参数更新过大，最终数值溢出。
+summary: 聚焦单点问题：训练 Loss NaN 与梯度爆炸，涵盖学习率调整、梯度裁剪（clip_grad_norm_）、AdamW+warmup、数据 NaN 检查等排查与修复方案。
 takeaways:
   - 快速识别「Loss NaN / 梯度爆炸」的典型症状
-  - 掌握根因分析：学习率过高导致梯度更新过大，数值溢出为 NaN/inf。也可能是输入数据中存在 NaN/inf，或使...
+  - 理解该问题的根因分析和标准排查步骤
   - 学会分步排查和解决问题的标准化流程
   - 了解预防措施，避免下次踩同样的坑
+relatedIntel:
+  - 090-pitfall-dl-training
+  - 017-metrics
 tags:
   - 踩坑
   - 避坑指南
@@ -31,7 +34,7 @@ tags:
 
 核心要点：
 - **现象**：train_loss 突然跳到 inf / NaN
-- **根因**：学习率过高导致梯度更新过大，数值溢出为 NaN/inf。也可能是输入数据中存在 NaN/inf，或使用 FP16 训练时动态范围不足。warmup 预热和梯度裁
+- **根因**：学习率过高导致梯度更新过大，数值溢出为 NaN/inf。也可能是输入数据中存在 NaN/inf，或使用 FP16 训练时动态范围不足。warmup 预热和梯度裁剪是标准解决方案
 - **解决**：按照下方 6 步标准流程排查
 
 ## 核心拆解
