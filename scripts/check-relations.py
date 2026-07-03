@@ -119,13 +119,19 @@ def main():
     print(f'\n[6] 学习路径文件检查')
     if os.path.exists(LEARNING_PATHS_FILE):
         lp_content = read_file(LEARNING_PATHS_FILE)
-        # 提取路径
-        path_pattern = r'id:\s*"([^"]+)"'
-        paths = re.findall(path_pattern, lp_content)
-        print(f'  学习路径数: {len(paths)}')
-        # 统计节点数
-        node_count = lp_content.count('node:')
+        # 提取路径数
+        path_count = lp_content.count('id:')
+        print(f'  学习路径数: {path_count}')
+        # 提取节点引用数
+        node_count = lp_content.count('nodes:')
         print(f'  路径节点引用数: {node_count}')
+        # 提取所有节点引用
+        node_refs = re.findall(r'nodes:\s*\[([^\]]*)\]', lp_content)
+        total_node_refs = 0
+        for ref in node_refs:
+            ids = re.findall(r"'([^']+)'", ref)
+            total_node_refs += len(ids)
+        print(f'  总节点引用数: {total_node_refs}')
 
     # 检查 track 颜色配置
     print(f'\n[7] Track 颜色配置检查')
@@ -133,20 +139,26 @@ def main():
     if os.path.exists(constants_file):
         c_content = read_file(constants_file)
         # 提取 track 颜色
-        color_pattern = r'"([^"]+)":\s*"#([0-9a-fA-F]{6})"'
-        colors = re.findall(color_pattern, c_content)
-        print(f'  Track 颜色配置: {len(colors)} 个')
-        for t, c in colors[:20]:
-            print(f'    {t}: #{c}')
+        track_pattern = r'"([^"]+)":\s*\{'
+        all_groups = re.findall(track_pattern, c_content)
+        # 过滤掉非 track 颜色的组（如 'text', 'bg' 等）
+        track_colors = [t for t in all_groups if t in ['cv', 'nlp', 'llm', 'devops', 'math', 'project', 'cs', 'embedded', 'electronics', 'signals', 'control', 'electrical']]
+        print(f'  Track 颜色配置: {len(track_colors)} 个')
+        for t in track_colors:
+            print(f'    {t}')
 
     # 检查 layout.ts 文件
     print(f'\n[8] Layout 顺序检查')
     layout_file = r'd:\trae_match\techradar\lib\layout.ts'
     if os.path.exists(layout_file):
         l_content = read_file(layout_file)
-        track_order = re.findall(r'track:\s*"([^"]+)"', l_content)
-        unique_order = list(dict.fromkeys(track_order))
-        print(f'  排序的 tracks: {unique_order}')
+        # 提取 TRACK_ORDER 数组
+        order_pattern = r'TRACK_ORDER\s*=\s*\[([^\]]*)\]'
+        m = re.search(order_pattern, l_content)
+        if m:
+            track_names = re.findall(r"'([^']+)'", m.group(1))
+            print(f'  排序的 tracks: {track_names}')
+            print(f'  总数: {len(track_names)}')
 
     print('\n' + '='*80)
     print('检查完成')
