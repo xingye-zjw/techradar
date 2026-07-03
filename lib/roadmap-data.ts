@@ -61,7 +61,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "Shell / Bash / SSH / tmux / 进程管理，AI 开发者的必备工作环境",
     outcomes: ["熟练使用命令行", "远程操控 GPU 服务器"],
     relatedIntel: ["009-linux", "016-server-setup"],
-    relatedTools: ["Docker"],
+    relatedTools: ["docker"],
     relatedTerms: ["linux", "shell", "ssh", "cli"], relatedNodes: ["git-github", "docker-basic", "devops-docker-api"],
     suggestions: {
       prerequisites: [
@@ -274,11 +274,17 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     prerequisites: ["linux-basic"],
     status: "locked",
     position: { x: 50, y: 220 },
-    description: "版本控制、分支管理、GitHub PR 协作流程",
+    description: "系统学习 Git 版本控制与 GitHub 协作开发流程，掌握分支策略、PR 代码评审、Issue 管理与开源项目贡献规范",
     outcomes: ["独立参与开源项目协作", "代码 Code Review 能力"],
     relatedIntel: ["008-git"],
-    relatedTools: ["Git", "VS Code"],
+    relatedTools: ["git", "vscode"],
     relatedTerms: ["git", "github", "commit", "branch", "pull-request"], relatedNodes: ["linux-basic", "docker-basic", "devops-cicd"],
+    suggestions: {
+      prerequisites: ["Linux 系统基础"],
+      nextSteps: ["模型服务 Docker 化部署"],
+      learningPath: ["DevOps 路径"],
+    },
+
     dailyTasks: [
       { day: 1, title: "仓库初始化与基础配置",
         summary: "掌握 Git 基础概念与初始化配置，完成第一次提交。", content: {
@@ -479,8 +485,14 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "镜像构建 / 容器编排 / GPU 容器 / Docker Compose",
     outcomes: ["模型服务容器化部署", "GPU 训练环境隔离"],
     relatedIntel: ["007-docker"],
-    relatedTools: ["Docker"],
+    relatedTools: ["docker"],
     relatedTerms: ["docker", "container", "image"], relatedNodes: ["linux-basic", "git-github", "devops-kubernetes", "devops-docker-api"],
+    suggestions: {
+      prerequisites: ["Linux 系统基础"],
+      nextSteps: ["综合实战项目", "Kubernetes 容器编排", "CI/CD 与自动化部署"],
+      learningPath: ["DevOps 路径"],
+    },
+
     dailyTasks: [
       { day: 1, title: "Docker 核心概念与第一条命令",
         summary: "理解容器化思想，跑通第一个 Docker 容器，掌握基础命令。", content: {
@@ -681,8 +693,14 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "向量空间、矩阵运算、特征值、SVD——用 NumPy/PyTorch 实战理解",
     outcomes: ["能在代码中理解权重矩阵的维度意义", "能推导反向传播的矩阵形式"],
     relatedIntel: ["010-numpy-pandas"],
-    relatedTools: ["NumPy", "PyTorch"],
+    relatedTools: ["numpy", "pytorch"],
     relatedTerms: ["matrix", "vector", "eigenvalue", "tensor"], relatedNodes: ["math-probability", "math-tensor-ops", "math-optimization"],
+    suggestions: {
+      prerequisites: ["无（入门级）"],
+      nextSteps: ["PyTorch 框架", "PyTorch 张量运算与广播机制", "信息论基础"],
+      learningPath: ["数学基础路径"],
+    },
+
     dailyTasks: [
       { day: 1, title: "向量与基本运算",
         summary: "掌握向量运算及其几何意义，理解点积与范数在深度学习中的应用。", content: {
@@ -878,14 +896,20 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     track: "math",
     duration: "2周",
     difficulty: "beginner",
-    prerequisites: [],
+    prerequisites: ["math-linear-algebra"],
     status: "available",
     position: { x: 260, y: 220 },
-    description: "分布、贝叶斯、假设检验、信息论——理解不确定性与交叉熵",
+    description: "深入学习概率论与数理统计，包括常见分布、贝叶斯推断、假设检验与信息论基础，为理解机器学习中的不确定性与交叉熵损失奠定数学基础",
     outcomes: ["解释 loss 函数的概率意义", "评估模型的统计显著性"],
     relatedIntel: ["010-numpy-pandas", "017-metrics"],
-    relatedTools: ["NumPy", "scikit-learn"],
+    relatedTools: ["numpy", "scikit-learn"],
     relatedTerms: ["gradient-descent", "loss-function", "learning-rate"], relatedNodes: ["math-linear-algebra", "math-information-theory"],
+    suggestions: {
+      prerequisites: ["无（入门级）"],
+      nextSteps: ["NLP 基础与 RNN"],
+      learningPath: ["数学基础路径"],
+    },
+
     dailyTasks: [
       { day: 1, title: "常见分布：均匀、正态、伯努利",
         summary: "掌握均匀、正态、伯努利三种基础分布的特性与采样方法。", content: {
@@ -1086,8 +1110,14 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "Tensor / Dataset / DataLoader / 优化器 / 分布式训练",
     outcomes: ["熟练用 PyTorch 搭建任意模型结构", "分布式训练基础"],
     relatedIntel: ["011-pytorch", "010-numpy-pandas"],
-    relatedTools: ["PyTorch"],
+    relatedTools: ["pytorch"],
     relatedTerms: ["pytorch", "tensor", "cuda", "gpu", "backpropagation"], relatedNodes: ["math-linear-algebra", "cv-cnn", "nlp-rnn"],
+    suggestions: {
+      prerequisites: ["线性代数"],
+      nextSteps: ["CNN 经典架构", "NLP 基础与 RNN", "词向量与语义表示"],
+      learningPath: ["CV 路径"],
+    },
+
     dailyTasks: [
       { day: 1, title: "Tensor 创建与在设备间迁移",
         summary: "掌握 Tensor 创建方法、核心属性与设备迁移，理解张量是深度学习的基础。", content: {
@@ -1285,11 +1315,17 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     prerequisites: ["pytorch-core"],
     status: "locked",
     position: { x: 470, y: 220 },
-    description: "卷积感受野 / ResNet / 迁移学习 / 特征可视化",
+    description: "系统掌握卷积神经网络核心原理，包括感受野计算、经典架构（ResNet/LeNet/VGG）、迁移学习策略与特征可视化方法，是计算机视觉的基石",
     outcomes: ["理解 CNN 设计原理", "能复现经典论文架构并训练"],
     relatedIntel: ["006-cnn-basics", "004-resnet", "002-yolo"],
-    relatedTools: ["Ultralytics YOLO"],
+    relatedTools: ["ultralytics-yolo"],
     relatedTerms: ["cnn", "resnet", "pooling", "feature-map"], relatedNodes: ["pytorch-core", "cv-detection"],
+    suggestions: {
+      prerequisites: ["PyTorch 框架"],
+      nextSteps: ["目标检测", "扩散模型与图像生成", "图像分类与模型部署"],
+      learningPath: ["CV 路径"],
+    },
+
     dailyTasks: [
       { day: 1, title: "卷积操作与感受野",
         summary: "掌握卷积操作的数学原理与感受野计算，理解CNN特征提取的核心机制。", content: {
@@ -1490,8 +1526,14 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "边界框回归 / IoU / YOLO / Ultralytics / 导出 ONNX",
     outcomes: ["训练自定义目标检测数据集", "推理优化与部署"],
     relatedIntel: ["002-yolo", "014-onnx"],
-    relatedTools: ["Ultralytics YOLO", "ONNX Runtime"],
+    relatedTools: ["ultralytics-yolo", "onnx-runtime"],
     relatedTerms: ["yolo", "object-detection", "bounding-box", "map", "nms"], relatedNodes: ["cv-cnn", "cv-instance-segmentation"],
+    suggestions: {
+      prerequisites: ["CNN 经典架构"],
+      nextSteps: ["综合实战项目"],
+      learningPath: ["CV 路径"],
+    },
+
     dailyTasks: [
       { day: 1, title: "目标检测任务与边界框",
         summary: "理解目标检测任务定义，掌握边界框标注格式与可视化方法。", content: {
@@ -1692,8 +1734,14 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "分词 / 词向量 / RNN LSTM / 文本分类 / Seq2Seq",
     outcomes: ["理解序列建模核心原理", "完成文本分类任务"],
     relatedIntel: ["013-huggingface-datasets"],
-    relatedTools: ["PyTorch", "Hugging Face Transformers"],
+    relatedTools: ["pytorch", "huggingface-transformers"],
     relatedTerms: ["rnn", "lstm", "sequence"], relatedNodes: ["pytorch-core", "nlp-word-embeddings", "nlp-transformer"],
+    suggestions: {
+      prerequisites: ["概率与统计", "PyTorch 框架"],
+      nextSteps: ["Transformer 与预训练模型", "序列标注与信息抽取"],
+      learningPath: ["NLP 路径"],
+    },
+
     dailyTasks: [
       { day: 1, title: "文本预处理与分词",
         summary: "掌握NLP文本预处理全流程，从原始文本到模型可用的数字序列。", content: {
@@ -1894,8 +1942,14 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "自注意力 / Multi-Head / BERT / HuggingFace",
     outcomes: ["熟练使用 HuggingFace", "微调 BERT 做文本分类"],
     relatedIntel: ["001-transformer", "013-huggingface-datasets"],
-    relatedTools: ["Hugging Face Transformers"],
+    relatedTools: ["huggingface-transformers"],
     relatedTerms: ["transformer", "self-attention", "attention-mechanism", "encoder", "decoder"], relatedNodes: ["nlp-rnn", "llm-fundamentals"],
+    suggestions: {
+      prerequisites: ["NLP 基础与 RNN"],
+      nextSteps: ["机器翻译与文本生成", "LLM 微调与对齐", "LLM 推理加速与部署"],
+      learningPath: ["NLP 路径"],
+    },
+
     dailyTasks: [
       { day: 1, title: "缩放点积注意力",
         summary: "深入理解缩放点积注意力机制，从零实现并验证数值正确性。", content: {
@@ -2100,7 +2154,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "Word2Vec / GloVe / FastText 词向量原理与训练，理解语义空间表示",
     outcomes: ["理解词向量的核心思想", "能用 Gensim 训练和使用词向量", "理解语义相似度计算"],
     relatedIntel: ["001-transformer"],
-    relatedTools: ["HuggingFace"],
+    relatedTools: ["huggingface-transformers"],
     relatedTerms: ["word-embedding", "word2vec", "glove", "cosine-similarity"], relatedNodes: ["nlp-rnn", "nlp-sentiment-analysis"],
     suggestions: {
       prerequisites: ["Python 编程基础", "线性代数基础"],
@@ -2188,10 +2242,10 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     prerequisites: ["nlp-word-embeddings"],
     status: "available",
     position: { x: 220, y: 0 },
-    description: "情感分析 / 文本分类 / 传统机器学习 + 深度学习方法",
+    description: "全面学习情感分析与文本分类技术，涵盖传统机器学习（SVM/朴素贝叶斯）与深度学习（CNN/RNN/Transformer）两大方法体系",
     outcomes: ["掌握情感分析的核心方法", "能构建文本分类系统", "理解不同方法的优缺点"],
     relatedIntel: ["020-prompt-engineering"],
-    relatedTools: ["HuggingFace"],
+    relatedTools: ["huggingface-transformers"],
     relatedTerms: ["sentiment-analysis", "text-classification", "naive-bayes", "svm", "bert"], relatedNodes: ["nlp-word-embeddings", "nlp-sequence-labeling"],
     suggestions: {
       prerequisites: ["词向量基础", "Python 编程基础"],
@@ -2282,7 +2336,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "命名实体识别 / 词性标注 / CRF / BiLSTM-CRF / 信息抽取",
     outcomes: ["掌握 NER 等序列标注任务", "实现 BiLSTM-CRF 模型", "能从非结构化文本中抽取结构化信息"],
     relatedIntel: ["001-transformer"],
-    relatedTools: ["HuggingFace"],
+    relatedTools: ["huggingface-transformers"],
     relatedTerms: ["named-entity-recognition", "crf", "sequence-labeling", "part-of-speech", "information-extraction"], relatedNodes: ["nlp-rnn", "nlp-transformer"],
     suggestions: {
       prerequisites: ["RNN 与序列模型", "词向量基础"],
@@ -2433,7 +2487,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "神经机器翻译 / Seq2Seq / Attention / Beam Search / 文本生成",
     outcomes: ["实现基于 Transformer 的机器翻译", "掌握文本生成的解码策略", "理解 NMT 的评估方法"],
     relatedIntel: ["001-transformer", "020-prompt-engineering"],
-    relatedTools: ["HuggingFace"],
+    relatedTools: ["huggingface-transformers"],
     relatedTerms: ["machine-translation", "seq2seq", "beam-search", "text-generation", "bleu"], relatedNodes: ["nlp-transformer", "llm-pretraining"],
     suggestions: {
       prerequisites: ["Transformer 与预训练模型", "深度学习基础"],
@@ -2580,8 +2634,14 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "LoRA / QLoRA / 聊天格式 / 数据准备 / 评估",
     outcomes: ["能在消费级 GPU 上微调一个 7B 模型", "搭建聊天 demo"],
     relatedIntel: ["003-lora-qlora", "015-rlhf", "013-huggingface-datasets"],
-    relatedTools: ["Hugging Face Transformers", "LangChain"],
+    relatedTools: ["huggingface-transformers", "langchain"],
     relatedTerms: ["lora", "fine-tuning", "pre-training", "rlhf", "qlora"], relatedNodes: ["llm-pretraining", "llm-rag"],
+    suggestions: {
+      prerequisites: ["Transformer 与预训练模型"],
+      nextSteps: ["综合实战项目", "提示工程与 Agent 设计", "LLM 评估与安全"],
+      learningPath: ["LLM 路径"],
+    },
+
     dailyTasks: [
       { day: 1, title: "LLM 生态与模型规模",
         summary: "了解大语言模型生态，掌握模型选择方法，成功加载并运行一个开源LLM。", content: {
@@ -2779,11 +2839,17 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     prerequisites: ["cv-detection", "llm-finetune", "docker-basic"],
     status: "locked",
     position: { x: 340, y: 620 },
-    description: "从选题到上线：需求/数据/模型/部署/文档/答辩",
+    description: "从选题调研到最终上线的完整项目实战，包含需求分析、数据采集、模型训练、系统部署、文档撰写与答辩全流程",
     outcomes: ["独立完成可演示项目", "产出简历可用作品集"],
     relatedIntel: ["002-yolo", "003-lora-qlora", "007-docker", "018-mlflow"],
-    relatedTools: ["Docker", "MLflow", "Streamlit", "Gradio"],
+    relatedTools: ["docker", "mlflow", "streamlit", "gradio"],
     relatedTerms: ["mlops", "deployment", "monitoring"], relatedNodes: ["devops-mlops", "llm-evaluation"],
+    suggestions: {
+      prerequisites: ["目标检测", "LLM 微调与对齐", "Docker 容器化"],
+      nextSteps: ["继续深入同方向高级话题"],
+      learningPath: ["项目实战路径"],
+    },
+
     dailyTasks: [
       { day: 1, title: "选题与需求文档",
         summary: "完成项目选题、需求分析和PRD文档，搭建项目仓库基础框架。", content: {
@@ -2982,8 +3048,14 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     status: "locked",
     description: "围绕 YOLOv8-seg 的实例分割实战。重点讲解如何将标注好的多边形数据集转化为 YOLO 格式并进行模型微调训练。",
     outcomes: ["掌握多边形标注到 YOLO 格式的转换流程", "完成 YOLOv8-seg 微调训练并推理"],
-    relatedIntel: ["002-yolo"], relatedTools: ["Ultralytics YOLO", "Label Studio", "OpenCV", "Segment Anything"],
+    relatedIntel: ["002-yolo"], relatedTools: ["ultralytics-yolo", "label-studio", "opencv", "segment-anything"],
     relatedTerms: ["yolo", "instance-segmentation", "coco-format"], relatedNodes: ["cv-detection", "cv-pose-estimation"],
+    suggestions: {
+      prerequisites: ["Linux 系统基础"],
+      nextSteps: ["人体姿态估计", "OCR 文字识别"],
+      learningPath: ["CV 路径"],
+    },
+
     dailyTasks: [
       {
         day: 1,
@@ -3127,8 +3199,14 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     status: "locked",
     description: "围绕软硬件结合的数据链路打通。重点讲解如何使用 ESP32 采集传感器数据，并通过 WiFi 发送 HTTP 请求到 FastAPI 构建的后端接收端点。",
     outcomes: ["ESP32 传感器数据采集与 WiFi HTTP 上报", "FastAPI 接收端点 + 数据持久化"],
-    relatedIntel: ["007-docker"], relatedTools: ["FastAPI", "ESP-IDF"],
+    relatedIntel: ["007-docker"], relatedTools: ["fastapi", "esp-idf"],
     relatedTerms: ["esp32", "wifi", "http", "rest-api", "uart"], relatedNodes: ["embedded-hal", "embedded-driver"],
+    suggestions: {
+      prerequisites: ["Linux 系统基础"],
+      nextSteps: ["继续深入同方向高级话题"],
+      learningPath: ["项目实战路径"],
+    },
+
     dailyTasks: [
       {
         day: 1,
@@ -3299,8 +3377,14 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     status: "locked",
     description: "围绕本地知识库构建。重点讲如何使用脚本自动化解析学术文献或网页内容，并结合向量数据库搭建一个轻量级的本地 RAG（检索增强生成）系统。",
     outcomes: ["自动化文档解析与分块", "向量数据库存储与相似度检索", "本地 LLM 生成回答"],
-    relatedIntel: ["005-rag", "001-transformer"], relatedTools: ["LangChain", "ChromaDB", "vLLM"],
+    relatedIntel: ["005-rag", "001-transformer"], relatedTools: ["langchain", "chromadb", "vllm"],
     relatedTerms: ["rag", "vector-database", "embedding", "chunking", "llm"], relatedNodes: ["llm-rag", "llm-inference"],
+    suggestions: {
+      prerequisites: ["Linux 系统基础"],
+      nextSteps: ["继续深入同方向高级话题"],
+      learningPath: ["LLM 路径"],
+    },
+
     dailyTasks: [
       {
         day: 1,
@@ -3543,8 +3627,14 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     status: "locked",
     description: "围绕模型服务化部署。重点讲如何编写 Dockerfile，将一个包含了深度学习推理逻辑的 Python/FastAPI 服务打包成体积优化的镜像。",
     outcomes: ["Dockerfile 多阶段构建优化", "FastAPI 模型推理服务容器化", "镜像体积控制 < 2GB"],
-    relatedIntel: ["007-docker"], relatedTools: ["Docker", "Triton Inference Server", "vLLM"],
+    relatedIntel: ["007-docker"], relatedTools: ["docker", "triton-inference-server", "vllm"],
     relatedTerms: ["docker", "dockerfile", "multi-stage-build", "uvicorn", "fastapi"], relatedNodes: ["docker-basic", "devops-kubernetes", "devops-monitoring"],
+    suggestions: {
+      prerequisites: ["Linux 系统基础", "Git & GitHub 协作"],
+      nextSteps: ["继续深入同方向高级话题"],
+      learningPath: ["DevOps 路径"],
+    },
+
     dailyTasks: [
       {
         day: 1,
@@ -3714,12 +3804,18 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     track: "math",
     difficulty: "intermediate",
     duration: "1周",
-    prerequisites: [],
+    prerequisites: ["math-linear-algebra"],
     status: "locked",
     description: "围绕深度学习中的矩阵运算。重点解析 PyTorch 中的高维张量乘法（如 torch.matmul）与广播机制（Broadcasting）在实际神经网络前向传播中的应用。",
     outcomes: ["理解高维张量的维度语义", "掌握 matmul / mm / bmm 差异", "熟练运用广播机制避免显式维度扩展"],
-    relatedIntel: ["010-numpy-pandas", "011-pytorch"], relatedTools: ["PyTorch", "NumPy"],
+    relatedIntel: ["010-numpy-pandas", "011-pytorch"], relatedTools: ["pytorch", "numpy"],
     relatedTerms: ["tensor", "matrix-multiplication", "broadcasting", "torch.matmul", "reshape"], relatedNodes: ["math-linear-algebra", "pytorch-core"],
+    suggestions: {
+      prerequisites: ["线性代数"],
+      nextSteps: ["继续深入同方向高级话题"],
+      learningPath: ["数学基础路径"],
+    },
+
     dailyTasks: [
       {
         day: 1,
@@ -3893,8 +3989,14 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     position: { x: 750, y: 220 },
     description: "基于 YOLOv8-pose / HRNet 的关键点检测与行为识别。从 COCO 17 点标注格式到实时摄像头动作告警。",
     outcomes: ["掌握关键点数据集标注与模型训练", "实现基于骨架序列的简单动作分类"],
-    relatedIntel: ["002-yolo"], relatedTools: ["Ultralytics YOLO", "OpenCV"],
+    relatedIntel: ["002-yolo"], relatedTools: ["ultralytics-yolo", "opencv"],
     relatedTerms: ["keypoint", "pose-estimation", "hrnet", "coco-format", "action-recognition"], relatedNodes: ["cv-detection"],
+    suggestions: {
+      prerequisites: ["YOLOv8-seg 实例分割实战"],
+      nextSteps: ["继续深入同方向高级话题"],
+      learningPath: ["CV 路径"],
+    },
+
     dailyTasks: [
       {
         day: 1,
@@ -4026,8 +4128,14 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     position: { x: 750, y: 400 },
     description: "从 PaddleOCR 开箱使用到自定义 DBNet 检测 + CRNN/TrOCR 识别的全流程，覆盖文档版面分析与票据结构化。",
     outcomes: ["能在中文票据场景下达到可用的 OCR 精度", "理解 DBNet 检测与 CRNN 序列识别原理"],
-    relatedIntel: ["002-yolo"], relatedTools: ["OpenCV", "PyTorch"],
+    relatedIntel: ["002-yolo"], relatedTools: ["opencv", "pytorch"],
     relatedTerms: ["ocr", "paddleocr", "dbnet", "crnn", "trocr", "layout-analysis"], relatedNodes: ["cv-cnn"],
+    suggestions: {
+      prerequisites: ["YOLOv8-seg 实例分割实战"],
+      nextSteps: ["继续深入同方向高级话题"],
+      learningPath: ["CV 路径"],
+    },
+
     dailyTasks: [
       {
         day: 1,
@@ -4162,8 +4270,14 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     position: { x: 470, y: 440 },
     description: "从 DDPM 数学直觉到 Stable Diffusion / FLUX 实战：LoRA 微调、ControlNet 条件控制、ComfyUI 工作流、产品图自动生成 Pipeline。",
     outcomes: ["理解扩散模型前向/反向过程", "能独立做 LoRA 微调 + ControlNet 条件生成", "搭建一个可复用的图像生成工作流"],
-    relatedIntel: ["006-cnn-basics"], relatedTools: ["PyTorch"],
+    relatedIntel: ["006-cnn-basics"], relatedTools: ["pytorch"],
     relatedTerms: ["diffusion", "stable-diffusion", "lora", "controlnet", "comfyui", "flux", "image-generation"], relatedNodes: ["cv-cnn", "llm-pretraining"],
+    suggestions: {
+      prerequisites: ["CNN 经典架构"],
+      nextSteps: ["继续深入同方向高级话题"],
+      learningPath: ["CV 路径"],
+    },
+
     dailyTasks: [
       {
         day: 1,
@@ -4383,8 +4497,14 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     status: "locked",
     description: "围绕大模型推理加速与生产级部署。重点讲 vLLM / SGLang 等推理引擎的原理，以及量化、批处理、长上下文等核心优化技术。",
     outcomes: ["掌握 KV Cache / PagedAttention 原理", "部署生产级 vLLM 推理服务", "GPTQ/AWQ 量化压缩模型"],
-    relatedIntel: ["001-transformer", "005-rag"], relatedTools: ["vLLM", "Triton Inference Server"],
+    relatedIntel: ["001-transformer", "005-rag"], relatedTools: ["vllm", "triton-inference-server"],
     relatedTerms: ["vllm", "quantization", "pagedattention", "kv-cache", "batch-inference"], relatedNodes: ["llm-pretraining", "llm-local-rag"],
+    suggestions: {
+      prerequisites: ["Transformer 与预训练模型"],
+      nextSteps: ["继续深入同方向高级话题"],
+      learningPath: ["LLM 路径"],
+    },
+
     dailyTasks: [
       {
         day: 1,
@@ -4593,8 +4713,14 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     status: "locked",
     description: "围绕大模型提示工程与 Agent 系统设计。重点讲 Prompt 结构化输出、ReAct 模式、Function Calling 与工具调用。",
     outcomes: ["掌握结构化 Prompt 设计", "实现 ReAct Agent", "Function Calling 集成工具"],
-    relatedIntel: ["001-transformer", "005-rag"], relatedTools: ["LangChain"],
+    relatedIntel: ["001-transformer", "005-rag"], relatedTools: ["langchain"],
     relatedTerms: ["prompt", "chain-of-thought", "function-calling", "react", "agent", "structured-output"], relatedNodes: ["llm-rag", "llm-agent"],
+    suggestions: {
+      prerequisites: ["LLM 微调与对齐"],
+      nextSteps: ["RAG 知识库问答系统"],
+      learningPath: ["LLM 路径"],
+    },
+
     dailyTasks: [
       {
         day: 1,
@@ -4720,8 +4846,14 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     status: "locked",
     description: "围绕 Kubernetes 容器编排核心技术与 GPU 调度。重点讲 Pod/Deployment/Service/Helm 等核心概念，以及在 K8s 上部署 AI 推理服务。",
     outcomes: ["掌握 K8s 核心概念与 kubectl 操作", "在 K8s 上部署有状态服务", "GPU 调度与 HPA 自动扩缩容"],
-    relatedIntel: ["007-docker", "016-server-setup"], relatedTools: ["Kubernetes", "Docker"],
+    relatedIntel: ["007-docker", "016-server-setup"], relatedTools: ["kubernetes", "docker"],
     relatedTerms: ["kubernetes", "kubectl", "helm", "pod", "deployment", "service", "gpu-scheduling"], relatedNodes: ["docker-basic", "devops-docker-api", "devops-monitoring"],
+    suggestions: {
+      prerequisites: ["Docker 容器化"],
+      nextSteps: ["MLOps 与模型运维", "监控体系：Prometheus + Grafana"],
+      learningPath: ["DevOps 路径"],
+    },
+
     dailyTasks: [
       {
         day: 1,
@@ -4934,7 +5066,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "GitHub Actions / Jenkins / 持续集成 / 持续部署 / 自动化测试流水线",
     outcomes: ["掌握 CI/CD 核心概念和流水线设计", "能用 GitHub Actions 构建完整的 CI/CD 流水线", "理解自动化测试和部署策略"],
     relatedIntel: ["008-git", "043-mlops-engineering"],
-    relatedTools: ["Docker"],
+    relatedTools: ["docker"],
     relatedTerms: ["ci-cd", "github-actions", "jenkins", "continuous-integration", "devops"], relatedNodes: ["git-github", "docker-basic", "devops-mlops"],
     suggestions: {
       prerequisites: ["Git & GitHub", "Docker 基础"],
@@ -5085,7 +5217,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "MLflow / 模型注册 / 实验管理 / 模型监控 / A/B 测试",
     outcomes: ["掌握 MLOps 核心概念", "能用 MLflow 管理实验和模型", "理解模型监控和持续训练"],
     relatedIntel: ["018-mlflow", "043-mlops-engineering", "028-server-ops"],
-    relatedTools: ["Docker", "Kubernetes"],
+    relatedTools: ["docker", "kubernetes"],
     relatedTerms: ["mlops", "mlflow", "model-registry", "experiment-tracking", "model-monitoring"], relatedNodes: ["devops-cicd", "devops-kubernetes", "project-capstone"],
     suggestions: {
       prerequisites: ["CI/CD 基础", "Kubernetes 基础"],
@@ -5230,8 +5362,14 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     status: "locked",
     description: "围绕 AI 服务监控体系搭建。重点讲 Prometheus 指标采集、Grafana 可视化仪表盘构建，以及模型训练与服务监控的最佳实践。",
     outcomes: ["搭建 Prometheus + Grafana 监控栈", "设计 Grafana 仪表盘", "配置告警规则"],
-    relatedIntel: ["017-metrics", "007-docker"], relatedTools: ["Prometheus", "Grafana"],
+    relatedIntel: ["017-metrics", "007-docker"], relatedTools: ["prometheus", "grafana"],
     relatedTerms: ["prometheus", "grafana", "metrics", "alerting", "observability"], relatedNodes: ["docker-basic", "devops-kubernetes"],
+    suggestions: {
+      prerequisites: ["Kubernetes 容器编排"],
+      nextSteps: ["继续深入同方向高级话题"],
+      learningPath: ["DevOps 路径"],
+    },
+
     dailyTasks: [
       {
         day: 1,
@@ -5357,8 +5495,14 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     status: "locked",
     description: "围绕信息论核心概念及其在机器学习中的应用。重点讲熵、交叉熵、KL 散度与损失函数的内在联系，以及 MLE/MAP 估计的理论基础。",
     outcomes: ["理解熵与互信息的定义", "掌握交叉熵作为损失函数的数学推导", "理解 MLE / MAP 估计的等价性"],
-    relatedIntel: ["010-numpy-pandas", "011-pytorch"], relatedTools: ["NumPy"],
+    relatedIntel: ["010-numpy-pandas", "011-pytorch"], relatedTools: ["numpy"],
     relatedTerms: ["entropy", "cross-entropy", "kl-divergence", "mutual-information", "mle", "map"], relatedNodes: ["math-probability", "math-optimization"],
+    suggestions: {
+      prerequisites: ["线性代数"],
+      nextSteps: ["继续深入同方向高级话题"],
+      learningPath: ["数学基础路径"],
+    },
+
     dailyTasks: [
       {
         day: 1,
@@ -5483,8 +5627,14 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     status: "locked",
     description: "围绕凸优化理论与深度学习优化器的数学原理。重点讲凸集/凸函数/梯度下降收敛性，以及 Adam/SGD 等优化器的数学推导。",
     outcomes: ["理解凸优化问题与局部最优的关系", "推导 Adam / SGD+Momentum 的更新公式", "理解正则化与优化问题的联系"],
-    relatedIntel: ["010-numpy-pandas", "011-pytorch"], relatedTools: ["NumPy"],
+    relatedIntel: ["010-numpy-pandas", "011-pytorch"], relatedTools: ["numpy"],
     relatedTerms: ["convex-optimization", "gradient-descent", "adam", "sgd", "lagrangian", "kkt", "regularization"], relatedNodes: ["math-linear-algebra", "math-probability"],
+    suggestions: {
+      prerequisites: ["线性代数"],
+      nextSteps: ["继续深入同方向高级话题"],
+      learningPath: ["数学基础路径"],
+    },
+
     dailyTasks: [
       {
         day: 1,
@@ -5613,10 +5763,10 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     prerequisites: ["llm-prompt-engineering", "pytorch-core"],
     status: "available",
     position: { x: 120, y: 620 },
-    description: "基于大语言模型的检索增强生成系统，从文档理解到问答应用",
+    description: "构建基于大语言模型的检索增强生成系统，从文档切分、向量检索、Prompt 工程到问答应用，掌握 RAG 全栈开发能力",
     outcomes: ["掌握 RAG 核心原理与实现", "能构建完整的知识库问答系统", "理解向量检索与 Prompt 工程"],
     relatedIntel: ["020-prompt-engineering", "021-rag-intro"],
-    relatedTools: ["LangChain", "HuggingFace", "Streamlit"],
+    relatedTools: ["langchain", "huggingface-transformers", "streamlit"],
     relatedTerms: ["rag", "vector-database", "embedding", "retrieval", "langchain"], relatedNodes: ["llm-rag", "llm-local-rag"],
     suggestions: {
       prerequisites: ["Python 编程基础", "LLM 基础"],
@@ -5764,10 +5914,10 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     prerequisites: ["cv-cnn", "pytorch-core"],
     status: "locked",
     position: { x: 560, y: 620 },
-    description: "从数据准备到模型训练再到部署的完整 CV 项目",
+    description: "从零开始完成图像分类项目，涵盖数据增强、模型选型、训练调优、模型压缩到端侧部署的完整计算机视觉开发链路",
     outcomes: ["掌握图像分类完整流程", "能训练并优化分类模型", "实现模型部署与 Demo 展示"],
     relatedIntel: ["002-yolo", "015-cv-tricks"],
-    relatedTools: ["PyTorch", "Streamlit", "Docker"],
+    relatedTools: ["pytorch", "streamlit", "docker"],
     relatedTerms: ["image-classification", "transfer-learning", "data-augmentation", "model-deployment", "grad-cam"], relatedNodes: ["cv-cnn", "cv-detection"],
     suggestions: {
       prerequisites: ["PyTorch 基础", "计算机视觉基础"],
@@ -5920,10 +6070,10 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     prerequisites: ["llm-agent", "project-rag-app"],
     status: "locked",
     position: { x: 780, y: 620 },
-    description: "构建具备工具调用、规划推理能力的 LLM Agent 应用",
+    description: "设计并实现具备工具调用、规划推理、记忆管理能力的 LLM Agent 应用，掌握 ReAct、AutoGPT 等主流 Agent 架构",
     outcomes: ["掌握 Agent 核心原理", "能构建多工具 Agent 系统", "理解 ReAct/规划等高级模式"],
     relatedIntel: ["022-agent-intro", "021-rag-intro"],
-    relatedTools: ["LangChain", "HuggingFace", "Streamlit"],
+    relatedTools: ["langchain", "huggingface-transformers", "streamlit"],
     relatedTerms: ["agent", "tool-calling", "react", "function-calling", "auto-gpt"], relatedNodes: ["llm-agent", "llm-prompt-engineering"],
     suggestions: {
       prerequisites: ["RAG 应用开发", "LLM 基础"],
@@ -6073,8 +6223,14 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     status: "locked",
     description: "围绕数据采集、清洗、标注、版本管理与定时调度。重点讲构建一条从原始数据到训练-ready 数据的完整端到端 Pipeline。",
     outcomes: ["掌握爬虫/API 数据采集", "数据清洗与质量验证", "DVC 数据版本管理", "Airflow 定时任务编排"],
-    relatedIntel: ["009-linux", "010-numpy-pandas"], relatedTools: ["Apache Airflow", "Dask", "pandas"],
+    relatedIntel: ["009-linux", "010-numpy-pandas"], relatedTools: ["airflow", "dask", "pandas"],
     relatedTerms: ["etl", "web-scraping", "dvc", "airflow", "data-quality", "pandas"], relatedNodes: ["devops-mlops"],
+    suggestions: {
+      prerequisites: ["Linux 系统基础"],
+      nextSteps: ["继续深入同方向高级话题"],
+      learningPath: ["项目实战路径"],
+    },
+
     dailyTasks: [
       {
         day: 1,
@@ -6202,8 +6358,14 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "计算机科学的核心基础，包括常用算法设计思路、时间空间复杂度分析、以及各类数据结构的应用场景",
     outcomes: ["熟练分析代码复杂度", "掌握常见算法设计范式", "能用数据结构解决实际问题"],
     relatedIntel: ["050-cs-algo", "133-pitfall-algorithm"],
-    relatedTools: ["NumPy", "pandas"],
+    relatedTools: ["numpy", "pandas"],
     relatedTerms: ["algorithm", "data-structure", "complexity"], relatedNodes: ["cs-os", "cs-network"],
+    suggestions: {
+      prerequisites: ["无（入门级）"],
+      nextSteps: ["操作系统原理", "数据库系统"],
+      learningPath: ["CS 基础路径"],
+    },
+
     dailyTasks: [
       { day: 1, title: "复杂度分析：时间与空间",
         summary: "掌握时间与空间复杂度分析方法，学会用Big O notation评价算法优劣。", content: {
@@ -6562,8 +6724,14 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "理解操作系统如何管理硬件资源：进程线程、内存管理、文件系统、IO调度，为系统级编程和性能优化打下基础",
     outcomes: ["理解进程与线程的区别", "掌握内存管理基本原理", "理解文件系统与IO模型"],
     relatedIntel: ["009-linux"],
-    relatedTools: ["GCC"],
+    relatedTools: ["gcc"],
     relatedTerms: ["process", "thread", "memory", "filesystem", "io"], relatedNodes: ["cs-algo", "cs-network"],
+    suggestions: {
+      prerequisites: ["算法与数据结构"],
+      nextSteps: ["计算机网络"],
+      learningPath: ["CS 基础路径"],
+    },
+
     dailyTasks: [
       { day: 1, title: "操作系统概述与体系结构",
         summary: "理解操作系统的核心功能与设计哲学，掌握Linux内核架构特点。", content: {
@@ -6779,8 +6947,14 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "C语言是嵌入式开发的基石，指针是C语言的核心。深入理解指针、内存管理和底层操作，是开发嵌入式系统和性能优化代码的必备技能",
     outcomes: ["掌握C语言核心语法", "深入理解指针和内存管理", "能编写嵌入式级别的高效代码"],
     relatedIntel: ["052-embedded-c", "140-pitfall-c-pointer-out-of-bounds"],
-    relatedTools: ["GCC"],
+    relatedTools: ["gcc"],
     relatedTerms: ["c-language", "pointer", "memory", "embedded"], relatedNodes: ["embedded-rtos", "embedded-driver"],
+    suggestions: {
+      prerequisites: ["无（入门级）"],
+      nextSteps: ["RTOS实时操作系统", "嵌入式驱动开发"],
+      learningPath: ["嵌入式路径"],
+    },
+
     dailyTasks: [
       { day: 1, title: "C语言基础与开发环境",
         summary: "理解C语言特点与编译流程，搭建开发环境并完成第一个C程序。", content: {
@@ -6995,8 +7169,14 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "FreeRTOS是最流行的开源实时操作系统，学习任务调度、信号量、消息队列、内存管理等核心机制，理解实时系统的确定性要求",
     outcomes: ["掌握FreeRTOS核心API", "理解任务调度与优先级", "能用信号量和队列实现任务间通信"],
     relatedIntel: ["009-linux"],
-    relatedTools: ["FreeRTOS", "STM32CubeMX"],
+    relatedTools: ["freertos", "stm32cubemx"],
     relatedTerms: ["rtos", "freertos", "task", "semaphore", "queue"], relatedNodes: ["embedded-c", "embedded-hal"],
+    suggestions: {
+      prerequisites: ["C语言与指针"],
+      nextSteps: ["机器人技术与ROS2", "嵌入式硬件抽象层"],
+      learningPath: ["嵌入式路径"],
+    },
+
     dailyTasks: [
       { day: 1, title: "实时操作系统概述",
         summary: "理解RTOS与通用OS的区别，掌握FreeRTOS的特点与实时系统基本概念。", content: {
@@ -7211,8 +7391,14 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "从电路基本定律到模拟电子技术核心器件，掌握看懂原理图、设计电路、分析信号的能力",
     outcomes: ["理解电路基本定律", "掌握常用电子器件特性", "能看懂和设计基础电路"],
     relatedIntel: ["054-elec-circuit", "070-elec-components", "111-pitfall-circuit"],
-    relatedTools: ["LTspice"],
+    relatedTools: ["ltspice"],
     relatedTerms: ["circuit", "analog", "op-amp", "transistor"], relatedNodes: ["elec-signals", "elec-digital"],
+    suggestions: {
+      prerequisites: ["无（入门级）"],
+      nextSteps: ["信号与系统", "电机控制与电力电子", "数字电子技术"],
+      learningPath: ["电子电路路径"],
+    },
+
     dailyTasks: [
       { day: 1, title: "电路基本定律",
         summary: "掌握电路基本组成与欧姆定律、基尔霍夫定律，建立电路分析的基础框架。", content: {
@@ -7462,8 +7648,14 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "掌握信号分析与系统响应的核心概念，理解傅里叶变换、拉普拉斯变换在信号处理中的应用",
     outcomes: ["理解信号分类与性质", "掌握傅里叶分析方法", "理解系统频率响应特性"],
     relatedIntel: ["055-elec-signals", "066-signals-basics"],
-    relatedTools: ["MATLAB"],
+    relatedTools: ["matlab"],
     relatedTerms: ["signal", "fourier", "laplace", "filter"], relatedNodes: ["elec-circuit", "signals-comm"],
+    suggestions: {
+      prerequisites: ["电路基础与模拟电子"],
+      nextSteps: ["通信原理", "自动控制原理", "DSP数字信号处理"],
+      learningPath: ["电子电路路径"],
+    },
+
     dailyTasks: [
       { day: 1, title: "信号与系统概述",
         summary: "掌握信号与系统的分类方法，理解LTI系统的核心特性与工程意义。", content: {
@@ -7713,8 +7905,14 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "理解通信系统的基本组成和调制解调原理，掌握数字通信中的编解码技术",
     outcomes: ["理解通信系统基本模型", "掌握调制解调原理", "理解信道编码技术"],
     relatedIntel: ["056-signals-comm", "082-signals-wireless"],
-    relatedTools: ["MATLAB"],
+    relatedTools: ["matlab"],
     relatedTerms: ["modulation", "demodulation", "coding", "channel"], relatedNodes: ["signals-dsp", "signals-wireless"],
+    suggestions: {
+      prerequisites: ["信号与系统"],
+      nextSteps: ["无线通信技术"],
+      learningPath: ["通信信号路径"],
+    },
+
     dailyTasks: [
       { day: 1, title: "通信系统基本模型", summary: "学习通信系统基本概念与架构，理解模拟通信和数字通信的特点差异。", content: {
           objective: "掌握通信系统的基本组成和主要性能指标，理解模拟通信与数字通信的区别，了解通信系统的发展历程和主要应用场景，建立通信系统的整体认知框架，为后续深入学习调制解调、信道编码等内容打下基础。",
@@ -7993,11 +8191,17 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     prerequisites: ["elec-signals"],
     status: "locked",
     position: { x: 0, y: 0 },
-    description: "掌握自动控制的核心概念，理解反馈控制原理和控制器设计方法",
+    description: "深入理解自动控制理论核心概念，掌握反馈控制原理、PID 控制器设计与参数整定方法，是工业控制与机器人的基础",
     outcomes: ["理解控制系统基本组成", "掌握PID控制器原理", "能分析系统稳定性"],
     relatedIntel: ["057-ctrl-pid", "068-ctrl-state-space", "142-pitfall-pid-tuning-oscillation"],
-    relatedTools: ["MATLAB", "NumPy"],
+    relatedTools: ["matlab", "numpy"],
     relatedTerms: ["control", "pid", "feedback", "stability"], relatedNodes: ["ctrl-ros", "ctrl-servo"],
+    suggestions: {
+      prerequisites: ["信号与系统"],
+      nextSteps: ["机器人技术与ROS2", "电机控制与电力电子", "PLC工业控制"],
+      learningPath: ["自动控制路径"],
+    },
+
     dailyTasks: [
       { day: 1, title: "控制系统概述", summary: "学习自动控制基本概念与系统组成，理解开环与闭环控制的区别与特点。", content: {
           objective: "掌握自动控制系统的基本组成和工作原理，理解开环控制与闭环控制的本质区别，学会用框图表示控制系统，了解控制系统的基本性能要求（稳、准、快），建立控制理论的基本认知框架，为后续PID控制和系统分析打下基础。",
@@ -8213,8 +8417,14 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "学习机器人操作系统ROS2的核心概念，掌握导航、定位和控制的实践技能",
     outcomes: ["掌握ROS2核心概念", "理解机器人导航原理", "能实现基本的机器人控制"],
     relatedIntel: ["058-ctrl-ros", "144-pitfall-h-bridge-shoot-through"],
-    relatedTools: ["ROS2"],
+    relatedTools: ["ros2"],
     relatedTerms: ["ros", "robot", "navigation", "slam"], relatedNodes: ["ctrl-pid", "ctrl-plc"],
+    suggestions: {
+      prerequisites: ["RTOS实时操作系统", "自动控制原理"],
+      nextSteps: ["继续深入同方向高级话题"],
+      learningPath: ["自动控制路径"],
+    },
+
     dailyTasks: [
       { day: 1, title: "ROS2概述与安装",
         summary: "学习ROS2的基本概念、系统架构与安装方法，建立机器人软件开发的整体认知。", content: {
@@ -8440,8 +8650,14 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "掌握直流电机和交流电机的控制原理，理解FOC矢量控制和电力电子变换技术",
     outcomes: ["理解电机工作原理", "掌握FOC矢量控制", "理解电力电子变换技术"],
     relatedIntel: ["059-elec-motor", "144-pitfall-h-bridge-shoot-through"],
-    relatedTools: ["LTspice", "STM32CubeMX"],
+    relatedTools: ["ltspice", "stm32cubemx"],
     relatedTerms: ["motor", "foc", "inverter", "pwm"], relatedNodes: ["electrical-power", "ctrl-servo"],
+    suggestions: {
+      prerequisites: ["电路基础与模拟电子", "自动控制原理"],
+      nextSteps: ["伺服控制系统"],
+      learningPath: ["电气工程路径"],
+    },
+
     dailyTasks: [
       { day: 1, title: "电机分类与工作原理",
         summary: "掌握电机的基本分类与工作原理，理解电磁转矩的产生机制与应用场景。", content: {
@@ -8731,8 +8947,14 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "理解计算机网络的核心原理，掌握TCP/IP协议栈、网络编程和分布式系统基础",
     outcomes: ["理解TCP/IP协议栈", "掌握网络编程基础", "理解分布式系统概念"],
     relatedIntel: ["075-cs-network", "108-pitfall-network"],
-    relatedTools: [],
+    relatedTools: ["wireshark", "postman"],
     relatedTerms: ["tcp-ip", "socket", "http", "dns", "routing"], relatedNodes: ["cs-os", "cs-database"],
+    suggestions: {
+      prerequisites: ["操作系统原理"],
+      nextSteps: ["继续深入同方向高级话题"],
+      learningPath: ["CS 基础路径"],
+    },
+
     dailyTasks: [
       { day: 1, title: "计算机网络概述",
         summary: "理解计算机网络的基本概念、分类和拓扑结构，掌握网络核心功能。", content: {
@@ -8948,8 +9170,14 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "掌握数据库系统的核心原理，理解关系模型、SQL语言、事务处理和数据库设计",
     outcomes: ["理解关系数据库模型", "掌握SQL语言", "理解事务和并发控制"],
     relatedIntel: ["076-cs-database", "107-pitfall-db"],
-    relatedTools: [],
+    relatedTools: ["mysql", "pgvector", "redis"],
     relatedTerms: ["sql", "database", "transaction", "index", "nosql"], relatedNodes: ["cs-network"],
+    suggestions: {
+      prerequisites: ["算法与数据结构"],
+      nextSteps: ["继续深入同方向高级话题"],
+      learningPath: ["CS 基础路径"],
+    },
+
     dailyTasks: [
       { day: 1, title: "数据库系统概述",
         summary: "理解数据库系统的组成与数据模型演进，掌握关系数据库的核心概念。", content: {
@@ -9165,8 +9393,14 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "掌握嵌入式外设驱动开发技术，理解GPIO、I2C、SPI、UART等通信协议和驱动架构",
     outcomes: ["掌握常用通信协议", "理解驱动架构设计", "能编写外设驱动程序"],
     relatedIntel: ["077-embedded-driver", "097-pitfall-embedded"],
-    relatedTools: ["STM32CubeMX"],
+    relatedTools: ["stm32cubemx"],
     relatedTerms: ["gpio", "i2c", "spi", "uart", "driver"], relatedNodes: ["embedded-c", "embedded-hal"],
+    suggestions: {
+      prerequisites: ["C语言与指针"],
+      nextSteps: ["嵌入式硬件抽象层"],
+      learningPath: ["嵌入式路径"],
+    },
+
     dailyTasks: [
       { day: 1, title: "嵌入式驱动概述",
         summary: "理解嵌入式驱动的作用与分类，掌握驱动开发的核心原则和不同环境差异。", content: {
@@ -9381,8 +9615,14 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "学习嵌入式系统的硬件抽象层设计，理解HAL架构和跨平台移植技术",
     outcomes: ["理解HAL架构设计", "掌握跨平台移植方法", "能设计可复用的驱动框架"],
     relatedIntel: ["078-embedded-hal", "069-embedded-arduino"],
-    relatedTools: ["STM32CubeMX"],
+    relatedTools: ["stm32cubemx"],
     relatedTerms: ["hal", "bsp", "porting", "abstraction"], relatedNodes: ["embedded-c", "embedded-rtos", "embedded-driver"],
+    suggestions: {
+      prerequisites: ["嵌入式驱动开发", "RTOS实时操作系统"],
+      nextSteps: ["继续深入同方向高级话题"],
+      learningPath: ["嵌入式路径"],
+    },
+
     dailyTasks: [
       { day: 1, title: "硬件抽象层概述",
         summary: "理解HAL的设计思想与层次结构，掌握硬件抽象层在嵌入式系统中的作用。", content: {
@@ -9532,8 +9772,14 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "掌握数字电路的核心原理，理解逻辑门、组合逻辑、时序逻辑和数字系统设计",
     outcomes: ["理解逻辑门和布尔代数", "掌握组合逻辑和时序逻辑设计", "能设计简单的数字系统"],
     relatedIntel: ["079-elec-digital", "111-pitfall-circuit"],
-    relatedTools: ["LTspice"],
+    relatedTools: ["ltspice"],
     relatedTerms: ["logic-gate", "boolean", "flip-flop", "counter", "fsm"], relatedNodes: ["elec-circuit", "elec-pcb"],
+    suggestions: {
+      prerequisites: ["电路基础与模拟电子"],
+      nextSteps: ["PCB设计基础"],
+      learningPath: ["电子电路路径"],
+    },
+
     dailyTasks: [
       { day: 1, title: "数字电路概述",
         summary: "学习数字电路基本概念与分类，理解数字信号的特点和数字系统的优势。", content: {
@@ -9793,8 +10039,14 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "学习印制电路板（PCB）设计的基础知识，掌握原理图绘制、PCB布局布线和设计规范",
     outcomes: ["掌握原理图绘制", "理解PCB布局布线", "了解PCB设计规范"],
     relatedIntel: ["080-elec-pcb", "098-pitfall-hardware"],
-    relatedTools: [],
+    relatedTools: ["kicad", "altium-designer"],
     relatedTerms: ["pcb", "schematic", "layout", "routing", "gerber"], relatedNodes: ["elec-digital"],
+    suggestions: {
+      prerequisites: ["电路基础与模拟电子", "数字电子技术"],
+      nextSteps: ["继续深入同方向高级话题"],
+      learningPath: ["电子电路路径"],
+    },
+
     dailyTasks: [
       { day: 1, title: "PCB概述",
         summary: "学习PCB基本概念、结构组成与分类，了解PCB在电子系统中的核心作用。", content: {
@@ -9953,8 +10205,14 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "掌握数字信号处理的核心算法，理解数字滤波器设计、FFT应用和实时信号处理",
     outcomes: ["掌握数字滤波器设计", "理解FFT算法应用", "能实现实时信号处理"],
     relatedIntel: ["081-signals-dsp", "067-signals-filter-design", "143-pitfall-fft-spectral-leakage"],
-    relatedTools: ["MATLAB", "NumPy"],
+    relatedTools: ["matlab", "numpy"],
     relatedTerms: ["dsp", "digital-filter", "fft", "convolution", "real-time"], relatedNodes: ["signals-comm", "signals-wireless"],
+    suggestions: {
+      prerequisites: ["信号与系统"],
+      nextSteps: ["继续深入同方向高级话题"],
+      learningPath: ["通信信号路径"],
+    },
+
     dailyTasks: [
       { day: 1, title: "DSP概述", summary: "学习DSP基本概念、系统组成与核心优势，了解其在各领域的广泛应用场景。", content: {
           objective: "掌握DSP（数字信号处理）的基本概念与系统架构，理解ADC采样、数字处理、DAC输出的完整流程，认识DSP相比模拟处理的核心优势，并能举例说明DSP在音频、图像、通信、雷达、医疗等领域的实际应用，为后续深入学习建立整体认知框架。",
@@ -10236,8 +10494,14 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "理解无线通信的核心技术，掌握天线原理、无线信道特性和常见无线协议",
     outcomes: ["理解无线信道特性", "掌握天线基本原理", "了解常见无线协议"],
     relatedIntel: ["082-signals-wireless", "056-signals-comm"],
-    relatedTools: ["MATLAB"],
+    relatedTools: ["matlab"],
     relatedTerms: ["antenna", "wireless", "wifi", "bluetooth", "channel"], relatedNodes: ["signals-comm", "signals-dsp"],
+    suggestions: {
+      prerequisites: ["通信原理"],
+      nextSteps: ["继续深入同方向高级话题"],
+      learningPath: ["通信信号路径"],
+    },
+
     dailyTasks: [
       { day: 1, title: "无线通信概述", summary: "学习无线通信系统概述与发展历程，掌握各代移动通信技术特点。", content: {
           objective: "理解无线通信的基本概念和系统组成，了解从1G到5G的移动通信发展历程和各代技术特点，掌握无线通信的关键技术领域和主要应用场景，建立对无线通信系统的整体认知，为后续深入学习各专项技术打下基础。",
@@ -10519,8 +10783,14 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "学习PLC（可编程逻辑控制器）的原理和应用，掌握工业自动化控制技术",
     outcomes: ["理解PLC工作原理", "掌握梯形图编程", "能设计简单的工业控制系统"],
     relatedIntel: ["083-ctrl-plc", "110-pitfall-control"],
-    relatedTools: [],
+    relatedTools: ["tia-portal", "codesys"],
     relatedTerms: ["plc", "ladder", "industrial", "automation", "scada"], relatedNodes: ["ctrl-ros"],
+    suggestions: {
+      prerequisites: ["自动控制原理"],
+      nextSteps: ["继续深入同方向高级话题"],
+      learningPath: ["自动控制路径"],
+    },
+
     dailyTasks: [
       { day: 1, title: "PLC概述",
         summary: "学习PLC基本概念、组成结构与工作原理，了解PLC在工业自动化中的核心地位。", content: {
@@ -10746,8 +11016,14 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "学习伺服系统的原理和应用，掌握伺服电机控制、运动规划和精密定位技术",
     outcomes: ["理解伺服系统原理", "掌握伺服电机控制", "能设计运动控制系统"],
     relatedIntel: ["084-ctrl-servo", "110-pitfall-control"],
-    relatedTools: ["MATLAB"],
+    relatedTools: ["matlab"],
     relatedTerms: ["servo", "motion", "encoder", "position", "trajectory"], relatedNodes: ["ctrl-pid", "ctrl-ros"],
+    suggestions: {
+      prerequisites: ["自动控制原理", "电机控制与电力电子"],
+      nextSteps: ["继续深入同方向高级话题"],
+      learningPath: ["自动控制路径"],
+    },
+
     dailyTasks: [
       { day: 1, title: "伺服系统概述",
         summary: "伺服系统：精确控制位置、速度、加速度的闭环控制系统。", content: {
@@ -10953,8 +11229,14 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "理解电力系统的基本组成和运行原理，掌握电力生产和配电基础知识",
     outcomes: ["理解电力系统组成", "掌握电力生产原理", "了解配电系统结构"],
     relatedIntel: ["071-elec-power-systems", "070-elec-components"],
-    relatedTools: ["LTspice", "MATLAB"],
+    relatedTools: ["ltspice", "matlab"],
     relatedTerms: ["power-system", "generation", "transmission", "distribution", "grid"], relatedNodes: ["elec-motor", "electrical-safety"],
+    suggestions: {
+      prerequisites: ["电路基础与模拟电子"],
+      nextSteps: ["电气安全与保护"],
+      learningPath: ["电气工程路径"],
+    },
+
     dailyTasks: [
       { day: 1, title: "电力系统概述",
         summary: "掌握电力系统基本组成与运行原理，理解从发电到用电的完整电能传输链条。", content: {
@@ -11243,8 +11525,14 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "学习电气安全的基本知识和保护技术，掌握接地、防雷和电气设备保护方法",
     outcomes: ["理解电气安全规范", "掌握接地技术", "了解防雷保护方法"],
     relatedIntel: ["085-electrical-safety", "098-pitfall-hardware"],
-    relatedTools: [],
+    relatedTools: ["autocad-electrical"],
     relatedTerms: ["grounding", "earthing", "lightning", "safety", "protection"], relatedNodes: ["electrical-power"],
+    suggestions: {
+      prerequisites: ["电路基础与模拟电子", "电力系统基础"],
+      nextSteps: ["继续深入同方向高级话题"],
+      learningPath: ["电气工程路径"],
+    },
+
     dailyTasks: [
       { day: 1, title: "电气安全概述",
         summary: "掌握电气安全基本概念与规范，理解触电类型与安全电压标准。", content: {
@@ -11441,7 +11729,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "深入理解 Transformer 架构、注意力机制、预训练范式（GPT/BERT/T5），掌握 LLM 的核心原理",
     outcomes: ["理解 Self-Attention 和 Multi-Head Attention", "掌握 GPT/BERT/T5 三大预训练范式", "理解 Scaling Law 和涌现能力"],
     relatedIntel: ["001-transformer", "029-moe-mixture-of-experts", "033-long-context-rope"],
-    relatedTools: ["HuggingFace"],
+    relatedTools: ["huggingface-transformers"],
     relatedTerms: ["transformer", "attention", "pre-training"], relatedNodes: ["nlp-transformer", "llm-pretraining"],
     suggestions: {
       prerequisites: ["Transformer 架构理解", "深度学习基础"],
@@ -11583,10 +11871,10 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     prerequisites: ["llm-fundamentals"],
     status: "available",
     position: { x: 50, y: 0 },
-    description: "掌握 LLM 预训练流程、数据清洗与配比、分布式训练策略",
+    description: "系统学习大语言模型预训练全流程，包括数据清洗配比、模型架构设计、分布式训练策略与训练稳定性优化",
     outcomes: ["理解预训练数据流水线", "掌握数据清洗和配比策略", "了解分布式训练（DDP/FSDP/DeepSpeed）"],
     relatedIntel: ["037-distributed-training", "040-data-annotation", "034-cuda-programming"],
-    relatedTools: ["HuggingFace", "PyTorch"],
+    relatedTools: ["huggingface-transformers", "pytorch"],
     relatedTerms: ["pre-training", "tokenization", "distributed-training"], relatedNodes: ["llm-fundamentals", "llm-finetune"],
     suggestions: {
       prerequisites: ["LLM 基础原理", "PyTorch 框架"],
@@ -11731,7 +12019,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "掌握 RAG 系统构建：文档处理、向量检索、生成增强，构建企业级知识库",
     outcomes: ["理解 RAG 架构和流程", "掌握向量数据库和检索策略", "能独立构建 RAG 知识库系统"],
     relatedIntel: ["005-rag", "035-advanced-rag", "042-vector-database"],
-    relatedTools: ["LangChain", "HuggingFace"],
+    relatedTools: ["langchain", "huggingface-transformers"],
     relatedTerms: ["rag", "embedding", "vector-database"], relatedNodes: ["llm-finetune", "llm-local-rag"],
     suggestions: {
       prerequisites: ["LLM 基础原理", "Python 编程基础"],
@@ -11876,7 +12164,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "掌握 LLM Agent 开发：Function Calling、ReAct 框架、多 Agent 协作",
     outcomes: ["理解 Agent 架构和 ReAct 范式", "掌握 Function Calling 和工具调用", "能构建多 Agent 协作系统"],
     relatedIntel: ["031-agentic-ai", "036-code-generation", "020-prompt-engineering"],
-    relatedTools: ["LangChain", "HuggingFace"],
+    relatedTools: ["langchain", "huggingface-transformers"],
     relatedTerms: ["agent", "function-calling", "react"], relatedNodes: ["llm-prompt-engineering", "llm-evaluation"],
     suggestions: {
       prerequisites: ["RAG 检索增强生成", "提示工程基础"],
@@ -12021,7 +12309,7 @@ export const FULL_ROADMAP: RoadmapNodeType[] = [
     description: "掌握 LLM 评估方法（自动/人工评估）、安全对齐（幻觉/偏见/越狱）和部署最佳实践",
     outcomes: ["掌握 LLM 评估指标和方法", "理解幻觉检测和缓解策略", "了解 LLM 安全防护和对齐技术"],
     relatedIntel: ["038-llm-security", "039-model-evaluation", "027-rlhf-alignment"],
-    relatedTools: ["HuggingFace", "MLflow"],
+    relatedTools: ["huggingface-transformers", "mlflow"],
     relatedTerms: ["evaluation", "hallucination", "alignment"], relatedNodes: ["llm-finetune", "llm-agent"],
     suggestions: {
       prerequisites: ["LLM 微调与对齐", "LLM 基础原理"],
