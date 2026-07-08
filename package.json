@@ -2,9 +2,14 @@
   "name": "techradar",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=9.0.0"
+  },
   "scripts": {
+    "clean": "node -e \"const fs=require('fs');['.next','out'].forEach(d=>{try{fs.rmSync(d,{recursive:true,force:true})}catch(e){console.warn('clean skip:',d,e.code)}})\"",
     "dev": "next dev",
-    "prebuild": "tsx scripts/prebuild-search-index.mjs",
+    "prebuild": "npm run clean && node -e \"const {existsSync,statSync}=require('fs');const {execSync}=require('child_process');const p='public/search-index.json';if(existsSync(p)&&statSync(p).size>200){console.log('✅ Prebuilt search-index found ('+statSync(p).size+' bytes), skip regeneration')}else{console.log('⚙️ Regenerating search-index.json');execSync('tsx scripts/prebuild-search-index.mjs',{stdio:'inherit'})}\"",
     "build": "next build",
     "start": "next start",
     "lint": "eslint \"{app,components,lib,__tests__}/**/*.{ts,tsx,js,jsx}\"",

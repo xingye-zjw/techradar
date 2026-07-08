@@ -38,3 +38,14 @@ test
 __pycache__/
 *.pyc
 *.pyo
+
+# local build & debug logs
+*.log
+build*.log
+push.log
+tsc.log
+vitest.log
+
+# local share packages & temp proposals
+.trae-html-share-packages/
+techradar-proposal/
