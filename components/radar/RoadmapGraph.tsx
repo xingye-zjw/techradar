@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState, useMemo, useRef } from "react";
+import { useCallback, useEffect, useState, useMemo, useRef, useTransition } from "react";
 import {
   ReactFlow,
   Controls,
@@ -21,7 +21,7 @@ import type { RoadmapNode as RoadmapNodeType, NodeStatus, TrackId } from "./type
 import { ROADMAP_TRACKS } from "./types";
 import { LEARNING_PATHS, type LearningPath } from "@/lib/learning-paths";
 import { getNodeProgressPercent } from "@/lib/progress";
-import { autoLayout, getTrackBounds, TRACK_ORDER } from "@/lib/layout";
+import { getTrackBounds, TRACK_ORDER } from "@/lib/layout";
 import { TRACK_COLORS, getSwimlaneLabelColor } from "@/lib/constants";
 import { useKeyboardShortcuts } from "@/lib/use-keyboard-shortcuts";
 import { ShortcutsPanel } from "@/components/ShortcutsPanel";
@@ -67,9 +67,9 @@ interface RoadmapGraphProps {
 function getTrackStats(nodes: RoadmapNodeType[], completedNodes: Set<string>) {
   const stats: Record<string, { total: number; completed: number }> = {};
 
-  TRACK_ORDER.forEach(trackId => {
-    const trackNodes = nodes.filter(n => n.track === trackId);
-    const completed = trackNodes.filter(n => completedNodes.has(n.id)).length;
+  TRACK_ORDER.forEach((trackId) => {
+    const trackNodes = nodes.filter((n) => n.track === trackId);
+    const completed = trackNodes.filter((n) => completedNodes.has(n.id)).length;
     stats[trackId] = { total: trackNodes.length, completed };
   });
 
@@ -81,14 +81,16 @@ export function RoadmapGraph({ initialNodes }: RoadmapGraphProps) {
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [completedNodes, setCompletedNodes] = useState<Set<string>>(new Set());
   const [activeTrack, setActiveTrack] = useState<TrackId | "all">("all");
-  const [layoutDirection, setLayoutDirection] = useState<'TB' | 'LR'>('TB');
+  const [layoutDirection, setLayoutDirection] = useState<"TB" | "LR">("TB");
   const [selectedNode, setSelectedNode] = useState<RoadmapNodeType | null>(null);
   const [selectedPath, setSelectedPath] = useState<LearningPath | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
   const [fullRoadmap, setFullRoadmap] = useState<RoadmapNodeType[]>([]);
   const [showShortcuts, setShowShortcuts] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [, startTransition] = useTransition();
   const reactFlowInstanceRef = useRef<ReactFlowInstance<RoadmapFlowNode, Edge> | null>(null);
+  const autoLayoutPositionsRef = useRef<Map<string, { x: number; y: number }>>(new Map());
 
   useEffect(() => {
     import("@/lib/roadmap-data").then(({ FULL_ROADMAP }) => {
@@ -103,7 +105,9 @@ export function RoadmapGraph({ initialNodes }: RoadmapGraphProps) {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       return saved ? JSON.parse(saved) : {};
-    } catch { return {}; }
+    } catch {
+      return {};
+    }
   }, []);
 
   const calculateNodeStatus = useCallback(
@@ -113,25 +117,130 @@ export function RoadmapGraph({ initialNodes }: RoadmapGraphProps) {
       if (!node) return "locked";
       if (node.prerequisites.length === 0) return "available";
       return node.prerequisites.every((p) => completed.has(p)) ? "available" : "locked";
-    }, []
+    },
+    [],
   );
 
-  // 使用 useMemo 缓存布局计算结果
-  const autoLayoutPositions = useMemo(
-    () => autoLayout(roadmapData, layoutDirection),
-    [roadmapData, layoutDirection]
+  // 异步自动布局计算：dynamic import dagre + Promise 回调
+  const runAutoLayoutAsync = useCallback(
+    async (
+      nodes: RoadmapNodeType[],
+      direction: "TB" | "LR",
+    ): Promise<Map<string, { x: number; y: number }>> => {
+      const dagre = await import("dagre");
+      const NODE_WIDTH = 220;
+      const NODE_HEIGHT = 160;
+      const TRACK_GAP = 150;
+
+      const positions = new Map<string, { x: number; y: number }>();
+
+      const trackGroups = new Map<string, RoadmapNodeType[]>();
+      for (const node of nodes) {
+        if (!trackGroups.has(node.track)) {
+          trackGroups.set(node.track, []);
+        }
+        trackGroups.get(node.track)!.push(node);
+      }
+
+      const trackLayouts: Array<{
+        track: string;
+        positions: Map<string, { x: number; y: number }>;
+        width: number;
+        height: number;
+      }> = [];
+
+      for (const track of TRACK_ORDER) {
+        const group = trackGroups.get(track) || [];
+        if (group.length === 0) continue;
+
+        const g = new dagre.graphlib.Graph();
+        g.setGraph({
+          rankdir: "TB",
+          nodesep: 80,
+          ranksep: 100,
+          marginx: 30,
+          marginy: 30,
+        });
+        g.setDefaultEdgeLabel(() => ({}));
+
+        for (const node of group) {
+          g.setNode(node.id, { width: NODE_WIDTH, height: NODE_HEIGHT });
+        }
+
+        for (const node of group) {
+          for (const prereq of node.prerequisites) {
+            if (g.hasNode(prereq)) {
+              g.setEdge(prereq, node.id);
+            }
+          }
+        }
+
+        dagre.layout(g);
+
+        const trackPositions = new Map<string, { x: number; y: number }>();
+        let minX = Infinity,
+          minY = Infinity,
+          maxX = -Infinity,
+          maxY = -Infinity;
+
+        for (const node of group) {
+          const nodeWithPos = g.node(node.id);
+          if (nodeWithPos) {
+            const x = nodeWithPos.x - NODE_WIDTH / 2;
+            const y = nodeWithPos.y - NODE_HEIGHT / 2;
+            trackPositions.set(node.id, { x, y });
+            minX = Math.min(minX, x);
+            minY = Math.min(minY, y);
+            maxX = Math.max(maxX, x + NODE_WIDTH);
+            maxY = Math.max(maxY, y + NODE_HEIGHT);
+          }
+        }
+
+        trackPositions.forEach((pos, id) => {
+          trackPositions.set(id, { x: pos.x - minX, y: pos.y - minY });
+        });
+
+        trackLayouts.push({
+          track,
+          positions: trackPositions,
+          width: maxX - minX,
+          height: maxY - minY,
+        });
+      }
+
+      let offset = 0;
+
+      if (direction === "TB") {
+        for (const layout of trackLayouts) {
+          layout.positions.forEach((pos, id) => {
+            positions.set(id, { x: pos.x + offset, y: pos.y });
+          });
+          offset += layout.width + TRACK_GAP;
+        }
+      } else {
+        for (const layout of trackLayouts) {
+          layout.positions.forEach((pos, id) => {
+            positions.set(id, { x: pos.y, y: pos.x + offset });
+          });
+          offset += layout.height + TRACK_GAP;
+        }
+      }
+
+      return positions;
+    },
+    [],
   );
 
   // 计算进度统计
   const trackStats = useMemo(
     () => getTrackStats(roadmapData, completedNodes),
-    [roadmapData, completedNodes]
+    [roadmapData, completedNodes],
   );
 
   // 总体进度
   const totalProgress = useMemo(() => {
     const total = roadmapData.length;
-    const completed = roadmapData.filter(n => completedNodes.has(n.id)).length;
+    const completed = roadmapData.filter((n) => completedNodes.has(n.id)).length;
     return { total, completed, percent: total > 0 ? Math.round((completed / total) * 100) : 0 };
   }, [roadmapData, completedNodes]);
 
@@ -143,39 +252,64 @@ export function RoadmapGraph({ initialNodes }: RoadmapGraphProps) {
     setIsInitialized(true);
   }, [loadProgress]);
 
-  // 当布局方向或初始化状态变化时，更新节点位置
+  // 当布局方向或初始化状态变化时，异步计算布局并更新节点
   useEffect(() => {
     if (!isInitialized || roadmapData.length === 0) return;
 
+    let cancelled = false;
     const saved = loadProgress();
     const completed = new Set(Object.keys(saved).filter((id) => saved[id] === "completed"));
 
-    const initialized = roadmapData.map((node) => ({
-      id: node.id,
-      type: "roadmap" as const,
-      position: autoLayoutPositions.get(node.id) || { x: 0, y: 0 },
-      data: {
-        name: node.name,
-        duration: node.duration,
-        status: calculateNodeStatus(node.id, roadmapData, completed),
-        track: node.track,
-        description: node.description,
-        outcomes: node.outcomes,
-        hasTasks: (node.dailyTasks?.length ?? 0) > 0,
-        progressPercent: getNodeProgressPercent(node.id, node.dailyTasks?.length || 0),
-        relatedIntelCount: node.relatedIntel?.length || 0,
-        relatedToolsCount: node.relatedTools?.length || 0,
-      },
-    }));
+    // dynamic import dagre 并异步计算布局
+    runAutoLayoutAsync(roadmapData, layoutDirection).then((positions) => {
+      if (cancelled) return;
 
-    setNodes(initialized);
-    setEdges(generateEdges(roadmapData));
+      autoLayoutPositionsRef.current = positions;
 
-    // 延迟 fitView
-    setTimeout(() => {
-      reactFlowInstanceRef.current?.fitView({ padding: 0.15, duration: 300 });
-    }, 100);
-  }, [isInitialized, roadmapData, layoutDirection, autoLayoutPositions, calculateNodeStatus, loadProgress, setNodes, setEdges]);
+      const initialized = roadmapData.map((node) => ({
+        id: node.id,
+        type: "roadmap" as const,
+        position: positions.get(node.id) || { x: 0, y: 0 },
+        data: {
+          name: node.name,
+          duration: node.duration,
+          status: calculateNodeStatus(node.id, roadmapData, completed),
+          track: node.track,
+          description: node.description,
+          outcomes: node.outcomes,
+          hasTasks: (node.dailyTasks?.length ?? 0) > 0,
+          progressPercent: getNodeProgressPercent(node.id, node.dailyTasks?.length || 0),
+          relatedIntelCount: node.relatedIntel?.length || 0,
+          relatedToolsCount: node.relatedTools?.length || 0,
+        },
+      }));
+
+      startTransition(() => {
+        setNodes(initialized);
+        setEdges(generateEdges(roadmapData));
+      });
+
+      setTimeout(() => {
+        startTransition(() => {
+          reactFlowInstanceRef.current?.fitView({ duration: 200, padding: 0.25 });
+        });
+      }, 100);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    isInitialized,
+    roadmapData,
+    layoutDirection,
+    runAutoLayoutAsync,
+    calculateNodeStatus,
+    loadProgress,
+    setNodes,
+    setEdges,
+    startTransition,
+  ]);
 
   // 路径高亮效果
   useEffect(() => {
@@ -193,7 +327,7 @@ export function RoadmapGraph({ initialNodes }: RoadmapGraphProps) {
             type: "arrowclosed" as const,
             color: completedNodes.has(e.source) ? "#4ade80" : "#52525b",
           },
-        }))
+        })),
       );
       return;
     }
@@ -209,7 +343,7 @@ export function RoadmapGraph({ initialNodes }: RoadmapGraphProps) {
               boxShadow: "0 0 12px rgba(139, 92, 246, 0.4)",
             }
           : { opacity: 0.3 },
-      }))
+      })),
     );
 
     setEdges((eds) =>
@@ -229,28 +363,30 @@ export function RoadmapGraph({ initialNodes }: RoadmapGraphProps) {
             color: isInPath ? "#8b5cf6" : "#52525b",
           },
         };
-      })
+      }),
     );
 
     // 自动跳转到路径节点区域
     setTimeout(() => {
       if (reactFlowInstanceRef.current && selectedPath.nodes.length > 0) {
-        // 获取路径中所有节点的 ID
         const nodeIds = selectedPath.nodes;
-        // 使用 fitView 聚焦到这些节点，减小 padding 让节点显示更大
-        reactFlowInstanceRef.current.fitView({
-          nodes: nodeIds.map(id => ({ id })),
-          padding: 0.1,
-          duration: 500,
-          maxZoom: 1.2,
+        startTransition(() => {
+          reactFlowInstanceRef.current?.fitView({
+            nodes: nodeIds.map((id) => ({ id })),
+            padding: 0.1,
+            duration: 500,
+            maxZoom: 1.2,
+          });
         });
       }
     }, 200);
-  }, [selectedPath, completedNodes, setNodes, setEdges]);
+  }, [selectedPath, completedNodes, setNodes, setEdges, startTransition]);
 
   const saveProgress = useCallback((completed: Set<string>) => {
     const progress: Record<string, NodeStatus> = {};
-    completed.forEach((id) => { progress[id] = "completed"; });
+    completed.forEach((id) => {
+      progress[id] = "completed";
+    });
     localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
   }, []);
 
@@ -261,7 +397,7 @@ export function RoadmapGraph({ initialNodes }: RoadmapGraphProps) {
         setSelectedNode(fullNode);
       }
     },
-    [roadmapData]
+    [roadmapData],
   );
 
   const onNodeToggleComplete = useCallback(
@@ -269,7 +405,9 @@ export function RoadmapGraph({ initialNodes }: RoadmapGraphProps) {
       let newCompleted = new Set(completedNodes);
       if (newCompleted.has(nodeId)) {
         newCompleted.delete(nodeId);
-        roadmapData.filter((n) => n.prerequisites.includes(nodeId)).forEach((n) => newCompleted.delete(n.id));
+        roadmapData
+          .filter((n) => n.prerequisites.includes(nodeId))
+          .forEach((n) => newCompleted.delete(n.id));
       } else {
         newCompleted.add(nodeId);
       }
@@ -284,10 +422,10 @@ export function RoadmapGraph({ initialNodes }: RoadmapGraphProps) {
             ...n.data,
             status: calculateNodeStatus(n.id, roadmapData, newCompleted),
           },
-        }))
+        })),
       );
     },
-    [completedNodes, calculateNodeStatus, saveProgress, setNodes, roadmapData]
+    [completedNodes, calculateNodeStatus, saveProgress, setNodes, roadmapData],
   );
 
   // 处理路径选择
@@ -304,17 +442,19 @@ export function RoadmapGraph({ initialNodes }: RoadmapGraphProps) {
   }, []);
 
   // 过滤显示的节点
-  const visibleNodes = activeTrack === "all"
-    ? nodes
-    : nodes.filter((n) => n.data.track === activeTrack);
+  const visibleNodes =
+    activeTrack === "all" ? nodes : nodes.filter((n) => n.data.track === activeTrack);
 
   const visibleNodeIds = new Set(visibleNodes.map((n) => n.id));
-  const visibleEdges = edges.filter((e) => visibleNodeIds.has(e.source) && visibleNodeIds.has(e.target));
+  const visibleEdges = edges.filter(
+    (e) => visibleNodeIds.has(e.source) && visibleNodeIds.has(e.target),
+  );
 
   // 计算泳道边界
   const trackBounds = useMemo(
-    () => activeTrack === "all" ? getTrackBounds(roadmapData, autoLayoutPositions) : null,
-    [activeTrack, roadmapData, autoLayoutPositions]
+    () =>
+      activeTrack === "all" ? getTrackBounds(roadmapData, autoLayoutPositionsRef.current) : null,
+    [activeTrack, roadmapData, nodes],
   );
 
   // 获取 selectedNode 的最新状态
@@ -336,14 +476,14 @@ export function RoadmapGraph({ initialNodes }: RoadmapGraphProps) {
     nextNode: () => {
       if (selectedNode && selectedNode.relatedNodes && selectedNode.relatedNodes.length > 0) {
         const nextId = selectedNode.relatedNodes[0];
-        const next = roadmapData.find(n => n.id === nextId);
+        const next = roadmapData.find((n) => n.id === nextId);
         if (next) setSelectedNode(next);
       }
     },
     prevNode: () => {
       if (selectedNode && selectedNode.prerequisites && selectedNode.prerequisites.length > 0) {
         const prevId = selectedNode.prerequisites[0];
-        const prev = roadmapData.find(n => n.id === prevId);
+        const prev = roadmapData.find((n) => n.id === prevId);
         if (prev) setSelectedNode(prev);
       }
     },
@@ -359,7 +499,9 @@ export function RoadmapGraph({ initialNodes }: RoadmapGraphProps) {
     },
     resetView: () => {
       if (reactFlowInstanceRef.current) {
-        reactFlowInstanceRef.current.fitView({ padding: 0.15, duration: 300 });
+        startTransition(() => {
+          reactFlowInstanceRef.current?.fitView({ duration: 200, padding: 0.25 });
+        });
       }
     },
     showShortcuts: () => setShowShortcuts(true),
@@ -373,13 +515,24 @@ export function RoadmapGraph({ initialNodes }: RoadmapGraphProps) {
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="text-base font-semibold text-neutral-100 flex items-center gap-2">
-                <svg className="w-5 h-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                <svg
+                  className="w-5 h-5 text-green-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                  />
                 </svg>
                 学习进度总览
               </h3>
               <p className="text-xs text-neutral-400 mt-1">
-                已完成 <span className="text-green-400 font-medium">{totalProgress.completed}</span> / {totalProgress.total} 个节点
+                已完成 <span className="text-green-400 font-medium">{totalProgress.completed}</span>{" "}
+                / {totalProgress.total} 个节点
               </p>
             </div>
             <div className="text-right">
@@ -420,10 +573,16 @@ export function RoadmapGraph({ initialNodes }: RoadmapGraphProps) {
                   }`}
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <span className={`w-2.5 h-2.5 rounded-full ${trackColor.solid} ${stat.completed > 0 ? 'shadow-sm' : 'opacity-50'}`} />
-                    <span className="font-mono text-[10px] text-neutral-400">{stat.completed}/{stat.total}</span>
+                    <span
+                      className={`w-2.5 h-2.5 rounded-full ${trackColor.solid} ${stat.completed > 0 ? "shadow-sm" : "opacity-50"}`}
+                    />
+                    <span className="font-mono text-[10px] text-neutral-400">
+                      {stat.completed}/{stat.total}
+                    </span>
                   </div>
-                  <div className={`text-xs font-medium mb-2 ${isActive ? trackColor.text : 'text-neutral-300'}`}>
+                  <div
+                    className={`text-xs font-medium mb-2 ${isActive ? trackColor.text : "text-neutral-300"}`}
+                  >
                     {trackColor.label}
                   </div>
                   <div className="w-full h-1.5 bg-neutral-800 rounded-full overflow-hidden">
@@ -468,7 +627,9 @@ export function RoadmapGraph({ initialNodes }: RoadmapGraphProps) {
                 }`}
               >
                 <span className="flex items-center gap-1.5">
-                  <span className={`w-2 h-2 rounded-full ${isActive ? trackColor.solid : 'bg-neutral-600'}`} />
+                  <span
+                    className={`w-2 h-2 rounded-full ${isActive ? trackColor.solid : "bg-neutral-600"}`}
+                  />
                   {t.name}
                 </span>
               </button>
@@ -483,21 +644,21 @@ export function RoadmapGraph({ initialNodes }: RoadmapGraphProps) {
             <span className="text-[10px] text-neutral-500 font-mono">布局</span>
             <div className="flex rounded-lg bg-neutral-800/50 p-0.5">
               <button
-                onClick={() => setLayoutDirection('TB')}
+                onClick={() => setLayoutDirection("TB")}
                 className={`px-3 py-1.5 rounded-md text-xs font-mono transition-all duration-200 ${
-                  layoutDirection === 'TB'
-                    ? 'bg-neutral-200 text-neutral-900 shadow-sm'
-                    : 'text-neutral-400 hover:text-neutral-200'
+                  layoutDirection === "TB"
+                    ? "bg-neutral-200 text-neutral-900 shadow-sm"
+                    : "text-neutral-400 hover:text-neutral-200"
                 }`}
               >
                 ↓ 纵向
               </button>
               <button
-                onClick={() => setLayoutDirection('LR')}
+                onClick={() => setLayoutDirection("LR")}
                 className={`px-3 py-1.5 rounded-md text-xs font-mono transition-all duration-200 ${
-                  layoutDirection === 'LR'
-                    ? 'bg-neutral-200 text-neutral-900 shadow-sm'
-                    : 'text-neutral-400 hover:text-neutral-200'
+                  layoutDirection === "LR"
+                    ? "bg-neutral-200 text-neutral-900 shadow-sm"
+                    : "text-neutral-400 hover:text-neutral-200"
                 }`}
               >
                 → 横向
@@ -512,7 +673,12 @@ export function RoadmapGraph({ initialNodes }: RoadmapGraphProps) {
             title="键盘快捷键 (?)"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
+              />
             </svg>
           </button>
 
@@ -527,8 +693,18 @@ export function RoadmapGraph({ initialNodes }: RoadmapGraphProps) {
             title="设置"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+              />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+              />
             </svg>
           </button>
         </div>
@@ -571,40 +747,44 @@ export function RoadmapGraph({ initialNodes }: RoadmapGraphProps) {
             fitViewOptions={{ padding: 0.15 }}
             minZoom={0.1}
             maxZoom={1.5}
+            onlyRenderVisibleElements={true}
+            proOptions={{ hideAttribution: true }}
           >
             <Background color="#000000" gap={20} />
 
             {/* 泳道背景 - 仅在"全部 Track"模式下显示 */}
-            {activeTrack === "all" && trackBounds && Array.from(trackBounds.entries()).map(([track, bounds]) => {
-              const trackColor = TRACK_COLORS[track];
-              if (!trackColor) return null;
-              return (
-                <div
-                  key={track}
-                  className="absolute rounded-2xl pointer-events-none"
-                  style={{
-                    left: bounds.x,
-                    top: bounds.y,
-                    width: bounds.width,
-                    height: bounds.height,
-                    backgroundColor: trackColor.swimlane,
-                    border: `1px solid ${trackColor.swimlaneBorder}`,
-                    zIndex: 0,
-                  }}
-                >
-                  {/* Track 标签 */}
+            {activeTrack === "all" &&
+              trackBounds &&
+              Array.from(trackBounds.entries()).map(([track, bounds]) => {
+                const trackColor = TRACK_COLORS[track];
+                if (!trackColor) return null;
+                return (
                   <div
-                    className="absolute top-3 left-3 px-3 py-1.5 rounded-lg text-[11px] font-mono font-bold"
+                    key={track}
+                    className="absolute rounded-2xl pointer-events-none"
                     style={{
-                      backgroundColor: trackColor.swimlaneBorder,
-                      color: getSwimlaneLabelColor(track),
+                      left: bounds.x,
+                      top: bounds.y,
+                      width: bounds.width,
+                      height: bounds.height,
+                      backgroundColor: trackColor.swimlane,
+                      border: `1px solid ${trackColor.swimlaneBorder}`,
+                      zIndex: 0,
                     }}
                   >
-                    {trackColor.label}
+                    {/* Track 标签 */}
+                    <div
+                      className="absolute top-3 left-3 px-3 py-1.5 rounded-lg text-[11px] font-mono font-bold"
+                      style={{
+                        backgroundColor: trackColor.swimlaneBorder,
+                        color: getSwimlaneLabelColor(track),
+                      }}
+                    >
+                      {trackColor.label}
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
 
             <Controls className="!bg-neutral-900 !border-neutral-700 !rounded-xl !shadow-xl hidden md:block" />
           </ReactFlow>
@@ -656,7 +836,12 @@ export function RoadmapGraph({ initialNodes }: RoadmapGraphProps) {
               className="p-1 rounded-lg hover:bg-neutral-800 text-neutral-400 hover:text-neutral-200 transition-colors"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
           </div>
@@ -665,10 +850,7 @@ export function RoadmapGraph({ initialNodes }: RoadmapGraphProps) {
       )}
 
       {/* 快捷键面板 */}
-      <ShortcutsPanel
-        isOpen={showShortcuts}
-        onClose={() => setShowShortcuts(false)}
-      />
+      <ShortcutsPanel isOpen={showShortcuts} onClose={() => setShowShortcuts(false)} />
     </div>
   );
 }

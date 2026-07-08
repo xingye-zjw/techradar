@@ -4,7 +4,7 @@
  */
 
 import { FULL_ROADMAP as FULL_ROADMAP_DATA } from "./roadmap-data";
-import type { RoadmapNode } from "@/components/radar/types";
+import type { RoadmapNode } from "@/lib/content-types";
 
 // 重新导出
 export { FULL_ROADMAP_DATA };

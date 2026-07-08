@@ -27,7 +27,7 @@ export function IntelListClient({ cards }: IntelListClientProps) {
         { name: "keywords", weight: 0.25 },
         { name: "tags", weight: 0.15 },
       ]),
-    [cards]
+    [cards],
   );
 
   // 快捷键聚焦搜索框
@@ -87,9 +87,7 @@ export function IntelListClient({ cards }: IntelListClientProps) {
 
     // 标签筛选
     if (activeTags.size > 0) {
-      result = result.filter((c) =>
-        Array.from(activeTags).some((tag) => c.tags.includes(tag))
-      );
+      result = result.filter((c) => Array.from(activeTags).some((tag) => c.tags.includes(tag)));
     }
 
     return result;
@@ -100,7 +98,11 @@ export function IntelListClient({ cards }: IntelListClientProps) {
     return Object.entries(categoryCounts)
       .filter(([key]) => key !== "all")
       .sort((a, b) => b[1] - a[1])
-      .map(([key, count]) => ({ key, count, ...(categoryMeta[key] || categoryMeta.uncategorized) }));
+      .map(([key, count]) => ({
+        key,
+        count,
+        ...(categoryMeta[key] || categoryMeta.uncategorized),
+      }));
   }, [categoryCounts]);
 
   // 根据 slug 计算原始索引
@@ -116,10 +118,11 @@ export function IntelListClient({ cards }: IntelListClientProps) {
           </span>
           <h1 className="text-3xl md:text-4xl font-bold mt-3 mb-4">技术情报检索</h1>
           <p className="text-base text-neutral-400 leading-relaxed mb-4 max-w-3xl">
-            精选 <span className="text-neutral-100 font-medium">{cards.length}</span> 条经过验证的技术情报，从入门到进阶，覆盖 AI 工程全链路。
-            每条情报卡包含：<span className="text-neutral-100 font-medium">一句话概览</span>
-            、<span className="text-neutral-100 font-medium">核心拆解</span>
-            、<span className="text-neutral-100 font-medium">完整跑通方案</span>，
+            精选 <span className="text-neutral-100 font-medium">{cards.length}</span>{" "}
+            条经过验证的技术情报，从入门到进阶，覆盖 AI 工程全链路。 每条情报卡包含：
+            <span className="text-neutral-100 font-medium">一句话概览</span>、
+            <span className="text-neutral-100 font-medium">核心拆解</span>、
+            <span className="text-neutral-100 font-medium">完整跑通方案</span>，
             帮助你快速判断「是否值得学」以及「如何学」。
           </p>
           {/* 情报搜索框 */}
@@ -290,7 +293,10 @@ export function IntelListClient({ cards }: IntelListClientProps) {
             ))}
           </div>
           <div className="flex items-center gap-3">
-            {(searchQuery || activeCategory !== "all" || activeDifficulty !== "all" || activeTags.size > 0) && (
+            {(searchQuery ||
+              activeCategory !== "all" ||
+              activeDifficulty !== "all" ||
+              activeTags.size > 0) && (
               <button
                 onClick={() => {
                   setSearchQuery("");
@@ -421,7 +427,7 @@ export function IntelListClient({ cards }: IntelListClientProps) {
         {/* 空状态 */}
         {filteredCards.length === 0 && (
           <div className="text-center py-16">
-            <div className="font-mono text-neutral-600 mb-3">// 没有匹配的情报</div>
+            <div className="font-mono text-neutral-600 mb-3">{"// 没有匹配的情报"}</div>
             <button
               onClick={() => {
                 setSearchQuery("");

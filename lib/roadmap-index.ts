@@ -23,12 +23,37 @@ export interface NodeSummary {
   relatedNodes?: string[];
 }
 
+// 构建期预生成反向索引（模块顶部计算一次，避免各处重算）
+const _NODE_BY_ID = new Map<string, RoadmapNode>();
+const _REVERSE_PREREQ = new Map<string, string[]>();
+const _TRACK_TO_NODES = new Map<string, RoadmapNode[]>();
+
+for (const node of FULL_ROADMAP) {
+  _NODE_BY_ID.set(node.id, node);
+
+  if (!_TRACK_TO_NODES.has(node.track)) {
+    _TRACK_TO_NODES.set(node.track, []);
+  }
+  _TRACK_TO_NODES.get(node.track)!.push(node);
+
+  for (const prereq of node.prerequisites) {
+    if (!_REVERSE_PREREQ.has(prereq)) {
+      _REVERSE_PREREQ.set(prereq, []);
+    }
+    _REVERSE_PREREQ.get(prereq)!.push(node.id);
+  }
+}
+
+export const NODE_BY_ID: ReadonlyMap<string, RoadmapNode> = _NODE_BY_ID;
+export const REVERSE_PREREQ: ReadonlyMap<string, string[]> = _REVERSE_PREREQ;
+export const TRACK_TO_NODES: ReadonlyMap<string, RoadmapNode[]> = _TRACK_TO_NODES;
+
 // 全量数据（用于路线图页面）
 export { FULL_ROADMAP };
 
 // 轻量级节点列表（用于首页、搜索等不需要 dailyTasks 的场景）
 export function getNodeSummaries(): NodeSummary[] {
-  return FULL_ROADMAP.map(node => ({
+  return FULL_ROADMAP.map((node) => ({
     id: node.id,
     name: node.name,
     track: node.track,
@@ -47,12 +72,12 @@ export function getNodeSummaries(): NodeSummary[] {
 
 // 获取单个节点详情（含 dailyTasks）
 export function getNodeById(nodeId: string): RoadmapNode | undefined {
-  return FULL_ROADMAP.find(n => n.id === nodeId);
+  return NODE_BY_ID.get(nodeId);
 }
 
 // 获取 track 下的所有节点
 export function getNodesByTrack(track: string): RoadmapNode[] {
-  return FULL_ROADMAP.filter(n => n.track === track);
+  return TRACK_TO_NODES.get(track) || [];
 }
 
 // 获取节点总数

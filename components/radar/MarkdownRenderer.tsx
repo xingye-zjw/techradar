@@ -1,143 +1,22 @@
 /**
- * 轻量 Markdown 渲染器
+ * 轻量 Markdown 渲染器（客户端组件）
  * - 正确处理代码块 ```...```（不会被空行切分）
  * - 支持标题 h1-h4、有序/无序列表、引用、表格、内联代码、加粗、链接
  * - 不依赖任何第三方库，输出 React 元素
+ * - 安全：链接通过 sanitizeUrl 过滤危险协议，外站链接二次确认
  *
- * 设计思路：先扫描拆分出"块"（block），再逐块渲染
+ * 【Client Component 边界】
+ * 此文件含有 "use client"（因为 <a> 的 onClick 使用 window.confirm）。
+ * 纯算法函数 parseBlocks / extractToc 已抽离至 lib/markdown-utils.ts，
+ * Server Components 应从那里 import，避免 client boundary proxy 引发的
+ * RSC 序列化错误 "(0, o.o) is not a function"。
  */
 
-interface HeadingMeta {
-  level: number;
-}
+"use client";
 
-interface TableMeta {
-  lang?: string;
-  headerCells?: string[];
-  aligns?: ("left" | "center" | "right")[];
-  rows?: string[][];
-}
-
-interface Block {
-  type: "code" | "heading" | "list" | "ordered-list" | "quote" | "table" | "paragraph";
-  raw: string;
-  meta?: HeadingMeta | TableMeta;
-}
-
-function parseBlocks(source: string): Block[] {
-  const lines = source.replace(/\r\n/g, "\n").split("\n");
-  const blocks: Block[] = [];
-  let i = 0;
-
-  while (i < lines.length) {
-    const line = lines[i];
-
-    // 代码块 ```...```
-    if (/^\s*```/.test(line)) {
-      const lang = line.replace(/^\s*```/, "").trim();
-      const codeLines: string[] = [];
-      i++;
-      while (i < lines.length && !/^\s*```/.test(lines[i])) {
-        codeLines.push(lines[i]);
-        i++;
-      }
-      i++; // 跳过结束 ```
-      blocks.push({ type: "code", raw: codeLines.join("\n"), meta: { lang } });
-      continue;
-    }
-
-    // 空行跳过
-    if (/^\s*$/.test(line)) {
-      i++;
-      continue;
-    }
-
-    // 标题
-    const headingMatch = line.match(/^(#{1,4})\s+(.+)$/);
-    if (headingMatch) {
-      blocks.push({
-        type: "heading",
-        raw: headingMatch[2].trim(),
-        meta: { level: headingMatch[1].length },
-      });
-      i++;
-      continue;
-    }
-
-    // 引用块 > ... （连续多行合并）
-    if (/^\s*>\s?/.test(line)) {
-      const quoteLines: string[] = [];
-      while (i < lines.length && /^\s*>\s?/.test(lines[i])) {
-        quoteLines.push(lines[i].replace(/^\s*>\s?/, ""));
-        i++;
-      }
-      blocks.push({ type: "quote", raw: quoteLines.join("\n") });
-      continue;
-    }
-
-    // 无序列表（以 - / * 开头，连续多行合并）
-    if (/^\s*[-*]\s+/.test(line)) {
-      const listLines: string[] = [];
-      while (i < lines.length && /^\s*[-*]\s+/.test(lines[i])) {
-        listLines.push(lines[i].replace(/^\s*[-*]\s+/, ""));
-        i++;
-      }
-      blocks.push({ type: "list", raw: listLines.join("\n") });
-      continue;
-    }
-
-    // 有序列表 1. 2. 3.
-    if (/^\s*\d+\.\s+/.test(line)) {
-      const listLines: string[] = [];
-      while (i < lines.length && /^\s*\d+\.\s+/.test(lines[i])) {
-        listLines.push(lines[i].replace(/^\s*\d+\.\s+/, ""));
-        i++;
-      }
-      blocks.push({ type: "ordered-list", raw: listLines.join("\n") });
-      continue;
-    }
-
-    // 表格（检测 | 开头的行 + 下一行是分隔行）
-    if (/^\s*\|/.test(line) && i + 1 < lines.length && /^\s*\|?\s*[-:|\s]+\|?\s*$/.test(lines[i + 1])) {
-      const headerCells = line.split("|").slice(1, -1).map((c) => c.trim());
-      const sepLine = lines[i + 1];
-      const aligns = sepLine.split("|").slice(1, -1).map((c) => {
-        const t = c.trim();
-        if (t.startsWith(":") && t.endsWith(":")) return "center";
-        if (t.endsWith(":")) return "right";
-        return "left";
-      });
-      i += 2;
-      const rows: string[][] = [];
-      while (i < lines.length && /^\s*\|/.test(lines[i])) {
-        rows.push(lines[i].split("|").slice(1, -1).map((c) => c.trim()));
-        i++;
-      }
-      blocks.push({ type: "table", raw: "", meta: { headerCells, aligns, rows } });
-      continue;
-    }
-
-    // 普通段落（连续非空行合并直到空行或遇到块元素）
-    const paraLines: string[] = [];
-    while (
-      i < lines.length &&
-      !/^\s*$/.test(lines[i]) &&
-      !/^\s*```/.test(lines[i]) &&
-      !/^#{1,4}\s+/.test(lines[i]) &&
-      !/^\s*>\s?/.test(lines[i]) &&
-      !/^\s*[-*]\s+/.test(lines[i]) &&
-      !/^\s*\d+\.\s+/.test(lines[i])
-    ) {
-      paraLines.push(lines[i]);
-      i++;
-    }
-    if (paraLines.length > 0) {
-      blocks.push({ type: "paragraph", raw: paraLines.join(" ") });
-    }
-  }
-
-  return blocks;
-}
+import { sanitizeUrl, isExternalUrl } from "@/lib/security";
+import { parseBlocks } from "@/lib/markdown-utils";
+import type { Block, HeadingMeta, TableMeta, TocItem } from "@/lib/markdown-utils";
 
 /**
  * 行内文本渲染：处理 **bold**、`code`、[link](url)
@@ -170,18 +49,46 @@ function renderInline(text: string, keyPrefix = ""): React.ReactNode[] {
       );
     }
 
-    // 链接 [text](url)
+    // 链接 [text](url) — 经 sanitizeUrl 过滤 + 外站二次确认
     const linkMatch = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
     if (linkMatch) {
+      const rawUrl = linkMatch[2];
+      const safe = sanitizeUrl(rawUrl);
+      if (!safe) {
+        return (
+          <span
+            key={key}
+            title="该链接使用了不被允许的协议，已禁用"
+            className="line-through decoration-red-500/70 text-neutral-500 cursor-not-allowed"
+          >
+            {linkMatch[1]}
+          </span>
+        );
+      }
+      const external = isExternalUrl(safe);
+      const rel = external ? "noopener noreferrer nofollow ugc" : undefined;
+      const target = external ? "_blank" : undefined;
       return (
         <a
           key={key}
-          href={linkMatch[2]}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-cyan-400 underline decoration-dotted underline-offset-2 hover:text-cyan-300"
+          href={safe}
+          target={target}
+          rel={rel}
+          onClick={
+            external
+              ? (e) => {
+                  const ok = window.confirm(
+                    `即将离开 TechRadar 跳转到外部站点：\n${safe}\n是否继续？`,
+                  );
+                  if (!ok) e.preventDefault();
+                }
+              : undefined
+          }
+          className="text-cyan-400 underline decoration-dotted underline-offset-2 hover:text-cyan-300 transition-colors"
+          title={external ? "外部链接，跳转请谨慎" : undefined}
         >
           {linkMatch[1]}
+          {external && <sup className="ml-0.5 text-[9px] opacity-60 align-top">↗</sup>}
         </a>
       );
     }
@@ -190,11 +97,10 @@ function renderInline(text: string, keyPrefix = ""): React.ReactNode[] {
   });
 }
 
-interface TocItem {
-  id: string;
-  text: string;
-  level: number;
-}
+// TocItem 类型与 extractToc 纯函数已抽离到 lib/markdown-utils.ts（Server-safe）
+// 此处保留 re-export 以维持旧的 import 路径兼容
+export { extractToc } from "@/lib/markdown-utils";
+export type { TocItem } from "@/lib/markdown-utils";
 
 export interface MarkdownRendererProps {
   source: string;
@@ -214,21 +120,33 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
             const Text = block.raw;
             if (level === 1) {
               return (
-                <h2 key={idx} id={blockId} className="text-2xl font-bold text-green-400 mt-10 mb-4 scroll-mt-24">
+                <h2
+                  key={idx}
+                  id={blockId}
+                  className="text-2xl font-bold text-green-400 mt-10 mb-4 scroll-mt-24"
+                >
                   {Text}
                 </h2>
               );
             }
             if (level === 2) {
               return (
-                <h3 key={idx} id={blockId} className="text-xl font-bold text-cyan-400 mt-8 mb-3 scroll-mt-24">
+                <h3
+                  key={idx}
+                  id={blockId}
+                  className="text-xl font-bold text-cyan-400 mt-8 mb-3 scroll-mt-24"
+                >
                   {Text}
                 </h3>
               );
             }
             if (level === 3) {
               return (
-                <h4 key={idx} id={blockId} className="text-base font-semibold text-neutral-100 mt-6 mb-2 scroll-mt-24">
+                <h4
+                  key={idx}
+                  id={blockId}
+                  className="text-base font-semibold text-neutral-100 mt-6 mb-2 scroll-mt-24"
+                >
                   {Text}
                 </h4>
               );
@@ -241,7 +159,8 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
           }
 
           case "code": {
-            const lang = ('lang' in (block.meta || {})) ? (block.meta as TableMeta).lang || "code" : "code";
+            const lang =
+              "lang" in (block.meta || {}) ? (block.meta as TableMeta).lang || "code" : "code";
             return (
               <pre
                 key={idx}
@@ -272,7 +191,10 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
           case "ordered-list": {
             const items = block.raw.split("\n");
             return (
-              <ol key={idx} className="space-y-1.5 pl-6 list-decimal marker:text-green-400 marker:font-mono">
+              <ol
+                key={idx}
+                className="space-y-1.5 pl-6 list-decimal marker:text-green-400 marker:font-mono"
+              >
                 {items.map((item, lIdx) => (
                   <li key={lIdx} className="text-sm text-neutral-400 leading-relaxed">
                     {renderInline(item, `olist-${idx}-${lIdx}`)}
@@ -314,7 +236,10 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
                   </thead>
                   <tbody>
                     {rows.map((row: string[], rIdx: number) => (
-                      <tr key={rIdx} className="border-b border-neutral-800/50 last:border-b-0 hover:bg-neutral-900/40">
+                      <tr
+                        key={rIdx}
+                        className="border-b border-neutral-800/50 last:border-b-0 hover:bg-neutral-900/40"
+                      >
                         {row.map((cell: string, cIdx: number) => (
                           <td
                             key={cIdx}
@@ -344,18 +269,4 @@ export function MarkdownRenderer({ source }: MarkdownRendererProps) {
       })}
     </div>
   );
-}
-
-/**
- * 仅提取目录（TOC），不渲染
- */
-export function extractToc(source: string): TocItem[] {
-  const blocks = parseBlocks(source);
-  const toc: TocItem[] = [];
-  blocks.forEach((b, idx) => {
-    if (b.type === "heading" && b.meta && 'level' in b.meta && b.meta.level === 2) {
-      toc.push({ id: `section-${idx}`, text: b.raw, level: b.meta.level });
-    }
-  });
-  return toc;
 }

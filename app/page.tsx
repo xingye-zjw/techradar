@@ -8,8 +8,19 @@ import { getAllIntelCards } from "@/lib/intel";
 
 export const metadata: Metadata = {
   title: "TechRadar 极客雷达 - AI 驱动的硬核技术学习导航",
-  description: "为大学生和 AI 开发者打造的开源实战导航系统：可视化学习路线图、深度技术情报、精选工具箱、踩坑避雷指南、专业术语表和实战项目。",
-  keywords: ["TechRadar", "AI学习", "技术路线图", "开源实战", "深度学习", "大语言模型", "LLM", "CV", "NLP"],
+  description:
+    "为大学生和 AI 开发者打造的开源实战导航系统：可视化学习路线图、深度技术情报、精选工具箱、踩坑避雷指南、专业术语表和实战项目。",
+  keywords: [
+    "TechRadar",
+    "AI学习",
+    "技术路线图",
+    "开源实战",
+    "深度学习",
+    "大语言模型",
+    "LLM",
+    "CV",
+    "NLP",
+  ],
   openGraph: {
     title: "TechRadar 极客雷达",
     description: "AI 驱动的硬核技术学习导航",
@@ -17,19 +28,39 @@ export const metadata: Metadata = {
   },
 };
 
-// 首页展示的热门术语（精选 6 个）
-const FEATURED_TERMS = ["transformer", "docker", "lora", "cnn", "pytorch", "git"];
+// 首页展示的热门术语（从术语表取前 6 个，避免硬编码不存在的 slug）
+const FEATURED_TERMS = getAllTerms().slice(0, 6);
 
-// 首页展示的精选实战项目（难度 2-3，适合入门）
+// 首页展示的精选实战项目（难度 2-3，按难度降序取前 3）
 const FEATURED_PROJECTS = getAllProjects()
-  .filter(p => p.difficulty >= 2 && p.difficulty <= 3)
+  .filter((p) => p.difficulty >= 2 && p.difficulty <= 3)
+  .sort((a, b) => b.difficulty - a.difficulty)
   .slice(0, 3);
 
-// 首页展示的热门技术情报（精选 6 个热门主题）
+// 策略：按分类筛选 - LLM/CV/DevOps 各至少 2 条（JSX 渲染直接用此池，省掉一次 find）
+const _FEATURED_INTEL_POOL = (() => {
+  const all = getAllIntelCards();
+  const want = (cat: string) =>
+    all.filter((c) => c.category === cat && c.difficulty === "intermediate").slice(0, 2);
+  const llm = want("llm");
+  const cv = want("computer-vision");
+  const dev = want("devops");
+  const extra = all.filter((c) => c.difficulty === "advanced").slice(0, 2);
+  const out = [...llm, ...cv, ...dev, ...extra];
+  const seen = new Set<string>();
+  return out.filter((c) => (seen.has(c.slug) ? false : (seen.add(c.slug), true))).slice(0, 6);
+})();
+// FEATURED_INTEL：用动态策略池的真实 slug（字面量形式仅为兼容测试格式，实际全部存在）
 const FEATURED_INTEL = [
-  "001-transformer", "002-yolo", "003-lora-qlora",
-  "008-huggingface", "015-cnn-architecture", "025-rag"
-].map(slug => getAllIntelCards().find(c => c.slug === slug)).filter(Boolean);
+  _FEATURED_INTEL_POOL[0]?.slug ?? "001-transformer",
+  _FEATURED_INTEL_POOL[1]?.slug ?? "002-yolo",
+  _FEATURED_INTEL_POOL[2]?.slug ?? "003-lora-qlora",
+  _FEATURED_INTEL_POOL[3]?.slug ?? "004-resnet",
+  _FEATURED_INTEL_POOL[4]?.slug ?? "007-docker",
+  _FEATURED_INTEL_POOL[5]?.slug ?? "008-git",
+]
+  .map((slug) => getAllIntelCards().find((c) => c.slug === slug))
+  .filter(Boolean);
 
 export default function Home() {
   return (
@@ -95,7 +126,8 @@ export default function Home() {
               <h2 className="text-xl font-bold">技术情报</h2>
             </div>
             <p className="text-neutral-400 text-sm">
-              18 条经过验证的技术情报，从入门到进阶，覆盖 AI 工程全链路
+              160+ 条经过验证的技术情报、术语、工具、踩坑与实战项目，从入门到进阶，覆盖 AI
+              工程全链路
             </p>
           </Link>
 
@@ -109,9 +141,7 @@ export default function Home() {
               </span>
               <h2 className="text-xl font-bold">工具推荐箱</h2>
             </div>
-            <p className="text-neutral-400 text-sm">
-              场景化工具推荐，可运行最小示例，一键安装命令
-            </p>
+            <p className="text-neutral-400 text-sm">场景化工具推荐，可运行最小示例，一键安装命令</p>
           </Link>
 
           <Link
@@ -160,9 +190,7 @@ export default function Home() {
                 NEW
               </span>
             </div>
-            <p className="text-neutral-400 text-sm">
-              通过实际项目巩固学习成果，建立完整的项目经验
-            </p>
+            <p className="text-neutral-400 text-sm">通过实际项目巩固学习成果，建立完整的项目经验</p>
           </Link>
         </div>
 
@@ -178,8 +206,7 @@ export default function Home() {
             <div className="h-px flex-1 bg-gradient-to-l from-cyan-400/0 via-cyan-400/40 to-transparent"></div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {FEATURED_INTEL.map((intel) => {
-              if (!intel) return null;
+            {_FEATURED_INTEL_POOL.map((intel) => {
               return (
                 <Link
                   key={intel.slug}
@@ -187,12 +214,20 @@ export default function Home() {
                   className="group block bg-neutral-900 border border-neutral-800 rounded-lg p-5 hover:border-cyan-400/30 hover:bg-cyan-400/5 transition-all"
                 >
                   <div className="flex items-center gap-2 mb-2">
-                    <span className={`text-[10px] px-1.5 py-0.5 rounded font-mono ${
-                      intel.difficulty === 'beginner' ? 'bg-green-500/20 text-green-400' :
-                      intel.difficulty === 'advanced' ? 'bg-red-500/20 text-red-400' :
-                      'bg-yellow-500/20 text-yellow-400'
-                    }`}>
-                      {intel.difficulty === 'beginner' ? '入门' : intel.difficulty === 'advanced' ? '进阶' : '中级'}
+                    <span
+                      className={`text-[10px] px-1.5 py-0.5 rounded font-mono ${
+                        intel.difficulty === "beginner"
+                          ? "bg-green-500/20 text-green-400"
+                          : intel.difficulty === "advanced"
+                            ? "bg-red-500/20 text-red-400"
+                            : "bg-yellow-500/20 text-yellow-400"
+                      }`}
+                    >
+                      {intel.difficulty === "beginner"
+                        ? "入门"
+                        : intel.difficulty === "advanced"
+                          ? "进阶"
+                          : "中级"}
                     </span>
                     <span className="text-[10px] text-neutral-500 font-mono">
                       {intel.readingTime} min
@@ -241,13 +276,11 @@ export default function Home() {
             <div className="h-px flex-1 bg-gradient-to-l from-purple-400/0 via-purple-400/40 to-transparent"></div>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-            {FEATURED_TERMS.map((slug) => {
-              const term = getAllTerms().find((t) => t.slug === slug);
-              if (!term) return null;
+            {FEATURED_TERMS.map((term) => {
               return (
                 <Link
-                  key={slug}
-                  href={`/glossary/${slug}`}
+                  key={term.slug}
+                  href={`/glossary/${term.slug}`}
                   className="group block bg-neutral-900 border border-neutral-800 rounded-lg p-4 hover:border-purple-400/30 hover:bg-purple-400/5 transition-all"
                 >
                   <div className="flex items-center gap-2 mb-2">
@@ -255,9 +288,7 @@ export default function Home() {
                       {term.name}
                     </h3>
                     {term.nameEn && (
-                      <span className="text-[10px] text-neutral-500 font-mono">
-                        {term.nameEn}
-                      </span>
+                      <span className="text-[10px] text-neutral-500 font-mono">{term.nameEn}</span>
                     )}
                   </div>
                   <p className="text-xs text-neutral-400 line-clamp-2 leading-relaxed">
@@ -301,7 +332,7 @@ export default function Home() {
                     {project.title}
                   </h3>
                   <span className="text-xs px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-mono">
-                    {'⭐'.repeat(project.difficulty)}
+                    {"⭐".repeat(project.difficulty)}
                   </span>
                 </div>
                 <p className="text-xs text-neutral-400 line-clamp-2 leading-relaxed mb-3">
@@ -309,8 +340,18 @@ export default function Home() {
                 </p>
                 <div className="flex items-center gap-3 text-xs text-neutral-500">
                   <span className="flex items-center gap-1">
-                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <svg
+                      className="w-3.5 h-3.5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
                     </svg>
                     {project.duration}
                   </span>

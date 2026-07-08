@@ -1,62 +1,55 @@
 "use client";
 
-/**
- * 进度设置组件
- * 支持导入/导出/清除学习进度
- */
-
-import { useState, useRef } from "react";
-import { downloadProgress, importFromFile, clearAllProgress } from "@/lib/progress-export";
+import { useRef } from "react";
+import { exportProgressAsJSON, importProgressFromJSON, resetProgress } from "@/lib/storage";
 import { toast } from "@/components/Toast";
 
 interface ProgressSettingsProps {
   onClose?: () => void;
 }
 
-export function ProgressSettings({ onClose }: ProgressSettingsProps) {
-  const [showConfirmClear, setShowConfirmClear] = useState(false);
+export function ProgressSettings({ onClose: _onClose }: ProgressSettingsProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const resetProgressHandler = () => {
+    resetProgress();
+    toast.success("所有进度已重置");
+    setTimeout(() => window.location.reload(), 600);
+  };
+
   const handleExport = () => {
+    // 完全复用 storage.ts 的统一导出格式：_format="tr-progress"、version=2
+    const jsonStr = exportProgressAsJSON();
+    const blob = new Blob([jsonStr], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `techradar-progress-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success("学习进度已导出");
+  };
+
+  const handleImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
-      downloadProgress();
-      toast.success("进度已导出");
-    } catch (e) {
-      toast.error("导出失败");
+      const f = e.target.files?.[0];
+      if (!f) return;
+      const text = await f.text();
+      // 走 storage.ts 官方导入 API：自动 schema 校验 + 覆盖非法字段
+      const restored = importProgressFromJSON(text);
+      const imported = Object.keys(restored.nodes || {}).length;
+      toast.success(
+        imported > 0
+          ? `进度导入成功（${imported} 个节点），正在刷新...`
+          : "进度导入成功，正在刷新...",
+      );
+      setTimeout(() => location.reload(), 600);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      toast.error("导入失败: " + msg);
+    } finally {
+      e.target.value = "";
     }
-  };
-
-  const handleImportClick = () => {
-    fileInputRef.current?.click();
-  };
-
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    try {
-      const result = await importFromFile(file);
-      if (result.success) {
-        toast.success(`成功导入 ${result.imported} 个节点的进度`);
-        setTimeout(() => window.location.reload(), 1000);
-      } else {
-        toast.error(`导入失败: ${result.errors[0]}`);
-      }
-    } catch (err) {
-      toast.error("导入失败");
-    }
-
-    // 重置文件输入
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
-  };
-
-  const handleClear = () => {
-    clearAllProgress();
-    toast.success("所有进度已清除");
-    setShowConfirmClear(false);
-    setTimeout(() => window.location.reload(), 1000);
   };
 
   return (
@@ -64,9 +57,7 @@ export function ProgressSettings({ onClose }: ProgressSettingsProps) {
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-sm font-semibold text-neutral-200">学习进度管理</h3>
-          <p className="text-xs text-neutral-500 mt-1">
-            导出进度到文件，或从文件导入进度
-          </p>
+          <p className="text-xs text-neutral-500 mt-1">导出进度到文件，或从文件导入进度</p>
         </div>
       </div>
 
@@ -80,7 +71,7 @@ export function ProgressSettings({ onClose }: ProgressSettingsProps) {
         </button>
 
         <button
-          onClick={handleImportClick}
+          onClick={() => fileInputRef.current?.click()}
           className="flex flex-col items-center gap-2 p-4 rounded-lg bg-neutral-800/50 border border-neutral-700/50 hover:border-green-500/50 hover:bg-neutral-800 transition-all"
         >
           <span className="text-2xl">📥</span>
@@ -88,44 +79,26 @@ export function ProgressSettings({ onClose }: ProgressSettingsProps) {
         </button>
 
         <button
-          onClick={() => setShowConfirmClear(true)}
+          onClick={() => {
+            if (confirm("确认清除全部进度？无法恢复")) {
+              resetProgressHandler();
+            }
+          }}
           className="flex flex-col items-center gap-2 p-4 rounded-lg bg-neutral-800/50 border border-neutral-700/50 hover:border-red-500/50 hover:bg-neutral-800 transition-all"
         >
-          <span className="text-2xl">🗑️</span>
-          <span className="text-xs font-medium text-neutral-300">清除进度</span>
+          <span className="text-2xl">↩️</span>
+          <span className="text-xs font-medium text-neutral-300">重置进度</span>
         </button>
       </div>
 
       <input
         ref={fileInputRef}
         type="file"
-        accept=".json"
-        onChange={handleFileChange}
+        accept="application/json"
+        onChange={handleImport}
+        id="progress-import-input"
         className="hidden"
       />
-
-      {/* 清除确认对话框 */}
-      {showConfirmClear && (
-        <div className="p-4 rounded-lg bg-red-950/30 border border-red-900/50">
-          <p className="text-sm text-red-300 mb-3">
-            ⚠️ 确定要清除所有学习进度吗？此操作不可撤销。
-          </p>
-          <div className="flex gap-2">
-            <button
-              onClick={handleClear}
-              className="flex-1 py-2 px-3 rounded-md bg-red-600 text-white text-sm font-medium hover:bg-red-500 transition-colors"
-            >
-              确认清除
-            </button>
-            <button
-              onClick={() => setShowConfirmClear(false)}
-              className="flex-1 py-2 px-3 rounded-md bg-neutral-700 text-neutral-200 text-sm font-medium hover:bg-neutral-600 transition-colors"
-            >
-              取消
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

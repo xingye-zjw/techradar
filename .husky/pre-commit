@@ -1,7 +1,10 @@
-echo "🔍 运行内容质量检查..."
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+echo "🔍 lint-staged: 增量代码格式化 + ESLint"
+npx lint-staged
+echo "🧪 运行单元测试（内容质量 + 优化套件）"
 npm test
 if [ $? -ne 0 ]; then
-  echo "❌ 内容质量检查未通过，请修复后重试"
+  echo "❌ 请修复失败的测试后再提交"
   exit 1
 fi
-echo "✅ 内容质量检查通过"

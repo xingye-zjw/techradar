@@ -86,7 +86,7 @@ export function Sidebar() {
   useEffect(() => {
     document.documentElement.style.setProperty(
       "--sidebar-width",
-      state === "collapsed" ? "64px" : "240px"
+      state === "collapsed" ? "64px" : "240px",
     );
   }, [state]);
 
@@ -114,6 +114,16 @@ export function Sidebar() {
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [isMobileOpen, handleCloseMobile]);
+
+  // 移动端侧边栏打开时锁定 body 滚动
+  useEffect(() => {
+    if (isMobileOpen) {
+      document.body.style.overflow = "hidden";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMobileOpen]);
 
   const pageDirectory = getPageDirectory(pathname);
   const isCollapsed = state === "collapsed";
@@ -163,9 +173,7 @@ export function Sidebar() {
             <Link href="/" className="flex items-center gap-2 overflow-hidden">
               <span className="text-lg">◢</span>
               {!isCollapsed && (
-                <span className="font-bold text-neutral-100 whitespace-nowrap">
-                  TechRadar
-                </span>
+                <span className="font-bold text-neutral-100 whitespace-nowrap">TechRadar</span>
               )}
             </Link>
             <button
@@ -175,9 +183,7 @@ export function Sidebar() {
               aria-label={isCollapsed ? "展开侧边栏" : "收起侧边栏"}
               aria-expanded={!isCollapsed}
             >
-              <span className={`transition-transform ${isCollapsed ? "rotate-180" : ""}`}>
-                ◀
-              </span>
+              <span className={`transition-transform ${isCollapsed ? "rotate-180" : ""}`}>◀</span>
             </button>
           </div>
 
@@ -192,15 +198,18 @@ export function Sidebar() {
                     href={item.href}
                     className={`
                       flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all
-                      ${isActive
-                        ? "bg-green-500/10 text-green-400 border-l-[3px] border-green-400"
-                        : "text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800 border-l-[3px] border-transparent"
+                      ${
+                        isActive
+                          ? "bg-green-500/10 text-green-400 border-l-[3px] border-green-400"
+                          : "text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800 border-l-[3px] border-transparent"
                       }
                     `}
                     title={isCollapsed ? item.label : undefined}
                     aria-current={isActive ? "page" : undefined}
                   >
-                    <span className="text-base flex-shrink-0" aria-hidden="true">{item.icon}</span>
+                    <span className="text-base flex-shrink-0" aria-hidden="true">
+                      {item.icon}
+                    </span>
                     {!isCollapsed && (
                       <>
                         <span className="flex-1 truncate">{item.label}</span>
@@ -223,7 +232,7 @@ export function Sidebar() {
                   当前页面
                 </div>
                 <div className="space-y-3">
-                  {isRoadmapSectionArray(pageDirectory) && (
+                  {isRoadmapSectionArray(pageDirectory) &&
                     // 分组形式（如路线图）
                     pageDirectory.map((section, idx) => (
                       <div key={idx}>
@@ -235,15 +244,16 @@ export function Sidebar() {
                             <button
                               key={item}
                               className="block w-full text-left text-xs text-neutral-400 hover:text-cyan-400 py-0.5"
-                              onClick={() => scrollToSection(item.toLowerCase().replace(/\s+/g, "-"))}
+                              onClick={() =>
+                                scrollToSection(item.toLowerCase().replace(/\s+/g, "-"))
+                              }
                             >
                               · {item}
                             </button>
                           ))}
                         </div>
                       </div>
-                    ))
-                  )}
+                    ))}
                   {isStringArray(pageDirectory) && (
                     // 标签形式（如情报）
                     <div className="flex flex-wrap gap-1">

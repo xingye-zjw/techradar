@@ -3,7 +3,8 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "学习路线图 - TechRadar 极客雷达",
-  description: "AI 驱动的可视化技术学习路线图，覆盖 CV、NLP、LLM、DevOps、数学、嵌入式、电子等 12 个技术方向。",
+  description:
+    "AI 驱动的可视化技术学习路线图，覆盖 CV、NLP、LLM、DevOps、数学、嵌入式、电子等 12 个技术方向。",
   keywords: ["技术路线图", "学习路径", "AI学习", "计算机视觉", "自然语言处理", "大语言模型"],
 };
 
@@ -19,7 +20,7 @@ const RoadmapGraph = dynamic(
       </div>
     ),
     ssr: false,
-  }
+  },
 );
 
 // 状态图例颜色（与 RoadmapNode 的 statusStyles 保持一致）
@@ -77,7 +78,7 @@ export default function RoadmapPage() {
 
         {/* 底部提示 */}
         <div className="mt-6 text-center font-mono text-xs text-neutral-600">
-          // 依赖链自动解锁下游节点 · 进度数据存储在浏览器本地
+          {"// 依赖链自动解锁下游节点 · 进度数据存储在浏览器本地"}
         </div>
       </div>
     </main>

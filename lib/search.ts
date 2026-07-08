@@ -1,14 +1,10 @@
-import fs from "node:fs";
-import path from "node:path";
-import matter from "gray-matter";
 import { FULL_ROADMAP } from "./roadmap-data";
-import { getAllProjects } from "./practice";
+import { getAllIntelCards, getIntelSearchIndex } from "./intel";
+import { getAllTerms } from "./glossary";
+import { getAllTools } from "./toolbox";
 import { getAllPitfalls } from "./pitfall";
+import { getAllProjects } from "./practice";
 
-/**
- * 统一搜索索引项
- * 所有模块的数据都转换为此格式
- */
 export interface UnifiedSearchItem {
   id: string;
   title: string;
@@ -19,18 +15,6 @@ export interface UnifiedSearchItem {
   tags?: string[];
   category?: string;
 }
-
-/** 工具 JSON 数据结构 */
-interface ToolJsonItem {
-  name: string;
-  purpose: string;
-  features: string[];
-  use_cases: string[];
-  tags?: string[];
-  category?: string;
-}
-
-
 
 // ============================================================
 // 路由节点数据提取
@@ -52,51 +36,23 @@ function getRoadmapSearchItems(): UnifiedSearchItem[] {
 // 情报数据提取
 // ============================================================
 function getIntelSearchItems(): UnifiedSearchItem[] {
-  const contentDir = path.join(process.cwd(), "content", "intel");
-
-  if (!fs.existsSync(contentDir)) {
-    return [];
-  }
-
-  const files = fs
-    .readdirSync(contentDir)
-    .filter((file) => file.endsWith(".md"))
-    .sort();
-
-  return files.map((file) => {
-    const filePath = path.join(contentDir, file);
-    const raw = fs.readFileSync(filePath, "utf8");
-    const { data } = matter(raw);
-
-    const slug = file.replace(/\.md$/, "");
-
-    return {
-      id: `intel-${slug}`,
-      title: String(data.title ?? slug),
-      content: String(data.summary ?? ""),
-      type: "intel" as const,
-      typeLabel: "情报",
-      url: `/intel/${slug}`,
-      tags: Array.isArray(data.keywords) ? data.keywords.map(String) : [],
-      category: String(data.category ?? ""),
-    };
-  });
+  return getIntelSearchIndex().map((item) => ({
+    id: `intel-${item.slug}`,
+    title: item.title,
+    content: item.summary,
+    type: "intel" as const,
+    typeLabel: "情报",
+    url: `/intel/${item.slug}`,
+    tags: item.keywords,
+    category: item.category,
+  }));
 }
 
 // ============================================================
 // 工具数据提取
 // ============================================================
 function getToolSearchItems(): UnifiedSearchItem[] {
-  const toolsPath = path.join(process.cwd(), "content", "toolbox", "tools.json");
-
-  if (!fs.existsSync(toolsPath)) {
-    return [];
-  }
-
-  const raw = fs.readFileSync(toolsPath, "utf8");
-  const data = JSON.parse(raw);
-
-  return (data.tools || []).map((tool: ToolJsonItem) => ({
+  return getAllTools().map((tool) => ({
     id: `tool-${tool.name.toLowerCase().replace(/\s+/g, "-")}`,
     title: tool.name,
     content: `${tool.purpose} ${tool.features.join(" ")} ${tool.use_cases.join(" ")}`,

@@ -1,12 +1,25 @@
-import dagre from 'dagre';
-import type { RoadmapNode as RoadmapNodeType } from '@/components/radar/types';
-import type { TrackId } from './constants';
+import dagre from "dagre";
+import type { RoadmapNode as RoadmapNodeType } from "@/lib/content-types";
+import type { TrackId } from "./constants";
 
 const NODE_WIDTH = 220;
 const NODE_HEIGHT = 160;
 
 // Track 的显示顺序
-export const TRACK_ORDER = ['devops', 'math', 'cs', 'embedded', 'electronics', 'signals', 'control', 'electrical', 'cv', 'nlp', 'llm', 'project'] as const;
+export const TRACK_ORDER = [
+  "devops",
+  "math",
+  "cs",
+  "embedded",
+  "electronics",
+  "signals",
+  "control",
+  "electrical",
+  "cv",
+  "nlp",
+  "llm",
+  "project",
+] as const;
 
 // Track 之间的间距
 const TRACK_GAP = 150;
@@ -18,7 +31,7 @@ const TRACK_GAP = 150;
  */
 export function autoLayout(
   nodes: RoadmapNodeType[],
-  direction: 'TB' | 'LR' = 'TB'
+  direction: "TB" | "LR" = "TB",
 ): Map<string, { x: number; y: number }> {
   const positions = new Map<string, { x: number; y: number }>();
 
@@ -46,7 +59,7 @@ export function autoLayout(
     // 使用 dagre 计算单个 track 内部的布局
     const g = new dagre.graphlib.Graph();
     g.setGraph({
-      rankdir: 'TB',  // 始终使用 TB 计算内部布局
+      rankdir: "TB", // 始终使用 TB 计算内部布局
       nodesep: 80,
       ranksep: 100,
       marginx: 30,
@@ -73,7 +86,10 @@ export function autoLayout(
 
     // 收集位置并计算边界
     const trackPositions = new Map<string, { x: number; y: number }>();
-    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    let minX = Infinity,
+      minY = Infinity,
+      maxX = -Infinity,
+      maxY = -Infinity;
 
     for (const node of group) {
       const nodeWithPos = g.node(node.id);
@@ -104,7 +120,7 @@ export function autoLayout(
   // 根据方向排列 track
   let offset = 0;
 
-  if (direction === 'TB') {
+  if (direction === "TB") {
     // TB 模式：track 水平排列（从左到右），每个 track 内部从上到下
     for (const layout of trackLayouts) {
       layout.positions.forEach((pos, id) => {
@@ -131,15 +147,18 @@ export function autoLayout(
  */
 export function getTrackBounds(
   nodes: RoadmapNodeType[],
-  positions: Map<string, { x: number; y: number }>
+  positions: Map<string, { x: number; y: number }>,
 ): Map<TrackId, { x: number; y: number; width: number; height: number }> {
   const bounds = new Map<TrackId, { x: number; y: number; width: number; height: number }>();
 
   for (const track of TRACK_ORDER) {
-    const trackNodes = nodes.filter(n => n.track === track);
+    const trackNodes = nodes.filter((n) => n.track === track);
     if (trackNodes.length === 0) continue;
 
-    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    let minX = Infinity,
+      minY = Infinity,
+      maxX = -Infinity,
+      maxY = -Infinity;
 
     for (const node of trackNodes) {
       const pos = positions.get(node.id);

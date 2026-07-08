@@ -3,165 +3,241 @@
  *
  * 验证情报、术语、工具、踩坑、项目数据是否符合规范。
  * 所有验证函数返回错误消息数组，空数组表示验证通过。
+ *
+ * 【类型安全】输入一律使用 unknown + 类型守卫判定，禁止直接用 any。
  */
 
-import { isValidCategory, type ContentCategory } from './content-types';
+import { isValidCategory, type ContentCategory } from "./content-types";
+
+type ValidatorInput = unknown;
+
+/* ---------- 类型守卫 helpers ---------- */
+
+function isRecord(obj: ValidatorInput): obj is Record<string, unknown> {
+  return typeof obj === "object" && obj !== null && !Array.isArray(obj);
+}
+
+function isNonEmptyStringArray(v: unknown): v is string[] {
+  return Array.isArray(v) && v.length > 0 && v.every((x) => typeof x === "string");
+}
+
+function asCategoryString(v: unknown): ContentCategory | null {
+  return typeof v === "string" && isValidCategory(v) ? v : null;
+}
+
+/* ---------- 公共字段收集器：减少每个 validator 的重复断言 ---------- */
+
+interface BaseValidated {
+  title?: string;
+  category: ContentCategory | null;
+  errors: string[];
+}
+
+function validateBase(data: ValidatorInput, label: string, requireTitle = true): BaseValidated {
+  const errors: string[] = [];
+  if (!isRecord(data)) {
+    errors.push(`${label}数据不是对象`);
+    return { category: null, errors };
+  }
+  if (requireTitle && typeof data.title !== "string") {
+    errors.push(`${label}缺少 title 字段`);
+  }
+  const category = asCategoryString(data.category);
+  if (typeof data.category === "undefined" || data.category === null) {
+    errors.push(`${label}缺少 category 字段`);
+  } else if (!category) {
+    errors.push(`${label}category 无效: ${String(data.category)}`);
+  }
+  return { title: typeof data.title === "string" ? data.title : undefined, category, errors };
+}
 
 /**
  * 验证情报数据
- * @param data - 待验证的情报数据
+ * @param data - 待验证的情报数据（unknown 类型以兼容外部输入）
  * @returns 错误消息数组，空数组表示验证通过
  */
-export function validateIntel(data: any): string[] {
-  const errors: string[] = [];
+export function validateIntel(data: ValidatorInput): string[] {
+  const base = validateBase(data, "情报");
+  if (base.errors.length > 0 && !isRecord(data)) return base.errors;
 
-  if (!data.title) errors.push('情报缺少 title 字段');
-  if (!data.category) {
-    errors.push('情报缺少 category 字段');
-  } else if (!isValidCategory(data.category)) {
-    errors.push(`情报 category 无效: ${data.category}`);
+  const obj = isRecord(data) ? data : {};
+  const errors = [...base.errors];
+
+  // keywords：必须是非空字符串数组
+  if (!isNonEmptyStringArray(obj.keywords)) {
+    errors.push("情报缺少 keywords 字段");
   }
-  if (!data.keywords?.length) errors.push('情报缺少 keywords 字段');
-  if (!data.difficulty) errors.push('情报缺少 difficulty 字段');
-  if (!data.summary) errors.push('情报缺少 summary 字段');
-  if (!data.takeaways?.length) errors.push('情报缺少 takeaways 字段');
+  if (typeof obj.difficulty !== "string" || !obj.difficulty) {
+    errors.push("情报缺少 difficulty 字段");
+  }
+  if (typeof obj.summary !== "string" || !obj.summary.trim()) {
+    errors.push("情报缺少 summary 字段");
+  }
+  // takeaways：必须是非空字符串数组（项目规范：4条人类编写的学习目标）
+  if (!isNonEmptyStringArray(obj.takeaways)) {
+    errors.push("情报缺少 takeaways 字段");
+  }
 
   return errors;
 }
 
 /**
- * 验证术语数据
- * @param data - 待验证的术语数据（支持 GlossaryTerm 或 TermIndex 格式）
- * @returns 错误消息数组，空数组表示验证通过
+ * 验证术语数据（支持 GlossaryTerm 或 TermIndex 格式）
  */
-export function validateTerm(data: any): string[] {
+export function validateTerm(data: ValidatorInput): string[] {
   const errors: string[] = [];
+  if (!isRecord(data)) {
+    return ["术语数据不是对象"];
+  }
 
   // 支持两种格式：GlossaryTerm (name/summary) 或 TermIndex (term/definition)
-  const hasTerm = data.term || data.name;
-  if (!hasTerm) errors.push('术语缺少 term/name 字段');
+  const hasTerm = typeof data.term === "string" || typeof data.name === "string";
+  if (!hasTerm) errors.push("术语缺少 term/name 字段");
 
-  if (!data.slug) errors.push('术语缺少 slug 字段');
+  if (typeof data.slug !== "string" || !data.slug) {
+    errors.push("术语缺少 slug 字段");
+  }
 
-  if (!data.category) {
-    errors.push('术语缺少 category 字段');
-  } else if (!isValidCategory(data.category)) {
-    errors.push(`术语 category 无效: ${data.category}`);
+  if (typeof data.category === "undefined" || data.category === null) {
+    errors.push("术语缺少 category 字段");
+  } else if (!asCategoryString(data.category)) {
+    errors.push(`术语 category 无效: ${String(data.category)}`);
   }
 
   // 支持 definition 或 summary 字段
-  const hasDefinition = data.definition || data.summary;
-  if (!hasDefinition) errors.push('术语缺少 definition/summary 字段');
+  const hasDefinition =
+    (typeof data.definition === "string" && !!data.definition.trim()) ||
+    (typeof data.summary === "string" && !!data.summary.trim());
+  if (!hasDefinition) errors.push("术语缺少 definition/summary 字段");
 
   return errors;
 }
 
 /**
  * 验证工具数据
- * @param data - 待验证的工具数据
- * @returns 错误消息数组，空数组表示验证通过
  */
-export function validateTool(data: any): string[] {
-  const errors: string[] = [];
+export function validateTool(data: ValidatorInput): string[] {
+  const base = validateBase(data, "工具");
+  if (base.errors.length > 0 && !isRecord(data)) return base.errors;
 
-  if (!data.name) errors.push('工具缺少 name 字段');
-  if (!data.category) {
-    errors.push('工具缺少 category 字段');
-  } else if (!isValidCategory(data.category)) {
-    errors.push(`工具 category 无效: ${data.category}`);
+  const obj = isRecord(data) ? data : {};
+  const errors = [...base.errors];
+
+  if (typeof obj.purpose !== "string" || !obj.purpose.trim()) {
+    errors.push("工具缺少 purpose 字段");
   }
-  if (!data.purpose) errors.push('工具缺少 purpose 字段');
-  if (!data.description) errors.push('工具缺少 description 字段');
-  if (!data.install) errors.push('工具缺少 install 字段');
+  if (typeof obj.description !== "string" || !obj.description.trim()) {
+    errors.push("工具缺少 description 字段");
+  }
+  if (typeof obj.install !== "string") {
+    errors.push("工具缺少 install 字段");
+  }
 
   return errors;
 }
 
 /**
  * 验证踩坑数据
- * @param data - 待验证的踩坑数据
- * @returns 错误消息数组，空数组表示验证通过
  */
-export function validatePitfall(data: any): string[] {
-  const errors: string[] = [];
+export function validatePitfall(data: ValidatorInput): string[] {
+  const base = validateBase(data, "踩坑");
+  if (base.errors.length > 0 && !isRecord(data)) return base.errors;
 
-  if (!data.title) errors.push('踩坑缺少 title 字段');
-  if (!data.category) {
-    errors.push('踩坑缺少 category 字段');
-  } else if (!isValidCategory(data.category)) {
-    errors.push(`踩坑 category 无效: ${data.category}`);
+  const obj = isRecord(data) ? data : {};
+  const errors = [...base.errors];
+
+  if (typeof obj.description !== "string" || !obj.description.trim()) {
+    errors.push("踩坑缺少 description 字段");
   }
-  if (!data.description) errors.push('踩坑缺少 description 字段');
-  if (!data.root_cause) errors.push('踩坑缺少 root_cause 字段');
-  if (!data.symptoms?.length) errors.push('踩坑缺少 symptoms 字段');
-  if (!data.solution?.length) errors.push('踩坑缺少 solution 字段');
-  if (!data.quickFix) errors.push('踩坑缺少 quickFix 字段');
+  if (typeof obj.root_cause !== "string" || !obj.root_cause.trim()) {
+    errors.push("踩坑缺少 root_cause 字段");
+  }
+  if (!isNonEmptyStringArray(obj.symptoms)) {
+    errors.push("踩坑缺少 symptoms 字段");
+  }
+  if (!isNonEmptyStringArray(obj.solution)) {
+    errors.push("踩坑缺少 solution 字段");
+  }
+  if (typeof obj.quickFix !== "string" || !obj.quickFix.trim()) {
+    errors.push("踩坑缺少 quickFix 字段");
+  }
 
   return errors;
 }
 
 /**
  * 验证实战项目数据
- * @param data - 待验证的项目数据
- * @returns 错误消息数组，空数组表示验证通过
  */
-export function validateProject(data: any): string[] {
+export function validateProject(data: ValidatorInput): string[] {
   const errors: string[] = [];
-
-  if (!data.slug) errors.push('项目缺少 slug 字段');
-  if (!data.title) errors.push('项目缺少 title 字段');
-  if (!data.category) {
-    errors.push('项目缺少 category 字段');
-  } else if (!isValidCategory(data.category)) {
-    errors.push(`项目 category 无效: ${data.category}`);
+  if (!isRecord(data)) {
+    return ["项目数据不是对象"];
   }
-  if (!data.difficulty) errors.push('项目缺少 difficulty 字段');
-  if (!data.duration) errors.push('项目缺少 duration 字段');
-  if (!data.summary) errors.push('项目缺少 summary 字段');
-  if (!data.prerequisites?.length) errors.push('项目缺少 prerequisites 字段');
-  if (!data.objectives?.length) errors.push('项目缺少 objectives 字段');
-  if (!data.steps?.length) errors.push('项目缺少 steps 字段');
+
+  if (typeof data.slug !== "string" || !data.slug) {
+    errors.push("项目缺少 slug 字段");
+  }
+  if (typeof data.title !== "string" || !data.title.trim()) {
+    errors.push("项目缺少 title 字段");
+  }
+  if (typeof data.category === "undefined" || data.category === null) {
+    errors.push("项目缺少 category 字段");
+  } else if (!asCategoryString(data.category)) {
+    errors.push(`项目 category 无效: ${String(data.category)}`);
+  }
+  if (typeof data.difficulty === "undefined" || data.difficulty === null) {
+    errors.push("项目缺少 difficulty 字段");
+  }
+  if (typeof data.duration !== "string" || !data.duration.trim()) {
+    errors.push("项目缺少 duration 字段");
+  }
+  if (typeof data.summary !== "string" || !data.summary.trim()) {
+    errors.push("项目缺少 summary 字段");
+  }
+  if (!isNonEmptyStringArray(data.prerequisites)) {
+    errors.push("项目缺少 prerequisites 字段");
+  }
+  if (!isNonEmptyStringArray(data.objectives)) {
+    errors.push("项目缺少 objectives 字段");
+  }
+  if (!Array.isArray(data.steps) || data.steps.length === 0) {
+    errors.push("项目缺少 steps 字段");
+  }
 
   return errors;
 }
 
+export type ContentType = "intel" | "term" | "tool" | "pitfall" | "project";
+
 /**
  * 验证数据是否符合指定类型的规范
- * @param type - 内容类型 ('intel' | 'term' | 'tool' | 'pitfall' | 'project')
- * @param data - 待验证的数据
- * @returns 错误消息数组，空数组表示验证通过
  */
-export function validateContent(
-  type: 'intel' | 'term' | 'tool' | 'pitfall' | 'project',
-  data: any
-): string[] {
+export function validateContent(type: ContentType, data: ValidatorInput): string[] {
   switch (type) {
-    case 'intel':
+    case "intel":
       return validateIntel(data);
-    case 'term':
+    case "term":
       return validateTerm(data);
-    case 'tool':
+    case "tool":
       return validateTool(data);
-    case 'pitfall':
+    case "pitfall":
       return validatePitfall(data);
-    case 'project':
+    case "project":
       return validateProject(data);
     default:
-      return [`未知的内容类型: ${type}`];
+      return [`未知的内容类型: ${String(type)}`];
   }
 }
 
 /**
  * 批量验证数据
- * @param type - 内容类型
- * @param items - 待验证的数据数组
- * @returns 每项数据的验证结果数组
  */
 export function validateBatch(
-  type: 'intel' | 'term' | 'tool' | 'pitfall' | 'project',
-  items: any[]
+  type: ContentType,
+  items: unknown[],
 ): { index: number; errors: string[] }[] {
   const results: { index: number; errors: string[] }[] = [];
+  if (!Array.isArray(items)) return results;
 
   items.forEach((item, index) => {
     const errors = validateContent(type, item);

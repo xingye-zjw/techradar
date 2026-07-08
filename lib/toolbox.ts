@@ -56,6 +56,10 @@ export function getToolCategories(): string[] {
   return categories;
 }
 
+export function getAllTools(): Tool[] {
+  return getToolboxData().tools;
+}
+
 /**
  * 关联到 intel 技术情报的轻量级引用
  */
@@ -74,11 +78,55 @@ export interface RelatedIntelRef {
  *   - 过滤停用词与过短 token
  */
 const STOPWORDS = new Set([
-  "the", "a", "an", "and", "or", "for", "with", "of", "in", "on", "to",
-  "is", "are", "was", "were", "be", "been", "being", "as", "at", "by",
-  "this", "that", "these", "those", "it", "its", "from", "into", "your",
-  "you", "we", "our", "can", "may", "will", "would", "should", "could",
-  "not", "but", "if", "then", "than", "so", "such", "no", "do", "does",
+  "the",
+  "a",
+  "an",
+  "and",
+  "or",
+  "for",
+  "with",
+  "of",
+  "in",
+  "on",
+  "to",
+  "is",
+  "are",
+  "was",
+  "were",
+  "be",
+  "been",
+  "being",
+  "as",
+  "at",
+  "by",
+  "this",
+  "that",
+  "these",
+  "those",
+  "it",
+  "its",
+  "from",
+  "into",
+  "your",
+  "you",
+  "we",
+  "our",
+  "can",
+  "may",
+  "will",
+  "would",
+  "should",
+  "could",
+  "not",
+  "but",
+  "if",
+  "then",
+  "than",
+  "so",
+  "such",
+  "no",
+  "do",
+  "does",
 ]);
 
 function tokenize(text: string): string[] {
@@ -196,7 +244,10 @@ export function getToolByName(name: string): Tool | undefined {
  * 获取工具的 ID（用于 URL）
  */
 export function getToolId(tool: Tool): string {
-  return tool.name.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
+  return tool.name
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9-]/g, "");
 }
 
 export function getToolboxDataWithRelated(): {

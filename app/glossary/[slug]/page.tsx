@@ -83,9 +83,12 @@ export default async function GlossaryDetailPage({ params }: PageProps) {
 
           {/* Tags */}
           <div className="flex flex-wrap gap-2 mb-4">
-            <span className={`text-[10px] px-2 py-1 rounded border font-medium ${
-              CATEGORY_COLORS[term.category] || "text-neutral-400 bg-neutral-800 border-neutral-700"
-            }`}>
+            <span
+              className={`text-[10px] px-2 py-1 rounded border font-medium ${
+                CATEGORY_COLORS[term.category] ||
+                "text-neutral-400 bg-neutral-800 border-neutral-700"
+              }`}
+            >
               {category?.name || term.category}
             </span>
             {term.tags.map((tag) => (
@@ -107,7 +110,7 @@ export default async function GlossaryDetailPage({ params }: PageProps) {
         {/* 详细解释 */}
         <section className="mb-10">
           <h2 className="font-mono text-[10px] text-neutral-500 uppercase tracking-wider mb-4 pb-2 border-b border-neutral-800">
-            // 详细解释
+            {"// 详细解释"}
           </h2>
           <div className="prose prose-invert prose-sm max-w-none">
             {markdownContent ? (
@@ -121,10 +124,12 @@ export default async function GlossaryDetailPage({ params }: PageProps) {
         </section>
 
         {/* 关联内容 */}
-        {(term.relatedIntel.length > 0 || term.relatedTools.length > 0 || term.relatedNodes.length > 0) && (
+        {(term.relatedIntel.length > 0 ||
+          term.relatedTools.length > 0 ||
+          term.relatedNodes.length > 0) && (
           <section className="mb-10">
             <h2 className="font-mono text-[10px] text-neutral-500 uppercase tracking-wider mb-4 pb-2 border-b border-neutral-800">
-              // 关联内容
+              {"// 关联内容"}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {/* 关联情报 */}
@@ -194,7 +199,7 @@ export default async function GlossaryDetailPage({ params }: PageProps) {
         {relatedTerms.length > 0 && (
           <section className="mb-10">
             <h2 className="font-mono text-[10px] text-neutral-500 uppercase tracking-wider mb-4 pb-2 border-b border-neutral-800">
-              // 关联术语
+              {"// 关联术语"}
             </h2>
             <div className="flex flex-wrap gap-2">
               {relatedTerms.map((related) => (
@@ -214,7 +219,7 @@ export default async function GlossaryDetailPage({ params }: PageProps) {
         {term.resources && term.resources.length > 0 && (
           <section className="mb-10">
             <h2 className="font-mono text-[10px] text-neutral-500 uppercase tracking-wider mb-4 pb-2 border-b border-neutral-800">
-              // 参考资料
+              {"// 参考资料"}
             </h2>
             <div className="space-y-3">
               {term.resources.map((resource, idx) => (

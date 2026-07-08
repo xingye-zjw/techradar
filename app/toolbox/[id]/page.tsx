@@ -72,9 +72,13 @@ export default function ToolDetailPage({ params }: ToolDetailPageProps) {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12">
         {/* 面包屑 */}
         <div className="flex items-center gap-2 mb-8 font-mono text-xs text-neutral-500">
-          <Link href="/" className="hover:text-cyan-400 transition-colors">首页</Link>
+          <Link href="/" className="hover:text-cyan-400 transition-colors">
+            首页
+          </Link>
           <span>/</span>
-          <Link href="/toolbox" className="hover:text-cyan-400 transition-colors">工具箱</Link>
+          <Link href="/toolbox" className="hover:text-cyan-400 transition-colors">
+            工具箱
+          </Link>
           <span>/</span>
           <span className="text-neutral-300">{tool.name}</span>
         </div>
@@ -117,9 +121,7 @@ export default function ToolDetailPage({ params }: ToolDetailPageProps) {
                 查看仓库 →
               </a>
               <div className="flex items-center gap-4">
-                <span className="font-mono text-xs text-neutral-500">
-                  ⭐ {tool.github.stars}
-                </span>
+                <span className="font-mono text-xs text-neutral-500">⭐ {tool.github.stars}</span>
                 <span className="font-mono text-xs text-neutral-500">
                   📦 {tool.github.last_release}
                 </span>
@@ -130,10 +132,13 @@ export default function ToolDetailPage({ params }: ToolDetailPageProps) {
 
         {/* 核心特性 */}
         <section className="mb-8">
-          <h2 className="font-mono text-sm text-neutral-500 uppercase mb-4">// 核心特性</h2>
+          <h2 className="font-mono text-sm text-neutral-500 uppercase mb-4">{"// 核心特性"}</h2>
           <ul className="space-y-2">
             {tool.features.map((feature, idx) => (
-              <li key={idx} className="flex items-start gap-3 p-3 bg-neutral-900 rounded-lg border border-neutral-800">
+              <li
+                key={idx}
+                className="flex items-start gap-3 p-3 bg-neutral-900 rounded-lg border border-neutral-800"
+              >
                 <span className="text-emerald-400 font-mono mt-0.5">✓</span>
                 <span className="text-sm text-neutral-300">{feature}</span>
               </li>
@@ -143,7 +148,7 @@ export default function ToolDetailPage({ params }: ToolDetailPageProps) {
 
         {/* 使用场景 */}
         <section className="mb-8">
-          <h2 className="font-mono text-sm text-neutral-500 uppercase mb-4">// 使用场景</h2>
+          <h2 className="font-mono text-sm text-neutral-500 uppercase mb-4">{"// 使用场景"}</h2>
           <div className="flex flex-wrap gap-2">
             {tool.use_cases.map((uc, idx) => (
               <span
@@ -159,7 +164,9 @@ export default function ToolDetailPage({ params }: ToolDetailPageProps) {
         {/* 关联情报 */}
         {tool.relatedIntel && tool.relatedIntel.length > 0 && (
           <section className="mb-8">
-            <h2 className="font-mono text-sm text-neutral-500 uppercase mb-4">// 📰 关联情报</h2>
+            <h2 className="font-mono text-sm text-neutral-500 uppercase mb-4">
+              {"// 📰 关联情报"}
+            </h2>
             <div className="space-y-3">
               {tool.relatedIntel.map((slug) => {
                 const intel = INTEL_MAP[slug];
@@ -176,7 +183,9 @@ export default function ToolDetailPage({ params }: ToolDetailPageProps) {
                         {intel.title}
                       </span>
                     </div>
-                    <span className="text-neutral-600 group-hover:text-cyan-400 transition-colors">→</span>
+                    <span className="text-neutral-600 group-hover:text-cyan-400 transition-colors">
+                      →
+                    </span>
                   </Link>
                 );
               })}
@@ -187,7 +196,9 @@ export default function ToolDetailPage({ params }: ToolDetailPageProps) {
         {/* 关联路线图节点 */}
         {tool.relatedNodes && tool.relatedNodes.length > 0 && (
           <section className="mb-8">
-            <h2 className="font-mono text-sm text-neutral-500 uppercase mb-4">// 📊 关联路线图节点</h2>
+            <h2 className="font-mono text-sm text-neutral-500 uppercase mb-4">
+              {"// 📊 关联路线图节点"}
+            </h2>
             <div className="space-y-3">
               {tool.relatedNodes.map((nodeId) => {
                 const node = NODE_MAP[nodeId];
@@ -204,7 +215,9 @@ export default function ToolDetailPage({ params }: ToolDetailPageProps) {
                         {node.name}
                       </span>
                     </div>
-                    <span className="text-neutral-600 group-hover:text-emerald-400 transition-colors">→</span>
+                    <span className="text-neutral-600 group-hover:text-emerald-400 transition-colors">
+                      →
+                    </span>
                   </Link>
                 );
               })}
@@ -214,7 +227,7 @@ export default function ToolDetailPage({ params }: ToolDetailPageProps) {
 
         {/* 标签 */}
         <section className="mb-8">
-          <h2 className="font-mono text-sm text-neutral-500 uppercase mb-4">// 标签</h2>
+          <h2 className="font-mono text-sm text-neutral-500 uppercase mb-4">{"// 标签"}</h2>
           <div className="flex flex-wrap gap-2">
             {tool.tags.map((tag, idx) => (
               <span

@@ -2,7 +2,13 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import { getAllTerms, getAllCategories, getTermsGroupedByLetter, getAllTags, type GlossaryTerm } from "@/lib/glossary";
+import {
+  getAllTerms,
+  getAllCategories,
+  getTermsGroupedByLetter,
+  getAllTags,
+  type GlossaryTerm,
+} from "@/lib/glossary";
 import { CATEGORY_COLORS } from "@/lib/constants";
 import { createFuse, highlightText } from "@/lib/search-helpers";
 
@@ -24,7 +30,7 @@ export default function GlossaryPage() {
         { name: "summary", weight: 0.25 },
         { name: "tags", weight: 0.15 },
       ]),
-    [terms]
+    [terms],
   );
 
   // 过滤后的术语
@@ -73,12 +79,8 @@ export default function GlossaryPage() {
       <header className="bg-neutral-900 border-b border-neutral-800">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12">
           <div className="text-center mb-8">
-            <h1 className="text-2xl sm:text-3xl font-bold text-neutral-100 mb-2">
-              📖 专业术语
-            </h1>
-            <p className="text-neutral-400">
-              快速查找 AI/ML、工程部署、数学基础等领域的专业术语
-            </p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-neutral-100 mb-2">📖 专业术语</h1>
+            <p className="text-neutral-400">快速查找 AI/ML、工程部署、数学基础等领域的专业术语</p>
           </div>
 
           {/* 搜索框 */}
@@ -109,7 +111,7 @@ export default function GlossaryPage() {
         {/* 分类筛选 */}
         <div className="mb-8">
           <div className="font-mono text-[10px] text-neutral-500 uppercase tracking-wider mb-3">
-            // 按方向筛选
+            {"// 按方向筛选"}
           </div>
           <div className="flex flex-wrap gap-2">
             <button
@@ -147,7 +149,7 @@ export default function GlossaryPage() {
         {/* 标签筛选 */}
         <div className="mb-8">
           <div className="font-mono text-[10px] text-neutral-500 uppercase tracking-wider mb-3">
-            // 标签筛选
+            {"// 标签筛选"}
           </div>
           <div className="flex flex-wrap gap-1.5">
             {allTags.map((tag) => (
@@ -210,9 +212,12 @@ export default function GlossaryPage() {
                             </span>
                           )}
                         </div>
-                        <span className={`text-[10px] px-2 py-0.5 rounded border font-medium ${
-                          CATEGORY_COLORS[term.category] || "text-neutral-400 bg-neutral-800 border-neutral-700"
-                        }`}>
+                        <span
+                          className={`text-[10px] px-2 py-0.5 rounded border font-medium ${
+                            CATEGORY_COLORS[term.category] ||
+                            "text-neutral-400 bg-neutral-800 border-neutral-700"
+                          }`}
+                        >
                           {categories.find((c) => c.id === term.category)?.name || term.category}
                         </span>
                       </div>
@@ -239,9 +244,7 @@ export default function GlossaryPage() {
             <div className="text-center py-12">
               <div className="text-3xl mb-3">🔍</div>
               <p className="text-neutral-400">没有找到匹配的术语</p>
-              <p className="text-xs text-neutral-500 mt-1">
-                尝试调整搜索关键词或筛选条件
-              </p>
+              <p className="text-xs text-neutral-500 mt-1">尝试调整搜索关键词或筛选条件</p>
             </div>
           )}
         </div>

@@ -11,10 +11,7 @@ interface ToolboxClientProps {
   categories: string[];
 }
 
-const DIFFICULTY_META: Record<
-  Tool["difficulty"],
-  { label: string; color: string; bg: string }
-> = {
+const DIFFICULTY_META: Record<Tool["difficulty"], { label: string; color: string; bg: string }> = {
   beginner: { label: "入门", color: "text-green-400", bg: "bg-green-400/10" },
   intermediate: {
     label: "进阶",
@@ -31,16 +28,11 @@ const DIFFICULTY_META: Record<
 type CategoryFilter = "all" | string;
 type DifficultyFilter = "all" | Tool["difficulty"];
 
-export function ToolboxClient({
-  tools,
-  scenarios,
-  categories,
-}: ToolboxClientProps) {
+export function ToolboxClient({ tools, scenarios, categories }: ToolboxClientProps) {
   const [query, setQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<CategoryFilter>("all");
   const [activeScenario, setActiveScenario] = useState<string>("all");
-  const [activeDifficulty, setActiveDifficulty] =
-    useState<DifficultyFilter>("all");
+  const [activeDifficulty, setActiveDifficulty] = useState<DifficultyFilter>("all");
   const [compareMode, setCompareMode] = useState(false);
   const [selectedForCompare, setSelectedForCompare] = useState<string[]>([]);
   const [copiedText, setCopiedText] = useState<string>("");
@@ -48,15 +40,19 @@ export function ToolboxClient({
   // Fuse.js 搜索实例
   const fuse = useMemo(
     () =>
-      createFuse<ToolWithRelated>(tools, [
-        { name: "name", weight: 0.4 },
-        { name: "purpose", weight: 0.2 },
-        { name: "tags", weight: 0.2 },
-        { name: "category", weight: 0.1 },
-        { name: "features", weight: 0.05 },
-        { name: "use_cases", weight: 0.05 },
-      ], { threshold: 0.3 }),
-    [tools]
+      createFuse<ToolWithRelated>(
+        tools,
+        [
+          { name: "name", weight: 0.4 },
+          { name: "purpose", weight: 0.2 },
+          { name: "tags", weight: 0.2 },
+          { name: "category", weight: 0.1 },
+          { name: "features", weight: 0.05 },
+          { name: "use_cases", weight: 0.05 },
+        ],
+        { threshold: 0.3 },
+      ),
+    [tools],
   );
 
   // 过滤后的工具列表
@@ -74,9 +70,7 @@ export function ToolboxClient({
     if (activeScenario !== "all") {
       const scenario = scenarios.find((s) => s.key === activeScenario);
       if (scenario) {
-        result = result.filter((t) =>
-          scenario.tool_names.includes(t.name)
-        );
+        result = result.filter((t) => scenario.tool_names.includes(t.name));
       }
     }
 
@@ -121,9 +115,7 @@ export function ToolboxClient({
     });
   };
 
-  const selectedTools = tools.filter((t) =>
-    selectedForCompare.includes(t.name)
-  );
+  const selectedTools = tools.filter((t) => selectedForCompare.includes(t.name));
 
   const scrollToCompare = () => {
     const el = document.getElementById("toolbox-compare-section");
@@ -202,9 +194,7 @@ export function ToolboxClient({
 
         {/* 分类 Tab */}
         <div className="mb-4">
-          <div className="font-mono text-[10px] text-neutral-500 mb-2 tracking-wider">
-            按分类
-          </div>
+          <div className="font-mono text-[10px] text-neutral-500 mb-2 tracking-wider">按分类</div>
           <div className="flex flex-wrap gap-1.5">
             <CategoryPill
               label="全部"
@@ -224,9 +214,7 @@ export function ToolboxClient({
 
         {/* 场景筛选 */}
         <div className="mb-4">
-          <div className="font-mono text-[10px] text-neutral-500 mb-2 tracking-wider">
-            按场景
-          </div>
+          <div className="font-mono text-[10px] text-neutral-500 mb-2 tracking-wider">按场景</div>
           <div className="flex flex-wrap gap-1.5">
             <CategoryPill
               label="不限制"
@@ -248,9 +236,7 @@ export function ToolboxClient({
 
         {/* 难度筛选 */}
         <div className="mb-6">
-          <div className="font-mono text-[10px] text-neutral-500 mb-2 tracking-wider">
-            按难度
-          </div>
+          <div className="font-mono text-[10px] text-neutral-500 mb-2 tracking-wider">按难度</div>
           <div className="flex flex-wrap gap-1.5">
             <CategoryPill
               label="不限制"
@@ -276,9 +262,7 @@ export function ToolboxClient({
           <span className="font-mono text-xs text-neutral-500">
             共 {filteredTools.length} / {tools.length} 个工具
             {activeFilterCount > 0 && (
-              <span className="text-amber-400 ml-2">
-                · {activeFilterCount} 个筛选条件
-              </span>
+              <span className="text-amber-400 ml-2">· {activeFilterCount} 个筛选条件</span>
             )}
           </span>
           {activeFilterCount > 0 && (
@@ -295,9 +279,7 @@ export function ToolboxClient({
         {compareMode && (
           <div className="mb-4 p-4 bg-amber-400/5 border border-amber-400/30 rounded-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <div className="font-mono text-xs text-amber-300 mb-1">
-                // 对比模式已开启
-              </div>
+              <div className="font-mono text-xs text-amber-300 mb-1">{"// 对比模式已开启"}</div>
               <div className="text-sm text-neutral-400">
                 在下方工具卡片中勾选 2-3 个工具进行特性对比
               </div>
@@ -317,12 +299,8 @@ export function ToolboxClient({
         <div className="flex flex-col gap-4">
           {filteredTools.length === 0 ? (
             <div className="py-16 text-center border border-dashed border-neutral-800 rounded-lg">
-              <p className="font-mono text-xs text-neutral-500 mb-2">
-                // 未匹配到工具
-              </p>
-              <p className="text-sm text-neutral-600">
-                试试调整关键词或清除筛选条件
-              </p>
+              <p className="font-mono text-xs text-neutral-500 mb-2">{"// 未匹配到工具"}</p>
+              <p className="text-sm text-neutral-600">试试调整关键词或清除筛选条件</p>
             </div>
           ) : (
             filteredTools.map((tool) => (
@@ -342,13 +320,10 @@ export function ToolboxClient({
 
         {/* 对比区域 */}
         {compareMode && selectedTools.length >= 2 && (
-          <div
-            id="toolbox-compare-section"
-            className="mt-12 pt-8 border-t border-neutral-800"
-          >
+          <div id="toolbox-compare-section" className="mt-12 pt-8 border-t border-neutral-800">
             <div className="mb-6">
               <span className="font-mono text-xs tracking-[0.15em] text-amber-400 uppercase">
-                // 工具对比
+                {"// 工具对比"}
               </span>
               <h2 className="text-xl font-bold mt-2 text-neutral-100">
                 {selectedTools.map((t) => t.name).join("  vs  ")}
@@ -361,7 +336,7 @@ export function ToolboxClient({
         {/* 页脚提示 */}
         <div className="mt-16 pt-8 border-t border-neutral-800 text-center">
           <p className="font-mono text-[10px] text-neutral-600">
-            // 数据来源：content/toolbox/tools.json · 按 commit 更新
+            {"// 数据来源：content/toolbox/tools.json · 按 commit 更新"}
           </p>
         </div>
       </div>
@@ -387,14 +362,14 @@ function CategoryPill({
     tone === "beginner"
       ? "bg-green-400/15 border-green-400/60 text-green-300"
       : tone === "intermediate"
-      ? "bg-amber-400/15 border-amber-400/60 text-amber-300"
-      : tone === "advanced"
-      ? "bg-rose-400/15 border-rose-400/60 text-rose-300"
-      : variant === "secondary"
-      ? "bg-cyan-400/15 border-cyan-400/60 text-cyan-300"
-      : variant === "tertiary"
-      ? "bg-violet-400/15 border-violet-400/60 text-violet-300"
-      : "bg-amber-400/15 border-amber-400/60 text-amber-300";
+        ? "bg-amber-400/15 border-amber-400/60 text-amber-300"
+        : tone === "advanced"
+          ? "bg-rose-400/15 border-rose-400/60 text-rose-300"
+          : variant === "secondary"
+            ? "bg-cyan-400/15 border-cyan-400/60 text-cyan-300"
+            : variant === "tertiary"
+              ? "bg-violet-400/15 border-violet-400/60 text-violet-300"
+              : "bg-amber-400/15 border-amber-400/60 text-amber-300";
 
   return (
     <button
@@ -488,9 +463,7 @@ function ToolCard({
       {/* 安装命令 + 复制 */}
       <div className="mb-4 p-3 bg-neutral-950 border border-neutral-700 rounded-md">
         <div className="flex items-center justify-between mb-2">
-          <div className="font-mono text-[10px] text-neutral-500">
-            // 安装命令
-          </div>
+          <div className="font-mono text-[10px] text-neutral-500">{"// 安装命令"}</div>
           <button
             onClick={() => onCopyInstall(tool.install)}
             className={`font-mono text-[10px] px-2 py-0.5 rounded-sm border transition-colors ${
@@ -549,7 +522,7 @@ function ToolCard({
           >
             <span className="flex items-center gap-2">
               <span className="font-mono text-[10px] text-cyan-400 tracking-wider">
-                // 相关技术情报
+                {"// 相关技术情报"}
               </span>
               <span className="font-mono text-[10px] text-neutral-600">
                 · {tool.related_intel.length} 篇
@@ -599,13 +572,10 @@ function CompareTable({ tools }: { tools: ToolWithRelated[] }) {
           {/* 表头 */}
           <tr className="border-b border-neutral-800 bg-neutral-950/50">
             <th className="text-left p-4 font-mono text-[10px] text-neutral-500 tracking-wider w-32">
-              <span className="text-neutral-600 font-mono">// 维度</span>
+              <span className="text-neutral-600 font-mono">{"// 维度"}</span>
             </th>
             {tools.map((t) => (
-              <th
-                key={t.name}
-                className="text-left p-4 font-mono text-sm text-amber-300"
-              >
+              <th key={t.name} className="text-left p-4 font-mono text-sm text-amber-300">
                 {t.name}
               </th>
             ))}
@@ -623,9 +593,7 @@ function CompareTable({ tools }: { tools: ToolWithRelated[] }) {
 
           {/* 难度 */}
           <tr className="border-b border-neutral-800/70">
-            <td className="p-4 font-mono text-[10px] text-neutral-500">
-              学习曲线
-            </td>
+            <td className="p-4 font-mono text-[10px] text-neutral-500">学习曲线</td>
             {tools.map((t) => {
               const meta = DIFFICULTY_META[t.difficulty];
               return (
@@ -642,9 +610,7 @@ function CompareTable({ tools }: { tools: ToolWithRelated[] }) {
 
           {/* GitHub */}
           <tr className="border-b border-neutral-800/70">
-            <td className="p-4 font-mono text-[10px] text-neutral-500">
-              GitHub
-            </td>
+            <td className="p-4 font-mono text-[10px] text-neutral-500">GitHub</td>
             {tools.map((t) => (
               <td key={t.name} className="p-4 text-sm text-neutral-300">
                 <a
@@ -664,14 +630,9 @@ function CompareTable({ tools }: { tools: ToolWithRelated[] }) {
 
           {/* 简介 */}
           <tr className="border-b border-neutral-800/70 align-top">
-            <td className="p-4 font-mono text-[10px] text-neutral-500">
-              适用场景
-            </td>
+            <td className="p-4 font-mono text-[10px] text-neutral-500">适用场景</td>
             {tools.map((t) => (
-              <td
-                key={t.name}
-                className="p-4 text-sm text-neutral-400 leading-relaxed"
-              >
+              <td key={t.name} className="p-4 text-sm text-neutral-400 leading-relaxed">
                 {t.purpose}
               </td>
             ))}
@@ -679,9 +640,7 @@ function CompareTable({ tools }: { tools: ToolWithRelated[] }) {
 
           {/* 安装 */}
           <tr className="border-b border-neutral-800/70 align-top">
-            <td className="p-4 font-mono text-[10px] text-neutral-500">
-              安装命令
-            </td>
+            <td className="p-4 font-mono text-[10px] text-neutral-500">安装命令</td>
             {tools.map((t) => (
               <td key={t.name} className="p-4">
                 <code className="font-mono text-[11px] text-green-400 break-all block bg-neutral-950 px-2 py-1.5 rounded-sm">
@@ -693,20 +652,13 @@ function CompareTable({ tools }: { tools: ToolWithRelated[] }) {
 
           {/* 核心特性 */}
           <tr className="align-top">
-            <td className="p-4 font-mono text-[10px] text-neutral-500">
-              核心特性
-            </td>
+            <td className="p-4 font-mono text-[10px] text-neutral-500">核心特性</td>
             {tools.map((t) => (
               <td key={t.name} className="p-4">
                 <ul className="space-y-1.5">
                   {t.features.map((f) => (
-                    <li
-                      key={f}
-                      className="flex items-start gap-2 text-sm text-neutral-400"
-                    >
-                      <span className="text-amber-400/70 font-mono text-xs flex-shrink-0">
-                        ▸
-                      </span>
+                    <li key={f} className="flex items-start gap-2 text-sm text-neutral-400">
+                      <span className="text-amber-400/70 font-mono text-xs flex-shrink-0">▸</span>
                       <span className="leading-relaxed">{f}</span>
                     </li>
                   ))}
@@ -717,9 +669,7 @@ function CompareTable({ tools }: { tools: ToolWithRelated[] }) {
 
           {/* 文档链接 */}
           <tr className="border-t border-neutral-800/70 bg-neutral-950/30">
-            <td className="p-4 font-mono text-[10px] text-neutral-500">
-              更多信息
-            </td>
+            <td className="p-4 font-mono text-[10px] text-neutral-500">更多信息</td>
             {tools.map((t) => (
               <td key={t.name} className="p-4">
                 <a

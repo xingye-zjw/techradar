@@ -2,16 +2,22 @@
 
 import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
-import type { RoadmapNode as RoadmapNodeType, DailyTask, ResourceLink, Track, TaskContent } from "./types";
+import type { RoadmapNode as RoadmapNodeType, DailyTask } from "./types";
 import { ROADMAP_TRACKS } from "./types";
 import { TermPopover } from "@/components/TermPopover";
 import { INTEL_LINKS, TOOL_LINKS, getTrackColorClasses } from "@/lib/constants";
 import type { TrackId } from "@/lib/constants";
-import { getTermByName, identifyTermsInText, getMirrorHint } from "@/lib/terms";
+import { identifyTermsInText, getMirrorHint } from "@/lib/terms";
 import { getAllTerms, getTermsBySlugs, type GlossaryTerm } from "@/lib/glossary";
 import { toast } from "@/components/Toast";
 import type { ResourceSource, ResourceType } from "./types";
 import { getProjectsByNode, getDifficultyStars } from "@/lib/practice";
+// ===== SSOT 统一存储：任务勾选状态直接复用 storage.ts 的 completedDays =====
+import {
+  getNodeProgress as storageGetNodeProgress,
+  toggleDay as storageToggleDay,
+  clearAllSplinterKeys,
+} from "@/lib/storage";
 
 interface NodeDetailPanelProps {
   node: RoadmapNodeType | null;
@@ -19,18 +25,22 @@ interface NodeDetailPanelProps {
   onToggleComplete?: (nodeId: string) => void;
 }
 
-const STORAGE_KEY = "techradar-task-progress";
-
-function loadTaskProgress(): Record<string, Record<number, boolean>> {
+/**
+ * 获取节点任务勾选状态（从统一存储 completedDays 推导）。
+ * 从此消除 techradar-task-progress 分裂 key，任务勾选状态 = completedDays 包含该天。
+ * @param nodeId 节点 slug
+ * @returns 形如 { [day]: boolean } 的勾选映射
+ */
+function buildTaskProgressFromCompletedDays(nodeId: string): Record<number, boolean> {
   if (typeof window === "undefined") return {};
   try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    return saved ? JSON.parse(saved) : {};
-  } catch { return {}; }
-}
-
-function saveTaskProgress(progress: Record<string, Record<number, boolean>>) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+    const nodeProgress = storageGetNodeProgress(nodeId);
+    const out: Record<number, boolean> = {};
+    for (const d of nodeProgress.completedDays) out[d] = true;
+    return out;
+  } catch {
+    return {};
+  }
 }
 
 /** 获取资源来源平台的图标和颜色 */
@@ -58,7 +68,7 @@ function getSourceInfo(source?: ResourceSource): { icon: string; color: string; 
 }
 
 /** 获取资源类型的标签 */
-function getTypeLabel(type?: ResourceType): { label: string; color: string } {
+function getTypeLabel(type?: ResourceType | string): { label: string; color: string } {
   switch (type) {
     case "video":
       return { label: "视频", color: "bg-pink-500/20 text-pink-400 border-pink-500/30" };
@@ -87,7 +97,10 @@ function renderApiItem(item: string) {
   return parts.map((part, idx) => {
     if (/^\w+\([^)]*\)$/.test(part)) {
       return (
-        <code key={idx} className="bg-zinc-800 text-cyan-300 font-mono px-1.5 py-0.5 rounded text-[11px]">
+        <code
+          key={idx}
+          className="bg-zinc-800 text-cyan-300 font-mono px-1.5 py-0.5 rounded text-[11px]"
+        >
           {part}
         </code>
       );
@@ -103,7 +116,7 @@ function renderTextWithTerms(text: string, terms: GlossaryTerm[], nodeId?: strin
     if (part.type === "term" && part.term) {
       // 查找对应的 GlossaryTerm
       const glossaryTerm = terms.find(
-        (t) => t.name === part.term?.term || t.nameEn === part.term?.term
+        (t) => t.name === part.term?.term || t.nameEn === part.term?.term,
       );
       if (glossaryTerm) {
         return (
@@ -134,7 +147,7 @@ export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailP
 
   // 展开/折叠任务
   const toggleExpand = (day: number) => {
-    setExpandedTasks(prev => {
+    setExpandedTasks((prev) => {
       const next = new Set(prev);
       if (next.has(day)) {
         next.delete(day);
@@ -156,8 +169,13 @@ export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailP
 
   useEffect(() => {
     if (node) {
-      const all = loadTaskProgress();
-      setTaskProgress(all[node.id] || {});
+      // 启动时清理残留的分裂 key（用户无感迁移），再从统一存储加载
+      try {
+        clearAllSplinterKeys();
+      } catch {
+        /* ignore */
+      }
+      setTaskProgress(buildTaskProgressFromCompletedDays(node.id));
       setVisibleCount(5);
     }
   }, [node]);
@@ -165,20 +183,21 @@ export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailP
   if (!node) return null;
 
   const track = ROADMAP_TRACKS.find((t) => t.id === node.track);
-  const colorStyle = getTrackColorClasses(node.track as TrackId) || "text-neutral-400 bg-neutral-800/50 border-neutral-700";
-  const trackColorClass = colorStyle.split(" ")[0];
+  const colorStyle =
+    getTrackColorClasses(node.track as TrackId) ||
+    "text-neutral-400 bg-neutral-800/50 border-neutral-700";
 
   // 获取关联的实战项目
   const relatedProjects = getProjectsByNode(node.id);
 
   const toggleTask = (day: number) => {
     const wasCompleted = taskProgress[day];
-    const newProgress = { ...taskProgress, [day]: !wasCompleted };
-    setTaskProgress(newProgress);
-
-    const all = loadTaskProgress();
-    all[node.id] = newProgress;
-    saveTaskProgress(all);
+    // 通过统一存储 API 切换，completedDays 是勾选状态的唯一真源
+    const updatedDays = storageToggleDay(node.id, day);
+    // 同步本地视图（从 completedDays 推导勾选状态）
+    const nextProgress: Record<number, boolean> = {};
+    for (const d of updatedDays) nextProgress[d] = true;
+    setTaskProgress(nextProgress);
 
     if (!wasCompleted) {
       toast.success(`第 ${day} 天任务已标记完成！`, 2000);
@@ -191,18 +210,13 @@ export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailP
   const totalCount = node.dailyTasks?.length ?? 0;
   const progressPercent = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
 
-  const requiredResources = (task: DailyTask) =>
-    task.resources?.filter((r) => r.required) ?? [];
-  const optionalResources = (task: DailyTask) =>
-    task.resources?.filter((r) => !r.required) ?? [];
+  const requiredResources = (task: DailyTask) => task.resources?.filter((r) => r.required) ?? [];
+  const optionalResources = (task: DailyTask) => task.resources?.filter((r) => !r.required) ?? [];
 
   return (
     <>
       {/* Backdrop */}
-      <div
-        className="fixed inset-0 bg-black/50 z-40"
-        onClick={onClose}
-      />
+      <div className="fixed inset-0 bg-black/50 z-40" onClick={onClose} />
 
       {/* Panel */}
       <div className="fixed right-0 top-0 bottom-0 w-full max-w-md bg-neutral-900 border-l border-neutral-700 z-50 overflow-y-auto">
@@ -211,35 +225,47 @@ export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailP
           <div className="flex items-start justify-between gap-3 mb-3">
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-2">
-                <span className={`inline-block font-mono text-[10px] px-2 py-0.5 rounded border ${colorStyle.split(" ").slice(1).join(" ")}`}>
+                <span
+                  className={`inline-block font-mono text-[10px] px-2 py-0.5 rounded border ${colorStyle.split(" ").slice(1).join(" ")}`}
+                >
                   {track?.name}
                 </span>
-                <span className={`font-mono text-[10px] px-2 py-0.5 rounded ${
-                  node.status === "completed"
-                    ? "bg-green-500/10 text-green-400 border border-green-500/30"
+                <span
+                  className={`font-mono text-[10px] px-2 py-0.5 rounded ${
+                    node.status === "completed"
+                      ? "bg-green-500/10 text-green-400 border border-green-500/30"
+                      : node.status === "available"
+                        ? "bg-neutral-800 text-neutral-400 border border-neutral-700"
+                        : "bg-neutral-800 text-neutral-600 border border-neutral-700"
+                  }`}
+                >
+                  {node.status === "completed"
+                    ? "✓ 已完成"
                     : node.status === "available"
-                    ? "bg-neutral-800 text-neutral-400 border border-neutral-700"
-                    : "bg-neutral-800 text-neutral-600 border border-neutral-700"
-                }`}>
-                  {node.status === "completed" ? "✓ 已完成" : node.status === "available" ? "● 可学习" : "✕ 需前置"}
+                      ? "● 可学习"
+                      : "✕ 需前置"}
                 </span>
               </div>
               <h2 className="text-xl font-bold text-neutral-100">{node.name}</h2>
               <div className="flex items-center gap-3 mt-2">
                 {node.difficulty && (
-                  <span className={`font-mono text-[10px] px-2 py-0.5 rounded border ${
-                    node.difficulty === 'beginner'
-                      ? 'bg-green-500/10 text-green-400 border-green-500/30'
-                      : node.difficulty === 'intermediate'
-                      ? 'bg-yellow-500/10 text-yellow-400 border-yellow-500/30'
-                      : 'bg-red-500/10 text-red-400 border-red-500/30'
-                  }`}>
-                    {node.difficulty === 'beginner' ? '初级' : node.difficulty === 'intermediate' ? '中级' : '高级'}
+                  <span
+                    className={`font-mono text-[10px] px-2 py-0.5 rounded border ${
+                      node.difficulty === "beginner"
+                        ? "bg-green-500/10 text-green-400 border-green-500/30"
+                        : node.difficulty === "intermediate"
+                          ? "bg-yellow-500/10 text-yellow-400 border-yellow-500/30"
+                          : "bg-red-500/10 text-red-400 border-red-500/30"
+                    }`}
+                  >
+                    {node.difficulty === "beginner"
+                      ? "初级"
+                      : node.difficulty === "intermediate"
+                        ? "中级"
+                        : "高级"}
                   </span>
                 )}
-                <span className="font-mono text-[10px] text-neutral-500">
-                  ⏱️ {node.duration}
-                </span>
+                <span className="font-mono text-[10px] text-neutral-500">⏱️ {node.duration}</span>
               </div>
             </div>
             <button
@@ -248,7 +274,12 @@ export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailP
               aria-label="关闭"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
           </div>
@@ -258,7 +289,9 @@ export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailP
             <div className="space-y-1">
               <div className="flex justify-between font-mono text-[10px] text-neutral-500">
                 <span>每日任务进度</span>
-                <span>{completedCount}/{totalCount} 天 ({progressPercent}%)</span>
+                <span>
+                  {completedCount}/{totalCount} 天 ({progressPercent}%)
+                </span>
               </div>
               <div className="h-1.5 bg-neutral-800 rounded-full overflow-hidden">
                 <div
@@ -282,14 +315,24 @@ export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailP
               {node.status === "completed" ? (
                 <span className="flex items-center justify-center gap-2">
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
                   </svg>
                   已完成 - 点击取消
                 </span>
               ) : (
                 <span className="flex items-center justify-center gap-2">
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
                   </svg>
                   标记为已完成
                 </span>
@@ -303,7 +346,9 @@ export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailP
           {/* 简介 */}
           {node.description && (
             <section>
-              <h3 className="font-mono text-[10px] text-neutral-500 uppercase tracking-wider mb-2">// 目标简介</h3>
+              <h3 className="font-mono text-[10px] text-neutral-500 uppercase tracking-wider mb-2">
+                {"// 目标简介"}
+              </h3>
               <p className="text-sm text-neutral-300 leading-relaxed">{node.description}</p>
             </section>
           )}
@@ -311,7 +356,9 @@ export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailP
           {/* 完成后可做到的事 */}
           {node.outcomes && node.outcomes.length > 0 && (
             <section>
-              <h3 className="font-mono text-[10px] text-neutral-500 uppercase tracking-wider mb-2">// 完成后可做到</h3>
+              <h3 className="font-mono text-[10px] text-neutral-500 uppercase tracking-wider mb-2">
+                {"// 完成后可做到"}
+              </h3>
               <ul className="space-y-1.5">
                 {node.outcomes.map((o) => (
                   <li key={o} className="flex items-start gap-2 text-sm text-neutral-300">
@@ -326,10 +373,15 @@ export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailP
           {/* 前置要求 */}
           {node.prerequisites.length > 0 && (
             <section>
-              <h3 className="font-mono text-[10px] text-neutral-500 uppercase tracking-wider mb-2">// 前置节点</h3>
+              <h3 className="font-mono text-[10px] text-neutral-500 uppercase tracking-wider mb-2">
+                {"// 前置节点"}
+              </h3>
               <div className="flex flex-wrap gap-2">
                 {node.prerequisites.map((prereq) => (
-                  <span key={prereq} className="font-mono text-[11px] px-2 py-1 bg-neutral-800 text-neutral-400 rounded border border-neutral-700">
+                  <span
+                    key={prereq}
+                    className="font-mono text-[11px] px-2 py-1 bg-neutral-800 text-neutral-400 rounded border border-neutral-700"
+                  >
                     {prereq}
                   </span>
                 ))}
@@ -340,7 +392,9 @@ export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailP
           {/* 学习建议 */}
           {node.suggestions && (
             <section>
-              <h3 className="font-mono text-[10px] text-neutral-500 uppercase tracking-wider mb-2">// 💡 学习建议</h3>
+              <h3 className="font-mono text-[10px] text-neutral-500 uppercase tracking-wider mb-2">
+                {"// 💡 学习建议"}
+              </h3>
 
               {/* 前置知识 */}
               {node.suggestions.prerequisites && node.suggestions.prerequisites.length > 0 && (
@@ -378,7 +432,10 @@ export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailP
                   <h4 className="text-xs font-semibold text-neutral-400 mb-2">🛤️ 推荐路径</h4>
                   <div className="flex flex-wrap gap-2">
                     {node.suggestions.learningPath.map((path, idx) => (
-                      <span key={idx} className="font-mono text-[10px] px-2 py-1 bg-purple-500/10 text-purple-400 rounded border border-purple-500/30">
+                      <span
+                        key={idx}
+                        className="font-mono text-[10px] px-2 py-1 bg-purple-500/10 text-purple-400 rounded border border-purple-500/30"
+                      >
                         {path}
                       </span>
                     ))}
@@ -389,9 +446,14 @@ export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailP
           )}
 
           {/* 关联内容分组显示 */}
-          {(nodeTerms.length > 0 || (node.relatedIntel && node.relatedIntel.length > 0) || (node.relatedTools && node.relatedTools.length > 0) || relatedProjects.length > 0) && (
+          {(nodeTerms.length > 0 ||
+            (node.relatedIntel && node.relatedIntel.length > 0) ||
+            (node.relatedTools && node.relatedTools.length > 0) ||
+            relatedProjects.length > 0) && (
             <section>
-              <h3 className="font-mono text-[10px] text-neutral-500 uppercase tracking-wider mb-3">// 🔗 关联内容</h3>
+              <h3 className="font-mono text-[10px] text-neutral-500 uppercase tracking-wider mb-3">
+                {"// 🔗 关联内容"}
+              </h3>
 
               <div className="space-y-4">
                 {/* 关联情报 */}
@@ -400,7 +462,9 @@ export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailP
                     <div className="flex items-center gap-2 mb-2">
                       <span className="text-cyan-400 text-sm">📰</span>
                       <span className="text-xs font-semibold text-neutral-400">情报</span>
-                      <span className="font-mono text-[10px] text-neutral-600">({node.relatedIntel.length})</span>
+                      <span className="font-mono text-[10px] text-neutral-600">
+                        ({node.relatedIntel.length})
+                      </span>
                     </div>
                     <div className="space-y-2">
                       {node.relatedIntel.map((slug) => (
@@ -412,7 +476,9 @@ export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailP
                           <span className="text-xs text-neutral-300 group-hover:text-cyan-400 transition-colors flex-1">
                             {INTEL_LINKS[slug] || slug}
                           </span>
-                          <span className="text-[10px] text-neutral-600 group-hover:text-cyan-400 transition-colors">→</span>
+                          <span className="text-[10px] text-neutral-600 group-hover:text-cyan-400 transition-colors">
+                            →
+                          </span>
                         </Link>
                       ))}
                     </div>
@@ -425,7 +491,9 @@ export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailP
                     <div className="flex items-center gap-2 mb-2">
                       <span className="text-blue-400 text-sm">📖</span>
                       <span className="text-xs font-semibold text-neutral-400">术语</span>
-                      <span className="font-mono text-[10px] text-neutral-600">({nodeTerms.length})</span>
+                      <span className="font-mono text-[10px] text-neutral-600">
+                        ({nodeTerms.length})
+                      </span>
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {nodeTerms.map((term) => (
@@ -447,7 +515,9 @@ export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailP
                     <div className="flex items-center gap-2 mb-2">
                       <span className="text-purple-400 text-sm">🔧</span>
                       <span className="text-xs font-semibold text-neutral-400">工具</span>
-                      <span className="font-mono text-[10px] text-neutral-600">({node.relatedTools.length})</span>
+                      <span className="font-mono text-[10px] text-neutral-600">
+                        ({node.relatedTools.length})
+                      </span>
                     </div>
                     <div className="space-y-2">
                       {node.relatedTools.map((toolName) => (
@@ -459,7 +529,9 @@ export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailP
                           <span className="text-xs text-neutral-300 group-hover:text-purple-400 transition-colors flex-1">
                             {TOOL_LINKS[toolName] || toolName}
                           </span>
-                          <span className="text-[10px] text-neutral-600 group-hover:text-purple-400 transition-colors">→</span>
+                          <span className="text-[10px] text-neutral-600 group-hover:text-purple-400 transition-colors">
+                            →
+                          </span>
                         </Link>
                       ))}
                     </div>
@@ -472,7 +544,9 @@ export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailP
                     <div className="flex items-center gap-2 mb-2">
                       <span className="text-emerald-400 text-sm">🚀</span>
                       <span className="text-xs font-semibold text-neutral-400">实战项目</span>
-                      <span className="font-mono text-[10px] text-neutral-600">({relatedProjects.length})</span>
+                      <span className="font-mono text-[10px] text-neutral-600">
+                        ({relatedProjects.length})
+                      </span>
                     </div>
                     <div className="space-y-2">
                       {relatedProjects.map((project) => (
@@ -486,12 +560,18 @@ export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailP
                               {project.title}
                             </span>
                             <div className="flex items-center gap-2 mt-0.5">
-                              <span className="text-[10px] text-neutral-500">{getDifficultyStars(project.difficulty)}</span>
+                              <span className="text-[10px] text-neutral-500">
+                                {getDifficultyStars(project.difficulty)}
+                              </span>
                               <span className="text-[10px] text-neutral-600">|</span>
-                              <span className="text-[10px] text-neutral-500">{project.duration}</span>
+                              <span className="text-[10px] text-neutral-500">
+                                {project.duration}
+                              </span>
                             </div>
                           </div>
-                          <span className="text-[10px] text-neutral-600 group-hover:text-emerald-400 transition-colors">→</span>
+                          <span className="text-[10px] text-neutral-600 group-hover:text-emerald-400 transition-colors">
+                            →
+                          </span>
                         </Link>
                       ))}
                     </div>
@@ -505,7 +585,9 @@ export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailP
           {node.dailyTasks && node.dailyTasks.length > 0 && (
             <section>
               <h3 className="font-mono text-[10px] text-neutral-500 uppercase tracking-wider mb-3">
-                // 📅 每日学习计划（共 {node.dailyTasks.length} 天）
+                {"// 📅 每日学习计划（共 "}
+                {node.dailyTasks.length}
+                {" 天）"}
               </h3>
               <div className="space-y-2">
                 {node.dailyTasks.slice(0, visibleCount).map((task) => {
@@ -538,27 +620,51 @@ export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailP
                           aria-label={`标记第 ${task.day} 天为${taskProgress[task.day] ? "未完成" : "已完成"}`}
                         >
                           {taskProgress[task.day] && (
-                            <svg className="w-2.5 h-2.5 text-neutral-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={4}>
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                            <svg
+                              className="w-2.5 h-2.5 text-neutral-900"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              strokeWidth={4}
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M5 13l4 4L19 7"
+                              />
                             </svg>
                           )}
                         </button>
 
                         {/* 日期标签 */}
-                        <span className={`font-mono text-[10px] w-6 h-6 rounded flex items-center justify-center font-bold flex-shrink-0 ${
-                          colorStyle.split(" ")[1]
-                        } ${taskProgress[task.day] ? "opacity-60 line-through" : ""}`}>
+                        <span
+                          className={`font-mono text-[10px] w-6 h-6 rounded flex items-center justify-center font-bold flex-shrink-0 ${
+                            colorStyle.split(" ")[1]
+                          } ${taskProgress[task.day] ? "opacity-60 line-through" : ""}`}
+                        >
                           D{String(task.day).padStart(2, "0")}
                         </span>
 
                         {/* 标题和时长 */}
                         <div className="flex-1 min-w-0">
-                          <span className={`font-semibold text-sm ${taskProgress[task.day] ? "text-neutral-500 line-through" : "text-neutral-200"}`}>
+                          <span
+                            className={`font-semibold text-sm ${taskProgress[task.day] ? "text-neutral-500 line-through" : "text-neutral-200"}`}
+                          >
                             {task.title || `第 ${task.day} 天学习任务`}
                           </span>
                           <div className="flex items-center gap-2 font-mono text-[10px] text-neutral-500 mt-0.5">
-                            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            <svg
+                              className="w-3 h-3"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                              />
                             </svg>
                             <span>{task.duration || "2-3小时"}</span>
                           </div>
@@ -571,7 +677,12 @@ export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailP
                           viewBox="0 0 24 24"
                           stroke="currentColor"
                         >
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M19 9l-7 7-7-7"
+                          />
                         </svg>
                       </div>
 
@@ -580,25 +691,43 @@ export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailP
                         <div className="px-3 pb-3 border-t border-neutral-800/50">
                           {/* Content items */}
                           <div className="mt-3 ml-6 sm:ml-9">
-                            {task.content && typeof task.content === 'object' && !Array.isArray(task.content) && 'objective' in task.content ? (
+                            {task.content &&
+                            typeof task.content === "object" &&
+                            !Array.isArray(task.content) &&
+                            "objective" in task.content ? (
                               /* 新格式：结构化内容 */
                               <div className="space-y-3">
                                 {/* 核心目标 */}
                                 <div>
-                                  <h4 className="text-xs font-bold text-emerald-400 mb-1 uppercase tracking-wider">核心目标</h4>
-                                  <p className={`text-xs text-neutral-400 leading-relaxed ${taskProgress[task.day] ? "line-through opacity-50" : ""}`}>
-                                    {renderTextWithTerms(task.content.objective ?? "", allTerms, node.id)}
+                                  <h4 className="text-xs font-bold text-emerald-400 mb-1 uppercase tracking-wider">
+                                    核心目标
+                                  </h4>
+                                  <p
+                                    className={`text-xs text-neutral-400 leading-relaxed ${taskProgress[task.day] ? "line-through opacity-50" : ""}`}
+                                  >
+                                    {renderTextWithTerms(
+                                      task.content.objective ?? "",
+                                      allTerms,
+                                      node.id,
+                                    )}
                                   </p>
                                 </div>
 
                                 {/* 核心要点 */}
                                 {task.content.key_points && task.content.key_points.length > 0 && (
                                   <div>
-                                    <h4 className="text-xs font-bold text-emerald-400 mb-1 uppercase tracking-wider">核心要点</h4>
+                                    <h4 className="text-xs font-bold text-emerald-400 mb-1 uppercase tracking-wider">
+                                      核心要点
+                                    </h4>
                                     <ul className="space-y-1">
                                       {task.content.key_points.map((api, idx) => (
-                                        <li key={idx} className={`flex items-start gap-2 text-xs text-neutral-400 ${taskProgress[task.day] ? "line-through opacity-50" : ""}`}>
-                                          <span className="text-neutral-600 font-mono mt-0.5 flex-shrink-0">·</span>
+                                        <li
+                                          key={idx}
+                                          className={`flex items-start gap-2 text-xs text-neutral-400 ${taskProgress[task.day] ? "line-through opacity-50" : ""}`}
+                                        >
+                                          <span className="text-neutral-600 font-mono mt-0.5 flex-shrink-0">
+                                            ·
+                                          </span>
                                           <span>{renderApiItem(api)}</span>
                                         </li>
                                       ))}
@@ -608,22 +737,41 @@ export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailP
 
                                 {/* 场景实操 */}
                                 {task.content.practice && (
-                                  <div className={`relative border-l-4 border-emerald-500 bg-gradient-to-r from-emerald-500/10 to-transparent pl-4 pr-3 py-3 rounded-r-lg ${taskProgress[task.day] ? "opacity-50" : ""}`}>
+                                  <div
+                                    className={`relative border-l-4 border-emerald-500 bg-gradient-to-r from-emerald-500/10 to-transparent pl-4 pr-3 py-3 rounded-r-lg ${taskProgress[task.day] ? "opacity-50" : ""}`}
+                                  >
                                     <div className="flex items-center gap-2 mb-2">
                                       <span className="text-base">🎯</span>
-                                      <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider">场景实操</span>
+                                      <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider">
+                                        场景实操
+                                      </span>
                                     </div>
-                                    <p className="text-sm text-zinc-200 leading-relaxed">{renderTextWithTerms(task.content.practice ?? "", allTerms, node.id)}</p>
+                                    <p className="text-sm text-zinc-200 leading-relaxed">
+                                      {renderTextWithTerms(
+                                        task.content.practice ?? "",
+                                        allTerms,
+                                        node.id,
+                                      )}
+                                    </p>
 
                                     {/* 查看答案折叠面板 */}
                                     {task.content.deep_dive && (
                                       <div className="mt-3 pt-3 border-t border-emerald-500/20">
                                         <button
-                                          onClick={() => setExpandedAnswers(prev => ({ ...prev, [task.day]: !prev[task.day] }))}
+                                          onClick={() =>
+                                            setExpandedAnswers((prev) => ({
+                                              ...prev,
+                                              [task.day]: !prev[task.day],
+                                            }))
+                                          }
                                           className="flex items-center gap-2 text-xs text-emerald-400 hover:text-emerald-300 transition-colors"
                                         >
                                           <span>{expandedAnswers[task.day] ? "🔽" : "▶️"}</span>
-                                          <span className="font-medium">{expandedAnswers[task.day] ? "收起拓展" : "查看深入拓展"}</span>
+                                          <span className="font-medium">
+                                            {expandedAnswers[task.day]
+                                              ? "收起拓展"
+                                              : "查看深入拓展"}
+                                          </span>
                                         </button>
                                         {expandedAnswers[task.day] && (
                                           <div className="mt-2 p-3 bg-zinc-900/80 rounded-lg border border-zinc-700/50">
@@ -637,19 +785,34 @@ export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailP
                                   </div>
                                 )}
                               </div>
-                            ) : typeof task.content === 'string' ? (
+                            ) : typeof task.content === "string" ? (
                               /* 旧格式：字符串 */
-                              <p className={`text-xs text-neutral-400 leading-relaxed ${taskProgress[task.day] ? "line-through opacity-50" : ""}`}>
+                              <p
+                                className={`text-xs text-neutral-400 leading-relaxed ${taskProgress[task.day] ? "line-through opacity-50" : ""}`}
+                              >
                                 {renderTextWithTerms(task.content, allTerms, node.id)}
                               </p>
                             ) : Array.isArray(task.content) ? (
                               /* 旧格式：数组 */
                               <ul className="space-y-1.5">
                                 {(task.content || []).map((item, idx) => (
-                                  <li key={idx} className="flex items-start gap-2 text-xs text-neutral-400">
-                                    <span className="text-neutral-600 font-mono mt-0.5 flex-shrink-0">·</span>
-                                    <span className={taskProgress[task.day] ? "line-through opacity-50" : ""}>
-                                      {renderTextWithTerms(item || "学习内容更新中...", allTerms, node.id)}
+                                  <li
+                                    key={idx}
+                                    className="flex items-start gap-2 text-xs text-neutral-400"
+                                  >
+                                    <span className="text-neutral-600 font-mono mt-0.5 flex-shrink-0">
+                                      ·
+                                    </span>
+                                    <span
+                                      className={
+                                        taskProgress[task.day] ? "line-through opacity-50" : ""
+                                      }
+                                    >
+                                      {renderTextWithTerms(
+                                        item || "学习内容更新中...",
+                                        allTerms,
+                                        node.id,
+                                      )}
                                     </span>
                                   </li>
                                 ))}
@@ -660,7 +823,9 @@ export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailP
                           {/* Resources: Required */}
                           {requiredResources(task).length > 0 && (
                             <div className="mt-3 ml-6 sm:ml-9">
-                              <div className="font-mono text-[9px] text-green-500/70 uppercase mb-1.5 tracking-wider">必学资源</div>
+                              <div className="font-mono text-[9px] text-green-500/70 uppercase mb-1.5 tracking-wider">
+                                必学资源
+                              </div>
                               <div className="flex flex-col gap-1.5">
                                 {requiredResources(task).map((r, idx) => {
                                   const mirror = getMirrorHint(r.url);
@@ -677,10 +842,14 @@ export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailP
                                         <span className="text-sm">{sourceInfo.icon}</span>
                                         <span className="flex-1">{r.title}</span>
                                         {r.duration && (
-                                          <span className="font-mono text-[10px] text-neutral-500">{r.duration}</span>
+                                          <span className="font-mono text-[10px] text-neutral-500">
+                                            {r.duration}
+                                          </span>
                                         )}
                                         {typeInfo.label && (
-                                          <span className={`font-mono text-[9px] px-1.5 py-0.5 rounded border ${typeInfo.color}`}>
+                                          <span
+                                            className={`font-mono text-[9px] px-1.5 py-0.5 rounded border ${typeInfo.color}`}
+                                          >
                                             {typeInfo.label}
                                           </span>
                                         )}
@@ -700,7 +869,9 @@ export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailP
                           {/* Resources: Optional */}
                           {optionalResources(task).length > 0 && (
                             <div className="mt-3 ml-6 sm:ml-9">
-                              <div className="font-mono text-[9px] text-neutral-500 uppercase mb-1.5 tracking-wider">可选资源</div>
+                              <div className="font-mono text-[9px] text-neutral-500 uppercase mb-1.5 tracking-wider">
+                                可选资源
+                              </div>
                               <div className="flex flex-col gap-1.5">
                                 {optionalResources(task).map((r, idx) => {
                                   const mirror = getMirrorHint(r.url);
@@ -717,10 +888,14 @@ export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailP
                                         <span className="text-sm">{sourceInfo.icon}</span>
                                         <span className="flex-1">{r.title}</span>
                                         {r.duration && (
-                                          <span className="font-mono text-[10px] text-neutral-500">{r.duration}</span>
+                                          <span className="font-mono text-[10px] text-neutral-500">
+                                            {r.duration}
+                                          </span>
                                         )}
                                         {typeInfo.label && (
-                                          <span className={`font-mono text-[9px] px-1.5 py-0.5 rounded border ${typeInfo.color}`}>
+                                          <span
+                                            className={`font-mono text-[9px] px-1.5 py-0.5 rounded border ${typeInfo.color}`}
+                                          >
                                             {typeInfo.label}
                                           </span>
                                         )}
@@ -738,10 +913,20 @@ export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailP
                           )}
 
                           {/* Checkpoint */}
-                          <div className={`mt-3 pt-2 border-t ml-6 sm:ml-9 ${taskProgress[task.day] ? "border-green-500/20" : "border-neutral-800/50"}`}>
-                            <div className="font-mono text-[9px] text-neutral-600 uppercase mb-1">✓ 完成标准</div>
-                            <p className={`text-[11px] ${taskProgress[task.day] ? "text-neutral-500 line-through" : "text-neutral-300"}`}>
-                              {renderTextWithTerms(task.checkpoint || "独立完成当日内容的学习与练习", allTerms, node.id)}
+                          <div
+                            className={`mt-3 pt-2 border-t ml-6 sm:ml-9 ${taskProgress[task.day] ? "border-green-500/20" : "border-neutral-800/50"}`}
+                          >
+                            <div className="font-mono text-[9px] text-neutral-600 uppercase mb-1">
+                              ✓ 完成标准
+                            </div>
+                            <p
+                              className={`text-[11px] ${taskProgress[task.day] ? "text-neutral-500 line-through" : "text-neutral-300"}`}
+                            >
+                              {renderTextWithTerms(
+                                task.checkpoint || "独立完成当日内容的学习与练习",
+                                allTerms,
+                                node.id,
+                              )}
                             </p>
                           </div>
                         </div>
@@ -768,12 +953,8 @@ export function NodeDetailPanel({ node, onClose, onToggleComplete }: NodeDetailP
             <section>
               <div className="text-center py-8">
                 <div className="text-3xl mb-3">📋</div>
-                <p className="text-sm text-neutral-500">
-                  该节点暂无每日学习计划
-                </p>
-                <p className="text-xs text-neutral-600 mt-1">
-                  每日任务正在持续更新中…
-                </p>
+                <p className="text-sm text-neutral-500">该节点暂无每日学习计划</p>
+                <p className="text-xs text-neutral-600 mt-1">每日任务正在持续更新中…</p>
               </div>
             </section>
           )}

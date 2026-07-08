@@ -24,7 +24,7 @@ export function PitfallListClient({ pitfalls }: PitfallListClientProps) {
         { name: "tags", weight: 0.2 },
         { name: "quickFix", weight: 0.1 },
       ]),
-    [pitfalls]
+    [pitfalls],
   );
 
   // 快捷键聚焦搜索框
@@ -86,9 +86,7 @@ export function PitfallListClient({ pitfalls }: PitfallListClientProps) {
 
     // 标签筛选
     if (activeTags.size > 0) {
-      result = result.filter((p) =>
-        Array.from(activeTags).some((tag) => p.tags.includes(tag))
-      );
+      result = result.filter((p) => Array.from(activeTags).some((tag) => p.tags.includes(tag)));
     }
 
     return result;
@@ -238,7 +236,9 @@ export function PitfallListClient({ pitfalls }: PitfallListClientProps) {
                 className="block p-4 sm:p-5 bg-neutral-900 border border-neutral-700 rounded-lg hover:border-red-400/40 transition-colors"
               >
                 <div className="mb-4">
-                  <span className={`font-mono text-[10px] px-2 py-0.5 rounded-sm ${meta ? `${meta.bgColor} ${meta.color}` : "bg-red-400/10 text-red-400"}`}>
+                  <span
+                    className={`font-mono text-[10px] px-2 py-0.5 rounded-sm ${meta ? `${meta.bgColor} ${meta.color}` : "bg-red-400/10 text-red-400"}`}
+                  >
                     [{meta ? meta.label : p.category}]
                   </span>
                   <h2 className="text-base sm:text-lg font-bold text-neutral-200 mt-2">
@@ -248,7 +248,7 @@ export function PitfallListClient({ pitfalls }: PitfallListClientProps) {
 
                 {p.quickFix && (
                   <div className="mb-4 p-3 bg-red-500/5 border border-red-400/20 rounded-md">
-                    <div className="font-mono text-[10px] text-red-400 mb-1">// 快速修复</div>
+                    <div className="font-mono text-[10px] text-red-400 mb-1">{"// 快速修复"}</div>
                     <span className="text-sm text-red-300">
                       {highlightText(p.quickFix, searchQuery)}
                     </span>
@@ -257,18 +257,24 @@ export function PitfallListClient({ pitfalls }: PitfallListClientProps) {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
-                    <div className="font-mono text-[10px] text-neutral-400 mb-2 tracking-wider">// 现象表现</div>
+                    <div className="font-mono text-[10px] text-neutral-400 mb-2 tracking-wider">
+                      {"// 现象表现"}
+                    </div>
                     <ul className="text-sm text-neutral-400 leading-relaxed space-y-1.5">
                       {p.symptoms.map((s) => (
                         <li key={s} className="flex items-start gap-2">
-                          <span className="text-red-400 font-mono text-xs flex-shrink-0 mt-0.5">×</span>
+                          <span className="text-red-400 font-mono text-xs flex-shrink-0 mt-0.5">
+                            ×
+                          </span>
                           <span>{highlightText(s, searchQuery)}</span>
                         </li>
                       ))}
                     </ul>
                   </div>
                   <div>
-                    <div className="font-mono text-[10px] text-neutral-400 mb-2 tracking-wider">// 排查步骤</div>
+                    <div className="font-mono text-[10px] text-neutral-400 mb-2 tracking-wider">
+                      {"// 排查步骤"}
+                    </div>
                     <ul className="text-sm text-neutral-400 leading-relaxed space-y-1.5">
                       {p.solution.map((s, idx) => (
                         <li key={s} className="flex items-start gap-2">
@@ -308,10 +314,8 @@ export function PitfallListClient({ pitfalls }: PitfallListClientProps) {
         {/* 空状态 */}
         {filteredPitfalls.length === 0 && (
           <div className="text-center py-16">
-            <div className="font-mono text-neutral-600 mb-3">// 没有匹配的踩坑记录</div>
-            <div className="text-sm text-neutral-500 mb-4">
-              试试其他关键词，或者浏览全部踩坑
-            </div>
+            <div className="font-mono text-neutral-600 mb-3">{"// 没有匹配的踩坑记录"}</div>
+            <div className="text-sm text-neutral-500 mb-4">试试其他关键词，或者浏览全部踩坑</div>
             <button
               onClick={() => {
                 setSearchQuery("");

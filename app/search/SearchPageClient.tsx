@@ -9,12 +9,21 @@ interface SearchPageClientProps {
   items: UnifiedSearchItem[];
 }
 
+const POPULAR_TAGS = ["LLM", "Transformer", "CNN", "YOLO", "RAG", "Docker"];
+
 export function SearchPageClient({ items }: SearchPageClientProps) {
   const [query, setQuery] = useState("");
   const [activeType, setActiveType] = useState<string>("all");
   const [highlightIndex, setHighlightIndex] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
   const listItemRefs = useRef<HTMLAnchorElement[]>([]);
+
+  // 精选情报推荐：从已加载的搜索条目里 type==="intel" 随机 3 条
+  const recommendedIntels = useMemo(() => {
+    const intels = items.filter((i) => i.type === "intel");
+    const shuffled = [...intels].sort(() => Math.random() - 0.5);
+    return shuffled.slice(0, 3);
+  }, [items]);
 
   // 聚焦输入框
   useEffect(() => {
@@ -39,7 +48,7 @@ export function SearchPageClient({ items }: SearchPageClientProps) {
         { name: "tags", weight: 0.2 },
         { name: "category", weight: 0.1 },
       ]),
-    [items]
+    [items],
   );
 
   // 搜索 + 筛选
@@ -74,16 +83,26 @@ export function SearchPageClient({ items }: SearchPageClientProps) {
       const total = results.length;
       if (e.key === "ArrowDown") {
         e.preventDefault();
-        setHighlightIndex((prev) => (total === 0 ? -1 : prev >= total - 1 ? 0 : prev + 1));
+        if (total === 0) {
+          setHighlightIndex(-1);
+        } else if (highlightIndex < 0) {
+          setHighlightIndex(0);
+        } else {
+          setHighlightIndex((prev) => (prev >= total - 1 ? 0 : prev + 1));
+        }
       } else if (e.key === "ArrowUp") {
         e.preventDefault();
-        setHighlightIndex((prev) => (total === 0 ? -1 : prev <= 0 ? total - 1 : prev - 1));
+        if (total === 0 || highlightIndex <= 0) {
+          // ArrowUp 时 <= 0 不动作
+          return;
+        }
+        setHighlightIndex((prev) => prev - 1);
       } else if (e.key === "Escape") {
         setQuery("");
         setHighlightIndex(-1);
       }
     },
-    [results.length]
+    [results.length, highlightIndex],
   );
 
   // 滚动高亮项到可视区
@@ -97,6 +116,24 @@ export function SearchPageClient({ items }: SearchPageClientProps) {
   useEffect(() => {
     setHighlightIndex(results.length > 0 ? 0 : -1);
   }, [results.length]);
+
+  // 输入框变化回调（供标签点击时调用）
+  const onInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setQuery(e.target.value);
+  }, []);
+
+  // 热门标签点击：设置 query 并立即触发搜索
+  const handleTagClick = useCallback(
+    (tag: string) => {
+      setQuery(tag);
+      const syntheticEvent = {
+        target: { value: tag },
+      } as React.ChangeEvent<HTMLInputElement>;
+      onInputChange(syntheticEvent);
+      inputRef.current?.focus();
+    },
+    [onInputChange],
+  );
 
   return (
     <main className="min-h-screen bg-neutral-950 text-neutral-200">
@@ -115,8 +152,8 @@ export function SearchPageClient({ items }: SearchPageClientProps) {
             <span className="text-neutral-200 font-medium">工具</span>、
             <span className="text-neutral-200 font-medium">踩坑指南</span>、
             <span className="text-neutral-200 font-medium">专业术语</span>和
-            <span className="text-neutral-200 font-medium">实战项目</span>。
-            共索引 <span className="text-neutral-200 font-medium">{items.length}</span> 条内容。
+            <span className="text-neutral-200 font-medium">实战项目</span>。 共索引{" "}
+            <span className="text-neutral-200 font-medium">{items.length}</span> 条内容。
           </p>
         </div>
 
@@ -129,7 +166,7 @@ export function SearchPageClient({ items }: SearchPageClientProps) {
             ref={inputRef}
             type="text"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={onInputChange}
             onKeyDown={handleKeyDown}
             placeholder="试试：Linux / Transformer / Docker / OOM..."
             className="w-full pl-10 pr-20 py-3.5 bg-neutral-900 border border-neutral-700 rounded-lg text-neutral-100 font-mono text-sm placeholder:text-neutral-500 focus:outline-none focus:border-green-400/60 focus:ring-2 focus:ring-green-400/15 transition-colors"
@@ -179,9 +216,11 @@ export function SearchPageClient({ items }: SearchPageClientProps) {
         {/* 结果统计 */}
         <div className="flex items-center justify-between mb-4">
           <div className="font-mono text-[11px] text-neutral-500">
-            {query || activeType !== "all"
-              ? `// 匹配到 ${results.length} 条`
-              : `// 已索引 ${items.length} 条内容`}
+            {query || activeType !== "all" ? (
+              <>{`// 匹配到 ${results.length} 条`}</>
+            ) : (
+              <>{`// 已索引 ${items.length} 条内容`}</>
+            )}
           </div>
           {(query || activeType !== "all") && (
             <button
@@ -198,13 +237,70 @@ export function SearchPageClient({ items }: SearchPageClientProps) {
 
         {/* 结果列表 */}
         {results.length === 0 ? (
-          <div className="py-12 text-center border border-dashed border-neutral-800 rounded-lg">
-            <div className="font-mono text-sm text-neutral-500 mb-2">
-              // 未匹配到结果
+          <div className="space-y-8">
+            <div className="py-12 text-center border border-dashed border-neutral-800 rounded-lg">
+              <div className="font-mono text-sm text-neutral-500 mb-2">{"// 未匹配到结果"}</div>
+              <p className="text-xs text-neutral-600">尝试换一个关键词，或检查拼写是否正确</p>
             </div>
-            <p className="text-xs text-neutral-600">
-              尝试换一个关键词，或检查拼写是否正确
-            </p>
+
+            {query.trim() && (
+              <>
+                {/* 热门标签云 */}
+                <div>
+                  <div className="font-mono text-[11px] text-neutral-500 mb-3">试试这些关键词:</div>
+                  <div className="flex flex-wrap gap-2">
+                    {POPULAR_TAGS.map((tag) => (
+                      <button
+                        key={tag}
+                        onClick={() => handleTagClick(tag)}
+                        className="px-3 py-1.5 rounded-lg bg-neutral-900 border border-neutral-800 font-mono text-xs text-cyan-400 hover:border-cyan-400/50 hover:bg-cyan-400/5 transition-colors"
+                      >
+                        #{tag}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 精选情报推荐 */}
+                {recommendedIntels.length > 0 && (
+                  <div>
+                    <div className="font-mono text-[11px] text-neutral-500 mb-3">精选情报推荐:</div>
+                    <ul className="space-y-2">
+                      {recommendedIntels.map((item) => (
+                        <li key={item.id}>
+                          <Link
+                            href={item.url}
+                            className="block p-4 rounded-lg border border-neutral-800 bg-neutral-900 hover:border-cyan-400/40 hover:bg-neutral-900/80 transition-all group"
+                          >
+                            <div className="flex items-start justify-between gap-3 mb-2">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <span className="font-mono text-[10px] px-1.5 py-0.5 rounded-sm border bg-amber-400/10 text-amber-400 border-amber-400/30">
+                                  情报
+                                </span>
+                                {item.category && (
+                                  <span className="font-mono text-[10px] text-neutral-500">
+                                    {item.category}
+                                  </span>
+                                )}
+                              </div>
+                              <span className="font-mono text-[11px] text-neutral-600 group-hover:text-cyan-400 transition-colors">
+                                →
+                              </span>
+                            </div>
+                            <div className="text-base font-semibold mb-2 text-neutral-100 group-hover:text-cyan-400 transition-colors">
+                              {item.title}
+                            </div>
+                            <p className="text-sm text-neutral-400 leading-relaxed line-clamp-2">
+                              {item.content}
+                            </p>
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </>
+            )}
           </div>
         ) : (
           <div className="space-y-8">
@@ -257,9 +353,13 @@ export function SearchPageClient({ items }: SearchPageClientProps) {
                                 →
                               </span>
                             </div>
-                            <div className={`text-base font-semibold mb-2 transition-colors ${
-                              isHighlighted ? "text-cyan-400" : "text-neutral-100 group-hover:text-cyan-400"
-                            }`}>
+                            <div
+                              className={`text-base font-semibold mb-2 transition-colors ${
+                                isHighlighted
+                                  ? "text-cyan-400"
+                                  : "text-neutral-100 group-hover:text-cyan-400"
+                              }`}
+                            >
                               {highlightText(item.title, query)}
                             </div>
                             <p className="text-sm text-neutral-400 leading-relaxed mb-3 line-clamp-2">

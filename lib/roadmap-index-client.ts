@@ -3,7 +3,7 @@
  * 不依赖 Node.js API，可以在 Client Components 中安全使用
  */
 
-import type { RoadmapNode } from "@/components/radar/types";
+import type { RoadmapNode } from "@/lib/content-types";
 
 export interface NodeSummary {
   id: string;
@@ -33,7 +33,7 @@ async function loadFullRoadmap(): Promise<RoadmapNode[]> {
 
 export async function getNodeSummaries(): Promise<NodeSummary[]> {
   const roadmap = await loadFullRoadmap();
-  return roadmap.map(node => ({
+  return roadmap.map((node) => ({
     id: node.id,
     name: node.name,
     track: node.track,
@@ -52,12 +52,12 @@ export async function getNodeSummaries(): Promise<NodeSummary[]> {
 
 export async function getNodeById(nodeId: string): Promise<RoadmapNode | undefined> {
   const roadmap = await loadFullRoadmap();
-  return roadmap.find(n => n.id === nodeId);
+  return roadmap.find((n) => n.id === nodeId);
 }
 
 export async function getNodesByTrack(track: string): Promise<RoadmapNode[]> {
   const roadmap = await loadFullRoadmap();
-  return roadmap.filter(n => n.track === track);
+  return roadmap.filter((n) => n.track === track);
 }
 
 export async function getNodeCount(): Promise<number> {
