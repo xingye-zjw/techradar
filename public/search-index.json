@@ -1,0 +1,3202 @@
+[
+  {
+    "id": "node-linux-basic",
+    "title": "Linux 系统基础",
+    "content": "Shell / Bash / SSH / tmux / 进程管理，AI 开发者的必备工作环境 熟练使用命令行 远程操控 GPU 服务器",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=linux-basic",
+    "tags": ["devops"],
+    "category": "devops"
+  },
+  {
+    "id": "node-git-github",
+    "title": "Git & GitHub 协作",
+    "content": "系统学习 Git 版本控制与 GitHub 协作开发流程，掌握分支策略、PR 代码评审、Issue 管理与开源项目贡献规范 独立参与开源项目协作 代码 Code Review 能力",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=git-github",
+    "tags": ["devops"],
+    "category": "devops"
+  },
+  {
+    "id": "node-docker-basic",
+    "title": "Docker 容器化",
+    "content": "镜像构建 / 容器编排 / GPU 容器 / Docker Compose 模型服务容器化部署 GPU 训练环境隔离",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=docker-basic",
+    "tags": ["devops"],
+    "category": "devops"
+  },
+  {
+    "id": "node-math-linear-algebra",
+    "title": "线性代数",
+    "content": "向量空间、矩阵运算、特征值、SVD——用 NumPy/PyTorch 实战理解 能在代码中理解权重矩阵的维度意义 能推导反向传播的矩阵形式",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=math-linear-algebra",
+    "tags": ["math"],
+    "category": "math"
+  },
+  {
+    "id": "node-math-probability",
+    "title": "概率与统计",
+    "content": "深入学习概率论与数理统计，包括常见分布、贝叶斯推断、假设检验与信息论基础，为理解机器学习中的不确定性与交叉熵损失奠定数学基础 解释 loss 函数的概率意义 评估模型的统计显著性",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=math-probability",
+    "tags": ["math"],
+    "category": "math"
+  },
+  {
+    "id": "node-pytorch-core",
+    "title": "PyTorch 框架",
+    "content": "Tensor / Dataset / DataLoader / 优化器 / 分布式训练 熟练用 PyTorch 搭建任意模型结构 分布式训练基础",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=pytorch-core",
+    "tags": ["cv"],
+    "category": "cv"
+  },
+  {
+    "id": "node-cv-cnn",
+    "title": "CNN 经典架构",
+    "content": "系统掌握卷积神经网络核心原理，包括感受野计算、经典架构（ResNet/LeNet/VGG）、迁移学习策略与特征可视化方法，是计算机视觉的基石 理解 CNN 设计原理 能复现经典论文架构并训练",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=cv-cnn",
+    "tags": ["cv"],
+    "category": "cv"
+  },
+  {
+    "id": "node-cv-detection",
+    "title": "目标检测",
+    "content": "边界框回归 / IoU / YOLO / Ultralytics / 导出 ONNX 训练自定义目标检测数据集 推理优化与部署",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=cv-detection",
+    "tags": ["cv"],
+    "category": "cv"
+  },
+  {
+    "id": "node-nlp-rnn",
+    "title": "NLP 基础与 RNN",
+    "content": "分词 / 词向量 / RNN LSTM / 文本分类 / Seq2Seq 理解序列建模核心原理 完成文本分类任务",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=nlp-rnn",
+    "tags": ["nlp"],
+    "category": "nlp"
+  },
+  {
+    "id": "node-nlp-transformer",
+    "title": "Transformer 与预训练模型",
+    "content": "自注意力 / Multi-Head / BERT / HuggingFace 熟练使用 HuggingFace 微调 BERT 做文本分类",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=nlp-transformer",
+    "tags": ["nlp"],
+    "category": "nlp"
+  },
+  {
+    "id": "node-nlp-word-embeddings",
+    "title": "词向量与语义表示",
+    "content": "Word2Vec / GloVe / FastText 词向量原理与训练，理解语义空间表示 理解词向量的核心思想 能用 Gensim 训练和使用词向量 理解语义相似度计算",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=nlp-word-embeddings",
+    "tags": ["nlp"],
+    "category": "nlp"
+  },
+  {
+    "id": "node-nlp-sentiment-analysis",
+    "title": "情感分析与文本分类",
+    "content": "全面学习情感分析与文本分类技术，涵盖传统机器学习（SVM/朴素贝叶斯）与深度学习（CNN/RNN/Transformer）两大方法体系 掌握情感分析的核心方法 能构建文本分类系统 理解不同方法的优缺点",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=nlp-sentiment-analysis",
+    "tags": ["nlp"],
+    "category": "nlp"
+  },
+  {
+    "id": "node-nlp-sequence-labeling",
+    "title": "序列标注与信息抽取",
+    "content": "命名实体识别 / 词性标注 / CRF / BiLSTM-CRF / 信息抽取 掌握 NER 等序列标注任务 实现 BiLSTM-CRF 模型 能从非结构化文本中抽取结构化信息",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=nlp-sequence-labeling",
+    "tags": ["nlp"],
+    "category": "nlp"
+  },
+  {
+    "id": "node-nlp-machine-translation",
+    "title": "机器翻译与文本生成",
+    "content": "神经机器翻译 / Seq2Seq / Attention / Beam Search / 文本生成 实现基于 Transformer 的机器翻译 掌握文本生成的解码策略 理解 NMT 的评估方法",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=nlp-machine-translation",
+    "tags": ["nlp"],
+    "category": "nlp"
+  },
+  {
+    "id": "node-llm-finetune",
+    "title": "LLM 微调与对齐",
+    "content": "LoRA / QLoRA / 聊天格式 / 数据准备 / 评估 能在消费级 GPU 上微调一个 7B 模型 搭建聊天 demo",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=llm-finetune",
+    "tags": ["llm"],
+    "category": "llm"
+  },
+  {
+    "id": "node-project-capstone",
+    "title": "综合实战项目",
+    "content": "从选题调研到最终上线的完整项目实战，包含需求分析、数据采集、模型训练、系统部署、文档撰写与答辩全流程 独立完成可演示项目 产出简历可用作品集",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=project-capstone",
+    "tags": ["project"],
+    "category": "project"
+  },
+  {
+    "id": "node-cv-instance-segmentation",
+    "title": "YOLOv8-seg 实例分割实战",
+    "content": "围绕 YOLOv8-seg 的实例分割实战。重点讲解如何将标注好的多边形数据集转化为 YOLO 格式并进行模型微调训练。 掌握多边形标注到 YOLO 格式的转换流程 完成 YOLOv8-seg 微调训练并推理",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=cv-instance-segmentation",
+    "tags": ["cv"],
+    "category": "cv"
+  },
+  {
+    "id": "node-project-iot-fastapi",
+    "title": "ESP32 传感器数据链路",
+    "content": "围绕软硬件结合的数据链路打通。重点讲解如何使用 ESP32 采集传感器数据，并通过 WiFi 发送 HTTP 请求到 FastAPI 构建的后端接收端点。 ESP32 传感器数据采集与 WiFi HTTP 上报 FastAPI 接收端点 + 数据持久化",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=project-iot-fastapi",
+    "tags": ["project"],
+    "category": "project"
+  },
+  {
+    "id": "node-llm-local-rag",
+    "title": "本地知识库 RAG 系统",
+    "content": "围绕本地知识库构建。重点讲如何使用脚本自动化解析学术文献或网页内容，并结合向量数据库搭建一个轻量级的本地 RAG（检索增强生成）系统。 自动化文档解析与分块 向量数据库存储与相似度检索 本地 LLM 生成回答",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=llm-local-rag",
+    "tags": ["llm"],
+    "category": "llm"
+  },
+  {
+    "id": "node-devops-docker-api",
+    "title": "模型服务 Docker 化部署",
+    "content": "围绕模型服务化部署。重点讲如何编写 Dockerfile，将一个包含了深度学习推理逻辑的 Python/FastAPI 服务打包成体积优化的镜像。 Dockerfile 多阶段构建优化 FastAPI 模型推理服务容器化 镜像体积控制 < 2GB",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=devops-docker-api",
+    "tags": ["devops"],
+    "category": "devops"
+  },
+  {
+    "id": "node-math-tensor-ops",
+    "title": "PyTorch 张量运算与广播机制",
+    "content": "围绕深度学习中的矩阵运算。重点解析 PyTorch 中的高维张量乘法（如 torch.matmul）与广播机制（Broadcasting）在实际神经网络前向传播中的应用。 理解高维张量的维度语义 掌握 matmul / mm / bmm 差异 熟练运用广播机制避免显式维度扩展",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=math-tensor-ops",
+    "tags": ["math"],
+    "category": "math"
+  },
+  {
+    "id": "node-cv-pose-estimation",
+    "title": "人体姿态估计",
+    "content": "基于 YOLOv8-pose / HRNet 的关键点检测与行为识别。从 COCO 17 点标注格式到实时摄像头动作告警。 掌握关键点数据集标注与模型训练 实现基于骨架序列的简单动作分类",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=cv-pose-estimation",
+    "tags": ["cv"],
+    "category": "cv"
+  },
+  {
+    "id": "node-cv-ocr",
+    "title": "OCR 文字识别",
+    "content": "从 PaddleOCR 开箱使用到自定义 DBNet 检测 + CRNN/TrOCR 识别的全流程，覆盖文档版面分析与票据结构化。 能在中文票据场景下达到可用的 OCR 精度 理解 DBNet 检测与 CRNN 序列识别原理",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=cv-ocr",
+    "tags": ["cv"],
+    "category": "cv"
+  },
+  {
+    "id": "node-cv-diffusion",
+    "title": "扩散模型与图像生成",
+    "content": "从 DDPM 数学直觉到 Stable Diffusion / FLUX 实战：LoRA 微调、ControlNet 条件控制、ComfyUI 工作流、产品图自动生成 Pipeline。 理解扩散模型前向/反向过程 能独立做 LoRA 微调 + ControlNet 条件生成 搭建一个可复用的图像生成工作流",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=cv-diffusion",
+    "tags": ["cv"],
+    "category": "cv"
+  },
+  {
+    "id": "node-llm-inference",
+    "title": "LLM 推理加速与部署",
+    "content": "围绕大模型推理加速与生产级部署。重点讲 vLLM / SGLang 等推理引擎的原理，以及量化、批处理、长上下文等核心优化技术。 掌握 KV Cache / PagedAttention 原理 部署生产级 vLLM 推理服务 GPTQ/AWQ 量化压缩模型",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=llm-inference",
+    "tags": ["llm"],
+    "category": "llm"
+  },
+  {
+    "id": "node-llm-prompt-engineering",
+    "title": "提示工程与 Agent 设计",
+    "content": "围绕大模型提示工程与 Agent 系统设计。重点讲 Prompt 结构化输出、ReAct 模式、Function Calling 与工具调用。 掌握结构化 Prompt 设计 实现 ReAct Agent Function Calling 集成工具",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=llm-prompt-engineering",
+    "tags": ["llm"],
+    "category": "llm"
+  },
+  {
+    "id": "node-devops-kubernetes",
+    "title": "Kubernetes 容器编排",
+    "content": "围绕 Kubernetes 容器编排核心技术与 GPU 调度。重点讲 Pod/Deployment/Service/Helm 等核心概念，以及在 K8s 上部署 AI 推理服务。 掌握 K8s 核心概念与 kubectl 操作 在 K8s 上部署有状态服务 GPU 调度与 HPA 自动扩缩容",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=devops-kubernetes",
+    "tags": ["devops"],
+    "category": "devops"
+  },
+  {
+    "id": "node-devops-cicd",
+    "title": "CI/CD 与自动化部署",
+    "content": "GitHub Actions / Jenkins / 持续集成 / 持续部署 / 自动化测试流水线 掌握 CI/CD 核心概念和流水线设计 能用 GitHub Actions 构建完整的 CI/CD 流水线 理解自动化测试和部署策略",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=devops-cicd",
+    "tags": ["devops"],
+    "category": "devops"
+  },
+  {
+    "id": "node-devops-mlops",
+    "title": "MLOps 与模型运维",
+    "content": "MLflow / 模型注册 / 实验管理 / 模型监控 / A/B 测试 掌握 MLOps 核心概念 能用 MLflow 管理实验和模型 理解模型监控和持续训练",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=devops-mlops",
+    "tags": ["devops"],
+    "category": "devops"
+  },
+  {
+    "id": "node-devops-monitoring",
+    "title": "监控体系：Prometheus + Grafana",
+    "content": "围绕 AI 服务监控体系搭建。重点讲 Prometheus 指标采集、Grafana 可视化仪表盘构建，以及模型训练与服务监控的最佳实践。 搭建 Prometheus + Grafana 监控栈 设计 Grafana 仪表盘 配置告警规则",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=devops-monitoring",
+    "tags": ["devops"],
+    "category": "devops"
+  },
+  {
+    "id": "node-math-information-theory",
+    "title": "信息论基础",
+    "content": "围绕信息论核心概念及其在机器学习中的应用。重点讲熵、交叉熵、KL 散度与损失函数的内在联系，以及 MLE/MAP 估计的理论基础。 理解熵与互信息的定义 掌握交叉熵作为损失函数的数学推导 理解 MLE / MAP 估计的等价性",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=math-information-theory",
+    "tags": ["math"],
+    "category": "math"
+  },
+  {
+    "id": "node-math-optimization",
+    "title": "凸优化理论基础",
+    "content": "围绕凸优化理论与深度学习优化器的数学原理。重点讲凸集/凸函数/梯度下降收敛性，以及 Adam/SGD 等优化器的数学推导。 理解凸优化问题与局部最优的关系 推导 Adam / SGD+Momentum 的更新公式 理解正则化与优化问题的联系",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=math-optimization",
+    "tags": ["math"],
+    "category": "math"
+  },
+  {
+    "id": "node-project-rag-app",
+    "title": "RAG 知识库问答系统",
+    "content": "构建基于大语言模型的检索增强生成系统，从文档切分、向量检索、Prompt 工程到问答应用，掌握 RAG 全栈开发能力 掌握 RAG 核心原理与实现 能构建完整的知识库问答系统 理解向量检索与 Prompt 工程",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=project-rag-app",
+    "tags": ["project"],
+    "category": "project"
+  },
+  {
+    "id": "node-project-cv-classification",
+    "title": "图像分类与模型部署",
+    "content": "从零开始完成图像分类项目，涵盖数据增强、模型选型、训练调优、模型压缩到端侧部署的完整计算机视觉开发链路 掌握图像分类完整流程 能训练并优化分类模型 实现模型部署与 Demo 展示",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=project-cv-classification",
+    "tags": ["project"],
+    "category": "project"
+  },
+  {
+    "id": "node-project-llm-agent",
+    "title": "LLM Agent 智能助手",
+    "content": "设计并实现具备工具调用、规划推理、记忆管理能力的 LLM Agent 应用，掌握 ReAct、AutoGPT 等主流 Agent 架构 掌握 Agent 核心原理 能构建多工具 Agent 系统 理解 ReAct/规划等高级模式",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=project-llm-agent",
+    "tags": ["project"],
+    "category": "project"
+  },
+  {
+    "id": "node-project-data-pipeline",
+    "title": "数据管道与 ETL",
+    "content": "围绕数据采集、清洗、标注、版本管理与定时调度。重点讲构建一条从原始数据到训练-ready 数据的完整端到端 Pipeline。 掌握爬虫/API 数据采集 数据清洗与质量验证 DVC 数据版本管理 Airflow 定时任务编排",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=project-data-pipeline",
+    "tags": ["project"],
+    "category": "project"
+  },
+  {
+    "id": "node-cs-algo",
+    "title": "算法与数据结构",
+    "content": "计算机科学的核心基础，包括常用算法设计思路、时间空间复杂度分析、以及各类数据结构的应用场景 熟练分析代码复杂度 掌握常见算法设计范式 能用数据结构解决实际问题",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=cs-algo",
+    "tags": ["cs"],
+    "category": "cs"
+  },
+  {
+    "id": "node-cs-os",
+    "title": "操作系统原理",
+    "content": "理解操作系统如何管理硬件资源：进程线程、内存管理、文件系统、IO调度，为系统级编程和性能优化打下基础 理解进程与线程的区别 掌握内存管理基本原理 理解文件系统与IO模型",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=cs-os",
+    "tags": ["cs"],
+    "category": "cs"
+  },
+  {
+    "id": "node-embedded-c",
+    "title": "C语言与指针",
+    "content": "C语言是嵌入式开发的基石，指针是C语言的核心。深入理解指针、内存管理和底层操作，是开发嵌入式系统和性能优化代码的必备技能 掌握C语言核心语法 深入理解指针和内存管理 能编写嵌入式级别的高效代码",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=embedded-c",
+    "tags": ["embedded"],
+    "category": "embedded"
+  },
+  {
+    "id": "node-embedded-rtos",
+    "title": "RTOS实时操作系统",
+    "content": "FreeRTOS是最流行的开源实时操作系统，学习任务调度、信号量、消息队列、内存管理等核心机制，理解实时系统的确定性要求 掌握FreeRTOS核心API 理解任务调度与优先级 能用信号量和队列实现任务间通信",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=embedded-rtos",
+    "tags": ["embedded"],
+    "category": "embedded"
+  },
+  {
+    "id": "node-elec-circuit",
+    "title": "电路基础与模拟电子",
+    "content": "从电路基本定律到模拟电子技术核心器件，掌握看懂原理图、设计电路、分析信号的能力 理解电路基本定律 掌握常用电子器件特性 能看懂和设计基础电路",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=elec-circuit",
+    "tags": ["electronics"],
+    "category": "electronics"
+  },
+  {
+    "id": "node-elec-signals",
+    "title": "信号与系统",
+    "content": "掌握信号分析与系统响应的核心概念，理解傅里叶变换、拉普拉斯变换在信号处理中的应用 理解信号分类与性质 掌握傅里叶分析方法 理解系统频率响应特性",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=elec-signals",
+    "tags": ["electronics"],
+    "category": "electronics"
+  },
+  {
+    "id": "node-signals-basics",
+    "title": "信号与系统基础",
+    "content": "连续/离散信号 / 采样定理 / 卷积 / LTI系统 / 傅里叶变换入门 理解连续和离散信号的区别 掌握采样定理和奈奎斯特频率 能用卷积运算分析LTI系统",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=signals-basics",
+    "tags": ["signals"],
+    "category": "signals"
+  },
+  {
+    "id": "node-signals-comm",
+    "title": "通信原理",
+    "content": "理解通信系统的基本组成和调制解调原理，掌握数字通信中的编解码技术 理解通信系统基本模型 掌握调制解调原理 理解信道编码技术",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=signals-comm",
+    "tags": ["signals"],
+    "category": "signals"
+  },
+  {
+    "id": "node-ctrl-pid",
+    "title": "自动控制原理",
+    "content": "深入理解自动控制理论核心概念，掌握反馈控制原理、PID 控制器设计与参数整定方法，是工业控制与机器人的基础 理解控制系统基本组成 掌握PID控制器原理 能分析系统稳定性",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=ctrl-pid",
+    "tags": ["control"],
+    "category": "control"
+  },
+  {
+    "id": "node-ctrl-ros",
+    "title": "机器人技术与ROS2",
+    "content": "学习机器人操作系统ROS2的核心概念，掌握导航、定位和控制的实践技能 掌握ROS2核心概念 理解机器人导航原理 能实现基本的机器人控制",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=ctrl-ros",
+    "tags": ["control"],
+    "category": "control"
+  },
+  {
+    "id": "node-elec-motor",
+    "title": "电机控制与电力电子",
+    "content": "掌握直流电机和交流电机的控制原理，理解FOC矢量控制和电力电子变换技术 理解电机工作原理 掌握FOC矢量控制 理解电力电子变换技术",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=elec-motor",
+    "tags": ["electrical"],
+    "category": "electrical"
+  },
+  {
+    "id": "node-cs-network",
+    "title": "计算机网络",
+    "content": "理解计算机网络的核心原理，掌握TCP/IP协议栈、网络编程和分布式系统基础 理解TCP/IP协议栈 掌握网络编程基础 理解分布式系统概念",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=cs-network",
+    "tags": ["cs"],
+    "category": "cs"
+  },
+  {
+    "id": "node-cs-database",
+    "title": "数据库系统",
+    "content": "掌握数据库系统的核心原理，理解关系模型、SQL语言、事务处理和数据库设计 理解关系数据库模型 掌握SQL语言 理解事务和并发控制",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=cs-database",
+    "tags": ["cs"],
+    "category": "cs"
+  },
+  {
+    "id": "node-embedded-driver",
+    "title": "嵌入式驱动开发",
+    "content": "掌握嵌入式外设驱动开发技术，理解GPIO、I2C、SPI、UART等通信协议和驱动架构 掌握常用通信协议 理解驱动架构设计 能编写外设驱动程序",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=embedded-driver",
+    "tags": ["embedded"],
+    "category": "embedded"
+  },
+  {
+    "id": "node-embedded-hal",
+    "title": "嵌入式硬件抽象层",
+    "content": "学习嵌入式系统的硬件抽象层设计，理解HAL架构和跨平台移植技术 理解HAL架构设计 掌握跨平台移植方法 能设计可复用的驱动框架",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=embedded-hal",
+    "tags": ["embedded"],
+    "category": "embedded"
+  },
+  {
+    "id": "node-elec-digital",
+    "title": "数字电子技术",
+    "content": "掌握数字电路的核心原理，理解逻辑门、组合逻辑、时序逻辑和数字系统设计 理解逻辑门和布尔代数 掌握组合逻辑和时序逻辑设计 能设计简单的数字系统",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=elec-digital",
+    "tags": ["electronics"],
+    "category": "electronics"
+  },
+  {
+    "id": "node-elec-pcb",
+    "title": "PCB设计基础",
+    "content": "学习印制电路板（PCB）设计的基础知识，掌握原理图绘制、PCB布局布线和设计规范 掌握原理图绘制 理解PCB布局布线 了解PCB设计规范",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=elec-pcb",
+    "tags": ["electronics"],
+    "category": "electronics"
+  },
+  {
+    "id": "node-signals-dsp",
+    "title": "DSP数字信号处理",
+    "content": "掌握数字信号处理的核心算法，理解数字滤波器设计、FFT应用和实时信号处理 掌握数字滤波器设计 理解FFT算法应用 能实现实时信号处理",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=signals-dsp",
+    "tags": ["signals"],
+    "category": "signals"
+  },
+  {
+    "id": "node-signals-wireless",
+    "title": "无线通信技术",
+    "content": "理解无线通信的核心技术，掌握天线原理、无线信道特性和常见无线协议 理解无线信道特性 掌握天线基本原理 了解常见无线协议",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=signals-wireless",
+    "tags": ["signals"],
+    "category": "signals"
+  },
+  {
+    "id": "node-ctrl-plc",
+    "title": "PLC工业控制",
+    "content": "学习PLC（可编程逻辑控制器）的原理和应用，掌握工业自动化控制技术 理解PLC工作原理 掌握梯形图编程 能设计简单的工业控制系统",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=ctrl-plc",
+    "tags": ["control"],
+    "category": "control"
+  },
+  {
+    "id": "node-ctrl-servo",
+    "title": "伺服控制系统",
+    "content": "学习伺服系统的原理和应用，掌握伺服电机控制、运动规划和精密定位技术 理解伺服系统原理 掌握伺服电机控制 能设计运动控制系统",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=ctrl-servo",
+    "tags": ["control"],
+    "category": "control"
+  },
+  {
+    "id": "node-electrical-power",
+    "title": "电力系统基础",
+    "content": "理解电力系统的基本组成和运行原理，掌握电力生产和配电基础知识 理解电力系统组成 掌握电力生产原理 了解配电系统结构",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=electrical-power",
+    "tags": ["electrical"],
+    "category": "electrical"
+  },
+  {
+    "id": "node-electrical-power-electronics",
+    "title": "电力电子技术",
+    "content": "整流器 / 逆变器 / PWM / 开关电源 / 功率因数校正 / 电力电子器件 掌握整流和逆变原理 理解PWM调制技术 能分析开关电源拓扑",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=electrical-power-electronics",
+    "tags": ["electrical"],
+    "category": "electrical"
+  },
+  {
+    "id": "node-electrical-safety",
+    "title": "电气安全与保护",
+    "content": "学习电气安全的基本知识和保护技术，掌握接地、防雷和电气设备保护方法 理解电气安全规范 掌握接地技术 了解防雷保护方法",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=electrical-safety",
+    "tags": ["electrical"],
+    "category": "electrical"
+  },
+  {
+    "id": "node-llm-fundamentals",
+    "title": "LLM 基础原理",
+    "content": "深入理解 Transformer 架构、注意力机制、预训练范式（GPT/BERT/T5），掌握 LLM 的核心原理 理解 Self-Attention 和 Multi-Head Attention 掌握 GPT/BERT/T5 三大预训练范式 理解 Scaling Law 和涌现能力",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=llm-fundamentals",
+    "tags": ["llm"],
+    "category": "llm"
+  },
+  {
+    "id": "node-llm-pretraining",
+    "title": "预训练与数据工程",
+    "content": "系统学习大语言模型预训练全流程，包括数据清洗配比、模型架构设计、分布式训练策略与训练稳定性优化 理解预训练数据流水线 掌握数据清洗和配比策略 了解分布式训练（DDP/FSDP/DeepSpeed）",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=llm-pretraining",
+    "tags": ["llm"],
+    "category": "llm"
+  },
+  {
+    "id": "node-llm-rag",
+    "title": "RAG 检索增强生成",
+    "content": "掌握 RAG 系统构建：文档处理、向量检索、生成增强，构建企业级知识库 理解 RAG 架构和流程 掌握向量数据库和检索策略 能独立构建 RAG 知识库系统",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=llm-rag",
+    "tags": ["llm"],
+    "category": "llm"
+  },
+  {
+    "id": "node-llm-agent",
+    "title": "Agent 与工具调用",
+    "content": "掌握 LLM Agent 开发：Function Calling、ReAct 框架、多 Agent 协作 理解 Agent 架构和 ReAct 范式 掌握 Function Calling 和工具调用 能构建多 Agent 协作系统",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=llm-agent",
+    "tags": ["llm"],
+    "category": "llm"
+  },
+  {
+    "id": "node-llm-evaluation",
+    "title": "LLM 评估与安全",
+    "content": "掌握 LLM 评估方法（自动/人工评估）、安全对齐（幻觉/偏见/越狱）和部署最佳实践 掌握 LLM 评估指标和方法 理解幻觉检测和缓解策略 了解 LLM 安全防护和对齐技术",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=llm-evaluation",
+    "tags": ["llm"],
+    "category": "llm"
+  },
+  {
+    "id": "node-signals-antenna",
+    "title": "天线原理与设计",
+    "content": "天线是无线通信系统的关键接口，本节点涵盖天线基础参数、类型选择、辐射模型与设计方法，帮助你理解从理论到工程实践的天线设计全流程。 理解天线增益、方向图、驻波比、带宽等核心参数 掌握偶极子、单极子、贴片、阵列天线等常见类型 学会使用 NEC/S参数 进行天线仿真 能根据频段和应用场景选择合适天线",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=signals-antenna",
+    "tags": ["signals"],
+    "category": "signals"
+  },
+  {
+    "id": "node-electrical-relay",
+    "title": "继电保护与电力系统自动化",
+    "content": "继电保护是电力系统安全运行的最后一道防线，本节点涵盖保护原理、继电器配置、故障检测、自动化装置与 SCADA 系统，帮助你掌握电力系统保护与监控全链路。 理解过流、差动、距离、方向保护原理 掌握继电器整定计算与配置方法 学会故障分析与保护配合 了解 SCADA/EMS 电力监控系统",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=electrical-relay",
+    "tags": ["electrical"],
+    "category": "electrical"
+  },
+  {
+    "id": "node-elec-fpga",
+    "title": "FPGA 与数字系统设计",
+    "content": "FPGA 是高性能数字系统的核心，本节点涵盖 Verilog/VHDL 硬件描述语言、时序约束、状态机设计、IP 核集成与仿真验证，帮助你掌握从 RTL 到比特流的 FPGA 全流程开发。 掌握 Verilog/SystemVerilog 硬件描述语言 理解时序约束、时钟域交叉、亚稳态处理 学会状态机、流水线、FIFO 等常用设计模式 能使用 Vivado/Quartus 完成 FPGA 综合与调试",
+    "type": "node",
+    "typeLabel": "路线图",
+    "url": "/roadmap?node=elec-fpga",
+    "tags": ["electronics"],
+    "category": "electronics"
+  },
+  {
+    "id": "intel-001-transformer",
+    "title": "Transformer 架构",
+    "content": "所有大模型（GPT、BERT、LLaMA）的底层架构。理解它就能理解现代 AI 是怎样工作的。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/001-transformer",
+    "tags": [],
+    "category": "deep-learning"
+  },
+  {
+    "id": "intel-002-yolo",
+    "title": "YOLO 目标检测",
+    "content": "单阶段端到端目标检测方案，看一张图一次前向传播就定位所有物体，是工业界实时检测的首选",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/002-yolo",
+    "tags": [],
+    "category": "computer-vision"
+  },
+  {
+    "id": "intel-003-lora-qlora",
+    "title": "LLM 微调 - LoRA / QLoRA",
+    "content": "仅训练大模型极小一部分参数就能让它适配你的领域任务，4-bit 量化把 7B 模型微调显存压缩到 6GB 级",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/003-lora-qlora",
+    "tags": [],
+    "category": "llm"
+  },
+  {
+    "id": "intel-004-resnet",
+    "title": "ResNet 残差网络",
+    "content": "通过 shortcut 让超深网络可训练，把深度从几十层推到上百层，是现代视觉模型的核心构件之一",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/004-resnet",
+    "tags": [],
+    "category": "computer-vision"
+  },
+  {
+    "id": "intel-005-rag",
+    "title": "RAG 检索增强生成",
+    "content": "让大模型基于私有文档回答问题而非只靠训练数据，是当前 LLM 落地企业场景成本最低的方案之一",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/005-rag",
+    "tags": [],
+    "category": "llm"
+  },
+  {
+    "id": "intel-006-cnn-basics",
+    "title": "卷积神经网络 CNN 基础",
+    "content": "从原始像素中自动提取层次化视觉特征，是 ResNet、ViT 等所有现代视觉模型的共同祖先",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/006-cnn-basics",
+    "tags": [],
+    "category": "computer-vision"
+  },
+  {
+    "id": "intel-007-docker",
+    "title": "Docker 容器化部署",
+    "content": "把应用（含 Python 环境、CUDA、系统库）打包成可在任何 Linux/Windows/Mac 上运行的镜像，一次构建，到处运行",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/007-docker",
+    "tags": [],
+    "category": "devops"
+  },
+  {
+    "id": "intel-008-git",
+    "title": "Git 版本控制与协作",
+    "content": "AI 项目协作的事实标准，让你不会因为误删代码、多人开发不出错、贡献开源项目更顺畅",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/008-git",
+    "tags": [],
+    "category": "devops"
+  },
+  {
+    "id": "intel-009-linux",
+    "title": "Linux 系统基础",
+    "content": "深度学习训练几乎都在 Linux 服务器上进行，不会 Linux 就没法跑大规模模型、没法做远程开发与部署",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/009-linux",
+    "tags": [],
+    "category": "devops"
+  },
+  {
+    "id": "intel-010-numpy-pandas",
+    "title": "NumPy / Pandas 数据处理",
+    "content": "深度学习 80% 的时间花在数据上，NumPy 和 Pandas 帮你把原始 CSV/Excel 变成模型能吃的张量",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/010-numpy-pandas",
+    "tags": [],
+    "category": "data-processing"
+  },
+  {
+    "id": "intel-011-pytorch",
+    "title": "PyTorch 深度学习框架",
+    "content": "学术界最主流的动态图框架，以清晰直观的方式定义模型，Debug 友好，是深度学习入门与论文复现的首选",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/011-pytorch",
+    "tags": [],
+    "category": "deep-learning"
+  },
+  {
+    "id": "intel-012-streamlit",
+    "title": "Streamlit 快速构建 AI 可视化界面",
+    "content": "只用 Python 就能把模型变成带滑块/图片/图表的交互式网页，是 AI demo 的第一生产力",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/012-streamlit",
+    "tags": [],
+    "category": "devops"
+  },
+  {
+    "id": "intel-013-huggingface-datasets",
+    "title": "Hugging Face Datasets 数据集库",
+    "content": "一行代码加载公开数据集，底层用 Apache Arrow 列式存储，比自己解析 CSV/JSON 快 5~10 倍",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/013-huggingface-datasets",
+    "tags": [],
+    "category": "data-processing"
+  },
+  {
+    "id": "intel-014-onnx",
+    "title": "ONNX 跨框架模型部署",
+    "content": "把训练好的 PyTorch 模型打包成通用格式，让你在任意设备和语言里都能拿到更快的推理速度",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/014-onnx",
+    "tags": [],
+    "category": "devops"
+  },
+  {
+    "id": "intel-015-cv-tricks",
+    "title": "CV 训练调优技巧",
+    "content": "图像模型训练中的实用技巧：数据增强、学习率策略、过拟合处理与迁移学习，帮你把 baseline 稳定提升到可交付水平。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/015-cv-tricks",
+    "tags": [],
+    "category": "computer-vision"
+  },
+  {
+    "id": "intel-015-rlhf",
+    "title": "RLHF 与大模型对齐",
+    "content": "用人类偏好数据把\"只会预测下一个 token\"的模型拉回正轨，让它输出有用、无害、符合指令的答案",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/015-rlhf",
+    "tags": [],
+    "category": "llm"
+  },
+  {
+    "id": "intel-016-server-setup",
+    "title": "Linux 服务器深度学习环境配置",
+    "content": "从零搭起一台能跑 PyTorch 的 GPU 服务器：驱动、CUDA、Conda、SSH 与远程训练全都能自己搞定",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/016-server-setup",
+    "tags": [],
+    "category": "devops"
+  },
+  {
+    "id": "intel-017-metrics",
+    "title": "模型评估指标详解",
+    "content": "分类 / 检测 / 生成任务该用什么指标打分，才能不被一个看起来漂亮的数字骗到",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/017-metrics",
+    "tags": [],
+    "category": "devops"
+  },
+  {
+    "id": "intel-018-mlflow",
+    "title": "MLflow 实验追踪平台",
+    "content": "一次把参数、metrics、模型都录下来，以后回头看\"这次到底改了什么为什么这么好\"不再抓瞎",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/018-mlflow",
+    "tags": [],
+    "category": "devops"
+  },
+  {
+    "id": "intel-019-vllm-inference",
+    "title": "vLLM 推理引擎与 PagedAttention",
+    "content": "通过 PagedAttention 和连续批处理突破 LLM 推理的显存墙，把 GPU 利用率从 30% 拉到 80%+",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/019-vllm-inference",
+    "tags": [],
+    "category": "devops"
+  },
+  {
+    "id": "intel-020-prompt-engineering",
+    "title": "Prompt Engineering 提示工程与 Agent 设计",
+    "content": "不是调模型参数，而是调问题表述——用更好的 Prompt 让同一个模型产生质的飞跃",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/020-prompt-engineering",
+    "tags": [],
+    "category": "llm"
+  },
+  {
+    "id": "intel-021-kubernetes",
+    "title": "Kubernetes 容器编排入门",
+    "content": "Docker 把应用打包，K8s 把应用运行——服务治理、扩缩容、滚动更新全部自动化",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/021-kubernetes",
+    "tags": [],
+    "category": "devops"
+  },
+  {
+    "id": "intel-021-rag-intro",
+    "title": "RAG 入门",
+    "content": "检索增强生成（RAG）让大模型能基于私有知识库回答问题，是构建企业知识库、客服机器人最落地的 LLM 方案。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/021-rag-intro",
+    "tags": [],
+    "category": "llm"
+  },
+  {
+    "id": "intel-022-agent-intro",
+    "title": "Agent 入门",
+    "content": "LLM Agent 是能自主规划、调用工具并迭代完成任务的大模型应用范式，是构建智能助手和自动化工作流的核心。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/022-agent-intro",
+    "tags": [],
+    "category": "llm"
+  },
+  {
+    "id": "intel-022-prometheus-grafana",
+    "title": "Prometheus + Grafana 监控体系",
+    "content": "服务上线后不知道它死活，就像飞机没有仪表盘——监控是工程化的最后一道防线",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/022-prometheus-grafana",
+    "tags": [],
+    "category": "devops"
+  },
+  {
+    "id": "intel-023-data-pipeline-etl",
+    "title": "数据管道与 ETL 实战",
+    "content": "训练数据决定模型上限——用工程化手段把脏数据挡在门外，让数据管道可持续运转",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/023-data-pipeline-etl",
+    "tags": [],
+    "category": "data-processing"
+  },
+  {
+    "id": "intel-024-information-theory",
+    "title": "信息论基础：熵、交叉熵与 KL 散度",
+    "content": "熵告诉我们「知道结果前还有多少不确定性」，交叉熵是损失函数的数学根源，KL 散度是模型逼近真相的代价",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/024-information-theory",
+    "tags": [],
+    "category": "math"
+  },
+  {
+    "id": "intel-025-convex-optimization",
+    "title": "凸优化理论基础",
+    "content": "梯度下降不是玄学——理解它的收敛性证明，才能真正用好学习率调度和优化器选择",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/025-convex-optimization",
+    "tags": [],
+    "category": "math"
+  },
+  {
+    "id": "intel-026-onnx-deployment",
+    "title": "ONNX 模型部署与推理优化",
+    "content": "把 PyTorch 模型导出为跨平台的 ONNX 格式，用 ONNXRuntime 加速推理，或进一步转为 TensorRT",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/026-onnx-deployment",
+    "tags": [],
+    "category": "devops"
+  },
+  {
+    "id": "intel-027-rlhf-alignment",
+    "title": "RLHF：人类反馈强化学习",
+    "content": "ChatGPT 为什么「对齐」了？RLHF 是如何让模型学会遵循人类意图而不是简单预测下一个 token",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/027-rlhf-alignment",
+    "tags": [],
+    "category": "llm"
+  },
+  {
+    "id": "intel-028-server-ops",
+    "title": "服务器运维基础与 Linux 环境管理",
+    "content": "模型能训练 ≠ 服务能上线——Linux 系统管理、网络配置、进程守护是工程化的基本功",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/028-server-ops",
+    "tags": [],
+    "category": "devops"
+  },
+  {
+    "id": "intel-029-moe-mixture-of-experts",
+    "title": "Mixture of Experts (MoE) 混合专家模型",
+    "content": "不是把模型做大，而是把模型「拆开」——每次只激活一小部分专家，参数量翻倍但推理成本几乎不变",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/029-moe-mixture-of-experts",
+    "tags": [],
+    "category": "llm"
+  },
+  {
+    "id": "intel-030-multimodal-llm",
+    "title": "多模态大模型：从 CLIP 到 GPT-4V",
+    "content": "文本和图像不再是两个世界——多模态大模型让 LLM「看懂」图片，实现图文混合推理",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/030-multimodal-llm",
+    "tags": [],
+    "category": "llm"
+  },
+  {
+    "id": "intel-031-agentic-ai",
+    "title": "Agentic AI：从 Chatbot 到 Agent",
+    "content": "Chatbot 只能「说话」，Agent 能「做事」——规划、执行、反思、协作，让 LLM 从对话者变成工作者",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/031-agentic-ai",
+    "tags": [],
+    "category": "llm"
+  },
+  {
+    "id": "intel-032-model-quantization",
+    "title": "模型量化：从 FP16 到 INT4",
+    "content": "把 7B 模型从 14GB 压到 4GB，让它在消费级 GPU 上也能跑——量化是模型部署的必修课",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/032-model-quantization",
+    "tags": [],
+    "category": "devops"
+  },
+  {
+    "id": "intel-033-long-context-rope",
+    "title": "长上下文推理：RoPE 与 YARN",
+    "content": "32k → 128k → 1M token，长上下文不是「加内存」而是「改编码」——RoPE 的缩放与扩展技术",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/033-long-context-rope",
+    "tags": [],
+    "category": "llm"
+  },
+  {
+    "id": "intel-034-cuda-programming",
+    "title": "CUDA 编程入门：让 GPU 为你加速",
+    "content": "深度学习框架帮你封装了一切，但你真的了解 GPU 是怎么工作的吗——理解 CUDA 编程才能真正优化 GPU 利用率",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/034-cuda-programming",
+    "tags": [],
+    "category": "devops"
+  },
+  {
+    "id": "intel-035-advanced-rag",
+    "title": "RAG 系统进阶：从 Naive RAG 到 Advanced RAG",
+    "content": "Naive RAG 的天花板在哪里？Advanced RAG 如何通过 Query 改写、重排序、知识图谱突破它",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/035-advanced-rag",
+    "tags": [],
+    "category": "llm"
+  },
+  {
+    "id": "intel-036-code-generation",
+    "title": "代码生成：Code LLM 与自动化编程",
+    "content": "从 GitHub Copilot 到 Devin——AI 代码生成正在重新定义软件开发",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/036-code-generation",
+    "tags": [],
+    "category": "llm"
+  },
+  {
+    "id": "intel-037-distributed-training",
+    "title": "分布式训练：多 GPU 甚至多机器并行",
+    "content": "单卡不够用？分布式训练把计算和显存分摊到多 GPU，让千亿参数模型在数百张 GPU 上训练",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/037-distributed-training",
+    "tags": [],
+    "category": "devops"
+  },
+  {
+    "id": "intel-038-llm-security",
+    "title": "安全与隐私：LLM 应用的红线",
+    "content": "LLM 能回答问题，也能泄露数据、被注入恶意指令、被逆向提取模型——安全是应用落地的第一道防线",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/038-llm-security",
+    "tags": [],
+    "category": "llm"
+  },
+  {
+    "id": "intel-039-model-evaluation",
+    "title": "模型评估与基准测试",
+    "content": "训练完模型，怎么知道它好不好？基准测试是模型能力的「体检报告」",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/039-model-evaluation",
+    "tags": [],
+    "category": "devops"
+  },
+  {
+    "id": "intel-040-data-annotation",
+    "title": "数据标注与主动学习",
+    "content": "标注数据是 AI 项目的最大成本——主动学习让模型告诉你「哪些数据最值得标注」",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/040-data-annotation",
+    "tags": [],
+    "category": "data-processing"
+  },
+  {
+    "id": "intel-041-lora-finetuning",
+    "title": "LLM 微调技术全景：从 SFT 到 LoRA",
+    "content": "全量微调太贵？LoRA 用 0.1% 的参数达到 95% 的效果——微调技术的性价比革命",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/041-lora-finetuning",
+    "tags": [],
+    "category": "llm"
+  },
+  {
+    "id": "intel-042-vector-database",
+    "title": "向量数据库：从原理到实践",
+    "content": "RAG 的核心是向量检索——向量数据库让「语义相似」变成可查询的索引",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/042-vector-database",
+    "tags": [],
+    "category": "devops"
+  },
+  {
+    "id": "intel-043-mlops-engineering",
+    "title": "MLOps：从实验到生产的完整工程化",
+    "content": "训练只是 MLOps 的 10%——那 90% 是版本管理、监控、自动重训练、模型部署的完整工程化体系",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/043-mlops-engineering",
+    "tags": [],
+    "category": "data-processing"
+  },
+  {
+    "id": "intel-050-cs-algo",
+    "title": "算法与数据结构",
+    "content": "计算机科学的核心基础，掌握常用算法设计思路、时间空间复杂度分析、以及各类数据结构的应用场景",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/050-cs-algo",
+    "tags": [],
+    "category": "cs"
+  },
+  {
+    "id": "intel-051-cs-os",
+    "title": "操作系统原理",
+    "content": "理解操作系统如何管理硬件资源：进程线程、内存管理、文件系统、IO调度，为系统级编程和性能优化打下基础",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/051-cs-os",
+    "tags": [],
+    "category": "cs"
+  },
+  {
+    "id": "intel-052-embedded-c",
+    "title": "C语言与指针",
+    "content": "C语言是嵌入式开发的基石，指针是C语言的核心。深入理解指针、内存管理和底层操作，是开发嵌入式系统和性能优化代码的必备技能",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/052-embedded-c",
+    "tags": [],
+    "category": "embedded"
+  },
+  {
+    "id": "intel-053-embedded-rtos",
+    "title": "FreeRTOS实时操作系统",
+    "content": "FreeRTOS是最流行的开源实时操作系统，学习任务调度、信号量、消息队列、内存管理等核心机制，理解实时系统的确定性要求",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/053-embedded-rtos",
+    "tags": [],
+    "category": "embedded"
+  },
+  {
+    "id": "intel-054-elec-circuit",
+    "title": "电路基础与模拟电子技术",
+    "content": "从电路基本定律到模拟电子技术核心器件，掌握看懂原理图、设计电路、分析信号的能力",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/054-elec-circuit",
+    "tags": [],
+    "category": "embedded"
+  },
+  {
+    "id": "intel-055-elec-signals",
+    "title": "信号与系统",
+    "content": "掌握信号分析与系统响应的核心概念，理解傅里叶变换、拉普拉斯变换在信号处理中的应用",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/055-elec-signals",
+    "tags": [],
+    "category": "embedded"
+  },
+  {
+    "id": "intel-056-signals-comm",
+    "title": "通信原理",
+    "content": "理解通信系统的基本组成和调制解调原理，掌握数字通信中的编解码技术",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/056-signals-comm",
+    "tags": [],
+    "category": "embedded"
+  },
+  {
+    "id": "intel-057-ctrl-pid",
+    "title": "自动控制原理",
+    "content": "掌握自动控制的核心概念，理解反馈控制原理和控制器设计方法",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/057-ctrl-pid",
+    "tags": [],
+    "category": "embedded"
+  },
+  {
+    "id": "intel-058-ctrl-ros",
+    "title": "机器人技术与ROS2",
+    "content": "学习机器人操作系统ROS2的核心概念，掌握导航、定位和控制的实践技能",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/058-ctrl-ros",
+    "tags": [],
+    "category": "embedded"
+  },
+  {
+    "id": "intel-059-elec-motor",
+    "title": "电机控制与电力电子",
+    "content": "掌握直流电机和交流电机的控制原理，理解FOC矢量控制和电力电子变换技术",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/059-elec-motor",
+    "tags": [],
+    "category": "embedded"
+  },
+  {
+    "id": "intel-060-cv-instance-segmentation",
+    "title": "CV 实例分割",
+    "content": "实例分割同时完成目标检测和语义分割，为图像中每个独立物体生成独立的前景掩码，是自动驾驶、医疗影像、AR/VR 等场景的核心技术。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/060-cv-instance-segmentation",
+    "tags": [],
+    "category": "computer-vision"
+  },
+  {
+    "id": "intel-061-cv-pose-estimation",
+    "title": "CV 姿态估计",
+    "content": "姿态估计是让计算机\"看懂人体动作\"的基础技术，通过检测人体关键点（头、肩、肘、腕等）来理解人的姿势和动作意图。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/061-cv-pose-estimation",
+    "tags": [],
+    "category": "computer-vision"
+  },
+  {
+    "id": "intel-062-cv-ocr",
+    "title": "CV OCR（光学字符识别）",
+    "content": "OCR 让计算机能\"读懂\"图像中的文字，是文档数字化、车牌识别、身份证识别的核心技术。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/062-cv-ocr",
+    "tags": [],
+    "category": "computer-vision"
+  },
+  {
+    "id": "intel-063-cv-diffusion",
+    "title": "CV Diffusion（扩散模型）",
+    "content": "Diffusion Model 通过逐步添加噪声再逐步去噪来生成图像，是 AIGC 时代图像生成的主流架构。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/063-cv-diffusion",
+    "tags": [],
+    "category": "computer-vision"
+  },
+  {
+    "id": "intel-064-nlp-rnn",
+    "title": "RNN 循环神经网络",
+    "content": "RNN 是处理序列数据的基石，通过隐藏状态在时间步之间传递信息。理解它能帮你搞懂为什么需要 LSTM/GRU，以及它们如何解决梯度消失问题。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/064-nlp-rnn",
+    "tags": [],
+    "category": "nlp"
+  },
+  {
+    "id": "intel-065-llm-inference-optimization",
+    "title": "LLM 推理优化",
+    "content": "让大模型推理从\"烧钱机器\"变成\"可持续服务\"的核心技术。覆盖 KV Cache、Batching、Speculative Decoding、Tensor Parallelism 等关键优化手段。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/065-llm-inference-optimization",
+    "tags": [],
+    "category": "llm"
+  },
+  {
+    "id": "intel-066-signals-basics",
+    "title": "信号与系统基础",
+    "content": "电子、控制、通信的共同基础。理解信号怎么被系统处理、怎么在频域里分析，是所有硬件和通信工程师的必备内功。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/066-signals-basics",
+    "tags": [],
+    "category": "embedded"
+  },
+  {
+    "id": "intel-067-signals-filter-design",
+    "title": "滤波器设计",
+    "content": "滤波器是从噪声中提取信号的核心工具。理解 IIR 和 FIR 的本质区别，以及如何用 scipy.signal 快速设计出符合规格的滤波器，是你做信号处理的必备技能。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/067-signals-filter-design",
+    "tags": [],
+    "category": "embedded"
+  },
+  {
+    "id": "intel-068-ctrl-state-space",
+    "title": "状态空间控制理论",
+    "content": "现代控制理论的核心数学框架。比 PID 更强大——不仅能处理单输入单输出，还能用状态反馈、极点配置、LQR 最优控制和卡尔曼滤波，对多输入多输出系统进行精确分析和设计。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/068-ctrl-state-space",
+    "tags": [],
+    "category": "embedded"
+  },
+  {
+    "id": "intel-069-embedded-arduino",
+    "title": "Arduino 嵌入式开发",
+    "content": "电子创客和快速原型开发的最佳起点，用几行代码就能控制硬件、读取传感器、执行器驱动。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/069-embedded-arduino",
+    "tags": [],
+    "category": "embedded"
+  },
+  {
+    "id": "intel-070-elec-components",
+    "title": "电子元件基础",
+    "content": "所有电子电路的原子级基础。理解电阻、电容、电感、二极管、三极管、运放，你就能看懂任何原理图并搭建自己的电路。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/070-elec-components",
+    "tags": [],
+    "category": "embedded"
+  },
+  {
+    "id": "intel-071-elec-power-systems",
+    "title": "Electric Power Systems 电力系统基础",
+    "content": "电力系统是现代文明的血管。理解它才能搞懂电网调度、新能源并网、电力电子变换器的底层逻辑。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/071-elec-power-systems",
+    "tags": [],
+    "category": "embedded"
+  },
+  {
+    "id": "intel-072-math-linear-algebra",
+    "title": "线性代数基础",
+    "content": "机器学习和深度学习的数学基础。理解矩阵运算、特征值分解、奇异值分解等核心概念。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/072-math-linear-algebra",
+    "tags": [],
+    "category": "math"
+  },
+  {
+    "id": "intel-073-math-probability",
+    "title": "概率论与数理统计",
+    "content": "机器学习模型的理论基础。理解概率分布、贝叶斯定理、假设检验等核心概念。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/073-math-probability",
+    "tags": [],
+    "category": "math"
+  },
+  {
+    "id": "intel-074-math-tensor-ops",
+    "title": "张量运算与自动微分",
+    "content": "深度学习框架的核心数学基础。理解张量运算、广播机制、自动微分原理。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/074-math-tensor-ops",
+    "tags": [],
+    "category": "math"
+  },
+  {
+    "id": "intel-075-cs-network",
+    "title": "计算机网络基础",
+    "content": "理解网络通信的底层原理，掌握TCP/IP协议栈、HTTP协议、DNS解析、网络安全等核心知识，为分布式系统和网络编程打下基础",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/075-cs-network",
+    "tags": [],
+    "category": "cs"
+  },
+  {
+    "id": "intel-076-cs-database",
+    "title": "数据库原理与实践",
+    "content": "理解数据库的设计原理和优化方法。掌握SQL查询、索引优化、事务处理等核心技能。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/076-cs-database",
+    "tags": [],
+    "category": "cs"
+  },
+  {
+    "id": "intel-077-embedded-driver",
+    "title": "嵌入式驱动开发",
+    "content": "理解Linux驱动开发的核心原理。掌握字符设备驱动、设备树、中断处理等关键技能。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/077-embedded-driver",
+    "tags": [],
+    "category": "embedded"
+  },
+  {
+    "id": "intel-078-embedded-hal",
+    "title": "嵌入式硬件抽象层",
+    "content": "理解硬件抽象层的设计原理。掌握STM32 HAL库、寄存器操作、外设配置等核心技能。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/078-embedded-hal",
+    "tags": [],
+    "category": "embedded"
+  },
+  {
+    "id": "intel-079-elec-digital",
+    "title": "数字电路基础",
+    "content": "理解数字电路的设计原理。掌握逻辑门、组合逻辑、时序逻辑等核心概念。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/079-elec-digital",
+    "tags": [],
+    "category": "embedded"
+  },
+  {
+    "id": "intel-080-elec-pcb",
+    "title": "PCB设计基础",
+    "content": "理解PCB设计的核心原理。掌握原理图绘制、PCB布局布线、信号完整性等关键技能。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/080-elec-pcb",
+    "tags": [],
+    "category": "embedded"
+  },
+  {
+    "id": "intel-081-signals-dsp",
+    "title": "数字信号处理",
+    "content": "理解数字信号处理的核心原理。掌握FFT、数字滤波器设计、采样定理等关键技能。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/081-signals-dsp",
+    "tags": [],
+    "category": "embedded"
+  },
+  {
+    "id": "intel-082-signals-wireless",
+    "title": "无线通信原理",
+    "content": "理解无线通信的核心原理。掌握调制解调、天线原理、无线协议等关键知识。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/082-signals-wireless",
+    "tags": [],
+    "category": "embedded"
+  },
+  {
+    "id": "intel-083-ctrl-plc",
+    "title": "PLC可编程控制器",
+    "content": "理解PLC在工业自动化中的应用。掌握梯形图编程、I/O配置、通信协议等核心技能。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/083-ctrl-plc",
+    "tags": [],
+    "category": "embedded"
+  },
+  {
+    "id": "intel-084-ctrl-servo",
+    "title": "伺服控制系统",
+    "content": "理解伺服控制系统的原理与应用。掌握伺服电机控制、编码器反馈、运动规划等核心技能。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/084-ctrl-servo",
+    "tags": [],
+    "category": "embedded"
+  },
+  {
+    "id": "intel-085-electrical-safety",
+    "title": "电气安全规范",
+    "content": "理解电气安全的核心规范。掌握接地保护、漏电保护、安全操作等关键知识。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/085-electrical-safety",
+    "tags": [],
+    "category": "embedded"
+  },
+  {
+    "id": "intel-090-pitfall-dl-training",
+    "title": "深度学习训练常见踩坑合集",
+    "content": "涵盖 6 个常见踩坑：显存不足 (CUDA out of memory)、Loss NaN / 梯度爆炸、多进程 DataLoader 卡死、模型训练收敛慢/几乎不收敛、CUDA 隐式同步导致推理速度异常慢、训练用 GPU 卡与推理用卡架构不一致，每个均附快速修复与排查步骤。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/090-pitfall-dl-training",
+    "tags": [],
+    "category": "deep-learning"
+  },
+  {
+    "id": "intel-091-pitfall-gpu-cuda",
+    "title": "GPU 与 CUDA 环境踩坑合集",
+    "content": "涵盖 4 个常见踩坑：CUDA 版本与 PyTorch 不匹配、Docker 容器中无法使用 GPU (nvidia-smi 报错)、多 GPU 训练时显存分配不均、GPU 温度过高导致降频/崩溃，每个均附快速修复与排查步骤。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/091-pitfall-gpu-cuda",
+    "tags": [],
+    "category": "deep-learning"
+  },
+  {
+    "id": "intel-092-pitfall-python",
+    "title": "Python 开发常见踩坑合集",
+    "content": "涵盖 5 个常见踩坑：Python 环境依赖冲突导致 import 失败、pandas inplace=True 链式赋值警告、可变默认参数导致函数行为异常、循环变量闭包捕获导致预期外结果、整数缓存导致 == 和 is 行为不一致，每个均附快速修复与排查步骤。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/092-pitfall-python",
+    "tags": [],
+    "category": "devops"
+  },
+  {
+    "id": "intel-093-pitfall-docker",
+    "title": "Docker 容器化踩坑合集",
+    "content": "涵盖 5 个常见踩坑：Docker 容器时间与宿主机不一致、Docker 容器中无法使用 GPU (nvidia-smi 报错)、Docker 镜像体积过大、Docker 容器内存泄漏、Docker 网络桥接模式导致容器间通信失败，每个均附快速修复与排查步骤。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/093-pitfall-docker",
+    "tags": [],
+    "category": "devops"
+  },
+  {
+    "id": "intel-094-pitfall-data-engineering",
+    "title": "数据工程踩坑合集",
+    "content": "涵盖 4 个常见踩坑：数据标注质量差导致模型无法收敛、pandas inplace=True 链式赋值警告、数据泄露 (Data Leakage) 导致模型评估虚高、大规模数据处理内存不足，每个均附快速修复与排查步骤。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/094-pitfall-data-engineering",
+    "tags": [],
+    "category": "data-processing"
+  },
+  {
+    "id": "intel-095-pitfall-llm-app",
+    "title": "LLM 应用开发踩坑合集",
+    "content": "涵盖 4 个常见踩坑：RAG 检索到了但回答不对 / 幻觉严重、大模型 Prompt 转义字符错误导致 JSON 输出截断、LLM 输出不稳定 / 重复复读、LLM API 调用超时 / 频率限制，每个均附快速修复与排查步骤。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/095-pitfall-llm-app",
+    "tags": [],
+    "category": "llm"
+  },
+  {
+    "id": "intel-096-pitfall-rag",
+    "title": "RAG 系统踩坑合集",
+    "content": "涵盖 4 个常见踩坑：RAG 检索到了但回答不对 / 幻觉严重、向量数据库检索结果与预期不匹配、RAG 系统延迟高/响应慢、知识库内容切分不合理导致关键信息丢失，每个均附快速修复与排查步骤。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/096-pitfall-rag",
+    "tags": [],
+    "category": "llm"
+  },
+  {
+    "id": "intel-097-pitfall-embedded",
+    "title": "嵌入式开发踩坑合集",
+    "content": "涵盖 4 个常见踩坑：C语言指针越界访问导致段错误、RTOS任务栈溢出、GPIO配置错误导致外设不工作、串口通信乱码或数据丢失，每个均附快速修复与排查步骤。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/097-pitfall-embedded",
+    "tags": [],
+    "category": "embedded"
+  },
+  {
+    "id": "intel-098-pitfall-hardware",
+    "title": "硬件设计踩坑合集",
+    "content": "涵盖 4 个常见踩坑：H桥驱动电机时的直通短路、PCB设计中的EMI/EMC问题、电源设计压降/纹波过大、晶振不起振/频率偏移，每个均附快速修复与排查步骤。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/098-pitfall-hardware",
+    "tags": [],
+    "category": "embedded"
+  },
+  {
+    "id": "intel-099-pitfall-ops",
+    "title": "运维与服务器踩坑合集",
+    "content": "涵盖 5 个常见踩坑：SSH 连接远程服务器频繁掉线、SSH 端口被防火墙拦截 / 服务器无法访问、Git 合并冲突处理不当导致代码丢失、服务器磁盘空间不足导致服务崩溃、容器时间与宿主机不一致，每个均附快速修复与排查步骤。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/099-pitfall-ops",
+    "tags": [],
+    "category": "devops"
+  },
+  {
+    "id": "intel-100-pitfall-cv",
+    "title": "计算机视觉踩坑合集",
+    "content": "涵盖 4 个常见踩坑：YOLO 训练时数据标注格式错误、图像增强导致标注错位、预训练模型在自定义数据上效果差、小目标检测效果差，每个均附快速修复与排查步骤。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/100-pitfall-cv",
+    "tags": [],
+    "category": "computer-vision"
+  },
+  {
+    "id": "intel-101-pitfall-nlp",
+    "title": "NLP 踩坑合集",
+    "content": "涵盖 4 个常见踩坑：Tokenizer 处理中文分词错误、文本分类标签不平衡导致模型偏向多数类、RNN/LSTM 梯度消失导致长序列信息丢失、文本数据泄露导致评估指标虚高，每个均附快速修复与排查步骤。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/101-pitfall-nlp",
+    "tags": [],
+    "category": "nlp"
+  },
+  {
+    "id": "intel-102-pitfall-metrics",
+    "title": "模型评估指标踩坑合集",
+    "content": "涵盖 4 个常见踩坑：用准确率评估类别不平衡数据、只看 AUC 不看 PRC 导致误判、回归任务用 MSE 评估被异常值主导、在测试集上调参导致过拟合测试集，每个均附快速修复与排查步骤。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/102-pitfall-metrics",
+    "tags": [],
+    "category": "machine-learning"
+  },
+  {
+    "id": "intel-103-pitfall-deployment",
+    "title": "模型部署踩坑合集",
+    "content": "涵盖 4 个常见踩坑：ONNX 导出后推理结果与 PyTorch 不一致、模型推理延迟高/吞吐量低、服务器多并发时模型加载慢、容器化部署模型文件缺失，每个均附快速修复与排查步骤。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/103-pitfall-deployment",
+    "tags": [],
+    "category": "devops"
+  },
+  {
+    "id": "intel-104-pitfall-security",
+    "title": "AI 安全踩坑合集",
+    "content": "涵盖 4 个常见踩坑：Prompt 注入攻击导致系统 prompt 泄露、RAG 系统检索到恶意文档导致生成有害内容、模型 API 密钥泄露导致被恶意调用、对抗样本攻击导致模型误分类，每个均附快速修复与排查步骤。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/104-pitfall-security",
+    "tags": [],
+    "category": "llm"
+  },
+  {
+    "id": "intel-105-pitfall-git",
+    "title": "Git 版本控制踩坑合集",
+    "content": "涵盖 4 个常见踩坑：Git 合并冲突处理不当导致代码丢失、误提交大文件/敏感信息到 Git 历史、分支命名混乱导致协作困难、rebase 后强制推送导致同事代码丢失，每个均附快速修复与排查步骤。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/105-pitfall-git",
+    "tags": [],
+    "category": "devops"
+  },
+  {
+    "id": "intel-106-pitfall-k8s",
+    "title": "Kubernetes 踩坑合集",
+    "content": "涵盖 4 个常见踩坑：Kubernetes Pod 无法调度/Pending 状态、Kubernetes Service 无法访问、Deployment 滚动更新时服务中断、PVC 挂载失败导致 Pod 无法启动，每个均附快速修复与排查步骤。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/106-pitfall-k8s",
+    "tags": [],
+    "category": "devops"
+  },
+  {
+    "id": "intel-107-pitfall-db",
+    "title": "数据库踩坑合集",
+    "content": "涵盖 4 个常见踩坑：SQL 查询全表扫描导致数据库卡死、数据库连接池耗尽导致应用无响应、事务未提交导致锁等待超时、数据库主从延迟导致读写分离失效，每个均附快速修复与排查步骤。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/107-pitfall-db",
+    "tags": [],
+    "category": "cs"
+  },
+  {
+    "id": "intel-108-pitfall-network",
+    "title": "网络编程踩坑合集",
+    "content": "涵盖 4 个常见踩坑：REST API 请求超时/失败、WebSocket 断线重连失败、HTTP keep-alive 导致连接复用问题、内网穿透后服务无法访问，每个均附快速修复与排查步骤。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/108-pitfall-network",
+    "tags": [],
+    "category": "cs"
+  },
+  {
+    "id": "intel-109-pitfall-rtos",
+    "title": "RTOS 实时操作系统踩坑合集",
+    "content": "涵盖 4 个常见踩坑：FreeRTOS 任务优先级配置不当导致系统响应差、中断与任务通信不同步导致数据错乱、临界区内调用阻塞 API 导致死锁、内存分配失败导致系统崩溃，每个均附快速修复与排查步骤。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/109-pitfall-rtos",
+    "tags": [],
+    "category": "embedded"
+  },
+  {
+    "id": "intel-110-pitfall-control",
+    "title": "自动控制踩坑合集",
+    "content": "涵盖 4 个常见踩坑：PID 积分饱和导致系统超调过大、离散控制系统采样频率设置不当、状态空间控制器极点位置选择不当、传感器噪声导致微分项失效，每个均附快速修复与排查步骤。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/110-pitfall-control",
+    "tags": [],
+    "category": "embedded"
+  },
+  {
+    "id": "intel-111-pitfall-circuit",
+    "title": "电路设计踩坑合集",
+    "content": "涵盖 4 个常见踩坑：电容选型不当导致滤波效果差、运放电路自激振荡、分压电阻选择不当导致测量误差大、功率器件散热设计不足导致过热保护，每个均附快速修复与排查步骤。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/111-pitfall-circuit",
+    "tags": [],
+    "category": "embedded"
+  },
+  {
+    "id": "intel-112-rl-basics",
+    "title": "强化学习基础",
+    "content": "让智能体通过与环境交互来学习最优决策的机器学习范式。掌握 MDP、Q-Learning、策略梯度、DQN、PPO 等核心算法，是进入机器人、游戏 AI、自动驾驶等领域的基础。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/112-rl-basics",
+    "tags": [],
+    "category": "machine-learning"
+  },
+  {
+    "id": "intel-113-gnn-basics",
+    "title": "图神经网络（GNN）基础",
+    "content": "处理图结构数据的深度学习方法，在社交网络、分子预测、推荐系统等领域广泛应用。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/113-gnn-basics",
+    "tags": [],
+    "category": "deep-learning"
+  },
+  {
+    "id": "intel-114-asr-speech-recognition",
+    "title": "语音识别（ASR）",
+    "content": "让计算机听懂人类说话的技术，从传统 HMM-GMM 到端到端深度学习，再到 OpenAI Whisper 一统江湖。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/114-asr-speech-recognition",
+    "tags": [],
+    "category": "speech"
+  },
+  {
+    "id": "intel-115-tts-speech-synthesis",
+    "title": "TTS 语音合成",
+    "content": "让机器像人一样说话的技术。从 Tacotron 到 VITS，掌握端到端语音合成的核心原理与实战。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/115-tts-speech-synthesis",
+    "tags": [],
+    "category": "nlp"
+  },
+  {
+    "id": "intel-116-recommender-systems",
+    "title": "推荐系统",
+    "content": "互联网产品的核心驱动力。从协同过滤到深度学习推荐，掌握排序、召回、多目标优化的完整技术栈。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/116-recommender-systems",
+    "tags": [],
+    "category": "machine-learning"
+  },
+  {
+    "id": "intel-117-time-series",
+    "title": "时间序列分析与预测",
+    "content": "从经典统计到深度学习，系统掌握时间序列分解、预测、异常检测的核心方法与实战技能。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/117-time-series",
+    "tags": [],
+    "category": "data-processing"
+  },
+  {
+    "id": "intel-118-anomaly-detection",
+    "title": "异常检测",
+    "content": "从数据中识别\"不正常\"的样本，广泛应用于欺诈检测、工业质检、运维监控、医疗诊断等场景。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/118-anomaly-detection",
+    "tags": [],
+    "category": "machine-learning"
+  },
+  {
+    "id": "intel-119-knowledge-graph",
+    "title": "知识图谱",
+    "content": "用结构化方式表示现实世界中的实体、关系和属性，是智能问答、推荐系统、语义搜索的核心基础设施。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/119-knowledge-graph",
+    "tags": [],
+    "category": "nlp"
+  },
+  {
+    "id": "intel-120-3d-point-cloud",
+    "title": "3D视觉与点云处理",
+    "content": "从点云表示到深度学习处理，掌握3D视觉核心技术栈，涵盖PointNet、ICP配准、NeRF重建等关键算法。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/120-3d-point-cloud",
+    "tags": [],
+    "category": "computer-vision"
+  },
+  {
+    "id": "intel-121-object-tracking",
+    "title": "目标跟踪技术",
+    "content": "计算机视觉核心任务之一，在视频中持续定位并跟踪一个或多个目标。是自动驾驶、视频监控、人机交互等应用的关键技术。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/121-object-tracking",
+    "tags": [],
+    "category": "computer-vision"
+  },
+  {
+    "id": "intel-122-federated-learning",
+    "title": "联邦学习",
+    "content": "数据不出本地、模型共享的分布式机器学习范式。解决数据孤岛与隐私保护的核心技术，金融、医疗、IoT 等场景刚需。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/122-federated-learning",
+    "tags": [],
+    "category": "machine-learning"
+  },
+  {
+    "id": "intel-123-automl",
+    "title": "AutoML 自动机器学习",
+    "content": "用自动化方法替代人工调参和模型选择，让机器学习从\"手艺活\"变成\"流水线\"。掌握AutoML能让你用1/10的时间得到更好的模型。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/123-automl",
+    "tags": [],
+    "category": "machine-learning"
+  },
+  {
+    "id": "intel-124-pitfall-rl",
+    "title": "强化学习踩坑合集",
+    "content": "涵盖 4 个常见踩坑：奖励函数设计不当导致Agent走捷径、探索与利用失衡导致训练不稳定、策略梯度方差过大导致训练崩溃、经验回放缓冲区样本质量差，每个均附快速修复与排查步骤。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/124-pitfall-rl",
+    "tags": [],
+    "category": "machine-learning"
+  },
+  {
+    "id": "intel-125-pitfall-gnn",
+    "title": "图神经网络踩坑合集",
+    "content": "涵盖 4 个常见踩坑：GNN层数过多导致过平滑、图数据集划分泄露导致评估虚高、消息传递中忽略自环导致信息丢失、异构图处理不当导致节点类型混淆，每个均附快速修复与排查步骤。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/125-pitfall-gnn",
+    "tags": [],
+    "category": "machine-learning"
+  },
+  {
+    "id": "intel-126-pitfall-recsys",
+    "title": "推荐系统踩坑合集",
+    "content": "涵盖 4 个常见踩坑：推荐系统马太效应导致头部内容越推越多、线上线下指标不一致、冷启动问题处理不当导致新用户体验差、特征穿越导致线上效果急剧下降，每个均附快速修复与排查步骤。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/126-pitfall-recsys",
+    "tags": [],
+    "category": "machine-learning"
+  },
+  {
+    "id": "intel-127-pitfall-speech",
+    "title": "语音处理踩坑合集",
+    "content": "涵盖 4 个常见踩坑：音频采样率不匹配导致识别错误、TTS中文多音字发音错误、背景噪声导致ASR识别率骤降、说话人识别中声纹漂移导致误识别，每个均附快速修复与排查步骤。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/127-pitfall-speech",
+    "tags": [],
+    "category": "speech"
+  },
+  {
+    "id": "intel-128-pitfall-time-series",
+    "title": "时间序列踩坑合集",
+    "content": "涵盖 4 个常见踩坑：随机打乱时序数据导致数据泄露、过度差分导致ARIMA模型失效、LSTM处理长序列时梯度消失、MAPE在数据接近0时无限大，每个均附快速修复与排查步骤。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/128-pitfall-time-series",
+    "tags": [],
+    "category": "data-processing"
+  },
+  {
+    "id": "intel-129-pitfall-3d-cv",
+    "title": "3D 视觉踩坑合集",
+    "content": "涵盖 4 个常见踩坑：点云数据预处理不当导致信息丢失、ICP配准陷入局部最优、体素分辨率与显存的矛盾、相机标定误差导致3D重建不准，每个均附快速修复与排查步骤。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/129-pitfall-3d-cv",
+    "tags": [],
+    "category": "computer-vision"
+  },
+  {
+    "id": "intel-130-pitfall-automl",
+    "title": "AutoML 踩坑合集",
+    "content": "涵盖 4 个常见踩坑：贝叶斯优化搜索空间过大导致效率低下、NAS搜索到的架构无法部署、过拟合验证集导致泛化能力差、AutoML完全替代人工调参导致可控性差，每个均附快速修复与排查步骤。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/130-pitfall-automl",
+    "tags": [],
+    "category": "machine-learning"
+  },
+  {
+    "id": "intel-131-pitfall-microservice",
+    "title": "微服务架构踩坑合集",
+    "content": "涵盖 4 个常见踩坑：分布式事务一致性问题、服务间依赖混乱导致级联失败、分布式追踪缺失导致问题定位难、API版本不兼容导致线上故障，每个均附快速修复与排查步骤。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/131-pitfall-microservice",
+    "tags": [],
+    "category": "devops"
+  },
+  {
+    "id": "intel-132-pitfall-frontend",
+    "title": "前端开发踩坑合集",
+    "content": "涵盖 4 个常见踩坑：JavaScript this指向问题、React useEffect依赖数组陷阱、移动端适配问题（viewport/rem）、内存泄漏导致页面越来越卡，每个均附快速修复与排查步骤。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/132-pitfall-frontend",
+    "tags": [],
+    "category": "cs"
+  },
+  {
+    "id": "intel-133-pitfall-algorithm",
+    "title": "算法与数据结构踩坑合集",
+    "content": "涵盖 4 个常见踩坑：二分查找边界条件处理错误、递归爆栈/栈溢出、哈希表键的可变类型陷阱、动态规划状态转移方程错误，每个均附快速修复与排查步骤。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/133-pitfall-algorithm",
+    "tags": [],
+    "category": "cs"
+  },
+  {
+    "id": "intel-134-pitfall-project-mgmt",
+    "title": "项目管理踩坑合集",
+    "content": "涵盖 4 个常见踩坑：需求模糊导致反复返工、时间估算过于乐观导致延期、技术债积累导致开发越来越慢、沟通不畅导致信息差，每个均附快速修复与排查步骤。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/134-pitfall-project-mgmt",
+    "tags": [],
+    "category": "best-practices"
+  },
+  {
+    "id": "intel-135-pitfall-interview",
+    "title": "技术面试踩坑合集",
+    "content": "涵盖 4 个常见踩坑：简历堆砌技术栈但没有深度、刷题但不会做变形题、项目经历讲不清楚、谈薪资时报价过低/过高，每个均附快速修复与排查步骤。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/135-pitfall-interview",
+    "tags": [],
+    "category": "best-practices"
+  },
+  {
+    "id": "intel-140-pitfall-c-pointer-out-of-bounds",
+    "title": "C语言指针越界访问导致段错误",
+    "content": "聚焦单点问题：C 语言指针越界访问导致段错误，涵盖根因（指针算术错误、数组越界、野指针）、Valgrind/-fsanitize=address 检测、strncpy/snprintf 安全函数、MPU 限制访问范围等排查与修复方案。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/140-pitfall-c-pointer-out-of-bounds",
+    "tags": [],
+    "category": "embedded"
+  },
+  {
+    "id": "intel-141-pitfall-rtos-task-stack-overflow",
+    "title": "RTOS任务栈溢出",
+    "content": "聚焦单点问题：FreeRTOS 任务栈溢出导致 HardFault，涵盖 uxTaskGetStackHighWaterMark 监控、configCHECK_FOR_STACK_OVERFLOW 检测、栈大小配置、避免大局部变量等排查与修复方案。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/141-pitfall-rtos-task-stack-overflow",
+    "tags": [],
+    "category": "embedded"
+  },
+  {
+    "id": "intel-142-pitfall-pid-tuning-oscillation",
+    "title": "PID参数整定不当导致系统振荡",
+    "content": "聚焦单点问题：PID 参数整定不当导致系统振荡，涵盖 Z-N 整定法、积分抗饱和、微分先行、奈奎斯特准则等排查与修复方案。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/142-pitfall-pid-tuning-oscillation",
+    "tags": [],
+    "category": "embedded"
+  },
+  {
+    "id": "intel-143-pitfall-fft-spectral-leakage",
+    "title": "傅里叶变换频谱泄漏",
+    "content": "聚焦单点问题：FFT 频谱泄漏导致频率分析失真，涵盖加窗处理（Hanning/Hamming/Blackman）、观测时长与频率分辨率关系、整数周期采样等排查与修复方案。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/143-pitfall-fft-spectral-leakage",
+    "tags": [],
+    "category": "embedded"
+  },
+  {
+    "id": "intel-144-pitfall-h-bridge-shoot-through",
+    "title": "H桥驱动电机时的直通短路",
+    "content": "聚焦单点问题：H 桥直通短路导致 MOSFET 损坏，涵盖死区时间设置（1-5μs）、IR2104 栅极驱动、关断延迟分析等排查与修复方案。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/144-pitfall-h-bridge-shoot-through",
+    "tags": [],
+    "category": "embedded"
+  },
+  {
+    "id": "intel-145-pitfall-cuda-pytorch-version-mismatch",
+    "title": "CUDA 版本与 PyTorch 不匹配",
+    "content": "聚焦单点问题：CUDA 与 PyTorch 版本不匹配导致算子不可用或运行时崩溃，涵盖 nvidia-smi 驱动版本核对、pytorch.org 官方安装命令、cuDNN 兼容性、conda 环境隔离等排查与修复方案。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/145-pitfall-cuda-pytorch-version-mismatch",
+    "tags": [],
+    "category": "devops"
+  },
+  {
+    "id": "intel-146-pitfall-cuda-out-of-memory",
+    "title": "显存不足 (CUDA out of memory)",
+    "content": "聚焦单点问题：GPU 显存不足（CUDA out of memory）导致训练/推理崩溃，涵盖降低 batch_size、AMP 自动混合精度、梯度检查点、4-bit 量化、多卡并行等排查与修复方案。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/146-pitfall-cuda-out-of-memory",
+    "tags": [],
+    "category": "deep-learning"
+  },
+  {
+    "id": "intel-147-pitfall-loss-nan-gradient-explosion",
+    "title": "Loss NaN / 梯度爆炸",
+    "content": "聚焦单点问题：训练 Loss NaN 与梯度爆炸，涵盖学习率调整、梯度裁剪（clip_grad_norm_）、AdamW+warmup、数据 NaN 检查等排查与修复方案。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/147-pitfall-loss-nan-gradient-explosion",
+    "tags": [],
+    "category": "deep-learning"
+  },
+  {
+    "id": "intel-148-pitfall-onnx-export-dynamic-shape",
+    "title": "ONNX 导出失败 / 动态 shape",
+    "content": "聚焦单点问题：ONNX 导出后动态 shape 失效或算子不支持，涵盖 dynamic_axes 声明、opset 版本、model.eval() 推理模式、onnx-simplifier 等排查与修复方案。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/148-pitfall-onnx-export-dynamic-shape",
+    "tags": [],
+    "category": "devops"
+  },
+  {
+    "id": "intel-149-pitfall-multiprocess-dataloader-hang",
+    "title": "多进程 DataLoader (num_workers > 0) 卡死",
+    "content": "聚焦单点问题：PyTorch DataLoader 多进程卡死，涵盖 Windows spawn 启动方式、num_workers=0、if __name__=='__main__' 保护、CUDA 不支持 fork 等排查与修复方案。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/149-pitfall-multiprocess-dataloader-hang",
+    "tags": [],
+    "category": "deep-learning"
+  },
+  {
+    "id": "intel-150-pitfall-rag-retrieval-hallucination",
+    "title": "RAG 检索到了但回答不对 / 幻觉严重",
+    "content": "聚焦单点问题：RAG 检索到了相关文档但回答仍幻觉严重，涵盖 BGE-M3 embedding、bge-reranker 重排、chunk 切分策略、HyDE 查询扩展等排查与修复方案。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/150-pitfall-rag-retrieval-hallucination",
+    "tags": [],
+    "category": "llm"
+  },
+  {
+    "id": "intel-151-pitfall-ssh-connection-drop",
+    "title": "SSH 连接远程服务器频繁掉线",
+    "content": "聚焦单点问题：SSH 连接远程服务器频繁掉线，涵盖 ServerAliveInterval/ServerAliveCountMax 保活、tmux/screen 会话保持、nohup/systemd 后台运行等排查与修复方案。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/151-pitfall-ssh-connection-drop",
+    "tags": [],
+    "category": "devops"
+  },
+  {
+    "id": "intel-152-pitfall-docker-gpu-not-available",
+    "title": "Docker 容器中无法使用 GPU (nvidia-smi 报错)",
+    "content": "聚焦单点问题：Docker 容器内无法使用 GPU，涵盖 NVIDIA Container Toolkit 安装、--gpus all 参数、nvidia/cuda 基础镜像、驱动版本兼容等排查与修复方案。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/152-pitfall-docker-gpu-not-available",
+    "tags": [],
+    "category": "devops"
+  },
+  {
+    "id": "intel-153-pitfall-slow-convergence",
+    "title": "模型训练收敛慢 / 几乎不收敛",
+    "content": "聚焦单点问题：模型训练收敛慢或几乎不收敛，涵盖数据标注检查、学习率网格搜索、loss 函数匹配、归一化验证、预训练权重加载等排查与修复方案。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/153-pitfall-slow-convergence",
+    "tags": [],
+    "category": "deep-learning"
+  },
+  {
+    "id": "intel-154-pitfall-git-merge-conflict-code-loss",
+    "title": "Git 合并冲突处理不当导致代码丢失",
+    "content": "聚焦单点问题：Git 合并冲突处理不当导致代码丢失，涵盖 git stash 保护本地修改、git reflog 找回误操作、pull --rebase、冲突标记解析等排查与修复方案。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/154-pitfall-git-merge-conflict-code-loss",
+    "tags": [],
+    "category": "best-practices"
+  },
+  {
+    "id": "intel-155-pitfall-python-dependency-conflict",
+    "title": "Python 环境依赖冲突导致 import 失败",
+    "content": "聚焦单点问题：Python 环境依赖冲突导致 import 失败，涵盖 pip/conda 混用风险、虚拟环境隔离、pip-compile 锁定版本、LD_LIBRARY_PATH 检查等排查与修复方案。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/155-pitfall-python-dependency-conflict",
+    "tags": [],
+    "category": "devops"
+  },
+  {
+    "id": "intel-156-pitfall-ssh-firewall-blocked",
+    "title": "SSH 端口被防火墙拦截 / 服务器无法访问",
+    "content": "聚焦单点问题：SSH 端口被防火墙拦截导致服务器无法访问，涵盖安全组规则、改用高位端口、fail2ban、frp/nps 内网穿透、Tailscale/WireGuard VPN 等排查与修复方案。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/156-pitfall-ssh-firewall-blocked",
+    "tags": [],
+    "category": "devops"
+  },
+  {
+    "id": "intel-157-pitfall-poor-data-labeling",
+    "title": "数据标注质量差导致模型无法收敛",
+    "content": "聚焦单点问题：数据标注质量差导致模型无法收敛或效果虚高，涵盖 inter-annotator agreement、混淆矩阵分析、active learning、类别不均衡检查等排查与修复方案。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/157-pitfall-poor-data-labeling",
+    "tags": [],
+    "category": "data-processing"
+  },
+  {
+    "id": "intel-158-pitfall-cuda-implicit-sync-slow-inference",
+    "title": "CUDA 隐式同步导致推理速度异常慢",
+    "content": "聚焦单点问题：CUDA 隐式同步导致推理速度异常慢，涵盖 .item()/.cpu()/.numpy() 触发同步、循环外统一转换、torch.cuda.synchronize 性能分析、批量推理等排查与修复方案。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/158-pitfall-cuda-implicit-sync-slow-inference",
+    "tags": [],
+    "category": "deep-learning"
+  },
+  {
+    "id": "intel-159-pitfall-docker-timezone-mismatch",
+    "title": "Docker 容器时间与宿主机不一致",
+    "content": "聚焦单点问题：Docker 容器时间与宿主机不一致（差 8 小时），涵盖 -e TZ=Asia/Shanghai 环境变量、-v /etc/localtime 挂载、Dockerfile 时区设置、cron 定时任务等排查与修复方案。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/159-pitfall-docker-timezone-mismatch",
+    "tags": [],
+    "category": "devops"
+  },
+  {
+    "id": "intel-160-pitfall-pandas-chained-assignment-warning",
+    "title": "pandas inplace=True 链式赋值警告",
+    "content": "聚焦单点问题：pandas 链式赋值触发 SettingWithCopyWarning 且值未正确设置，涵盖 df.loc 单步赋值、df.copy() 显式复制、避免视图副本歧义等排查与修复方案。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/160-pitfall-pandas-chained-assignment-warning",
+    "tags": [],
+    "category": "data-processing"
+  },
+  {
+    "id": "intel-161-pitfall-gpu-architecture-mismatch",
+    "title": "训练用 GPU 卡与推理用卡架构不一致",
+    "content": "聚焦单点问题：训练用 GPU 与推理用 GPU 架构不一致导致模型不可用，涵盖 Ampere/Ada/Hopper 架构差异、CUDA Compute Capability、ONNX 跨架构验证、torch.jit 导出等排查与修复方案。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/161-pitfall-gpu-architecture-mismatch",
+    "tags": [],
+    "category": "deep-learning"
+  },
+  {
+    "id": "intel-162-pitfall-llm-prompt-escape-json-truncation",
+    "title": "大模型 Prompt 转义字符错误导致 JSON 输出截断",
+    "content": "聚焦单点问题：LLM Prompt 中转义字符错误导致 JSON 输出解析失败或截断，涵盖 json.dumps 转义、Function Calling JSON mode、max_tokens 限制、print(repr(prompt)) 检查等排查与修复方案。",
+    "type": "intel",
+    "typeLabel": "情报",
+    "url": "/intel/162-pitfall-llm-prompt-escape-json-truncation",
+    "tags": [],
+    "category": "llm"
+  },
+  {
+    "id": "tool-ultralytics-yolo",
+    "title": "Ultralytics YOLO",
+    "content": "工业界首选的端到端目标检测框架，YOLOv8 官方统一维护 一行命令训练自定义数据集 内置 Detection / Segmentation / Pose / OBB ONNX / TensorRT / CoreML 一键导出 Python / CLI / Docker 多运行方式 目标检测 实例分割 关键点检测",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["python", "pytorch", "实时检测"],
+    "category": "computer-vision"
+  },
+  {
+    "id": "tool-hugging-face-transformers",
+    "title": "Hugging Face Transformers",
+    "content": "10 万+ 预训练模型的统一加载接口，PyTorch / JAX 双后端 AutoModel / AutoTokenizer 即插即用 Trainer API 封装分布式训练 / 混合精度 配合 PEFT 支持 LoRA / QLoRA 微调 Tokenizers Rust 底层加速，tokenize 极快 文本生成 文本分类 LLM 推理 模型微调",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["llm", "微调", "nlp"],
+    "category": "nlp"
+  },
+  {
+    "id": "tool-pytorch",
+    "title": "PyTorch",
+    "content": "研究界最流行的动态计算图深度学习框架，debug 友好，与 Python 完全融合 动态图：代码即模型，可直接 print 中间变量 torch.compile() 编译优化（PyTorch 2.0 新特性） torch.distributed 封装多卡 / 多机分布式训练 torch.jit 脚本化导出 TorchScript 模型训练 研究实验 自定义算子",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["深度学习", "研究", "动态图"],
+    "category": "deep-learning"
+  },
+  {
+    "id": "tool-langchain",
+    "title": "LangChain",
+    "content": "大模型应用开发瑞士军刀：RAG / Agent / Chain / Memory 一站式 统一的 VectorStore 抽象（FAISS / Chroma / pgvector） Agent 工具调用与自定义 Tool LangSmith 可观测性与调试面板 LangServe 一键将 Chain 部署为 REST API RAG 检索增强 Agent 智能体 对话系统",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["rag", "agent", "应用层"],
+    "category": "llm"
+  },
+  {
+    "id": "tool-streamlit",
+    "title": "Streamlit",
+    "content": "纯 Python 构建交互式 Web 界面，无需前端知识，快速原型展示 数据可视化图表（折线/柱状/散点/地图） 文件上传 / 滑块 / 下拉框 / 按钮等交互组件 Session State 保持页面状态 部署到 Streamlit Cloud 免费公开访问 快速 Demo 数据看板 原型展示",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["web", "demo", "python"],
+    "category": "devops"
+  },
+  {
+    "id": "tool-mlflow",
+    "title": "MLflow",
+    "content": "开源 ML 生命周期管理平台，自动记录参数/指标/模型，支持超参搜索 自动记录 PyTorch / Keras / XGBoost 等框架的训练指标 Web UI 对比不同实验的参数与 Loss 曲线 Model Registry 版本化管理，支持 Stage（Staging/Production） 可对接 PostgreSQL / S3 等生产级存储后端 实验追踪 模型版本管理 团队协作",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["实验管理", "mlops"],
+    "category": "devops"
+  },
+  {
+    "id": "tool-weights-&-biases",
+    "title": "Weights & Biases",
+    "content": "实验可视化 + 超参数 Sweep + 模型版本管理，团队协作友好 一条 wandb.init() 自动记录 Loss / 指标 / 产出 Sweep 超参数搜索（Bayesian / Grid / Random） Artifacts 管理数据集与模型版本 视频/音频/表格等多种数据类型可视化 实验可视化 超参搜索 团队协作",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["实验追踪", "团队协作"],
+    "category": "devops"
+  },
+  {
+    "id": "tool-dvc-(data-version-control)",
+    "title": "DVC (Data Version Control)",
+    "content": "用 Git 的方式管理数据集和模型文件，支持大规模数据的版本控制与共享 dvc add data/ 将大文件纳入版本控制（存指针到 Git，内容存远程存储） dvc repro 自动检测数据/代码变化后重新运行训练流程 支持 S3/GCS/Azure/HDFS 等远程存储后端 与 Git 完全兼容，可同仓库管理代码和数据 数据版本控制 流水线复现 大文件管理",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["数据管理", "mlops", "git"],
+    "category": "devops"
+  },
+  {
+    "id": "tool-docker",
+    "title": "Docker",
+    "content": "将模型或服务封装为 Docker 镜像，实现跨环境无差异部署 Dockerfile 定义镜像构建步骤，一次构建多处运行 nvidia-docker 支持 GPU 容器分配 Docker Compose 编排多容器（API + Redis + 模型） 多阶段构建大幅减小镜像体积 模型部署 环境隔离 服务编排",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["devops", "部署", "容器化"],
+    "category": "devops"
+  },
+  {
+    "id": "tool-gradio",
+    "title": "Gradio",
+    "content": "专为机器学习设计的快速 Web 界面框架，比 Streamlit 更适合 AI 模型展示 chatbot / sketch / image / audio 等 AI 专属组件 内置分享链接生成，可直接分享 Demo 给他人 支持加载 Hugging Face Space 直接嵌入 Blocks API 支持自定义复杂布局与交互 AI Demo 对话系统 Demo 多模态交互",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["AI界面", "demo", "python"],
+    "category": "devops"
+  },
+  {
+    "id": "tool-label-studio",
+    "title": "Label Studio",
+    "content": "多模态标注平台：图像检测框 / 文本 NER / 音频分段 / 视频 导出格式兼容 COCO / YOLO / Pascal VOC / JSON-MIN 自托管，无用户数限制 可接入 ML 模型做预标注（主动学习） 支持多人协作标注，质量控制工作流 数据标注 主动学习 标注质量控制",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["标注", "自托管", "多模态"],
+    "category": "devops"
+  },
+  {
+    "id": "tool-pgvector-+-postgresql",
+    "title": "pgvector + PostgreSQL",
+    "content": "PostgreSQL 扩展，在 SQL 中直接做 KNN 向量检索，无需引入新组件 与现有 PostgreSQL 无缝融合，零额外运维 支持 HNSW / ivfflat 索引，查询速度可达到毫秒级 Hybrid Search 实现 metadata filter + vector 支持多种维度（HNSW 索引建议 ≤2000 维，IVF 索引支持更高维度）向量（HNSW 索引有维度上限） RAG 检索 向量检索 混合搜索",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["rag", "sql", "hnsw"],
+    "category": "devops"
+  },
+  {
+    "id": "tool-onnx-runtime",
+    "title": "ONNX Runtime",
+    "content": "跨框架、高性能模型推理引擎，比原生框架快 1.5-3 倍 支持 PyTorch / TensorFlow / ONNX 模型输入 GPU 加速（CUDA / TensorRT / ROCm） 图优化（常量折叠 / 算子融合 / 内存规划） 支持 CPU / GPU / Mobile / WebAssembly 多平台部署 模型推理加速 跨平台部署 生产环境推理",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["推理", "部署", "onnx"],
+    "category": "devops"
+  },
+  {
+    "id": "tool-gcc",
+    "title": "GCC",
+    "content": "GNU编译器套件，支持C/C++/Fortran等多种语言，是嵌入式和系统开发的基础工具 支持C/C++/Fortran等多种语言 arm-none-eabi-gcc用于ARM嵌入式开发 丰富的优化选项控制代码大小和性能 支持交叉编译，在x86上编译ARM程序 C程序编译 嵌入式固件编译 交叉编译",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["编译器", "C语言", "嵌入式"],
+    "category": "cs"
+  },
+  {
+    "id": "tool-freertos",
+    "title": "FreeRTOS",
+    "content": "最流行的开源实时操作系统，用于微控制器的多任务调度和资源管理 抢占式多任务调度，最多255个优先级 信号量、互斥锁、消息队列、事件组 软件定时器和中断管理 内存管理五种堆分配策略可选 传感器数据采集 工业控制 物联网设备",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["rtos", "嵌入式", "实时系统"],
+    "category": "embedded"
+  },
+  {
+    "id": "tool-ltspice",
+    "title": "LTspice",
+    "content": "Analog Devices推出的免费电路仿真软件，用于模拟电路设计和分析 SPICE电路仿真，支持瞬态/AC/DC分析 内置大量ADI元件模型库 强大的波形查看器和FFT分析 完全免费，无功能限制 模拟电路设计 电源电路验证 滤波器设计",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["电路仿真", "模拟电路", "eda"],
+    "category": "embedded"
+  },
+  {
+    "id": "tool-matlab",
+    "title": "MATLAB",
+    "content": "MathWorks推出的科学计算和仿真平台，广泛用于信号处理、控制系统和通信仿真 强大的矩阵运算和数值计算能力 Signal Processing Toolbox信号处理工具箱 Communications Toolbox通信系统仿真 Simulink图形化建模和仿真 信号处理算法验证 通信系统仿真 控制系统设计",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["科学计算", "信号处理", "仿真"],
+    "category": "embedded"
+  },
+  {
+    "id": "tool-ros2",
+    "title": "ROS2",
+    "content": "机器人操作系统第二代，提供机器人软件开发的标准框架和中间件 基于DDS的分布式通信机制 Navigation2自主导航堆栈 MoveIt2机械臂运动规划 Gazebo仿真环境集成 移动机器人导航 机械臂控制 多机器人协调",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["机器人", "ros", "导航"],
+    "category": "embedded"
+  },
+  {
+    "id": "tool-stm32cubemx",
+    "title": "STM32CubeMX",
+    "content": "STM32微控制器的图形化配置工具，自动生成初始化代码和Makefile 图形化引脚分配和时钟树配置 自动生成初始化代码和Makefile 支持FreeRTOS和Middleware配置 功耗计算器辅助低功耗设计 STM32项目初始化 引脚配置 时钟配置",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["stm32", "嵌入式", "代码生成"],
+    "category": "embedded"
+  },
+  {
+    "id": "tool-dask",
+    "title": "Dask",
+    "content": "用纯 Python 代码实现 pandas / numpy / scikit-learn 的并行化，处理 TB 级数据 dask.array / dask.dataframe / dask.delayed 透明并行化 处理比单机内存大几个数量级的数据集 与现有 pandas / numpy API 几乎完全兼容 可对接 Kubernetes / HPC / Yarn 集群 大数据处理 分布式计算 集群调度",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["大数据", "并行计算", "python"],
+    "category": "devops"
+  },
+  {
+    "id": "tool-tensorflow",
+    "title": "TensorFlow",
+    "content": "工业界最流行的深度学习框架，生产部署和移动端支持最佳 tf.function AutoGraph 自动转换 Python 代码为计算图 TensorBoard 内置可视化（训练曲线/计算图/Embedding） TPU 加速训练和分布式策略（MirroredStrategy/MultiWorker） TensorFlow Lite 移动端部署和 TensorFlow.js 浏览器端推理 模型训练 生产部署 移动端推理",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["深度学习", "生产部署", "移动端"],
+    "category": "deep-learning"
+  },
+  {
+    "id": "tool-opencv",
+    "title": "OpenCV",
+    "content": "计算机视觉领域最核心的开源库，支持图像读取/处理/特征提取 图像读取/显示/保存，支持 JPEG/PNG/BMP 等格式 图像预处理（滤波/边缘检测/形态学操作） 特征提取（SIFT/SURF/ORB/HOG） 目标检测（Haar 级联/HOG+SVM）和视频分析 图像处理 特征提取 视频分析",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["计算机视觉", "图像处理", "特征提取"],
+    "category": "computer-vision"
+  },
+  {
+    "id": "tool-scikit-learn",
+    "title": "scikit-learn",
+    "content": "经典机器学习算法的一站式实现，API 设计优雅，文档完善 完整的监督/无监督学习算法实现 Pipeline 管道化处理（预处理+训练+评估） GridSearchCV / RandomizedSearchCV 超参搜索 内置数据集（iris/digits/wine/breast_cancer）和评估指标 数据挖掘 分类回归 特征工程",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["机器学习", "经典算法", "python"],
+    "category": "devops"
+  },
+  {
+    "id": "tool-pandas",
+    "title": "pandas",
+    "content": "Python 数据分析的核心库，DataFrame 表格操作神器 DataFrame 表格数据结构，支持行列索引和切片 数据读取（CSV/Excel/JSON/SQL/Parquet） groupby / pivot / merge / join 等 SQL 风格操作 内置数据清洗和缺失值处理 数据清洗 数据分析 特征工程",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["数据分析", "表格处理", "python"],
+    "category": "devops"
+  },
+  {
+    "id": "tool-numpy",
+    "title": "NumPy",
+    "content": "Python 科学计算基础库，矩阵运算和数组操作的核心 ndarray 多维数组，支持广播机制 矩阵运算（点积/转置/逆矩阵/特征值） 线性代数（linalg）和傅里叶变换（fft） 随机数生成和统计函数 数值计算 矩阵运算 数据预处理",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["科学计算", "矩阵运算", "python"],
+    "category": "devops"
+  },
+  {
+    "id": "tool-faiss",
+    "title": "FAISS",
+    "content": "Facebook AI 开源的高效向量检索库，支持十亿级向量快速搜索 多种索引类型：Flat（精确搜索）/ IVF（倒排索引）/ HNSW（图索引） 支持 L2 距离和内积相似度计算 GPU 加速版本支持十亿级向量毫秒级查询 支持向量添加、删除和批量搜索 RAG 检索 相似图片搜索 推荐系统",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["rag", "向量检索", "gpu"],
+    "category": "llm"
+  },
+  {
+    "id": "tool-chromadb",
+    "title": "ChromaDB",
+    "content": "专为 LLM 应用设计的轻量级向量数据库，开箱即用 开箱即用，无需额外部署数据库服务 支持内存和持久化存储（SQLite/PostgreSQL） 内置文本分割和 Embedding 函数 与 LangChain 无缝集成 RAG 应用 文档检索 知识库",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["rag", "向量数据库", "llm"],
+    "category": "llm"
+  },
+  {
+    "id": "tool-jupyter-notebook",
+    "title": "Jupyter Notebook",
+    "content": "交互式编程和文档写作神器，代码、文本、图表一体化 代码、文本、数学公式、图表一体化展示 支持 Python/R/Julia 等 40+ 编程语言 nbconvert 导出为 HTML/PDF/Markdown 支持交互式小部件（ipywidgets） 数据探索 教学演示 技术文档",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["交互式", "文档", "python"],
+    "category": "devops"
+  },
+  {
+    "id": "tool-spacy",
+    "title": "spaCy",
+    "content": "工业级 NLP 处理库，支持分词/词性标注/NER/依存分析 分词、词性标注、命名实体识别（NER） 依存分析和句法解析 60+ 种语言支持，内置预训练模型 spaCy Transformers 集成 BERT 等深度学习模型 文本处理 实体识别 信息抽取",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["nlp", "工业级", "实体识别"],
+    "category": "nlp"
+  },
+  {
+    "id": "tool-pytorch-lightning",
+    "title": "PyTorch Lightning",
+    "content": "PyTorch 的高级封装，专注研究逻辑，自动处理训练循环 研究代码与工程代码分离，专注核心逻辑 自动处理训练/验证/测试循环 支持分布式训练（多 GPU/TPU）和混合精度 一键导出 ONNX / TensorRT / CoreML 模型训练 研究实验 分布式训练",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["pytorch", "研究", "分布式"],
+    "category": "deep-learning"
+  },
+  {
+    "id": "tool-kubernetes",
+    "title": "Kubernetes",
+    "content": "容器编排平台，自动化部署、扩展和管理容器化应用 Pod / Service / Deployment / StatefulSet 核心资源 水平自动伸缩（HPA）和集群自动伸缩（CA） 滚动更新和蓝绿部署策略 Helm Chart 包管理和 Operator 模式 微服务部署 容器编排 生产环境管理",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["devops", "容器编排", "微服务"],
+    "category": "devops"
+  },
+  {
+    "id": "tool-prometheus",
+    "title": "Prometheus",
+    "content": "开源监控系统，多维数据模型 + 灵活查询语言 + 告警机制 多维数据模型：指标名称 + 标签 PromQL 灵活查询语言 服务发现（Kubernetes/Consul/文件） Alertmanager 告警管理和通知路由 系统监控 应用监控 告警管理",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["监控", "时序数据库", "devops"],
+    "category": "devops"
+  },
+  {
+    "id": "tool-grafana",
+    "title": "Grafana",
+    "content": "开源可视化监控平台，连接多种数据源，构建漂亮的仪表盘 连接 Prometheus / InfluxDB / Elasticsearch 等数据源 丰富的图表类型：折线图/柱状图/热力图/Gauge 告警规则配置和多渠道通知（Email/Slack/Webhook） Dashboard 模板市场和插件生态 监控仪表盘 数据可视化 告警",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["可视化", "监控", "仪表盘"],
+    "category": "devops"
+  },
+  {
+    "id": "tool-git",
+    "title": "Git",
+    "content": "分布式版本控制系统，代码协作和版本管理的标准工具 分布式版本控制，本地拥有完整历史 分支管理：feature/hotfix/release 代码合并和冲突解决 与 GitHub/GitLab 远程协作 代码管理 团队协作 版本控制",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["版本控制", "协作", "开发工具"],
+    "category": "devops"
+  },
+  {
+    "id": "tool-vs-code",
+    "title": "VS Code",
+    "content": "微软开源的轻量级代码编辑器，插件生态丰富，智能补全强大 IntelliSense 智能补全和代码导航 丰富的插件生态（Python/TypeScript/Docker） Remote Development 在远程服务器开发 内置终端和 Git 集成 代码编辑 远程开发 调试",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["编辑器", "开发工具", "插件"],
+    "category": "devops"
+  },
+  {
+    "id": "tool-transformers-agent",
+    "title": "Transformers Agent",
+    "content": "Hugging Face Transformers 内置的 Agent 模块，支持多模态工具调用 自动根据指令选择和调用工具 支持文本/图像/语音/代码等多模态工具 AgentExecutor 实现多步推理 自定义工具扩展能力 智能体开发 多模态应用 工具调用",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["llm", "agent", "多模态"],
+    "category": "llm"
+  },
+  {
+    "id": "tool-segment-anything",
+    "title": "Segment Anything",
+    "content": "Meta 开源的通用图像分割模型，支持点选/框选/自动分割 点选/框选/自动分割三种模式 ViT-B/ViT-L/ViT-H 三种模型尺寸 ONNX 导出支持实时推理 自动生成分割掩码 图像分割 目标检测 图像编辑",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["图像分割", "sam", "cv"],
+    "category": "computer-vision"
+  },
+  {
+    "id": "tool-esp-idf",
+    "title": "ESP-IDF",
+    "content": "Espressif 官方开发框架，用于 ESP32/ESP32-S3/ESP8266 嵌入式开发 完整的 WiFi / 蓝牙无线通信支持 内置 FreeRTOS 实时操作系统 lwIP 网络协议栈和 mDNS / HTTP 服务 Arduino 兼容层，支持 Arduino 生态 物联网设备 WiFi 开发 ESP32 项目",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["esp32", "物联网", "嵌入式"],
+    "category": "embedded"
+  },
+  {
+    "id": "tool-pytorch-geometric",
+    "title": "PyTorch Geometric",
+    "content": "PyTorch 图神经网络库，支持 GCN/GAT/GNN 等图模型 GCN / GAT / GraphSAGE / GIN 等主流图模型 高效的稀疏矩阵运算和图数据处理 支持异构图和动态图 与 PyTorch Lightning 集成 图分类 节点分类 推荐系统",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["图神经网络", "gnn", "pytorch"],
+    "category": "deep-learning"
+  },
+  {
+    "id": "tool-xgboost",
+    "title": "XGBoost",
+    "content": "梯度提升决策树库，Kaggle 竞赛神器，工业界广泛使用 并行训练，速度快于传统 GBDT 缺失值自动处理，无需预处理 正则化（L1/L2）防止过拟合 支持分类/回归/排序任务 分类回归 特征重要性分析 Kaggle竞赛",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["机器学习", "gbdt", "kaggle"],
+    "category": "devops"
+  },
+  {
+    "id": "tool-lightgbm",
+    "title": "LightGBM",
+    "content": "微软开源的轻量级梯度提升框架，速度更快内存占用更低 直方图算法，内存占用比 XGBoost 低 1/3 Leaf-wise 生长策略，收敛更快 类别特征自动处理，无需独热编码 GPU 加速和并行训练 大规模数据 分类回归 推荐系统",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["机器学习", "gbdt", "微软"],
+    "category": "devops"
+  },
+  {
+    "id": "tool-matplotlib",
+    "title": "Matplotlib",
+    "content": "Python 数据可视化基础库，支持折线图/柱状图/散点图/热力图等 丰富的图表类型：折线/柱状/散点/热力图/3D图 与 NumPy/pandas 无缝集成 自定义样式和主题 导出 PNG/PDF/SVG 等多种格式 数据可视化 科研绘图 报表生成",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["可视化", "图表", "python"],
+    "category": "data-processing"
+  },
+  {
+    "id": "tool-plotly",
+    "title": "Plotly",
+    "content": "交互式可视化库，支持动态图表和 Dashboard 构建 交互式图表：鼠标悬停显示数据、缩放、平移 Dash 框架构建交互式 Web Dashboard 支持 Python/R/JavaScript 导出 HTML 在浏览器中交互查看 交互式报表 Dashboard 数据探索",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["交互式", "可视化", "dashboard"],
+    "category": "data-processing"
+  },
+  {
+    "id": "tool-vllm",
+    "title": "vLLM",
+    "content": "高性能 LLM 推理引擎，PagedAttention 技术实现高吞吐量 PagedAttention 高效管理 KV Cache 内存 连续批处理提高吞吐量 张量并行和多 GPU 推理 OpenAI 兼容的 API 接口 LLM 推理 API 服务 高并发部署",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["llm", "推理", "高吞吐"],
+    "category": "llm"
+  },
+  {
+    "id": "tool-triton-inference-server",
+    "title": "Triton Inference Server",
+    "content": "NVIDIA 推出的生产级推理服务器，支持多框架模型部署 支持 PyTorch/TensorFlow/ONNX/TensorRT 多框架 动态批处理和模型并发执行 GPU 内存优化和多模型共享 REST 和 gRPC 协议支持 模型部署 推理服务 生产环境",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["推理", "部署", "nvidia"],
+    "category": "llm"
+  },
+  {
+    "id": "tool-fastapi",
+    "title": "FastAPI",
+    "content": "高性能 Python Web 框架，自动生成 OpenAPI 文档，适合构建模型 API 自动生成 OpenAPI 文档和 Swagger UI 异步请求处理，性能接近 Go/Node.js Pydantic 类型检查和数据验证 依赖注入和中间件支持 模型 API Web 服务 微服务",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["api", "web", "异步"],
+    "category": "devops"
+  },
+  {
+    "id": "tool-apache-airflow",
+    "title": "Apache Airflow",
+    "content": "工作流编排平台，可视化 DAG 定义和管理数据管道 DAG 可视化定义和管理数据管道 任务依赖、失败重试和定时调度 可视化界面监控任务执行状态 与 Kubernetes/AWS/GCP 等平台集成 数据管道 ETL MLOps",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["工作流", "编排", "dag"],
+    "category": "devops"
+  },
+  {
+    "id": "tool-kubeflow",
+    "title": "Kubeflow",
+    "content": "Kubernetes 上的机器学习平台，提供训练/推理/ pipeline 一站式解决方案 Jupyter Notebook 多用户管理 Pipeline 编排和可视化 模型服务和推理管理 Katib 超参数自动调优 ML 平台 云原生 MLOps 团队协作",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["mlops", "kubernetes", "云原生"],
+    "category": "devops"
+  },
+  {
+    "id": "tool-whisper",
+    "title": "Whisper",
+    "content": "OpenAI 开源的语音识别模型，支持多语言转录和翻译 支持 99 种语言的转录和翻译 多种模型尺寸（tiny 到 large） CPU 和 GPU 运行支持 批量处理和实时转录 语音转录 会议记录 字幕生成",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["语音识别", "asr", "多语言"],
+    "category": "speech"
+  },
+  {
+    "id": "tool-stable-baselines3",
+    "title": "Stable Baselines3",
+    "content": "强化学习算法库，提供 PPO/SAC/DQN 等经典算法的可靠实现 PPO/SAC/DQN/A2C 等经典算法实现 一致的 API 设计，易于使用 支持自定义环境和策略 与 Gym/Gymnasium 无缝集成 强化学习 机器人控制 游戏 AI",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["强化学习", "rl", "算法库"],
+    "category": "machine-learning"
+  },
+  {
+    "id": "tool-polars",
+    "title": "Polars",
+    "content": "高性能 DataFrame 库，比 pandas 快 10-100 倍，内存占用更低 Apache Arrow 列式存储，性能极高 懒执行和多线程并行 SQL 查询语法支持 内存占用比 pandas 低 10 倍 大数据处理 数据清洗 特征工程",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["dataframe", "高性能", "rust"],
+    "category": "data-processing"
+  },
+  {
+    "id": "tool-wireshark",
+    "title": "Wireshark",
+    "content": "开源网络协议分析器，用于抓包、排错与学习网络协议 实时捕获与离线分析网络流量 支持数千种协议深度解码 强大的显示过滤器与着色规则 导出多种格式并支持 TLS 解密 网络排错 协议学习 安全审计",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["network", "packet-capture", "troubleshooting"],
+    "category": "cs"
+  },
+  {
+    "id": "tool-postman",
+    "title": "Postman",
+    "content": "API 开发与协作平台，支持 REST / GraphQL 接口测试与文档生成 可视化构建和发送 HTTP 请求 集合与环境变量管理 自动化测试与 CI/CD 集成 API 文档生成与团队协作 接口测试 API 文档 团队协作",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["api", "testing", "rest"],
+    "category": "cs"
+  },
+  {
+    "id": "tool-mysql",
+    "title": "MySQL",
+    "content": "最流行的开源关系型数据库，广泛应用于 Web 后端与数据分析 标准 SQL 与 ACID 事务支持 InnoDB 存储引擎与行级锁 主从复制与读写分离 丰富的客户端与 ORM 生态 Web 后端 数据分析 事务系统",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["database", "sql", "relational"],
+    "category": "cs"
+  },
+  {
+    "id": "tool-redis",
+    "title": "Redis",
+    "content": "高性能内存键值数据库，常用于缓存、消息队列与会话存储 亚毫秒级读写延迟 丰富的数据类型与原子操作 持久化、主从复制与高可用集群 发布订阅与流数据结构 缓存 会话存储 消息队列",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["cache", "database", "in-memory"],
+    "category": "cs"
+  },
+  {
+    "id": "tool-kicad",
+    "title": "KiCad",
+    "content": "开源 PCB 电子设计自动化套件，支持原理图与 PCB 布局 原理图捕获与层次化设计 多层 PCB 布局与 DRC 检查 集成 3D 模型查看器 Gerber / Drill / BOM 一键输出 原理图设计 PCB 布局 硬件开源",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["pcb", "eda", "electronics"],
+    "category": "electronics"
+  },
+  {
+    "id": "tool-altium-designer",
+    "title": "Altium Designer",
+    "content": "业界高端 PCB 设计工具，适合复杂高速板与团队协作 统一数据模型下的原理图与 PCB 协同 高速信号完整性与约束管理 3D PCB 装配与 MCAD 协作 版本控制与团队协作工作流 高速 PCB 复杂硬件 团队项目",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["pcb", "eda", "enterprise"],
+    "category": "electronics"
+  },
+  {
+    "id": "tool-autocad-electrical",
+    "title": "AutoCAD Electrical",
+    "content": "面向电气控制设计的 AutoCAD 垂直版本，用于绘制原理图与生成报表 丰富的电气符号与元件库 自动导线编号与交叉引用 PLC I/O 表格与面板布局 自动生成报表与 BOM 电气原理图 控制柜设计 工业自动化",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["electrical", "cad", "schematic"],
+    "category": "electrical"
+  },
+  {
+    "id": "tool-tia-portal",
+    "title": "TIA Portal",
+    "content": "西门子全集成自动化软件，用于 PLC、HMI 和驱动器的统一编程 STEP 7 与 WinCC 统一工程环境 PLC、HMI、驱动器无缝集成 变量表与交叉引用统一管理 在线诊断与 Trace 功能 PLC 编程 HMI 组态 产线自动化",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["plc", "siemens", "industrial"],
+    "category": "control"
+  },
+  {
+    "id": "tool-codesys",
+    "title": "Codesys",
+    "content": "跨平台 IEC 61131-3 开发环境，支持多种品牌 PLC 编程 符合 IEC 61131-3 标准的多种语言支持 跨硬件平台的统一开发环境 可视化编辑与运动控制功能 丰富的设备库与现场总线支持 PLC 编程 工业控制 跨平台开发",
+    "type": "tool",
+    "typeLabel": "工具",
+    "url": "/toolbox",
+    "tags": ["plc", "iec-61131-3", "industrial"],
+    "category": "control"
+  },
+  {
+    "id": "pitfall-140-pitfall-c-pointer-out-of-bounds",
+    "title": "C语言指针越界访问导致段错误",
+    "content": "Segmentation fault (core dumped) 程序崩溃在看似无关的代码位置 数据被莫名其妙地修改 嵌入式系统死机或看门狗复位 使用Valgrind检测内存错误：valgrind --leak-check=full ./program 数组访问前检查索引范围：if (index >= 0 && index < array_size) 字符串操作使用安全版本：strncpy替代strcpy，snprintf替代sprintf 指针释放后设为NULL：free(ptr); ptr = NULL; 嵌入式开发中使用MPU（内存保护单元）限制访问范围 启用编译器边界检查选项：-fsanitize=address（调试时） 聚焦单点问题：C 语言指针越界访问导致段错误，涵盖根因（指针算术错误、数组越界、野指针）、Valgrind/-fsanitize=address 检测、strncpy/snprintf 安全函数、MPU 限制访问范围等排查与修复方案。",
+    "type": "pitfall",
+    "typeLabel": "踩坑",
+    "url": "/intel/140-pitfall-c-pointer-out-of-bounds",
+    "tags": ["intermediate"],
+    "category": "embedded"
+  },
+  {
+    "id": "pitfall-141-pitfall-rtos-task-stack-overflow",
+    "title": "RTOS任务栈溢出",
+    "content": "HardFault_Handler被触发 任务运行一段时间后崩溃 变量值被莫名其妙修改 调试时发现LR（链接寄存器）值异常 使用FreeRTOS的uxTaskGetStackHighWaterMark()监控栈使用情况 初始设置较大的栈（如2KB），稳定后再优化 避免在任务中使用大的局部数组，改用静态分配或动态分配 减少函数调用嵌套深度，避免递归 启用MPU栈溢出检测：configCHECK_FOR_STACK_OVERFLOW = 2 使用静态分析工具（如PC-lint）检查栈深度 聚焦单点问题：FreeRTOS 任务栈溢出导致 HardFault，涵盖 uxTaskGetStackHighWaterMark 监控、configCHECK_FOR_STACK_OVERFLOW 检测、栈大小配置、避免大局部变量等排查与修复方案。",
+    "type": "pitfall",
+    "typeLabel": "踩坑",
+    "url": "/intel/141-pitfall-rtos-task-stack-overflow",
+    "tags": ["intermediate"],
+    "category": "embedded"
+  },
+  {
+    "id": "pitfall-142-pitfall-pid-tuning-oscillation",
+    "title": "PID参数整定不当导致系统振荡",
+    "content": "系统输出围绕设定值持续振荡 响应速度极慢，长时间达不到设定值 执行机构频繁动作，磨损加剧 微分环节对测量噪声过度敏感 先用纯P控制，逐渐增大Kp直到系统开始振荡，记录临界增益Kc和周期Pc 用Ziegler-Nichols公式整定：Kp=0.6Kc, Ti=0.5Pc, Td=0.125Pc 积分抗饱和：当执行器饱和时停止积分累积 微分先行：对测量值而非误差做微分，避免设定值突变引起冲击 使用试凑法：先P后I最后D，观察响应曲线调整 考虑使用自整定PID或模糊PID适应非线性系统 聚焦单点问题：PID 参数整定不当导致系统振荡，涵盖 Z-N 整定法、积分抗饱和、微分先行、奈奎斯特准则等排查与修复方案。",
+    "type": "pitfall",
+    "typeLabel": "踩坑",
+    "url": "/intel/142-pitfall-pid-tuning-oscillation",
+    "tags": ["intermediate"],
+    "category": "embedded"
+  },
+  {
+    "id": "pitfall-143-pitfall-fft-spectral-leakage",
+    "title": "傅里叶变换频谱泄漏",
+    "content": "单一频率信号的频谱展宽到多个bin 频谱峰值幅度低于理论值 相邻频率成分难以分辨 频谱出现虚假旁瓣 加窗处理：使用汉宁窗（Hanning）、汉明窗（Hamming）或布莱克曼窗（Blackman） 增加观测时长（提高真实频率分辨率）；补零（zero-padding）仅对频谱做插值、平滑显示，不提高真实分辨率（分辨率由观测时间 T 决定，=1/T） 确保采样长度包含整数个信号周期 使用平顶窗（Flat Top）做精确幅度测量 频谱平均：多次测量取平均降低噪声影响 聚焦单点问题：FFT 频谱泄漏导致频率分析失真，涵盖加窗处理（Hanning/Hamming/Blackman）、观测时长与频率分辨率关系、整数周期采样等排查与修复方案。",
+    "type": "pitfall",
+    "typeLabel": "踩坑",
+    "url": "/intel/143-pitfall-fft-spectral-leakage",
+    "tags": ["intermediate"],
+    "category": "embedded"
+  },
+  {
+    "id": "pitfall-144-pitfall-h-bridge-shoot-through",
+    "title": "H桥驱动电机时的直通短路",
+    "content": "H桥MOSFET迅速发热甚至烧毁 电源电流异常增大 电机驱动时电源电压跌落 PWM占空比接近100%时问题更严重 设置足够的死区时间（通常1-5μs，根据MOSFET开关时间调整） 使用带死区插入功能的专用栅极驱动芯片（如IR2104） 软件实现互补PWM时确保先关后开 添加过流保护电路，检测短路时立即关断 选择开关速度快的MOSFET，减少死区时间需求 用示波器观察栅极驱动波形，确认死区时间足够 聚焦单点问题：H 桥直通短路导致 MOSFET 损坏，涵盖死区时间设置（1-5μs）、IR2104 栅极驱动、关断延迟分析等排查与修复方案。",
+    "type": "pitfall",
+    "typeLabel": "踩坑",
+    "url": "/intel/144-pitfall-h-bridge-shoot-through",
+    "tags": ["intermediate"],
+    "category": "embedded"
+  },
+  {
+    "id": "pitfall-145-pitfall-cuda-pytorch-version-mismatch",
+    "title": "CUDA 版本与 PyTorch 不匹配",
+    "content": "RuntimeError: CUDA error: no kernel image is available torch.cuda.is_available() 返回 False import torch 即崩溃或 segfault 先运行 nvidia-smi，记录驱动支持的最高 CUDA 版本（如 Driver 535.x → CUDA 12.2） 前往 pytorch.org/get-started/locally/ 选择匹配版本，不要自己拼版本号 使用官方给出的 pip install 命令安装对应 CUDA 版本的 PyTorch 用 conda 虚拟环境隔离不同项目的 CUDA 依赖，避免混用 确认 cuDNN 版本与 CUDA 兼容（cuDNN 8.x 同时支持 CUDA 11.x 和 12.x；cuDNN 9.x 主要匹配 CUDA 12.x） 聚焦单点问题：CUDA 与 PyTorch 版本不匹配导致算子不可用或运行时崩溃，涵盖 nvidia-smi 驱动版本核对、pytorch.org 官方安装命令、cuDNN 兼容性、conda 环境隔离等排查与修复方案。",
+    "type": "pitfall",
+    "typeLabel": "踩坑",
+    "url": "/intel/145-pitfall-cuda-pytorch-version-mismatch",
+    "tags": ["devops", "intermediate"],
+    "category": "devops"
+  },
+  {
+    "id": "pitfall-146-pitfall-cuda-out-of-memory",
+    "title": "显存不足 (CUDA out of memory)",
+    "content": "RuntimeError: CUDA out of memory at torch/csrc/generic/StorageSharing.cpp 训练第一步就 OOM Loss 正常波动，跑几步后突然 OOM 降低 batch_size（最有效；梯度累积不额外占显存，降低 batch_size 时应提高 gradient_accumulation_steps 维持等效 batch） 启用 AMP 自动混合精度：`with torch.cuda.amp.autocast():` + `GradScaler`（注意：`model.half()` 是将全部权重转 FP16，并非 AMP，且易数值不稳定） 启用梯度检查点（gradient_checkpointing=True），以 30% 速度换 50% 显存 启用 bitsandbytes 4-bit 量化，7B 模型仅需 6GB 显存 多卡并行（DataParallel / DistributedDataParallel）分摊显存 推理时也 OOM：检查是否有张量未从显存释放（del model; torch.cuda.empty_cache()） 聚焦单点问题：GPU 显存不足（CUDA out of memory）导致训练/推理崩溃，涵盖降低 batch_size、AMP 自动混合精度、梯度检查点、4-bit 量化、多卡并行等排查与修复方案。",
+    "type": "pitfall",
+    "typeLabel": "踩坑",
+    "url": "/intel/146-pitfall-cuda-out-of-memory",
+    "tags": ["intermediate"],
+    "category": "deep-learning"
+  },
+  {
+    "id": "pitfall-147-pitfall-loss-nan-gradient-explosion",
+    "title": "Loss NaN / 梯度爆炸",
+    "content": "train_loss 突然跳到 inf / NaN eval_loss 稳定但 train_loss 异常 embedding 参数出现 NaN 或梯度变成 inf 首要：降低学习率（默认 5e-5，中文任务常需降为 2e-5 / 1e-5） 启用 max_grad_norm 梯度裁剪（常见值 1.0）：torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0) 检查数据中是否存在 NaN 输入 / 长度超限 / tokenizer 未处理字符 AdamW 优化器 + warmup 预热（前 2-3% 的 step 线性预热） FP16 下出现 NaN 可先降为 FP32 定位具体模块 如果发生在第一个 epoch 检查数据本身是否正常（可视化第一批数据） 聚焦单点问题：训练 Loss NaN 与梯度爆炸，涵盖学习率调整、梯度裁剪（clip_grad_norm_）、AdamW+warmup、数据 NaN 检查等排查与修复方案。",
+    "type": "pitfall",
+    "typeLabel": "踩坑",
+    "url": "/intel/147-pitfall-loss-nan-gradient-explosion",
+    "tags": ["intermediate"],
+    "category": "deep-learning"
+  },
+  {
+    "id": "pitfall-148-pitfall-onnx-export-dynamic-shape",
+    "title": "ONNX 导出失败 / 动态 shape",
+    "content": "torch.onnx.export 报 shape mismatch 或 unsupported op 导出成功但推理输出与 PyTorch 不一致（diff > 1e-3） 输入 shape 可变时结果错误（batch_size / seq_len 变化） 显式指定 dynamic_axes，让输入 batch / seq_len 真的动态 使用 opset_version >= 14，新版算子支持更全 导出前 model.eval() 确保 BatchNorm 使用 running stats（推理模式）而非 batch stats（训练模式） 用 onnx-simplifier 做常量折叠与形状推断：model_simplified, ok = onnxsim.simplify(model) 用 onnxruntime-gpu 而非 CPU 版推理，速度差 10 倍以上 导出后对比 PyTorch 输出与 ONNXRuntime 输出的最大误差（应 < 1e-3） 聚焦单点问题：ONNX 导出后动态 shape 失效或算子不支持，涵盖 dynamic_axes 声明、opset 版本、model.eval() 推理模式、onnx-simplifier 等排查与修复方案。",
+    "type": "pitfall",
+    "typeLabel": "踩坑",
+    "url": "/intel/148-pitfall-onnx-export-dynamic-shape",
+    "tags": ["devops", "intermediate"],
+    "category": "devops"
+  },
+  {
+    "id": "pitfall-149-pitfall-multiprocess-dataloader-hang",
+    "title": "多进程 DataLoader (num_workers > 0) 卡死",
+    "content": "Windows 下运行即卡死，Linux 正常 报错: Broken pipe / DataLoader worker (pid xxx) exited unexpectedly Python 进程挂起，无报错日志 Windows 下将 num_workers 设为 0，或改用 WSL2 / Linux 服务器训练 代码入口必须加 if __name__ == \"__main__\": 保护（spawn 多进程必需） 不要在 Dataset.__getitem__ 中持有未释放的文件句柄/数据库连接 pin_memory=True 在支持 CUDA 时可加速主机到 GPU 的数据搬运 检查 CUDA 是否支持 fork（默认不支持，改用 spawn 或 CUDA_VISIBLE_DEVICES 隔离） 聚焦单点问题：PyTorch DataLoader 多进程卡死，涵盖 Windows spawn 启动方式、num_workers=0、if __name__=='__main__' 保护、CUDA 不支持 fork 等排查与修复方案。",
+    "type": "pitfall",
+    "typeLabel": "踩坑",
+    "url": "/intel/149-pitfall-multiprocess-dataloader-hang",
+    "tags": ["intermediate"],
+    "category": "deep-learning"
+  },
+  {
+    "id": "pitfall-150-pitfall-rag-retrieval-hallucination",
+    "title": "RAG 检索到了但回答不对 / 幻觉严重",
+    "content": "向量搜索返回了相关文档，但 LLM 回答与文档不符 答案引用了训练知识而非检索文档（幻觉） 中英文混排检索结果差，语义不匹配 为中文任务选用 BGE-M3 / text-embedding-3-large 等中文表现强的 embedding chunk size 取 200-400 token，务必设置 10-20% overlap，避免关键句被切分 用 reranker（bge-reranker-large）对 Top-k 结果二次排序，取 Top-3 给 LLM Prompt 中明确要求：仅基于给定上下文回答，若无法回答则说不知道 可将 query 先让 LLM 改写为更适合检索的标准问题（HyDE 模式） 检查是否向量数据库中真的存入了正确的 chunk（抽查几条 embedding） 聚焦单点问题：RAG 检索到了相关文档但回答仍幻觉严重，涵盖 BGE-M3 embedding、bge-reranker 重排、chunk 切分策略、HyDE 查询扩展等排查与修复方案。",
+    "type": "pitfall",
+    "typeLabel": "踩坑",
+    "url": "/intel/150-pitfall-rag-retrieval-hallucination",
+    "tags": ["nlp", "intermediate"],
+    "category": "llm"
+  },
+  {
+    "id": "pitfall-151-pitfall-ssh-connection-drop",
+    "title": "SSH 连接远程服务器频繁掉线",
+    "content": "SSH 连接服务器后几分钟无操作就自动断开 scp 传输大文件时中途断开 tmux 会话也随 SSH 断开而消失（未正确使用） 客户端编辑 ~/.ssh/config 添加：ServerAliveInterval 60 + ServerAliveCountMax 3 服务器端编辑 /etc/ssh/sshd_config：ClientAliveInterval 60 使用 tmux 或 screen：SSH 断开后会话保持运行 传输大文件使用 rsync -avz --progress 并加 screen 后台运行 长期训练任务用 nohup 或 systemd service 替代 SSH 会话 聚焦单点问题：SSH 连接远程服务器频繁掉线，涵盖 ServerAliveInterval/ServerAliveCountMax 保活、tmux/screen 会话保持、nohup/systemd 后台运行等排查与修复方案。",
+    "type": "pitfall",
+    "typeLabel": "踩坑",
+    "url": "/intel/151-pitfall-ssh-connection-drop",
+    "tags": ["devops", "intermediate"],
+    "category": "devops"
+  },
+  {
+    "id": "pitfall-152-pitfall-docker-gpu-not-available",
+    "title": "Docker 容器中无法使用 GPU (nvidia-smi 报错)",
+    "content": "容器内 nvidia-smi: No devices were found RuntimeError: CUDA error: no kernel image is available (in container) 训练时 GPU 利用率为 0% 安装 NVIDIA Container Toolkit（Ubuntu 示例）：curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg && curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list && sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit && sudo nvidia-ctk runtime configure --runtime=docker && sudo systemctl restart docker 基础镜像必须使用带 CUDA 的官方镜像（nvidia/cuda:*-runtime-* 或 *-devel-*） 运行容器时加 --gpus all 参数：docker run --gpus all ... 确认宿主机 NVIDIA Driver 版本与容器内 CUDA 版本兼容 验证：docker run --rm --gpus all nvidia/cuda:11.8.0-base-ubuntu22.04 nvidia-smi 聚焦单点问题：Docker 容器内无法使用 GPU，涵盖 NVIDIA Container Toolkit 安装、--gpus all 参数、nvidia/cuda 基础镜像、驱动版本兼容等排查与修复方案。",
+    "type": "pitfall",
+    "typeLabel": "踩坑",
+    "url": "/intel/152-pitfall-docker-gpu-not-available",
+    "tags": ["devops", "intermediate"],
+    "category": "devops"
+  },
+  {
+    "id": "pitfall-153-pitfall-slow-convergence",
+    "title": "模型训练收敛慢 / 几乎不收敛",
+    "content": "Loss 下降极慢，几十个 epoch 后仍无明显变化 训练集和验证集 Loss 同时偏高或不下降 Accuracy 始终在随机猜测水平附近 检查数据标注是否正确（随机抽 10 条数据可视化检查标签） 学习率是否合适：尝试 10 倍范围（1e-2 到 1e-5）网格搜索 检查是否使用了正确的 loss（如多分类用 CrossEntropyLoss 而非 BCELoss） 检查数据归一化/标准化是否正确（ImageNet 统计量 vs 自定义统计量） 模型容量是否不足导致欠拟合（用更小数据测试过拟合能力验证 pipeline；模型过大通常导致过拟合而非欠拟合） 如果用了预训练模型，检查是否正确加载了权重（最后一层 FC 通常需要重新初始化） 聚焦单点问题：模型训练收敛慢或几乎不收敛，涵盖数据标注检查、学习率网格搜索、loss 函数匹配、归一化验证、预训练权重加载等排查与修复方案。",
+    "type": "pitfall",
+    "typeLabel": "踩坑",
+    "url": "/intel/153-pitfall-slow-convergence",
+    "tags": ["intermediate"],
+    "category": "deep-learning"
+  },
+  {
+    "id": "pitfall-154-pitfall-git-merge-conflict-code-loss",
+    "title": "Git 合并冲突处理不当导致代码丢失",
+    "content": "git merge 后某些文件变成了旧版本 git pull 后本地修改被覆盖 强制合并后无法找回之前的工作 合并前先 git stash 或 git commit 本地修改：git stash push -m 'wip' git merge 遇到冲突后，用 git status 查看冲突文件列表 手动编辑冲突文件，保留需要的部分，删除 <<< === >>> 标记 冲突解决后 git add <file> + git commit（不要带 -m，让合并提交自动生成） 永远不要在未提交本地修改的情况下做 git pull 或 git merge 如果误操作：git reflog 找回操作历史，git reset --hard HEAD@{N} 回退 聚焦单点问题：Git 合并冲突处理不当导致代码丢失，涵盖 git stash 保护本地修改、git reflog 找回误操作、pull --rebase、冲突标记解析等排查与修复方案。",
+    "type": "pitfall",
+    "typeLabel": "踩坑",
+    "url": "/intel/154-pitfall-git-merge-conflict-code-loss",
+    "tags": ["intermediate"],
+    "category": "best-practices"
+  },
+  {
+    "id": "pitfall-155-pitfall-python-dependency-conflict",
+    "title": "Python 环境依赖冲突导致 import 失败",
+    "content": "ImportError: cannot import name 'xxx' from 'yyy' python -c 'import torch' 报错：undefined symbol: xxx 或 libtorch_cuda.so: cannot open shared object file 同一个环境中不同项目需要不兼容的包版本 每个项目使用独立的 conda 或 venv 虚拟环境 conda create -n proj_env python=3.10 创建干净环境 导出项目依赖：pip freeze > requirements.txt（发布时用 pip-compile 锁定精确版本） 避免 pip 和 conda 混用同一批包，优先选择 conda install 需要的包 torch / tensorflow 等大包只用 pip install，不要用 conda install（conda 源版本通常落后） 遇到 .so 文件报错时通常是 CUDA 版本不一致，检查 LD_LIBRARY_PATH 聚焦单点问题：Python 环境依赖冲突导致 import 失败，涵盖 pip/conda 混用风险、虚拟环境隔离、pip-compile 锁定版本、LD_LIBRARY_PATH 检查等排查与修复方案。",
+    "type": "pitfall",
+    "typeLabel": "踩坑",
+    "url": "/intel/155-pitfall-python-dependency-conflict",
+    "tags": ["devops", "intermediate"],
+    "category": "devops"
+  },
+  {
+    "id": "pitfall-156-pitfall-ssh-firewall-blocked",
+    "title": "SSH 端口被防火墙拦截 / 服务器无法访问",
+    "content": "ssh: connect to host x.x.x.x port 22: Connection timed out 云服务器安全组已开端口但仍无法连接 本地端口 22 被 ISP 封锁（家用宽带） 云服务器检查安全组：确认入方向规则包含 SSH（22 端口或自定义端口） 修改 SSH 端口为 443（绕过部分防火墙封锁）：Port 443 家用宽带无法直接访问：使用内网穿透工具（frp / nps）或 cloudflare tunnel 使用密钥登录替代密码，减少被暴力破解的风险 安装 fail2ban 自动封禁多次登录失败的 IP：sudo apt install fail2ban 长期解决方案：使用 Tailscale 或 WireGuard 建立 VPN 隧道 聚焦单点问题：SSH 端口被防火墙拦截导致服务器无法访问，涵盖安全组规则、改用高位端口、fail2ban、frp/nps 内网穿透、Tailscale/WireGuard VPN 等排查与修复方案。",
+    "type": "pitfall",
+    "typeLabel": "踩坑",
+    "url": "/intel/156-pitfall-ssh-firewall-blocked",
+    "tags": ["devops", "intermediate"],
+    "category": "devops"
+  },
+  {
+    "id": "pitfall-157-pitfall-poor-data-labeling",
+    "title": "数据标注质量差导致模型无法收敛",
+    "content": "Loss 不下降，但学习率、数据量、网络结构都正常 验证集 accuracy 在某几个类别之间来回震荡 模型对某些类别的预测始终偏向某一错误类别 随机抽样 50-100 条数据，人工逐一检查标注是否正确 检查类别分布是否严重不均衡：某类样本过少导致模型倾向于多数类 检查标注一致性：同一张图不同标注者结果是否一致（inter-annotator agreement） 用混淆矩阵分析哪两个类别最容易混淆，针对性补充该类别的标注数据 对低质量标注数据用 active learning 优先重新标注 聚焦单点问题：数据标注质量差导致模型无法收敛或效果虚高，涵盖 inter-annotator agreement、混淆矩阵分析、active learning、类别不均衡检查等排查与修复方案。",
+    "type": "pitfall",
+    "typeLabel": "踩坑",
+    "url": "/intel/157-pitfall-poor-data-labeling",
+    "tags": ["intermediate"],
+    "category": "data-processing"
+  },
+  {
+    "id": "pitfall-158-pitfall-cuda-implicit-sync-slow-inference",
+    "title": "CUDA 隐式同步导致推理速度异常慢",
+    "content": "torch profiler 显示 GPU Time << CPU Time，大量 GPU 时间花在等待 逐行 profiler 发现某行代码的 .item() / .cpu() / .numpy() 阻塞了 GPU 单次推理明明很简单却耗时几十毫秒 .item() / .cpu() / .numpy() 会在 GPU 和 CPU 之间触发隐式同步，等待所有 CUDA 操作完成 在循环内保留 GPU tensor，循环外再统一调用 .item()/.cpu() 取结果（.item() 与 tensor.item() 是同一操作，不能\"替换\"，关键是移出循环） 使用 torch.cuda.synchronize() 显式等待（性能分析时用，不要在推理循环中加） 检查代码中是否有 tensor.cpu() 放在了推理循环内 对批量推理确保在 GPU 端完成所有计算后再统一取结果 聚焦单点问题：CUDA 隐式同步导致推理速度异常慢，涵盖 .item()/.cpu()/.numpy() 触发同步、循环外统一转换、torch.cuda.synchronize 性能分析、批量推理等排查与修复方案。",
+    "type": "pitfall",
+    "typeLabel": "踩坑",
+    "url": "/intel/158-pitfall-cuda-implicit-sync-slow-inference",
+    "tags": ["intermediate"],
+    "category": "deep-learning"
+  },
+  {
+    "id": "pitfall-159-pitfall-docker-timezone-mismatch",
+    "title": "Docker 容器时间与宿主机不一致",
+    "content": "日志时间戳比实际时间晚 8 小时（容器用了 UTC 而非 CST） 定时任务 cron 执行时间与预期不符 数据库记录的创建时间与实际文件修改时间差 8 小时 Docker run 时加 -v /etc/localtime:/etc/localtime:ro 挂载宿主机时区 或 Docker run 加 -e TZ=Asia/Shanghai 设置容器环境变量 在 Dockerfile 中 RUN ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime 定时任务用 cron 时确保容器内时区正确：ENV TZ=Asia/Shanghai 日志框架（Python logging / loguru）确认使用了正确的时区配置 聚焦单点问题：Docker 容器时间与宿主机不一致（差 8 小时），涵盖 -e TZ=Asia/Shanghai 环境变量、-v /etc/localtime 挂载、Dockerfile 时区设置、cron 定时任务等排查与修复方案。",
+    "type": "pitfall",
+    "typeLabel": "踩坑",
+    "url": "/intel/159-pitfall-docker-timezone-mismatch",
+    "tags": ["devops", "intermediate"],
+    "category": "devops"
+  },
+  {
+    "id": "pitfall-160-pitfall-pandas-chained-assignment-warning",
+    "title": "pandas inplace=True 链式赋值警告",
+    "content": "SettingWithCopyWarning 或 FutureWarning: A value is trying to be set on a copy of a slice 链式赋值 df[df['a']>0]['b'] = 100 警告后值未正确设置 数据清洗后部分值没有按预期被修改 永远不要用链式赋值：df[df['a']>0]['b'] = 100，改用 df.loc 或 df.iloc 正确写法：df.loc[df['a']>0, 'b'] = 100 避免 inplace=True（关键是不链式赋值；inplace=True 在 pandas 2.x 仍未正式废弃），改为链式方法：df = df.dropna() 怀疑 DataFrame 是视图还是副本时，用 df = df.copy() 显式复制后再修改（不建议依赖私有属性 _is_view） chain 导致的 SettingWithCopyWarning：检查是否在对 slice 操作时触发了 聚焦单点问题：pandas 链式赋值触发 SettingWithCopyWarning 且值未正确设置，涵盖 df.loc 单步赋值、df.copy() 显式复制、避免视图副本歧义等排查与修复方案。",
+    "type": "pitfall",
+    "typeLabel": "踩坑",
+    "url": "/intel/160-pitfall-pandas-chained-assignment-warning",
+    "tags": ["intermediate"],
+    "category": "data-processing"
+  },
+  {
+    "id": "pitfall-161-pitfall-gpu-architecture-mismatch",
+    "title": "训练用 GPU 卡与推理用卡架构不一致",
+    "content": "在 H100 上训练成功，部署到 RTX 3090 上报 CUDA 架构不兼容错误 PyTorch 模型权重在两台机器之间迁移后出现 NaN 混合精度（AMP）在不同架构 GPU 上行为不一致 NVIDIA GPU 架构分几代：Ampere(A100/3090) / Ada(4090) / Hopper(H100)，PTX/SM 兼容但性能不同 训练和推理尽量使用相同系列 GPU，或确保 CUDA Compute Capability 兼容 导出模型时使用 torch.jit.trace / torch.jit.script 保存完整计算图避免架构依赖 ONNX 导出后验证在不同 GPU 上推理输出一致 确认 PyTorch 版本一致：torch.__version__ + torch.version.cuda 聚焦单点问题：训练用 GPU 与推理用 GPU 架构不一致导致模型不可用，涵盖 Ampere/Ada/Hopper 架构差异、CUDA Compute Capability、ONNX 跨架构验证、torch.jit 导出等排查与修复方案。",
+    "type": "pitfall",
+    "typeLabel": "踩坑",
+    "url": "/intel/161-pitfall-gpu-architecture-mismatch",
+    "tags": ["intermediate"],
+    "category": "deep-learning"
+  },
+  {
+    "id": "pitfall-162-pitfall-llm-prompt-escape-json-truncation",
+    "title": "大模型 Prompt 转义字符错误导致 JSON 输出截断",
+    "content": "LLM 输出的 JSON 在中途被截断，后半部分丢失 JSON 解析报 Unexpected end of JSON input 只在特定 Prompt 内容时出现，换了 Prompt 就正常 检查 Prompt 中是否有未转义的双引号、换行符、特殊字符 Python 中构建 Prompt 时用 json.dumps() 转义 JSON 特殊字符（注意：re.escape() 用于转义正则元字符，不适用于 JSON 引号/换行符转义） Prompt 中避免直接放 JSON 模板中的未转义双引号 使用 Function Calling / response_format 的 JSON mode 让模型保证输出格式 对长 Prompt 截断检查：print(repr(prompt)) 看是否有 \\n 或 \" 未正确转义 聚焦单点问题：LLM Prompt 中转义字符错误导致 JSON 输出解析失败或截断，涵盖 json.dumps 转义、Function Calling JSON mode、max_tokens 限制、print(repr(prompt)) 检查等排查与修复方案。",
+    "type": "pitfall",
+    "typeLabel": "踩坑",
+    "url": "/intel/162-pitfall-llm-prompt-escape-json-truncation",
+    "tags": ["nlp", "intermediate"],
+    "category": "llm"
+  },
+  {
+    "id": "project-cv-image-classification",
+    "title": "CV 图像分类实战",
+    "content": "使用 PyTorch 实现图像分类，掌握 CNN 完整训练流程 Python 基础 PyTorch 基础 CNN 基础概念",
+    "type": "project",
+    "typeLabel": "项目",
+    "url": "/practice/cv-image-classification",
+    "tags": ["Python 基础", "PyTorch 基础", "CNN 基础概念"],
+    "category": "computer-vision"
+  },
+  {
+    "id": "project-nlp-sentiment-analysis",
+    "title": "NLP 情感分析实战",
+    "content": "使用 Transformers 实现情感分析，理解预训练模型 Python 基础 NLP 基础概念",
+    "type": "project",
+    "typeLabel": "项目",
+    "url": "/practice/nlp-sentiment-analysis",
+    "tags": ["Python 基础", "NLP 基础概念"],
+    "category": "nlp"
+  },
+  {
+    "id": "project-devops-cicd-pipeline",
+    "title": "DevOps CI/CD 流水线实战",
+    "content": "搭建完整的 CI/CD 流水线，实现自动化部署 Linux 基础 Git 基础 Docker 基础",
+    "type": "project",
+    "typeLabel": "项目",
+    "url": "/practice/devops-cicd-pipeline",
+    "tags": ["Linux 基础", "Git 基础", "Docker 基础"],
+    "category": "devops"
+  },
+  {
+    "id": "project-math-numpy-linear-algebra",
+    "title": "NumPy 线性代数实战",
+    "content": "使用 NumPy 实现线性代数核心运算，为深度学习打下数学基础 Python 基础",
+    "type": "project",
+    "typeLabel": "项目",
+    "url": "/practice/math-numpy-linear-algebra",
+    "tags": ["Python 基础"],
+    "category": "math"
+  },
+  {
+    "id": "project-devops-docker-deploy",
+    "title": "Docker 容器化部署实战",
+    "content": "掌握 Docker 核心操作，实现应用容器化部署 Linux 基础",
+    "type": "project",
+    "typeLabel": "项目",
+    "url": "/practice/devops-docker-deploy",
+    "tags": ["Linux 基础"],
+    "category": "devops"
+  },
+  {
+    "id": "project-nlp-transformer-classification",
+    "title": "Transformer 文本分类实战",
+    "content": "使用 HuggingFace Transformers 微调 BERT 实现文本分类 Python 基础 NLP 基础概念",
+    "type": "project",
+    "typeLabel": "项目",
+    "url": "/practice/nlp-transformer-classification",
+    "tags": ["Python 基础", "NLP 基础概念"],
+    "category": "nlp"
+  },
+  {
+    "id": "project-cv-yolo-detection",
+    "title": "YOLO 目标检测实战",
+    "content": "使用 Ultralytics YOLOv8 训练自定义目标检测模型 Python 基础 PyTorch 基础 CNN 基础概念",
+    "type": "project",
+    "typeLabel": "项目",
+    "url": "/practice/cv-yolo-detection",
+    "tags": ["Python 基础", "PyTorch 基础", "CNN 基础概念"],
+    "category": "computer-vision"
+  },
+  {
+    "id": "project-llm-lora-finetune",
+    "title": "LoRA 微调实战",
+    "content": "使用 LoRA/QLoRA 在消费级 GPU 上微调大语言模型 Python 基础 PyTorch 基础 Transformer 基础",
+    "type": "project",
+    "typeLabel": "项目",
+    "url": "/practice/llm-lora-finetune",
+    "tags": ["Python 基础", "PyTorch 基础", "Transformer 基础"],
+    "category": "llm"
+  },
+  {
+    "id": "project-llm-rag-application",
+    "title": "RAG 检索增强生成实战",
+    "content": "掌握 RAG 全流程：文档解析、Embedding 向量化、向量数据库检索、LLM 生成回答，构建企业级文档问答系统 Python 基础 LLM 基础 Embedding 概念",
+    "type": "project",
+    "typeLabel": "项目",
+    "url": "/practice/llm-rag-application",
+    "tags": ["Python 基础", "LLM 基础", "Embedding 概念"],
+    "category": "llm"
+  },
+  {
+    "id": "project-cv-gan-generation",
+    "title": "CV GAN 图像生成实战",
+    "content": "使用 PyTorch 实现 DCGAN 和 CycleGAN，掌握生成对抗网络核心原理 Python 基础 PyTorch 基础 CNN 基础 GAN 基础概念",
+    "type": "project",
+    "typeLabel": "项目",
+    "url": "/practice/cv-gan-generation",
+    "tags": ["Python 基础", "PyTorch 基础", "CNN 基础", "GAN 基础概念"],
+    "category": "computer-vision"
+  },
+  {
+    "id": "project-cv-semantic-segmentation",
+    "title": "CV 语义分割实战",
+    "content": "使用 PyTorch 实现 UNet 和 DeepLabV3+，在 Pascal VOC 数据集上掌握像素级图像分割技术，理解编码器-解码器架构、空洞卷积、ASPP 模块及 mIoU 评估方法 Python 基础 PyTorch 基础 CNN 基础 图像分类经验",
+    "type": "project",
+    "typeLabel": "项目",
+    "url": "/practice/cv-semantic-segmentation",
+    "tags": ["Python 基础", "PyTorch 基础", "CNN 基础", "图像分类经验"],
+    "category": "computer-vision"
+  },
+  {
+    "id": "project-rl-from-scratch-to-ppo",
+    "title": "强化学习实战：从 Q-Learning 到 PPO",
+    "content": "使用 Gymnasium 和 Stable-Baselines3 从零开始学习强化学习，涵盖经典表格法到深度强化学习算法的完整实践路径 Python 基础编程能力 NumPy 基础操作 机器学习基本概念 神经网络基础知识",
+    "type": "project",
+    "typeLabel": "项目",
+    "url": "/practice/rl-from-scratch-to-ppo",
+    "tags": ["Python 基础编程能力", "NumPy 基础操作", "机器学习基本概念", "神经网络基础知识"],
+    "category": "machine-learning"
+  },
+  {
+    "id": "project-gnn-pytorch-geometric-complete",
+    "title": "图神经网络实战：从节点分类到图分类",
+    "content": "基于 PyTorch Geometric (PyG) 的完整图神经网络实战项目，从基础图数据处理到节点分类、图分类、链路预测等核心任务，涵盖 GCN、GAT、GraphSAGE 等经典模型。 Python 基础 PyTorch 基础 机器学习基础",
+    "type": "project",
+    "typeLabel": "项目",
+    "url": "/practice/gnn-pytorch-geometric-complete",
+    "tags": ["Python 基础", "PyTorch 基础", "机器学习基础"],
+    "category": "machine-learning"
+  },
+  {
+    "id": "project-asr-whisper-practice",
+    "title": "语音识别实战：基于 Whisper 的端到端语音识别系统",
+    "content": "从零开始学习语音识别技术，掌握音频信号处理、Whisper 模型使用、数据增强、模型微调和实时语音识别等核心技能。 Python 基础编程能力 了解深度学习基本概念 了解 PyTorch 框架",
+    "type": "project",
+    "typeLabel": "项目",
+    "url": "/practice/asr-whisper-practice",
+    "tags": ["Python 基础编程能力", "了解深度学习基本概念", "了解 PyTorch 框架"],
+    "category": "machine-learning"
+  },
+  {
+    "id": "project-recsys-movielens-practice",
+    "title": "推荐系统实战：从协同过滤到深度推荐",
+    "content": "基于 MovieLens 数据集，从零实现协同过滤、矩阵分解、神经网络推荐到 DIN 深度兴趣网络的完整推荐系统学习路径 Python 基础编程能力 NumPy / Pandas 数据处理基础 机器学习基础概念 PyTorch 或 TensorFlow 基础",
+    "type": "project",
+    "typeLabel": "项目",
+    "url": "/practice/recsys-movielens-practice",
+    "tags": [
+      "Python 基础编程能力",
+      "NumPy / Pandas 数据处理基础",
+      "机器学习基础概念",
+      "PyTorch 或 TensorFlow 基础"
+    ],
+    "category": "machine-learning"
+  },
+  {
+    "id": "project-ts-forecasting-arima-to-dl",
+    "title": "时间序列预测实战：从ARIMA到深度学习",
+    "content": "系统性学习时间序列预测技术，从经典统计模型ARIMA到深度学习LSTM/TCN，覆盖数据分析、模型构建、参数调优到评估对比全流程。 Python编程基础 统计学基础（概率、假设检验） 机器学习基础概念 pandas/numpy数据处理能力",
+    "type": "project",
+    "typeLabel": "项目",
+    "url": "/practice/ts-forecasting-arima-to-dl",
+    "tags": [
+      "Python编程基础",
+      "统计学基础（概率、假设检验）",
+      "机器学习基础概念",
+      "pandas/numpy数据处理能力"
+    ],
+    "category": "machine-learning"
+  },
+  {
+    "id": "project-anomaly-detection-practice",
+    "title": "异常检测实战",
+    "content": "从统计方法到深度学习，系统掌握异常检测核心技术与实战应用 Python 基础 NumPy/Pandas 基础 机器学习基础概念 Scikit-learn 基础",
+    "type": "project",
+    "typeLabel": "项目",
+    "url": "/practice/anomaly-detection-practice",
+    "tags": ["Python 基础", "NumPy/Pandas 基础", "机器学习基础概念", "Scikit-learn 基础"],
+    "category": "machine-learning"
+  }
+]
