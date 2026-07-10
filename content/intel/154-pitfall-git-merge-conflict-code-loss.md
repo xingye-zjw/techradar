@@ -4,20 +4,25 @@ category: best-practices
 difficulty: intermediate
 duration: 30分钟
 summary: 聚焦单点问题：Git 合并冲突处理不当导致代码丢失，涵盖 git stash 保护本地修改、git reflog 找回误操作、pull --rebase、冲突标记解析等排查与修复方案。
-takeaways:
-  - 快速识别「Git 合并冲突处理不当导致代码丢失」的典型症状
-  - 理解该问题的根因分析和标准排查步骤
-  - 学会分步排查和解决问题的标准化流程
-  - 了解预防措施，避免下次踩同样的坑
-relatedIntel:
-  - 008-git
-  - 105-pitfall-git
+takeaways: "- 快速识别「Git 合并冲突处理不当导致代码丢失」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑"
+relatedIntel: "- 008-git - 105-pitfall-git"
 tags:
-  - 踩坑
-  - 避坑指南
-  - git
+  - 最佳实践
+  - 规范
   - 协作
-  - 版本控制
+  - 质量
+relatedTerms:
+  - data-structure
+  - algorithm
+  - transformer
+  - complexity
+relatedTools:
+  - mlflow
+  - ultralytics-yolo
+  - huggingface-transformers
+relatedNodes:
+  - roadmap-capstone
+  - llm-prompt-engineering
 ---
 
 ## 为什么你要学它
@@ -33,6 +38,7 @@ tags:
 > **快速修复：合并前先 git stash → 解决冲突后 git add + commit → git stash pop**
 
 核心要点：
+
 - **现象**：git merge 后某些文件变成了旧版本
 - **根因**：在未提交本地修改的情况下执行 git pull/merge，或解决冲突时误删了他人代码。缺乏 stash 操作习惯和冲突解决流程是根本原因。
 - **解决**：按照下方 6 步标准流程排查
@@ -53,12 +59,12 @@ tags:
 
 按照以下步骤逐一排查，通常能在几分钟内定位并解决问题：
 
-01. 合并前先 git stash 或 git commit 本地修改：git stash push -m 'wip'
-02. git merge 遇到冲突后，用 git status 查看冲突文件列表
-03. 手动编辑冲突文件，保留需要的部分，删除 <<< === >>> 标记
-04. 冲突解决后 git add <file> + git commit（不要带 -m，让合并提交自动生成）
-05. 永远不要在未提交本地修改的情况下做 git pull 或 git merge
-06. 如果误操作：git reflog 找回操作历史，git reset --hard HEAD@{N} 回退
+1.  合并前先 git stash 或 git commit 本地修改：git stash push -m 'wip'
+2.  git merge 遇到冲突后，用 git status 查看冲突文件列表
+3.  手动编辑冲突文件，保留需要的部分，删除 <<< === >>> 标记
+4.  冲突解决后 git add <file> + git commit（不要带 -m，让合并提交自动生成）
+5.  永远不要在未提交本地修改的情况下做 git pull 或 git merge
+6.  如果误操作：git reflog 找回操作历史，git reset --hard HEAD@{N} 回退
 
 ### 快速修复（救急用）
 

@@ -4,22 +4,22 @@ category: cs
 difficulty: beginner
 duration: 2-3周
 summary: 理解数据库的设计原理和优化方法。掌握SQL查询、索引优化、事务处理等核心技能。
-takeaways:
-  - 理解关系型数据库的设计原理
+takeaways: "- 理解关系型数据库的设计原理
   - 掌握SQL查询优化技巧
   - 理解索引原理和优化方法
-  - 掌握事务的ACID特性
-relatedIntel:
-  - 050-cs-algo
+  - 掌握事务的ACID特性"
+relatedIntel: "- 050-cs-algo
   - 051-cs-os
-  - 075-cs-network
-tags:
-  - 数据库
+  - 075-cs-network"
+tags: "- 数据库
   - sql
   - 索引
   - 事务
   - mysql
-  - postgresql
+  - postgresql"
+relatedTerms: ["data-structure", "algorithm", "transformer", "complexity"]
+relatedTools: ["huggingface-transformers", "ultralytics-yolo", "pytorch"]
+relatedNodes: ["roadmap-capstone", "math-linear-algebra"]
 ---
 
 ## 为什么你要学它
@@ -47,6 +47,7 @@ tags:
 关系模型是数据库的理论基础，由E.F.Codd于1970年提出。
 
 **核心概念：**
+
 - **关系（Relation）**：即表（Table），由行和列组成
 - **属性（Attribute）**：即列（Column），每列有唯一名称和数据类型
 - **元组（Tuple）**：即行（Row），代表一条记录
@@ -54,6 +55,7 @@ tags:
 - **外键（Foreign Key）**：引用其他表主键的列，建立表间关联
 
 **范式（Normal Form）：**
+
 ```
 第一范式（1NF）：属性不可再分（每列都是原子值）
 第二范式（2NF）：消除非主属性对主键的部分依赖
@@ -62,6 +64,7 @@ BCNF：消除主属性对主键的部分和传递依赖
 ```
 
 **设计示例：**
+
 ```sql
 -- 不符合3NF的设计（存在传递依赖）
 CREATE TABLE orders_bad (
@@ -103,6 +106,7 @@ CREATE TABLE orders (
 SQL是结构化查询语言，分为DDL、DML、DCL三类。
 
 **DDL（数据定义语言）：**
+
 ```sql
 -- 创建表
 CREATE TABLE users (
@@ -123,9 +127,10 @@ DROP TABLE IF EXISTS users;
 ```
 
 **DML（数据操作语言）：**
+
 ```sql
 -- 插入数据
-INSERT INTO users (username, email) VALUES 
+INSERT INTO users (username, email) VALUES
     ('alice', 'alice@example.com'),
     ('bob', 'bob@example.com');
 
@@ -140,6 +145,7 @@ DELETE FROM users WHERE id = 1;
 ```
 
 **JOIN操作：**
+
 ```sql
 -- 内连接：只返回匹配的行
 SELECT orders.order_id, customers.name, products.product_name
@@ -161,6 +167,7 @@ ORDER BY order_count DESC;
 ```
 
 **子查询：**
+
 ```sql
 -- 查询订单数大于平均值的客户
 SELECT customer_id, COUNT(*) as order_count
@@ -182,12 +189,14 @@ WHERE EXISTS (
 索引是数据库性能优化的核心，理解索引原理至关重要。
 
 **B+树索引：**
+
 - MySQL InnoDB使用B+树作为索引结构
 - 非叶子节点只存储键值和指针，叶子节点存储完整数据
 - 叶子节点通过双向链表连接，支持范围查询
 - 查询复杂度：O(log n)
 
 **索引类型：**
+
 ```sql
 -- 主键索引（聚簇索引）：数据存储在叶子节点
 CREATE TABLE users (
@@ -209,6 +218,7 @@ CREATE FULLTEXT INDEX idx_content ON articles(content);
 ```
 
 **索引使用原则：**
+
 ```sql
 -- 最左前缀原则：复合索引(name, age, city)
 -- 有效查询：
@@ -228,6 +238,7 @@ SELECT * FROM users WHERE age = 25;  -- 不使用索引
 ```
 
 **EXPLAIN分析查询：**
+
 ```sql
 EXPLAIN SELECT * FROM users WHERE name = 'Alice'\G
 
@@ -243,12 +254,14 @@ EXPLAIN SELECT * FROM users WHERE name = 'Alice'\G
 事务是保证数据一致性的核心机制。
 
 **ACID特性：**
+
 - **原子性（Atomicity）**：事务要么全部成功，要么全部回滚
 - **一致性（Consistency）**：事务前后数据库状态一致
 - **隔离性（Isolation）**：并发事务之间互不干扰
 - **持久性（Durability）**：事务提交后数据永久保存
 
 **隔离级别：**
+
 ```sql
 -- 查看隔离级别
 SELECT @@transaction_isolation;
@@ -264,6 +277,7 @@ SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
 ```
 
 **事务控制：**
+
 ```sql
 -- 开始事务
 START TRANSACTION;
@@ -284,10 +298,11 @@ ROLLBACK TO transfer_done;
 ```
 
 **并发问题与解决方案：**
+
 ```sql
 -- 乐观锁：版本号控制
-UPDATE products 
-SET stock = stock - 1, version = version + 1 
+UPDATE products
+SET stock = stock - 1, version = version + 1
 WHERE id = 1 AND version = 10;
 
 -- 悲观锁：SELECT ... FOR UPDATE
@@ -302,6 +317,7 @@ SHOW ENGINE INNODB STATUS;  -- 查看死锁信息
 ### 🔑 数据库优化
 
 **查询优化：**
+
 ```sql
 -- 1. 避免SELECT *
 SELECT id, name FROM users WHERE age > 18;  -- 好
@@ -313,7 +329,7 @@ SELECT * FROM orders ORDER BY id LIMIT 10000, 20;  -- 深分页性能差
 SELECT * FROM orders WHERE id > 10000 ORDER BY id LIMIT 20;
 
 -- 3. 批量插入
-INSERT INTO users (name, email) VALUES 
+INSERT INTO users (name, email) VALUES
     ('user1', 'user1@example.com'),
     ('user2', 'user2@example.com'),
     ('user3', 'user3@example.com');  -- 批量插入，减少事务开销
@@ -326,6 +342,7 @@ SELECT o.* FROM orders o INNER JOIN customers c ON o.customer_id = c.id WHERE c.
 ```
 
 **表结构优化：**
+
 ```sql
 -- 1. 选择合适的数据类型
 -- 整数：TINYINT < SMALLINT < INT < BIGINT
@@ -350,6 +367,7 @@ CREATE TABLE orders (
 ```
 
 **性能监控：**
+
 ```sql
 -- 慢查询日志
 SET GLOBAL slow_query_log = ON;
@@ -450,7 +468,7 @@ HAVING COUNT(*) > 0
 ORDER BY user_count DESC;
 
 -- 3. 多表JOIN
-SELECT 
+SELECT
     u.username,
     u.city,
     o.product_name,
@@ -467,7 +485,7 @@ SELECT username, email FROM users
 WHERE id IN (SELECT user_id FROM orders WHERE total_amount > 5000);
 
 -- 5. 窗口函数（MySQL 8.0+）
-SELECT 
+SELECT
     username,
     city,
     age,
@@ -511,8 +529,8 @@ UPDATE accounts SET balance = balance + 1000 WHERE user_id = 2;
 COMMIT;
 
 -- 查看结果
-SELECT u.username, a.balance 
-FROM users u 
+SELECT u.username, a.balance
+FROM users u
 INNER JOIN accounts a ON u.id = a.user_id;
 ```
 
@@ -594,27 +612,32 @@ EXPLAIN SELECT * FROM big_table WHERE city = 'Beijing'\G
 ## 学习资源推荐
 
 **官方文档：**
+
 - [MySQL官方文档](https://dev.mysql.com/doc/)
 - [PostgreSQL官方文档](https://www.postgresql.org/docs/)
 - [SQLite官方文档](https://www.sqlite.org/docs.html)
 
 **经典书籍：**
+
 - 《数据库系统概念》（Database System Concepts）- 经典教材
 - 《高性能MySQL》- 实战优化指南
 - 《SQL必知必会》- SQL入门经典
 - 《MySQL技术内幕：InnoDB存储引擎》- 深入理解MySQL
 
 **在线课程：**
+
 - [Stanford DB Course](https://online.stanford.edu/courses/soe-ydatabases-databases-5-minimum-viable-db)
 - [CMU Database Group](https://www.youtube.com/channel/UCHnBsf2rH_K7kn9MhPBIqLw)
 - [MySQL官方教程](https://dev.mysql.com/doc/mysql-tutorial-excerpt/5.7/en/)
 
 **实践平台：**
+
 - [LeetCode数据库题目](https://leetcode.com/problemset/database/)
 - [SQLZoo](https://sqlzoo.net/) - 交互式SQL教程
 - [SQL Bolt](https://sqlbolt.com/) - SQL入门教程
 
 **工具推荐：**
+
 - MySQL Workbench - 官方图形化管理工具
 - DBeaver - 开源多数据库管理工具
 - DataGrip - JetBrains的数据库IDE

@@ -1,19 +1,29 @@
 ---
-title: "图神经网络踩坑合集"
+title: 图神经网络踩坑合集
 category: machine-learning
 difficulty: advanced
 duration: 30分钟
 summary: 涵盖 4 个常见踩坑：GNN层数过多导致过平滑、图数据集划分泄露导致评估虚高、消息传递中忽略自环导致信息丢失、异构图处理不当导致节点类型混淆，每个均附快速修复与排查步骤。
-takeaways:
-  - 掌握「图神经网络踩坑合集」中各问题的快速识别方法
-  - 理解每个踩坑的根因分析和排查步骤
-  - 学会标准化的修复流程和预防措施
+takeaways: "- 掌握「图神经网络踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施"
 relatedIntel:
   - 113-gnn-basics
 tags:
-  - 踩坑
-  - GNN
-  - 图神经网络
+  - 机器学习
+  - ML
+  - 数据
+  - scikit-learn
+relatedTerms:
+  - matrix
+  - tensor
+  - gradient-descent
+  - convex-optimization
+relatedTools:
+  - numpy
+  - pandas
+  - scikit-learn
+relatedNodes:
+  - math-linear-algebra
+  - llm-inference
 ---
 
 [图神经网络]
@@ -121,3 +131,20 @@ tags:
 - 05 尝试使用元路径（Meta-Path）引导的异构图神经网络
 
 #GNN#异构图#模型适配
+
+## 修复后附加：最小一键诊断命令
+
+```bash
+# ML 最小自检：二分类 AUC + 混淆矩阵 3 秒内
+python - <<'PY'
+import numpy as np
+from sklearn.datasets import make_classification
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.metrics import roc_auc_score, confusion_matrix
+X, y = make_classification(n_samples=2000, n_features=20, random_state=42)
+m = GradientBoostingClassifier(n_estimators=40).fit(X[:1600], y[:1600])
+p = m.predict_proba(X[1600:])[:, 1]
+print('AUC', round(roc_auc_score(y[1600:], p), 3))
+print('CM\n', confusion_matrix(y[1600:], (p > 0.5).astype(int)))
+PY
+```

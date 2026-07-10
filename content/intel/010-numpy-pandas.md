@@ -4,26 +4,28 @@ category: data-processing
 difficulty: beginner
 duration: 1-2周
 summary: 深度学习 80% 的时间花在数据上，NumPy 和 Pandas 帮你把原始 CSV/Excel 变成模型能吃的张量
-takeaways:
-  - 掌握 NumPy ndarray 的创建、索引、形状变换与数学运算
+takeaways: "- 掌握 NumPy ndarray 的创建、索引、形状变换与数学运算
   - 理解广播机制，能正确写出无需显式循环的向量化代码
   - 用 Pandas 读写 CSV/Excel，处理缺失值、去重、分组聚合、合并连接
-  - 能把清洗后的数据对接成 PyTorch Dataset/DataLoader 训练管道
-relatedTools:
-  - pandas
-  - numpy
-relatedIntel:
-  - 013-huggingface-datasets
+  - 能把清洗后的数据对接成 PyTorch Dataset/DataLoader 训练管道"
+relatedTools: [
+    "numpy",
+    "pandas",
+    "- pandas
+    - numpy",
+  ]
+relatedIntel: "- 013-huggingface-datasets
   - 023-data-pipeline-etl
-  - 040-data-annotation
-tags:
-  - numpy
+  - 040-data-annotation"
+tags: "- numpy
   - pandas
   - data preprocessing
   - array
   - dataframe
   - csv
-  - missing data
+  - missing data"
+relatedTerms: ["matrix", "entropy", "tensor", "transformer"]
+relatedNodes: ["nlp-rnn", "math-linear-algebra"]
 ---
 
 ## 为什么你要学它

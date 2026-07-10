@@ -4,25 +4,24 @@ category: embedded
 difficulty: intermediate
 duration: 3-4周
 summary: 理解无线通信的核心原理。掌握调制解调、天线原理、无线协议等关键知识。
-takeaways:
-  - 理解电磁波传播原理
+takeaways: "- 理解电磁波传播原理
   - 掌握调制解调技术
   - 理解天线设计基础
-  - 了解WiFi、蓝牙等无线协议
-relatedIntel:
-  - 052-embedded-c
+  - 了解WiFi、蓝牙等无线协议"
+relatedIntel: "- 052-embedded-c
   - 053-embedded-rtos
-  - 054-elec-circuit
-relatedNodes: signals-comm
-tags:
-  - 无线通信
+  - 054-elec-circuit"
+relatedNodes: ["signals-comm", "electrical-safety"]
+tags: "- 无线通信
   - 调制解调
   - 天线
   - 无线协议
   - wifi
   - 蓝牙
   - 电磁波
-  - 链路预算
+  - 链路预算"
+relatedTerms: ["data-structure", "rtos", "algorithm", "complexity"]
+relatedTools: ["huggingface-transformers", "ultralytics-yolo", "pytorch"]
 ---
 
 ## 为什么你要学它
@@ -86,12 +85,12 @@ for d in distances:
 
 **传播模型**
 
-| 环境 | 模型 | 适用场景 |
-|------|------|----------|
-| 自由空间 | FSPL | 理想条件、卫星通信 |
-| 室内 | ITU-R P.1238 | WiFi覆盖规划 |
-| 城市 | COST-231 Hata | 蜂窝网络规划 |
-| 郊区 | Okumura-Hata | 宏基站覆盖 |
+| 环境     | 模型          | 适用场景           |
+| -------- | ------------- | ------------------ |
+| 自由空间 | FSPL          | 理想条件、卫星通信 |
+| 室内     | ITU-R P.1238  | WiFi覆盖规划       |
+| 城市     | COST-231 Hata | 蜂窝网络规划       |
+| 郊区     | Okumura-Hata  | 宏基站覆盖         |
 
 **多径效应与衰落**
 
@@ -195,10 +194,10 @@ import matplotlib.pyplot as plt
 
 class DigitalModulator:
     """数字调制器"""
-    
+
     def __init__(self, modulation_type='QPSK'):
         self.mod_type = modulation_type
-        
+
     def modulate(self, bits):
         """调制"""
         if self.mod_type == 'BPSK':
@@ -209,17 +208,17 @@ class DigitalModulator:
             return self._qam16_modulate(bits)
         else:
             raise ValueError(f"不支持的调制类型: {self.mod_type}")
-    
+
     def _bpsk_modulate(self, bits):
         """BPSK: 0→-1, 1→+1"""
         symbols = 2 * bits - 1
         return symbols.astype(complex)
-    
+
     def _qpsk_modulate(self, bits):
         """QPSK: 每2比特映射到一个星座点"""
         if len(bits) % 2 != 0:
             bits = np.append(bits, 0)
-        
+
         # Gray码映射
         mapping = {
             (0, 0): 1 + 1j,
@@ -227,22 +226,22 @@ class DigitalModulator:
             (1, 1): -1 - 1j,
             (1, 0): 1 - 1j
         }
-        
+
         symbols = np.array([mapping[tuple(bits[i:i+2])] for i in range(0, len(bits), 2)])
         return symbols / np.sqrt(2)  # 归一化
-    
+
     def _qam16_modulate(self, bits):
         """16QAM: 每4比特映射到一个星座点"""
         while len(bits) % 4 != 0:
             bits = np.append(bits, 0)
-        
+
         symbols = []
         for i in range(0, len(bits), 4):
             # Gray码映射到I/Q
             I = 2 * (1 - bits[i]) + (1 - bits[i+1]) - 1.5
             Q = 2 * (1 - bits[i+2]) + (1 - bits[i+3]) - 1.5
             symbols.append(I + 1j * Q)
-        
+
         return np.array(symbols) / np.sqrt(10)  # 归一化
 
 # 绘制星座图
@@ -259,7 +258,7 @@ bits_per_symbol = {'BPSK': 1, 'QPSK': 2, '16QAM': 4}
 for ax, (name, mod) in zip(axes, modulators):
     bits = np.random.randint(0, 2, 1000 * bits_per_symbol[name])
     symbols = mod.modulate(bits)
-    
+
     ax.scatter(symbols.real, symbols.imag, alpha=0.3, s=10)
     ax.axhline(0, color='k', linewidth=0.5)
     ax.axvline(0, color='k', linewidth=0.5)
@@ -277,13 +276,13 @@ plt.savefig('constellation_diagrams.png', dpi=150)
 
 **调制效率对比**
 
-| 调制方式 | 比特/符号 | 最小SNR (BER=1e-5) | 频谱效率 |
-|----------|-----------|-------------------|----------|
-| BPSK | 1 | 9.6 dB | 1 bit/s/Hz |
-| QPSK | 2 | 9.6 dB | 2 bit/s/Hz |
-| 16QAM | 4 | 16.5 dB | 4 bit/s/Hz |
-| 64QAM | 6 | 22.5 dB | 6 bit/s/Hz |
-| 256QAM | 8 | 28.4 dB | 8 bit/s/Hz |
+| 调制方式 | 比特/符号 | 最小SNR (BER=1e-5) | 频谱效率   |
+| -------- | --------- | ------------------ | ---------- |
+| BPSK     | 1         | 9.6 dB             | 1 bit/s/Hz |
+| QPSK     | 2         | 9.6 dB             | 2 bit/s/Hz |
+| 16QAM    | 4         | 16.5 dB            | 4 bit/s/Hz |
+| 64QAM    | 6         | 22.5 dB            | 6 bit/s/Hz |
+| 256QAM   | 8         | 28.4 dB            | 8 bit/s/Hz |
 
 ### 🔑 天线原理
 
@@ -297,13 +296,13 @@ import matplotlib.pyplot as plt
 
 def antenna_parameters():
     """天线参数计算示例"""
-    
+
     # 1. 天线尺寸与波长关系
     c = 3e8  # 光速
-    
+
     frequencies = [2.4e9, 5e9, 24e9]  # 2.4GHz, 5GHz, 24GHz
     names = ['WiFi 2.4G', 'WiFi 5G', '5G mmWave']
-    
+
     print("天线尺寸与频率关系：")
     print("-" * 50)
     for name, f in zip(names, frequencies):
@@ -314,32 +313,32 @@ def antenna_parameters():
         print(f"  波长: {wavelength*100:.1f} cm")
         print(f"  半波天线: {half_wave*100:.1f} cm")
         print(f"  1/4波天线: {quarter_wave*100:.1f} cm")
-    
+
     # 2. 天线增益
     print("\n天线增益换算：")
     print("-" * 50)
-    
+
     gains_linear = [1, 2, 10, 100]  # 线性增益
     for g in gains_linear:
         g_dbi = 10 * np.log10(g)
         print(f"线性增益 {g} = {g_dbi:.1f} dBi")
-    
+
     # 3. 弗里斯传输方程
     print("\n弗里斯传输方程示例：")
     print("-" * 50)
-    
+
     pt = 20  # 发射功率 dBm
     gt = 6   # 发射天线增益 dBi
     gr = 6   # 接收天线增益 dBi
     f = 2.4e9  # 频率 2.4GHz
     d = 100  # 距离 100m
-    
+
     # 自由空间路径损耗
     fspl = 20 * np.log10(d) + 20 * np.log10(f/1e6) + 32.44
-    
+
     # 接收功率
     pr = pt + gt + gr - fspl
-    
+
     print(f"发射功率: {pt} dBm")
     print(f"发射天线增益: {gt} dBi")
     print(f"接收天线增益: {gr} dBi")
@@ -359,29 +358,29 @@ import matplotlib.pyplot as plt
 
 def dipole_radiation_pattern():
     """绘制偶极子天线方向图"""
-    
+
     theta = np.linspace(0, 2*np.pi, 360)
-    
+
     # 半波偶极子方向图函数
     # E平面: F(θ) = cos(π/2 * cos(θ)) / sin(θ)
     # 简化模型
     pattern = np.abs(np.cos(np.pi/2 * np.cos(theta)) / np.sin(theta + 1e-10))
     pattern = pattern / np.max(pattern)  # 归一化
-    
+
     # 绘制极坐标方向图
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5), 
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5),
                                     subplot_kw={'projection': 'polar'})
-    
+
     # E平面（垂直面）
     ax1.plot(theta, pattern)
     ax1.set_title('半波偶极子 E平面方向图', pad=20)
     ax1.set_theta_zero_location('N')
-    
+
     # H平面（水平面）- 全向
     h_pattern = np.ones_like(theta)
     ax2.plot(theta, h_pattern)
     ax2.set_title('半波偶极子 H平面方向图（全向）', pad=20)
-    
+
     plt.tight_layout()
     plt.savefig('antenna_pattern.png', dpi=150)
 
@@ -390,13 +389,13 @@ dipole_radiation_pattern()
 
 **常见天线类型**
 
-| 天线类型 | 增益 | 带宽 | 应用场景 |
-|----------|------|------|----------|
-| 偶极子天线 | 2.15 dBi | 窄 | 基础参考、FM广播 |
-| 单极子天线 | 0-5 dBi | 中 | 手机、路由器 |
-| 八木天线 | 10-15 dBi | 窄 | 定向通信、电视接收 |
-| 微带贴片天线 | 6-8 dBi | 中 | 手机、GPS |
-| 抛物面天线 | 20-50 dBi | 宽 | 卫星通信、雷达 |
+| 天线类型     | 增益      | 带宽 | 应用场景           |
+| ------------ | --------- | ---- | ------------------ |
+| 偶极子天线   | 2.15 dBi  | 窄   | 基础参考、FM广播   |
+| 单极子天线   | 0-5 dBi   | 中   | 手机、路由器       |
+| 八木天线     | 10-15 dBi | 窄   | 定向通信、电视接收 |
+| 微带贴片天线 | 6-8 dBi   | 中   | 手机、GPS          |
+| 抛物面天线   | 20-50 dBi | 宽   | 卫星通信、雷达     |
 
 ### 🔑 无线协议
 
@@ -499,13 +498,13 @@ for version, params in bluetooth_versions.items():
 
 **其他无线协议**
 
-| 协议 | 频段 | 速率 | 范围 | 典型应用 |
-|------|------|------|------|----------|
-| Zigbee | 2.4GHz | 250kbps | 10-100m | 智能家居 |
-| LoRa | 868/915MHz | 0.3-50kbps | 2-15km | LPWAN |
-| NB-IoT | LTE频段 | 250kbps | 1-10km | 物联网 |
-| NFC | 13.56MHz | 424kbps | <10cm | 支付、门禁 |
-| UWB | 3.1-10.6GHz | 480Mbps | <10m | 精确定位 |
+| 协议   | 频段        | 速率       | 范围    | 典型应用   |
+| ------ | ----------- | ---------- | ------- | ---------- |
+| Zigbee | 2.4GHz      | 250kbps    | 10-100m | 智能家居   |
+| LoRa   | 868/915MHz  | 0.3-50kbps | 2-15km  | LPWAN      |
+| NB-IoT | LTE频段     | 250kbps    | 1-10km  | 物联网     |
+| NFC    | 13.56MHz    | 424kbps    | <10cm   | 支付、门禁 |
+| UWB    | 3.1-10.6GHz | 480Mbps    | <10m    | 精确定位   |
 
 ### 🔑 链路预算
 
@@ -516,36 +515,36 @@ import numpy as np
 
 class LinkBudget:
     """无线链路预算计算器"""
-    
+
     def __init__(self):
         self.params = {}
-    
+
     def set_transmitter(self, tx_power_dbm, tx_antenna_gain_dbi, cable_loss_db=0):
         """设置发射端参数"""
         self.params['tx_power'] = tx_power_dbm
         self.params['tx_antenna_gain'] = tx_antenna_gain_dbi
         self.params['tx_cable_loss'] = cable_loss_db
-    
+
     def set_receiver(self, rx_sensitivity_dbm, rx_antenna_gain_dbi, cable_loss_db=0):
         """设置接收端参数"""
         self.params['rx_sensitivity'] = rx_sensitivity_dbm
         self.params['rx_antenna_gain'] = rx_antenna_gain_dbi
         self.params['rx_cable_loss'] = cable_loss_db
-    
+
     def set_channel(self, frequency_hz, distance_km, environment='free_space'):
         """设置信道参数"""
         self.params['frequency'] = frequency_hz
         self.params['distance'] = distance_km
         self.params['environment'] = environment
-    
+
     def calculate_path_loss(self):
         """计算路径损耗"""
         f_mhz = self.params['frequency'] / 1e6
         d_km = self.params['distance']
-        
+
         # 自由空间路径损耗
         fspl = 20 * np.log10(d_km) + 20 * np.log10(f_mhz) + 32.44
-        
+
         # 根据环境添加额外损耗
         if self.params['environment'] == 'urban':
             extra_loss = 20  # 城市环境额外损耗
@@ -555,27 +554,27 @@ class LinkBudget:
             extra_loss = 15  # 室内穿透损耗
         else:
             extra_loss = 0  # 自由空间
-        
+
         return fspl + extra_loss
-    
+
     def calculate_link_budget(self):
         """计算完整链路预算"""
         # 发射端EIRP
-        eirp = (self.params['tx_power'] + 
-                self.params['tx_antenna_gain'] - 
+        eirp = (self.params['tx_power'] +
+                self.params['tx_antenna_gain'] -
                 self.params['tx_cable_loss'])
-        
+
         # 路径损耗
         path_loss = self.calculate_path_loss()
-        
+
         # 接收信号强度
-        rssi = (eirp - path_loss + 
-                self.params['rx_antenna_gain'] - 
+        rssi = (eirp - path_loss +
+                self.params['rx_antenna_gain'] -
                 self.params['rx_cable_loss'])
-        
+
         # 链路余量
         link_margin = rssi - self.params['rx_sensitivity']
-        
+
         return {
             'EIRP': eirp,
             'path_loss': path_loss,
@@ -583,11 +582,11 @@ class LinkBudget:
             'link_margin': link_margin,
             'feasible': link_margin > 0
         }
-    
+
     def print_report(self):
         """打印链路预算报告"""
         budget = self.calculate_link_budget()
-        
+
         print("=" * 50)
         print("无线链路预算报告")
         print("=" * 50)
@@ -631,16 +630,16 @@ import matplotlib.pyplot as plt
 
 def wifi_coverage_analysis():
     """WiFi覆盖分析"""
-    
+
     # 参数设置
     tx_power = 20  # dBm，典型WiFi路由器发射功率
     tx_gain = 2   # dBi，内置天线增益
     rx_sensitivity = -82  # dBm，典型WiFi接收灵敏度
     frequency = 2.4e9  # Hz
-    
+
     # 计算不同距离的信号强度
     distances = np.linspace(1, 100, 100)  # 1-100米
-    
+
     # 不同环境下的路径损耗指数
     environments = {
         '自由空间': 2.0,
@@ -649,31 +648,31 @@ def wifi_coverage_analysis():
         '住宅': 3.5,
         '密集建筑': 4.5
     }
-    
+
     plt.figure(figsize=(12, 8))
-    
+
     for env_name, n in environments.items():
         # 对数距离路径损耗模型
         # PL = PL(d0) + 10*n*log10(d/d0)
         d0 = 1  # 参考距离 1m
         PL_d0 = 20 * np.log10(frequency/1e6) + 20 * np.log10(d0/1000) + 32.44
-        
+
         path_loss = PL_d0 + 10 * n * np.log10(distances / d0)
         rssi = tx_power + tx_gain - path_loss
-        
+
         plt.plot(distances, rssi, label=f'{env_name} (n={n})')
-    
+
     # 绘制接收灵敏度线
-    plt.axhline(y=rx_sensitivity, color='r', linestyle='--', 
+    plt.axhline(y=rx_sensitivity, color='r', linestyle='--',
                 label=f'接收灵敏度 ({rx_sensitivity} dBm)')
-    
+
     plt.xlabel('距离 (m)')
     plt.ylabel('RSSI (dBm)')
     plt.title('WiFi信号强度 vs 距离')
     plt.legend()
     plt.grid(True, alpha=0.3)
     plt.ylim(-100, -20)
-    
+
     plt.tight_layout()
     plt.savefig('wifi_coverage.png', dpi=150)
     print("WiFi覆盖分析图已保存: wifi_coverage.png")
@@ -690,15 +689,15 @@ from scipy.signal import butter, lfilter
 
 class WirelessLink:
     """完整无线链路仿真"""
-    
+
     def __init__(self, modulation='QPSK', samples_per_symbol=16):
         self.modulation = modulation
         self.sps = samples_per_symbol
-    
+
     def generate_bits(self, num_bits):
         """生成随机比特流"""
         return np.random.randint(0, 2, num_bits)
-    
+
     def modulate(self, bits):
         """调制"""
         if self.modulation == 'BPSK':
@@ -719,69 +718,69 @@ class WirelessLink:
             symbols = np.array(symbols) / np.sqrt(2)
         else:
             raise ValueError(f"不支持的调制: {self.modulation}")
-        
+
         # 上采样（脉冲成形）
         upsampled = np.zeros(len(symbols) * self.sps, dtype=complex)
         upsampled[::self.sps] = symbols
-        
+
         # 根升余弦滤波器（脉冲成形）
         alpha = 0.35  # 滚降因子
         t = np.arange(-4 * self.sps, 4 * self.sps + 1) / self.sps
-        
+
         # RRC脉冲
         with np.errstate(divide='ignore', invalid='ignore'):
-            rrc = (np.sin(np.pi * t * (1 - alpha)) + 
+            rrc = (np.sin(np.pi * t * (1 - alpha)) +
                    4 * alpha * t * np.cos(np.pi * t * (1 + alpha))) / \
                   (np.pi * t * (1 - (4 * alpha * t) ** 2))
             rrc = np.nan_to_num(rrc)
         rrc = rrc / np.sqrt(np.sum(rrc ** 2))  # 归一化
-        
+
         # 滤波
         tx_signal = np.convolve(upsampled, rrc, mode='same')
-        
+
         return tx_signal, symbols
-    
+
     def add_channel(self, signal, snr_db, fading=False):
         """添加信道效应"""
         # AWGN噪声
         signal_power = np.mean(np.abs(signal) ** 2)
         snr_linear = 10 ** (snr_db / 10)
         noise_power = signal_power / snr_linear
-        
+
         noise = np.sqrt(noise_power / 2) * (
             np.random.randn(len(signal)) + 1j * np.random.randn(len(signal))
         )
-        
+
         rx_signal = signal + noise
-        
+
         # 瑞利衰落（可选）
         if fading:
             h = (np.random.randn(len(signal)) + 1j * np.random.randn(len(signal))) / np.sqrt(2)
             rx_signal = rx_signal * h
-        
+
         return rx_signal
-    
+
     def demodulate(self, rx_signal):
         """解调"""
         # 匹配滤波（与发送端相同的RRC）
         alpha = 0.35
         t = np.arange(-4 * self.sps, 4 * self.sps + 1) / self.sps
-        
+
         with np.errstate(divide='ignore', invalid='ignore'):
-            rrc = (np.sin(np.pi * t * (1 - alpha)) + 
+            rrc = (np.sin(np.pi * t * (1 - alpha)) +
                    4 * alpha * t * np.cos(np.pi * t * (1 + alpha))) / \
                   (np.pi * t * (1 - (4 * alpha * t) ** 2))
             rrc = np.nan_to_num(rrc)
         rrc = rrc / np.sqrt(np.sum(rrc ** 2))
-        
+
         # 匹配滤波
         filtered = np.convolve(rx_signal, rrc, mode='same')
-        
+
         # 下采样
         symbols = filtered[::self.sps]
-        
+
         return symbols
-    
+
     def detect_bits(self, rx_symbols, modulation='QPSK'):
         """比特检测"""
         if modulation == 'BPSK':
@@ -798,7 +797,7 @@ class WirelessLink:
                 else:
                     bits.extend([1, 0])
             return np.array(bits)
-    
+
     def calculate_ber(self, tx_bits, rx_bits):
         """计算误码率"""
         min_len = min(len(tx_bits), len(rx_bits))
@@ -843,13 +842,13 @@ import numpy as np
 
 def antenna_design_calculator():
     """天线设计参数计算器"""
-    
+
     c = 3e8  # 光速
-    
+
     print("=" * 60)
     print("天线设计参数计算器")
     print("=" * 60)
-    
+
     # 常见频段天线尺寸
     frequencies = {
         'FM广播 (100MHz)': 100e6,
@@ -860,46 +859,46 @@ def antenna_design_calculator():
         '5G毫米波 (28GHz)': 28e9,
         '卫星通信 Ku波段 (12GHz)': 12e9
     }
-    
+
     print("\n各频段天线尺寸参考：")
     print("-" * 60)
     print(f"{'频段':<25} {'波长(cm)':<12} {'半波(cm)':<12} {'1/4波(cm)':<12}")
     print("-" * 60)
-    
+
     for name, freq in frequencies.items():
         wavelength = c / freq
         half_wave = wavelength / 2
         quarter_wave = wavelength / 4
         print(f"{name:<25} {wavelength*100:<12.2f} {half_wave*100:<12.2f} {quarter_wave*100:<12.2f}")
-    
+
     # 天线增益计算
     print("\n天线增益计算：")
     print("-" * 60)
-    
+
     # 抛物面天线增益
     dish_diameter = 0.6  # 60cm
     frequency = 12e9  # 12GHz
     efficiency = 0.55  # 典型效率
-    
+
     wavelength = c / frequency
     gain_linear = efficiency * (np.pi * dish_diameter / wavelength) ** 2
     gain_dbi = 10 * np.log10(gain_linear)
-    
+
     print(f"抛物面天线 (直径={dish_diameter*100}cm, 频率={frequency/1e9}GHz):")
     print(f"  增益: {gain_dbi:.1f} dBi")
     print(f"  波束宽度: {70 * wavelength / dish_diameter:.1f}°")
-    
+
     # 微带贴片天线
     patch_frequency = 2.4e9
     substrate_er = 4.4  # FR4基板
     substrate_height = 1.6e-3  # 1.6mm
-    
+
     wavelength_patch = c / patch_frequency
     patch_width = wavelength_patch / 2 * np.sqrt(2 / (substrate_er + 1))
     patch_length = wavelength_patch / (2 * np.sqrt(substrate_er)) - 2 * substrate_height * 0.412 * \
                    ((substrate_er + 0.3) * (patch_width / substrate_height + 0.264)) / \
                    ((substrate_er - 0.258) * (patch_width / substrate_height + 0.8))
-    
+
     print(f"\n微带贴片天线 (频率={patch_frequency/1e9}GHz, FR4基板):")
     print(f"  贴片宽度: {patch_width * 1000:.2f} mm")
     print(f"  贴片长度: {patch_length * 1000:.2f} mm")
@@ -933,29 +932,34 @@ antenna_design_calculator()
 ## 推荐学习资源
 
 ### 书籍
+
 - **《无线通信原理与应用》**（Rappaport）- 无线通信经典教材
 - **《天线理论与设计》**（Balanis）- 天线设计权威参考
 - **《通信原理》**（樊昌信）- 国内经典教材
 - **《射频电路设计——理论与应用》**（Ludwig）- 射频工程实践
 
 ### 在线课程
+
 - **MIT OpenCourseWare 6.450** - 数字通信原理
 - **Coursera: Wireless Communications for Everybody** - 延世大学
 - **edX: Introduction to RF Design** - MIT
 
 ### 实践工具
+
 - **GNU Radio** - 开源软件无线电平台
 - **MATLAB Communications Toolbox** - 通信系统仿真
 - **ADS / HFSS** - 射频电路和天线仿真
 - **NS-3** - 网络协议仿真
 
 ### 标准文档
+
 - **IEEE 802.11** - WiFi协议标准
 - **IEEE 802.15.1** - 蓝牙协议标准
 - **IEEE 802.15.4** - Zigbee/LoRa物理层
 - **3GPP TS 36/38系列** - LTE/5G标准
 
 ### 开发板推荐
+
 - **ESP32** - WiFi + 蓝牙，适合入门
 - **nRF52840** - 蓝牙5.0开发
 - **SX1276/1278** - LoRa模块

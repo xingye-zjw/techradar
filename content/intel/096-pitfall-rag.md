@@ -1,22 +1,28 @@
 ---
-title: "RAG 系统踩坑合集"
+title: RAG 系统踩坑合集
 category: llm
 difficulty: intermediate
 duration: 30分钟
 summary: 涵盖 4 个常见踩坑：RAG 检索到了但回答不对 / 幻觉严重、向量数据库检索结果与预期不匹配、RAG 系统延迟高/响应慢、知识库内容切分不合理导致关键信息丢失，每个均附快速修复与排查步骤。
-takeaways:
-  - 掌握「RAG 系统踩坑合集」中各问题的快速识别方法
-  - 理解每个踩坑的根因分析和排查步骤
-  - 学会标准化的修复流程和预防措施
-relatedIntel:
-  - 005-rag
-  - 035-advanced-rag
-  - 042-vector-database
+takeaways: "- 掌握「RAG 系统踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施"
+relatedIntel: "- 005-rag - 035-advanced-rag - 042-vector-database"
 tags:
-  - 踩坑
-  - RAG
-  - 检索
-  - 幻觉
+  - 大模型
+  - LLM
+  - Prompt
+  - 推理
+relatedTerms:
+  - lora
+  - rag
+  - transformer
+  - chain-of-thought
+relatedTools:
+  - langchain
+  - pytorch
+  - huggingface-transformers
+relatedNodes:
+  - llm-prompt-engineering
+  - llm-inference
 ---
 
 [RAG]
@@ -118,3 +124,18 @@ tags:
 - 04 避免单段落过长
 
 #RAG#数据处理#数据标注
+
+## 修复后附加：最小一键诊断命令
+
+```bash
+# 最小 LLM 环境自检：模型下载+加载+token 消耗 10 秒内可用
+python - <<'PY'
+import os, time
+assert os.system('pip show transformers accelerate') == 0, 'pip 依赖缺失'
+t0 = time.time()
+from transformers import AutoTokenizer
+tok = AutoTokenizer.from_pretrained('Qwen/Qwen2.5-1.5B-Instruct', trust_remote_code=True)
+ids = tok('hello world', return_tensors='pt').input_ids
+print(f'tokenize OK len={ids.shape[1]}, cost_ms={(time.time()-t0)*1000:.0f}')
+PY
+```

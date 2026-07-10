@@ -4,20 +4,25 @@ category: data-processing
 difficulty: intermediate
 duration: 30分钟
 summary: 聚焦单点问题：数据标注质量差导致模型无法收敛或效果虚高，涵盖 inter-annotator agreement、混淆矩阵分析、active learning、类别不均衡检查等排查与修复方案。
-takeaways:
-  - 快速识别「数据标注质量差导致模型无法收敛」的典型症状
-  - 理解该问题的根因分析和标准排查步骤
-  - 学会分步排查和解决问题的标准化流程
-  - 了解预防措施，避免下次踩同样的坑
-relatedIntel:
-  - 040-data-annotation
-  - 094-pitfall-data-engineering
+takeaways: "- 快速识别「数据标注质量差导致模型无法收敛」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑"
+relatedIntel: "- 040-data-annotation - 094-pitfall-data-engineering"
 tags:
-  - 踩坑
-  - 避坑指南
-  - 数据标注
-  - 数据质量
-  - 收敛
+  - 数据
+  - 处理
+  - 清洗
+  - ETL
+relatedTerms:
+  - matrix
+  - tensor
+  - entropy
+  - transformer
+relatedTools:
+  - numpy
+  - jupyter
+  - pandas
+relatedNodes:
+  - nlp-rnn
+  - math-linear-algebra
 ---
 
 ## 为什么你要学它
@@ -33,6 +38,7 @@ tags:
 > **快速修复：可视化混淆矩阵 → 定位错误类别 → 补充该类别标注数据**
 
 核心要点：
+
 - **现象**：Loss 不下降，但学习率、数据量、网络结构都正常
 - **根因**：标注人员理解不一致、标注规范缺失、类别定义模糊、或标注工具配置错误。inter-annotator agreement 低是数据质量差的直接信号。
 - **解决**：按照下方 5 步标准流程排查
@@ -53,11 +59,11 @@ tags:
 
 按照以下步骤逐一排查，通常能在几分钟内定位并解决问题：
 
-01. 随机抽样 50-100 条数据，人工逐一检查标注是否正确
-02. 检查类别分布是否严重不均衡：某类样本过少导致模型倾向于多数类
-03. 检查标注一致性：同一张图不同标注者结果是否一致（inter-annotator agreement）
-04. 用混淆矩阵分析哪两个类别最容易混淆，针对性补充该类别的标注数据
-05. 对低质量标注数据用 active learning 优先重新标注
+1.  随机抽样 50-100 条数据，人工逐一检查标注是否正确
+2.  检查类别分布是否严重不均衡：某类样本过少导致模型倾向于多数类
+3.  检查标注一致性：同一张图不同标注者结果是否一致（inter-annotator agreement）
+4.  用混淆矩阵分析哪两个类别最容易混淆，针对性补充该类别的标注数据
+5.  对低质量标注数据用 active learning 优先重新标注
 
 ### 快速修复（救急用）
 

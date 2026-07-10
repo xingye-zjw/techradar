@@ -4,21 +4,21 @@ category: data-processing
 difficulty: beginner
 duration: 1周
 summary: 一行代码加载公开数据集，底层用 Apache Arrow 列式存储，比自己解析 CSV/JSON 快 5~10 倍
-takeaways:
-  - 会用 datasets.load_dataset 一行加载 Hub 公开数据集与本地文件
+takeaways: "- 会用 datasets.load_dataset 一行加载 Hub 公开数据集与本地文件
   - 理解 Arrow 列式存储与内存映射的好处，知道 Dataset / DatasetDict 的区别
   - 能用 dataset.map(batched=True, num_proc=4) 做高效批量预处理与 tokenize
-  - 能把 Dataset 对接成 PyTorch DataLoader，跑通 end-to-end 训练 pipeline
-relatedIntel:
-  - 010-numpy-pandas
+  - 能把 Dataset 对接成 PyTorch DataLoader，跑通 end-to-end 训练 pipeline"
+relatedIntel: "- 010-numpy-pandas
   - 023-data-pipeline-etl
-  - 040-data-annotation
-tags:
-  - datasets
+  - 040-data-annotation"
+tags: "- datasets
   - huggingface
   - dataloader
   - arrow
-  - parquet
+  - parquet"
+relatedTerms: ["matrix", "entropy", "tensor", "transformer"]
+relatedTools: ["jupyter", "numpy", "pandas"]
+relatedNodes: ["nlp-rnn", "math-linear-algebra"]
 ---
 
 ## 为什么你要学它

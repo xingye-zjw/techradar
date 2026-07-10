@@ -4,23 +4,22 @@ category: cs
 difficulty: beginner
 duration: 2-3周
 summary: 理解网络通信的底层原理，掌握TCP/IP协议栈、HTTP协议、DNS解析、网络安全等核心知识，为分布式系统和网络编程打下基础
-takeaways:
-  - 理解OSI七层模型和TCP/IP四层模型
+takeaways: "- 理解OSI七层模型和TCP/IP四层模型
   - 掌握TCP三次握手四次挥手
   - 理解HTTP/HTTPS协议工作原理
-  - 能进行网络问题排查和性能优化
-relatedIntel:
-  - 050-cs-algo
+  - 能进行网络问题排查和性能优化"
+relatedIntel: "- 050-cs-algo
   - 051-cs-os
-  - 076-cs-database
-relatedNodes: cs-network
-tags:
-  - computer-network
+  - 076-cs-database"
+relatedNodes: ["cs-network", "math-linear-algebra"]
+tags: "- computer-network
   - tcp-ip
   - http
   - dns
   - network-security
-  - osi-model
+  - osi-model"
+relatedTerms: ["data-structure", "algorithm", "transformer", "complexity"]
+relatedTools: ["huggingface-transformers", "ultralytics-yolo", "pytorch"]
 ---
 
 ## 为什么你要学它
@@ -64,15 +63,15 @@ tags:
 
 **各层职责**
 
-| 层级 | 功能 | 典型协议/设备 |
-|------|------|---------------|
-| 应用层 | 提供用户接口 | HTTP、FTP、SMTP、DNS、SSH |
-| 表示层 | 数据格式转换、加密 | SSL/TLS、JPEG、MPEG |
-| 会话层 | 建立、管理、终止会话 | NetBIOS、RPC |
-| 传输层 | 端到端可靠传输 | TCP、UDP、SCTP |
-| 网络层 | 路由选择、IP寻址 | IP、ICMP、ARP、路由器 |
-| 数据链路层 | 帧同步、MAC寻址 | Ethernet、PPP、交换机 |
-| 物理层 | 比特流传输 | 网线、光纤、集线器 |
+| 层级       | 功能                 | 典型协议/设备             |
+| ---------- | -------------------- | ------------------------- |
+| 应用层     | 提供用户接口         | HTTP、FTP、SMTP、DNS、SSH |
+| 表示层     | 数据格式转换、加密   | SSL/TLS、JPEG、MPEG       |
+| 会话层     | 建立、管理、终止会话 | NetBIOS、RPC              |
+| 传输层     | 端到端可靠传输       | TCP、UDP、SCTP            |
+| 网络层     | 路由选择、IP寻址     | IP、ICMP、ARP、路由器     |
+| 数据链路层 | 帧同步、MAC寻址      | Ethernet、PPP、交换机     |
+| 物理层     | 比特流传输           | 网线、光纤、集线器        |
 
 ### 🔑 TCP协议详解
 
@@ -160,17 +159,17 @@ class SlidingWindow:
         self.window_size = window_size
         self.base = 0      # 窗口起始
         self.next_seq = 0  # 下一个要发送的序号
-    
+
     def can_send(self):
         return self.next_seq < self.base + self.window_size
-    
+
     def send(self):
         if self.can_send():
             seq = self.next_seq
             self.next_seq += 1
             return seq
         return None
-    
+
     def ack(self, ack_num):
         # 收到ACK，移动窗口
         if ack_num > self.base:
@@ -240,15 +239,15 @@ Date: Mon, 24 Jun 2024 10:00:00 GMT
 
 **HTTP方法**
 
-| 方法 | 用途 | 幂等性 | 安全性 |
-|------|------|--------|--------|
-| GET | 获取资源 | 是 | 是 |
-| POST | 创建资源 | 否 | 否 |
-| PUT | 更新资源（全量） | 是 | 否 |
-| PATCH | 更新资源（部分） | 否 | 否 |
-| DELETE | 删除资源 | 是 | 否 |
-| HEAD | 获取响应头 | 是 | 是 |
-| OPTIONS | 获取支持的方法 | 是 | 是 |
+| 方法    | 用途             | 幂等性 | 安全性 |
+| ------- | ---------------- | ------ | ------ |
+| GET     | 获取资源         | 是     | 是     |
+| POST    | 创建资源         | 否     | 否     |
+| PUT     | 更新资源（全量） | 是     | 否     |
+| PATCH   | 更新资源（部分） | 否     | 否     |
+| DELETE  | 删除资源         | 是     | 否     |
+| HEAD    | 获取响应头       | 是     | 是     |
+| OPTIONS | 获取支持的方法   | 是     | 是     |
 
 **HTTP状态码**
 
@@ -283,14 +282,14 @@ Date: Mon, 24 Jun 2024 10:00:00 GMT
 
 **HTTP/1.1 vs HTTP/2 vs HTTP/3**
 
-| 特性 | HTTP/1.1 | HTTP/2 | HTTP/3 |
-|------|----------|--------|--------|
-| 传输层 | TCP | TCP | QUIC(UDP) |
-| 多路复用 | 否（需多个连接） | 是 | 是 |
-| 头部压缩 | 否 | HPACK | QPACK |
-| 服务器推送 | 否 | 是 | 是 |
-| 队头阻塞 | 有 | TCP层有 | 无 |
-| 连接建立 | 1-3 RTT | 1-3 RTT | 0-1 RTT |
+| 特性       | HTTP/1.1         | HTTP/2  | HTTP/3    |
+| ---------- | ---------------- | ------- | --------- |
+| 传输层     | TCP              | TCP     | QUIC(UDP) |
+| 多路复用   | 否（需多个连接） | 是      | 是        |
+| 头部压缩   | 否               | HPACK   | QPACK     |
+| 服务器推送 | 否               | 是      | 是        |
+| 队头阻塞   | 有               | TCP层有 | 无        |
+| 连接建立   | 1-3 RTT          | 1-3 RTT | 0-1 RTT   |
 
 ### 🔑 HTTPS与TLS
 
@@ -512,11 +511,11 @@ def tcp_server(host='0.0.0.0', port=9999):
     server.bind((host, port))
     server.listen(5)
     print(f"Server listening on {host}:{port}")
-    
+
     while True:
         client, addr = server.accept()
         print(f"Connection from {addr}")
-        
+
         # 处理客户端请求
         data = client.recv(1024)
         print(f"Received: {data.decode()}")
@@ -539,15 +538,15 @@ import json
 def http_request(url, data=None, headers=None):
     """发送HTTP请求"""
     req = urllib.request.Request(url)
-    
+
     if headers:
         for key, value in headers.items():
             req.add_header(key, value)
-    
+
     if data:
         req.data = json.dumps(data).encode()
         req.add_header('Content-Type', 'application/json')
-    
+
     with urllib.request.urlopen(req) as response:
         return json.loads(response.read().decode())
 
@@ -559,22 +558,22 @@ def api_call():
     response = requests.get('https://api.github.com')
     print(f"Status: {response.status_code}")
     print(f"JSON: {response.json()}")
-    
+
     # POST请求
     data = {'key': 'value'}
     response = requests.post('https://httpbin.org/post', json=data)
     print(f"Response: {response.json()}")
-    
+
     # 带超时和重试
     from requests.adapters import HTTPAdapter
     from urllib3.util.retry import Retry
-    
+
     session = requests.Session()
     retry = Retry(total=3, backoff_factor=0.5, status_forcelist=[500, 502, 503, 504])
     adapter = HTTPAdapter(max_retries=retry)
     session.mount('http://', adapter)
     session.mount('https://', adapter)
-    
+
     response = session.get('https://api.github.com', timeout=5)
 ```
 
@@ -663,21 +662,25 @@ sar -n DEV 1                       # 网络接口统计
 ## 学习资源推荐
 
 **书籍**
+
 - 《计算机网络：自顶向下方法》- 经典教材，从应用层到物理层
 - 《TCP/IP详解 卷1：协议》- 深入TCP/IP协议细节
 - 《图解HTTP》- 通俗易懂的HTTP入门
 - 《网络是怎样连接的》- 从浏览器输入URL到页面显示的完整过程
 
 **在线课程**
+
 - 斯坦福 CS144: Introduction to Computer Networking
 - MIT 6.02: Introduction to EECS II: Digital Communication Systems
 
 **实践工具**
+
 - Wireshark - 网络协议分析器
 - Packet Tracer - 网络模拟器
 - GNS3 - 网络仿真平台
 
 **在线实验**
+
 - https://www.wireshark.org/ - 抓包分析
 - https://httpbin.org/ - HTTP请求测试
 - https://www.dnsdumpster.com/ - DNS信息收集

@@ -4,24 +4,23 @@ category: embedded
 difficulty: beginner
 duration: 2-3周
 summary: 电子、控制、通信的共同基础。理解信号怎么被系统处理、怎么在频域里分析，是所有硬件和通信工程师的必备内功。
-takeaways:
-  - 搞懂连续信号与离散信号的区别，以及为什么要引入采样
+takeaways: '- 搞懂连续信号与离散信号的区别，以及为什么要引入采样
   - 理解 LTI 系统为什么"卷积走天下"——任何 LTI 系统的输出都是输入与冲激响应的卷积
   - 能说出傅里叶、拉普拉斯、Z 变换各自的应用场景和区别
-  - 用 Python scipy/numpy 完整实现一个信号-filter-频谱分析的流程
-relatedIntel:
-  - 052-embedded-c
+  - 用 Python scipy/numpy 完整实现一个信号-filter-频谱分析的流程'
+relatedIntel: "- 052-embedded-c
   - 053-embedded-rtos
-  - 054-elec-circuit
-relatedNodes: elec-signals
-tags:
-  - signal
+  - 054-elec-circuit"
+relatedNodes: ["elec-signals", "electrical-safety"]
+tags: "- signal
   - system
   - linear-time-invariant
   - laplace-transform
   - z-transform
   - frequency-domain
-  - convolution
+  - convolution"
+relatedTerms: ["data-structure", "rtos", "algorithm", "complexity"]
+relatedTools: ["huggingface-transformers", "ultralytics-yolo", "pytorch"]
 ---
 
 ## 为什么你要学它
@@ -31,6 +30,7 @@ tags:
 无论是你手机里的射频信号、工厂里的传感器数据，还是音频处理中的降噪算法，核心都是一个问题：**"一个信号经过一个系统，会变成什么？"** 信号与系统就是回答这个问题的通用框架。
 
 它的重要性体现在：
+
 - **硬件层**：滤波器设计、放大器稳定性分析、ADC/DAC 采样定理
 - **控制系统**：伯德图、奈奎斯特判据、PID 控制器的理论基础
 - **通信**：调制解调、信道编码、频分复用/时分复用
@@ -138,6 +138,7 @@ print("幅值:", np.abs(yf[pos_mask])[:10])
 拉普拉斯变换是傅里叶变换的推广，引入复频率 `s = σ + jω`。
 
 **为什么需要它？**
+
 - 傅里叶变换要求信号绝对可积（收敛），很多实际信号（如增长信号）不满足
 - 拉普拉斯变换通过 `e^(-σt)` 因子强制收敛
 
@@ -152,6 +153,7 @@ Z 变换是拉普拉斯变换的离散版本，是离散信号与系统的分析
 `Z{ x[n] } = Σ x[n] · z^(-n)`，其中 `z = e^(sT)`，T 是采样周期。
 
 **核心用途**：
+
 - 分析离散系统的稳定性（单位圆内 vs 单位圆外）
 - 设计数字滤波器（IIR/FIR）
 - 求解差分方程

@@ -1,20 +1,29 @@
 ---
-title: "网络编程踩坑合集"
+title: 网络编程踩坑合集
 category: cs
 difficulty: intermediate
 duration: 30分钟
 summary: 涵盖 4 个常见踩坑：REST API 请求超时/失败、WebSocket 断线重连失败、HTTP keep-alive 导致连接复用问题、内网穿透后服务无法访问，每个均附快速修复与排查步骤。
-takeaways:
-  - 掌握「网络编程踩坑合集」中各问题的快速识别方法
-  - 理解每个踩坑的根因分析和排查步骤
-  - 学会标准化的修复流程和预防措施
+takeaways: "- 掌握「网络编程踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施"
 relatedIntel:
   - 075-cs-network
 tags:
   - 踩坑
-  - 网络
-  - TCP
-  - CORS
+  - 避坑指南
+  - 经验
+  - 常见问题
+relatedTerms:
+  - data-structure
+  - algorithm
+  - transformer
+  - complexity
+relatedTools:
+  - pytorch
+  - ultralytics-yolo
+  - huggingface-transformers
+relatedNodes:
+  - roadmap-capstone
+  - math-linear-algebra
 ---
 
 [网络通信]
@@ -127,3 +136,21 @@ tags:
 - 07 必要时重启穿透服务：systemctl restart frp 或重启 nps
 
 #内网穿透#网络#SSH
+
+## 修复后附加：最小一键诊断命令
+
+```bash
+# CS 基础最小自检：大 O + 算法复杂度自测 3 秒内
+python - <<'PY'
+from time import perf_counter
+N = 100_000
+arr = list(range(N)); s = 0
+t0 = perf_counter()
+for x in arr: s += x            # O(n)
+t1 = perf_counter()
+arr_sorted = sorted(arr)        # O(n log n)
+t2 = perf_counter()
+print(f'sum O(n)   = {(t1-t0)*1000:6.2f} ms  sum={s}')
+print(f'sort       = {(t2-t1)*1000:6.2f} ms  first={arr_sorted[0]} last={arr_sorted[-1]}')
+PY
+```

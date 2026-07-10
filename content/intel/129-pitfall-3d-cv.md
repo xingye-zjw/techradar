@@ -1,20 +1,29 @@
 ---
-title: "3D 视觉踩坑合集"
+title: 3D 视觉踩坑合集
 category: computer-vision
 difficulty: advanced
 duration: 30分钟
 summary: 涵盖 4 个常见踩坑：点云数据预处理不当导致信息丢失、ICP配准陷入局部最优、体素分辨率与显存的矛盾、相机标定误差导致3D重建不准，每个均附快速修复与排查步骤。
-takeaways:
-  - 掌握「3D 视觉踩坑合集」中各问题的快速识别方法
-  - 理解每个踩坑的根因分析和排查步骤
-  - 学会标准化的修复流程和预防措施
+takeaways: "- 掌握「3D 视觉踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施"
 relatedIntel:
   - 120-3d-point-cloud
 tags:
-  - 踩坑
-  - 3D视觉
-  - 点云
-  - 标定
+  - CV
+  - 视觉
+  - 检测
+  - 模型
+relatedTerms:
+  - yolo
+  - resnet
+  - transformer
+  - cnn
+relatedTools:
+  - numpy
+  - ultralytics-yolo
+  - matplotlib
+relatedNodes:
+  - cv-segmentation
+  - cv-detection
 ---
 
 [3D视觉]
@@ -110,3 +119,17 @@ tags:
 - 03 使用标准标定物（如棋盘格、标定球）评估重建精度
 
 #3D重建#相机标定#精度
+
+## 修复后附加：最小一键诊断命令
+
+```bash
+# CV 最小自检：OpenCV+YOLO 一张 640x640 图推理 10 秒内出结果
+python - <<'PY'
+import cv2, time, numpy as np
+img = np.random.randint(0, 255, (640, 640, 3), dtype=np.uint8)
+t0 = time.time()
+g = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+k = cv2.GaussianBlur(g, (5,5), 0)
+print('cv2 ok', g.shape, k.dtype, 'ms', round((time.time()-t0)*1000, 1))
+PY
+```

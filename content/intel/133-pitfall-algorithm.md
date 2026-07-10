@@ -1,20 +1,29 @@
 ---
-title: "算法与数据结构踩坑合集"
+title: 算法与数据结构踩坑合集
 category: cs
 difficulty: intermediate
 duration: 30分钟
 summary: 涵盖 4 个常见踩坑：二分查找边界条件处理错误、递归爆栈/栈溢出、哈希表键的可变类型陷阱、动态规划状态转移方程错误，每个均附快速修复与排查步骤。
-takeaways:
-  - 掌握「算法与数据结构踩坑合集」中各问题的快速识别方法
-  - 理解每个踩坑的根因分析和排查步骤
-  - 学会标准化的修复流程和预防措施
+takeaways: "- 掌握「算法与数据结构踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施"
 relatedIntel:
   - 050-cs-algo
 tags:
   - 踩坑
-  - 算法
-  - 边界条件
-  - 溢出
+  - 避坑指南
+  - 经验
+  - 常见问题
+relatedTerms:
+  - data-structure
+  - algorithm
+  - transformer
+  - complexity
+relatedTools:
+  - pytorch
+  - ultralytics-yolo
+  - huggingface-transformers
+relatedNodes:
+  - roadmap-capstone
+  - math-linear-algebra
 ---
 
 [数据结构与算法]
@@ -120,3 +129,21 @@ tags:
 - 05 空间优化核对：滚动数组优化时注意覆盖顺序，确保用到的旧值未被提前覆盖
 
 #动态规划#递推#算法
+
+## 修复后附加：最小一键诊断命令
+
+```bash
+# CS 基础最小自检：大 O + 算法复杂度自测 3 秒内
+python - <<'PY'
+from time import perf_counter
+N = 100_000
+arr = list(range(N)); s = 0
+t0 = perf_counter()
+for x in arr: s += x            # O(n)
+t1 = perf_counter()
+arr_sorted = sorted(arr)        # O(n log n)
+t2 = perf_counter()
+print(f'sum O(n)   = {(t1-t0)*1000:6.2f} ms  sum={s}')
+print(f'sort       = {(t2-t1)*1000:6.2f} ms  first={arr_sorted[0]} last={arr_sorted[-1]}')
+PY
+```

@@ -3,19 +3,16 @@ title: CV OCR（光学字符识别）
 category: computer-vision
 difficulty: intermediate
 duration: 1-2周
-summary: OCR 让计算机能"读懂"图像中的文字，是文档数字化、车牌识别、身份证识别的核心技术。
-takeaways:
-  - 理解文本检测 + 文本识别两阶段 pipeline，能说清楚每阶段的输入输出
+summary: OCR 让计算机能\"读懂\"图像中的文字，是文档数字化、车牌识别、身份证识别的核心技术。
+takeaways: "- 理解文本检测 + 文本识别两阶段 pipeline，能说清楚每阶段的输入输出
   - 搞懂 CRNN + CTC 的原理，为什么适合变长序列识别
   - 能用 EasyOCR 或 PaddleOCR 在真实图片上跑出一个完整 OCR pipeline
-  - 明白 Transformer OCR（如 TR、PARSeq）的核心改进点
-relatedTerms: ocr
-relatedIntel:
-  - 002-yolo
+  - 明白 Transformer OCR（如 TR、PARSeq）的核心改进点"
+relatedTerms: ["cnn", "yolo", "ocr", "resnet"]
+relatedIntel: "- 002-yolo
   - 004-resnet
-  - 006-cnn-basics
-tags:
-  - ocr
+  - 006-cnn-basics"
+tags: "- ocr
   - text-recognition
   - text-detection
   - crnn
@@ -27,7 +24,9 @@ tags:
   - ctpn
   - dbnet
   - rosetta
-  - tr大眼睛
+  - tr大眼睛"
+relatedTools: ["ultralytics-yolo", "numpy", "matplotlib"]
+relatedNodes: ["cv-detection", "cv-segmentation"]
 ---
 
 ## 为什么你要学它
@@ -35,6 +34,7 @@ tags:
 先讲结论：**OCR = 让计算机从图像中提取文字信息，是物理世界数字化的入口。**
 
 它解决的场景非常实际：
+
 - **文档数字化**：扫描纸质合同、发票、名片，转换成可搜索的文本
 - **车牌识别**：停车场、高速公路卡口，自动识别车牌号
 - **身份证/银行卡识别**：金融开户、KYC 认证，自动录入证件信息
@@ -72,12 +72,12 @@ OCR 通常分为两个独立阶段：
 
 代表方法：
 
-| 方法 | 论文 | 特点 |
-|------|------|------|
-| CTPN | 2016 | 预测文本小框，再连成行，适合水平文字 |
-| EAST | 2017 | 全卷积网络，直接预测多边形，支持旋转 |
-| DBNet | 2019 | 可微二值化，精度高，部署友好 |
-| TextFuseNet | 2020 | 引入语义分割，多语言支持好 |
+| 方法        | 论文 | 特点                                 |
+| ----------- | ---- | ------------------------------------ |
+| CTPN        | 2016 | 预测文本小框，再连成行，适合水平文字 |
+| EAST        | 2017 | 全卷积网络，直接预测多边形，支持旋转 |
+| DBNet       | 2019 | 可微二值化，精度高，部署友好         |
+| TextFuseNet | 2020 | 引入语义分割，多语言支持好           |
 
 核心思路：把文字检测当成目标检测或分割任务，只是检测目标是"文字区域"。
 
@@ -85,21 +85,23 @@ OCR 通常分为两个独立阶段：
 
 代表方法：
 
-| 方法 | 论文 | 特点 |
-|------|------|------|
-| CRNN + CTC | 2015 | CNN + RNN + CTC，经典baseline |
-| Rosetta | 2019 | Facebook出品，CNN + Attention |
-| TR (TransformeR) | 2020 | 用 Transformer 替代 RNN |
-| PARSeq | 2022 | 并行 Transformer，Scene Text Recognition |
+| 方法             | 论文 | 特点                                     |
+| ---------------- | ---- | ---------------------------------------- |
+| CRNN + CTC       | 2015 | CNN + RNN + CTC，经典baseline            |
+| Rosetta          | 2019 | Facebook出品，CNN + Attention            |
+| TR (TransformeR) | 2020 | 用 Transformer 替代 RNN                  |
+| PARSeq           | 2022 | 并行 Transformer，Scene Text Recognition |
 
 ### 🔑 CRNN + CTC 详解
 
 **CRNN（Convolutional Recurrent Neural Network）**：
+
 - CNN 提取图像特征
 - RNN（双向 LSTM）对序列建模，捕捉上下文
 - 输入图像是宽度 W×高度 H，输出是 T 个时间步的特征（T 与 W 成比例）
 
 **CTC（Connectionist Temporal Classification）**：
+
 - 解决"输入和输出长度不一致"的问题
 - 引入 blank（空白符）机制，允许重复和跳跃
 - 损失函数：输入序列到输出序列的所有对齐路径之和
@@ -112,6 +114,7 @@ CTC 允许：h-e-l-l-o 或 h--el-l-o 或各种对齐方式
 ```
 
 **CTC 解码方式**：
+
 - **贪心解码**：每个时间步取最大概率，合并重复字符，去掉 blank
 - **束搜索解码**：保留多条候选路径，精度更高但更慢
 
@@ -120,11 +123,13 @@ CTC 允许：h-e-l-l-o 或 h--el-l-o 或各种对齐方式
 CRNN 的局限：RNN 难以并行，训练慢；单向上下文可能遗漏信息。
 
 **TR（Transformer's Role）**：
+
 - 用 Transformer Encoder 替代 LSTM，捕获全局依赖
 - Self-Attention 让每个位置都能看到所有位置
 - 并行训练，速度更快
 
 **PARSeq**：
+
 - 并行 Transformer，解码时使用 Permutation Language Modeling
 - 既能并行训练，又能自回归解码
 - 在 Scene Text Recognition 上刷新 SOTA
@@ -183,7 +188,7 @@ class CRNN(nn.Module):
     def __init__(self, img_height, num_classes):
         super().__init__()
         self.img_height = img_height
-        
+
         # CNN backbone（VGG风格，高度压缩到 1）
         self.cnn = nn.Sequential(
             nn.Conv2d(1, 64, 3, 1, 1), nn.BatchNorm2d(64), nn.ReLU(),
@@ -198,23 +203,23 @@ class CRNN(nn.Module):
             nn.MaxPool2d((2, 1)),             # H: 4 -> 2
             nn.Conv2d(512, 512, 2, 1, 0),     # H: 2 -> 1
         )
-        
+
         # RNN
         self.rnn = nn.LSTM(512, 256, bidirectional=True, batch_first=True)
         self.fc = nn.Linear(512, num_classes)  # num_classes 包含 blank
-    
+
     def forward(self, x):
         # x: (B, C, H, W) -> CNN -> (B, 512, 1, W')
         x = self.cnn(x)
         b, c, h, w = x.size()
         assert h == 1, "CNN output height should be 1"
-        
+
         # 转为序列: (B, W', 512)
         x = x.squeeze(2).permute(0, 2, 1)
-        
+
         # RNN: (B, W', 512)
         x, _ = self.rnn(x)
-        
+
         # 分类: (B, W', num_classes)
         x = self.fc(x)
         return x  # 训练时返回 log_softmax，推理时返回预测

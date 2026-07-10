@@ -4,17 +4,14 @@ category: embedded
 difficulty: beginner
 duration: 1-2周
 summary: 电子创客和快速原型开发的最佳起点，用几行代码就能控制硬件、读取传感器、执行器驱动。
-takeaways:
-  - 掌握 Arduino 语言和开发环境，能独立编写 GPIO、PWM、UART、I2C、SPI 通信代码
+takeaways: '- 掌握 Arduino 语言和开发环境，能独立编写 GPIO、PWM、UART、I2C、SPI 通信代码
   - 理解微控制器基本工作原理，能读懂传感器数据手册并完成接口对接
   - 能独立完成一个从硬件连接到软件实现的完整嵌入式小项目
-  - 建立起"用代码控制物理世界"的直觉，为学习 RTOS、Linux 嵌入式打下基础
-relatedIntel:
-  - 052-embedded-c
+  - 建立起"用代码控制物理世界"的直觉，为学习 RTOS、Linux 嵌入式打下基础'
+relatedIntel: "- 052-embedded-c
   - 053-embedded-rtos
-  - 054-elec-circuit
-tags:
-  - arduino
+  - 054-elec-circuit"
+tags: "- arduino
   - microcontroller
   - gpio
   - pwm
@@ -23,7 +20,10 @@ tags:
   - spi
   - sensor-interface
   - embedded
-  - prototyping
+  - prototyping"
+relatedTerms: ["data-structure", "rtos", "algorithm", "complexity"]
+relatedTools: ["huggingface-transformers", "ultralytics-yolo", "pytorch"]
+relatedNodes: ["roadmap-capstone", "electrical-safety"]
 ---
 
 ## 为什么你要学它
@@ -222,26 +222,32 @@ void loop() {}
 ## 常见错误和解决方案
 
 **"上传失败：avrdude: ser_open(): can't open device"**
+
 - 原因：串口被占用或驱动未安装
 - 解决：在设备管理器中查看 COM 端口，确保选择了正确的端口；安装 CH340/FTDI 驱动
 
 **"I2C 设备不工作，读不到数据"**
+
 - 原因：接线错误（SDC/SCL 反了）、地址不对、没有上拉电阻
 - 解决：用 I2C Scanner 扫描确认设备地址；确保 SDA→A4, SCL→A5（UNO）；某些传感器需要外接 4.7kΩ 上拉电阻
 
 **"analogRead() 读数不稳定，波动几十到上百"**
+
 - 原因：ADC 参考电压受电源噪声影响
 - 解决：在 AREF 引脚接 100nF 电容去耦；多次采样取平均；使用外部精密参考源
 
 **"PWM 控制电机时有抖动"**
+
 - 原因：Arduino 默认 PWM 频率低（约 490Hz），电机能听到声音
 - 解决：使用 Timer1 库将 PWM 频率提高到 20kHz 以上
 
 **"程序能编译但行为不符合预期"**
+
 - 原因：`loop()` 里逻辑错误、死循环、delay 阻塞
 - 解决：用 `millis()` 替代 `delay()` 实现非阻塞延时；用 State Machine 模式组织代码
 
 **"ESP32 连接 WiFi 一直失败"**
+
 - 原因：WiFi 密码错误、路由器不支持 802.11b、供电不足
 - 解决：确认密码；检查供电是否稳定（ESP32 需要 500mA+）；尝试用手机热点测试
 

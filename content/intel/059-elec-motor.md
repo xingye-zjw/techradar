@@ -4,24 +4,23 @@ category: embedded
 difficulty: advanced
 duration: 3周
 summary: 掌握直流电机和交流电机的控制原理，理解FOC矢量控制和电力电子变换技术
-takeaways:
-  - 理解电机工作原理
+takeaways: "- 理解电机工作原理
   - 掌握FOC矢量控制
   - 理解电力电子变换技术
-  - 能设计电机驱动系统
-relatedIntel:
-  - 052-embedded-c
+  - 能设计电机驱动系统"
+relatedIntel: "- 052-embedded-c
   - 053-embedded-rtos
-  - 054-elec-circuit
-relatedNodes: elec-motor
-tags:
-  - motor
+  - 054-elec-circuit"
+relatedNodes: ["elec-motor", "electrical-safety"]
+tags: "- motor
   - foc
   - inverter
   - pwm
   - pmsm
   - bldc
-  - power-electronics
+  - power-electronics"
+relatedTerms: ["data-structure", "rtos", "algorithm", "complexity"]
+relatedTools: ["huggingface-transformers", "ultralytics-yolo", "pytorch"]
 ---
 
 ## 为什么你要学它
@@ -62,25 +61,25 @@ class DCMotor:
         self.Kt = Kt  # 转矩常数
         self.J = J    # 转动惯量
         self.B = B    # 阻尼系数
-        
+
         # 状态变量
         self.ia = 0.0  # 电枢电流
         self.omega = 0.0  # 转速
-        
+
     def update(self, Va, TL, dt):
         """更新电机状态"""
         # 电枢电流变化率
         dia_dt = (Va - self.Ra * self.ia - self.Ke * self.omega) / self.La
-        
+
         # 转速变化率
         domega_dt = (self.Kt * self.ia - self.B * self.omega - TL) / self.J
-        
+
         # 更新状态
         self.ia += dia_dt * dt
         self.omega += domega_dt * dt
-        
+
         return self.ia, self.omega
-    
+
     def get_speed_rpm(self):
         """获取转速（RPM）"""
         return self.omega * 60 / (2 * np.pi)
@@ -134,7 +133,7 @@ class PWMController:
     def __init__(self, frequency=1000):
         self.frequency = frequency
         self.period = 1.0 / frequency
-        
+
     def generate_pwm(self, duty_cycle, t):
         """生成PWM信号"""
         phase = (t % self.period) / self.period
@@ -150,13 +149,13 @@ speeds = []
 for duty in duty_cycles:
     motor_pwm.ia = 0.0
     motor_pwm.omega = 0.0
-    
+
     # 仿真1秒
     for i in range(int(1.0 / dt)):
         pwm_signal = pwm.generate_pwm(duty, i * dt)
         Va_pwm = 12 * pwm_signal
         motor_pwm.update(Va_pwm, 0.1, dt)
-    
+
     speeds.append(motor_pwm.get_speed_rpm())
 
 print("PWM调速特性：")
@@ -178,13 +177,13 @@ class PMSM_FOC:
         self.Ke = Ke  # 反电动势常数
         self.poles = poles  # 极对数
         self.J = J    # 转动惯量
-        
+
         # 状态变量
         self.id = 0.0  # d轴电流
         self.iq = 0.0  # q轴电流
         self.theta = 0.0  # 转子位置
         self.omega = 0.0  # 转速
-        
+
         # PI控制器
         self.Kp_id = 10.0
         self.Ki_id = 100.0
@@ -192,52 +191,52 @@ class PMSM_FOC:
         self.Ki_iq = 100.0
         self.Kp_speed = 0.5
         self.Ki_speed = 5.0
-        
+
         self.integral_id = 0.0
         self.integral_iq = 0.0
         self.integral_speed = 0.0
-        
+
     def clarke_transform(self, ia, ib, ic):
         """Clarke变换：三相→两相静止坐标系"""
         ialpha = ia
         ibeta = (ia + 2*ib) / np.sqrt(3)
         return ialpha, ibeta
-    
+
     def park_transform(self, ialpha, ibeta, theta):
         """Park变换：静止坐标系→旋转坐标系"""
         id = ialpha * np.cos(theta) + ibeta * np.sin(theta)
         iq = -ialpha * np.sin(theta) + ibeta * np.cos(theta)
         return id, iq
-    
+
     def inverse_park(self, vd, vq, theta):
         """反Park变换"""
         valpha = vd * np.cos(theta) - vq * np.sin(theta)
         vbeta = vd * np.sin(theta) + vq * np.cos(theta)
         return valpha, vbeta
-    
+
     def inverse_clarke(self, valpha, vbeta):
         """反Clarke变换"""
         va = valpha
         vb = (-valpha + np.sqrt(3)*vbeta) / 2
         vc = (-valpha - np.sqrt(3)*vbeta) / 2
         return va, vb, vc
-    
+
     def svpwm(self, valpha, vbeta, Vdc):
         """空间矢量PWM"""
         # 扇区判断
         Vref = np.sqrt(valpha**2 + vbeta**2)
         angle = np.arctan2(vbeta, valpha)
-        
+
         # 限制电压
         Vref = min(Vref, Vdc / np.sqrt(3))
-        
+
         # 计算占空比（简化）
         duty_a = 0.5 + valpha / Vdc
         duty_b = 0.5 + (-valpha/2 + np.sqrt(3)*vbeta/2) / Vdc
         duty_c = 0.5 + (-valpha/2 - np.sqrt(3)*vbeta/2) / Vdc
-        
+
         return np.clip([duty_a, duty_b, duty_c], 0, 1)
-    
+
     def update(self, speed_ref, ia, ib, ic, theta, omega, dt):
         """FOC控制周期"""
         # 速度环
@@ -245,30 +244,30 @@ class PMSM_FOC:
         self.integral_speed += speed_error * dt
         iq_ref = self.Kp_speed * speed_error + self.Ki_speed * self.integral_speed
         iq_ref = np.clip(iq_ref, -10, 10)  # 限制电流
-        
+
         # d轴电流给定（id=0控制）
         id_ref = 0.0
-        
+
         # 坐标变换
         ialpha, ibeta = self.clarke_transform(ia, ib, ic)
         id_meas, iq_meas = self.park_transform(ialpha, ibeta, theta)
-        
+
         # 电流环（d轴）
         id_error = id_ref - id_meas
         self.integral_id += id_error * dt
         vd = self.Kp_id * id_error + self.Ki_id * self.integral_id
         vd -= omega * self.Lq * iq_meas  # 解耦项
-        
+
         # 电流环（q轴）
         iq_error = iq_ref - iq_meas
         self.integral_iq += iq_error * dt
         vq = self.Kp_iq * iq_error + self.Ki_iq * self.integral_iq
         vq += omega * (self.Ld * id_meas + self.Ke)  # 解耦项
-        
+
         # 反变换
         valpha, vbeta = self.inverse_park(vd, vq, theta)
         va, vb, vc = self.inverse_clarke(valpha, vbeta)
-        
+
         return va, vb, vc, iq_ref
 
 # FOC仿真
@@ -290,15 +289,15 @@ for i in range(len(t)):
     ia = foc.iq * np.sin(foc.theta)
     ib = foc.iq * np.sin(foc.theta - 2*np.pi/3)
     ic = foc.iq * np.sin(foc.theta + 2*np.pi/3)
-    
+
     # FOC控制
     va, vb, vc, iq_ref = foc.update(speed_ref[i], ia, ib, ic, foc.theta, foc.omega, dt)
-    
+
     # 简化电机模型更新
     foc.iq += (va[0] - foc.Rs * foc.iq - foc.Ke * foc.omega) / foc.Lq * dt
     foc.omega += (foc.Ke * foc.iq - 0.01 * foc.omega) / foc.J * dt
     foc.theta += foc.omega * dt
-    
+
     speed[i] = foc.omega
     vd[i] = va[0]
     vq[i] = iq_ref
@@ -338,7 +337,7 @@ class ThreePhaseInverter:
         self.Vdc = Vdc  # 直流母线电压
         self.switching_freq = switching_freq
         self.period = 1.0 / switching_freq
-        
+
     def generate_spwm(self, va_ref, vb_ref, vc_ref, t):
         """正弦PWM"""
         # 载波（三角波）
@@ -347,40 +346,40 @@ class ThreePhaseInverter:
             carrier = 2 * carrier_phase
         else:
             carrier = 2 * (1 - carrier_phase)
-        
+
         # 比较
         sa = 1 if va_ref / self.Vdc > carrier else 0
         sb = 1 if vb_ref / self.Vdc > carrier else 0
         sc = 1 if vc_ref / self.Vdc > carrier else 0
-        
+
         return sa, sb, sc
-    
+
     def generate_svpwm(self, valpha, vbeta, t):
         """空间矢量PWM"""
         # 扇区判断
         Vref = np.sqrt(valpha**2 + vbeta**2)
         angle = np.arctan2(vbeta, valpha)
-        
+
         # 限制电压
         Vmax = self.Vdc / np.sqrt(3)
         if Vref > Vmax:
             valpha = valpha * Vmax / Vref
             vbeta = vbeta * Vmax / Vref
             Vref = Vmax
-        
+
         # 计算占空比
         duty_a = 0.5 + valpha / self.Vdc
         duty_b = 0.5 + (-valpha/2 + np.sqrt(3)*vbeta/2) / self.Vdc
         duty_c = 0.5 + (-valpha/2 - np.sqrt(3)*vbeta/2) / self.Vdc
-        
+
         # PWM生成
         carrier_phase = (t % self.period) / self.period
         sa = 1 if duty_a > carrier_phase else 0
         sb = 1 if duty_b > carrier_phase else 0
         sc = 1 if duty_c > carrier_phase else 0
-        
+
         return sa, sb, sc
-    
+
     def output_voltage(self, sa, sb, sc):
         """计算输出电压"""
         # 假设中点接地

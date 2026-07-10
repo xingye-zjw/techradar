@@ -4,22 +4,22 @@ category: computer-vision
 difficulty: intermediate
 duration: 1-2周
 summary: 图像模型训练中的实用技巧：数据增强、学习率策略、过拟合处理与迁移学习，帮你把 baseline 稳定提升到可交付水平。
-takeaways:
-  - 掌握常用数据增强策略与 AutoAugment/RandAugment 的使用场景
+takeaways: "- 掌握常用数据增强策略与 AutoAugment/RandAugment 的使用场景
   - 理解学习率 warmup、cosine decay 与早停机制对收敛的影响
   - 学会用迁移学习、冻结层和微调策略快速适配小数据集
-  - 掌握过拟合、类别不平衡与标签噪声的常用应对手段
-relatedIntel:
-  - 006-cnn-basics
+  - 掌握过拟合、类别不平衡与标签噪声的常用应对手段"
+relatedIntel: "- 006-cnn-basics
   - 002-yolo
-  - 004-resnet
-tags:
-  - computer-vision
+  - 004-resnet"
+tags: "- computer-vision
   - data-augmentation
   - transfer-learning
   - learning-rate-schedule
   - overfitting
-  - fine-tuning
+  - fine-tuning"
+relatedTerms: ["cnn", "yolo", "transformer", "resnet"]
+relatedTools: ["ultralytics-yolo", "numpy", "matplotlib"]
+relatedNodes: ["cv-detection", "cv-segmentation"]
 ---
 
 ## 为什么你要学它
@@ -33,6 +33,7 @@ tags:
 > **数据增强 + 预训练权重 + 合理学习率 + 早停，是 CV 训练的黄金四角。**
 
 核心要点：
+
 - **数据层面**：增强要足够、标签要干净、类别要平衡
 - **优化层面**：AdamW + cosine decay + warmup 是大多数任务的默认选择
 - **模型层面**：优先用 ImageNet 预训练权重，再按层解冻微调
@@ -45,12 +46,14 @@ tags:
 合理的增强能让模型见过更多样化的输入，显著提升泛化能力。
 
 常用增强：
+
 - **几何变换**：随机裁剪、翻转、旋转、缩放
 - **颜色变换**：亮度、对比度、色相、饱和度抖动
 - **Mixup / CutMix**：将两张图按一定比例混合，增强决策边界平滑度
 - **AutoAugment / RandAugment**：自动搜索或随机组合增强策略
 
 代码示例（PyTorch + Albumentations）：
+
 ```python
 import albumentations as A
 from albumentations.pytorch import ToTensorV2
@@ -81,6 +84,7 @@ scheduler = CosineAnnealingLR(optimizer, T_max=epochs)
 ### 🔑 迁移学习与微调
 
 小数据集上不要从头训练，优先使用预训练权重：
+
 1. **冻结 backbone**：只训练最后的分类层，快速获得稳定 baseline
 2. **逐层解冻**：训练几轮后逐步放开更多层，让模型适配目标域
 3. **差分学习率**：backbone 用较小 lr（如 1e-4），head 用较大 lr（如 1e-3）
@@ -96,13 +100,13 @@ scheduler = CosineAnnealingLR(optimizer, T_max=epochs)
 
 当验证集指标不理想时，按以下顺序排查：
 
-01. 检查数据加载是否正确（标签、路径、归一化）
-02. 可视化增强后的样本，确认增强强度合理
-03. 画出 train/val loss 曲线，判断是否过拟合或欠拟合
-04. 检查学习率是否过大或 warmup 是否缺失
-05. 用预训练权重重跑，确认 baseline 是否正常
-06. 分析错误样本，定位是数据问题还是模型容量问题
-07. 尝试更大的模型或更强的增强，做消融实验
+1.  检查数据加载是否正确（标签、路径、归一化）
+2.  可视化增强后的样本，确认增强强度合理
+3.  画出 train/val loss 曲线，判断是否过拟合或欠拟合
+4.  检查学习率是否过大或 warmup 是否缺失
+5.  用预训练权重重跑，确认 baseline 是否正常
+6.  分析错误样本，定位是数据问题还是模型容量问题
+7.  尝试更大的模型或更强的增强，做消融实验
 
 ## 常见误区与注意事项
 

@@ -4,17 +4,14 @@ category: computer-vision
 difficulty: beginner
 duration: 1-2周
 summary: 从原始像素中自动提取层次化视觉特征，是 ResNet、ViT 等所有现代视觉模型的共同祖先
-takeaways:
-  - 理解卷积、池化、padding、stride 的直觉与输出尺寸公式
+takeaways: "- 理解卷积、池化、padding、stride 的直觉与输出尺寸公式
   - 理解感受野与层次化特征提取（边缘 → 纹理 → 物体 → 场景）
   - 读懂 LeNet → AlexNet → VGG → GoogLeNet 的演进脉络
-  - 能用 PyTorch 手写一个两层 CNN，在 MNIST 上训练到 99%+ 准确率
-relatedIntel:
-  - 002-yolo
+  - 能用 PyTorch 手写一个两层 CNN，在 MNIST 上训练到 99%+ 准确率"
+relatedIntel: "- 002-yolo
   - 004-resnet
-  - 060-cv-instance-segmentation
-tags:
-  - cnn
+  - 060-cv-instance-segmentation"
+tags: "- cnn
   - convolution
   - pooling
   - feature map
@@ -22,7 +19,10 @@ tags:
   - alexnet
   - vgg
   - receptive field
-  - batch normalization
+  - batch normalization"
+relatedTerms: ["cnn", "yolo", "transformer", "resnet"]
+relatedTools: ["ultralytics-yolo", "numpy", "matplotlib"]
+relatedNodes: ["cv-detection", "cv-segmentation"]
 ---
 
 ## 为什么你要学它
@@ -80,13 +80,13 @@ W_out = floor((W_in + 2*P - K) / S) + 1
 
 **常用组合速查**：
 
-| 输入 | K | P | S | 输出 | 说明 |
-|------|---|---|---|------|------|
-| 28×28 | 3 | 1 | 1 | 28×28 | same padding，保持尺寸 |
-| 28×28 | 3 | 0 | 1 | 26×26 | valid padding，边缘不补零 |
-| 28×28 | 3 | 1 | 2 | 14×14 | 尺寸减半，常用于下采样 |
-| 224×224 | 7 | 3 | 2 | 112×112 | AlexNet / ResNet 开头的大卷积 |
-| 32×32 | 5 | 2 | 1 | 32×32 | same padding with 5×5 |
+| 输入    | K   | P   | S   | 输出    | 说明                          |
+| ------- | --- | --- | --- | ------- | ----------------------------- |
+| 28×28   | 3   | 1   | 1   | 28×28   | same padding，保持尺寸        |
+| 28×28   | 3   | 0   | 1   | 26×26   | valid padding，边缘不补零     |
+| 28×28   | 3   | 1   | 2   | 14×14   | 尺寸减半，常用于下采样        |
+| 224×224 | 7   | 3   | 2   | 112×112 | AlexNet / ResNet 开头的大卷积 |
+| 32×32   | 5   | 2   | 1   | 32×32   | same padding with 5×5         |
 
 **PyTorch 示例**：
 
@@ -133,19 +133,20 @@ print(pool(x).shape)            # torch.Size([2, 16, 14, 14])
 
 堆叠多个 3×3 卷积（stride=1, padding=1）的感受野增长：
 
-| 第 n 层 | 感受野大小 | 计算 |
-|---------|-----------|------|
-| 输入 | 1 | - |
-| Conv1 (3×3) | 3 | 1 + (3-1)×1 = 3 |
-| Conv2 (3×3) | 5 | 3 + (3-1)×1 = 5 |
-| Conv3 (3×3) | 7 | 5 + (3-1)×1 = 7 |
-| Conv4 (3×3) | 9 | 7 + (3-1)×1 = 9 |
+| 第 n 层     | 感受野大小 | 计算            |
+| ----------- | ---------- | --------------- |
+| 输入        | 1          | -               |
+| Conv1 (3×3) | 3          | 1 + (3-1)×1 = 3 |
+| Conv2 (3×3) | 5          | 3 + (3-1)×1 = 5 |
+| Conv3 (3×3) | 7          | 5 + (3-1)×1 = 7 |
+| Conv4 (3×3) | 9          | 7 + (3-1)×1 = 9 |
 
 公式：`RF_{i+1} = RF_i + (K_{i+1} - 1) × prod(stride_0..stride_i)`。stride 的乘积是累积的——每次下采样都会让后续层的感受野增长更快。
 
 **为什么这很重要？** 假设你要检测一个占据 40×40 像素的物体，而输出特征图一个像素的感受野只有 20×20——那网络"看不全"这个物体，检测质量会差。你需要要么增加层数要么增加 stride，把感受野做大。
 
 **为什么不用一个大卷积核而用多个小的？** 两个 3×3 堆叠的感受野 = 一个 5×5，但：
+
 - 参数量：2×(9×C_in×C_out) vs 25×C_in×C_out，**参数少 2.7 倍**
 - 多了一层 ReLU，**非线性更强**，表达能力更好
 
@@ -167,23 +168,27 @@ BN 在每个 mini-batch 上对每个通道做"均值归零、方差归一"，再
 ### 🔑 经典架构串讲
 
 **LeNet-5（1998，Yann LeCun）**
+
 - 输入：28×28 手写数字
 - 结构：Conv(5×5, 6) → Pool → Conv(5×5, 16) → Pool → FC(120) → FC(84) → FC(10)
 - 历史意义：第一个被大规模使用的 CNN，用来读支票。结构简单，非常适合你手写第一个实现。
 
 **AlexNet（2012，Krizhevsky / Sutskever / Hinton）**
+
 - 输入：224×224×3
 - 创新点：ReLU（替代 sigmoid/tanh，缓解梯度消失）、Dropout、数据翻转/裁剪增强、两块 GPU 并行训练、Local Response Normalization（现已被 BN 替代）
 - top-5 error：15.3%（第二名 26.2%）
 - 历史意义：**引爆了深度学习革命**，让业界真正相信端到端学习。
 
 **VGG-16 / VGG-19（2014，Simonyan & Zisserman）**
+
 - 全网络只用 3×3 卷积、stride=1、padding=1，穿插 2×2 MaxPool
 - 结构极简：conv-conv-pool × 若干 → FC → softmax
 - 缺点：参数量巨大（FC 层占大部分），推理慢
 - 历史贡献：确立了"小卷积核堆叠"的设计哲学，直到今天仍是教学和 baseline 的首选。
 
 **GoogLeNet / Inception-v1（2014，Szegedy et al.）**
+
 - 核心创新：**Inception 模块**——对同一输入并行跑 1×1、3×3、5×5 卷积和 max pooling，再把输出拼起来。让网络"自由选择用哪种尺度的特征"。
 - 另一个关键：**1×1 卷积作为"瓶颈"**——在 3×3/5×5 之前先把通道数压下去，大幅减少参数量。
 - 参数量只有 AlexNet 的 1/12，精度却更高。
@@ -334,6 +339,7 @@ Epoch 4: train_loss=0.024, train_acc=0.9922, test_acc=0.9925
 ```
 
 **5 个 epoch 后测试准确率约 99.2%~99.3%**。要进一步冲到 99.5%+，可以：
+
 - 加一个额外的卷积层
 - 把 dropout 从 0.25 调到 0.3
 - 用学习率调度（MultiStepLR / CosineAnnealingLR）

@@ -4,20 +4,25 @@ category: deep-learning
 difficulty: intermediate
 duration: 30分钟
 summary: 聚焦单点问题：训练 Loss NaN 与梯度爆炸，涵盖学习率调整、梯度裁剪（clip_grad_norm_）、AdamW+warmup、数据 NaN 检查等排查与修复方案。
-takeaways:
-  - 快速识别「Loss NaN / 梯度爆炸」的典型症状
-  - 理解该问题的根因分析和标准排查步骤
-  - 学会分步排查和解决问题的标准化流程
-  - 了解预防措施，避免下次踩同样的坑
-relatedIntel:
-  - 090-pitfall-dl-training
-  - 017-metrics
+takeaways: "- 快速识别「Loss NaN / 梯度爆炸」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑"
+relatedIntel: "- 090-pitfall-dl-training - 017-metrics"
 tags:
-  - 踩坑
-  - 避坑指南
-  - loss
-  - 梯度
-  - 数值稳定性
+  - 深度学习
+  - DL
+  - 训练
+  - PyTorch
+relatedTerms:
+  - tensor
+  - gradient-descent
+  - transformer
+  - cnn
+relatedTools:
+  - pytorch
+  - numpy
+  - huggingface-transformers
+relatedNodes:
+  - cv-segmentation
+  - llm-inference
 ---
 
 ## 为什么你要学它
@@ -33,6 +38,7 @@ tags:
 > **快速修复：降学习率 + 梯度裁剪 + warmup，优先排查数据**
 
 核心要点：
+
 - **现象**：train_loss 突然跳到 inf / NaN
 - **根因**：学习率过高导致梯度更新过大，数值溢出为 NaN/inf。也可能是输入数据中存在 NaN/inf，或使用 FP16 训练时动态范围不足。warmup 预热和梯度裁剪是标准解决方案
 - **解决**：按照下方 6 步标准流程排查
@@ -53,12 +59,12 @@ tags:
 
 按照以下步骤逐一排查，通常能在几分钟内定位并解决问题：
 
-01. 首要：降低学习率（默认 5e-5，中文任务常需降为 2e-5 / 1e-5）
-02. 启用 max_grad_norm 梯度裁剪（常见值 1.0）：torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
-03. 检查数据中是否存在 NaN 输入 / 长度超限 / tokenizer 未处理字符
-04. AdamW 优化器 + warmup 预热（前 2-3% 的 step 线性预热）
-05. FP16 下出现 NaN 可先降为 FP32 定位具体模块
-06. 如果发生在第一个 epoch 检查数据本身是否正常（可视化第一批数据）
+1.  首要：降低学习率（默认 5e-5，中文任务常需降为 2e-5 / 1e-5）
+2.  启用 max_grad_norm 梯度裁剪（常见值 1.0）：torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+3.  检查数据中是否存在 NaN 输入 / 长度超限 / tokenizer 未处理字符
+4.  AdamW 优化器 + warmup 预热（前 2-3% 的 step 线性预热）
+5.  FP16 下出现 NaN 可先降为 FP32 定位具体模块
+6.  如果发生在第一个 epoch 检查数据本身是否正常（可视化第一批数据）
 
 ### 快速修复（救急用）
 

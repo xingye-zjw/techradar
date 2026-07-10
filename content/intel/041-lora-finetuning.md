@@ -4,35 +4,38 @@ category: llm
 difficulty: intermediate
 duration: 1周
 summary: 全量微调太贵？LoRA 用 0.1% 的参数达到 95% 的效果——微调技术的性价比革命
-takeaways:
-  - 理解全量微调（Full Fine-tuning）的成本和局限
+takeaways: "- 理解全量微调（Full Fine-tuning）的成本和局限
   - 理解 LoRA 的数学原理：低秩分解
   - 能用 PEFT 库实现 LoRA 微调
-  - 理解 QLoRA（4-bit + LoRA）的显存优化
-relatedIntel:
-  - 003-lora-qlora
+  - 理解 QLoRA（4-bit + LoRA）的显存优化"
+relatedIntel: "- 003-lora-qlora
   - 005-rag
-  - 015-rlhf
-relatedNodes:
-  - llm-finetune
-  - llm-inference
-tags:
-  - fine-tuning
+  - 015-rlhf"
+relatedNodes: [
+    "llm-inference",
+    "- llm-finetune
+    - llm-inference",
+  ]
+tags: "- fine-tuning
   - sft
   - lora
   - qlora
   - peft
-  - adapter
+  - adapter"
+relatedTerms: ["rag", "lora", "transformer", "chain-of-thought"]
+relatedTools: ["huggingface-transformers", "langchain", "pytorch"]
 ---
 
 ## 为什么你要学它
 
 全量微调一个 7B 模型：
+
 - 显存：需要 ~100GB（FP16 模型 + 梯度 + Optimizer 状态）
 - 时间：单卡需要数天
 - 存储：每个微调版本都是完整的 7B 模型
 
 **LoRA（Low-Rank Adaptation）** 的突破：
+
 - 只训练 0.1% 的参数（~7M vs 7B）
 - 显存需求降到 ~20GB（单卡可跑）
 - 每个微调版本只需存储 ~20MB 的 LoRA 权重
@@ -58,10 +61,12 @@ tags:
 ```
 
 例如：d=4096, k=4096, r=8
+
 - 全量更新：ΔW 有 4096×4096 = 16M 参数
 - LoRA：A + B 有 4096×8 + 8×4096 = 65K 参数（减少 99.6%）
 
 训练时：
+
 - 原始权重 W₀ 冻结
 - 只训练 A 和 B
 - 前向传播：W = W₀ + A × B
@@ -71,14 +76,14 @@ class LoRALayer(nn.Module):
     def __init__(self, original_layer, rank=8):
         super().__init__()
         self.original = original_layer  # 冻结
-        
+
         d = original_layer.in_features
         k = original_layer.out_features
-        
+
         # LoRA 矩阵
         self.A = nn.Parameter(torch.randn(d, rank) * 0.01)
         self.B = nn.Parameter(torch.zeros(rank, k))
-    
+
     def forward(self, x):
         # 原始输出 + LoRA 输出
         return self.original(x) + (x @ self.A @ self.B)
@@ -114,6 +119,7 @@ model.print_trainable_parameters()
 ### 🔑 QLoRA：4-bit + LoRA
 
 QLoRA 在 LoRA 基础上进一步降低显存：
+
 - 基础模型用 4-bit 量化加载
 - LoRA 矩阵用 FP16 训练
 - 显存需求：~6GB（7B 模型）

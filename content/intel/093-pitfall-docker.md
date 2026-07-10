@@ -1,21 +1,28 @@
 ---
-title: "Docker 容器化踩坑合集"
+title: Docker 容器化踩坑合集
 category: devops
 difficulty: intermediate
 duration: 30分钟
 summary: 涵盖 5 个常见踩坑：Docker 容器时间与宿主机不一致、Docker 容器中无法使用 GPU (nvidia-smi 报错)、Docker 镜像体积过大、Docker 容器内存泄漏、Docker 网络桥接模式导致容器间通信失败，每个均附快速修复与排查步骤。
-takeaways:
-  - 掌握「Docker 容器化踩坑合集」中各问题的快速识别方法
-  - 理解每个踩坑的根因分析和排查步骤
-  - 学会标准化的修复流程和预防措施
-relatedIntel:
-  - 007-docker
-  - 034-cuda-programming
+takeaways: "- 掌握「Docker 容器化踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施"
+relatedIntel: "- 007-docker - 034-cuda-programming"
 tags:
-  - 踩坑
-  - Docker
-  - 容器化
-  - GPU
+  - DevOps
+  - 部署
+  - 运维
+  - 容器
+relatedTerms:
+  - git
+  - docker
+  - linux
+  - kubernetes
+relatedTools:
+  - mlflow
+  - docker
+  - kubernetes
+relatedNodes:
+  - docker-basic
+  - devops-kubernetes
 ---
 
 [环境配置]
@@ -147,3 +154,14 @@ docker run -e TZ=Asia/Shanghai 或 -v /etc/localtime:/etc/localtime:ro
 - 06 使用 docker-compose 统一管理网络配置
 
 #Docker#网络#容器
+
+## 修复后附加：最小一键诊断命令
+
+```bash
+# DevOps 最小自检：Docker/K8s/磁盘空间/SSH 端口 10 秒内出结论
+set -e
+echo '--- docker ---' && (docker info 2>/dev/null | head -n 5 || echo 'docker unavailable')
+echo '--- disk ---'   && df -h / | tail -n 1
+echo '--- k8s ---'    && (kubectl cluster-info 2>/dev/null | head -n 3 || echo 'kubectl unavailable')
+echo '--- ssh 22 ---' && (timeout 3 bash -c 'cat < /dev/tcp/127.0.0.1/22' >/dev/null 2>&1 && echo open || echo closed)
+```

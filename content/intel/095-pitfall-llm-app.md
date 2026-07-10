@@ -1,22 +1,28 @@
 ---
-title: "LLM 应用开发踩坑合集"
+title: LLM 应用开发踩坑合集
 category: llm
 difficulty: intermediate
 duration: 30分钟
 summary: 涵盖 4 个常见踩坑：RAG 检索到了但回答不对 / 幻觉严重、大模型 Prompt 转义字符错误导致 JSON 输出截断、LLM 输出不稳定 / 重复复读、LLM API 调用超时 / 频率限制，每个均附快速修复与排查步骤。
-takeaways:
-  - 掌握「LLM 应用开发踩坑合集」中各问题的快速识别方法
-  - 理解每个踩坑的根因分析和排查步骤
-  - 学会标准化的修复流程和预防措施
-relatedIntel:
-  - 020-prompt-engineering
-  - 005-rag
-  - 031-agentic-ai
+takeaways: "- 掌握「LLM 应用开发踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施"
+relatedIntel: "- 020-prompt-engineering - 005-rag - 031-agentic-ai"
 tags:
-  - 踩坑
+  - 大模型
   - LLM
   - Prompt
-  - 应用开发
+  - 推理
+relatedTerms:
+  - lora
+  - rag
+  - transformer
+  - chain-of-thought
+relatedTools:
+  - langchain
+  - pytorch
+  - huggingface-transformers
+relatedNodes:
+  - llm-prompt-engineering
+  - llm-inference
 ---
 
 [大语言模型]
@@ -127,3 +133,18 @@ tags:
 - 06 配置多模型冗余，主模型失败时自动切换到备用模型
 
 #LLM#API#网络安全
+
+## 修复后附加：最小一键诊断命令
+
+```bash
+# 最小 LLM 环境自检：模型下载+加载+token 消耗 10 秒内可用
+python - <<'PY'
+import os, time
+assert os.system('pip show transformers accelerate') == 0, 'pip 依赖缺失'
+t0 = time.time()
+from transformers import AutoTokenizer
+tok = AutoTokenizer.from_pretrained('Qwen/Qwen2.5-1.5B-Instruct', trust_remote_code=True)
+ids = tok('hello world', return_tensors='pt').input_ids
+print(f'tokenize OK len={ids.shape[1]}, cost_ms={(time.time()-t0)*1000:.0f}')
+PY
+```

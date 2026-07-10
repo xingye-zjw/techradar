@@ -1,21 +1,28 @@
 ---
-title: "模型评估指标踩坑合集"
+title: 模型评估指标踩坑合集
 category: machine-learning
 difficulty: intermediate
 duration: 30分钟
 summary: 涵盖 4 个常见踩坑：用准确率评估类别不平衡数据、只看 AUC 不看 PRC 导致误判、回归任务用 MSE 评估被异常值主导、在测试集上调参导致过拟合测试集，每个均附快速修复与排查步骤。
-takeaways:
-  - 掌握「模型评估指标踩坑合集」中各问题的快速识别方法
-  - 理解每个踩坑的根因分析和排查步骤
-  - 学会标准化的修复流程和预防措施
-relatedIntel:
-  - 017-metrics
-  - 039-model-evaluation
+takeaways: "- 掌握「模型评估指标踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施"
+relatedIntel: "- 017-metrics - 039-model-evaluation"
 tags:
-  - 踩坑
-  - 评估指标
-  - 准确率
-  - 交叉验证
+  - 机器学习
+  - ML
+  - 数据
+  - scikit-learn
+relatedTerms:
+  - matrix
+  - tensor
+  - gradient-descent
+  - convex-optimization
+relatedTools:
+  - numpy
+  - pandas
+  - scikit-learn
+relatedNodes:
+  - math-linear-algebra
+  - llm-inference
 ---
 
 [模型评估]
@@ -118,3 +125,20 @@ tags:
 - 05 若需要多次评估测试集，考虑使用嵌套交叉验证
 
 #模型评估#过拟合#数据划分
+
+## 修复后附加：最小一键诊断命令
+
+```bash
+# ML 最小自检：二分类 AUC + 混淆矩阵 3 秒内
+python - <<'PY'
+import numpy as np
+from sklearn.datasets import make_classification
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.metrics import roc_auc_score, confusion_matrix
+X, y = make_classification(n_samples=2000, n_features=20, random_state=42)
+m = GradientBoostingClassifier(n_estimators=40).fit(X[:1600], y[:1600])
+p = m.predict_proba(X[1600:])[:, 1]
+print('AUC', round(roc_auc_score(y[1600:], p), 3))
+print('CM\n', confusion_matrix(y[1600:], (p > 0.5).astype(int)))
+PY
+```

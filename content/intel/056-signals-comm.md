@@ -4,24 +4,23 @@ category: embedded
 difficulty: intermediate
 duration: 3周
 summary: 理解通信系统的基本组成和调制解调原理，掌握数字通信中的编解码技术
-takeaways:
-  - 理解通信系统基本模型
+takeaways: "- 理解通信系统基本模型
   - 掌握调制解调原理
   - 理解信道编码技术
-  - 理解OFDM和多址接入技术
-relatedIntel:
-  - 052-embedded-c
+  - 理解OFDM和多址接入技术"
+relatedIntel: "- 052-embedded-c
   - 053-embedded-rtos
-  - 054-elec-circuit
-relatedNodes: signals-comm
-tags:
-  - modulation
+  - 054-elec-circuit"
+relatedNodes: ["signals-comm", "electrical-safety"]
+tags: "- modulation
   - demodulation
   - ofdm
   - channel-coding
   - 5g
   - wireless
-  - communication
+  - communication"
+relatedTerms: ["data-structure", "rtos", "algorithm", "complexity"]
+relatedTools: ["huggingface-transformers", "ultralytics-yolo", "pytorch"]
 ---
 
 ## 为什么你要学它
@@ -67,17 +66,17 @@ def bpsk_modulate(bits, fc, fs, samples_per_bit):
     """BPSK调制"""
     # 映射：0→-1, 1→+1
     symbols = 2 * bits - 1
-    
+
     # 上采样
     samples = np.repeat(symbols, samples_per_bit)
-    
+
     # 生成载波
     t = np.arange(len(samples)) / fs
     carrier = np.cos(2 * np.pi * fc * t)
-    
+
     # 调制
     modulated = samples * carrier
-    
+
     return modulated, t
 
 # 2. QPSK调制：每2比特映射到一个星座点
@@ -86,10 +85,10 @@ def qpsk_modulate(bits, fc, fs, samples_per_bit):
     # 确保比特数是偶数
     if len(bits) % 2 != 0:
         bits = np.append(bits, 0)
-    
+
     # 分组：每2比特一组
     bit_pairs = bits.reshape(-1, 2)
-    
+
     # 映射到星座点
     # 00 → +1+j, 01 → -1+j, 10 → +1-j, 11 → -1-j
     mapping = {
@@ -98,21 +97,21 @@ def qpsk_modulate(bits, fc, fs, samples_per_bit):
         (1, 0): 1 - 1j,
         (1, 1): -1 - 1j
     }
-    
+
     symbols = np.array([mapping[tuple(pair)] for pair in bit_pairs])
-    
+
     # 上采样
     I = np.repeat(np.real(symbols), samples_per_bit * 2)  # QPSK每个符号2比特
     Q = np.repeat(np.imag(symbols), samples_per_bit * 2)
-    
+
     # 生成载波
     t = np.arange(len(I)) / fs
     carrier_I = np.cos(2 * np.pi * fc * t)
     carrier_Q = np.sin(2 * np.pi * fc * t)
-    
+
     # 调制
     modulated = I * carrier_I - Q * carrier_Q
-    
+
     return modulated, symbols, t
 
 # 3. 16QAM调制
@@ -121,10 +120,10 @@ def qam16_modulate(bits, fc, fs, samples_per_bit):
     # 确保比特数是4的倍数
     while len(bits) % 4 != 0:
         bits = np.append(bits, 0)
-    
+
     # 分组：每4比特一组
     bit_groups = bits.reshape(-1, 4)
-    
+
     # 16QAM星座映射（格雷编码）
     # I和Q各4个电平：-3, -1, +1, +3
     def map_bits(b1, b2):
@@ -136,27 +135,27 @@ def qam16_modulate(bits, fc, fs, samples_per_bit):
             return 1
         else:
             return 3
-    
+
     I = np.array([map_bits(g[0], g[1]) for g in bit_groups])
     Q = np.array([map_bits(g[2], g[3]) for g in bit_groups])
-    
+
     symbols = I + 1j * Q
-    
+
     # 归一化
     symbols = symbols / np.sqrt(10)  # 平均功率归一化
-    
+
     # 上采样
     I_up = np.repeat(I / np.sqrt(10), samples_per_bit * 4)
     Q_up = np.repeat(Q / np.sqrt(10), samples_per_bit * 4)
-    
+
     # 生成载波
     t = np.arange(len(I_up)) / fs
     carrier_I = np.cos(2 * np.pi * fc * t)
     carrier_Q = np.sin(2 * np.pi * fc * t)
-    
+
     # 调制
     modulated = I_up * carrier_I - Q_up * carrier_Q
-    
+
     return modulated, symbols, t
 
 # 绘制星座图
@@ -220,7 +219,7 @@ class OFDM:
         self.n_subcarriers = n_subcarriers
         self.cp_length = cp_length
         self.modulation = modulation
-        
+
     def modulate(self, bits):
         """OFDM调制"""
         # 根据调制方式确定每符号比特数
@@ -232,49 +231,49 @@ class OFDM:
             bits_per_symbol = 4
         else:
             raise ValueError("Unsupported modulation")
-        
+
         # 确保比特数足够
         num_symbols = len(bits) // bits_per_symbol
         bits = bits[:num_symbols * bits_per_symbol]
-        
+
         # 调制到子载波
         symbols = self._map_bits_to_symbols(bits, bits_per_symbol)
-        
+
         # 串并转换
         parallel_symbols = symbols.reshape(-1, self.n_subcarriers)
-        
+
         # IFFT（OFDM核心）
         ofdm_symbols = np.fft.ifft(parallel_symbols, axis=1)
-        
+
         # 添加循环前缀
         cp = ofdm_symbols[:, -self.cp_length:]
         ofdm_with_cp = np.hstack([cp, ofdm_symbols])
-        
+
         # 并串转换
         tx_signal = ofdm_with_cp.flatten()
-        
+
         return tx_signal
-    
+
     def demodulate(self, rx_signal):
         """OFDM解调"""
         # 串并转换
         symbol_length = self.n_subcarriers + self.cp_length
         num_ofdm_symbols = len(rx_signal) // symbol_length
         rx_signal = rx_signal[:num_ofdm_symbols * symbol_length]
-        
+
         rx_parallel = rx_signal.reshape(num_ofdm_symbols, symbol_length)
-        
+
         # 去除循环前缀
         rx_no_cp = rx_parallel[:, self.cp_length:]
-        
+
         # FFT
         rx_freq = np.fft.fft(rx_no_cp, axis=1)
-        
+
         # 并串转换
         rx_symbols = rx_freq.flatten()
-        
+
         return rx_symbols
-    
+
     def _map_bits_to_symbols(self, bits, bits_per_symbol):
         """比特映射到星座符号"""
         if bits_per_symbol == 1:  # BPSK
@@ -370,14 +369,14 @@ class HammingCode:
             [0, 0, 1, 0, 0, 1, 1],
             [0, 0, 0, 1, 1, 1, 1]
         ])
-        
+
         # 校验矩阵 H（3×7）
         self.H = np.array([
             [1, 1, 0, 1, 1, 0, 0],
             [1, 0, 1, 1, 0, 1, 0],
             [0, 1, 1, 1, 0, 0, 1]
         ])
-        
+
         # 伴随式到错误位置的映射
         self.syndrome_to_error = {
             (0, 0, 0): None,  # 无错误
@@ -389,38 +388,38 @@ class HammingCode:
             (0, 1, 0): 5,     # 第6位错
             (0, 0, 1): 6,     # 第7位错
         }
-    
+
     def encode(self, data):
         """编码：4位数据→7位码字"""
         if len(data) != 4:
             raise ValueError("Data must be 4 bits")
-        
+
         # 计算码字：c = d × G (mod 2)
         codeword = np.dot(data, self.G) % 2
         return codeword.astype(int)
-    
+
     def decode(self, received):
         """解码：7位接收→4位数据，纠正1位错误"""
         if len(received) != 7:
             raise ValueError("Received must be 7 bits")
-        
+
         # 计算伴随式：s = r × H^T (mod 2)
         syndrome = np.dot(received, self.H.T) % 2
         syndrome_tuple = tuple(syndrome.astype(int))
-        
+
         # 查找错误位置
         error_pos = self.syndrome_to_error.get(syndrome_tuple)
-        
+
         if error_pos is not None:
             # 纠正错误
             corrected = received.copy()
             corrected[error_pos] = 1 - corrected[error_pos]
         else:
             corrected = received
-        
+
         # 提取数据位（前4位）
         data = corrected[:4]
-        
+
         return data.astype(int), error_pos
 
 # 测试汉明码
@@ -493,20 +492,20 @@ ber_theoretical = []
 for EbN0_db in EbN0_range:
     # 生成随机比特
     tx_bits = np.random.randint(0, 2, num_bits)
-    
+
     # 调制
     tx_signal = bpsk_modulate(tx_bits, Eb)
-    
+
     # 通过AWGN信道
     rx_signal = awgn_channel(tx_signal, EbN0_db)
-    
+
     # 解调
     rx_bits = bpsk_demodulate(rx_signal)
-    
+
     # 计算BER
     ber = calculate_ber(tx_bits, rx_bits)
     ber_simulated.append(ber)
-    
+
     # 理论BER：Q(sqrt(2*Eb/N0))
     EbN0 = 10**(EbN0_db / 10)
     ber_theory = 0.5 * np.erfc(np.sqrt(EbN0))

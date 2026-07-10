@@ -4,29 +4,29 @@ category: devops
 difficulty: intermediate
 duration: 1-2周
 summary: 模型能训练 ≠ 服务能上线——Linux 系统管理、网络配置、进程守护是工程化的基本功
-takeaways:
-  - 能用 systemd 管理服务（开机自启、崩溃重启、日志查看）
+takeaways: "- 能用 systemd 管理服务（开机自启、崩溃重启、日志查看）
   - 能用 Nginx 做反向代理和负载均衡
   - 能用 SSH Key 免密登录，配置 sshd 安全策略
-  - 能用 cron 配置定时任务，配合数据管道使用
-relatedIntel:
-  - 007-docker
+  - 能用 cron 配置定时任务，配合数据管道使用"
+relatedIntel: "- 007-docker
   - 008-git
-  - 009-linux
-relatedNodes: electrical-safety
-tags:
-  - linux
+  - 009-linux"
+relatedNodes: ["devops-kubernetes", "electrical-safety"]
+tags: "- linux
   - systemd
   - ssh
   - nginx
   - bash
   - cron
-  - firewall
+  - firewall"
+relatedTerms: ["linux", "docker", "kubernetes", "git"]
+relatedTools: ["kubernetes", "mlflow", "docker"]
 ---
 
 ## 为什么你要学它
 
 很多 AI 工程师写得出 ResNet 的 forward 函数，却不知道：
+
 - 如何让模型推理服务在服务器重启后自动启动
 - 如何用 Nginx 把外部流量转发到内网端口
 - 如何排查服务器端口不通是防火墙还是服务没起来

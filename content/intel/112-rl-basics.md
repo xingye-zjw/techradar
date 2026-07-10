@@ -4,25 +4,25 @@ category: machine-learning
 difficulty: intermediate
 duration: 2-3周
 summary: 让智能体通过与环境交互来学习最优决策的机器学习范式。掌握 MDP、Q-Learning、策略梯度、DQN、PPO 等核心算法，是进入机器人、游戏 AI、自动驾驶等领域的基础。
-takeaways:
-  - 理解马尔可夫决策过程（MDP）的数学定义：状态、动作、转移概率、奖励、折扣因子
+takeaways: "- 理解马尔可夫决策过程（MDP）的数学定义：状态、动作、转移概率、奖励、折扣因子
   - 掌握 Q-Learning 与 Sarsa 的区别：off-policy vs on-policy，能手写更新公式
   - 理解策略梯度方法（REINFORCE）的核心思想：用采样轨迹估计梯度并更新策略
   - 掌握 DQN 的两大创新：经验回放（Experience Replay）与目标网络（Target Network）
-  - 理解 PPO 的剪切目标函数，能用 Stable-Baselines3 在 Gym 环境中训练智能体
-relatedIntel:
-  - 116-recommender-systems
+  - 理解 PPO 的剪切目标函数，能用 Stable-Baselines3 在 Gym 环境中训练智能体"
+relatedIntel: "- 116-recommender-systems
   - 118-anomaly-detection
-  - 122-federated-learning
-tags:
-  - reinforcement learning
+  - 122-federated-learning"
+tags: "- reinforcement learning
   - mdp
   - q-learning
   - sarsa
   - policy gradient
   - dqn
   - ppo
-  - gym
+  - gym"
+relatedTerms: ["matrix", "tensor", "gradient-descent", "convex-optimization"]
+relatedTools: ["numpy", "pandas", "scikit-learn"]
+relatedNodes: ["math-linear-algebra", "llm-inference"]
 ---
 
 ## 为什么你要学它
@@ -60,6 +60,7 @@ MDP 是一个五元组 $(S, A, P, R, \gamma)$：
 $$G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \dots = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1}$$
 
 **两个核心函数**：
+
 - **状态值函数 $V^\pi(s)$**：从状态 $s$ 出发，遵循策略 $\pi$ 能获得的期望回报
 - **动作值函数 $Q^\pi(s,a)$**：在状态 $s$ 执行动作 $a$，之后遵循策略 $\pi$ 能获得的期望回报
 
@@ -75,6 +76,7 @@ $$Q^\pi(s,a) = \sum_{s'} P(s'|s,a) [R(s,a,s') + \gamma \sum_{a'} \pi(a'|s') Q^\p
 $$Q(s,a) \leftarrow Q(s,a) + \alpha \left[ r + \gamma \max_{a'} Q(s',a') - Q(s,a) \right]$$
 
 其中：
+
 - $\alpha$ 是学习率
 - $r + \gamma \max_{a'} Q(s',a')$ 是 TD Target（时序差分目标）
 - $r + \gamma \max_{a'} Q(s',a') - Q(s,a)$ 是 TD Error（时序差分误差）
@@ -86,14 +88,15 @@ $$Q(s,a) \leftarrow Q(s,a) + \alpha \left[ r + \gamma Q(s',a') - Q(s,a) \right]$
 
 **核心区别**：
 
-| 特性 | Q-Learning | Sarsa |
-|------|-----------|-------|
-| 策略类型 | Off-policy（学习的是最优策略，行为策略可以是 $\epsilon$-greedy） | On-policy（学习的就是当前正在执行的策略） |
-| TD Target | 使用 $\max_{a'} Q(s',a')$（贪心） | 使用 $Q(s',a')$（实际执行的动作） |
-| 特点 | 更激进，追求最优策略 | 更保守，考虑探索风险 |
-| 悬崖行走例子 | 走悬崖边缘（最优路径但风险高） | 走安全路径（离悬崖远） |
+| 特性         | Q-Learning                                                       | Sarsa                                     |
+| ------------ | ---------------------------------------------------------------- | ----------------------------------------- |
+| 策略类型     | Off-policy（学习的是最优策略，行为策略可以是 $\epsilon$-greedy） | On-policy（学习的就是当前正在执行的策略） |
+| TD Target    | 使用 $\max_{a'} Q(s',a')$（贪心）                                | 使用 $Q(s',a')$（实际执行的动作）         |
+| 特点         | 更激进，追求最优策略                                             | 更保守，考虑探索风险                      |
+| 悬崖行走例子 | 走悬崖边缘（最优路径但风险高）                                   | 走安全路径（离悬崖远）                    |
 
 **$\epsilon$-greedy 探索策略**：
+
 - 以 $\epsilon$ 的概率随机选择动作（探索）
 - 以 $1-\epsilon$ 的概率选择 $Q$ 值最大的动作（利用）
 - 训练过程中通常让 $\epsilon$ 逐渐衰减
@@ -111,15 +114,18 @@ $$J(\theta) = \mathbb{E}_{\tau \sim \pi_\theta} [R(\tau)]$$
 $$\nabla_\theta J(\theta) = \mathbb{E}_{\tau \sim \pi_\theta} \left[ \sum_{t=0}^T \nabla_\theta \log \pi_\theta(a_t|s_t) \cdot G_t \right]$$
 
 **REINFORCE 算法**（蒙特卡洛策略梯度）：
+
 1. 用当前策略 $\pi_\theta$ 采集多条轨迹
 2. 对每条轨迹计算每个时刻的回报 $G_t$
 3. 用策略梯度公式更新参数：$\theta \leftarrow \theta + \alpha \nabla_\theta \log \pi_\theta(a_t|s_t) \cdot G_t$
 
 **REINFORCE 的问题**：
+
 - 方差大：每次采样的轨迹差异大，梯度估计噪声高
 - 样本效率低：用一次就扔掉，on-policy 不能重复利用数据
 
 **改进方向**：
+
 - 加入基线（Baseline）：用 $A_t = G_t - V(s_t)$ 替代 $G_t$，降低方差
 - Actor-Critic：用 Critic 网络估计 $V(s)$ 或 $Q(s,a)$，替代蒙特卡洛回报
 
@@ -132,6 +138,7 @@ DQN 是 DeepMind 在 2013 年提出的算法，用深度神经网络来近似 Q 
 把智能体的经验 $(s, a, r, s', \text{done})$ 存储到回放缓冲区中，训练时随机采样一批来更新网络。
 
 **作用**：
+
 - 打破样本之间的相关性（神经网络训练假设样本独立同分布）
 - 提高样本效率（一条经验可以被多次使用）
 - 平滑学习分布，避免策略剧烈波动
@@ -139,6 +146,7 @@ DQN 是 DeepMind 在 2013 年提出的算法，用深度神经网络来近似 Q 
 **核心创新二：目标网络（Target Network）**
 
 使用两个结构相同但参数不同的网络：
+
 - **当前网络**（online network）：用来选择动作，参数 $\theta$ 实时更新
 - **目标网络**（target network）：用来计算 TD Target，参数 $\theta^-$ 每隔 N 步从当前网络复制
 
@@ -146,10 +154,12 @@ DQN 是 DeepMind 在 2013 年提出的算法，用深度神经网络来近似 Q 
 $$y = r + \gamma \max_{a'} Q_{\theta^-}(s', a')$$
 
 **作用**：
+
 - 稳定训练：目标不会随每次更新而变化，避免"移动目标"问题
 - 没有目标网络的话，Q 值训练容易发散
 
 **DQN 算法流程**：
+
 ```python
 # 初始化回放缓冲区 D，容量 N
 # 初始化当前网络 Q（参数 θ）和目标网络 Q_target（参数 θ⁻ = θ）
@@ -162,38 +172,39 @@ for episode in range(num_episodes):
             a = env.action_space.sample()
         else:
             a = argmax(Q(s))
-        
+
         # 执行动作，获得转移
         s_next, r, done, _ = env.step(a)
         D.append((s, a, r, s_next, done))
-        
+
         # 从回放缓冲区采样一批
         batch = D.sample(batch_size)
         s_batch, a_batch, r_batch, s_next_batch, done_batch = batch
-        
+
         # 计算 TD Target
         q_next_max = Q_target(s_next_batch).max(dim=1)[0]
         target = r_batch + gamma * q_next_max * (1 - done_batch)
-        
+
         # 计算当前 Q 值
         q_current = Q(s_batch).gather(1, a_batch.unsqueeze(1)).squeeze()
-        
+
         # 更新当前网络
         loss = MSELoss(q_current, target)
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
-        
+
         # 每隔 C 步同步目标网络
         if total_steps % C == 0:
             θ⁻ = θ
-        
+
         s = s_next
         if done:
             break
 ```
 
 **DQN 的常见改进**：
+
 - Double DQN：用当前网络选动作，目标网络算 Q 值，解决过估计问题
 - Dueling DQN：把 Q 网络拆成 V(s) + A(s,a) 两部分
 - Prioritized Experience Replay：优先采样 TD Error 大的经验
@@ -224,11 +235,13 @@ $$L^{\text{PG}}(\theta) = \mathbb{E}_t \left[ r_t(\theta) \hat{A}_t \right]$$
 $$L^{\text{CLIP}}(\theta) = \mathbb{E}_t \left[ \min\left( r_t(\theta) \hat{A}_t,\ \text{clip}(r_t(\theta),\ 1-\epsilon,\ 1+\epsilon) \hat{A}_t \right) \right]$$
 
 **直觉理解**：
+
 - 当 $\hat{A}_t > 0$（这个动作比平均好）：我们想增加这个动作的概率，但最多增加到 $1+\epsilon$ 倍
 - 当 $\hat{A}_t < 0$（这个动作比平均差）：我们想减少这个动作的概率，但最多减少到 $1-\epsilon$ 倍
 - 取 min 的意思是：哪个更保守就用哪个，防止策略更新太远
 
 **PPO 的优势**：
+
 - 实现简单，调参容易
 - 训练稳定，不容易崩
 - 样本效率不错（可以用同一批数据更新多次）
@@ -298,19 +311,19 @@ for ep in range(n_episodes):
     s, _ = env.reset()
     total_reward = 0
     done = False
-    
+
     while not done:
         a = epsilon_greedy(Q, s, epsilon)
         s_next, r, terminated, truncated, _ = env.step(a)
         done = terminated or truncated
-        
+
         # Q-Learning 更新
         best_next = np.max(Q[s_next])
         Q[s, a] += alpha * (r + gamma * best_next * (1 - done) - Q[s, a])
-        
+
         total_reward += r
         s = s_next
-    
+
     rewards_history.append(total_reward)
 
 # 测试最优策略
@@ -427,7 +440,7 @@ class PolicyNetwork(nn.Module):
         self.fc1 = nn.Linear(obs_dim, hidden_dim)
         self.fc2 = nn.Linear(hidden_dim, hidden_dim)
         self.fc3 = nn.Linear(hidden_dim, act_dim)
-    
+
     def forward(self, x):
         x = F.tanh(self.fc1(x))
         x = F.tanh(self.fc2(x))
@@ -439,17 +452,17 @@ def ppo_clip_loss(policy, obs, actions, advantages, old_log_probs, clip_eps=0.2)
     logits = policy(obs)
     dist = torch.distributions.Categorical(logits=logits)
     log_probs = dist.log_prob(actions)
-    
+
     # 重要性采样比率
     ratio = torch.exp(log_probs - old_log_probs)
-    
+
     # 未裁剪目标
     surr1 = ratio * advantages
     # 裁剪目标
     surr2 = torch.clamp(ratio, 1.0 - clip_eps, 1.0 + clip_eps) * advantages
     # 取最小值
     loss = -torch.min(surr1, surr2).mean()
-    
+
     return loss
 ```
 

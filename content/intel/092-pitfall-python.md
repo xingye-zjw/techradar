@@ -1,21 +1,28 @@
 ---
-title: "Python 开发常见踩坑合集"
+title: Python 开发常见踩坑合集
 category: devops
 difficulty: beginner
 duration: 30分钟
 summary: 涵盖 5 个常见踩坑：Python 环境依赖冲突导致 import 失败、pandas inplace=True 链式赋值警告、可变默认参数导致函数行为异常、循环变量闭包捕获导致预期外结果、整数缓存导致 == 和 is 行为不一致，每个均附快速修复与排查步骤。
-takeaways:
-  - 掌握「Python 开发常见踩坑合集」中各问题的快速识别方法
-  - 理解每个踩坑的根因分析和排查步骤
-  - 学会标准化的修复流程和预防措施
-relatedIntel:
-  - 010-numpy-pandas
-  - 009-linux
+takeaways: "- 掌握「Python 开发常见踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施"
+relatedIntel: "- 010-numpy-pandas - 009-linux"
 tags:
-  - 踩坑
-  - Python
-  - 依赖
-  - 虚拟环境
+  - DevOps
+  - 部署
+  - 运维
+  - 容器
+relatedTerms:
+  - git
+  - docker
+  - linux
+  - kubernetes
+relatedTools:
+  - mlflow
+  - docker
+  - kubernetes
+relatedNodes:
+  - docker-basic
+  - devops-kubernetes
 ---
 
 [环境配置]
@@ -142,3 +149,14 @@ conda create 独立环境 → pip install 分批安装 → freeze 导出依赖
 - 04 避免用 is 比较整数、字符串、列表等可变对象的值
 
 #Python#语言特性#数值稳定性
+
+## 修复后附加：最小一键诊断命令
+
+```bash
+# DevOps 最小自检：Docker/K8s/磁盘空间/SSH 端口 10 秒内出结论
+set -e
+echo '--- docker ---' && (docker info 2>/dev/null | head -n 5 || echo 'docker unavailable')
+echo '--- disk ---'   && df -h / | tail -n 1
+echo '--- k8s ---'    && (kubectl cluster-info 2>/dev/null | head -n 3 || echo 'kubectl unavailable')
+echo '--- ssh 22 ---' && (timeout 3 bash -c 'cat < /dev/tcp/127.0.0.1/22' >/dev/null 2>&1 && echo open || echo closed)
+```

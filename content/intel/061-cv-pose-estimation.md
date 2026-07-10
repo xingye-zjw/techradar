@@ -3,19 +3,16 @@ title: CV 姿态估计
 category: computer-vision
 difficulty: intermediate
 duration: 1-2周
-summary: 姿态估计是让计算机"看懂人体动作"的基础技术，通过检测人体关键点（头、肩、肘、腕等）来理解人的姿势和动作意图。
-takeaways:
-  - 理解 Top-down 和 Bottom-up 两大技术路线的核心差异和适用场景
+summary: 姿态估计是让计算机\"看懂人体动作\"的基础技术，通过检测人体关键点（头、肩、肘、腕等）来理解人的姿势和动作意图。
+takeaways: "- 理解 Top-down 和 Bottom-up 两大技术路线的核心差异和适用场景
   - 掌握 HRNet、OpenPose、AlphaPose 等主流模型的设计思想
   - 能用 mmpose 或 AlphaPose 在真实图像上跑通姿态估计流程
-  - 理解姿态估计在动作识别、安防监控、人机交互等场景的实际价值
-relatedTerms: pose-estimation
-relatedIntel:
-  - 002-yolo
+  - 理解姿态估计在动作识别、安防监控、人机交互等场景的实际价值"
+relatedTerms: ["pose-estimation", "cnn", "yolo", "resnet"]
+relatedIntel: "- 002-yolo
   - 004-resnet
-  - 006-cnn-basics
-tags:
-  - pose-estimation
+  - 006-cnn-basics"
+tags: "- pose-estimation
   - keypoint-detection
   - top-down
   - bottom-up
@@ -24,7 +21,9 @@ tags:
   - hrnet
   - openpose
   - alphapose
-  - mmpose
+  - mmpose"
+relatedTools: ["ultralytics-yolo", "numpy", "matplotlib"]
+relatedNodes: ["cv-detection", "cv-segmentation"]
 ---
 
 ## 为什么你要学它
@@ -34,6 +33,7 @@ tags:
 它解决了一个核心问题：当你看到一个人举起右手，你知道这是在打招呼还是指方向。但对计算机来说，这需要两步：先找到人的关节点（头在哪、肩在哪、手在哪），再理解这些点组成的姿势意味着什么。姿态估计就是完成第一步的技术。
 
 实际应用场景：
+
 - **动作识别**：体育视频分析、舞蹈评分、康复训练评估
 - **安防监控**：异常行为检测（摔倒、闯入、徘徊）
 - **游戏交互**：体感游戏（如 Switch、Kinect）、AR/VR 手势控制
@@ -55,12 +55,14 @@ tags:
 ### 🔑 Top-down vs Bottom-up
 
 **Top-down（自上而下）**：
+
 - 流程：先用目标检测器（如 YOLO）找出图中所有人 → 对每个人crop → 分别做单人姿态估计
 - 优点：精度高，因为单人图像更易处理
 - 缺点：人数多时计算量大，且漏检的人无法估计姿态
 - 适用：人数较少、精度要求高的场景
 
 **Bottom-up（自下而上）**：
+
 - 流程：先检测图中所有关键点 → 再通过关联算法把点组合成人
 - 优点：人数多时效率高，不依赖人检测器
 - 缺点：组合关节点时可能出错，精度略逊于 Top-down
@@ -71,6 +73,7 @@ tags:
 HRNet 是 Top-down 方案的代表性 backbone，其核心思想是**在整个网络中保持高分辨率表示**，而不是像传统网络那样先下采样再上采样。
 
 关键设计：
+
 - 并行多分辨率子网络，不同分辨率之间反复交换信息
 - 全程保持高分辨率特征图，更精准地定位关键点
 - 在 COCO 等数据集上精度领先
@@ -82,6 +85,7 @@ HRNet-W32/48 是最常用的变体，数字代表宽度（通道数）。
 OpenPose 是 Bottom-up 方案的先驱，由 CMU 提出。
 
 核心组件：
+
 - **VGGNet backbone**：提取图像特征
 - **Part Confidence Maps**：预测每个关键点的位置概率图
 - **Part Affinity Fields（PAF）**：预测关键点之间的关联向量场，用于组合关节点
@@ -94,6 +98,7 @@ OpenPose 是 Bottom-up 方案的先驱，由 CMU 提出。
 AlphaPose 是国产精品，专为**精确多人姿态估计**设计。
 
 核心创新：
+
 - **姿态误差模板匹配（Pose Guided Proposals）**：利用姿态先验引导检测
 - **PyRAMID**：金字塔结构捕捉多尺度人体
 - **Symmetric Spatial Transformer Network**：对称空间变换网络，提升定位精度
@@ -104,6 +109,7 @@ AlphaPose 是国产精品，专为**精确多人姿态估计**设计。
 ### 🔑 关键点定义（COCO 17 点）
 
 COCO 格式是最常用的标注标准，17 个关键点：
+
 ```
 0: nose          1: left_eye     2: right_eye    3: left_ear     4: right_ear
 5: left_shoulder 6: right_shoulder 7: left_elbow  8: right_elbow
@@ -118,6 +124,7 @@ COCO 格式是最常用的标注标准，17 个关键点：
 mmpose 是 OpenMMLab 生态的一员，支持多种姿态估计算法。
 
 **第一步：安装**
+
 ```bash
 pip install mmpose
 # 或完整安装
@@ -125,6 +132,7 @@ pip install mmcv-full mmdet mmpose
 ```
 
 **第二步：使用 HRNet 进行单人姿态估计**
+
 ```python
 import torch
 from mmpose.apis import inference_top_down_pose_model, init_pose_model
@@ -152,6 +160,7 @@ for kpt in results[0]['keypoints']:
 ```
 
 **第三步：使用 MMPose 的推理可视化工具**
+
 ```python
 from mmpose.apis import vis_pose_result
 
@@ -170,6 +179,7 @@ vis_pose_result(
 AlphaPose 支持完整的训练和推理流程。
 
 **第一步：安装**
+
 ```bash
 git clone https://github.com/MVIG-SJTU/AlphaPose.git
 cd AlphaPose
@@ -178,6 +188,7 @@ python setup.py build develop
 ```
 
 **第二步：推理示例**
+
 ```python
 import torch
 from alphapose.models.builder import build_pose_model
@@ -205,6 +216,7 @@ print(pose_result)
 ```
 
 **第三步：命令行快速运行**
+
 ```bash
 # 使用预训练模型推理
 python scripts/demo_inference.py \
@@ -218,6 +230,7 @@ python scripts/demo_inference.py \
 ## 常见错误和解决方案
 
 **错误1：mmpose 报 "No module named 'mmcv'"**
+
 ```
 原因：mmcv 未安装或版本不匹配
 解决：
@@ -227,6 +240,7 @@ python scripts/demo_inference.py \
 ```
 
 **错误2：推理结果关键点全部为零**
+
 ```
 原因1：检测器未检测到人
 解决：确保图像中有明确的人体，或传入已知的 bbox
@@ -239,6 +253,7 @@ python scripts/demo_inference.py \
 ```
 
 **错误3：AlphaPose 报 "CUDA out of memory"**
+
 ```
 原因：图像分辨率过高或 batch_size 过大
 解决：
@@ -248,6 +263,7 @@ python scripts/demo_inference.py \
 ```
 
 **错误4：Top-down 方法人数多时速度极慢**
+
 ```
 原因：每个人都要过一次网络，人数多时计算量线性增长
 解决：
@@ -257,6 +273,7 @@ python scripts/demo_inference.py \
 ```
 
 **错误5：关键点置信度低，抖动严重**
+
 ```
 原因1：图像模糊或遮挡严重
 解决：使用图像增强（去模糊、锐化）

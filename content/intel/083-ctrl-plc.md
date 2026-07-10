@@ -4,22 +4,22 @@ category: embedded
 difficulty: beginner
 duration: 2-3周
 summary: 理解PLC在工业自动化中的应用。掌握梯形图编程、I/O配置、通信协议等核心技能。
-takeaways:
-  - 理解PLC的工作原理
+takeaways: "- 理解PLC的工作原理
   - 掌握梯形图编程方法
   - 理解I/O模块配置
-  - 了解工业通信协议
-relatedIntel:
-  - 052-embedded-c
+  - 了解工业通信协议"
+relatedIntel: "- 052-embedded-c
   - 053-embedded-rtos
-  - 054-elec-circuit
-tags:
-  - plc
+  - 054-elec-circuit"
+tags: "- plc
   - 可编程控制器
   - 梯形图
   - 工业自动化
   - 西门子
-  - IEC 61131-3
+  - IEC 61131-3"
+relatedTerms: ["data-structure", "rtos", "algorithm", "complexity"]
+relatedTools: ["pytorch", "ultralytics-yolo", "huggingface-transformers"]
+relatedNodes: ["roadmap-capstone", "electrical-safety"]
 ---
 
 ## 为什么你要学它
@@ -71,13 +71,13 @@ PLC（Programmable Logic Controller）是工业自动化的核心控制器：
 
 **主流PLC品牌对比：**
 
-| 品牌 | 代表型号 | 特点 | 适用场景 |
-|------|----------|------|----------|
-| 西门子 | S7-1200/1500 | 功能强大，生态完善 | 中大型项目 |
-| 三菱 | FX/Q系列 | 性价比高，亚洲市场主流 | 中小型项目 |
-| 欧姆龙 | CP/CJ系列 | 指令丰富，运动控制强 | 电子制造 |
-| 罗克韦尔 | ControlLogix | 北美市场主流，安全认证完善 | 过程控制 |
-| 倍福 | CX系列 | 基于PC，支持多种语言 | 高端应用 |
+| 品牌     | 代表型号     | 特点                       | 适用场景   |
+| -------- | ------------ | -------------------------- | ---------- |
+| 西门子   | S7-1200/1500 | 功能强大，生态完善         | 中大型项目 |
+| 三菱     | FX/Q系列     | 性价比高，亚洲市场主流     | 中小型项目 |
+| 欧姆龙   | CP/CJ系列    | 指令丰富，运动控制强       | 电子制造   |
+| 罗克韦尔 | ControlLogix | 北美市场主流，安全认证完善 | 过程控制   |
+| 倍福     | CX系列       | 基于PC，支持多种语言       | 高端应用   |
 
 ### 🔑 梯形图编程（Ladder Diagram）
 
@@ -484,11 +484,11 @@ BEGIN
     IF #Start AND NOT #Fault THEN
         #Run := TRUE;
     END_IF;
-    
+
     IF #Stop OR #Fault THEN
         #Run := FALSE;
     END_IF;
-    
+
     // 故障检测
     IF #Run AND (#Speed_Act < 10.0) THEN
         #TON_Instance(IN := TRUE, PT := T#5s);
@@ -498,7 +498,7 @@ BEGIN
     ELSE
         #TON_Instance(IN := FALSE);
     END_IF;
-    
+
     // 故障复位
     IF #Fault_Reset THEN
         #Fault := FALSE;
@@ -524,10 +524,10 @@ def get_plc_data():
     try:
         if not plc.get_connected():
             plc.connect('192.168.0.1', 0, 1)
-        
+
         # 读取DB1数据
         data = plc.db_read(1, 0, 20)
-        
+
         return {
             'temperature': get_real(data, 0),
             'pressure': get_real(data, 4),
@@ -575,21 +575,25 @@ if __name__ == '__main__':
 ## 学习资源推荐
 
 **官方文档：**
+
 - 西门子TIA Portal帮助文档
 - IEC 61131-3标准文档
 - Codesys在线帮助
 
 **推荐书籍：**
+
 - 《PLC编程及应用》廖常初
 - 《西门子S7-1200/1500 PLC编程及应用》廖常初
 - 《IEC 61131-3编程语言及应用》
 
 **在线资源：**
+
 - 西门子工业支持中心：support.industry.siemens.com
 - Codesys官方教程：www.codesys.com
 - PLC论坛：www.plctalk.net
 
 **实践平台：**
+
 - 西门子PLCSIM Advanced（仿真）
 - Codesys Control Win（免费仿真）
 - Factory I/O（3D虚拟工厂仿真）

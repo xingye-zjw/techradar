@@ -4,24 +4,23 @@ category: computer-vision
 difficulty: intermediate
 duration: 1-2周
 summary: Diffusion Model 通过逐步添加噪声再逐步去噪来生成图像，是 AIGC 时代图像生成的主流架构。
-takeaways:
-  - 搞懂 DDPM 的前向加噪过程和反向去噪过程，理解为什么"去噪"可以生成数据
+takeaways: '- 搞懂 DDPM 的前向加噪过程和反向去噪过程，理解为什么"去噪"可以生成数据
   - 能画出 Stable Diffusion 的 Latent Diffusion 架构，说清 VAE、UNet、Text Encoder 各组件的作用
   - 理解 Classifier-Free Guidance 的原理——用条件概率的差值来引导生成方向
   - 理解 LoRA 如何适配 Stable Diffusion，实现轻量级微调
-  - 用 diffusers 库跑通文生图、图生图完整流程
-relatedTerms: diffusion-model
-relatedIntel:
-  - 002-yolo
+  - 用 diffusers 库跑通文生图、图生图完整流程'
+relatedTerms: ["cnn", "yolo", "diffusion-model", "resnet"]
+relatedIntel: "- 002-yolo
   - 004-resnet
-  - 006-cnn-basics
-tags:
-  - diffusion-model
+  - 006-cnn-basics"
+tags: "- diffusion-model
   - ddpm
   - stable-diffusion
   - gan-comparison
   - image-generation
-  - score-based-model
+  - score-based-model"
+relatedTools: ["ultralytics-yolo", "numpy", "matplotlib"]
+relatedNodes: ["cv-detection", "cv-segmentation"]
 ---
 
 ## 为什么你要学它
@@ -54,16 +53,20 @@ DDPM 两个过程：
 
 **前向过程（Forward Process）**：
 逐步向图像添加高斯噪声，经过 T 步（通常 T=1000）后图像变成纯噪声。
+
 ```
 q(x_t | x_{t-1}) = N(x_t; sqrt(1 - β_t} x_{t-1}, β_t I)
 ```
+
 利用重参数化技巧，可以直接从 x_0 得到任意 x_t，无需迭代。
 
 **反向过程（Reverse Process）**：
 训练一个神经网络 p_θ(x_{t-1} | x_t) 来逐步去除噪声。
+
 ```
 p_θ(x_{t-1} | x_t) = N(x_{t-1}; μ_θ(x_t, t), Σ_θ(x_t, t))
 ```
+
 训练目标是最小化 p_θ 和真实反向过程的 KL 散度，可以简化为预测噪声 ε_θ。
 
 ### 🔑 Stable Diffusion 架构（Latent Diffusion Model）
@@ -83,9 +86,11 @@ Stable Diffusion 不直接在像素空间做扩散，而是在压缩后的 Laten
 CFG 是一种无需单独训练分类器即可引导生成方向的技术。
 
 核心公式：
+
 ```
 ε̂(x_t, y) = ε_θ(x_t, ∅) + w · (ε_θ(x_t, y) - ε_θ(x_t, ∅))
 ```
+
 其中 y 是条件（文本），∅ 是无条件，w 是 guidance scale（通常 7-12）。
 
 **直觉理解**：用"有条件噪声预测"减去"无条件噪声预测"，得到条件方向，再放大 w 倍叠加回去。w 越大，生成越符合文本提示，但也可能降低多样性。
@@ -103,6 +108,7 @@ LoRA（Low-Rank Adaptation）通过低秩矩阵分解来微调大模型：
 ## 完整跑通方案
 
 **环境准备**：
+
 ```bash
 pip install diffusers transformers accelerate scipy safetensors
 ```
@@ -206,9 +212,11 @@ image = pipe(
 ## 常见错误和解决方案
 
 **OOM（显存不足）**
+
 ```
 OutOfMemoryError: CUDA out of memory
 ```
+
 解决：降低 resolution（用 512×512 而非 1024×1024）、开启 attention slicing（`pipe.enable_attention_slicing()`）、使用 `--low-vram` flag、或切换到更小的模型如 `stable-diffusion-2-1-base`。
 
 **生成的图像模糊或噪声过多**
@@ -221,9 +229,11 @@ OutOfMemoryError: CUDA out of memory
 解决：确保数据集质量（图文相关、分辨率一致），检查 r 值是否过小（建议至少 r=4），确认学习率设置合理（通常 1e-4 量级）。
 
 **CLIP Attention 报错**
+
 ```
 RuntimeError: expected scalar type Float but found Half
 ```
+
 解决：确保 VAE 和 Text Encoder 使用 float32（`torch_dtype=torch.float32`），或所有组件统一使用 float16。
 
 ## 推荐学习顺序

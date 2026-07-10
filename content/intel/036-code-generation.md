@@ -4,24 +4,25 @@ category: llm
 difficulty: intermediate
 duration: 1周
 summary: 从 GitHub Copilot 到 Devin——AI 代码生成正在重新定义软件开发
-takeaways:
-  - 理解 Code LLM 的训练方式和当前能力边界
+takeaways: "- 理解 Code LLM 的训练方式和当前能力边界
   - 能用 Code LLM 自动生成单元测试和代码补全
   - 能用 Code Interpreter（沙盒 Python）做数据分析
-  - 能设计 Code Review Agent 自动审查代码质量
-relatedIntel:
-  - 003-lora-qlora
+  - 能设计 Code Review Agent 自动审查代码质量"
+relatedIntel: "- 003-lora-qlora
   - 005-rag
-  - 015-rlhf
-relatedNodes:
-  - llm-finetune
-  - llm-inference
-tags:
-  - code generation
+  - 015-rlhf"
+relatedNodes: [
+    "llm-inference",
+    "- llm-finetune
+    - llm-inference",
+  ]
+tags: "- code generation
   - copilot
   - code interpreter
   - unit test generation
-  - code review
+  - code review"
+relatedTerms: ["rag", "lora", "transformer", "chain-of-thought"]
+relatedTools: ["huggingface-transformers", "langchain", "pytorch"]
 ---
 
 ## 为什么你要学它
@@ -29,6 +30,7 @@ tags:
 GitHub Copilot 已经成为程序员的标配工具，Devin（AI 软件工程师）能够独立完成端到端开发任务。
 
 Code LLM 不仅是「代码补全」，它在：
+
 - **单元测试生成**：根据函数签名和文档字符串生成测试用例
 - **代码审查**：自动发现 bug、安全漏洞、代码规范问题
 - **代码重构**：理解代码逻辑后提出改进建议
@@ -54,18 +56,19 @@ Code LLM 不仅是「代码补全」，它在：
 
 代表模型对比：
 
-| 模型 | 参数量 | 特点 | 适用场景 |
-|---|---|---|---|
-| CodeLlama | 7-70B | 基于 Llama2，代码专项 | 代码补全/生成 |
-| DeepSeek-Coder | 6.7-33B | 代码能力最强，中文支持好 | 全栈开发 |
-| Starcoder2 | 3-15B | 多语言，128k 上下文 | 大型代码库分析 |
-| GPT-4o | - | 代码能力强，通用性好 | 代码审查/复杂任务 |
+| 模型           | 参数量  | 特点                     | 适用场景          |
+| -------------- | ------- | ------------------------ | ----------------- |
+| CodeLlama      | 7-70B   | 基于 Llama2，代码专项    | 代码补全/生成     |
+| DeepSeek-Coder | 6.7-33B | 代码能力最强，中文支持好 | 全栈开发          |
+| Starcoder2     | 3-15B   | 多语言，128k 上下文      | 大型代码库分析    |
+| GPT-4o         | -       | 代码能力强，通用性好     | 代码审查/复杂任务 |
 
 ### 🔑 Code Interpreter：AI 执行代码
 
 Code Interpreter = LLM + Python 沙盒 + 代码执行器。
 
 典型应用：
+
 - 数据分析：上传 CSV → LLM 写 Python 分析 → 执行 → 生成图表/统计结果
 - 数学计算：复杂公式推导和验证
 - 自动化报告：生成数据分析报告
@@ -101,16 +104,16 @@ import pytest
 class TestAdd:
     def test_positive_numbers(self):
         assert add(1, 2) == 3
-    
+
     def test_negative_numbers(self):
         assert add(-1, -2) == -3
-    
+
     def test_zero(self):
         assert add(0, 5) == 5
-    
+
     def test_large_numbers(self):
         assert add(10**6, 10**6) == 2 * 10**6
-    
+
     def test_boundary(self):
         # 测试整数边界
         assert add(2**31-1, 0) == 2**31-1  # 最大 int32
@@ -118,23 +121,23 @@ class TestAdd:
 
 ### 🔑 Code Review Agent
 
-```python
+````python
 class CodeReviewAgent:
     def __init__(self, llm):
         self.llm = llm
-    
+
     def review(self, code: str, language: str) -> ReviewReport:
         prompt = f"""审查以下 {language} 代码，检查：
         1. Bug 和逻辑错误
         2. 安全漏洞（SQL注入、XSS等）
         3. 代码规范（PEP8 / style guide）
         4. 性能问题（O(n²) 可优化等）
-        
+
         代码：
         ```{language}
         {code}
         ```
-        
+
         输出 JSON 格式：
         {{
             "bugs": [...],
@@ -146,7 +149,7 @@ class CodeReviewAgent:
         """
         response = self.llm.generate(prompt)
         return parse_review_report(response)
-```
+````
 
 ## 实战指南
 
@@ -168,11 +171,11 @@ def develop_cli_tool(spec):
         }]
     )
     code = extract_code(response)
-    
+
     # 2. 写文件并测试
     with open("tool.py", "w") as f:
         f.write(code)
-    
+
     # 3. 验证
     result = subprocess.run(["python", "tool.py", "--help"], capture_output=True)
     return result.returncode == 0

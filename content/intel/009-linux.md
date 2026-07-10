@@ -4,27 +4,28 @@ category: devops
 difficulty: beginner
 duration: 2-3周
 summary: 深度学习训练几乎都在 Linux 服务器上进行，不会 Linux 就没法跑大规模模型、没法做远程开发与部署
-takeaways:
-  - 掌握 Linux 目录结构与高频命令（ls/cd/pwd/mkdir/cp/rm/find/grep）
+takeaways: "- 掌握 Linux 目录结构与高频命令（ls/cd/pwd/mkdir/cp/rm/find/grep）
   - 会用 top/nvidia-smi/kill 管理进程与资源，能定位训练卡死问题
   - 配置 SSH 免密登录与密钥认证，能安全远程管理多台服务器
-  - 理解文件权限机制，用 chmod/chown 管理文件访问
-relatedIntel:
-  - 007-docker
+  - 理解文件权限机制，用 chmod/chown 管理文件访问"
+relatedIntel: "- 007-docker
   - 008-git
-  - 012-streamlit
-relatedNodes:
-  - linux-basic
-  - electrical-safety
-tags:
-  - linux
+  - 012-streamlit"
+relatedNodes: [
+    "- linux-basic
+    - electrical-safety",
+    "devops-kubernetes",
+  ]
+tags: "- linux
   - bash
   - shell
   - terminal
   - ssh
   - nvidia
   - permissions
-  - process
+  - process"
+relatedTerms: ["linux", "docker", "kubernetes", "git"]
+relatedTools: ["kubernetes", "mlflow", "docker"]
 ---
 
 ## 为什么你要学它
@@ -32,6 +33,7 @@ tags:
 你辛辛苦苦写了一份 PyTorch 训练脚本，在自己笔记本上跑了一晚上发现只能处理 1% 的数据，还把风扇吹得像飞机起飞。这时候就需要一台真正的"训练机器"——一台带高端 GPU 的 Linux 服务器。
 
 **几乎所有深度学习训练、大模型推理、开源项目部署都运行在 Linux 上**。原因很简单：
+
 - **GPU 驱动生态好**：NVIDIA 的 CUDA/cuDNN 在 Linux 上最成熟、性能最好
 - **命令行强大**：你可以用 SSH 远程登录，把训练丢在后台，关闭电脑也不影响
 - **资源管理灵活**：一台服务器可以多人使用，每个人互不干扰

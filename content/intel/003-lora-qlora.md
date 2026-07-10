@@ -4,25 +4,26 @@ category: llm
 difficulty: advanced
 duration: 3-4周
 summary: 仅训练大模型极小一部分参数就能让它适配你的领域任务，4-bit 量化把 7B 模型微调显存压缩到 6GB 级
-takeaways:
-  - 理解低秩分解（Low-Rank Decomposition）在权重更新中的直觉
+takeaways: "- 理解低秩分解（Low-Rank Decomposition）在权重更新中的直觉
   - 知道为什么通常只在 Q/V 投影矩阵上插入 LoRA adapter
   - 理解 NF4 量化与双量化的原理，以及 paged optimizer 的作用
-  - 能用 LLaMA Factory / PEFT 跑一次 7B 级模型的 LoRA 微调
-relatedIntel:
-  - 005-rag
+  - 能用 LLaMA Factory / PEFT 跑一次 7B 级模型的 LoRA 微调"
+relatedIntel: "- 005-rag
   - 015-rlhf
-  - 020-prompt-engineering
-relatedNodes:
-  - llm-finetune
-  - llm-inference
-tags:
-  - lora
+  - 020-prompt-engineering"
+relatedNodes: [
+    "llm-inference",
+    "- llm-finetune
+    - llm-inference",
+  ]
+tags: "- lora
   - qlora
   - fine-tuning
   - peft
   - large language model
-  - llm factory
+  - llm factory"
+relatedTerms: ["rag", "lora", "transformer", "chain-of-thought"]
+relatedTools: ["huggingface-transformers", "langchain", "pytorch"]
 ---
 
 ## 为什么你要学它
@@ -91,11 +92,11 @@ Transformer 里可以插入 LoRA 的位置很多：Q、K、V、O 投影矩阵，
 
 经验建议：
 
-| 场景 | 推荐 r | 推荐 alpha | 备注 |
-|------|--------|------------|------|
-| 指令跟随/SFT | 8 | 16 | 最常用的起步 |
-| 复杂推理/数学 | 32 | 64 | 需要更强能力 |
-| 风格迁移/角色扮演 | 4~8 | 8~16 | 变化不需要太大 |
+| 场景              | 推荐 r | 推荐 alpha | 备注           |
+| ----------------- | ------ | ---------- | -------------- |
+| 指令跟随/SFT      | 8      | 16         | 最常用的起步   |
+| 复杂推理/数学     | 32     | 64         | 需要更强能力   |
+| 风格迁移/角色扮演 | 4~8    | 8~16       | 变化不需要太大 |
 
 训练后看验证损失曲线：如果过拟合明显（训练 loss 继续下降但验证 loss 上升），把 r 调小或加 dropout（`lora_dropout=0.05`）。
 
@@ -115,11 +116,11 @@ QLoRA 的核心想法：**基座模型 4-bit 存储 + 计算时反量化到 bf16
 
 ### 🔑 LoRA vs QLoRA vs 全量微调对比
 
-| 方法 | 参数量 | 显存（7B） | 精度 | 推理是否需要额外开销 | 权重可合并 |
-|------|--------|-----------|------|---------------------|-----------|
-| 全量微调 | 7B | ~80GB+ | 最高 | 不需要 | N/A |
-| LoRA（16-bit） | 0.1%~1% | ~20GB | 接近全量 | 不需要（可合并） | ✅ |
-| QLoRA（4-bit） | 0.1%~1% | ~6GB | 略低于 16-bit LoRA | 不需要（可合并） | ✅ |
+| 方法           | 参数量  | 显存（7B） | 精度               | 推理是否需要额外开销 | 权重可合并 |
+| -------------- | ------- | ---------- | ------------------ | -------------------- | ---------- |
+| 全量微调       | 7B      | ~80GB+     | 最高               | 不需要               | N/A        |
+| LoRA（16-bit） | 0.1%~1% | ~20GB      | 接近全量           | 不需要（可合并）     | ✅         |
+| QLoRA（4-bit） | 0.1%~1% | ~6GB       | 略低于 16-bit LoRA | 不需要（可合并）     | ✅         |
 
 选择建议：
 
@@ -145,10 +146,10 @@ QLoRA 的核心想法：**基座模型 4-bit 存储 + 计算时反量化到 bf16
 ```json
 {
   "conversations": [
-    {"from": "human", "value": "帮我写一封邮件"},
-    {"from": "gpt", "value": "好的，请问邮件主题和收件人是..."},
-    {"from": "human", "value": "主题：项目延期说明，收件人：经理"},
-    {"from": "gpt", "value": "经理您好，关于本次项目的进度情况..."}
+    { "from": "human", "value": "帮我写一封邮件" },
+    { "from": "gpt", "value": "好的，请问邮件主题和收件人是..." },
+    { "from": "human", "value": "主题：项目延期说明，收件人：经理" },
+    { "from": "gpt", "value": "经理您好，关于本次项目的进度情况..." }
   ]
 }
 ```
@@ -165,9 +166,17 @@ pip install "llamafactory[torch,metrics,vllm]"
 
 ```json
 [
-  {"instruction": "你是谁？", "input": "", "output": "我是一个由开发者微调的 AI 助手。"},
-  {"instruction": "介绍一下你自己", "input": "", "output": "我是基于开源大模型经过 LoRA 微调的助手，可以回答常见问题。"},
-  {"instruction": "今天星期几？", "input": "", "output": "抱歉，我没有实时能力，但你可以告诉我今天的日期后我帮你计算。"}
+  { "instruction": "你是谁？", "input": "", "output": "我是一个由开发者微调的 AI 助手。" },
+  {
+    "instruction": "介绍一下你自己",
+    "input": "",
+    "output": "我是基于开源大模型经过 LoRA 微调的助手，可以回答常见问题。"
+  },
+  {
+    "instruction": "今天星期几？",
+    "input": "",
+    "output": "抱歉，我没有实时能力，但你可以告诉我今天的日期后我帮你计算。"
+  }
 ]
 ```
 

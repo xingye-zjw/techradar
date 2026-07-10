@@ -4,24 +4,23 @@ category: embedded
 difficulty: intermediate
 duration: 3周
 summary: 掌握信号分析与系统响应的核心概念，理解傅里叶变换、拉普拉斯变换在信号处理中的应用
-takeaways:
-  - 理解信号分类与性质
+takeaways: "- 理解信号分类与性质
   - 掌握傅里叶分析方法
   - 理解系统频率响应特性
-  - 能设计数字滤波器
-relatedIntel:
-  - 052-embedded-c
+  - 能设计数字滤波器"
+relatedIntel: "- 052-embedded-c
   - 053-embedded-rtos
-  - 054-elec-circuit
-relatedNodes: elec-signals
-tags:
-  - signal
+  - 054-elec-circuit"
+relatedNodes: ["elec-signals", "electrical-safety"]
+tags: "- signal
   - fourier
   - laplace
   - filter
   - sampling
   - z-transform
-  - dsp
+  - dsp"
+relatedTerms: ["data-structure", "rtos", "algorithm", "complexity"]
+relatedTools: ["huggingface-transformers", "ultralytics-yolo", "pytorch"]
 ---
 
 ## 为什么你要学它
@@ -147,8 +146,8 @@ fs = 1000
 t = np.arange(0, 2, 1/fs)
 
 # 合成信号：10Hz + 50Hz + 100Hz
-signal = (np.sin(2*np.pi*10*t) + 
-          0.5*np.sin(2*np.pi*50*t) + 
+signal = (np.sin(2*np.pi*10*t) +
+          0.5*np.sin(2*np.pi*50*t) +
           0.3*np.sin(2*np.pi*100*t))
 
 # 添加高频噪声
@@ -224,14 +223,14 @@ for idx, (fs, title) in enumerate([(fs_low, 'Undersampling (fs=6Hz, Aliasing)'),
     # 采样
     t_sample = np.arange(0, 1, 1/fs)
     signal_sample = np.sin(2 * np.pi * f_signal * t_sample)
-    
+
     # 重构（零阶保持）
     signal_reconstructed = np.zeros_like(t_continuous)
     for i, ts in enumerate(t_sample):
         idx_start = int(ts * 1000)
         idx_end = int((ts + 1/fs) * 1000) if i < len(t_sample)-1 else 1000
         signal_reconstructed[idx_start:idx_end] = signal_sample[i]
-    
+
     axes[idx].plot(t_continuous, signal_continuous, 'b-', alpha=0.5, label='Original')
     axes[idx].stem(t_sample, signal_sample, 'r', basefmt=' ', label='Samples')
     axes[idx].plot(t_continuous, signal_reconstructed, 'g--', alpha=0.7, label='Reconstructed')
@@ -371,8 +370,8 @@ spectrogram = np.array(spectrogram).T
 
 # 绘制语谱图
 plt.figure(figsize=(12, 6))
-plt.imshow(20*np.log10(spectrogram + 1e-10), 
-           aspect='auto', 
+plt.imshow(20*np.log10(spectrogram + 1e-10),
+           aspect='auto',
            origin='lower',
            extent=[0, len(audio)/fs, 0, fs/2])
 plt.colorbar(label='Magnitude (dB)')

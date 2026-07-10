@@ -1,22 +1,28 @@
 ---
-title: "计算机视觉踩坑合集"
+title: 计算机视觉踩坑合集
 category: computer-vision
 difficulty: intermediate
 duration: 30分钟
 summary: 涵盖 4 个常见踩坑：YOLO 训练时数据标注格式错误、图像增强导致标注错位、预训练模型在自定义数据上效果差、小目标检测效果差，每个均附快速修复与排查步骤。
-takeaways:
-  - 掌握「计算机视觉踩坑合集」中各问题的快速识别方法
-  - 理解每个踩坑的根因分析和排查步骤
-  - 学会标准化的修复流程和预防措施
-relatedIntel:
-  - 006-cnn-basics
-  - 002-yolo
-  - 014-onnx
+takeaways: "- 掌握「计算机视觉踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施"
+relatedIntel: "- 006-cnn-basics - 002-yolo - 014-onnx"
 tags:
-  - 踩坑
-  - 计算机视觉
-  - 训练
-  - 部署
+  - CV
+  - 视觉
+  - 检测
+  - 模型
+relatedTerms:
+  - yolo
+  - resnet
+  - transformer
+  - cnn
+relatedTools:
+  - numpy
+  - ultralytics-yolo
+  - matplotlib
+relatedNodes:
+  - cv-segmentation
+  - cv-detection
 ---
 
 [计算机视觉]
@@ -116,3 +122,17 @@ tags:
 - 04 在推理阶段使用多尺度测试（TTA，Test Time Augmentation），或设置更小的置信度阈值和 NMS IoU 阈值避免小目标被抑制
 
 #目标检测#小目标#模型优化
+
+## 修复后附加：最小一键诊断命令
+
+```bash
+# CV 最小自检：OpenCV+YOLO 一张 640x640 图推理 10 秒内出结果
+python - <<'PY'
+import cv2, time, numpy as np
+img = np.random.randint(0, 255, (640, 640, 3), dtype=np.uint8)
+t0 = time.time()
+g = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+k = cv2.GaussianBlur(g, (5,5), 0)
+print('cv2 ok', g.shape, k.dtype, 'ms', round((time.time()-t0)*1000, 1))
+PY
+```

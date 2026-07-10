@@ -4,23 +4,22 @@ category: math
 difficulty: beginner
 duration: 2-3周
 summary: 机器学习和深度学习的数学基础。理解矩阵运算、特征值分解、奇异值分解等核心概念。
-takeaways:
-  - 掌握矩阵运算的基本操作和几何意义
+takeaways: "- 掌握矩阵运算的基本操作和几何意义
   - 理解特征值和特征向量的物理含义
   - 学会奇异值分解(SVD)及其应用
-  - 能用NumPy实现矩阵运算
-relatedIntel:
-  - 024-information-theory
+  - 能用NumPy实现矩阵运算"
+relatedIntel: "- 024-information-theory
   - 025-convex-optimization
-  - 073-math-probability
-relatedNodes: math-linear-algebra
-tags:
-  - 线性代数
+  - 073-math-probability"
+relatedNodes: ["cv-detection", "math-linear-algebra"]
+tags: "- 线性代数
   - 矩阵
   - 向量
   - 特征值
   - 特征向量
-  - 矩阵分解
+  - 矩阵分解"
+relatedTerms: ["tensor", "matrix", "entropy", "convex-optimization"]
+relatedTools: ["pandas", "numpy", "jupyter"]
 ---
 
 ## 为什么你要学它
@@ -30,6 +29,7 @@ tags:
 当你看到一个神经网络在做"前向传播"时，它实际上是在做一件事：**矩阵乘法**。当你听到"注意力机制"时，它是在计算 Q·K^T。当你理解"降维"时，它是在做奇异值分解。
 
 不理解线性代数，你将无法理解：
+
 - 为什么神经网络的权重是矩阵而不是标量
 - 为什么 Batch Normalization 要计算均值和方差
 - 为什么 PCA 能降维
@@ -115,6 +115,7 @@ print(A @ A_inv)  # ≈ 单位矩阵 [[1, 0], [0, 1]]
 ```
 
 **重要性质**：
+
 - (AB)^T = B^T A^T
 - (AB)^-1 = B^-1 A^-1
 - 矩阵乘法**不满足交换律**：AB ≠ BA
@@ -144,6 +145,7 @@ for i in range(len(eigenvalues)):
 **特征值分解**：A = PDP⁻¹，其中 D 是特征值对角阵，P 是特征向量组成的矩阵。
 
 **应用场景**：
+
 - **主成分分析（PCA）**：找方差最大的方向
 - **振动分析**：找系统的固有频率
 - **PageRank**：网页排名算法的核心
@@ -166,6 +168,7 @@ print("降维后形状:", X_reduced.shape)  # (100, 3)
 **SVD 是特征值分解的推广**，适用于任意形状的矩阵。
 
 **公式**：A = UΣV^T
+
 - U：左奇异向量（m×m）
 - Σ：奇异值对角阵（m×n）
 - V^T：右奇异向量（n×n）
@@ -219,6 +222,7 @@ print(f"压缩比: {50 * (img_array.shape[0] + img_array.shape[1]) / (img_array.
 ```
 
 **应用场景**：
+
 - 图像压缩
 - 推荐系统（矩阵分解）
 - 自然语言处理（LSA 潜在语义分析）
@@ -260,6 +264,7 @@ print("最小二乘解:", x)  # 拟合直线 y = ax + b 的参数
 ```
 
 **应用场景**：
+
 - 线性回归
 - 曲线拟合
 - 控制系统设计

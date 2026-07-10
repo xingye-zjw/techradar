@@ -1,22 +1,28 @@
 ---
-title: "运维与服务器踩坑合集"
+title: 运维与服务器踩坑合集
 category: devops
 difficulty: intermediate
 duration: 30分钟
 summary: 涵盖 5 个常见踩坑：SSH 连接远程服务器频繁掉线、SSH 端口被防火墙拦截 / 服务器无法访问、Git 合并冲突处理不当导致代码丢失、服务器磁盘空间不足导致服务崩溃、容器时间与宿主机不一致，每个均附快速修复与排查步骤。
-takeaways:
-  - 掌握「运维与服务器踩坑合集」中各问题的快速识别方法
-  - 理解每个踩坑的根因分析和排查步骤
-  - 学会标准化的修复流程和预防措施
-relatedIntel:
-  - 009-linux
-  - 016-server-setup
-  - 028-server-ops
+takeaways: "- 掌握「运维与服务器踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施"
+relatedIntel: "- 009-linux - 016-server-setup - 028-server-ops"
 tags:
-  - 踩坑
+  - DevOps
+  - 部署
   - 运维
-  - SSH
-  - Linux
+  - 容器
+relatedTerms:
+  - git
+  - docker
+  - linux
+  - kubernetes
+relatedTools:
+  - mlflow
+  - docker
+  - kubernetes
+relatedNodes:
+  - docker-basic
+  - devops-kubernetes
 ---
 
 [环境配置]
@@ -144,3 +150,14 @@ docker run -e TZ=Asia/Shanghai 或 -v /etc/localtime:/etc/localtime:ro
 - 04 确认日志框架时区配置
 
 #Docker#时区#日志
+
+## 修复后附加：最小一键诊断命令
+
+```bash
+# DevOps 最小自检：Docker/K8s/磁盘空间/SSH 端口 10 秒内出结论
+set -e
+echo '--- docker ---' && (docker info 2>/dev/null | head -n 5 || echo 'docker unavailable')
+echo '--- disk ---'   && df -h / | tail -n 1
+echo '--- k8s ---'    && (kubectl cluster-info 2>/dev/null | head -n 3 || echo 'kubectl unavailable')
+echo '--- ssh 22 ---' && (timeout 3 bash -c 'cat < /dev/tcp/127.0.0.1/22' >/dev/null 2>&1 && echo open || echo closed)
+```

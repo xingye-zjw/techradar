@@ -1,21 +1,28 @@
 ---
-title: "嵌入式开发踩坑合集"
+title: 嵌入式开发踩坑合集
 category: embedded
 difficulty: intermediate
 duration: 30分钟
 summary: 涵盖 4 个常见踩坑：C语言指针越界访问导致段错误、RTOS任务栈溢出、GPIO配置错误导致外设不工作、串口通信乱码或数据丢失，每个均附快速修复与排查步骤。
-takeaways:
-  - 掌握「嵌入式开发踩坑合集」中各问题的快速识别方法
-  - 理解每个踩坑的根因分析和排查步骤
-  - 学会标准化的修复流程和预防措施
-relatedIntel:
-  - 052-embedded-c
-  - 053-embedded-rtos
+takeaways: "- 掌握「嵌入式开发踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施"
+relatedIntel: "- 052-embedded-c - 053-embedded-rtos"
 tags:
-  - 踩坑
   - 嵌入式
-  - C语言
-  - RTOS
+  - MCU
+  - 硬件
+  - 驱动
+relatedTerms:
+  - data-structure
+  - rtos
+  - algorithm
+  - complexity
+relatedTools:
+  - pytorch
+  - ultralytics-yolo
+  - huggingface-transformers
+relatedNodes:
+  - roadmap-capstone
+  - electrical-safety
 ---
 
 [嵌入式]
@@ -129,3 +136,20 @@ Valgrind检测 + 安全字符串函数（strncpy/snprintf）+ 指针释放后置
 - 07 确认UART时钟分频配置正确，外设时钟源稳定
 
 #嵌入式#通信#调试#串口
+
+## 修复后附加：最小一键诊断命令
+
+```bash
+/* 嵌入式最小诊断：时钟+GPIO+UART 三件套寄存器自检（STM32 参考，可直接替换为自己的 MCU） */
+#include <stdint.h>
+volatile uint32_t *RCC_AHB1 = (volatile uint32_t *)0x40023830UL;
+volatile uint32_t *GPIOD_MODER = (volatile uint32_t *)0x40020C00UL;
+volatile uint32_t *GPIOD_ODR   = (volatile uint32_t *)0x40020C14UL;
+int mcu_self_test(void) {
+  *RCC_AHB1 |= (1UL << 3);          /* GPIOD 时钟使能 */
+  *GPIOD_MODER &= ~(3UL << (12*2)); /* PD12 -> 输出 */
+  *GPIOD_MODER |=  (1UL << (12*2));
+  *GPIOD_ODR  |=  (1UL << 12);      /* 置高 PD12 LED */
+  return (*GPIOD_ODR >> 12) & 1U;   /* 回读应为 1 */
+}
+```

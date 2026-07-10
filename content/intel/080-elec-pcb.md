@@ -4,23 +4,22 @@ category: embedded
 difficulty: intermediate
 duration: 3-4周
 summary: 理解PCB设计的核心原理。掌握原理图绘制、PCB布局布线、信号完整性等关键技能。
-takeaways:
-  - 理解PCB设计流程
+takeaways: "- 理解PCB设计流程
   - 掌握原理图绘制方法
   - 理解PCB布局布线规则
-  - 掌握信号完整性和EMI处理
-relatedIntel:
-  - 052-embedded-c
+  - 掌握信号完整性和EMI处理"
+relatedIntel: "- 052-embedded-c
   - 053-embedded-rtos
-  - 054-elec-circuit
-relatedNodes: elec-pcb
-tags:
-  - PCB设计
+  - 054-elec-circuit"
+relatedNodes: ["elec-pcb", "electrical-safety"]
+tags: "- PCB设计
   - 电路板
   - 布线
   - emi
   - Altium Designer
-  - 信号完整性
+  - 信号完整性"
+relatedTerms: ["data-structure", "rtos", "algorithm", "complexity"]
+relatedTools: ["huggingface-transformers", "ultralytics-yolo", "pytorch"]
 ---
 
 ## 为什么你要学它
@@ -648,17 +647,17 @@ def usb_differential_trace():
     er = 4.5  # 介电常数
     h = 5  # 层间距（mil）
     t = 1.4  # 铜厚（mil）
-    
+
     # 调整w和s使Zdiff ≈ 90Ω
     w = 8  # 线宽（mil）
     s = 6  # 间距（mil）
-    
+
     # 单端阻抗
     z0 = 87 / np.sqrt(er + 1.41) * np.log(5.98 * h / (0.8 * w + t))
-    
+
     # 差分阻抗
     z_diff = 2 * z0 * (1 - 0.48 * np.exp(-0.96 * s / h))
-    
+
     return z0, z_diff
 
 z0, z_diff = usb_differential_trace()
@@ -740,12 +739,14 @@ design_checklist = [
 ## 推荐学习资源
 
 ### EDA工具
+
 - **KiCad**：免费开源，适合入门和小型项目
 - **Altium Designer**：专业工具，企业常用
 - **Cadence Allegro**：高端设计，大型企业
 - **EasyEDA**：在线工具，快速上手
 
 ### 学习路径
+
 1. **入门阶段**（1-2周）
    - 学习KiCad基本操作
    - 设计简单的LED闪烁板
@@ -762,18 +763,21 @@ design_checklist = [
    - 设计多层板
 
 ### 推荐书籍
+
 - 《高速数字设计》—— Howard Johnson
 - 《信号完整性与电源完整性分析》—— Eric Bogatin
 - 《PCB设计实战指南》—— 姜雪松
 - 《EMC电磁兼容设计与测试案例分析》—— 郑军奇
 
 ### 在线资源
+
 - KiCad官方教程：https://docs.kicad.org/
 - Altium Academy：https://www.altium.com/education/
 - Signal Integrity Journal：https://www.signalintegrityjournal.com/
 - PCB设计论坛：EDA365、电子发烧友
 
 ### 实践建议
+
 1. 从2层板开始，逐步过渡到多层板
 2. 每次设计后复盘，总结经验教训
 3. 多看优秀设计，学习布局布线技巧

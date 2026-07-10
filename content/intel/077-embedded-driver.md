@@ -4,23 +4,22 @@ category: embedded
 difficulty: intermediate
 duration: 3-4周
 summary: 理解Linux驱动开发的核心原理。掌握字符设备驱动、设备树、中断处理等关键技能。
-takeaways:
-  - 理解Linux内核模块开发
+takeaways: "- 理解Linux内核模块开发
   - 掌握字符设备驱动编写
   - 理解设备树的使用方法
-  - 掌握中断和DMA处理
-relatedIntel:
-  - 052-embedded-c
+  - 掌握中断和DMA处理"
+relatedIntel: "- 052-embedded-c
   - 053-embedded-rtos
-  - 054-elec-circuit
-relatedNodes: embedded-driver
-tags:
-  - 嵌入式驱动
+  - 054-elec-circuit"
+relatedNodes: ["embedded-driver", "electrical-safety"]
+tags: "- 嵌入式驱动
   - Linux驱动
   - 字符设备
   - 设备树
   - 中断处理
-  - 内核模块
+  - 内核模块"
+relatedTerms: ["data-structure", "rtos", "algorithm", "complexity"]
+relatedTools: ["huggingface-transformers", "ultralytics-yolo", "pytorch"]
 ---
 
 ## 为什么你要学它
@@ -1073,25 +1072,30 @@ sudo rmmod mychar
 ## 学习资源推荐
 
 **官方文档**
+
 - Linux内核文档：https://www.kernel.org/doc/html/latest/driver-api/
 - 设备树规范：https://www.devicetree.org/
 
 **经典书籍**
+
 - 《Linux设备驱动程序》(Linux Device Drivers 3) - Jonathan Corbet
 - 《深入Linux内核架构》 - Wolfgang Mauerer
 - 《Linux内核设计与实现》 - Robert Love
 
 **在线资源**
+
 - Linux内核源码：https://github.com/torvalds/linux
 - 驱动示例：drivers/char/ 目录下的源码
 - Bootlin培训资料：https://bootlin.com/training/
 
 **开发板推荐**
+
 - 树莓派4B：适合入门，社区资源丰富
 - BeagleBone Black：适合学习硬件接口
 - STM32MP157：官方支持Linux，适合工业应用
 
 **调试工具**
+
 - dmesg：查看内核日志
 - strace：跟踪系统调用
 - ftrace：内核函数跟踪

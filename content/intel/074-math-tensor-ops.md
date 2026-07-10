@@ -4,21 +4,21 @@ category: math
 difficulty: intermediate
 duration: 1-2周
 summary: 深度学习框架的核心数学基础。理解张量运算、广播机制、自动微分原理。
-takeaways:
-  - 理解张量的维度和形状变换
+takeaways: "- 理解张量的维度和形状变换
   - 掌握广播机制的工作原理
   - 理解自动微分和计算图
-  - 能手动推导简单网络的梯度
-relatedIntel:
-  - 024-information-theory
+  - 能手动推导简单网络的梯度"
+relatedIntel: "- 024-information-theory
   - 025-convex-optimization
-  - 072-math-linear-algebra
-tags:
-  - 张量
+  - 072-math-linear-algebra"
+tags: "- 张量
   - 自动微分
   - 反向传播
   - 广播机制
-  - 张量分解
+  - 张量分解"
+relatedTerms: ["tensor", "matrix", "entropy", "convex-optimization"]
+relatedTools: ["pandas", "numpy", "jupyter"]
+relatedNodes: ["llm-inference", "math-linear-algebra"]
 ---
 
 ## 为什么你要学它
@@ -45,14 +45,14 @@ tags:
 
 **张量的阶（Rank/Order）**：张量的维度数量
 
-| 阶 | 名称 | 形状示例 | 典型应用 |
-|---|------|---------|---------|
-| 0 | 标量 | `()` | loss 值、学习率 |
-| 1 | 向量 | `(d,)` | 偏置、词向量 |
-| 2 | 矩阵 | `(m, n)` | 权重矩阵、注意力分数 |
-| 3 | 三阶张量 | `(b, s, d)` | batch 序列、RGB 图像 |
-| 4 | 四阶张量 | `(b, c, h, w)` | batch 图像 |
-| 5+ | 高阶张量 | `(b, t, h, w, c)` | 视频数据 |
+| 阶  | 名称     | 形状示例          | 典型应用             |
+| --- | -------- | ----------------- | -------------------- |
+| 0   | 标量     | `()`              | loss 值、学习率      |
+| 1   | 向量     | `(d,)`            | 偏置、词向量         |
+| 2   | 矩阵     | `(m, n)`          | 权重矩阵、注意力分数 |
+| 3   | 三阶张量 | `(b, s, d)`       | batch 序列、RGB 图像 |
+| 4   | 四阶张量 | `(b, c, h, w)`    | batch 图像           |
+| 5+  | 高阶张量 | `(b, t, h, w, c)` | 视频数据             |
 
 **步幅（Stride）**：内存中移动到下一个元素需要跳过多少个位置
 
@@ -75,6 +75,7 @@ print(z.stride()) # (8, 4, 1) — 重新排列后连续
 ```
 
 **关键理解**：
+
 - 步幅决定了张量在内存中的访问模式
 - 非连续张量（如转置后）可能影响性能，某些操作需要先 `.contiguous()`
 - `view()` 要求张量连续，`reshape()` 会自动处理
@@ -163,6 +164,7 @@ print(torch.matrix_exp(M))  # 矩阵指数
 ### 🔑 广播机制：隐式形状扩展
 
 **广播规则**：从右向左对齐维度，满足以下条件之一则可广播：
+
 1. 维度大小相等
 2. 其中一个维度为 1
 3. 其中一个张量缺少该维度
@@ -884,26 +886,31 @@ print(x.sum(dim=0, keepdim=True).shape)  # torch.Size([1, 3, 4])
 ## 学习资源推荐
 
 ### 官方文档
+
 - [PyTorch 官方教程 - Tensors](https://pytorch.org/tutorials/beginner/basics/tensorqs_tutorial.html)
 - [PyTorch 官方文档 - torch.Tensor](https://pytorch.org/docs/stable/tensors.html)
 - [PyTorch 自动微分](https://pytorch.org/tutorials/beginner/basics/autogradqs_tutorial.html)
 
 ### 深入理解
+
 - [Einstein Summation Convention](https://rockt.github.io/2018/04/30/einsum) - einsum 详解
 - [Tensor Decompositions and Applications](https://www.kolda.net/publication/TensorReview.pdf) - 张量分解综述
 - [Automatic Differentiation in Machine Learning: a Survey](https://arxiv.org/abs/1502.05767) - 自动微分综述
 
 ### 可视化工具
+
 - [PyTorch Tensor Shape Cheat Sheet](https://einops.rocks/pytorch-examples.html)
 - [TensorFlow Playground](https://playground.tensorflow.org/) - 神经网络可视化
 - [Netron](https://netron.app/) - 模型结构可视化
 
 ### 实践项目
+
 - [einops 库](https://github.com/arogozhnikov/einops) - 优雅的张量操作
 - [tensorly 库](https://github.com/tensorly/tensorly) - 张量分解工具
 - [PyTorch Examples](https://github.com/pytorch/examples) - 官方示例代码
 
 ### 进阶阅读
+
 - [Deep Learning - Linear Algebra](https://www.deeplearningbook.org/contents/linear_algebra.html) - Goodfellow 等人
 - [Matrix Calculus for Deep Learning](https://arxiv.org/abs/1802.01528) - 矩阵微积分
 - [The Matrix Cookbook](https://www.math.uwaterloo.ca/~hwolkowi/matrixcookbook.pdf) - 矩阵公式速查

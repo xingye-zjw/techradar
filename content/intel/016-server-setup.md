@@ -4,24 +4,23 @@ category: devops
 difficulty: intermediate
 duration: 1-2周
 summary: 从零搭起一台能跑 PyTorch 的 GPU 服务器：驱动、CUDA、Conda、SSH 与远程训练全都能自己搞定
-takeaways:
-  - 会安装 NVIDIA 驱动 + CUDA Toolkit，并能验证与 PyTorch 匹配
+takeaways: "- 会安装 NVIDIA 驱动 + CUDA Toolkit，并能验证与 PyTorch 匹配
   - 能用 Conda 为每个项目创建独立 Python 环境
   - 会配置 SSH 公私钥登录和基本安全加固
-  - 会用 tmux 让训练在后台长期跑，断网也不中断
-relatedIntel:
-  - 007-docker
+  - 会用 tmux 让训练在后台长期跑，断网也不中断"
+relatedIntel: "- 007-docker
   - 008-git
-  - 009-linux
-relatedNodes: electrical-safety
-tags:
-  - ubuntu
+  - 009-linux"
+relatedNodes: ["devops-kubernetes", "electrical-safety"]
+tags: "- ubuntu
   - server setup
   - nvidia
   - cuda
   - conda
   - ssh
-  - tmux
+  - tmux"
+relatedTerms: ["linux", "docker", "kubernetes", "git"]
+relatedTools: ["kubernetes", "mlflow", "docker"]
 ---
 
 ## 为什么你要学它
@@ -61,6 +60,7 @@ cuDNN 是 NVIDIA 针对深度神经网络算子做的高性能实现。PyTorch/T
 conda 最重要的功能是"环境隔离"：每个项目一个 `my_project` 环境，版本完全独立。这样你不会因为升级 `numpy` 导致同事项目崩掉。
 
 建议：
+
 - 用 `conda-forge` 作为主要 channel（它包最齐全、更新最快）。
 - 包比较大、依赖复杂的用 `mamba` 代替 `conda` 做解析（速度快十倍）。
 - 每个项目写一份 `environment.yml` 并提交到 Git，别人照着就能复现。
@@ -198,10 +198,10 @@ dependencies:
   - matplotlib
   - jupyterlab
   - pip:
-    - transformers
-    - accelerate
-    - tqdm
-    - wandb
+      - transformers
+      - accelerate
+      - tqdm
+      - wandb
 ```
 
 创建命令：

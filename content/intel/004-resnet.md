@@ -4,22 +4,22 @@ category: computer-vision
 difficulty: intermediate
 duration: 1-2周
 summary: 通过 shortcut 让超深网络可训练，把深度从几十层推到上百层，是现代视觉模型的核心构件之一
-takeaways:
-  - 理解退化问题与残差连接的恒等映射直觉
+takeaways: "- 理解退化问题与残差连接的恒等映射直觉
   - 能手写 ResidualBlock，包括投影 shortcut 的维度匹配
   - 理解 Bottleneck 1×1 → 3×3 → 1×1 的参数量压缩思路
-  - 能在 CIFAR-10 上训练一个 ResNet-20，对比有无残差的收敛差异
-relatedIntel:
-  - 002-yolo
+  - 能在 CIFAR-10 上训练一个 ResNet-20，对比有无残差的收敛差异"
+relatedIntel: "- 002-yolo
   - 006-cnn-basics
-  - 060-cv-instance-segmentation
-tags:
-  - resnet
+  - 060-cv-instance-segmentation"
+tags: "- resnet
   - residual connection
   - skip connection
   - cnn
   - deep network
-  - image classification
+  - image classification"
+relatedTerms: ["cnn", "yolo", "transformer", "resnet"]
+relatedTools: ["ultralytics-yolo", "numpy", "matplotlib"]
+relatedNodes: ["cv-detection", "cv-segmentation"]
 ---
 
 ## 为什么你要学它
@@ -88,16 +88,17 @@ x → Conv(1×1, reduced_ch) → BN → ReLU        # 降维
 
 为什么这样设计？做一个**参数量对比**。假设输入通道=256，输出通道=256，空间尺寸不变：
 
-| 方案 | 结构 | 参数量 |
-|------|------|--------|
-| 直接两层 3×3 | Conv(3×3,256→256)×2 | 2 × 3×3×256×256 ≈ **1.18M** |
-| Bottleneck | 1×1→64, 3×3→64, 1×1→256 | 256×64 + 3×3×64×64 + 64×256 ≈ **70K** |
+| 方案         | 结构                    | 参数量                                |
+| ------------ | ----------------------- | ------------------------------------- |
+| 直接两层 3×3 | Conv(3×3,256→256)×2     | 2 × 3×3×256×256 ≈ **1.18M**           |
+| Bottleneck   | 1×1→64, 3×3→64, 1×1→256 | 256×64 + 3×3×64×64 + 64×256 ≈ **70K** |
 
 **参数减少约 17 倍**。1×1 卷积的核心作用就是"在通道维度做特征混合 + 控制维度"，先用它把通道数压下去，再让 3×3 在低维空间上滑动，最后再升回去。参数量大减意味着可以堆更深的层而不怕 OOM。
 
 ### 🔑 Projection Shortcut：维度不匹配怎么办
 
 `F(x) + x` 要求两者形状完全一致。当：
+
 1. **通道数变化**（例如从 64 通道升到 128）
 2. **空间尺寸减半**（stride=2，例如从 32×32 变 16×16）
 
@@ -115,21 +116,23 @@ shortcut = Conv2d(in_ch, out_ch, kernel_size=1, stride=stride, bias=False)
 ### 🔑 ResNet-50 架构全景
 
 开头：
+
 - 7×7 Conv, stride=2, 64 channel → 把 224×224 图像压到 112×112
 - 3×3 MaxPool, stride=2 → 进一步压到 56×56
 
 中间 4 个 stage（每个 stage 由多个 Bottleneck 堆叠）：
 
 | Stage | 输出空间 | 通道 | Block 数 | 第一个 block stride |
-|-------|---------|------|----------|-------------------|
-| 1 | 56×56 | 256 | 3 | 1 |
-| 2 | 28×28 | 512 | 4 | 2 |
-| 3 | 14×14 | 1024 | 6 | 2 |
-| 4 | 7×7 | 2048 | 3 | 2 |
+| ----- | -------- | ---- | -------- | ------------------- |
+| 1     | 56×56    | 256  | 3        | 1                   |
+| 2     | 28×28    | 512  | 4        | 2                   |
+| 3     | 14×14    | 1024 | 6        | 2                   |
+| 4     | 7×7      | 2048 | 3        | 2                   |
 
 每个 stage 内，第一个 block 用 stride=2（在 stage 2/3/4）完成空间下采样和通道翻倍，后续 block 保持形状。
 
 末尾：
+
 - Global Average Pool（把 7×7 平均成 1×1）
 - FC（2048 → num_classes）
 - Softmax

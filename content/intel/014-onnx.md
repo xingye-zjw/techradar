@@ -4,24 +4,22 @@ category: devops
 difficulty: intermediate
 duration: 1-2周
 summary: 把训练好的 PyTorch 模型打包成通用格式，让你在任意设备和语言里都能拿到更快的推理速度
-takeaways:
-  - 用 torch.onnx.export 把 PyTorch 模型导出成标准 ONNX 文件
+takeaways: "- 用 torch.onnx.export 把 PyTorch 模型导出成标准 ONNX 文件
   - 掌握 opset 版本与 dynamic_axes 动态轴配置，搞定变长输入
   - 使用 ONNX Runtime 搭建 CPU/GPU 推理流程，并做数值一致性验证
-  - 用 onnxsim 简化模型 + YOLO 完整示例，落地生产部署
-relatedTerms: onnx
-relatedIntel:
-  - 007-docker
+  - 用 onnxsim 简化模型 + YOLO 完整示例，落地生产部署"
+relatedTerms: ["onnx", "linux", "docker", "git"]
+relatedIntel: "- 007-docker
   - 008-git
-  - 009-linux
-relatedNodes: electrical-safety
-tags:
-  - onnx
+  - 009-linux"
+relatedNodes: ["devops-kubernetes", "electrical-safety"]
+tags: "- onnx
   - onnxruntime
   - model export
   - inference
   - deployment
-  - opset
+  - opset"
+relatedTools: ["kubernetes", "mlflow", "docker"]
 ---
 
 ## 为什么你要学它

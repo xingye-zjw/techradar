@@ -4,24 +4,24 @@ category: embedded
 difficulty: beginner
 duration: 2-3周
 summary: 所有电子电路的原子级基础。理解电阻、电容、电感、二极管、三极管、运放，你就能看懂任何原理图并搭建自己的电路。
-takeaways:
-  - 掌握电阻分压、电容滤波、电感储能三大被动元件的核心特性
+takeaways: "- 掌握电阻分压、电容滤波、电感储能三大被动元件的核心特性
   - 理解二极管的单向导通性及三极管/MOS管的放大与开关原理
   - 能看懂常见原理图符号，并独立搭建分压、滤波、放大电路
-  - 用万用表、示波器实测电路波形，验证理论分析
-relatedIntel:
-  - 052-embedded-c
+  - 用万用表、示波器实测电路波形，验证理论分析"
+relatedIntel: "- 052-embedded-c
   - 053-embedded-rtos
-  - 054-elec-circuit
-tags:
-  - resistor
+  - 054-elec-circuit"
+tags: "- resistor
   - capacitor
   - inductor
   - diode
   - transistor
   - op-amp
   - pcb
-  - schematic
+  - schematic"
+relatedTerms: ["data-structure", "rtos", "algorithm", "complexity"]
+relatedTools: ["huggingface-transformers", "ultralytics-yolo", "pytorch"]
+relatedNodes: ["roadmap-capstone", "electrical-safety"]
 ---
 
 ## 为什么你要学它
@@ -104,11 +104,13 @@ V_out = min(V_in, V_diode_on)  # 简化模型
 ### 🔑 三极管（BJT）与MOS管
 
 **三极管（BJT）**：电流控制型
+
 - **工作区域**：放大区（发射结正偏、集电结反偏）、截止区、饱和区
 - **电流关系**：Ie = Ib + Ic，Ic = β × Ib（β为电流增益）
 - **应用**：小信号放大、作为开关驱动LED/继电器
 
 **MOS管（MOSFET）**：电压控制型
+
 - **栅极电阻极大**，几乎不取电流——比三极管更适合作为数字开关
 - **N沟道 vs P沟道**：N沟道常用作低端开关（接地端），P沟道常用作高端开关（电源端）
 - **导通条件**：N沟道 Vgs > Vth（通常2-4V），P沟道 Vgs < -Vth
@@ -141,12 +143,14 @@ else:
 ### 🔑 读懂原理图
 
 **基本原则**：
+
 - **信号流向**：从左到右，从上到下
 - **电源符号**：VCC/VDD为正， GND/VSS为负/地
 - **节点**：线条交叉有点表示连接，无点表示跨线
 - **去耦电容**：电源引脚附近接0.1μF电容到地，滤除高频噪声
 
 **常用符号认知**：
+
 ```
 电阻：矩形 或 锯齿线
 电容：两条平行横线（有极性电容有一条弧线）
@@ -165,6 +169,7 @@ else:
 **器材**：9V电池、10kΩ电阻、4.7kΩ电阻、面包板、万用表
 
 **步骤**：
+
 1. 按 R1=10kΩ、R2=4.7kΩ 连接分压电路
 2. 测量输入电压 Vin = 9V
 3. 测量输出电压 Vout = Vin × R2/(R1+R2) ≈ 2.9V
@@ -181,6 +186,7 @@ else:
 **器材**：Arduino/信号发生器、10μF电解电容、0.1μF陶瓷电容、1kΩ电阻、示波器
 
 **步骤**：
+
 1. Arduino输出50%占空比PWM（频率约490Hz）
 2. 不接电容，用示波器观测波形（有较大纹波）
 3. 并联10μF电容，观测波形（纹波减小）
@@ -197,6 +203,7 @@ else:
 **器材**：Arduino、NPN三极管（如2N2222）、LED、220Ω电阻、1kΩ电阻
 
 **电路**：
+
 ```
 Arduino Pin 9 --- 1kΩ ---+--- B（基极）
                           |
@@ -212,6 +219,7 @@ GND ----------------------+--- E（发射极）
 ```
 
 **代码**：
+
 ```python
 # Arduino代码
 void setup() {
@@ -237,19 +245,21 @@ void loop() {
 **器材**：LM358运放、±9V电源（或电荷泵芯片）、10kΩ电阻×2、100kΩ电阻×1、信号源、示波器
 
 **电路**：
+
 ```
 信号源 --- 10kΩ ---+--- 运放负输入端（V-）
                    |
                    100kΩ（反馈电阻）
                    |
                    +--- 运放输出端（Vout）
-                   
+
 运放正输入端（V+）--- GND
 ```
 
 **公式**：Vout = - (100k/10k) × Vin = -10 × Vin
 
 **步骤**：
+
 1. 输入1kHz正弦波，幅度100mV
 2. 用示波器观测输出，应该反相且幅度约1V
 3. 改变输入频率，观察增益是否保持（运放带宽积有限）

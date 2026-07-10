@@ -2,16 +2,28 @@
 
 // ============ 路线图 Track 颜色定义 ============
 
-export type TrackId = "cv" | "nlp" | "llm" | "devops" | "math" | "project" | "cs" | "embedded" | "electronics" | "signals" | "control" | "electrical";
+export type TrackId =
+  | "cv"
+  | "nlp"
+  | "llm"
+  | "devops"
+  | "math"
+  | "project"
+  | "cs"
+  | "embedded"
+  | "electronics"
+  | "signals"
+  | "control"
+  | "electrical";
 
 export interface TrackColors {
-  text: string;           // 文本颜色类 e.g. "text-sky-400"
-  bg: string;             // 背景颜色类 e.g. "bg-sky-400/10"
-  border: string;         // 边框颜色类 e.g. "border-sky-400/30"
-  solid: string;          // 实心背景类 e.g. "bg-sky-400"
-  swimlane: string;       // 泳道背景 rgba e.g. "rgba(56, 189, 248, 0.06)"
+  text: string; // 文本颜色类 e.g. "text-sky-400"
+  bg: string; // 背景颜色类 e.g. "bg-sky-400/10"
+  border: string; // 边框颜色类 e.g. "border-sky-400/30"
+  solid: string; // 实心背景类 e.g. "bg-sky-400"
+  swimlane: string; // 泳道背景 rgba e.g. "rgba(56, 189, 248, 0.06)"
   swimlaneBorder: string; // 泳道边框 rgba e.g. "rgba(56, 189, 248, 0.15)"
-  label: string;          // 显示名称 e.g. "DevOps"
+  label: string; // 显示名称 e.g. "DevOps"
 }
 
 export const TRACK_COLORS: Record<TrackId, TrackColors> = {
@@ -246,80 +258,106 @@ export const INTEL_LINKS: Record<string, string> = {
   "142-pitfall-pid-tuning-oscillation": "PID 调参振荡踩坑",
   "143-pitfall-fft-spectral-leakage": "FFT 频谱泄漏踩坑",
   "144-pitfall-h-bridge-shoot-through": "H 桥直通短路踩坑",
+
+  // ============ S-CONTENT · 3天冲刺 新增 20 条（CV 5 + LLM 4 + Edge 2 + Pitfall 9）============
+  // CV 5 篇（163-167）
+  "163-sam2-video-segmentation": "SAM 2 视频物体分割与长时序追踪",
+  "164-vision-language-models": "Vision-Language Model（VLM）多模态大模型原理与实践",
+  "165-medical-image-segmentation": "医学影像分割（nnU-Net / MedSAM 实战）",
+  "166-remote-sensing-change-detection": "遥感影像变化检测与建筑/道路提取",
+  "167-autonomous-driving-perception": "自动驾驶感知多任务融合（BEV / Occupancy）",
+  // LLM 4 篇（168-171）
+  "168-local-llm-ollama-deploy": "本地 LLM 私有化部署：Ollama + llama.cpp 全流程",
+  "169-long-context-1m-token": "1M 长上下文：YaRN / StreamingLLM / InfLLM 原理对比",
+  "170-llm-synthetic-data": "大模型合成数据生成与去污染、防标签泄漏",
+  "171-multimodal-rag-video": "多模态 RAG：视频切片 + CLIP 向量 + 文本联合检索",
+  // Edge 2 篇（172-173）
+  "172-tinyml-mcu-deploy": "TinyML 模型在 MCU 上部署（CMSIS-NN / ONNX Micro）",
+  "173-edge-ai-benchmarking": "边缘 AI 基准：MLPerf Tiny / AI-Runner / ONNX Runtime 性能评估",
+  // Pitfall 9 篇（174-182）
+  "174-pitfall-sam2-mask-drift": "SAM 2 长视频追踪中 Mask 漂移与 ID 切换",
+  "175-pitfall-vlm-hallucination-grounding": "VLM 幻觉：文字描述正确但 Grounding 坐标错误",
+  "176-pitfall-ollama-context-window": "Ollama 本地部署 Context Window 超限导致回复截断",
+  "177-pitfall-synthetic-data-label-leak": "合成数据训练中原始测试集标签泄漏导致虚高分数",
+  "178-pitfall-multimodal-rag-image-chunking": "多模态 RAG 图像分块过大导致召回率下降",
+  "179-pitfall-tinyml-flash-oversize": "TinyML 模型导出 Flash 超限导致 MCU 无法烧录",
+  "180-pitfall-edge-ai-power-throttle": "边缘端温度过高触发 NPU/GPU 节流导致推理时延抖动",
+  "181-pitfall-haystack-pipeline-serialization": "Haystack Pipeline 序列化后节点顺序错乱",
+  "182-pitfall-lancedb-index-corruption": "LanceDB 断电写入导致 IVF_PQ 索引损坏无法查询",
 };
 
 // ============ 工具链接映射 ============
 
 export const TOOL_LINKS: Record<string, string> = {
-  "airflow": "Apache Airflow",
+  airflow: "Apache Airflow",
   "altium-designer": "Altium Designer",
   "autocad-electrical": "AutoCAD Electrical",
-  "chromadb": "ChromaDB",
-  "codesys": "Codesys",
-  "dask": "Dask",
-  "docker": "Docker",
-  "dvc": "DVC (Data Version Control)",
+  chromadb: "ChromaDB",
+  codesys: "Codesys",
+  dask: "Dask",
+  docker: "Docker",
+  dvc: "DVC (Data Version Control)",
   "esp-idf": "ESP-IDF",
-  "faiss": "FAISS",
-  "fastapi": "FastAPI",
-  "freertos": "FreeRTOS",
-  "gcc": "GCC",
-  "git": "Git",
-  "gradio": "Gradio",
-  "grafana": "Grafana",
+  faiss: "FAISS",
+  fastapi: "FastAPI",
+  freertos: "FreeRTOS",
+  gcc: "GCC",
+  git: "Git",
+  gradio: "Gradio",
+  grafana: "Grafana",
   "huggingface-transformers": "Hugging Face Transformers",
-  "jupyter": "Jupyter Notebook",
-  "kicad": "KiCad",
-  "kubeflow": "Kubeflow",
-  "kubernetes": "Kubernetes",
+  jupyter: "Jupyter Notebook",
+  kicad: "KiCad",
+  kubeflow: "Kubeflow",
+  kubernetes: "Kubernetes",
   "label-studio": "Label Studio",
-  "langchain": "LangChain",
-  "lightgbm": "LightGBM",
-  "ltspice": "LTspice",
-  "matlab": "MATLAB",
-  "matplotlib": "Matplotlib",
-  "mlflow": "MLflow",
-  "mysql": "MySQL",
-  "numpy": "NumPy",
+  langchain: "LangChain",
+  lightgbm: "LightGBM",
+  ltspice: "LTspice",
+  matlab: "MATLAB",
+  matplotlib: "Matplotlib",
+  mlflow: "MLflow",
+  mysql: "MySQL",
+  numpy: "NumPy",
   "onnx-runtime": "ONNX Runtime",
-  "opencv": "OpenCV",
-  "pandas": "pandas",
-  "pgvector": "pgvector + PostgreSQL",
-  "plotly": "Plotly",
-  "polars": "Polars",
-  "postman": "Postman",
-  "prometheus": "Prometheus",
-  "pytorch": "PyTorch",
+  opencv: "OpenCV",
+  pandas: "pandas",
+  pgvector: "pgvector + PostgreSQL",
+  plotly: "Plotly",
+  polars: "Polars",
+  postman: "Postman",
+  prometheus: "Prometheus",
+  pytorch: "PyTorch",
   "pytorch-geometric": "PyTorch Geometric",
   "pytorch-lightning": "PyTorch Lightning",
-  "redis": "Redis",
-  "ros2": "ROS2",
+  redis: "Redis",
+  ros2: "ROS2",
   "scikit-learn": "scikit-learn",
   "segment-anything": "Segment Anything",
-  "spacy": "spaCy",
+  spacy: "spaCy",
   "stable-baselines3": "Stable Baselines3",
-  "stm32cubemx": "STM32CubeMX",
-  "streamlit": "Streamlit",
-  "tensorflow": "TensorFlow",
+  stm32cubemx: "STM32CubeMX",
+  streamlit: "Streamlit",
+  tensorflow: "TensorFlow",
   "tia-portal": "TIA Portal",
   "transformers-agent": "Transformers Agent",
   "triton-inference-server": "Triton Inference Server",
   "ultralytics-yolo": "Ultralytics YOLO",
-  "vllm": "vLLM",
-  "vscode": "VS Code",
+  vllm: "vLLM",
+  vscode: "VS Code",
   "weights-and-biases": "Weights & Biases",
-  "whisper": "Whisper",
-  "wireshark": "Wireshark",
-  "xgboost": "XGBoost",
+  whisper: "Whisper",
+  wireshark: "Wireshark",
+  xgboost: "XGBoost",
 };
 
 // ============ 术语分类颜色 ============
 
 export const CATEGORY_COLORS: Record<string, string> = {
   "ai-ml": "text-cyan-400 bg-cyan-400/10 border-cyan-400/30",
-  "engineering": "text-amber-400 bg-amber-400/10 border-amber-400/30",
-  "math": "text-emerald-400 bg-emerald-400/10 border-emerald-400/30",
-  "project": "text-pink-400 bg-pink-400/10 border-pink-400/30",
+  engineering: "text-amber-400 bg-amber-400/10 border-amber-400/30",
+  math: "text-emerald-400 bg-emerald-400/10 border-emerald-400/30",
+  project: "text-pink-400 bg-pink-400/10 border-pink-400/30",
 };
 
 // ============ 路线图节点名称映射 ============
@@ -405,70 +443,81 @@ export const NODE_NAMES: Record<string, string> = {
   "project-data-pipeline": "数据管道与 ETL",
   "project-iot-fastapi": "ESP32 传感器数据链路",
   "project-capstone": "综合实战项目",
-
 };
 
 // ============ 工具 ID 到名称映射 ============
 
 export const TOOL_IDS: Record<string, string> = {
-  "airflow": "Apache Airflow",
+  airflow: "Apache Airflow",
   "altium-designer": "Altium Designer",
   "autocad-electrical": "AutoCAD Electrical",
-  "chromadb": "ChromaDB",
-  "codesys": "Codesys",
-  "dask": "Dask",
-  "docker": "Docker",
-  "dvc": "DVC (Data Version Control)",
+  chromadb: "ChromaDB",
+  codesys: "Codesys",
+  dask: "Dask",
+  docker: "Docker",
+  dvc: "DVC (Data Version Control)",
   "esp-idf": "ESP-IDF",
-  "faiss": "FAISS",
-  "fastapi": "FastAPI",
-  "freertos": "FreeRTOS",
-  "gcc": "GCC",
-  "git": "Git",
-  "gradio": "Gradio",
-  "grafana": "Grafana",
+  faiss: "FAISS",
+  fastapi: "FastAPI",
+  freertos: "FreeRTOS",
+  gcc: "GCC",
+  git: "Git",
+  gradio: "Gradio",
+  grafana: "Grafana",
   "huggingface-transformers": "Hugging Face Transformers",
-  "jupyter": "Jupyter Notebook",
-  "kicad": "KiCad",
-  "kubeflow": "Kubeflow",
-  "kubernetes": "Kubernetes",
+  jupyter: "Jupyter Notebook",
+  kicad: "KiCad",
+  kubeflow: "Kubeflow",
+  kubernetes: "Kubernetes",
   "label-studio": "Label Studio",
-  "langchain": "LangChain",
-  "lightgbm": "LightGBM",
-  "ltspice": "LTspice",
-  "matlab": "MATLAB",
-  "matplotlib": "Matplotlib",
-  "mlflow": "MLflow",
-  "mysql": "MySQL",
-  "numpy": "NumPy",
+  langchain: "LangChain",
+  lightgbm: "LightGBM",
+  ltspice: "LTspice",
+  matlab: "MATLAB",
+  matplotlib: "Matplotlib",
+  mlflow: "MLflow",
+  mysql: "MySQL",
+  numpy: "NumPy",
   "onnx-runtime": "ONNX Runtime",
-  "opencv": "OpenCV",
-  "pandas": "pandas",
-  "pgvector": "pgvector + PostgreSQL",
-  "plotly": "Plotly",
-  "polars": "Polars",
-  "postman": "Postman",
-  "prometheus": "Prometheus",
-  "pytorch": "PyTorch",
+  opencv: "OpenCV",
+  pandas: "pandas",
+  pgvector: "pgvector + PostgreSQL",
+  plotly: "Plotly",
+  polars: "Polars",
+  postman: "Postman",
+  prometheus: "Prometheus",
+  pytorch: "PyTorch",
   "pytorch-geometric": "PyTorch Geometric",
   "pytorch-lightning": "PyTorch Lightning",
-  "redis": "Redis",
-  "ros2": "ROS2",
+  redis: "Redis",
+  ros2: "ROS2",
   "scikit-learn": "scikit-learn",
   "segment-anything": "Segment Anything",
-  "spacy": "spaCy",
+  spacy: "spaCy",
   "stable-baselines3": "Stable Baselines3",
-  "stm32cubemx": "STM32CubeMX",
-  "streamlit": "Streamlit",
-  "tensorflow": "TensorFlow",
+  stm32cubemx: "STM32CubeMX",
+  streamlit: "Streamlit",
+  tensorflow: "TensorFlow",
   "tia-portal": "TIA Portal",
   "transformers-agent": "Transformers Agent",
   "triton-inference-server": "Triton Inference Server",
   "ultralytics-yolo": "Ultralytics YOLO",
-  "vllm": "vLLM",
-  "vscode": "VS Code",
+  vllm: "vLLM",
+  vscode: "VS Code",
   "weights-and-biases": "Weights & Biases",
-  "whisper": "Whisper",
-  "wireshark": "Wireshark",
-  "xgboost": "XGBoost",
+  whisper: "Whisper",
+  wireshark: "Wireshark",
+  xgboost: "XGBoost",
+
+  // ============ S-CONTENT · 3天冲刺 新增 10 工具（LLM Infra / Multimodal / Edge / RAG）============
+  ollama: "Ollama（本地 LLM 一键推理服务）",
+  lancedb: "LanceDB（基于 Apache Arrow 的嵌入式向量数据库）",
+  "comfy-ui": "ComfyUI（Stable Diffusion 节点流工作流编辑器）",
+  "lm-studio": "LM Studio（桌面端 GUI 本地 LLM 推理 + OpenAI API 兼容）",
+  "onnxruntime-genai": "ONNX Runtime GenAI（生成式 LLM ONNX 高速推理）",
+  "semantic-kernel": "Semantic Kernel（微软 C#/Python 企业级 LLM 编排框架）",
+  autogen: "AutoGen（多 Agent 协作对话编排框架，微软出品）",
+  crewai: "CrewAI（角色扮演型 Multi-Agent 流水线编排）",
+  haystack: "Haystack（deepset 出品，生产级 RAG Pipeline 框架）",
+  unstructured: "Unstructured（非结构化 PDF/HTML/DOCX 统一提取工具）",
 };

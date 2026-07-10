@@ -1,20 +1,29 @@
 ---
-title: "强化学习踩坑合集"
+title: 强化学习踩坑合集
 category: machine-learning
 difficulty: advanced
 duration: 30分钟
 summary: 涵盖 4 个常见踩坑：奖励函数设计不当导致Agent走捷径、探索与利用失衡导致训练不稳定、策略梯度方差过大导致训练崩溃、经验回放缓冲区样本质量差，每个均附快速修复与排查步骤。
-takeaways:
-  - 掌握「强化学习踩坑合集」中各问题的快速识别方法
-  - 理解每个踩坑的根因分析和排查步骤
-  - 学会标准化的修复流程和预防措施
+takeaways: "- 掌握「强化学习踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施"
 relatedIntel:
   - 112-rl-basics
 tags:
-  - 踩坑
-  - 强化学习
-  - 奖励
-  - 训练
+  - 机器学习
+  - ML
+  - 数据
+  - scikit-learn
+relatedTerms:
+  - matrix
+  - tensor
+  - gradient-descent
+  - convex-optimization
+relatedTools:
+  - numpy
+  - pandas
+  - scikit-learn
+relatedNodes:
+  - math-linear-algebra
+  - llm-inference
 ---
 
 [强化学习]
@@ -114,3 +123,20 @@ tags:
 - 04 定期清理旧样本，保持缓冲区样本的时效性
 
 #RL#DQN#经验回放
+
+## 修复后附加：最小一键诊断命令
+
+```bash
+# ML 最小自检：二分类 AUC + 混淆矩阵 3 秒内
+python - <<'PY'
+import numpy as np
+from sklearn.datasets import make_classification
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.metrics import roc_auc_score, confusion_matrix
+X, y = make_classification(n_samples=2000, n_features=20, random_state=42)
+m = GradientBoostingClassifier(n_estimators=40).fit(X[:1600], y[:1600])
+p = m.predict_proba(X[1600:])[:, 1]
+print('AUC', round(roc_auc_score(y[1600:], p), 3))
+print('CM\n', confusion_matrix(y[1600:], (p > 0.5).astype(int)))
+PY
+```

@@ -4,25 +4,24 @@ category: speech
 difficulty: intermediate
 duration: 2-3周
 summary: 让计算机听懂人类说话的技术，从传统 HMM-GMM 到端到端深度学习，再到 OpenAI Whisper 一统江湖。
-takeaways:
-  - 搞懂语音信号怎么变成特征（MFCC、Mel谱图），这是所有语音技术的基础
+takeaways: "- 搞懂语音信号怎么变成特征（MFCC、Mel谱图），这是所有语音技术的基础
   - 能说出三种端到端ASR范式（CTC、Attention Seq2Seq、Transducer）的区别和适用场景
   - 理解 Whisper 为什么能成为工业界标配，以及它的架构设计
   - 用 Whisper 跑通一个完整的语音识别 demo，计算 WER 评估效果
-  - 知道中文语音识别的特殊挑战（声调、方言、同音字）
-relatedTools: whisper
-relatedIntel:
-  - 115-tts-speech-synthesis
-  - 001-transformer
-tags:
-  - asr
+  - 知道中文语音识别的特殊挑战（声调、方言、同音字）"
+relatedTools: ["pytorch", "whisper", "numpy"]
+relatedIntel: "- 115-tts-speech-synthesis
+  - 001-transformer"
+tags: "- asr
   - speech recognition
   - whisper
   - mfcc
   - ctc
   - attention
   - transducer
-  - hmm-gmm
+  - hmm-gmm"
+relatedTerms: ["speech-asr", "transformer", "speech-tts", "self-attention"]
+relatedNodes: ["nlp-rnn", "llm-inference"]
 ---
 
 ## 为什么你要学它
@@ -32,6 +31,7 @@ tags:
 你每天用的 Siri、小爱同学、微信语音转文字、会议记录工具……背后都是 ASR（Automatic Speech Recognition，自动语音识别）技术。
 
 过去十年，ASR 经历了三次范式跃迁：
+
 1. **传统时代**（~2012）：HMM-GMM 混合架构，需要语言学专家手工设计特征，WER 居高不下
 2. **深度学习时代**（2012-2020）：端到端模型（CTC/Attention/Transducer），WER 大幅下降
 3. **大模型时代**（2022~）：Whisper 用 68 万小时数据训练，多语言、多口音、鲁棒性拉满
@@ -63,26 +63,31 @@ tags:
 ```
 
 **1. 预加重（Pre-emphasis）**
+
 - 目的：提升高频部分能量，因为人声高频能量本来就低
 - 公式：`y[n] = x[n] - 0.97 * x[n-1]`
 
 **2. 分帧（Framing）**
+
 - 语音是短时平稳信号（~25ms 内近似不变）
 - 帧长：25ms（16kHz 下 = 400 个采样点）
 - 帧移：10ms（160 个采样点），相邻帧重叠 15ms
 
 **3. 加窗（Windowing）**
+
 - 用汉明窗（Hamming Window）乘每一帧，减少帧两端平滑过渡
 - 目的：减少 FFT 后的频谱泄漏
 - 汉明窗：`w[n] = 0.54 - 0.46 * cos(2πn/N)`
 
 **4. MFCC 提取**：
+
 - **FFT**：每一帧做快速傅里叶变换，得到频谱
 - **Mel 滤波组**：用 40 个 Mel 滤波器组模拟人耳对频率的非线性感知（低频分辨力强，高频弱）
 - **对数**：取对数，模拟人耳对响度的感知也是对数的
 - **DCT**：离散余弦变换，去除相关性，得到 13 维 MFCC 系数（通常取前 13 维）
 
 > **Mel 谱图 vs MFCC**：
+
 - Mel 谱图：Mel 滤波 + 对数，保留了频谱的整体形状（40 维）
 - MFCC：再多一步 DCT，压缩到 13 维，去相关性，传统 HMM 时代常用
 - 今天深度学习时代，**直接用 Mel 谱图当输入更常见**（保留信息更多）
@@ -111,14 +116,17 @@ tags:
 **问题**：输入 1 秒语音 = 100 帧，但可能只有 3 个字，怎么对齐？
 
 **CTC 的思路**：引入空白符（blank），让模型自己学对齐。
+
 - 输出序列比输入短没关系，中间插很多 blank，最后合并重复字符合并掉 blank 和重复字符。
 
 **关键规则**：
+
 1. 连续相同的字符合并（除非中间有 blank）
 2. 去掉所有 blank
 3. 剩下的就是最终文字
 
 **例子**：
+
 ```
 模型输出：h h e l l l o → hello
 模型输出：h - e l - l o → hello  （- 表示 blank）
@@ -127,10 +135,12 @@ tags:
 **CTC Loss**：在所有可能的对齐路径上求和（动态规划前向后向算法）。
 
 **优点**：
+
 - 训练简单，不需要强制对齐
 - 推理快，可以流式输出
 
 **缺点**：
+
 - 假设各帧输出条件独立（实际语音有上下文依赖）
 - 没有显式语言建模能力
 
@@ -139,14 +149,17 @@ tags:
 #### 范式二：Attention-based Seq2Seq
 
 **思路**：直接用 Encoder-Decoder + Attention，和机器翻译一模一样。
+
 - Encoder：把声学特征编码成语义表示
 - Decoder：一个词一个词地生成文字，每一步看 Encoder 的哪些位置（Attention）
 
 **优点**：
+
 - 效果好，没有条件独立假设
 - 天然带语言模型能力
 
 **缺点**：
+
 - 不能流式识别（必须听完整个句子才能开始生成）
 - 训练不稳定，容易出现Attention 漂移（attention drift）
 
@@ -157,30 +170,34 @@ tags:
 **CTC + Decoder = Transducer**，把两者优点结合起来。
 
 架构：
+
 - **Encoder**：处理声学特征，得到高级表示
 - **Prediction Network**：处理已生成的文字（类似语言模型）
 - **Joint Network**：把两者结合起来，在每个时间步预测下一个字符或输出 blank
 
 **关键区别**：
+
 - CTC：每个声学帧只能输出一个字符或 blank
 - Transducer：每个声学帧可以输出 0 个或多个字符（通过 Prediction Network 循环生成）
 
 **优点**：
+
 - 可以流式识别
 - 有语言建模能力，效果比 CTC 好
 
 **缺点**：
+
 - 训练慢，计算量大
 
 代表模型：Google 的 Google 就是用 RNN-T 架构
 
 > **三者对比总结**：
 
-| 范式 | 流式 | 效果 | 训练难度 | 代表 |
-|------|------|------|--------|------|
-| CTC | ✅ | 一般 | 简单 | DeepSpeech2 |
-| Attention Seq2Seq | ❌ | 好 | 中等 | LAS |
-| Transducer | ✅ | 最好 | 难 | RNN-T |
+| 范式              | 流式 | 效果 | 训练难度 | 代表        |
+| ----------------- | ---- | ---- | -------- | ----------- |
+| CTC               | ✅   | 一般 | 简单     | DeepSpeech2 |
+| Attention Seq2Seq | ❌   | 好   | 中等     | LAS         |
+| Transducer        | ✅   | 最好 | 难       | RNN-T       |
 
 ### 🔑 Whisper 架构
 
@@ -195,6 +212,7 @@ OpenAI 在 2022 年发布的 Whisper，彻底改变了 ASR 行业格局。
 ```
 
 **关键设计**：
+
 - **输入**：80 维 Mel 谱图，30 秒语音 = 3000 帧
 - **Encoder**：
   - 先用 2 个 1D 卷积下采样（步长 2，总共下采样 4 倍）
@@ -205,6 +223,7 @@ OpenAI 在 2022 年发布的 Whisper，彻底改变了 ASR 行业格局。
   - Cross-Attention 看 Encoder 输出
 
 **为什么 Whisper 这么强？**
+
 1. **数据量大**：68 万小时，比之前公开数据集大 10 倍以上
 2. **多语言**：96 种语言
 3. **鲁棒性强**：噪音、口音、远场都能 handle
@@ -213,38 +232,43 @@ OpenAI 在 2022 年发布的 Whisper，彻底改变了 ASR 行业格局。
 
 **Whisper 的五个尺寸**：
 
-| 模型 | 参数 | 相对速度 |
-|------|------|----------|
-| tiny | 39M | 32x |
-| base | 74M | 16x |
-| small | 244M | 6x |
-| medium | 769M | 2x |
-| large | 1550M | 1x |
+| 模型   | 参数  | 相对速度 |
+| ------ | ----- | -------- |
+| tiny   | 39M   | 32x      |
+| base   | 74M   | 16x      |
+| small  | 244M  | 6x       |
+| medium | 769M  | 2x       |
+| large  | 1550M | 1x       |
 
 ### 🔑 中文语音识别特点
 
 中文 ASR 比英文难，原因：
 
 **1. 声调**
+
 - 中文是声调语言，妈麻马骂不一样
 - 基频（F0）是声调的主要声学特征
 - 英文没有声调问题
 - 同音字多：shi 有上百个字
 
 **2. 分词问题**
+
 - 中文词之间没有空格
 - 识别的连续语音是连续的，怎么分词是连续的"字"的序列
 - 英文天然空格分隔词
 
 **3. 方言多样性**
+
 - 普通话、粤语、上海话、四川话……
 - 各方言差异巨大，几乎是不同语言
 
 **4. 同音字**
+
 - 中文同音字特别多
 - 必须依赖上下文才能分辨
 
 **中文 ASR 的特殊技巧**：
+
 - 用字模型：字为单位建模（而不是音素）
 - 声调建模：把声调当额外特征加进去
 - 大语料：中文文本语料比英文多，语言模型更重要
@@ -319,6 +343,7 @@ print(f"WER: {error:.2%}")
 ```
 
 **WER 公式**：
+
 ```
 WER = (S + D + I) / N
 S = 替换错误数

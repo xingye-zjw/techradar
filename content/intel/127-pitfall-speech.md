@@ -1,21 +1,28 @@
 ---
-title: "语音处理踩坑合集"
+title: 语音处理踩坑合集
 category: speech
 difficulty: intermediate
 duration: 30分钟
 summary: 涵盖 4 个常见踩坑：音频采样率不匹配导致识别错误、TTS中文多音字发音错误、背景噪声导致ASR识别率骤降、说话人识别中声纹漂移导致误识别，每个均附快速修复与排查步骤。
-takeaways:
-  - 掌握「语音处理踩坑合集」中各问题的快速识别方法
-  - 理解每个踩坑的根因分析和排查步骤
-  - 学会标准化的修复流程和预防措施
-relatedIntel:
-  - 114-asr-speech-recognition
-  - 115-tts-speech-synthesis
+takeaways: "- 掌握「语音处理踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施"
+relatedIntel: "- 114-asr-speech-recognition - 115-tts-speech-synthesis"
 tags:
   - 踩坑
-  - 语音
-  - ASR
-  - TTS
+  - 避坑指南
+  - 经验
+  - 常见问题
+relatedTerms:
+  - speech-asr
+  - transformer
+  - speech-tts
+  - self-attention
+relatedTools:
+  - pytorch
+  - numpy
+  - streamlit
+relatedNodes:
+  - nlp-rnn
+  - llm-inference
 ---
 
 [语音技术]
@@ -119,3 +126,21 @@ tags:
 - 04 引入域自适应（Domain Adaptation）算法，缓解跨设备、跨环境的声纹漂移问题
 
 #声纹识别#说话人验证#鲁棒性
+
+## 修复后附加：最小一键诊断命令
+
+```bash
+# 语音最小自检：16kHz 正弦波 → STFT → 对数梅尔谱 3 秒内
+python - <<'PY'
+import numpy as np, time
+sr = 16000
+t = np.linspace(0, 1, sr, endpoint=False)
+x = (np.sin(2*np.pi*440*t)*16384).astype(np.int16)
+try:
+    import librosa
+    s = librosa.feature.melspectrogram(y=x.astype(np.float32), sr=sr, n_mels=80)
+    print('librosa melspec', s.shape, 'dB range', (s.max()-s.min()).round(1))
+except ImportError:
+    print('no librosa; raw wav samples', len(x), 'peak', x.max())
+PY
+```

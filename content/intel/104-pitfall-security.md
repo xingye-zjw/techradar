@@ -1,21 +1,28 @@
 ---
-title: "AI 安全踩坑合集"
+title: AI 安全踩坑合集
 category: llm
 difficulty: advanced
 duration: 30分钟
 summary: 涵盖 4 个常见踩坑：Prompt 注入攻击导致系统 prompt 泄露、RAG 系统检索到恶意文档导致生成有害内容、模型 API 密钥泄露导致被恶意调用、对抗样本攻击导致模型误分类，每个均附快速修复与排查步骤。
-takeaways:
-  - 掌握「AI 安全踩坑合集」中各问题的快速识别方法
-  - 理解每个踩坑的根因分析和排查步骤
-  - 学会标准化的修复流程和预防措施
-relatedIntel:
-  - 038-llm-security
-  - 020-prompt-engineering
+takeaways: "- 掌握「AI 安全踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施"
+relatedIntel: "- 038-llm-security - 020-prompt-engineering"
 tags:
-  - 踩坑
-  - 安全
-  - Prompt注入
-  - 对抗样本
+  - 大模型
+  - LLM
+  - Prompt
+  - 推理
+relatedTerms:
+  - lora
+  - rag
+  - transformer
+  - chain-of-thought
+relatedTools:
+  - langchain
+  - pytorch
+  - huggingface-transformers
+relatedNodes:
+  - llm-prompt-engineering
+  - llm-inference
 ---
 
 [AI安全]
@@ -115,3 +122,18 @@ tags:
 - 04 使用模型蒸馏（Distillation）将鲁棒性知识迁移到轻量模型
 
 #深度学习#安全#对抗样本
+
+## 修复后附加：最小一键诊断命令
+
+```bash
+# 最小 LLM 环境自检：模型下载+加载+token 消耗 10 秒内可用
+python - <<'PY'
+import os, time
+assert os.system('pip show transformers accelerate') == 0, 'pip 依赖缺失'
+t0 = time.time()
+from transformers import AutoTokenizer
+tok = AutoTokenizer.from_pretrained('Qwen/Qwen2.5-1.5B-Instruct', trust_remote_code=True)
+ids = tok('hello world', return_tensors='pt').input_ids
+print(f'tokenize OK len={ids.shape[1]}, cost_ms={(time.time()-t0)*1000:.0f}')
+PY
+```

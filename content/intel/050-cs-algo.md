@@ -4,27 +4,29 @@ category: cs
 difficulty: beginner
 duration: 4周
 summary: 计算机科学的核心基础，掌握常用算法设计思路、时间空间复杂度分析、以及各类数据结构的应用场景
-takeaways:
-  - 熟练分析代码复杂度，能给出准确的大O表示
+takeaways: "- 熟练分析代码复杂度，能给出准确的大O表示
   - 掌握常见算法设计范式：分治、动态规划、贪心、回溯
   - 能用数据结构解决实际问题，选择最优方案
-  - 理解算法在AI系统中的应用：搜索、优化、图神经网络
-relatedTerms:
-  - algorithm
-  - data-structure
-relatedIntel:
-  - 051-cs-os
+  - 理解算法在AI系统中的应用：搜索、优化、图神经网络"
+relatedTerms: [
+    "data-structure",
+    "algorithm",
+    "- algorithm
+    - data-structure",
+    "complexity",
+  ]
+relatedIntel: "- 051-cs-os
   - 075-cs-network
-  - 076-cs-database
-relatedNodes: cs-algo
-tags:
-  - algorithm
+  - 076-cs-database"
+relatedNodes: ["cs-algo", "math-linear-algebra"]
+tags: "- algorithm
   - data-structure
   - complexity
   - big-o
   - sorting
   - graph
-  - dynamic-programming
+  - dynamic-programming"
+relatedTools: ["huggingface-transformers", "ultralytics-yolo", "pytorch"]
 ---
 
 ## 为什么你要学它
@@ -95,20 +97,21 @@ def bubble_sort(arr):
 
 ### 🔑 核心数据结构
 
-| 数据结构 | 访问 | 插入 | 删除 | 查找 | 典型应用 |
-|---------|------|------|------|------|---------|
-| 数组 | O(1) | O(n) | O(n) | O(n) | 缓存、矩阵 |
-| 链表 | O(n) | O(1) | O(1) | O(n) | LRU缓存、内存池 |
-| 栈 | O(n) | O(1) | O(1) | - | 函数调用、表达式求值 |
-| 队列 | O(n) | O(1) | O(1) | - | BFS、任务调度 |
-| 哈希表 | O(1) | O(1) | O(1) | O(1) | 字典、缓存、去重 |
-| 二叉搜索树 | O(log n) | O(log n) | O(log n) | O(log n) | 索引、排序 |
-| 堆 | O(n) | O(log n) | O(log n) | O(1) | Top-K、优先队列 |
-| 图 | O(1) | O(1) | O(1) | O(V+E) | 社交网络、知识图谱 |
+| 数据结构   | 访问     | 插入     | 删除     | 查找     | 典型应用             |
+| ---------- | -------- | -------- | -------- | -------- | -------------------- |
+| 数组       | O(1)     | O(n)     | O(n)     | O(n)     | 缓存、矩阵           |
+| 链表       | O(n)     | O(1)     | O(1)     | O(n)     | LRU缓存、内存池      |
+| 栈         | O(n)     | O(1)     | O(1)     | -        | 函数调用、表达式求值 |
+| 队列       | O(n)     | O(1)     | O(1)     | -        | BFS、任务调度        |
+| 哈希表     | O(1)     | O(1)     | O(1)     | O(1)     | 字典、缓存、去重     |
+| 二叉搜索树 | O(log n) | O(log n) | O(log n) | O(log n) | 索引、排序           |
+| 堆         | O(n)     | O(log n) | O(log n) | O(1)     | Top-K、优先队列      |
+| 图         | O(1)     | O(1)     | O(1)     | O(V+E)   | 社交网络、知识图谱   |
 
 ### 🔑 算法设计范式
 
 **分治法（Divide and Conquer）**
+
 ```python
 # 归并排序：分而治之，再合并
 def merge_sort(arr):
@@ -121,6 +124,7 @@ def merge_sort(arr):
 ```
 
 **动态规划（Dynamic Programming）**
+
 ```python
 # 最长公共子序列（LCS）：经典DP
 # 状态：dp[i][j]表示s1[0:i]和s2[0:j]的LCS长度
@@ -138,6 +142,7 @@ def lcs(s1, s2):
 ```
 
 **贪心算法（Greedy）**
+
 ```python
 # 活动选择问题：每次选结束时间最早的
 def activity_selection(activities):
@@ -151,6 +156,7 @@ def activity_selection(activities):
 ```
 
 **回溯法（Backtracking）**
+
 ```python
 # 全排列：枚举所有可能，不满足条件时剪枝
 def permute(nums):
@@ -189,10 +195,10 @@ class HashTable:
     def __init__(self, size=16):
         self.size = size
         self.table = [[] for _ in range(size)]
-    
+
     def _hash(self, key):
         return hash(key) % self.size
-    
+
     def put(self, key, value):
         idx = self._hash(key)
         for i, (k, v) in enumerate(self.table[idx]):
@@ -200,7 +206,7 @@ class HashTable:
                 self.table[idx][i] = (key, value)
                 return
         self.table[idx].append((key, value))
-    
+
     def get(self, key):
         idx = self._hash(key)
         for k, v in self.table[idx]:

@@ -1,20 +1,29 @@
 ---
-title: "时间序列踩坑合集"
+title: 时间序列踩坑合集
 category: data-processing
 difficulty: intermediate
 duration: 30分钟
 summary: 涵盖 4 个常见踩坑：随机打乱时序数据导致数据泄露、过度差分导致ARIMA模型失效、LSTM处理长序列时梯度消失、MAPE在数据接近0时无限大，每个均附快速修复与排查步骤。
-takeaways:
-  - 掌握「时间序列踩坑合集」中各问题的快速识别方法
-  - 理解每个踩坑的根因分析和排查步骤
-  - 学会标准化的修复流程和预防措施
+takeaways: "- 掌握「时间序列踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施"
 relatedIntel:
   - 117-time-series
 tags:
-  - 踩坑
-  - 时间序列
-  - 预测
-  - ARIMA
+  - 数据
+  - 处理
+  - 清洗
+  - ETL
+relatedTerms:
+  - matrix
+  - tensor
+  - entropy
+  - transformer
+relatedTools:
+  - numpy
+  - jupyter
+  - pandas
+relatedNodes:
+  - nlp-rnn
+  - math-linear-algebra
 ---
 
 [时间序列]
@@ -120,3 +129,17 @@ tags:
 - 05 考虑使用对数变换后的数据进行评估，或引入加权 MAPE
 
 #时间序列#评估指标#MAPE
+
+## 修复后附加：最小一键诊断命令
+
+```bash
+# 数据工程最小自检：Pandas/Polars 1M 行 groupby 3 秒内
+python - <<'PY'
+import numpy as np, pandas as pd, time
+N = 1_000_000
+df = pd.DataFrame({'k': np.random.randint(0, 1000, N), 'v': np.random.randn(N)})
+t0 = time.time()
+g = df.groupby('k')['v'].agg(['mean', 'std', 'count'])
+print('groupby', g.shape, 'ms', round((time.time()-t0)*1000, 1), 'rows', len(g))
+PY
+```

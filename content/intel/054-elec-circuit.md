@@ -4,25 +4,23 @@ category: embedded
 difficulty: beginner
 duration: 3周
 summary: 从电路基本定律到模拟电子技术核心器件，掌握看懂原理图、设计电路、分析信号的能力
-takeaways:
-  - 理解电路基本定律和分析方法
+takeaways: "- 理解电路基本定律和分析方法
   - 掌握常用电子器件特性
   - 能看懂和设计基础电路
-  - 理解运放、二极管、晶体管的应用
-relatedTerms: circuit
-relatedIntel:
-  - 052-embedded-c
+  - 理解运放、二极管、晶体管的应用"
+relatedTerms: ["data-structure", "rtos", "circuit", "algorithm"]
+relatedIntel: "- 052-embedded-c
   - 053-embedded-rtos
-  - 055-elec-signals
-relatedNodes: elec-circuit
-tags:
-  - circuit
+  - 055-elec-signals"
+relatedNodes: ["elec-circuit", "electrical-safety"]
+tags: "- circuit
   - analog
   - op-amp
   - transistor
   - diode
   - mosfet
-  - power-supply
+  - power-supply"
+relatedTools: ["huggingface-transformers", "ultralytics-yolo", "pytorch"]
 ---
 
 ## 为什么你要学它
@@ -245,19 +243,19 @@ def buck_efficiency(vin, vout, iout, rds_on=0.01, rl=0.05):
     """
     # 占空比
     d = vout / vin
-    
+
     # 导通损耗
     p_cond = iout**2 * (rds_on + rl)
-    
+
     # 开关损耗（简化）
     p_sw = 0.01 * vin * iout  # 假设开关损耗为1%
-    
+
     # 输出功率
     p_out = vout * iout
-    
+
     # 输入功率
     p_in = p_out + p_cond + p_sw
-    
+
     efficiency = p_out / p_in
     return efficiency, d
 

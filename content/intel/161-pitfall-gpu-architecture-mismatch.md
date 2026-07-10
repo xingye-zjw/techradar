@@ -4,20 +4,25 @@ category: deep-learning
 difficulty: intermediate
 duration: 30分钟
 summary: 聚焦单点问题：训练用 GPU 与推理用 GPU 架构不一致导致模型不可用，涵盖 Ampere/Ada/Hopper 架构差异、CUDA Compute Capability、ONNX 跨架构验证、torch.jit 导出等排查与修复方案。
-takeaways:
-  - 快速识别「训练用 GPU 卡与推理用卡架构不一致」的典型症状
-  - 理解该问题的根因分析和标准排查步骤
-  - 学会分步排查和解决问题的标准化流程
-  - 了解预防措施，避免下次踩同样的坑
-relatedIntel:
-  - 034-cuda-programming
-  - 011-pytorch
+takeaways: "- 快速识别「训练用 GPU 卡与推理用卡架构不一致」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑"
+relatedIntel: "- 034-cuda-programming - 011-pytorch"
 tags:
-  - 踩坑
-  - 避坑指南
-  - gpu
-  - cuda
-  - 模型迁移
+  - 深度学习
+  - DL
+  - 训练
+  - PyTorch
+relatedTerms:
+  - tensor
+  - gradient-descent
+  - transformer
+  - cnn
+relatedTools:
+  - pytorch
+  - numpy
+  - huggingface-transformers
+relatedNodes:
+  - cv-segmentation
+  - llm-inference
 ---
 
 ## 为什么你要学它
@@ -33,6 +38,7 @@ tags:
 > **快速修复：训练推理同架构 GPU，或导出 ONNX 跨架构验证**
 
 核心要点：
+
 - **现象**：在 H100 上训练成功，部署到 RTX 3090 上报 CUDA 架构不兼容错误
 - **根因**：NVIDIA GPU 不同架构（Ampere/Ada/Hopper）的 CUDA Compute Capability 不同，某些算子在旧架构上可能不支持或行为
 - **解决**：按照下方 5 步标准流程排查
@@ -53,11 +59,11 @@ NVIDIA GPU 不同架构（Ampere/Ada/Hopper）的 CUDA Compute Capability 不同
 
 按照以下步骤逐一排查，通常能在几分钟内定位并解决问题：
 
-01. NVIDIA GPU 架构分几代：Ampere(A100/3090) / Ada(4090) / Hopper(H100)，PTX/SM 兼容但性能不同
-02. 训练和推理尽量使用相同系列 GPU，或确保 CUDA Compute Capability 兼容
-03. 导出模型时使用 torch.jit.trace / torch.jit.script 保存完整计算图避免架构依赖
-04. ONNX 导出后验证在不同 GPU 上推理输出一致
-05. 确认 PyTorch 版本一致：torch.__version__ + torch.version.cuda
+1.  NVIDIA GPU 架构分几代：Ampere(A100/3090) / Ada(4090) / Hopper(H100)，PTX/SM 兼容但性能不同
+2.  训练和推理尽量使用相同系列 GPU，或确保 CUDA Compute Capability 兼容
+3.  导出模型时使用 torch.jit.trace / torch.jit.script 保存完整计算图避免架构依赖
+4.  ONNX 导出后验证在不同 GPU 上推理输出一致
+5.  确认 PyTorch 版本一致：torch.**version** + torch.version.cuda
 
 ### 快速修复（救急用）
 

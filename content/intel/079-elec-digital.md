@@ -4,22 +4,21 @@ category: embedded
 difficulty: beginner
 duration: 2-3周
 summary: 理解数字电路的设计原理。掌握逻辑门、组合逻辑、时序逻辑等核心概念。
-takeaways:
-  - 理解二进制数制和编码
+takeaways: "- 理解二进制数制和编码
   - 掌握逻辑门和布尔代数
   - 理解组合逻辑电路设计
-  - 掌握时序逻辑电路设计
-relatedTerms: circuit
-relatedIntel:
-  - 052-embedded-c
+  - 掌握时序逻辑电路设计"
+relatedTerms: ["data-structure", "rtos", "circuit", "algorithm"]
+relatedIntel: "- 052-embedded-c
   - 053-embedded-rtos
-  - 054-elec-circuit
-tags:
-  - 数字电路
+  - 054-elec-circuit"
+tags: "- 数字电路
   - 逻辑门
   - 组合逻辑
   - 时序逻辑
-  - fpga
+  - fpga"
+relatedTools: ["huggingface-transformers", "ultralytics-yolo", "pytorch"]
+relatedNodes: ["roadmap-capstone", "electrical-safety"]
 ---
 
 ## 为什么你要学它
@@ -253,12 +252,12 @@ def ripple_carry_adder(a_bits, b_bits):
     n = len(a_bits)
     result = []
     cin = 0
-    
+
     for i in range(n):
         s, cout = full_adder(a_bits[i], b_bits[i], cin)
         result.append(s)
         cin = cout
-    
+
     result.append(cin)  # 最高位进位
     return result
 
@@ -320,13 +319,13 @@ class DFlipFlop:
     """D触发器：时钟上升沿采样"""
     def __init__(self):
         self.q = 0  # 输出
-    
+
     def clock(self, d, clk):
         """时钟上升沿触发"""
         if clk == 1:
             self.q = d
         return self.q
-    
+
     def reset(self):
         """异步复位"""
         self.q = 0
@@ -336,7 +335,7 @@ class JKFlipFlop:
     """JK触发器"""
     def __init__(self):
         self.q = 0
-    
+
     def clock(self, j, k, clk):
         """时钟上升沿触发"""
         if clk == 1:
@@ -356,16 +355,16 @@ class Counter:
     def __init__(self, bits=4):
         self.bits = bits
         self.value = 0
-    
+
     def clock(self, enable=True):
         """时钟上升沿计数"""
         if enable:
             self.value = (self.value + 1) % (1 << self.bits)
         return self.value
-    
+
     def reset(self):
         self.value = 0
-    
+
     def get_bits(self):
         """返回二进制位列表"""
         return [(self.value >> i) & 1 for i in range(self.bits)]
@@ -384,22 +383,22 @@ class ShiftRegister:
     def __init__(self, bits=8):
         self.bits = bits
         self.data = [0] * bits
-    
+
     def shift_left(self, din=0):
         """左移"""
         self.data = self.data[1:] + [din]
         return self.data
-    
+
     def shift_right(self, din=0):
         """右移"""
         self.data = [din] + self.data[:-1]
         return self.data
-    
+
     def load(self, data):
         """并行加载"""
         self.data = data[-self.bits:]
         return self.data
-    
+
     def get_value(self):
         """获取当前值"""
         return sum(b << i for i, b in enumerate(self.data))
@@ -424,15 +423,15 @@ class TrafficLightFSM:
         'GREEN': {'next': 'YELLOW', 'output': '绿灯行'},
         'YELLOW': {'next': 'RED', 'output': '黄灯等'}
     }
-    
+
     def __init__(self):
         self.state = 'RED'
         self.timer = 0
-    
+
     def transition(self):
         """状态转换"""
         self.timer += 1
-        
+
         # 状态转换条件
         if self.state == 'RED' and self.timer >= 3:
             self.state = 'GREEN'
@@ -443,7 +442,7 @@ class TrafficLightFSM:
         elif self.state == 'YELLOW' and self.timer >= 2:
             self.state = 'RED'
             self.timer = 0
-    
+
     def get_output(self):
         return self.STATES[self.state]['output']
 
@@ -533,7 +532,7 @@ module traffic_light(
     output reg [2:0] light  // R, Y, G
 );
     parameter RED = 2'b00, GREEN = 2'b01, YELLOW = 2'b10;
-    
+
     always @(posedge clk or posedge rst) begin
         if (rst) begin
             state <= RED;
@@ -594,14 +593,14 @@ set_output_delay -clock clk 3 [all_outputs]
 # 简单的仿真框架
 class DigitalSimulator:
     """数字电路仿真器"""
-    
+
     def __init__(self):
         self.signals = {}
         self.components = []
-    
+
     def add_signal(self, name, initial=0):
         self.signals[name] = initial
-    
+
     def add_component(self, func, inputs, output):
         """添加组合逻辑组件"""
         self.components.append({
@@ -609,17 +608,17 @@ class DigitalSimulator:
             'inputs': inputs,
             'output': output
         })
-    
+
     def update(self):
         """更新所有信号"""
         for comp in self.components:
             inputs = [self.signals[i] for i in comp['inputs']]
             self.signals[comp['output']] = comp['func'](*inputs)
-    
+
     def set_input(self, name, value):
         self.signals[name] = value
         self.update()
-    
+
     def get_signal(self, name):
         return self.signals[name]
 
@@ -647,6 +646,7 @@ for a in [0, 1]:
 **第二步：使用在线仿真工具**
 
 推荐工具：
+
 - **CircuitVerse**：https://circuitverse.org/ - 在线数字电路仿真
 - **Logisim**：免费开源，适合学习
 - **Digital**：Android应用，移动端仿真
@@ -695,7 +695,7 @@ def alu_4bit(a, b, op):
     """
     a_val = a if isinstance(a, int) else sum(b << i for i, b in enumerate(a))
     b_val = b if isinstance(b, int) else sum(b << i for i, b in enumerate(b))
-    
+
     if op == 0b000:  # 加法
         result = (a_val + b_val) & 0xF
         zero = 1 if result == 0 else 0
@@ -732,7 +732,7 @@ def alu_4bit(a, b, op):
         result = 0
         zero = 0
         carry = 0
-    
+
     return result, zero, carry
 
 # 测试ALU
@@ -769,26 +769,31 @@ for i, op_name in enumerate(ops):
 ## 学习资源推荐
 
 **在线课程**
+
 - Coursera: "Digital Systems" by Universitat Autònoma de Barcelona
 - edX: "Introduction to Digital Circuit Design" by MIT
 - B站: 西安电子科技大学《数字电路与逻辑设计》
 
 **经典教材**
+
 - 《数字电子技术基础》（阎石）- 国内经典教材
 - 《Digital Design》（Morris Mano）- 国际经典教材
 - 《FPGA原理和结构》- FPGA深入学习
 
 **仿真工具**
+
 - Logisim: https://sourceforge.net/projects/circuit/ - 免费开源
 - CircuitVerse: https://circuitverse.org/ - 在线仿真
 - ModelSim: 专业HDL仿真工具
 
 **FPGA开发**
+
 - TinyFPGA: https://tinyfpga.com/ - 入门开发板
 - FPGA4Fun: https://www.fpga4fun.com/ - 学习资源
 - ZipCPU: https://zipcpu.com/ - FPGA设计博客
 
 **实践项目**
+
 - 数字时钟：计数器+译码器+显示
 - 交通灯控制器：状态机设计
 - 简易CPU：ALU+寄存器+控制器

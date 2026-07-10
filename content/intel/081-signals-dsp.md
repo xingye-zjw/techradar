@@ -4,17 +4,14 @@ category: embedded
 difficulty: intermediate
 duration: 3-4周
 summary: 理解数字信号处理的核心原理。掌握FFT、数字滤波器设计、采样定理等关键技能。
-takeaways:
-  - 理解采样定理和量化
+takeaways: "- 理解采样定理和量化
   - 掌握DFT和FFT算法
   - 理解IIR和FIR滤波器设计
-  - 能用Python实现信号处理
-relatedIntel:
-  - 052-embedded-c
+  - 能用Python实现信号处理"
+relatedIntel: "- 052-embedded-c
   - 053-embedded-rtos
-  - 054-elec-circuit
-tags:
-  - dsp
+  - 054-elec-circuit"
+tags: "- dsp
   - 数字信号处理
   - fft
   - 数字滤波器
@@ -23,7 +20,10 @@ tags:
   - iir
   - fir
   - 多采样率
-  - 量化
+  - 量化"
+relatedTerms: ["data-structure", "rtos", "algorithm", "complexity"]
+relatedTools: ["huggingface-transformers", "ultralytics-yolo", "pytorch"]
+relatedNodes: ["roadmap-capstone", "electrical-safety"]
 ---
 
 ## 为什么你要学它
@@ -33,6 +33,7 @@ tags:
 它的核心价值在于：**让计算机能够"理解"和处理现实世界的模拟信号。** 现实世界是连续的模拟信号，但计算机只能处理离散的数字。DSP就是连接这两个世界的桥梁，让你能够用算法对信号进行滤波、变换、压缩、识别。
 
 学习DSP，你将掌握：
+
 - **音频处理**：降噪、回声消除、音乐合成
 - **图像处理**：边缘检测、图像压缩、特征提取
 - **通信系统**：调制解调、信道编码、同步
@@ -204,11 +205,11 @@ def frequency_domain_filter(signal, fs, cutoff_low, cutoff_high):
     N = len(signal)
     X = fft(signal)
     freqs = fftfreq(N, 1/fs)
-    
+
     # 创建带通滤波器
     mask = (np.abs(freqs) >= cutoff_low) & (np.abs(freqs) <= cutoff_high)
     X_filtered = X * mask
-    
+
     # 逆变换回时域
     return np.real(ifft(X_filtered))
 
@@ -309,13 +310,13 @@ plt.show()
 
 **IIR vs FIR对比**：
 
-| 特性 | IIR | FIR |
-|------|-----|-----|
-| 结构 | 递归（有反馈） | 非递归（无反馈） |
-| 阶数 | 低（效率高） | 高（计算量大） |
-| 稳定性 | 可能不稳定 | 始终稳定 |
-| 相位 | 非线性 | 可以线性 |
-| 适用 | 实时性要求高 | 相位敏感场景 |
+| 特性   | IIR            | FIR              |
+| ------ | -------------- | ---------------- |
+| 结构   | 递归（有反馈） | 非递归（无反馈） |
+| 阶数   | 低（效率高）   | 高（计算量大）   |
+| 稳定性 | 可能不稳定     | 始终稳定         |
+| 相位   | 非线性         | 可以线性         |
+| 适用   | 实时性要求高   | 相位敏感场景     |
 
 ### 🔑 多采样率处理
 
@@ -375,50 +376,50 @@ def audio_denoise_demo():
     """音频降噪演示"""
     fs = 8000
     t = np.arange(0, 2, 1/fs)
-    
+
     # 模拟语音信号（基频+谐波）
     fundamental = 200
     voice = np.sin(2*np.pi*fundamental*t)
     for harmonic in range(2, 6):
         voice += 0.5/harmonic * np.sin(2*np.pi*fundamental*harmonic*t)
-    
+
     # 添加高频噪声
     noise = 0.3 * np.random.randn(len(t))
     noise += 0.2 * np.sin(2*np.pi*3000*t)  # 3kHz干扰
-    
+
     noisy_audio = voice + noise
-    
+
     # 设计低通滤波器（保留语音，去除高频噪声）
     b, a = signal.butter(6, 1000/(fs/2), btype='low')
     clean_audio = signal.filtfilt(b, a, noisy_audio)
-    
+
     # 绘制结果
     plt.figure(figsize=(12, 8))
-    
+
     plt.subplot(3, 2, 1)
     plt.plot(t[:1000], voice[:1000])
     plt.title('原始语音信号')
-    
+
     plt.subplot(3, 2, 2)
     plt.plot(t[:1000], noisy_audio[:1000])
     plt.title('带噪声信号')
-    
+
     plt.subplot(3, 2, 3)
     plt.plot(t[:1000], clean_audio[:1000])
     plt.title('降噪后信号')
-    
+
     # 频谱对比
     plt.subplot(3, 2, 4)
     freqs = fftfreq(len(t), 1/fs)
     plt.semilogy(freqs[:len(t)//2], np.abs(fft(noisy_audio))[:len(t)//2])
     plt.xlim(0, 4000)
     plt.title('噪声信号频谱')
-    
+
     plt.subplot(3, 2, 5)
     plt.semilogy(freqs[:len(t)//2], np.abs(fft(clean_audio))[:len(t)//2])
     plt.xlim(0, 4000)
     plt.title('降噪后频谱')
-    
+
     plt.tight_layout()
     plt.show()
 
@@ -433,7 +434,7 @@ def ecg_processing_demo():
     # 模拟ECG信号
     fs = 360
     t = np.arange(0, 5, 1/fs)
-    
+
     # 简化的ECG波形（R波）
     ecg = np.zeros(len(t))
     for beat in range(5):
@@ -446,30 +447,30 @@ def ecg_processing_demo():
                 ecg[idx-10:idx-5] = -0.1 * np.exp(-((np.arange(5)-2)**2)/2)
             # S波
             ecg[idx+10:idx+15] = -0.2 * np.exp(-((np.arange(5)-2)**2)/2)
-    
+
     # 添加基线漂移和噪声
     baseline = 0.1 * np.sin(2*np.pi*0.15*t)  # 基线漂移
     noise = 0.05 * np.random.randn(len(t))  # 高频噪声
     ecg_noisy = ecg + baseline + noise
-    
+
     # 处理步骤1：去除基线漂移（高通滤波）
     b_hp, a_hp = signal.butter(2, 0.5/(fs/2), btype='high')
     ecg_detrend = signal.filtfilt(b_hp, a_hp, ecg_noisy)
-    
+
     # 处理步骤2：去除高频噪声（低通滤波）
     b_lp, a_lp = signal.butter(2, 40/(fs/2), btype='low')
     ecg_clean = signal.filtfilt(b_lp, a_lp, ecg_detrend)
-    
+
     # 绘制
     plt.figure(figsize=(12, 6))
     plt.subplot(3, 1, 1)
     plt.plot(t, ecg_noisy)
     plt.title('原始ECG（含基线漂移和噪声）')
-    
+
     plt.subplot(3, 1, 2)
     plt.plot(t, ecg_detrend)
     plt.title('去除基线漂移后')
-    
+
     plt.subplot(3, 1, 3)
     plt.plot(t, ecg_clean)
     plt.title('最终处理结果')
@@ -653,21 +654,25 @@ print(f"极点模值: {np.abs(p)}")
 ## 学习资源推荐
 
 **经典教材**
+
 - 《数字信号处理》（Oppenheim & Schafer）- DSP领域的圣经
 - 《离散时间信号处理》- 理论深度足够
 - 《理解数字信号处理》（Lyons）- 工程师友好，直观易懂
 
 **在线课程**
+
 - MIT OpenCourseWare: Digital Signal Processing
 - Coursera: DSP for Software Radio
 - YouTube: 3Blue1Brown 傅里叶变换可视化
 
 **实践资源**
+
 - SciPy Signal Processing Documentation
 - DSP Guide (dspguide.com) - 免费在线教程
 - MATLAB Signal Processing Toolbox Examples
 
 **进阶方向**
+
 - 多采样率信号处理
 - 自适应滤波
 - 小波变换

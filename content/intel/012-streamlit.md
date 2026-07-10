@@ -5,22 +5,21 @@ difficulty: beginner
 duration: 1周
 summary: 只用 Python 就能把模型变成带滑块/图片/图表的交互式网页，是 AI demo 的第一生产力
 takeaways:
-  - 掌握 Streamlit 的声明式 API：st.title、st.slider、st.file_uploader、st.image、st.dataframe、st.plotly_chart
+  "- 掌握 Streamlit 的声明式 API：st.title、st.slider、st.file_uploader、st.image、st.dataframe、st.plotly_chart
   - 理解 Session State 原理与写法，能在多次 rerun 之间保存状态
   - 会用 st.sidebar / st.columns / st.expander 做布局，能快速搭建 YOLO 风格检测 Demo
-  - 知道 @st.cache_data / @st.cache_resource 的使用场景，避免重复加载大模型
-relatedTools: streamlit
-relatedIntel:
-  - 007-docker
+  - 知道 @st.cache_data / @st.cache_resource 的使用场景，避免重复加载大模型"
+relatedTools: ["streamlit", "mlflow", "docker"]
+relatedIntel: "- 007-docker
   - 008-git
-  - 009-linux
-relatedNodes: electrical-safety
-tags:
-  - streamlit
+  - 009-linux"
+relatedNodes: ["devops-kubernetes", "electrical-safety"]
+tags: "- streamlit
   - web ui
   - demo
   - visualization
-  - interactive
+  - interactive"
+relatedTerms: ["linux", "docker", "kubernetes", "git"]
 ---
 
 ## 为什么你要学它

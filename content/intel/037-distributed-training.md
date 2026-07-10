@@ -4,23 +4,22 @@ category: devops
 difficulty: advanced
 duration: 1-2周
 summary: 单卡不够用？分布式训练把计算和显存分摊到多 GPU，让千亿参数模型在数百张 GPU 上训练
-takeaways:
-  - 理解 Data Parallel（DP）和 Model Parallel（MP）的核心区别
+takeaways: "- 理解 Data Parallel（DP）和 Model Parallel（MP）的核心区别
   - 能用 PyTorch DDP 做多 GPU 数据并行训练
   - 能用 DeepSpeed ZeRO 做显存优化和混合并行
-  - 能估算不同并行策略的通信量和扩展效率
-relatedIntel:
-  - 007-docker
+  - 能估算不同并行策略的通信量和扩展效率"
+relatedIntel: "- 007-docker
   - 008-git
-  - 009-linux
-relatedNodes: electrical-safety
-tags:
-  - distributed training
+  - 009-linux"
+relatedNodes: ["devops-kubernetes", "electrical-safety"]
+tags: "- distributed training
   - data parallel
   - model parallel
   - ddp
   - deepspeed
-  - zero redundancy optimizer
+  - zero redundancy optimizer"
+relatedTerms: ["linux", "docker", "kubernetes", "git"]
+relatedTools: ["kubernetes", "mlflow", "docker"]
 ---
 
 ## 为什么你要学它
@@ -87,11 +86,11 @@ for data in dataloader:
 
 ZeRO（Zero Redundancy Optimizer）解决 DDP 的显存问题：每个 rank 只存储 1/N 的 optimizer 状态，需要时从其他 rank 拿。
 
-| Stage | 分片内容 | 显存减少 |
-|---|---|---|
-| ZeRO-1 | Optimizer States | ~4x |
-| ZeRO-2 | + Gradients | ~8x |
-| ZeRO-3 | + Model Parameters | ~N倍（线性扩展）|
+| Stage  | 分片内容           | 显存减少         |
+| ------ | ------------------ | ---------------- |
+| ZeRO-1 | Optimizer States   | ~4x              |
+| ZeRO-2 | + Gradients        | ~8x              |
+| ZeRO-3 | + Model Parameters | ~N倍（线性扩展） |
 
 ```python
 # DeepSpeed 训练
@@ -159,6 +158,7 @@ Pipeline Parallel 通信量：
 ```
 
 扩展效率估算：
+
 - Data Parallel: N 张卡 → 理想加速 Nx，实际 ~0.9N（通信开销）
 - 100 张卡 Data Parallel 实际加速 ~85-90x
 

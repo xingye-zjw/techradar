@@ -1,19 +1,29 @@
 ---
-title: "AutoML 踩坑合集"
+title: AutoML 踩坑合集
 category: machine-learning
 difficulty: intermediate
 duration: 30分钟
 summary: 涵盖 4 个常见踩坑：贝叶斯优化搜索空间过大导致效率低下、NAS搜索到的架构无法部署、过拟合验证集导致泛化能力差、AutoML完全替代人工调参导致可控性差，每个均附快速修复与排查步骤。
-takeaways:
-  - 掌握「AutoML 踩坑合集」中各问题的快速识别方法
-  - 理解每个踩坑的根因分析和排查步骤
-  - 学会标准化的修复流程和预防措施
+takeaways: "- 掌握「AutoML 踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施"
 relatedIntel:
   - 123-automl
 tags:
-  - 踩坑
-  - AutoML
-  - 超参搜索
+  - 机器学习
+  - ML
+  - 数据
+  - scikit-learn
+relatedTerms:
+  - matrix
+  - tensor
+  - gradient-descent
+  - convex-optimization
+relatedTools:
+  - numpy
+  - pandas
+  - scikit-learn
+relatedNodes:
+  - math-linear-algebra
+  - llm-inference
 ---
 
 [AutoML]
@@ -121,3 +131,20 @@ tags:
 - 05 保留人工干预的入口，关键决策由人来做最终确认
 
 #AutoML#调参#工程实践
+
+## 修复后附加：最小一键诊断命令
+
+```bash
+# ML 最小自检：二分类 AUC + 混淆矩阵 3 秒内
+python - <<'PY'
+import numpy as np
+from sklearn.datasets import make_classification
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.metrics import roc_auc_score, confusion_matrix
+X, y = make_classification(n_samples=2000, n_features=20, random_state=42)
+m = GradientBoostingClassifier(n_estimators=40).fit(X[:1600], y[:1600])
+p = m.predict_proba(X[1600:])[:, 1]
+print('AUC', round(roc_auc_score(y[1600:], p), 3))
+print('CM\n', confusion_matrix(y[1600:], (p > 0.5).astype(int)))
+PY
+```

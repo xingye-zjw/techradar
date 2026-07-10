@@ -4,28 +4,28 @@ category: devops
 difficulty: beginner
 duration: 1-2周
 summary: 把应用（含 Python 环境、CUDA、系统库）打包成可在任何 Linux/Windows/Mac 上运行的镜像，一次构建，到处运行
-takeaways:
-  - 理解镜像 vs 容器 vs Dockerfile 的关系
+takeaways: "- 理解镜像 vs 容器 vs Dockerfile 的关系
   - 能写一个 PyTorch 推理服务的 Dockerfile（含 .dockerignore、多阶段、非 root 用户）
   - 理解 nvidia-container-toolkit 是让容器看见 GPU 的关键组件
-  - 能用 Docker Compose 编排多容器服务（API + Redis），并持久化数据
-relatedTools: docker
-relatedIntel:
-  - 008-git
+  - 能用 Docker Compose 编排多容器服务（API + Redis），并持久化数据"
+relatedTools: ["ultralytics-yolo", "mlflow", "docker"]
+relatedIntel: "- 008-git
   - 009-linux
-  - 012-streamlit
-relatedNodes:
-  - electrical-safety
-  - docker-basic
-tags:
-  - docker
+  - 012-streamlit"
+relatedNodes: [
+    "- electrical-safety
+    - docker-basic",
+    "devops-kubernetes",
+  ]
+tags: "- docker
   - container
   - dockerfile
   - image
   - volume
   - compose
   - gpu
-  - nvidia-docker
+  - nvidia-docker"
+relatedTerms: ["linux", "docker", "kubernetes", "git"]
 ---
 
 ## 为什么你要学它
@@ -71,17 +71,17 @@ tags:
 
 常用命令对照：
 
-| 意图 | 命令 |
-|------|------|
-| 构建镜像 | `docker build -t my-app:v1 .` |
-| 列出镜像 | `docker images` |
-| 启动容器 | `docker run -d -p 8000:8000 my-app:v1` |
-| 列出正在跑的容器 | `docker ps` |
-| 停止容器 | `docker stop <container_id>` |
-| 进入容器 | `docker exec -it <container_id> bash` |
-| 查看日志 | `docker logs -f <container_id>` |
-| 上传到 registry | `docker push my-registry.com/my-app:v1` |
-| 清理未用的镜像/容器 | `docker system prune` |
+| 意图                | 命令                                    |
+| ------------------- | --------------------------------------- |
+| 构建镜像            | `docker build -t my-app:v1 .`           |
+| 列出镜像            | `docker images`                         |
+| 启动容器            | `docker run -d -p 8000:8000 my-app:v1`  |
+| 列出正在跑的容器    | `docker ps`                             |
+| 停止容器            | `docker stop <container_id>`            |
+| 进入容器            | `docker exec -it <container_id> bash`   |
+| 查看日志            | `docker logs -f <container_id>`         |
+| 上传到 registry     | `docker push my-registry.com/my-app:v1` |
+| 清理未用的镜像/容器 | `docker system prune`                   |
 
 ### 🔑 Dockerfile 常用指令
 
@@ -180,6 +180,7 @@ docker run --rm --gpus all nvidia/cuda:11.8.0-base-ubuntu22.04 nvidia-smi
 ```
 
 常见坑：
+
 - **主机驱动版本太旧**：容器内 CUDA 要求主机驱动 ≥ 某个版本。`nvidia-smi` 的 CUDA Version 是驱动支持的最高 CUDA，它必须 ≥ 容器内 CUDA 版本。
 - **忘了加 `--gpus all`**：不加时容器看不到 GPU，`torch.cuda.is_available()` 必为 False。
 - **用了 CPU 版的基础镜像**：镜像名必须是 `cuda`/`runtime` 系列，不是普通 `python`。
@@ -218,6 +219,7 @@ docker run -d -p 8000:8000 \
 当你的应用不止一个进程（例如：API + Redis 缓存 + 数据库），Compose 让你用一个 YAML 描述整个系统，一条命令启动全部。
 
 核心概念：
+
 - **service** = 一个容器进程（api / redis / db）
 - **network** = service 之间的虚拟网络（默认已创建一个）
 - **volume** = service 之间共享的持久化数据
@@ -413,7 +415,7 @@ services:
         reservations:
           devices:
             - driver: nvidia
-              count: all          # 分配所有 GPU；也可写数字 1
+              count: all # 分配所有 GPU；也可写数字 1
               capabilities: [gpu]
     depends_on:
       - redis
@@ -428,7 +430,7 @@ services:
     ports:
       - "6379:6379"
     volumes:
-      - redis_data:/data        # 命名卷持久化 Redis 数据
+      - redis_data:/data # 命名卷持久化 Redis 数据
     command: ["redis-server", "--save", "60", "1", "--loglevel", "warning"]
 
 volumes:

@@ -4,25 +4,23 @@ category: embedded
 difficulty: advanced
 duration: 3周
 summary: 学习机器人操作系统ROS2的核心概念，掌握导航、定位和控制的实践技能
-takeaways:
-  - 掌握ROS2核心概念和通信机制
+takeaways: "- 掌握ROS2核心概念和通信机制
   - 理解机器人导航原理
   - 能实现基本的机器人控制
-  - 理解多机器人协调
-relatedTools: ros2
-relatedIntel:
-  - 052-embedded-c
+  - 理解多机器人协调"
+relatedTools: ["ros2", "ultralytics-yolo", "huggingface-transformers"]
+relatedIntel: "- 052-embedded-c
   - 053-embedded-rtos
-  - 054-elec-circuit
-relatedNodes: ctrl-ros
-tags:
-  - ros
+  - 054-elec-circuit"
+relatedNodes: ["electrical-safety", "ctrl-ros"]
+tags: "- ros
   - robot
   - navigation
   - slam
   - moveit
   - gazebo
-  - sensor
+  - sensor"
+relatedTerms: ["data-structure", "rtos", "algorithm", "complexity"]
 ---
 
 ## 为什么你要学它
@@ -58,10 +56,10 @@ from sensor_msgs.msg import LaserScan
 class SimpleRobot(Node):
     def __init__(self):
         super().__init__('simple_robot')
-        
+
         # 创建发布者：发布速度指令
         self.cmd_vel_pub = self.create_publisher(Twist, 'cmd_vel', 10)
-        
+
         # 创建订阅者：订阅激光雷达数据
         self.laser_sub = self.create_subscription(
             LaserScan,
@@ -69,34 +67,34 @@ class SimpleRobot(Node):
             self.laser_callback,
             10
         )
-        
+
         # 创建定时器：每100ms执行一次
         self.timer = self.create_timer(0.1, self.timer_callback)
-        
+
         self.get_logger().info('Robot node started')
-    
+
     def laser_callback(self, msg):
         """处理激光雷达数据"""
         # 获取前方距离
         front_distance = msg.ranges[len(msg.ranges)//2]
-        
+
         if front_distance < 0.5:  # 前方有障碍物
             self.get_logger().warn(f'Obstacle detected: {front_distance:.2f}m')
             self.stop()
         else:
             self.move_forward()
-    
+
     def timer_callback(self):
         """定时任务"""
         pass
-    
+
     def move_forward(self):
         """前进"""
         cmd = Twist()
         cmd.linear.x = 0.2  # 0.2 m/s
         cmd.angular.z = 0.0
         self.cmd_vel_pub.publish(cmd)
-    
+
     def stop(self):
         """停止"""
         cmd = Twist()
@@ -131,7 +129,7 @@ class Navigator(Node):
     def __init__(self):
         super().__init__('navigator')
         self.nav = BasicNavigator()
-        
+
     def navigate_to_pose(self, x, y, theta):
         """导航到指定位置"""
         goal_pose = PoseStamped()
@@ -141,9 +139,9 @@ class Navigator(Node):
         goal_pose.pose.position.y = y
         goal_pose.pose.orientation.z = np.sin(theta/2)
         goal_pose.pose.orientation.w = np.cos(theta/2)
-        
+
         self.nav.goToPose(goal_pose)
-        
+
         # 等待完成
         while not self.nav.isTaskComplete():
             feedback = self.nav.getFeedback()
@@ -151,7 +149,7 @@ class Navigator(Node):
                 self.get_logger().info(
                     f'Estimated time: {feedback.estimated_time_remaining:.2f}s'
                 )
-        
+
         result = self.nav.getResult()
         self.get_logger().info(f'Navigation result: {result}')
 
@@ -196,30 +194,30 @@ def load_map(map_yaml_path):
     """加载占据栅格地图"""
     with open(map_yaml_path, 'r') as f:
         map_info = yaml.safe_load(f)
-    
+
     # 加载PGM图像
     map_image = Image.open(map_info['image'])
     map_data = np.array(map_image)
-    
+
     # 转换占据概率
     # 0: 空闲, 255: 占据, 205: 未知
     occupancy = np.zeros_like(map_data, dtype=float)
     occupancy[map_data == 0] = 0.0      # 空闲
     occupancy[map_data == 255] = 1.0    # 占据
     occupancy[map_data == 205] = -1.0   # 未知
-    
+
     return occupancy, map_info
 
 # 可视化地图
 def visualize_map(occupancy, map_info):
     import matplotlib.pyplot as plt
-    
+
     resolution = map_info['resolution']
     origin = map_info['origin']
-    
+
     plt.figure(figsize=(10, 10))
     plt.imshow(occupancy, cmap='gray', origin='lower',
-               extent=[origin[0], 
+               extent=[origin[0],
                        origin[0] + occupancy.shape[1] * resolution,
                        origin[1],
                        origin[1] + occupancy.shape[0] * resolution])
@@ -242,11 +240,11 @@ from geometry_msgs.msg import Pose
 class ArmController(Node):
     def __init__(self):
         super().__init__('arm_controller')
-        
+
         # 初始化MoveIt
         self.moveit = MoveItPy(node_name="moveit_py")
         self.arm = self.moveit.get_planning_component("panda_arm")
-        
+
     def move_to_pose(self, x, y, z, roll, pitch, yaw):
         """移动到指定姿态"""
         # 设置目标姿态
@@ -254,7 +252,7 @@ class ArmController(Node):
         target_pose.position.x = x
         target_pose.position.y = y
         target_pose.position.z = z
-        
+
         # 欧拉角转四元数
         from scipy.spatial.transform import Rotation as R
         quat = R.from_euler('xyz', [roll, pitch, yaw]).as_quat()
@@ -262,11 +260,11 @@ class ArmController(Node):
         target_pose.orientation.y = quat[1]
         target_pose.orientation.z = quat[2]
         target_pose.orientation.w = quat[3]
-        
+
         # 规划
         self.arm.set_start_state_to_current_state()
         self.arm.set_goal_state(pose_stamped_msg=target_pose, pose_link="panda_link8")
-        
+
         # 执行
         plan_result = self.arm.plan()
         if plan_result:
@@ -274,12 +272,12 @@ class ArmController(Node):
             self.get_logger().info('Motion executed successfully')
         else:
             self.get_logger().error('Planning failed')
-    
+
     def move_joint(self, joint_positions):
         """移动到指定关节角度"""
         self.arm.set_start_state_to_current_state()
         self.arm.set_goal_state(joint_positions=joint_positions)
-        
+
         plan_result = self.arm.plan()
         if plan_result:
             self.moveit.execute(plan_result.trajectory, controllers=[])
@@ -330,7 +328,7 @@ class Robot(Node):
         super().__init__('robot')
         self.pub = self.create_publisher(Twist, 'cmd_vel', 10)
         self.timer = self.create_timer(1.0, self.timer_callback)
-        
+
     def timer_callback(self):
         msg = Twist()
         msg.linear.x = 0.5

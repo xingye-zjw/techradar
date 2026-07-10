@@ -1,21 +1,28 @@
 ---
-title: "电路设计踩坑合集"
+title: 电路设计踩坑合集
 category: embedded
 difficulty: intermediate
 duration: 30分钟
 summary: 涵盖 4 个常见踩坑：电容选型不当导致滤波效果差、运放电路自激振荡、分压电阻选择不当导致测量误差大、功率器件散热设计不足导致过热保护，每个均附快速修复与排查步骤。
-takeaways:
-  - 掌握「电路设计踩坑合集」中各问题的快速识别方法
-  - 理解每个踩坑的根因分析和排查步骤
-  - 学会标准化的修复流程和预防措施
-relatedIntel:
-  - 054-elec-circuit
-  - 079-elec-digital
+takeaways: "- 掌握「电路设计踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施"
+relatedIntel: "- 054-elec-circuit - 079-elec-digital"
 tags:
-  - 踩坑
-  - 电路
-  - H桥
-  - 运放
+  - 嵌入式
+  - MCU
+  - 硬件
+  - 驱动
+relatedTerms:
+  - data-structure
+  - rtos
+  - algorithm
+  - complexity
+relatedTools:
+  - pytorch
+  - ultralytics-yolo
+  - huggingface-transformers
+relatedNodes:
+  - roadmap-capstone
+  - electrical-safety
 ---
 
 [电子电路]
@@ -110,3 +117,20 @@ tags:
 - 03 验证散热设计余量，必要时增加散热片或风扇
 
 #散热#功率#可靠性
+
+## 修复后附加：最小一键诊断命令
+
+```bash
+/* 嵌入式最小诊断：时钟+GPIO+UART 三件套寄存器自检（STM32 参考，可直接替换为自己的 MCU） */
+#include <stdint.h>
+volatile uint32_t *RCC_AHB1 = (volatile uint32_t *)0x40023830UL;
+volatile uint32_t *GPIOD_MODER = (volatile uint32_t *)0x40020C00UL;
+volatile uint32_t *GPIOD_ODR   = (volatile uint32_t *)0x40020C14UL;
+int mcu_self_test(void) {
+  *RCC_AHB1 |= (1UL << 3);          /* GPIOD 时钟使能 */
+  *GPIOD_MODER &= ~(3UL << (12*2)); /* PD12 -> 输出 */
+  *GPIOD_MODER |=  (1UL << (12*2));
+  *GPIOD_ODR  |=  (1UL << 12);      /* 置高 PD12 LED */
+  return (*GPIOD_ODR >> 12) & 1U;   /* 回读应为 1 */
+}
+```

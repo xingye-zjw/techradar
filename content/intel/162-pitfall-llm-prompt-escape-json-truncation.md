@@ -4,21 +4,25 @@ category: llm
 difficulty: intermediate
 duration: 30分钟
 summary: 聚焦单点问题：LLM Prompt 中转义字符错误导致 JSON 输出解析失败或截断，涵盖 json.dumps 转义、Function Calling JSON mode、max_tokens 限制、print(repr(prompt)) 检查等排查与修复方案。
-takeaways:
-  - 快速识别「大模型 Prompt 转义字符错误导致 JSON 输出截断」的典型症状
-  - 理解该问题的根因分析和标准排查步骤
-  - 学会分步排查和解决问题的标准化流程
-  - 了解预防措施，避免下次踩同样的坑
-relatedIntel:
-  - 020-prompt-engineering
-  - 095-pitfall-llm-app
+takeaways: "- 快速识别「大模型 Prompt 转义字符错误导致 JSON 输出截断」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑"
+relatedIntel: "- 020-prompt-engineering - 095-pitfall-llm-app"
 tags:
-  - 踩坑
-  - 避坑指南
-  - llm
-  - prompt
-  - json
-  - 字符串转义
+  - 大模型
+  - LLM
+  - Prompt
+  - 推理
+relatedTerms:
+  - lora
+  - rag
+  - transformer
+  - chain-of-thought
+relatedTools:
+  - langchain
+  - pytorch
+  - huggingface-transformers
+relatedNodes:
+  - llm-prompt-engineering
+  - llm-inference
 ---
 
 ## 为什么你要学它
@@ -34,6 +38,7 @@ tags:
 > **快速修复：json.dumps(prompt_content) 或使用 Function Calling 代替手动拼接**
 
 核心要点：
+
 - **现象**：LLM 输出的 JSON 在中途被截断，后半部分丢失
 - **根因**：Prompt 中包含未转义的双引号、换行符或特殊字符，干扰了 JSON 的格式。Python 字符串拼接 Prompt 时容易引入此类问题。
 - **解决**：按照下方 5 步标准流程排查
@@ -54,11 +59,11 @@ Prompt 中包含未转义的双引号、换行符或特殊字符，干扰了 JSO
 
 按照以下步骤逐一排查，通常能在几分钟内定位并解决问题：
 
-01. 检查 Prompt 中是否有未转义的双引号、换行符、特殊字符
-02. Python 中构建 Prompt 时用 json.dumps() 转义 JSON 特殊字符（注意：re.escape() 用于转义正则元字符，不适用于 JSON 引号/换行符转义）
-03. Prompt 中避免直接放 JSON 模板中的未转义双引号
-04. 使用 Function Calling / response_format 的 JSON mode 让模型保证输出格式
-05. 对长 Prompt 截断检查：print(repr(prompt)) 看是否有 \n 或 " 未正确转义
+1.  检查 Prompt 中是否有未转义的双引号、换行符、特殊字符
+2.  Python 中构建 Prompt 时用 json.dumps() 转义 JSON 特殊字符（注意：re.escape() 用于转义正则元字符，不适用于 JSON 引号/换行符转义）
+3.  Prompt 中避免直接放 JSON 模板中的未转义双引号
+4.  使用 Function Calling / response_format 的 JSON mode 让模型保证输出格式
+5.  对长 Prompt 截断检查：print(repr(prompt)) 看是否有 \n 或 " 未正确转义
 
 ### 快速修复（救急用）
 

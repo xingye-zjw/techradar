@@ -4,20 +4,25 @@ category: data-processing
 difficulty: intermediate
 duration: 30分钟
 summary: 聚焦单点问题：pandas 链式赋值触发 SettingWithCopyWarning 且值未正确设置，涵盖 df.loc 单步赋值、df.copy() 显式复制、避免视图副本歧义等排查与修复方案。
-takeaways:
-  - 快速识别「pandas inplace=True 链式赋值警告」的典型症状
-  - 理解该问题的根因分析和标准排查步骤
-  - 学会分步排查和解决问题的标准化流程
-  - 了解预防措施，避免下次踩同样的坑
-relatedIntel:
-  - 010-numpy-pandas
-  - 094-pitfall-data-engineering
+takeaways: "- 快速识别「pandas inplace=True 链式赋值警告」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑"
+relatedIntel: "- 010-numpy-pandas - 094-pitfall-data-engineering"
 tags:
-  - 踩坑
-  - 避坑指南
+  - 数据
+  - 处理
+  - 清洗
+  - ETL
+relatedTerms:
+  - matrix
+  - tensor
+  - entropy
+  - transformer
+relatedTools:
+  - numpy
+  - jupyter
   - pandas
-  - python
-  - 数据处理
+relatedNodes:
+  - nlp-rnn
+  - math-linear-algebra
 ---
 
 ## 为什么你要学它
@@ -33,6 +38,7 @@ tags:
 > **快速修复：df.loc[mask, 'col'] = value 而非 df[mask]['col'] = value**
 
 核心要点：
+
 - **现象**：SettingWithCopyWarning 或 FutureWarning: A value is trying to be set on a copy of a slice
 - **根因**：链式赋值 df[mask]['col'] = value 操作的是 DataFrame 的副本而非视图，导致值未被设置。pandas 1.x 开始将 inplace=True 标记为 deprecated
 - **解决**：按照下方 5 步标准流程排查
@@ -53,11 +59,11 @@ tags:
 
 按照以下步骤逐一排查，通常能在几分钟内定位并解决问题：
 
-01. 永远不要用链式赋值：df[df['a']>0]['b'] = 100，改用 df.loc 或 df.iloc
-02. 正确写法：df.loc[df['a']>0, 'b'] = 100
-03. 避免 inplace=True（关键是不链式赋值；inplace=True 在 pandas 2.x 仍未正式废弃），改为链式方法：df = df.dropna()
-04. 怀疑 DataFrame 是视图还是副本时，用 df = df.copy() 显式复制后再修改（不建议依赖私有属性 _is_view）
-05. chain 导致的 SettingWithCopyWarning：检查是否在对 slice 操作时触发了
+1.  永远不要用链式赋值：df[df['a']>0]['b'] = 100，改用 df.loc 或 df.iloc
+2.  正确写法：df.loc[df['a']>0, 'b'] = 100
+3.  避免 inplace=True（关键是不链式赋值；inplace=True 在 pandas 2.x 仍未正式废弃），改为链式方法：df = df.dropna()
+4.  怀疑 DataFrame 是视图还是副本时，用 df = df.copy() 显式复制后再修改（不建议依赖私有属性 _is_view）
+5.  chain 导致的 SettingWithCopyWarning：检查是否在对 slice 操作时触发了
 
 ### 快速修复（救急用）
 

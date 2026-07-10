@@ -1,21 +1,28 @@
 ---
-title: "微服务架构踩坑合集"
+title: 微服务架构踩坑合集
 category: devops
 difficulty: advanced
 duration: 30分钟
 summary: 涵盖 4 个常见踩坑：分布式事务一致性问题、服务间依赖混乱导致级联失败、分布式追踪缺失导致问题定位难、API版本不兼容导致线上故障，每个均附快速修复与排查步骤。
-takeaways:
-  - 掌握「微服务架构踩坑合集」中各问题的快速识别方法
-  - 理解每个踩坑的根因分析和排查步骤
-  - 学会标准化的修复流程和预防措施
-relatedIntel:
-  - 021-kubernetes
-  - 043-mlops-engineering
+takeaways: "- 掌握「微服务架构踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施"
+relatedIntel: "- 021-kubernetes - 043-mlops-engineering"
 tags:
-  - 踩坑
-  - 微服务
-  - 分布式
-  - 熔断
+  - DevOps
+  - 部署
+  - 运维
+  - 容器
+relatedTerms:
+  - git
+  - docker
+  - linux
+  - kubernetes
+relatedTools:
+  - mlflow
+  - docker
+  - kubernetes
+relatedNodes:
+  - docker-basic
+  - devops-kubernetes
 ---
 
 [微服务]
@@ -111,3 +118,14 @@ Saga模式 + TCC + 最终一致性
 - 03 配合灰度发布，小流量验证后再全量上线
 
 #微服务#API#兼容性
+
+## 修复后附加：最小一键诊断命令
+
+```bash
+# DevOps 最小自检：Docker/K8s/磁盘空间/SSH 端口 10 秒内出结论
+set -e
+echo '--- docker ---' && (docker info 2>/dev/null | head -n 5 || echo 'docker unavailable')
+echo '--- disk ---'   && df -h / | tail -n 1
+echo '--- k8s ---'    && (kubectl cluster-info 2>/dev/null | head -n 3 || echo 'kubectl unavailable')
+echo '--- ssh 22 ---' && (timeout 3 bash -c 'cat < /dev/tcp/127.0.0.1/22' >/dev/null 2>&1 && echo open || echo closed)
+```

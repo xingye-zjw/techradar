@@ -1,21 +1,28 @@
 ---
-title: "Kubernetes 踩坑合集"
+title: Kubernetes 踩坑合集
 category: devops
 difficulty: advanced
 duration: 30分钟
 summary: 涵盖 4 个常见踩坑：Kubernetes Pod 无法调度/Pending 状态、Kubernetes Service 无法访问、Deployment 滚动更新时服务中断、PVC 挂载失败导致 Pod 无法启动，每个均附快速修复与排查步骤。
-takeaways:
-  - 掌握「Kubernetes 踩坑合集」中各问题的快速识别方法
-  - 理解每个踩坑的根因分析和排查步骤
-  - 学会标准化的修复流程和预防措施
-relatedIntel:
-  - 021-kubernetes
-  - 022-prometheus-grafana
+takeaways: "- 掌握「Kubernetes 踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施"
+relatedIntel: "- 021-kubernetes - 022-prometheus-grafana"
 tags:
-  - 踩坑
-  - Kubernetes
-  - Pod
-  - 集群
+  - DevOps
+  - 部署
+  - 运维
+  - 容器
+relatedTerms:
+  - git
+  - docker
+  - linux
+  - kubernetes
+relatedTools:
+  - mlflow
+  - docker
+  - kubernetes
+relatedNodes:
+  - docker-basic
+  - devops-kubernetes
 ---
 
 [容器编排]
@@ -116,3 +123,14 @@ tags:
 - 05 如使用持久化存储，确认存储后端（如 NFS、Ceph）正常运行且网络可达
 
 #Kubernetes#存储#容器
+
+## 修复后附加：最小一键诊断命令
+
+```bash
+# DevOps 最小自检：Docker/K8s/磁盘空间/SSH 端口 10 秒内出结论
+set -e
+echo '--- docker ---' && (docker info 2>/dev/null | head -n 5 || echo 'docker unavailable')
+echo '--- disk ---'   && df -h / | tail -n 1
+echo '--- k8s ---'    && (kubectl cluster-info 2>/dev/null | head -n 3 || echo 'kubectl unavailable')
+echo '--- ssh 22 ---' && (timeout 3 bash -c 'cat < /dev/tcp/127.0.0.1/22' >/dev/null 2>&1 && echo open || echo closed)
+```

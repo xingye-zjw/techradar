@@ -4,24 +4,22 @@ category: devops
 difficulty: intermediate
 duration: 1周
 summary: 把 PyTorch 模型导出为跨平台的 ONNX 格式，用 ONNXRuntime 加速推理，或进一步转为 TensorRT
-takeaways:
-  - 能把 PyTorch 模型导出为 ONNX 并用 onnxsim 简化
+takeaways: "- 能把 PyTorch 模型导出为 ONNX 并用 onnxsim 简化
   - 能用 ONNXRuntime GPU 版做推理加速
   - 能处理动态 shape 输入和多输入/输出模型
-  - 能做基本的精度验证（PyTorch vs ONNX 输出误差 < 1e-3）
-relatedTerms: onnx
-relatedIntel:
-  - 007-docker
+  - 能做基本的精度验证（PyTorch vs ONNX 输出误差 < 1e-3）"
+relatedTerms: ["onnx", "linux", "docker", "git"]
+relatedIntel: "- 007-docker
   - 008-git
-  - 009-linux
-relatedNodes: electrical-safety
-tags:
-  - onnx
+  - 009-linux"
+relatedNodes: ["devops-kubernetes", "electrical-safety"]
+tags: "- onnx
   - onnxruntime
   - model export
   - inference optimization
   - tensorrt
-  - quantization
+  - quantization"
+relatedTools: ["kubernetes", "mlflow", "docker"]
 ---
 
 ## 为什么你要学它
@@ -29,6 +27,7 @@ tags:
 训练在 PyTorch，上线时需要跨平台、跨语言、跨硬件推理。直接用 PyTorch 做推理？慢，而且依赖 PyTorch 运行时，不方便部署到手机/嵌入式/浏览器。
 
 **ONNX（Open Neural Network Exchange）** 是模型部署的「中间语言」：
+
 - PyTorch → ONNX → ONNXRuntime（CPU/GPU）
 - PyTorch → ONNX → TensorRT（GPU 专用优化）
 - PyTorch → ONNX → CoreML（iOS）
@@ -67,6 +66,7 @@ torch.onnx.export(
 **shape 不匹配**：导出时用的 `dummy_input` shape 必须与实际推理时的 shape 兼容。
 
 **精度不一致**：导出后模型输出与 PyTorch 有微小误差（通常 < 1e-6），如果误差过大，检查：
+
 - 是否用了 `model.eval()`
 - BatchNorm 是否用了 running stats（而非训练模式的统计量）
 - 是否所有算子都 ONNX 支持（尤其是自定义算子）
@@ -82,6 +82,7 @@ onnx.save(model_simplified, "model_simplified.onnx")
 ```
 
 onnxsim 会做：
+
 - 常量折叠（Constant Folding）
 - 冗余算子消除
 - Shape 推断与优化
@@ -108,10 +109,10 @@ output = session.run(None, input_data)
 
 ### 🔑 ONNX vs TensorRT
 
-| 工具 | 优化方式 | 适用场景 |
-|---|---|---|
-| ONNXRuntime | 算子融合 + 内存优化 | 通用跨平台，GPU/CPU 都支持 |
-| TensorRT | CUDA Kernel 定制 + INT8/FP16 | NVIDIA GPU 生产推理最快 |
+| 工具        | 优化方式                     | 适用场景                   |
+| ----------- | ---------------------------- | -------------------------- |
+| ONNXRuntime | 算子融合 + 内存优化          | 通用跨平台，GPU/CPU 都支持 |
+| TensorRT    | CUDA Kernel 定制 + INT8/FP16 | NVIDIA GPU 生产推理最快    |
 
 **推荐路径**：PyTorch → ONNX → onnxsim → ONNXRuntime → （可选）→ TensorRT
 

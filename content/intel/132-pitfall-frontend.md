@@ -1,20 +1,29 @@
 ---
-title: "前端开发踩坑合集"
+title: 前端开发踩坑合集
 category: cs
 difficulty: intermediate
 duration: 30分钟
 summary: 涵盖 4 个常见踩坑：JavaScript this指向问题、React useEffect依赖数组陷阱、移动端适配问题（viewport/rem）、内存泄漏导致页面越来越卡，每个均附快速修复与排查步骤。
-takeaways:
-  - 掌握「前端开发踩坑合集」中各问题的快速识别方法
-  - 理解每个踩坑的根因分析和排查步骤
-  - 学会标准化的修复流程和预防措施
+takeaways: "- 掌握「前端开发踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施"
 relatedIntel:
   - 075-cs-network
 tags:
   - 踩坑
-  - 前端
-  - JavaScript
-  - 性能
+  - 避坑指南
+  - 经验
+  - 常见问题
+relatedTerms:
+  - data-structure
+  - algorithm
+  - transformer
+  - complexity
+relatedTools:
+  - pytorch
+  - ultralytics-yolo
+  - huggingface-transformers
+relatedNodes:
+  - roadmap-capstone
+  - math-linear-algebra
 ---
 
 [前端开发]
@@ -110,3 +119,21 @@ tags:
 - 03 检查全局变量、DOM引用、闭包是否持有大对象导致无法回收
 
 #内存泄漏#性能#前端
+
+## 修复后附加：最小一键诊断命令
+
+```bash
+# CS 基础最小自检：大 O + 算法复杂度自测 3 秒内
+python - <<'PY'
+from time import perf_counter
+N = 100_000
+arr = list(range(N)); s = 0
+t0 = perf_counter()
+for x in arr: s += x            # O(n)
+t1 = perf_counter()
+arr_sorted = sorted(arr)        # O(n log n)
+t2 = perf_counter()
+print(f'sum O(n)   = {(t1-t0)*1000:6.2f} ms  sum={s}')
+print(f'sort       = {(t2-t1)*1000:6.2f} ms  first={arr_sorted[0]} last={arr_sorted[-1]}')
+PY
+```

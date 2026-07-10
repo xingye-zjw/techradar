@@ -4,25 +4,23 @@ category: cs
 difficulty: intermediate
 duration: 3周
 summary: 理解操作系统如何管理硬件资源：进程线程、内存管理、文件系统、IO调度，为系统级编程和性能优化打下基础
-takeaways:
-  - 理解进程与线程的区别，掌握多线程编程
+takeaways: "- 理解进程与线程的区别，掌握多线程编程
   - 掌握内存管理基本原理，理解虚拟内存和页表
   - 理解文件系统与IO模型，掌握异步IO
-  - 能分析系统性能瓶颈，优化资源使用
-relatedTerms: operating-system
-relatedIntel:
-  - 050-cs-algo
+  - 能分析系统性能瓶颈，优化资源使用"
+relatedTerms: ["data-structure", "operating-system", "algorithm", "complexity"]
+relatedIntel: "- 050-cs-algo
   - 075-cs-network
-  - 076-cs-database
-relatedNodes: cs-os
-tags:
-  - operating-system
+  - 076-cs-database"
+relatedNodes: ["cs-os", "math-linear-algebra"]
+tags: "- operating-system
   - process
   - thread
   - memory-management
   - filesystem
   - scheduling
-  - synchronization
+  - synchronization"
+relatedTools: ["huggingface-transformers", "ultralytics-yolo", "pytorch"]
 ---
 
 ## 为什么你要学它
@@ -86,14 +84,14 @@ for t in threads:
 
 **进程 vs 线程对比**
 
-| 特性 | 进程 | 线程 |
-|------|------|------|
-| 地址空间 | 独立 | 共享 |
-| 切换开销 | 大（需切换页表） | 小（只需切换寄存器） |
-| 通信方式 | IPC（管道、消息队列、共享内存） | 直接读写共享内存 |
-| 崩溃影响 | 不影响其他进程 | 可能导致整个进程崩溃 |
-| Python GIL | 每个进程独立GIL，可并行 | 共享GIL，不能并行 |
-| 适用场景 | CPU密集型（训练、计算） | IO密集型（网络、文件） |
+| 特性       | 进程                            | 线程                   |
+| ---------- | ------------------------------- | ---------------------- |
+| 地址空间   | 独立                            | 共享                   |
+| 切换开销   | 大（需切换页表）                | 小（只需切换寄存器）   |
+| 通信方式   | IPC（管道、消息队列、共享内存） | 直接读写共享内存       |
+| 崩溃影响   | 不影响其他进程                  | 可能导致整个进程崩溃   |
+| Python GIL | 每个进程独立GIL，可并行         | 共享GIL，不能并行      |
+| 适用场景   | CPU密集型（训练、计算）         | IO密集型（网络、文件） |
 
 ### 🔑 内存管理
 
@@ -129,12 +127,12 @@ for i in range(10):
 
 **内存分配算法**
 
-| 算法 | 原理 | 优点 | 缺点 |
-|------|------|------|------|
-| 首次适配 | 找第一个足够大的空闲块 | 快 | 碎片化 |
-| 最佳适配 | 找最小的足够大的空闲块 | 省空间 | 慢，碎片多 |
-| 最差适配 | 找最大的空闲块 | 减少碎片 | 浪费空间 |
-| 伙伴系统 | 按2的幂次分配，合并时找伙伴 | 碎片少，合并快 | 内部碎片 |
+| 算法     | 原理                        | 优点           | 缺点       |
+| -------- | --------------------------- | -------------- | ---------- |
+| 首次适配 | 找第一个足够大的空闲块      | 快             | 碎片化     |
+| 最佳适配 | 找最小的足够大的空闲块      | 省空间         | 慢，碎片多 |
+| 最差适配 | 找最大的空闲块              | 减少碎片       | 浪费空间   |
+| 伙伴系统 | 按2的幂次分配，合并时找伙伴 | 碎片少，合并快 | 内部碎片   |
 
 ### 🔑 文件系统与IO
 
@@ -167,13 +165,13 @@ asyncio.run(main())
 
 **IO多路复用对比**
 
-| 机制 | 原理 | 最大连接数 | 时间复杂度 | 特点 |
-|------|------|-----------|-----------|------|
-| select | 轮询所有fd | 1024 | O(n) | 跨平台，但有上限 |
-| poll | 链表存储fd | 无上限 | O(n) | 无上限，但仍需轮询 |
-| epoll | 事件驱动，回调通知 | 无上限 | O(1) | Linux最优，Redis/Nginx用 |
-| kqueue | 类似epoll | 无上限 | O(1) | macOS/BSD |
-| io_uring | 共享环形缓冲区 | 无上限 | O(1) | Linux新异步IO |
+| 机制     | 原理               | 最大连接数 | 时间复杂度 | 特点                     |
+| -------- | ------------------ | ---------- | ---------- | ------------------------ |
+| select   | 轮询所有fd         | 1024       | O(n)       | 跨平台，但有上限         |
+| poll     | 链表存储fd         | 无上限     | O(n)       | 无上限，但仍需轮询       |
+| epoll    | 事件驱动，回调通知 | 无上限     | O(1)       | Linux最优，Redis/Nginx用 |
+| kqueue   | 类似epoll          | 无上限     | O(1)       | macOS/BSD                |
+| io_uring | 共享环形缓冲区     | 无上限     | O(1)       | Linux新异步IO            |
 
 ## 完整跑通方案
 

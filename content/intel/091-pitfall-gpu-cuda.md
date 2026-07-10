@@ -1,21 +1,28 @@
 ---
-title: "GPU 与 CUDA 环境踩坑合集"
+title: GPU 与 CUDA 环境踩坑合集
 category: deep-learning
 difficulty: intermediate
 duration: 30分钟
 summary: 涵盖 4 个常见踩坑：CUDA 版本与 PyTorch 不匹配、Docker 容器中无法使用 GPU (nvidia-smi 报错)、多 GPU 训练时显存分配不均、GPU 温度过高导致降频/崩溃，每个均附快速修复与排查步骤。
-takeaways:
-  - 掌握「GPU 与 CUDA 环境踩坑合集」中各问题的快速识别方法
-  - 理解每个踩坑的根因分析和排查步骤
-  - 学会标准化的修复流程和预防措施
-relatedIntel:
-  - 034-cuda-programming
-  - 011-pytorch
+takeaways: "- 掌握「GPU 与 CUDA 环境踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施"
+relatedIntel: "- 034-cuda-programming - 011-pytorch"
 tags:
-  - 踩坑
-  - GPU
-  - CUDA
-  - 环境配置
+  - 深度学习
+  - DL
+  - 训练
+  - PyTorch
+relatedTerms:
+  - tensor
+  - gradient-descent
+  - transformer
+  - cnn
+relatedTools:
+  - pytorch
+  - numpy
+  - huggingface-transformers
+relatedNodes:
+  - cv-segmentation
+  - llm-inference
 ---
 
 [环境配置]
@@ -119,3 +126,18 @@ nvidia-smi → pytorch.org 官方命令安装 → conda 隔离环境
 - 05 Jupyter Notebook 中实时监控温度，过热前暂停训练
 
 #GPU#散热#训练#性能优化
+
+## 修复后附加：最小一键诊断命令
+
+```bash
+# DL 最小自检：GPU 显存+CUDA+PyTorch 10 秒内结论
+python - <<'PY'
+import torch, time
+t0 = time.time()
+print('cuda', torch.cuda.is_available(), 'device_count', torch.cuda.device_count())
+if torch.cuda.is_available():
+    print('mem(MiB)', *[round(torch.cuda.get_device_properties(i).total_memory/1024**2, 0) for i in range(torch.cuda.device_count())])
+    a = torch.randn((1, 3, 512, 512), device='cuda', dtype=torch.float16)
+    print('fp16 tensor live', a.shape, 'ms', round((time.time()-t0)*1000, 1))
+PY
+```

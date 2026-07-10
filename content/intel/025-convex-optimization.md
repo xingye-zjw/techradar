@@ -4,25 +4,23 @@ category: math
 difficulty: advanced
 duration: 1周
 summary: 梯度下降不是玄学——理解它的收敛性证明，才能真正用好学习率调度和优化器选择
-takeaways:
-  - 理解凸集、凸函数的定义，以及凸优化问题「局部最优=全局最优」的重要性
+takeaways: "- 理解凸集、凸函数的定义，以及凸优化问题「局部最优=全局最优」的重要性
   - 能用 CVXPY 求解约束优化问题并验证 KKT 条件
   - 能从原理理解 Adam 的一阶/二阶矩估计和偏差校正
-  - 能区分 L1/L2 正则化并用几何直觉解释稀疏性
-relatedTerms: convex-optimization
-relatedIntel:
-  - 024-information-theory
+  - 能区分 L1/L2 正则化并用几何直觉解释稀疏性"
+relatedTerms: ["matrix", "entropy", "convex-optimization", "transformer"]
+relatedIntel: "- 024-information-theory
   - 072-math-linear-algebra
-  - 073-math-probability
-relatedNodes: math-optimization
-tags:
-  - convex optimization
+  - 073-math-probability"
+relatedNodes: ["math-linear-algebra", "math-optimization"]
+tags: "- convex optimization
   - gradient descent
   - adam
   - sgd
   - lagrangian
   - kkt
-  - regularization
+  - regularization"
+relatedTools: ["pandas", "numpy", "jupyter"]
 ---
 
 ## 为什么你要学它
@@ -30,6 +28,7 @@ tags:
 深度学习工程师每天都在用优化器：SGD、Adam、AdamW... 但大多数人是「哪个效果好就用哪个」，调参靠玄学。
 
 **如果不懂优化的数学原理，你会在关键问题上做出错误判断**：
+
 - 学习率设大了Loss 发散，设小了收敛太慢——但为什么？
 - Adam 在某些任务（尤其是大模型预训练）泛化比 SGD 差——为什么？
 - L1 正则化能产生稀疏解，但 L2 不行——为什么？
@@ -48,11 +47,13 @@ tags:
 ### 🔑 凸集与凸函数
 
 **凸集**：集合内任意两点的连线仍在集合内。
+
 ```
 ∀x, y ∈ C, ∀λ ∈ [0,1]: λx + (1-λ)y ∈ C
 ```
 
 **凸函数**：函数图像上任意两点的连线都在函数图像上方。
+
 ```
 f(λx + (1-λ)y) ≤ λf(x) + (1-λ)f(y)
 ```
@@ -62,6 +63,7 @@ f(λx + (1-λ)y) ≤ λf(x) + (1-λ)f(y)
 ### 🔑 KKT 条件：约束优化的最优性条件
 
 对于约束优化问题：
+
 ```
 min f(θ)
 s.t. g(θ) ≤ 0  （不等式约束）
@@ -69,6 +71,7 @@ s.t. g(θ) ≤ 0  （不等式约束）
 ```
 
 KKT 条件（必要条件）是：
+
 1. ∇f + λᵀ∇g + μᵀ∇h = 0（平稳性）
 2. λᵢ ≥ 0（对偶可行性）
 3. λᵢgᵢ(θ*) = 0（互补松弛性）
@@ -92,6 +95,7 @@ print(x.value, y.value)  # 解析解
 ### 🔑 Adam 的数学推导
 
 Adam 更新公式：
+
 ```
 m_t = β₁·m_{t-1} + (1-β₁)·g_t          # 一阶矩（动量）
 v_t = β₂·v_{t-1} + (1-β₂)·g_t²         # 二阶矩（RMSProp）
@@ -101,6 +105,7 @@ v̂ = v_t / (1 - β₂ᵗ)                    # 偏差校正
 ```
 
 **物理直觉**：
+
 - m_t：梯度方向的指数移动平均（像物理里的动量，积累方向一致性）
 - v_t：梯度平方的指数移动平均（大梯度参数 → 大 v → 自适应降低该参数学习率）
 - 偏差校正：早期 m_t 和 v_t 被 β 的权重压低了，需要放大回来
@@ -108,6 +113,7 @@ v̂ = v_t / (1 - β₂ᵗ)                    # 偏差校正
 ### 🔑 L1 vs L2 正则化与稀疏性
 
 几何解释：
+
 - **L2 约束**（球形）：等 Loss 线与球相切于所有方向，解是「均匀缩小」，没有稀疏性
 - **L1 约束**（菱形）：等 Loss 线优先与菱形顶点相交，顶点对应稀疏解（某些维度为 0）
 

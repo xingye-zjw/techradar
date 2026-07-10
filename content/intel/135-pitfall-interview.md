@@ -1,21 +1,28 @@
 ---
-title: "技术面试踩坑合集"
+title: 技术面试踩坑合集
 category: best-practices
 difficulty: beginner
 duration: 30分钟
 summary: 涵盖 4 个常见踩坑：简历堆砌技术栈但没有深度、刷题但不会做变形题、项目经历讲不清楚、谈薪资时报价过低/过高，每个均附快速修复与排查步骤。
-takeaways:
-  - 掌握「技术面试踩坑合集」中各问题的快速识别方法
-  - 理解每个踩坑的根因分析和排查步骤
-  - 学会标准化的修复流程和预防措施
-relatedIntel:
-  - 050-cs-algo
-  - 134-pitfall-project-mgmt
+takeaways: "- 掌握「技术面试踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施"
+relatedIntel: "- 050-cs-algo - 134-pitfall-project-mgmt"
 tags:
-  - 踩坑
-  - 面试
-  - 简历
-  - 薪资
+  - 最佳实践
+  - 规范
+  - 协作
+  - 质量
+relatedTerms:
+  - data-structure
+  - algorithm
+  - transformer
+  - complexity
+relatedTools:
+  - mlflow
+  - ultralytics-yolo
+  - huggingface-transformers
+relatedNodes:
+  - roadmap-capstone
+  - llm-prompt-engineering
 ---
 
 [求职面试]
@@ -111,3 +118,16 @@ STAR法则 + 讲清挑战和方案 + 突出个人贡献
 - 03 基于上一份薪资涨幅30%左右作为基准，结合市场行情上下浮动，不要虚报也不要贱卖
 
 #薪资#求职#谈判
+
+## 修复后附加：最小一键诊断命令
+
+```bash
+# Best Practice 最小自检：项目 4 条工程底线（lint + 单测 + prebuild + bundle size）
+set -e
+PROJ=$(git rev-parse --show-toplevel 2>/dev/null || echo .)
+cd "$PROJ"
+echo '--- lint ts 错误数 ---' && (npx tsc --noEmit 2>&1 || true) | wc -l
+echo '--- unit tests PASS rate ---' && (npm run test 2>&1 || true) | tail -n 6
+echo '--- prebuild search-index size ---' && ls -la public/search-index.json 2>/dev/null || echo 'no prebuild yet'
+echo '--- out html count ---' && (find out -name '*.html' 2>/dev/null | wc -l || echo 'no build yet')
+```

@@ -1,20 +1,29 @@
 ---
-title: "推荐系统踩坑合集"
+title: 推荐系统踩坑合集
 category: machine-learning
 difficulty: intermediate
 duration: 30分钟
 summary: 涵盖 4 个常见踩坑：推荐系统马太效应导致头部内容越推越多、线上线下指标不一致、冷启动问题处理不当导致新用户体验差、特征穿越导致线上效果急剧下降，每个均附快速修复与排查步骤。
-takeaways:
-  - 掌握「推荐系统踩坑合集」中各问题的快速识别方法
-  - 理解每个踩坑的根因分析和排查步骤
-  - 学会标准化的修复流程和预防措施
+takeaways: "- 掌握「推荐系统踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施"
 relatedIntel:
   - 116-recommender-systems
 tags:
-  - 踩坑
-  - 推荐系统
-  - 冷启动
-  - A/B测试
+  - 机器学习
+  - ML
+  - 数据
+  - scikit-learn
+relatedTerms:
+  - matrix
+  - tensor
+  - gradient-descent
+  - convex-optimization
+relatedTools:
+  - numpy
+  - pandas
+  - scikit-learn
+relatedNodes:
+  - math-linear-algebra
+  - llm-inference
 ---
 
 [推荐系统]
@@ -127,3 +136,20 @@ tags:
 - 07 建立特征监控体系，线上监控特征分布、缺失率、覆盖率，发现异常及时告警
 
 #推荐系统#特征工程#数据泄露
+
+## 修复后附加：最小一键诊断命令
+
+```bash
+# ML 最小自检：二分类 AUC + 混淆矩阵 3 秒内
+python - <<'PY'
+import numpy as np
+from sklearn.datasets import make_classification
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.metrics import roc_auc_score, confusion_matrix
+X, y = make_classification(n_samples=2000, n_features=20, random_state=42)
+m = GradientBoostingClassifier(n_estimators=40).fit(X[:1600], y[:1600])
+p = m.predict_proba(X[1600:])[:, 1]
+print('AUC', round(roc_auc_score(y[1600:], p), 3))
+print('CM\n', confusion_matrix(y[1600:], (p > 0.5).astype(int)))
+PY
+```

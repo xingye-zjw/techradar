@@ -1,20 +1,29 @@
 ---
-title: "数据库踩坑合集"
+title: 数据库踩坑合集
 category: cs
 difficulty: intermediate
 duration: 30分钟
 summary: 涵盖 4 个常见踩坑：SQL 查询全表扫描导致数据库卡死、数据库连接池耗尽导致应用无响应、事务未提交导致锁等待超时、数据库主从延迟导致读写分离失效，每个均附快速修复与排查步骤。
-takeaways:
-  - 掌握「数据库踩坑合集」中各问题的快速识别方法
-  - 理解每个踩坑的根因分析和排查步骤
-  - 学会标准化的修复流程和预防措施
+takeaways: "- 掌握「数据库踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施"
 relatedIntel:
   - 076-cs-database
 tags:
   - 踩坑
-  - 数据库
-  - SQL
-  - 索引
+  - 避坑指南
+  - 经验
+  - 常见问题
+relatedTerms:
+  - data-structure
+  - algorithm
+  - transformer
+  - complexity
+relatedTools:
+  - pytorch
+  - ultralytics-yolo
+  - huggingface-transformers
+relatedNodes:
+  - roadmap-capstone
+  - math-linear-algebra
 ---
 
 [数据库]
@@ -117,3 +126,21 @@ tags:
 - 05 优化网络延迟或升级硬件
 
 #数据库#主从#性能优化
+
+## 修复后附加：最小一键诊断命令
+
+```bash
+# CS 基础最小自检：大 O + 算法复杂度自测 3 秒内
+python - <<'PY'
+from time import perf_counter
+N = 100_000
+arr = list(range(N)); s = 0
+t0 = perf_counter()
+for x in arr: s += x            # O(n)
+t1 = perf_counter()
+arr_sorted = sorted(arr)        # O(n log n)
+t2 = perf_counter()
+print(f'sum O(n)   = {(t1-t0)*1000:6.2f} ms  sum={s}')
+print(f'sort       = {(t2-t1)*1000:6.2f} ms  first={arr_sorted[0]} last={arr_sorted[-1]}')
+PY
+```

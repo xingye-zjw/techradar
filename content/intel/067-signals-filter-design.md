@@ -4,18 +4,15 @@ category: embedded
 difficulty: intermediate
 duration: 3-5天
 summary: 滤波器是从噪声中提取信号的核心工具。理解 IIR 和 FIR 的本质区别，以及如何用 scipy.signal 快速设计出符合规格的滤波器，是你做信号处理的必备技能。
-takeaways:
-  - 能说清楚 IIR 和 FIR 的根本差异：递归 vs 非递归、阶数 vs 长度、相位特性
+takeaways: "- 能说清楚 IIR 和 FIR 的根本差异：递归 vs 非递归、阶数 vs 长度、相位特性
   - 能根据指标（通带/阻带频率、纹波）选择合适的滤波器类型（Butterworth/Chebyshev/Elliptic）
   - 能用 scipy.signal 一行代码设计出满足规格的低通/高通/带通滤波器
   - 理解窗函数法设计 FIR 的原理，知道怎么选窗函数
-  - 能画出频率响应图，验证滤波器是否满足规格
-relatedIntel:
-  - 052-embedded-c
+  - 能画出频率响应图，验证滤波器是否满足规格"
+relatedIntel: "- 052-embedded-c
   - 053-embedded-rtos
-  - 054-elec-circuit
-tags:
-  - filter-design
+  - 054-elec-circuit"
+tags: "- filter-design
   - iir
   - fir
   - lowpass
@@ -26,7 +23,10 @@ tags:
   - elliptic
   - window-function
   - scipy.signal
-  - frequency-response
+  - frequency-response"
+relatedTerms: ["data-structure", "rtos", "algorithm", "complexity"]
+relatedTools: ["huggingface-transformers", "ultralytics-yolo", "pytorch"]
+relatedNodes: ["roadmap-capstone", "electrical-safety"]
 ---
 
 ## 为什么你要学它
@@ -49,14 +49,14 @@ tags:
 
 ### 🔑 IIR vs FIR：根本区别
 
-| 特性 | IIR | FIR |
-|------|-----|-----|
-| 结构 | 递归（输出反馈到输入） | 非递归（仅输入参与） |
-| 阶数 | 低（几阶到十几阶） | 高（几十到几百阶） |
-| 相位 | 非线性 | 线性（可选） |
-| 稳定性 | 可能不稳定（需检查） | 始终稳定 |
-| 计算效率 | 高（阶数低） | 低（阶数高） |
-| 适用场景 | 实时性强、规格宽松 | 相位敏感、规格严格 |
+| 特性     | IIR                    | FIR                  |
+| -------- | ---------------------- | -------------------- |
+| 结构     | 递归（输出反馈到输入） | 非递归（仅输入参与） |
+| 阶数     | 低（几阶到十几阶）     | 高（几十到几百阶）   |
+| 相位     | 非线性                 | 线性（可选）         |
+| 稳定性   | 可能不稳定（需检查）   | 始终稳定             |
+| 计算效率 | 高（阶数低）           | 低（阶数高）         |
+| 适用场景 | 实时性强、规格宽松     | 相位敏感、规格严格   |
 
 **直觉理解**：IIR 像一个高效的老手，用少量经验（反馈）就能干活，但可能会"跑偏"（不稳定）；FIR 像一个笨拙但可靠的新手，完全靠死记硬背（大量系数）干活，永远不会失控。
 
@@ -89,13 +89,13 @@ FIR 设计的主流方法是**窗函数法**，核心思想：
 
 常见窗函数（按主瓣宽度从窄到宽、旁瓣从高到低）：
 
-| 窗函数 | 主瓣宽度 | 旁瓣衰减 | 适用场景 |
-|--------|----------|----------|----------|
-| Rectangular | 最窄 | 最低（-13dB） | 频率分辨率优先 |
-| Hann | 中等 | 较好（-31dB） | 通用 |
-| Hamming | 中等 | 较好（-41dB） | 通用 |
-| Blackman | 宽 | 好（-57dB） | 阻带衰减优先 |
-| Kaiser | 可调 | 可调 | 需指定阻带衰减 |
+| 窗函数      | 主瓣宽度 | 旁瓣衰减      | 适用场景       |
+| ----------- | -------- | ------------- | -------------- |
+| Rectangular | 最窄     | 最低（-13dB） | 频率分辨率优先 |
+| Hann        | 中等     | 较好（-31dB） | 通用           |
+| Hamming     | 中等     | 较好（-41dB） | 通用           |
+| Blackman    | 宽       | 好（-57dB）   | 阻带衰减优先   |
+| Kaiser      | 可调     | 可调          | 需指定阻带衰减 |
 
 ### 🔑 滤波器设计步骤
 

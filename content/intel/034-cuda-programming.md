@@ -4,33 +4,34 @@ category: devops
 difficulty: advanced
 duration: 1-2周
 summary: 深度学习框架帮你封装了一切，但你真的了解 GPU 是怎么工作的吗——理解 CUDA 编程才能真正优化 GPU 利用率
-takeaways:
-  - 理解 CUDA 的编程模型：Grid / Block / Thread
+takeaways: "- 理解 CUDA 的编程模型：Grid / Block / Thread
   - 能写一个简单的 CUDA Kernel 并用 nvcc 编译
   - 理解 GPU 内存层级：Global / Shared / Register
-  - 能用 nvprof / Nsight 定位 GPU 程序瓶颈
-relatedIntel:
-  - 007-docker
+  - 能用 nvprof / Nsight 定位 GPU 程序瓶颈"
+relatedIntel: "- 007-docker
   - 008-git
-  - 009-linux
-relatedNodes: electrical-safety
-tags:
-  - cuda
+  - 009-linux"
+relatedNodes: ["devops-kubernetes", "electrical-safety"]
+tags: "- cuda
   - gpu programming
   - kernel
   - thread
   - memory coalescing
-  - shared memory
+  - shared memory"
+relatedTerms: ["linux", "docker", "kubernetes", "git"]
+relatedTools: ["kubernetes", "mlflow", "docker"]
 ---
 
 ## 为什么你要学它
 
 PyTorch 把 GPU 编程封装得很好，但当你遇到：
+
 - 自定义算子需要 GPU 加速
 - 推理优化需要理解 memory coalescing
 - 多 GPU 通信需要了解 NCCL
 
 理解 CUDA 编程模型能让你：
+
 - 在 PyTorch 中写高效的自定义 CUDA Kernel
 - 用 Nsight 定位性能瓶颈
 - 理解为什么某些操作在 GPU 上快/慢
@@ -38,11 +39,13 @@ PyTorch 把 GPU 编程封装得很好，但当你遇到：
 ## 一句话概览
 
 CUDA 编程模型：
+
 - **Grid**：整个 GPU 上所有线程的集合
 - **Block**：一组线程（最多 1024 个），共享 Shared Memory
 - **Thread**：最小执行单元，每个线程执行同一个 Kernel
 
 GPU 内存层级：
+
 - **Global Memory**：所有线程可见，带宽高（~900 GB/s）但延迟高
 - **Shared Memory**：Block 内线程共享，带宽高（~10 TB/s）但容量小（48KB/Block）
 - **Register**：每个线程私有，最快但数量有限
@@ -56,7 +59,7 @@ GPU 内存层级：
 __global__ void vectorAdd(float *a, float *b, float *c, int n) {
     // 计算当前线程对应的数组索引
     int i = blockIdx.x * blockDim.x + threadIdx.x;
-    
+
     if (i < n) {
         c[i] = a[i] + b[i];
     }
@@ -74,6 +77,7 @@ vectorAdd<<<blocks, 256>>>(d_a, d_b, d_c, n);
 ### 🔑 Memory Coalescing：如何让显存访问快 10 倍
 
 **坏的访问模式**（不连续）：
+
 ```cuda
 // 每个 thread 访问不相邻的地址（thread i 访问 i*1024）
 int i = blockIdx.x * blockDim.x + threadIdx.x;
@@ -81,6 +85,7 @@ value = global_array[i * 1024];  // ❌ 分散访问，显存带宽利用率低
 ```
 
 **好的访问模式**（连续）：
+
 ```cuda
 // thread i 访问连续的地址 i
 int i = blockIdx.x * blockDim.x + threadIdx.x;
@@ -98,17 +103,17 @@ __global__ void sharedMatrixMultiply(float *a, float *b, float *c, int n) {
     // 每个 Block 加载一块数据到 Shared Memory
     __shared__ float sharedA[TILE][TILE];
     __shared__ float sharedB[TILE][TILE];
-    
+
     int row = blockIdx.y * TILE + threadIdx.y;
     int col = blockIdx.x * TILE + threadIdx.x;
-    
+
     float sum = 0.0f;
     for (int i = 0; i < n/TILE; i++) {
         // 从 Global Memory 加载到 Shared Memory
         sharedA[threadIdx.y][threadIdx.x] = a[row * n + i * TILE + threadIdx.x];
         sharedB[threadIdx.y][threadIdx.x] = b[(i * TILE + threadIdx.y) * n + col];
         __syncthreads();  // 等待所有线程加载完成
-        
+
         // 计算
         for (int k = 0; k < TILE; k++) {
             sum += sharedA[threadIdx.y][k] * sharedB[k][threadIdx.x];

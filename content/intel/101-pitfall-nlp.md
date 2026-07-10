@@ -1,21 +1,28 @@
 ---
-title: "NLP 踩坑合集"
+title: NLP 踩坑合集
 category: nlp
 difficulty: intermediate
 duration: 30分钟
 summary: 涵盖 4 个常见踩坑：Tokenizer 处理中文分词错误、文本分类标签不平衡导致模型偏向多数类、RNN/LSTM 梯度消失导致长序列信息丢失、文本数据泄露导致评估指标虚高，每个均附快速修复与排查步骤。
-takeaways:
-  - 掌握「NLP 踩坑合集」中各问题的快速识别方法
-  - 理解每个踩坑的根因分析和排查步骤
-  - 学会标准化的修复流程和预防措施
-relatedIntel:
-  - 064-nlp-rnn
-  - 001-transformer
+takeaways: "- 掌握「NLP 踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施"
+relatedIntel: "- 064-nlp-rnn - 001-transformer"
 tags:
-  - 踩坑
   - NLP
-  - 分词
-  - 训练
+  - 文本
+  - 语义
+  - Transformers
+relatedTerms:
+  - self-attention
+  - rag
+  - transformer
+  - chain-of-thought
+relatedTools:
+  - langchain
+  - numpy
+  - huggingface-transformers
+relatedNodes:
+  - nlp-rnn
+  - llm-inference
 ---
 
 [NLP]
@@ -119,3 +126,15 @@ tags:
 - 04 用 k-fold 交叉验证替代单次划分，多次评估取平均值以发现数据泄露问题
 
 #文本分类#数据泄露#模型评估
+
+## 修复后附加：最小一键诊断命令
+
+```bash
+# NLP 最小自检：分词+向量维度+BPE 合并 3 秒内出结果
+python - <<'PY'
+from transformers import AutoTokenizer
+tok = AutoTokenizer.from_pretrained('Qwen/Qwen2.5-0.5B')
+ids = tok('RAG pipeline 的召回率不能只看 top-k 准确度').input_ids
+print('tokens', len(ids), 'first 6', ids[:6])
+PY
+```

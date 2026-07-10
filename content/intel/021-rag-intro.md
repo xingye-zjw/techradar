@@ -4,27 +4,28 @@ category: llm
 difficulty: beginner
 duration: 1周
 summary: 检索增强生成（RAG）让大模型能基于私有知识库回答问题，是构建企业知识库、客服机器人最落地的 LLM 方案。
-takeaways:
-  - 理解 RAG 的核心流程：文档加载、分块、向量化、检索、生成
+takeaways: "- 理解 RAG 的核心流程：文档加载、分块、向量化、检索、生成
   - 掌握向量数据库与 Embedding 模型在 RAG 中的作用
   - 学会用 LangChain / LlamaIndex 搭建最小可用 RAG 系统
-  - 了解 RAG 常见失败模式：检索不准、上下文截断、幻觉
-relatedIntel:
-  - 005-rag
+  - 了解 RAG 常见失败模式：检索不准、上下文截断、幻觉"
+relatedIntel: "- 005-rag
   - 035-advanced-rag
-  - 042-vector-database
-tags:
-  - rag
+  - 042-vector-database"
+tags: "- rag
   - retrieval-augmented-generation
   - vector-database
   - embedding
   - langchain
-  - llm
+  - llm"
+relatedTerms: ["rag", "lora", "transformer", "chain-of-thought"]
+relatedTools: ["huggingface-transformers", "langchain", "pytorch"]
+relatedNodes: ["llm-inference", "llm-prompt-engineering"]
 ---
 
 ## 为什么你要学它
 
 大语言模型（LLM）虽然知识渊博，但有两个明显短板：
+
 1. **知识不实时**：模型参数里的知识截止到训练数据时间
 2. **无法访问私有数据**：企业内部文档、产品手册、聊天记录都不在训练集中
 
@@ -37,6 +38,7 @@ tags:
 > **RAG = 检索（Retrieval）+ 生成（Generation）。先找证据，再让大模型根据证据回答。**
 
 核心流程：
+
 - **加载文档**：PDF、Word、网页、数据库等多种来源
 - **文本分块（Chunking）**：把长文档切成适合模型处理的小段
 - **Embedding 向量化**：用 Embedding 模型把文本变成向量
@@ -49,6 +51,7 @@ tags:
 ### 🔑 文档加载与分块
 
 文档来源通常包括 PDF、Markdown、网页、数据库等。加载后需要切成合适大小的文本块：
+
 - **块太大**：超过模型上下文窗口，检索粒度粗
 - **块太小**：丢失上下文，语义不完整
 - **常用策略**：按段落/标题分块，块大小 300-500 字符，重叠 50-100 字符
@@ -69,11 +72,13 @@ chunks = splitter.split_documents(documents)
 Embedding 模型把文本映射到高维向量空间，语义相似的文本向量距离更近。
 
 常用 Embedding 模型：
+
 - **OpenAI text-embedding-ada-002 / text-embedding-3-small**
 - **BGE（BAAI General Embedding）**：中文场景表现优秀
 - **M3E / GTE**：中文开源 Embedding 模型
 
 常用向量数据库：
+
 - **ChromaDB**：轻量、易上手，适合原型
 - **FAISS**：Facebook 开源，适合本地实验
 - **pgvector**：PostgreSQL 扩展，适合已有 PG 生态
@@ -120,13 +125,13 @@ answer = qa.run("公司的年假政策是什么？")
 
 搭建 RAG 系统后效果不好，按以下顺序排查：
 
-01. 检查文档加载是否正确，是否有乱码或格式丢失
-02. 调整分块大小和重叠度，观察检索质量变化
-03. 换用更强的 Embedding 模型，尤其是中文场景
-04. 检查向量数据库中的 Top-K 召回结果是否相关
-05. 优化 prompt，明确告诉模型只能基于资料回答
-06. 对复杂问题尝试重排序（Rerank）或多查询检索
-07. 必要时引入 Advanced RAG：HyDE、摘要检索、Agentic RAG
+1.  检查文档加载是否正确，是否有乱码或格式丢失
+2.  调整分块大小和重叠度，观察检索质量变化
+3.  换用更强的 Embedding 模型，尤其是中文场景
+4.  检查向量数据库中的 Top-K 召回结果是否相关
+5.  优化 prompt，明确告诉模型只能基于资料回答
+6.  对复杂问题尝试重排序（Rerank）或多查询检索
+7.  必要时引入 Advanced RAG：HyDE、摘要检索、Agentic RAG
 
 ## 常见误区与注意事项
 

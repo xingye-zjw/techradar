@@ -1,24 +1,28 @@
 ---
-title: "深度学习训练常见踩坑合集"
+title: 深度学习训练常见踩坑合集
 category: deep-learning
 difficulty: intermediate
 duration: 30分钟
 summary: 涵盖 6 个常见踩坑：显存不足 (CUDA out of memory)、Loss NaN / 梯度爆炸、多进程 DataLoader 卡死、模型训练收敛慢/几乎不收敛、CUDA 隐式同步导致推理速度异常慢、训练用 GPU 卡与推理用卡架构不一致，每个均附快速修复与排查步骤。
-takeaways:
-  - 掌握「深度学习训练常见踩坑合集」中各问题的快速识别方法
-  - 理解每个踩坑的根因分析和排查步骤
-  - 学会标准化的修复流程和预防措施
-relatedIntel:
-  - 011-pytorch
-  - 034-cuda-programming
-  - 017-metrics
+takeaways: "- 掌握「深度学习训练常见踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施"
+relatedIntel: "- 011-pytorch - 034-cuda-programming - 017-metrics"
 tags:
-  - 踩坑
   - 深度学习
+  - DL
   - 训练
-  - OOM
-  - NaN
-  - CUDA
+  - PyTorch
+relatedTerms:
+  - tensor
+  - gradient-descent
+  - transformer
+  - cnn
+relatedTools:
+  - pytorch
+  - numpy
+  - huggingface-transformers
+relatedNodes:
+  - cv-segmentation
+  - llm-inference
 ---
 
 [深度学习]
@@ -182,3 +186,18 @@ Windows 系统设置 num_workers=0；Linux 可正常多进程；入口加 `if __
 - 06 在部署前用 ONNX Runtime 或 TensorRT 做跨平台验证
 
 #GPU#CUDA#模型迁移
+
+## 修复后附加：最小一键诊断命令
+
+```bash
+# DL 最小自检：GPU 显存+CUDA+PyTorch 10 秒内结论
+python - <<'PY'
+import torch, time
+t0 = time.time()
+print('cuda', torch.cuda.is_available(), 'device_count', torch.cuda.device_count())
+if torch.cuda.is_available():
+    print('mem(MiB)', *[round(torch.cuda.get_device_properties(i).total_memory/1024**2, 0) for i in range(torch.cuda.device_count())])
+    a = torch.randn((1, 3, 512, 512), device='cuda', dtype=torch.float16)
+    print('fp16 tensor live', a.shape, 'ms', round((time.time()-t0)*1000, 1))
+PY
+```

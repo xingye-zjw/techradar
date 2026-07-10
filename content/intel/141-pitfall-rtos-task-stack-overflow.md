@@ -4,21 +4,25 @@ category: embedded
 difficulty: intermediate
 duration: 30分钟
 summary: 聚焦单点问题：FreeRTOS 任务栈溢出导致 HardFault，涵盖 uxTaskGetStackHighWaterMark 监控、configCHECK_FOR_STACK_OVERFLOW 检测、栈大小配置、避免大局部变量等排查与修复方案。
-takeaways:
-  - 快速识别「RTOS任务栈溢出」的典型症状
-  - 理解该问题的根因分析和标准排查步骤
-  - 学会分步排查和解决问题的标准化流程
-  - 了解预防措施，避免下次踩同样的坑
-relatedIntel:
-  - 053-embedded-rtos
-  - 097-pitfall-embedded
+takeaways: "- 快速识别「RTOS任务栈溢出」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑"
+relatedIntel: "- 053-embedded-rtos - 097-pitfall-embedded"
 tags:
-  - 踩坑
-  - 避坑指南
-  - freertos
-  - 栈溢出
   - 嵌入式
-  - hardfault
+  - MCU
+  - 硬件
+  - 驱动
+relatedTerms:
+  - data-structure
+  - rtos
+  - algorithm
+  - complexity
+relatedTools:
+  - pytorch
+  - ultralytics-yolo
+  - huggingface-transformers
+relatedNodes:
+  - roadmap-capstone
+  - electrical-safety
 ---
 
 ## 为什么你要学它
@@ -34,6 +38,7 @@ FreeRTOS等RTOS中任务栈空间不足导致栈溢出，表现为 HardFault 或
 > **快速修复：增大栈大小 + 监控高水位标记 + 避免大局部变量**
 
 核心要点：
+
 - **现象**：HardFault_Handler被触发
 - **根因**：任务栈大小设置过小、函数调用嵌套过深、局部数组过大、或中断嵌套消耗额外栈空间。RTOS任务栈通常只有几百字节到几KB，远小于Linux线程栈。
 - **解决**：按照下方 6 步标准流程排查
@@ -55,12 +60,12 @@ FreeRTOS等RTOS中任务栈空间不足导致栈溢出，表现为 HardFault 或
 
 按照以下步骤逐一排查，通常能在几分钟内定位并解决问题：
 
-01. 使用FreeRTOS的uxTaskGetStackHighWaterMark()监控栈使用情况
-02. 初始设置较大的栈（如2KB），稳定后再优化
-03. 避免在任务中使用大的局部数组，改用静态分配或动态分配
-04. 减少函数调用嵌套深度，避免递归
-05. 启用MPU栈溢出检测：configCHECK_FOR_STACK_OVERFLOW = 2
-06. 使用静态分析工具（如PC-lint）检查栈深度
+1.  使用FreeRTOS的uxTaskGetStackHighWaterMark()监控栈使用情况
+2.  初始设置较大的栈（如2KB），稳定后再优化
+3.  避免在任务中使用大的局部数组，改用静态分配或动态分配
+4.  减少函数调用嵌套深度，避免递归
+5.  启用MPU栈溢出检测：configCHECK_FOR_STACK_OVERFLOW = 2
+6.  使用静态分析工具（如PC-lint）检查栈深度
 
 ### 快速修复（救急用）
 

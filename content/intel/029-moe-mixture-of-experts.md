@@ -4,25 +4,26 @@ category: llm
 difficulty: advanced
 duration: 1周
 summary: 不是把模型做大，而是把模型「拆开」——每次只激活一小部分专家，参数量翻倍但推理成本几乎不变
-takeaways:
-  - 理解 MoE 的核心：稀疏激活（Sparse Activation）+ 专家路由（Expert Routing）
+takeaways: "- 理解 MoE 的核心：稀疏激活（Sparse Activation）+ 专家路由（Expert Routing）
   - 能解释为什么 MoE 模型参数量大但推理快
   - 理解 DeepSeek / Mixtral 等 MoE LLM 的架构设计
-  - 能在 PyTorch 中实现一个简单的 MoE Layer
-relatedIntel:
-  - 003-lora-qlora
+  - 能在 PyTorch 中实现一个简单的 MoE Layer"
+relatedIntel: "- 003-lora-qlora
   - 005-rag
-  - 015-rlhf
-relatedNodes:
-  - llm-finetune
-  - llm-inference
-tags:
-  - mixture of experts
+  - 015-rlhf"
+relatedNodes: [
+    "llm-inference",
+    "- llm-finetune
+    - llm-inference",
+  ]
+tags: "- mixture of experts
   - moe
   - sparse activation
   - expert routing
   - deepseek
-  - mixtral
+  - mixtral"
+relatedTerms: ["rag", "lora", "transformer", "chain-of-thought"]
+relatedTools: ["huggingface-transformers", "langchain", "pytorch"]
 ---
 
 ## 为什么你要学它
@@ -30,6 +31,7 @@ tags:
 传统大模型（如 GPT-3、LLaMA）是「密集激活」的：每次推理都要跑完所有参数。模型越大，推理越慢、显存占用越高。
 
 **MoE（Mixture of Experts）** 的核心思想是：把一个大模型拆成多个「小专家」，每次只激活其中一小部分。这样：
+
 - **参数量**可以翻倍（更多专家 = 更多容量）
 - **推理成本**几乎不变（只激活少数专家）
 
@@ -59,18 +61,18 @@ Router 是一个小的线性层：`gates = softmax(W_router @ x)`，输出每个
 def moe_forward(x, experts, router, top_k=2):
     # 1. 计算路由得分
     gates = router(x)  # (batch, num_experts)
-    
+
     # 2. 选择 Top-k 专家
     topk_gates, topk_indices = torch.topk(gates, top_k)
     topk_gates = topk_gates / topk_gates.sum(dim=-1, keepdim=True)  # 归一化
-    
+
     # 3. 只激活选中的专家
     outputs = []
     for i in range(top_k):
         expert_idx = topk_indices[:, i]
         expert_out = experts[expert_idx](x)  # 批量调用不同专家
         outputs.append(topk_gates[:, i].unsqueeze(-1) * expert_out)
-    
+
     # 4. 加权聚合
     return sum(outputs)
 ```
@@ -78,6 +80,7 @@ def moe_forward(x, experts, router, top_k=2):
 ### 🔑 稀疏激活的数学解释
 
 假设有 N 个专家，每个专家参数量 E：
+
 - **密集模型**：参数量 N×E，每次推理计算量 N×E
 - **MoE 模型**：参数量 N×E，每次推理计算量 k×E（k << N）
 
@@ -88,6 +91,7 @@ def moe_forward(x, experts, router, top_k=2):
 如果 Router 总是选择同一个专家，其他专家就「饿死」了——训练时得不到梯度更新，推理时浪费参数。
 
 解决方案：
+
 1. **Auxiliary Loss**：在训练时加一个负载均衡损失，惩罚专家使用不均匀
 2. **Expert Capacity**：限制每个专家最多处理多少 token，超出则溢出到其他专家
 3. **Random Routing**：在 Top-k 选择时加入噪声，增加探索性
@@ -97,14 +101,14 @@ def moe_forward(x, experts, router, top_k=2):
 def auxiliary_loss(gates, expert_indices, num_experts):
     # gates: (batch, num_experts) - 每个专家被选中的概率
     # expert_indices: (batch, top_k) - 实际选中的专家
-    
+
     # 计算每个专家被选中的频率
     expert_counts = torch.bincount(expert_indices.flatten(), minlength=num_experts)
     expert_freq = expert_counts / expert_counts.sum()
-    
+
     # 计算路由得分均值
     gate_mean = gates.mean(dim=0)
-    
+
     # 惩罚频率与得分均值的不一致
     loss = num_experts * torch.sum(expert_freq * gate_mean)
     return loss
@@ -126,24 +130,24 @@ class MoELayer(nn.Module):
         ])
         self.router = nn.Linear(input_dim, num_experts)
         self.top_k = top_k
-    
+
     def forward(self, x):
         # Router
         gates = torch.softmax(self.router(x), dim=-1)
-        
+
         # Top-k selection
         topk_gates, topk_idx = torch.topk(gates, self.top_k)
         topk_gates = topk_gates / topk_gates.sum(dim=-1, keepdim=True)
-        
+
         # Expert computation (简化版，实际需用 scatter/gather 优化)
         batch_size = x.shape[0]
         output = torch.zeros(batch_size, self.experts[0].out_features, device=x.device)
-        
+
         for i in range(self.top_k):
             for b in range(batch_size):
                 expert = self.experts[topk_idx[b, i]]
                 output[b] += topk_gates[b, i] * expert(x[b])
-        
+
         return output
 ```
 

@@ -4,24 +4,23 @@ category: embedded
 difficulty: intermediate
 duration: 3周
 summary: 掌握自动控制的核心概念，理解反馈控制原理和控制器设计方法
-takeaways:
-  - 理解控制系统基本组成
+takeaways: "- 理解控制系统基本组成
   - 掌握PID控制器原理
   - 能分析系统稳定性
-  - 能设计简单的控制器
-relatedIntel:
-  - 052-embedded-c
+  - 能设计简单的控制器"
+relatedIntel: "- 052-embedded-c
   - 053-embedded-rtos
-  - 054-elec-circuit
-relatedNodes: ctrl-pid
-tags:
-  - control
+  - 054-elec-circuit"
+relatedNodes: ["ctrl-pid", "electrical-safety"]
+tags: "- control
   - pid
   - feedback
   - stability
   - system-response
   - root-locus
-  - bode-plot
+  - bode-plot"
+relatedTerms: ["data-structure", "rtos", "algorithm", "complexity"]
+relatedTools: ["huggingface-transformers", "ultralytics-yolo", "pytorch"]
 ---
 
 ## 为什么你要学它
@@ -98,31 +97,31 @@ class PIDController:
         self.Ki = Ki
         self.Kd = Kd
         self.dt = dt
-        
+
         self.integral = 0
         self.prev_error = 0
-        
+
     def reset(self):
         self.integral = 0
         self.prev_error = 0
-        
+
     def update(self, setpoint, measurement):
         error = setpoint - measurement
-        
+
         # 比例项
         P = self.Kp * error
-        
+
         # 积分项
         self.integral += error * self.dt
         I = self.Ki * self.integral
-        
+
         # 微分项
         derivative = (error - self.prev_error) / self.dt
         D = self.Kd * derivative
-        
+
         # 更新
         self.prev_error = error
-        
+
         return P + I + D
 
 # 仿真被控对象（一阶系统）
@@ -152,22 +151,22 @@ plt.figure(figsize=(12, 8))
 
 for i, case in enumerate(cases):
     pid = PIDController(case['Kp'], case['Ki'], case['Kd'], dt)
-    
+
     # 仿真
     y = np.zeros_like(t)
     u = np.zeros_like(t)
-    
+
     for k in range(1, len(t)):
         u[k] = pid.update(setpoint[k], y[k-1])
         # 限制控制量
         u[k] = np.clip(u[k], -10, 10)
-        
+
         # 更新系统输出
         y[k] = y[k-1] + dt/0.5 * (2*u[k-1] - y[k-1])
-    
+
     plt.subplot(2, 1, 1)
     plt.plot(t, y, label=case['label'])
-    
+
     plt.subplot(2, 1, 2)
     plt.plot(t, u, label=case['label'])
 
@@ -223,7 +222,7 @@ plt.figure(figsize=(10, 8))
 
 # 绘制开环极点
 open_loop_poles = np.roots(den)
-plt.plot(np.real(open_loop_poles), np.imag(open_loop_poles), 
+plt.plot(np.real(open_loop_poles), np.imag(open_loop_poles),
          'bx', markersize=15, label='Open-loop Poles')
 
 # 绘制根轨迹
@@ -250,25 +249,25 @@ def routh_hurwitz(coeffs):
     """
     n = len(coeffs) - 1
     routh_table = np.zeros((n+1, (n+1)//2 + 1))
-    
+
     # 第一行
     routh_table[0, :(n+1)//2] = coeffs[::2]
     # 第二行
     routh_table[1, :n//2 + 1] = coeffs[1::2]
-    
+
     # 计算其余行
     for i in range(2, n+1):
         for j in range((n-i)//2 + 1):
             if routh_table[i-1, 0] != 0:
-                routh_table[i, j] = (routh_table[i-1, 0] * routh_table[i-2, j+1] - 
+                routh_table[i, j] = (routh_table[i-1, 0] * routh_table[i-2, j+1] -
                                      routh_table[i-2, 0] * routh_table[i-1, j+1]) / routh_table[i-1, 0]
-    
+
     # 检查第一列符号
     first_column = routh_table[:, 0]
     first_column = first_column[first_column != 0]
-    
+
     is_stable = np.all(first_column > 0) or np.all(first_column < 0)
-    
+
     return is_stable, routh_table
 
 # 测试
