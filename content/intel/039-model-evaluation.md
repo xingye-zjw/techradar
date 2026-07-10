@@ -4,22 +4,34 @@ category: devops
 difficulty: intermediate
 duration: 1周
 summary: 训练完模型，怎么知道它好不好？基准测试是模型能力的「体检报告」
-takeaways: "- 理解主流 LLM 基准测试（MMLU / GSM8K / HellaSwag）的设计思路
+takeaways:
+  - 理解主流 LLM 基准测试（MMLU / GSM8K / HellaSwag）的设计思路
   - 能用 lm-evaluation-harness 跑标准评测
   - 理解 Perplexity 作为语言模型核心指标的意义
-  - 能设计领域特定的评测集"
-relatedIntel: "- 007-docker
+  - 能设计领域特定的评测集
+relatedIntel:
+  - 007-docker
   - 008-git
-  - 009-linux"
-relatedNodes: ["devops-kubernetes", "electrical-safety"]
-tags: "- model evaluation
+  - 009-linux
+relatedNodes:
+  - "devops-kubernetes"
+  - "electrical-safety"
+tags:
+  - model evaluation
   - benchmark
   - mmlu
   - hellaswag
   - perplexity
-  - human evaluation"
-relatedTerms: ["linux", "docker", "kubernetes", "git"]
-relatedTools: ["kubernetes", "mlflow", "docker"]
+  - human evaluation
+relatedTerms:
+  - "linux"
+  - "docker"
+  - "kubernetes"
+  - "git"
+relatedTools:
+  - "kubernetes"
+  - "mlflow"
+  - "docker"
 ---
 
 ## 为什么你要学它

@@ -4,22 +4,34 @@ category: embedded
 difficulty: intermediate
 duration: 3-4周
 summary: 理解Linux驱动开发的核心原理。掌握字符设备驱动、设备树、中断处理等关键技能。
-takeaways: "- 理解Linux内核模块开发
+takeaways:
+  - 理解Linux内核模块开发
   - 掌握字符设备驱动编写
   - 理解设备树的使用方法
-  - 掌握中断和DMA处理"
-relatedIntel: "- 052-embedded-c
+  - 掌握中断和DMA处理
+relatedIntel:
+  - 052-embedded-c
   - 053-embedded-rtos
-  - 054-elec-circuit"
-relatedNodes: ["embedded-driver", "electrical-safety"]
-tags: "- 嵌入式驱动
+  - 054-elec-circuit
+relatedNodes:
+  - "embedded-driver"
+  - "electrical-safety"
+tags:
+  - 嵌入式驱动
   - Linux驱动
   - 字符设备
   - 设备树
   - 中断处理
-  - 内核模块"
-relatedTerms: ["data-structure", "rtos", "algorithm", "complexity"]
-relatedTools: ["huggingface-transformers", "ultralytics-yolo", "pytorch"]
+  - 内核模块
+relatedTerms:
+  - "data-structure"
+  - "rtos"
+  - "algorithm"
+  - "complexity"
+relatedTools:
+  - "huggingface-transformers"
+  - "ultralytics-yolo"
+  - "pytorch"
 ---
 
 ## 为什么你要学它

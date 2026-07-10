@@ -4,7 +4,8 @@ category: devops
 difficulty: beginner
 duration: 30分钟
 summary: 涵盖 4 个常见踩坑：Git 合并冲突处理不当导致代码丢失、误提交大文件/敏感信息到 Git 历史、分支命名混乱导致协作困难、rebase 后强制推送导致同事代码丢失，每个均附快速修复与排查步骤。
-takeaways: "- 掌握「Git 版本控制踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施"
+takeaways:
+  - 掌握「Git 版本控制踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施
 relatedIntel:
   - 008-git
 tags:

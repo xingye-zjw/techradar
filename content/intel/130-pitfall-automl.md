@@ -4,7 +4,8 @@ category: machine-learning
 difficulty: intermediate
 duration: 30分钟
 summary: 涵盖 4 个常见踩坑：贝叶斯优化搜索空间过大导致效率低下、NAS搜索到的架构无法部署、过拟合验证集导致泛化能力差、AutoML完全替代人工调参导致可控性差，每个均附快速修复与排查步骤。
-takeaways: "- 掌握「AutoML 踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施"
+takeaways:
+  - 掌握「AutoML 踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施
 relatedIntel:
   - 123-automl
 tags:

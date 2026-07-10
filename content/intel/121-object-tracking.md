@@ -4,16 +4,19 @@ category: computer-vision
 difficulty: intermediate
 duration: 2-3周
 summary: 计算机视觉核心任务之一，在视频中持续定位并跟踪一个或多个目标。是自动驾驶、视频监控、人机交互等应用的关键技术。
-takeaways: "- 理解单目标跟踪(SOT)与多目标跟踪(MOT)的本质区别和典型应用场景
+takeaways:
+  - 理解单目标跟踪(SOT)与多目标跟踪(MOT)的本质区别和典型应用场景
   - 掌握相关滤波方法(MOSSE/KCF)的核心原理及其速度优势来源
   - 深入理解孪生网络系列(SiamFC/SiamRPN/SiamMask)的跟踪范式
   - 了解Transformer在目标跟踪中的应用(TransT/MixFormer)及优势
   - 掌握多目标跟踪核心算法(SORT/DeepSORT/ByteTrack)的数据关联逻辑
-  - 能用SiamMask和ByteTrack跑通完整的跟踪demo"
-relatedIntel: "- 002-yolo
+  - 能用SiamMask和ByteTrack跑通完整的跟踪demo
+relatedIntel:
+  - 002-yolo
   - 004-resnet
-  - 006-cnn-basics"
-tags: "- object tracking
+  - 006-cnn-basics
+tags:
+  - object tracking
   - 目标跟踪
   - sot
   - mot
@@ -25,10 +28,19 @@ tags: "- object tracking
   - deepsort
   - bytetrack
   - kcf
-  - mosse"
-relatedTerms: ["yolo", "resnet", "transformer", "cnn"]
-relatedTools: ["numpy", "ultralytics-yolo", "matplotlib"]
-relatedNodes: ["cv-segmentation", "cv-detection"]
+  - mosse
+relatedTerms:
+  - "yolo"
+  - "resnet"
+  - "transformer"
+  - "cnn"
+relatedTools:
+  - "numpy"
+  - "ultralytics-yolo"
+  - "matplotlib"
+relatedNodes:
+  - "cv-segmentation"
+  - "cv-detection"
 ---
 
 ## 为什么你要学它

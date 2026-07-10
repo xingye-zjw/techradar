@@ -4,24 +4,36 @@ category: embedded
 difficulty: intermediate
 duration: 1-2周
 summary: 电力系统是现代文明的血管。理解它才能搞懂电网调度、新能源并网、电力电子变换器的底层逻辑。
-takeaways: "- 搞懂为什么交流电网（AC）能统治全球，理解三相电的优势来源
+takeaways:
+  - 搞懂为什么交流电网（AC）能统治全球，理解三相电的优势来源
   - 能用等效电路分析变压器，理解阻抗匹配和电压等级选取的工程逻辑
   - 掌握输电线路的 π 型等效模型，能做简单的潮流计算和损耗分析
-  - 理解短路故障分析的原理，知道为什么保护继电器能精准切除故障"
-relatedIntel: "- 052-embedded-c
+  - 理解短路故障分析的原理，知道为什么保护继电器能精准切除故障
+relatedIntel:
+  - 052-embedded-c
   - 053-embedded-rtos
-  - 054-elec-circuit"
-relatedNodes: ["electrical-power", "electrical-safety"]
-tags: "- power-system
+  - 054-elec-circuit
+relatedNodes:
+  - "electrical-power"
+  - "electrical-safety"
+tags:
+  - power-system
   - ac-dc
   - three-phase
   - transformer
   - power-grid
   - transmission-line
   - load-flow
-  - fault-analysis"
-relatedTerms: ["data-structure", "rtos", "algorithm", "complexity"]
-relatedTools: ["huggingface-transformers", "ultralytics-yolo", "pytorch"]
+  - fault-analysis
+relatedTerms:
+  - "data-structure"
+  - "rtos"
+  - "algorithm"
+  - "complexity"
+relatedTools:
+  - "huggingface-transformers"
+  - "ultralytics-yolo"
+  - "pytorch"
 ---
 
 ## 为什么你要学它

@@ -4,8 +4,10 @@ category: data-processing
 difficulty: intermediate
 duration: 30分钟
 summary: 聚焦单点问题：数据标注质量差导致模型无法收敛或效果虚高，涵盖 inter-annotator agreement、混淆矩阵分析、active learning、类别不均衡检查等排查与修复方案。
-takeaways: "- 快速识别「数据标注质量差导致模型无法收敛」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑"
-relatedIntel: "- 040-data-annotation - 094-pitfall-data-engineering"
+takeaways:
+  - 快速识别「数据标注质量差导致模型无法收敛」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑
+relatedIntel:
+  - 040-data-annotation - 094-pitfall-data-engineering
 tags:
   - 数据
   - 处理

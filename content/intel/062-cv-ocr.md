@@ -4,15 +4,22 @@ category: computer-vision
 difficulty: intermediate
 duration: 1-2周
 summary: OCR 让计算机能\"读懂\"图像中的文字，是文档数字化、车牌识别、身份证识别的核心技术。
-takeaways: "- 理解文本检测 + 文本识别两阶段 pipeline，能说清楚每阶段的输入输出
+takeaways:
+  - 理解文本检测 + 文本识别两阶段 pipeline，能说清楚每阶段的输入输出
   - 搞懂 CRNN + CTC 的原理，为什么适合变长序列识别
   - 能用 EasyOCR 或 PaddleOCR 在真实图片上跑出一个完整 OCR pipeline
-  - 明白 Transformer OCR（如 TR、PARSeq）的核心改进点"
-relatedTerms: ["cnn", "yolo", "ocr", "resnet"]
-relatedIntel: "- 002-yolo
+  - 明白 Transformer OCR（如 TR、PARSeq）的核心改进点
+relatedTerms:
+  - "cnn"
+  - "yolo"
+  - "ocr"
+  - "resnet"
+relatedIntel:
+  - 002-yolo
   - 004-resnet
-  - 006-cnn-basics"
-tags: "- ocr
+  - 006-cnn-basics
+tags:
+  - ocr
   - text-recognition
   - text-detection
   - crnn
@@ -24,9 +31,14 @@ tags: "- ocr
   - ctpn
   - dbnet
   - rosetta
-  - tr大眼睛"
-relatedTools: ["ultralytics-yolo", "numpy", "matplotlib"]
-relatedNodes: ["cv-detection", "cv-segmentation"]
+  - tr大眼睛
+relatedTools:
+  - "ultralytics-yolo"
+  - "numpy"
+  - "matplotlib"
+relatedNodes:
+  - "cv-detection"
+  - "cv-segmentation"
 ---
 
 ## 为什么你要学它

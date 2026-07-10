@@ -4,8 +4,10 @@ category: llm
 difficulty: intermediate
 duration: 30分钟
 summary: 聚焦单点问题：LLM Prompt 中转义字符错误导致 JSON 输出解析失败或截断，涵盖 json.dumps 转义、Function Calling JSON mode、max_tokens 限制、print(repr(prompt)) 检查等排查与修复方案。
-takeaways: "- 快速识别「大模型 Prompt 转义字符错误导致 JSON 输出截断」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑"
-relatedIntel: "- 020-prompt-engineering - 095-pitfall-llm-app"
+takeaways:
+  - 快速识别「大模型 Prompt 转义字符错误导致 JSON 输出截断」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑
+relatedIntel:
+  - 020-prompt-engineering - 095-pitfall-llm-app
 tags:
   - 大模型
   - LLM

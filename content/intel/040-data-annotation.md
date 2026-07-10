@@ -4,21 +4,33 @@ category: data-processing
 difficulty: intermediate
 duration: 1周
 summary: 标注数据是 AI 项目的最大成本——主动学习让模型告诉你「哪些数据最值得标注」
-takeaways: "- 理解数据标注的质量控制方法（一致性检查 / 黄金标准）
+takeaways:
+  - 理解数据标注的质量控制方法（一致性检查 / 黄金标准）
   - 能用 Label Studio 搭建标注平台
   - 理解主动学习的核心思想：不确定性采样
-  - 能设计一个标注-训练-主动学习的闭环 Pipeline"
-relatedTools: ["label-studio", "pandas", "numpy"]
-relatedIntel: "- 010-numpy-pandas
+  - 能设计一个标注-训练-主动学习的闭环 Pipeline
+relatedTools:
+  - "label-studio"
+  - "pandas"
+  - "numpy"
+relatedIntel:
+  - 010-numpy-pandas
   - 013-huggingface-datasets
-  - 023-data-pipeline-etl"
-tags: "- data annotation
+  - 023-data-pipeline-etl
+tags:
+  - data annotation
   - active learning
   - label studio
   - annotation quality
-  - inter-annotator agreement"
-relatedTerms: ["matrix", "entropy", "tensor", "transformer"]
-relatedNodes: ["nlp-rnn", "math-linear-algebra"]
+  - inter-annotator agreement
+relatedTerms:
+  - "matrix"
+  - "entropy"
+  - "tensor"
+  - "transformer"
+relatedNodes:
+  - "nlp-rnn"
+  - "math-linear-algebra"
 ---
 
 ## 为什么你要学它

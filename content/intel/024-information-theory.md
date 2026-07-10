@@ -4,22 +4,34 @@ category: math
 difficulty: intermediate
 duration: 1周
 summary: 熵告诉我们「知道结果前还有多少不确定性」，交叉熵是损失函数的数学根源，KL 散度是模型逼近真相的代价
-takeaways: "- 能用公式计算离散分布的熵，理解熵的单位（bit vs nat）
+takeaways:
+  - 能用公式计算离散分布的熵，理解熵的单位（bit vs nat）
   - 能从 KL 散度推导 Binary Cross-Entropy loss
   - 理解 MLE 和 MAP 的数学框架，以及它们与正则化的联系
-  - 能用 AIC/BIC 做模型选择，理解奥卡姆剃刀的信息论解释"
-relatedIntel: "- 025-convex-optimization
+  - 能用 AIC/BIC 做模型选择，理解奥卡姆剃刀的信息论解释
+relatedIntel:
+  - 025-convex-optimization
   - 072-math-linear-algebra
-  - 073-math-probability"
-relatedNodes: ["math-information-theory", "math-linear-algebra"]
-tags: "- entropy
+  - 073-math-probability
+relatedNodes:
+  - "math-information-theory"
+  - "math-linear-algebra"
+tags:
+  - entropy
   - cross-entropy
   - kl-divergence
   - mutual information
   - mle
-  - map"
-relatedTerms: ["tensor", "matrix", "entropy", "convex-optimization"]
-relatedTools: ["pandas", "numpy", "jupyter"]
+  - map
+relatedTerms:
+  - "tensor"
+  - "matrix"
+  - "entropy"
+  - "convex-optimization"
+relatedTools:
+  - "pandas"
+  - "numpy"
+  - "jupyter"
 ---
 
 ## 为什么你要学它

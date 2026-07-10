@@ -4,22 +4,34 @@ category: cs
 difficulty: beginner
 duration: 2-3周
 summary: 理解网络通信的底层原理，掌握TCP/IP协议栈、HTTP协议、DNS解析、网络安全等核心知识，为分布式系统和网络编程打下基础
-takeaways: "- 理解OSI七层模型和TCP/IP四层模型
+takeaways:
+  - 理解OSI七层模型和TCP/IP四层模型
   - 掌握TCP三次握手四次挥手
   - 理解HTTP/HTTPS协议工作原理
-  - 能进行网络问题排查和性能优化"
-relatedIntel: "- 050-cs-algo
+  - 能进行网络问题排查和性能优化
+relatedIntel:
+  - 050-cs-algo
   - 051-cs-os
-  - 076-cs-database"
-relatedNodes: ["cs-network", "math-linear-algebra"]
-tags: "- computer-network
+  - 076-cs-database
+relatedNodes:
+  - "cs-network"
+  - "math-linear-algebra"
+tags:
+  - computer-network
   - tcp-ip
   - http
   - dns
   - network-security
-  - osi-model"
-relatedTerms: ["data-structure", "algorithm", "transformer", "complexity"]
-relatedTools: ["huggingface-transformers", "ultralytics-yolo", "pytorch"]
+  - osi-model
+relatedTerms:
+  - "data-structure"
+  - "algorithm"
+  - "transformer"
+  - "complexity"
+relatedTools:
+  - "huggingface-transformers"
+  - "ultralytics-yolo"
+  - "pytorch"
 ---
 
 ## 为什么你要学它

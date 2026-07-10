@@ -4,26 +4,34 @@ category: llm
 difficulty: advanced
 duration: 3-4周
 summary: 用人类偏好数据把\"只会预测下一个 token\"的模型拉回正轨，让它输出有用、无害、符合指令的答案
-takeaways: "- 理解 RLHF 的三段流水线：SFT → 奖励模型 → PPO 对齐
+takeaways:
+  - 理解 RLHF 的三段流水线：SFT → 奖励模型 → PPO 对齐
   - 能解释 PPO 中 KL 惩罚项存在的意义，以及 reward hacking 的风险
   - 知道 DPO 为什么比 PPO 更简单，以及两者在数学上的等价关系
-  - 能用 TRL / Axolotl 等库跑通一次最小化的对齐实验"
-relatedTerms: ["rlhf", "rag", "lora", "transformer"]
-relatedIntel: "- 003-lora-qlora
+  - 能用 TRL / Axolotl 等库跑通一次最小化的对齐实验
+relatedTerms:
+  - "rlhf"
+  - "rag"
+  - "lora"
+  - "transformer"
+relatedIntel:
+  - 003-lora-qlora
   - 005-rag
-  - 020-prompt-engineering"
-relatedNodes: [
-    "llm-inference",
-    "- llm-finetune
-    - llm-inference",
-  ]
-tags: "- rlhf
+  - 020-prompt-engineering
+relatedNodes:
+  - llm-inference
+  - llm-finetune
+tags:
+  - rlhf
   - reward model
   - ppo
   - dpo
   - alignment
-  - sft"
-relatedTools: ["huggingface-transformers", "langchain", "pytorch"]
+  - sft
+relatedTools:
+  - "huggingface-transformers"
+  - "langchain"
+  - "pytorch"
 ---
 
 ## 为什么你要学它

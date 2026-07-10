@@ -4,8 +4,10 @@ category: embedded
 difficulty: intermediate
 duration: 30分钟
 summary: 涵盖 4 个常见踩坑：C语言指针越界访问导致段错误、RTOS任务栈溢出、GPIO配置错误导致外设不工作、串口通信乱码或数据丢失，每个均附快速修复与排查步骤。
-takeaways: "- 掌握「嵌入式开发踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施"
-relatedIntel: "- 052-embedded-c - 053-embedded-rtos"
+takeaways:
+  - 掌握「嵌入式开发踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施
+relatedIntel:
+  - 052-embedded-c - 053-embedded-rtos
 tags:
   - 嵌入式
   - MCU

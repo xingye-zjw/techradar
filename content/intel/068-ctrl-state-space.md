@@ -4,24 +4,36 @@ category: embedded
 difficulty: advanced
 duration: 2-3周
 summary: 现代控制理论的核心数学框架。比 PID 更强大——不仅能处理单输入单输出，还能用状态反馈、极点配置、LQR 最优控制和卡尔曼滤波，对多输入多输出系统进行精确分析和设计。
-takeaways: "- 理解状态空间模型如何用一组一阶微分方程描述任意阶控制系统
+takeaways:
+  - 理解状态空间模型如何用一组一阶微分方程描述任意阶控制系统
   - 掌握能控性/能观性判据，知道什么情况下状态反馈和观测器设计是可行的
   - 能用极点配置或 LQR 设计状态反馈控制器
-  - 理解卡尔曼滤波如何在噪声环境下最优估计不可直接测量的状态"
-relatedIntel: "- 052-embedded-c
+  - 理解卡尔曼滤波如何在噪声环境下最优估计不可直接测量的状态
+relatedIntel:
+  - 052-embedded-c
   - 053-embedded-rtos
-  - 054-elec-circuit"
-tags: "- state-space
+  - 054-elec-circuit
+tags:
+  - state-space
   - controllability
   - observability
   - pole-placement
   - lqr
   - kalman-filter
   - state-feedback
-  - observer-design"
-relatedTerms: ["data-structure", "rtos", "algorithm", "complexity"]
-relatedTools: ["huggingface-transformers", "ultralytics-yolo", "pytorch"]
-relatedNodes: ["roadmap-capstone", "electrical-safety"]
+  - observer-design
+relatedTerms:
+  - "data-structure"
+  - "rtos"
+  - "algorithm"
+  - "complexity"
+relatedTools:
+  - "huggingface-transformers"
+  - "ultralytics-yolo"
+  - "pytorch"
+relatedNodes:
+  - "roadmap-capstone"
+  - "electrical-safety"
 ---
 
 ## 为什么你要学它

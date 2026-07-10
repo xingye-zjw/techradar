@@ -4,22 +4,34 @@ category: math
 difficulty: beginner
 duration: 2-3周
 summary: 机器学习和深度学习的数学基础。理解矩阵运算、特征值分解、奇异值分解等核心概念。
-takeaways: "- 掌握矩阵运算的基本操作和几何意义
+takeaways:
+  - 掌握矩阵运算的基本操作和几何意义
   - 理解特征值和特征向量的物理含义
   - 学会奇异值分解(SVD)及其应用
-  - 能用NumPy实现矩阵运算"
-relatedIntel: "- 024-information-theory
+  - 能用NumPy实现矩阵运算
+relatedIntel:
+  - 024-information-theory
   - 025-convex-optimization
-  - 073-math-probability"
-relatedNodes: ["cv-detection", "math-linear-algebra"]
-tags: "- 线性代数
+  - 073-math-probability
+relatedNodes:
+  - "cv-detection"
+  - "math-linear-algebra"
+tags:
+  - 线性代数
   - 矩阵
   - 向量
   - 特征值
   - 特征向量
-  - 矩阵分解"
-relatedTerms: ["tensor", "matrix", "entropy", "convex-optimization"]
-relatedTools: ["pandas", "numpy", "jupyter"]
+  - 矩阵分解
+relatedTerms:
+  - "tensor"
+  - "matrix"
+  - "entropy"
+  - "convex-optimization"
+relatedTools:
+  - "pandas"
+  - "numpy"
+  - "jupyter"
 ---
 
 ## 为什么你要学它

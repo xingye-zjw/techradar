@@ -4,17 +4,49 @@ category: embedded
 difficulty: advanced
 duration: 2周
 summary: 把机器学习模型从云端搬到资源极度受限的 8/32 位 MCU，实现电池供电、毫秒级响应的边缘智能。覆盖 PyTorch 训练 → INT8 量化 → ONNX 导出 → CMSIS-NN / ONNX Micro 推理 → STM32 裸机部署全流程，解决 RAM/Flash 双瓶颈。
-keywords: [TinyML, MCU, CMSIS-NN, ONNX Micro, INT8量化, STM32, 边缘部署]
+keywords:
+  - TinyML
+  - MCU
+  - CMSIS-NN
+  - ONNX Micro
+  - INT8量化
+  - STM32
+  - 边缘部署
 takeaways:
   - 搞懂 MCU 上 TinyML 的资源天花板：Flash < 1MB、RAM < 512KB、算力 < 100M MAC/s
   - 理解训练后量化（PTQ）与量化感知训练（QAT）的精度-部署难度权衡
   - 能画出 PyTorch → ONNX → CMSIS-NN C 代码 → Keil/IAR 编译 → STM32 烧录的链路图
   - 能跑通关键词唤醒 KWS 模型的 INT8 量化 + CMSIS-NN 推理完整流程
   - 实现基于 ONNX Micro 的手势识别模型部署，并测量 RAM/Flash/推理时延
-tags: [embedded, TinyML, MCU, CMSIS-NN, ONNX Micro, INT8量化, STM32]
-relatedTerms: [onnx, rtos, operating-system, matrix, circuit, cnn, pointer, algorithm]
-relatedTools: [onnx-runtime, stm32cubemx, gcc, esp-idf, freertos, onnxruntime-genai]
-relatedNodes: [embedded-rtos, embedded-hal, embedded-rtos, embedded-hal]
+tags:
+  - embedded
+  - TinyML
+  - MCU
+  - CMSIS-NN
+  - ONNX Micro
+  - INT8量化
+  - STM32
+relatedTerms:
+  - onnx
+  - rtos
+  - operating-system
+  - matrix
+  - circuit
+  - cnn
+  - pointer
+  - algorithm
+relatedTools:
+  - onnx-runtime
+  - stm32cubemx
+  - gcc
+  - esp-idf
+  - freertos
+  - onnxruntime-genai
+relatedNodes:
+  - embedded-rtos
+  - embedded-hal
+  - embedded-rtos
+  - embedded-hal
 ---
 
 ## 为什么你要学它

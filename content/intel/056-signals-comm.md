@@ -4,23 +4,35 @@ category: embedded
 difficulty: intermediate
 duration: 3周
 summary: 理解通信系统的基本组成和调制解调原理，掌握数字通信中的编解码技术
-takeaways: "- 理解通信系统基本模型
+takeaways:
+  - 理解通信系统基本模型
   - 掌握调制解调原理
   - 理解信道编码技术
-  - 理解OFDM和多址接入技术"
-relatedIntel: "- 052-embedded-c
+  - 理解OFDM和多址接入技术
+relatedIntel:
+  - 052-embedded-c
   - 053-embedded-rtos
-  - 054-elec-circuit"
-relatedNodes: ["signals-comm", "electrical-safety"]
-tags: "- modulation
+  - 054-elec-circuit
+relatedNodes:
+  - "signals-comm"
+  - "electrical-safety"
+tags:
+  - modulation
   - demodulation
   - ofdm
   - channel-coding
   - 5g
   - wireless
-  - communication"
-relatedTerms: ["data-structure", "rtos", "algorithm", "complexity"]
-relatedTools: ["huggingface-transformers", "ultralytics-yolo", "pytorch"]
+  - communication
+relatedTerms:
+  - "data-structure"
+  - "rtos"
+  - "algorithm"
+  - "complexity"
+relatedTools:
+  - "huggingface-transformers"
+  - "ultralytics-yolo"
+  - "pytorch"
 ---
 
 ## 为什么你要学它

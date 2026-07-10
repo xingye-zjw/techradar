@@ -4,23 +4,35 @@ category: embedded
 difficulty: intermediate
 duration: 3周
 summary: 掌握自动控制的核心概念，理解反馈控制原理和控制器设计方法
-takeaways: "- 理解控制系统基本组成
+takeaways:
+  - 理解控制系统基本组成
   - 掌握PID控制器原理
   - 能分析系统稳定性
-  - 能设计简单的控制器"
-relatedIntel: "- 052-embedded-c
+  - 能设计简单的控制器
+relatedIntel:
+  - 052-embedded-c
   - 053-embedded-rtos
-  - 054-elec-circuit"
-relatedNodes: ["ctrl-pid", "electrical-safety"]
-tags: "- control
+  - 054-elec-circuit
+relatedNodes:
+  - "ctrl-pid"
+  - "electrical-safety"
+tags:
+  - control
   - pid
   - feedback
   - stability
   - system-response
   - root-locus
-  - bode-plot"
-relatedTerms: ["data-structure", "rtos", "algorithm", "complexity"]
-relatedTools: ["huggingface-transformers", "ultralytics-yolo", "pytorch"]
+  - bode-plot
+relatedTerms:
+  - "data-structure"
+  - "rtos"
+  - "algorithm"
+  - "complexity"
+relatedTools:
+  - "huggingface-transformers"
+  - "ultralytics-yolo"
+  - "pytorch"
 ---
 
 ## 为什么你要学它

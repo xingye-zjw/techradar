@@ -4,8 +4,10 @@ category: best-practices
 difficulty: intermediate
 duration: 30分钟
 summary: 聚焦单点问题：Git 合并冲突处理不当导致代码丢失，涵盖 git stash 保护本地修改、git reflog 找回误操作、pull --rebase、冲突标记解析等排查与修复方案。
-takeaways: "- 快速识别「Git 合并冲突处理不当导致代码丢失」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑"
-relatedIntel: "- 008-git - 105-pitfall-git"
+takeaways:
+  - 快速识别「Git 合并冲突处理不当导致代码丢失」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑
+relatedIntel:
+  - 008-git - 105-pitfall-git
 tags:
   - 最佳实践
   - 规范

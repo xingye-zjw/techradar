@@ -4,24 +4,36 @@ category: speech
 difficulty: intermediate
 duration: 2-3周
 summary: 让计算机听懂人类说话的技术，从传统 HMM-GMM 到端到端深度学习，再到 OpenAI Whisper 一统江湖。
-takeaways: "- 搞懂语音信号怎么变成特征（MFCC、Mel谱图），这是所有语音技术的基础
+takeaways:
+  - 搞懂语音信号怎么变成特征（MFCC、Mel谱图），这是所有语音技术的基础
   - 能说出三种端到端ASR范式（CTC、Attention Seq2Seq、Transducer）的区别和适用场景
   - 理解 Whisper 为什么能成为工业界标配，以及它的架构设计
   - 用 Whisper 跑通一个完整的语音识别 demo，计算 WER 评估效果
-  - 知道中文语音识别的特殊挑战（声调、方言、同音字）"
-relatedTools: ["pytorch", "whisper", "numpy"]
-relatedIntel: "- 115-tts-speech-synthesis
-  - 001-transformer"
-tags: "- asr
+  - 知道中文语音识别的特殊挑战（声调、方言、同音字）
+relatedTools:
+  - "pytorch"
+  - "whisper"
+  - "numpy"
+relatedIntel:
+  - 115-tts-speech-synthesis
+  - 001-transformer
+tags:
+  - asr
   - speech recognition
   - whisper
   - mfcc
   - ctc
   - attention
   - transducer
-  - hmm-gmm"
-relatedTerms: ["speech-asr", "transformer", "speech-tts", "self-attention"]
-relatedNodes: ["nlp-rnn", "llm-inference"]
+  - hmm-gmm
+relatedTerms:
+  - "speech-asr"
+  - "transformer"
+  - "speech-tts"
+  - "self-attention"
+relatedNodes:
+  - "nlp-rnn"
+  - "llm-inference"
 ---
 
 ## 为什么你要学它

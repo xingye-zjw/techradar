@@ -4,23 +4,35 @@ category: embedded
 difficulty: advanced
 duration: 3周
 summary: 学习机器人操作系统ROS2的核心概念，掌握导航、定位和控制的实践技能
-takeaways: "- 掌握ROS2核心概念和通信机制
+takeaways:
+  - 掌握ROS2核心概念和通信机制
   - 理解机器人导航原理
   - 能实现基本的机器人控制
-  - 理解多机器人协调"
-relatedTools: ["ros2", "ultralytics-yolo", "huggingface-transformers"]
-relatedIntel: "- 052-embedded-c
+  - 理解多机器人协调
+relatedTools:
+  - "ros2"
+  - "ultralytics-yolo"
+  - "huggingface-transformers"
+relatedIntel:
+  - 052-embedded-c
   - 053-embedded-rtos
-  - 054-elec-circuit"
-relatedNodes: ["electrical-safety", "ctrl-ros"]
-tags: "- ros
+  - 054-elec-circuit
+relatedNodes:
+  - "electrical-safety"
+  - "ctrl-ros"
+tags:
+  - ros
   - robot
   - navigation
   - slam
   - moveit
   - gazebo
-  - sensor"
-relatedTerms: ["data-structure", "rtos", "algorithm", "complexity"]
+  - sensor
+relatedTerms:
+  - "data-structure"
+  - "rtos"
+  - "algorithm"
+  - "complexity"
 ---
 
 ## 为什么你要学它

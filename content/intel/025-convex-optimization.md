@@ -4,23 +4,35 @@ category: math
 difficulty: advanced
 duration: 1周
 summary: 梯度下降不是玄学——理解它的收敛性证明，才能真正用好学习率调度和优化器选择
-takeaways: "- 理解凸集、凸函数的定义，以及凸优化问题「局部最优=全局最优」的重要性
+takeaways:
+  - 理解凸集、凸函数的定义，以及凸优化问题「局部最优=全局最优」的重要性
   - 能用 CVXPY 求解约束优化问题并验证 KKT 条件
   - 能从原理理解 Adam 的一阶/二阶矩估计和偏差校正
-  - 能区分 L1/L2 正则化并用几何直觉解释稀疏性"
-relatedTerms: ["matrix", "entropy", "convex-optimization", "transformer"]
-relatedIntel: "- 024-information-theory
+  - 能区分 L1/L2 正则化并用几何直觉解释稀疏性
+relatedTerms:
+  - "matrix"
+  - "entropy"
+  - "convex-optimization"
+  - "transformer"
+relatedIntel:
+  - 024-information-theory
   - 072-math-linear-algebra
-  - 073-math-probability"
-relatedNodes: ["math-linear-algebra", "math-optimization"]
-tags: "- convex optimization
+  - 073-math-probability
+relatedNodes:
+  - "math-linear-algebra"
+  - "math-optimization"
+tags:
+  - convex optimization
   - gradient descent
   - adam
   - sgd
   - lagrangian
   - kkt
-  - regularization"
-relatedTools: ["pandas", "numpy", "jupyter"]
+  - regularization
+relatedTools:
+  - "pandas"
+  - "numpy"
+  - "jupyter"
 ---
 
 ## 为什么你要学它

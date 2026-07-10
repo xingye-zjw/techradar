@@ -4,8 +4,10 @@ category: deep-learning
 difficulty: intermediate
 duration: 30分钟
 summary: 聚焦单点问题：模型训练收敛慢或几乎不收敛，涵盖数据标注检查、学习率网格搜索、loss 函数匹配、归一化验证、预训练权重加载等排查与修复方案。
-takeaways: "- 快速识别「模型训练收敛慢 / 几乎不收敛」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑"
-relatedIntel: "- 090-pitfall-dl-training - 025-convex-optimization"
+takeaways:
+  - 快速识别「模型训练收敛慢 / 几乎不收敛」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑
+relatedIntel:
+  - 090-pitfall-dl-training - 025-convex-optimization
 tags:
   - 深度学习
   - DL

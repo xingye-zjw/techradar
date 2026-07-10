@@ -4,7 +4,8 @@ category: embedded
 difficulty: advanced
 duration: 30分钟
 summary: 涵盖 4 个常见踩坑：FreeRTOS 任务优先级配置不当导致系统响应差、中断与任务通信不同步导致数据错乱、临界区内调用阻塞 API 导致死锁、内存分配失败导致系统崩溃，每个均附快速修复与排查步骤。
-takeaways: "- 掌握「RTOS 实时操作系统踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施"
+takeaways:
+  - 掌握「RTOS 实时操作系统踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施
 relatedIntel:
   - 053-embedded-rtos
 tags:

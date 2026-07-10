@@ -14,7 +14,7 @@ relatedTerms: vllm
 relatedIntel:
   - 003-lora-qlora
   - 005-rag
-  - 015-rlhf
+  - 044-rlhf
 relatedNodes:
   - llm-finetune
   - llm-inference

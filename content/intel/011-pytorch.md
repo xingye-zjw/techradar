@@ -4,22 +4,34 @@ category: deep-learning
 difficulty: intermediate
 duration: 2-3周
 summary: 学术界最主流的动态图框架，以清晰直观的方式定义模型，Debug 友好，是深度学习入门与论文复现的首选
-takeaways: "- 掌握 Tensor 的创建、形状变换、数学运算、GPU 迁移与 NumPy 互转
+takeaways:
+  - 掌握 Tensor 的创建、形状变换、数学运算、GPU 迁移与 NumPy 互转
   - 理解 autograd 自动微分机制，会用 backward() 并在不需要梯度时用 torch.no_grad() / detach()
   - 能独立用 nn.Module 定义网络、组合子模块，写完整训练循环（train/eval/保存/恢复 checkpoint）
-  - 会选择优化器、配置学习率调度与梯度裁剪，能排查 NaN loss、梯度消失/爆炸等常见问题"
-relatedTools: ["pytorch", "ultralytics-yolo", "huggingface-transformers"]
-relatedIntel: "- 001-transformer
-  - 113-gnn-basics"
-tags: "- pytorch
+  - 会选择优化器、配置学习率调度与梯度裁剪，能排查 NaN loss、梯度消失/爆炸等常见问题
+relatedTools:
+  - "pytorch"
+  - "ultralytics-yolo"
+  - "huggingface-transformers"
+relatedIntel:
+  - 001-transformer
+  - 113-gnn-basics
+tags:
+  - pytorch
   - tensor
   - autograd
   - nn.module
   - dataloader
   - optimizer
-  - gpu"
-relatedTerms: ["cnn", "gradient-descent", "tensor", "transformer"]
-relatedNodes: ["llm-inference", "cv-segmentation"]
+  - gpu
+relatedTerms:
+  - "cnn"
+  - "gradient-descent"
+  - "tensor"
+  - "transformer"
+relatedNodes:
+  - "llm-inference"
+  - "cv-segmentation"
 ---
 
 ## 为什么你要学它

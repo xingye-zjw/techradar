@@ -4,8 +4,10 @@ category: devops
 difficulty: advanced
 duration: 30分钟
 summary: 涵盖 4 个常见踩坑：Kubernetes Pod 无法调度/Pending 状态、Kubernetes Service 无法访问、Deployment 滚动更新时服务中断、PVC 挂载失败导致 Pod 无法启动，每个均附快速修复与排查步骤。
-takeaways: "- 掌握「Kubernetes 踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施"
-relatedIntel: "- 021-kubernetes - 022-prometheus-grafana"
+takeaways:
+  - 掌握「Kubernetes 踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施
+relatedIntel:
+  - 021-kubernetes - 022-prometheus-grafana
 tags:
   - DevOps
   - 部署

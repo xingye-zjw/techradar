@@ -4,17 +4,50 @@ category: llm
 difficulty: advanced
 duration: 2周
 summary: 打通从视频抽帧、ASR 字幕提取、CLIP 跨模态向量建模到多模态查询联合检索的完整链路。让大模型能直接回答"某个视频第 3 分钟那段画面说了什么 + 画面里有什么物体"这类需要图文联动的问题。
-keywords: [多模态RAG, 视频检索, CLIP, 跨模态, ASR, 向量检索, LanceDB]
+keywords:
+  - 多模态RAG
+  - 视频检索
+  - CLIP
+  - 跨模态
+  - ASR
+  - 向量检索
+  - LanceDB
 takeaways:
   - 搞懂视频多模态切分的三要素：关键帧采样、ASR 字幕时间轴、场景边界检测
   - 理解 CLIP 对比学习预训练的原理，为什么它能实现"以文搜图 / 以图搜文"
   - 能画出视频切片 → 帧向量 + 文本向量 → LanceDB 存储 → 联合检索排序的架构图
   - 能跑通 ffmpeg 抽帧 + Whisper ASR + CLIP 向量 + LanceDB 的完整端到端流水线
   - 实现基于时间轴融合的图文联合 rerank 算法，让检索结果同时对齐画面和语音
-tags: [llm, 多模态RAG, CLIP, 视频检索, 跨模态, 向量数据库, ASR]
-relatedTerms: [rag, transformer, cnn, resnet, onnx, matrix, ocr, self-attention]
-relatedTools: [ollama, lancedb, haystack, unstructured, langchain, onnx-runtime, vllm]
-relatedNodes: [llm-rag, llm-inference, llm-agent, llm-finetune]
+tags:
+  - llm
+  - 多模态RAG
+  - CLIP
+  - 视频检索
+  - 跨模态
+  - 向量数据库
+  - ASR
+relatedTerms:
+  - rag
+  - transformer
+  - cnn
+  - resnet
+  - onnx
+  - matrix
+  - ocr
+  - self-attention
+relatedTools:
+  - ollama
+  - lancedb
+  - haystack
+  - unstructured
+  - langchain
+  - onnx-runtime
+  - vllm
+relatedNodes:
+  - llm-rag
+  - llm-inference
+  - llm-agent
+  - llm-finetune
 ---
 
 ## 为什么你要学它

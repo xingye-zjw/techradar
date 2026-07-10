@@ -4,23 +4,35 @@ category: computer-vision
 difficulty: intermediate
 duration: 1-2周
 summary: Diffusion Model 通过逐步添加噪声再逐步去噪来生成图像，是 AIGC 时代图像生成的主流架构。
-takeaways: '- 搞懂 DDPM 的前向加噪过程和反向去噪过程，理解为什么"去噪"可以生成数据
+takeaways:
+  - '搞懂 DDPM 的前向加噪过程和反向去噪过程，理解为什么"去噪"可以生成数据'
   - 能画出 Stable Diffusion 的 Latent Diffusion 架构，说清 VAE、UNet、Text Encoder 各组件的作用
   - 理解 Classifier-Free Guidance 的原理——用条件概率的差值来引导生成方向
   - 理解 LoRA 如何适配 Stable Diffusion，实现轻量级微调
-  - 用 diffusers 库跑通文生图、图生图完整流程'
-relatedTerms: ["cnn", "yolo", "diffusion-model", "resnet"]
-relatedIntel: "- 002-yolo
+  - 用 diffusers 库跑通文生图、图生图完整流程
+relatedTerms:
+  - "cnn"
+  - "yolo"
+  - "diffusion-model"
+  - "resnet"
+relatedIntel:
+  - 002-yolo
   - 004-resnet
-  - 006-cnn-basics"
-tags: "- diffusion-model
+  - 006-cnn-basics
+tags:
+  - diffusion-model
   - ddpm
   - stable-diffusion
   - gan-comparison
   - image-generation
-  - score-based-model"
-relatedTools: ["ultralytics-yolo", "numpy", "matplotlib"]
-relatedNodes: ["cv-detection", "cv-segmentation"]
+  - score-based-model
+relatedTools:
+  - "ultralytics-yolo"
+  - "numpy"
+  - "matplotlib"
+relatedNodes:
+  - "cv-detection"
+  - "cv-segmentation"
 ---
 
 ## 为什么你要学它

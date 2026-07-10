@@ -4,28 +4,37 @@ category: devops
 difficulty: beginner
 duration: 1-2周
 summary: 把应用（含 Python 环境、CUDA、系统库）打包成可在任何 Linux/Windows/Mac 上运行的镜像，一次构建，到处运行
-takeaways: "- 理解镜像 vs 容器 vs Dockerfile 的关系
+takeaways:
+  - 理解镜像 vs 容器 vs Dockerfile 的关系
   - 能写一个 PyTorch 推理服务的 Dockerfile（含 .dockerignore、多阶段、非 root 用户）
   - 理解 nvidia-container-toolkit 是让容器看见 GPU 的关键组件
-  - 能用 Docker Compose 编排多容器服务（API + Redis），并持久化数据"
-relatedTools: ["ultralytics-yolo", "mlflow", "docker"]
-relatedIntel: "- 008-git
+  - 能用 Docker Compose 编排多容器服务（API + Redis），并持久化数据
+relatedTools:
+  - "ultralytics-yolo"
+  - "mlflow"
+  - "docker"
+relatedIntel:
+  - 008-git
   - 009-linux
-  - 012-streamlit"
-relatedNodes: [
-    "- electrical-safety
-    - docker-basic",
-    "devops-kubernetes",
-  ]
-tags: "- docker
+  - 012-streamlit
+relatedNodes:
+  - electrical-safety
+  - docker-basic
+  - devops-kubernetes
+tags:
+  - docker
   - container
   - dockerfile
   - image
   - volume
   - compose
   - gpu
-  - nvidia-docker"
-relatedTerms: ["linux", "docker", "kubernetes", "git"]
+  - nvidia-docker
+relatedTerms:
+  - "linux"
+  - "docker"
+  - "kubernetes"
+  - "git"
 ---
 
 ## 为什么你要学它

@@ -4,26 +4,34 @@ category: llm
 difficulty: advanced
 duration: 1-2周
 summary: ChatGPT 为什么「对齐」了？RLHF 是如何让模型学会遵循人类意图而不是简单预测下一个 token
-takeaways: "- 理解 RLHF 三阶段：SFT / Reward Model / RL Fine-tuning (PPO)
+takeaways:
+  - 理解 RLHF 三阶段：SFT / Reward Model / RL Fine-tuning (PPO)
   - 能解释 Reward Model 如何从人类偏好数据中学习
   - 能解释 PPO 算法在 RLHF 中的作用（避免大模型在 RL 阶段崩溃）
-  - 理解 RLHF 与 SFT 的本质区别：不是教模型「说什么」，而是教模型「怎么说才算好」"
-relatedTerms: ["rlhf", "rag", "lora", "transformer"]
-relatedIntel: "- 003-lora-qlora
+  - 理解 RLHF 与 SFT 的本质区别：不是教模型「说什么」，而是教模型「怎么说才算好」
+relatedTerms:
+  - "rlhf"
+  - "rag"
+  - "lora"
+  - "transformer"
+relatedIntel:
+  - 003-lora-qlora
   - 005-rag
-  - 015-rlhf"
-relatedNodes: [
-    "llm-inference",
-    "- llm-finetune
-    - llm-inference",
-  ]
-tags: "- rlhf
+  - 044-rlhf
+relatedNodes:
+  - llm-inference
+  - llm-finetune
+tags:
+  - rlhf
   - reinforcement learning
   - reward model
   - ppo
   - alignment
-  - instructgpt"
-relatedTools: ["huggingface-transformers", "langchain", "pytorch"]
+  - instructgpt
+relatedTools:
+  - "huggingface-transformers"
+  - "langchain"
+  - "pytorch"
 ---
 
 ## 为什么你要学它

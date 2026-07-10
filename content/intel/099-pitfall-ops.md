@@ -4,8 +4,10 @@ category: devops
 difficulty: intermediate
 duration: 30分钟
 summary: 涵盖 5 个常见踩坑：SSH 连接远程服务器频繁掉线、SSH 端口被防火墙拦截 / 服务器无法访问、Git 合并冲突处理不当导致代码丢失、服务器磁盘空间不足导致服务崩溃、容器时间与宿主机不一致，每个均附快速修复与排查步骤。
-takeaways: "- 掌握「运维与服务器踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施"
-relatedIntel: "- 009-linux - 016-server-setup - 028-server-ops"
+takeaways:
+  - 掌握「运维与服务器踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施
+relatedIntel:
+  - 009-linux - 016-server-setup - 028-server-ops
 tags:
   - DevOps
   - 部署

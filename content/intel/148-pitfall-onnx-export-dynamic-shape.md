@@ -4,8 +4,10 @@ category: devops
 difficulty: intermediate
 duration: 30分钟
 summary: 聚焦单点问题：ONNX 导出后动态 shape 失效或算子不支持，涵盖 dynamic_axes 声明、opset 版本、model.eval() 推理模式、onnx-simplifier 等排查与修复方案。
-takeaways: "- 快速识别「ONNX 导出失败 / 动态 shape」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑"
-relatedIntel: "- 014-onnx - 026-onnx-deployment"
+takeaways:
+  - 快速识别「ONNX 导出失败 / 动态 shape」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑
+relatedIntel:
+  - 014-onnx - 026-onnx-deployment
 tags:
   - DevOps
   - 部署

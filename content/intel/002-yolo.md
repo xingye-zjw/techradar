@@ -4,24 +4,36 @@ category: computer-vision
 difficulty: intermediate
 duration: 2-3周
 summary: 单阶段端到端目标检测方案，看一张图一次前向传播就定位所有物体，是工业界实时检测的首选
-takeaways: "- 理解 Anchor-Free 机制和 PAN-FPN 的特征融合直觉
+takeaways:
+  - 理解 Anchor-Free 机制和 PAN-FPN 的特征融合直觉
   - 能在自己的图片上跑 Ultralytics YOLO 推理
   - 能组织 YOLO 格式数据集并训练自定义目标检测模型
-  - 能导出 ONNX 用于部署，读懂 mAP 和 NMS 等核心指标"
-relatedIntel: "- 004-resnet
+  - 能导出 ONNX 用于部署，读懂 mAP 和 NMS 等核心指标
+relatedIntel:
+  - 004-resnet
   - 006-cnn-basics
-  - 060-cv-instance-segmentation"
-relatedNodes: ["cv-detection", "cv-segmentation"]
-tags: "- yolo
+  - 060-cv-instance-segmentation
+relatedNodes:
+  - "cv-detection"
+  - "cv-segmentation"
+tags:
+  - yolo
   - object detection
   - cnn
   - ultralytics
   - bounding box
   - map
   - nms
-  - anchor-free"
-relatedTerms: ["cnn", "yolo", "transformer", "resnet"]
-relatedTools: ["ultralytics-yolo", "numpy", "matplotlib"]
+  - anchor-free
+relatedTerms:
+  - "cnn"
+  - "yolo"
+  - "transformer"
+  - "resnet"
+relatedTools:
+  - "ultralytics-yolo"
+  - "numpy"
+  - "matplotlib"
 ---
 
 ## 为什么你要学它

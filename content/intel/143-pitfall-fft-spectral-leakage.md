@@ -4,8 +4,10 @@ category: embedded
 difficulty: intermediate
 duration: 30分钟
 summary: 聚焦单点问题：FFT 频谱泄漏导致频率分析失真，涵盖加窗处理（Hanning/Hamming/Blackman）、观测时长与频率分辨率关系、整数周期采样等排查与修复方案。
-takeaways: "- 快速识别「傅里叶变换频谱泄漏」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑"
-relatedIntel: "- 081-signals-dsp - 055-elec-signals"
+takeaways:
+  - 快速识别「傅里叶变换频谱泄漏」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑
+relatedIntel:
+  - 081-signals-dsp - 055-elec-signals
 tags:
   - 嵌入式
   - MCU

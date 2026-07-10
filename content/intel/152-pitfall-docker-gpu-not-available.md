@@ -4,8 +4,10 @@ category: devops
 difficulty: intermediate
 duration: 30分钟
 summary: 聚焦单点问题：Docker 容器内无法使用 GPU，涵盖 NVIDIA Container Toolkit 安装、--gpus all 参数、nvidia/cuda 基础镜像、驱动版本兼容等排查与修复方案。
-takeaways: "- 快速识别「Docker 容器中无法使用 GPU (nvidia-smi 报错)」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑"
-relatedIntel: "- 007-docker - 034-cuda-programming"
+takeaways:
+  - 快速识别「Docker 容器中无法使用 GPU (nvidia-smi 报错)」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑
+relatedIntel:
+  - 007-docker - 034-cuda-programming
 tags:
   - DevOps
   - 部署

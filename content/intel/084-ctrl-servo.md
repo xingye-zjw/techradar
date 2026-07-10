@@ -4,21 +4,33 @@ category: embedded
 difficulty: intermediate
 duration: 2-3周
 summary: 理解伺服控制系统的原理与应用。掌握伺服电机控制、编码器反馈、运动规划等核心技能。
-takeaways: "- 理解伺服电机的工作原理
+takeaways:
+  - 理解伺服电机的工作原理
   - 掌握位置、速度、扭矩控制
   - 理解编码器反馈原理
-  - 掌握运动控制编程"
-relatedIntel: "- 052-embedded-c
+  - 掌握运动控制编程
+relatedIntel:
+  - 052-embedded-c
   - 053-embedded-rtos
-  - 054-elec-circuit"
-relatedNodes: ["electrical-safety", "ctrl-servo"]
-tags: "- 伺服电机
+  - 054-elec-circuit
+relatedNodes:
+  - "electrical-safety"
+  - "ctrl-servo"
+tags:
+  - 伺服电机
   - 伺服控制
   - 运动控制
   - 编码器
-  - PID控制"
-relatedTerms: ["data-structure", "rtos", "algorithm", "complexity"]
-relatedTools: ["pytorch", "ultralytics-yolo", "huggingface-transformers"]
+  - PID控制
+relatedTerms:
+  - "data-structure"
+  - "rtos"
+  - "algorithm"
+  - "complexity"
+relatedTools:
+  - "pytorch"
+  - "ultralytics-yolo"
+  - "huggingface-transformers"
 ---
 
 ## 为什么你要学它

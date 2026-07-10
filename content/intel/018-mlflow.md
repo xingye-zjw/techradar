@@ -4,27 +4,34 @@ category: devops
 difficulty: intermediate
 duration: 1周
 summary: 一次把参数、metrics、模型都录下来，以后回头看\"这次到底改了什么为什么这么好\"不再抓瞎
-takeaways: "- 能用 mlflow.start_run / log_param / log_metric / log_artifact 做基础追踪
+takeaways:
+  - 能用 mlflow.start_run / log_param / log_metric / log_artifact 做基础追踪
   - 会用 mlflow.pytorch.autolog 配合 PyTorch Lightning 一键记录
   - 会启动本地 Tracking Server 并用 Web UI 对比多组超参
-  - 理解 Model Registry 基本用法，能注册、生产化一个模型版本"
-relatedTools: [
-    "- pytorch
-    - mlflow",
-    "mlflow",
-    "docker",
-  ]
-relatedIntel: "- 007-docker
+  - 理解 Model Registry 基本用法，能注册、生产化一个模型版本
+relatedTools:
+  - pytorch
+  - mlflow
+  - docker
+relatedIntel:
+  - 007-docker
   - 008-git
-  - 009-linux"
-relatedNodes: ["devops-kubernetes", "electrical-safety"]
-tags: "- mlflow
+  - 009-linux
+relatedNodes:
+  - "devops-kubernetes"
+  - "electrical-safety"
+tags:
+  - mlflow
   - experiment tracking
   - pytorch
   - autolog
   - model registry
-  - hyperparameter"
-relatedTerms: ["linux", "docker", "kubernetes", "git"]
+  - hyperparameter
+relatedTerms:
+  - "linux"
+  - "docker"
+  - "kubernetes"
+  - "git"
 ---
 
 ## 为什么你要学它

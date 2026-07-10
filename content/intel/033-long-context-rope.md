@@ -4,26 +4,34 @@ category: llm
 difficulty: advanced
 duration: 1周
 summary: 32k → 128k → 1M token，长上下文不是「加内存」而是「改编码」——RoPE 的缩放与扩展技术
-takeaways: "- 理解 RoPE（旋转位置编码）的数学原理
+takeaways:
+  - 理解 RoPE（旋转位置编码）的数学原理
   - 理解为什么直接扩展 context window 会破坏位置编码
   - 能解释 YaRN / LongRoPE 等长上下文扩展方法
-  - 能用 FlashAttention-2 加速长上下文推理"
-relatedIntel: "- 003-lora-qlora
+  - 能用 FlashAttention-2 加速长上下文推理
+relatedIntel:
+  - 003-lora-qlora
   - 005-rag
-  - 015-rlhf"
-relatedNodes: [
-    "llm-inference",
-    "- llm-finetune
-    - llm-inference",
-  ]
-tags: "- long context
+  - 044-rlhf
+relatedNodes:
+  - llm-inference
+  - llm-finetune
+tags:
+  - long context
   - rope
   - yarn
   - context window
   - position encoding
-  - flashattention"
-relatedTerms: ["rag", "lora", "transformer", "chain-of-thought"]
-relatedTools: ["huggingface-transformers", "langchain", "pytorch"]
+  - flashattention
+relatedTerms:
+  - "rag"
+  - "lora"
+  - "transformer"
+  - "chain-of-thought"
+relatedTools:
+  - "huggingface-transformers"
+  - "langchain"
+  - "pytorch"
 ---
 
 ## 为什么你要学它

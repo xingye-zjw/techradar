@@ -4,22 +4,34 @@ category: computer-vision
 difficulty: intermediate
 duration: 1-2周
 summary: 图像模型训练中的实用技巧：数据增强、学习率策略、过拟合处理与迁移学习，帮你把 baseline 稳定提升到可交付水平。
-takeaways: "- 掌握常用数据增强策略与 AutoAugment/RandAugment 的使用场景
+takeaways:
+  - 掌握常用数据增强策略与 AutoAugment/RandAugment 的使用场景
   - 理解学习率 warmup、cosine decay 与早停机制对收敛的影响
   - 学会用迁移学习、冻结层和微调策略快速适配小数据集
-  - 掌握过拟合、类别不平衡与标签噪声的常用应对手段"
-relatedIntel: "- 006-cnn-basics
+  - 掌握过拟合、类别不平衡与标签噪声的常用应对手段
+relatedIntel:
+  - 006-cnn-basics
   - 002-yolo
-  - 004-resnet"
-tags: "- computer-vision
+  - 004-resnet
+tags:
+  - computer-vision
   - data-augmentation
   - transfer-learning
   - learning-rate-schedule
   - overfitting
-  - fine-tuning"
-relatedTerms: ["cnn", "yolo", "transformer", "resnet"]
-relatedTools: ["ultralytics-yolo", "numpy", "matplotlib"]
-relatedNodes: ["cv-detection", "cv-segmentation"]
+  - fine-tuning
+relatedTerms:
+  - "cnn"
+  - "yolo"
+  - "transformer"
+  - "resnet"
+relatedTools:
+  - "ultralytics-yolo"
+  - "numpy"
+  - "matplotlib"
+relatedNodes:
+  - "cv-detection"
+  - "cv-segmentation"
 ---
 
 ## 为什么你要学它

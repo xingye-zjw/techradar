@@ -4,7 +4,8 @@ category: machine-learning
 difficulty: advanced
 duration: 30分钟
 summary: 涵盖 4 个常见踩坑：GNN层数过多导致过平滑、图数据集划分泄露导致评估虚高、消息传递中忽略自环导致信息丢失、异构图处理不当导致节点类型混淆，每个均附快速修复与排查步骤。
-takeaways: "- 掌握「图神经网络踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施"
+takeaways:
+  - 掌握「图神经网络踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施
 relatedIntel:
   - 113-gnn-basics
 tags:

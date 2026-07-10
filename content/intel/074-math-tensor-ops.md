@@ -4,21 +4,33 @@ category: math
 difficulty: intermediate
 duration: 1-2周
 summary: 深度学习框架的核心数学基础。理解张量运算、广播机制、自动微分原理。
-takeaways: "- 理解张量的维度和形状变换
+takeaways:
+  - 理解张量的维度和形状变换
   - 掌握广播机制的工作原理
   - 理解自动微分和计算图
-  - 能手动推导简单网络的梯度"
-relatedIntel: "- 024-information-theory
+  - 能手动推导简单网络的梯度
+relatedIntel:
+  - 024-information-theory
   - 025-convex-optimization
-  - 072-math-linear-algebra"
-tags: "- 张量
+  - 072-math-linear-algebra
+tags:
+  - 张量
   - 自动微分
   - 反向传播
   - 广播机制
-  - 张量分解"
-relatedTerms: ["tensor", "matrix", "entropy", "convex-optimization"]
-relatedTools: ["pandas", "numpy", "jupyter"]
-relatedNodes: ["llm-inference", "math-linear-algebra"]
+  - 张量分解
+relatedTerms:
+  - "tensor"
+  - "matrix"
+  - "entropy"
+  - "convex-optimization"
+relatedTools:
+  - "pandas"
+  - "numpy"
+  - "jupyter"
+relatedNodes:
+  - "llm-inference"
+  - "math-linear-algebra"
 ---
 
 ## 为什么你要学它

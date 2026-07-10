@@ -4,15 +4,18 @@ category: embedded
 difficulty: intermediate
 duration: 3-5天
 summary: 滤波器是从噪声中提取信号的核心工具。理解 IIR 和 FIR 的本质区别，以及如何用 scipy.signal 快速设计出符合规格的滤波器，是你做信号处理的必备技能。
-takeaways: "- 能说清楚 IIR 和 FIR 的根本差异：递归 vs 非递归、阶数 vs 长度、相位特性
+takeaways:
+  - 能说清楚 IIR 和 FIR 的根本差异：递归 vs 非递归、阶数 vs 长度、相位特性
   - 能根据指标（通带/阻带频率、纹波）选择合适的滤波器类型（Butterworth/Chebyshev/Elliptic）
   - 能用 scipy.signal 一行代码设计出满足规格的低通/高通/带通滤波器
   - 理解窗函数法设计 FIR 的原理，知道怎么选窗函数
-  - 能画出频率响应图，验证滤波器是否满足规格"
-relatedIntel: "- 052-embedded-c
+  - 能画出频率响应图，验证滤波器是否满足规格
+relatedIntel:
+  - 052-embedded-c
   - 053-embedded-rtos
-  - 054-elec-circuit"
-tags: "- filter-design
+  - 054-elec-circuit
+tags:
+  - filter-design
   - iir
   - fir
   - lowpass
@@ -23,10 +26,19 @@ tags: "- filter-design
   - elliptic
   - window-function
   - scipy.signal
-  - frequency-response"
-relatedTerms: ["data-structure", "rtos", "algorithm", "complexity"]
-relatedTools: ["huggingface-transformers", "ultralytics-yolo", "pytorch"]
-relatedNodes: ["roadmap-capstone", "electrical-safety"]
+  - frequency-response
+relatedTerms:
+  - "data-structure"
+  - "rtos"
+  - "algorithm"
+  - "complexity"
+relatedTools:
+  - "huggingface-transformers"
+  - "ultralytics-yolo"
+  - "pytorch"
+relatedNodes:
+  - "roadmap-capstone"
+  - "electrical-safety"
 ---
 
 ## 为什么你要学它

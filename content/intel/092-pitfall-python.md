@@ -4,8 +4,10 @@ category: devops
 difficulty: beginner
 duration: 30分钟
 summary: 涵盖 5 个常见踩坑：Python 环境依赖冲突导致 import 失败、pandas inplace=True 链式赋值警告、可变默认参数导致函数行为异常、循环变量闭包捕获导致预期外结果、整数缓存导致 == 和 is 行为不一致，每个均附快速修复与排查步骤。
-takeaways: "- 掌握「Python 开发常见踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施"
-relatedIntel: "- 010-numpy-pandas - 009-linux"
+takeaways:
+  - 掌握「Python 开发常见踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施
+relatedIntel:
+  - 010-numpy-pandas - 009-linux
 tags:
   - DevOps
   - 部署

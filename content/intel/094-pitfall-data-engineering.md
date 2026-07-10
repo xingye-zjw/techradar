@@ -4,8 +4,10 @@ category: data-processing
 difficulty: intermediate
 duration: 30分钟
 summary: 涵盖 4 个常见踩坑：数据标注质量差导致模型无法收敛、pandas inplace=True 链式赋值警告、数据泄露 (Data Leakage) 导致模型评估虚高、大规模数据处理内存不足，每个均附快速修复与排查步骤。
-takeaways: "- 掌握「数据工程踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施"
-relatedIntel: "- 023-data-pipeline-etl - 040-data-annotation"
+takeaways:
+  - 掌握「数据工程踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施
+relatedIntel:
+  - 023-data-pipeline-etl - 040-data-annotation
 tags:
   - 数据
   - 处理

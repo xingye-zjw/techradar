@@ -4,7 +4,8 @@ category: computer-vision
 difficulty: advanced
 duration: 30分钟
 summary: 涵盖 4 个常见踩坑：点云数据预处理不当导致信息丢失、ICP配准陷入局部最优、体素分辨率与显存的矛盾、相机标定误差导致3D重建不准，每个均附快速修复与排查步骤。
-takeaways: "- 掌握「3D 视觉踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施"
+takeaways:
+  - 掌握「3D 视觉踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施
 relatedIntel:
   - 120-3d-point-cloud
 tags:

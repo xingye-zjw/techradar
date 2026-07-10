@@ -4,29 +4,34 @@ category: cs
 difficulty: beginner
 duration: 4周
 summary: 计算机科学的核心基础，掌握常用算法设计思路、时间空间复杂度分析、以及各类数据结构的应用场景
-takeaways: "- 熟练分析代码复杂度，能给出准确的大O表示
+takeaways:
+  - 熟练分析代码复杂度，能给出准确的大O表示
   - 掌握常见算法设计范式：分治、动态规划、贪心、回溯
   - 能用数据结构解决实际问题，选择最优方案
-  - 理解算法在AI系统中的应用：搜索、优化、图神经网络"
-relatedTerms: [
-    "data-structure",
-    "algorithm",
-    "- algorithm
-    - data-structure",
-    "complexity",
-  ]
-relatedIntel: "- 051-cs-os
+  - 理解算法在AI系统中的应用：搜索、优化、图神经网络
+relatedTerms:
+  - data-structure
+  - algorithm
+  - complexity
+relatedIntel:
+  - 051-cs-os
   - 075-cs-network
-  - 076-cs-database"
-relatedNodes: ["cs-algo", "math-linear-algebra"]
-tags: "- algorithm
+  - 076-cs-database
+relatedNodes:
+  - "cs-algo"
+  - "math-linear-algebra"
+tags:
+  - algorithm
   - data-structure
   - complexity
   - big-o
   - sorting
   - graph
-  - dynamic-programming"
-relatedTools: ["huggingface-transformers", "ultralytics-yolo", "pytorch"]
+  - dynamic-programming
+relatedTools:
+  - "huggingface-transformers"
+  - "ultralytics-yolo"
+  - "pytorch"
 ---
 
 ## 为什么你要学它

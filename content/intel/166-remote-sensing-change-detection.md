@@ -26,9 +26,21 @@ tags:
   - road-extraction
   - semantic-segmentation
   - satellite-imagery
-relatedTerms: [cnn, transformer, self-attention, resnet, instance-segmentation]
-relatedTools: [opencv, pytorch, numpy, matplotlib, jupyter]
-relatedNodes: [cv-segmentation, cv-detection]
+relatedTerms:
+  - cnn
+  - transformer
+  - self-attention
+  - resnet
+  - instance-segmentation
+relatedTools:
+  - opencv
+  - pytorch
+  - numpy
+  - matplotlib
+  - jupyter
+relatedNodes:
+  - cv-segmentation
+  - cv-detection
 ---
 
 ## 为什么你要学它

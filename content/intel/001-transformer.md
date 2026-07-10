@@ -4,21 +4,33 @@ category: deep-learning
 difficulty: intermediate
 duration: 1-2周
 summary: 所有大模型（GPT、BERT、LLaMA）的底层架构。理解它就能理解现代 AI 是怎样工作的。
-takeaways: '- 搞懂 Self-Attention 为什么能让模型"同时关注所有词"，这是大模型最核心的直觉
+takeaways:
+  - '搞懂 Self-Attention 为什么能让模型"同时关注所有词"，这是大模型最核心的直觉'
   - 能在纸上画出 Encoder-Decoder 架构，说出每个模块输入输出长什么样
   - 明白为什么 Attention + 位置编码一起用才能解决序列问题
-  - 用 PyTorch 写出一个最小可跑的 Transformer Encoder，在真实数据集上训练'
-relatedIntel: "- 011-pytorch
-  - 113-gnn-basics"
-tags: "- transformer
+  - 用 PyTorch 写出一个最小可跑的 Transformer Encoder，在真实数据集上训练
+relatedIntel:
+  - 011-pytorch
+  - 113-gnn-basics
+tags:
+  - transformer
   - attention
   - self-attention
   - multi-head
   - positional encoding
-  - encoder decoder"
-relatedTerms: ["cnn", "gradient-descent", "tensor", "transformer"]
-relatedTools: ["pytorch", "numpy", "huggingface-transformers"]
-relatedNodes: ["llm-inference", "cv-segmentation"]
+  - encoder decoder
+relatedTerms:
+  - "cnn"
+  - "gradient-descent"
+  - "tensor"
+  - "transformer"
+relatedTools:
+  - "pytorch"
+  - "numpy"
+  - "huggingface-transformers"
+relatedNodes:
+  - "llm-inference"
+  - "cv-segmentation"
 ---
 
 ## 为什么你要学它

@@ -4,15 +4,22 @@ category: computer-vision
 difficulty: intermediate
 duration: 1-2周
 summary: 姿态估计是让计算机\"看懂人体动作\"的基础技术，通过检测人体关键点（头、肩、肘、腕等）来理解人的姿势和动作意图。
-takeaways: "- 理解 Top-down 和 Bottom-up 两大技术路线的核心差异和适用场景
+takeaways:
+  - 理解 Top-down 和 Bottom-up 两大技术路线的核心差异和适用场景
   - 掌握 HRNet、OpenPose、AlphaPose 等主流模型的设计思想
   - 能用 mmpose 或 AlphaPose 在真实图像上跑通姿态估计流程
-  - 理解姿态估计在动作识别、安防监控、人机交互等场景的实际价值"
-relatedTerms: ["pose-estimation", "cnn", "yolo", "resnet"]
-relatedIntel: "- 002-yolo
+  - 理解姿态估计在动作识别、安防监控、人机交互等场景的实际价值
+relatedTerms:
+  - "pose-estimation"
+  - "cnn"
+  - "yolo"
+  - "resnet"
+relatedIntel:
+  - 002-yolo
   - 004-resnet
-  - 006-cnn-basics"
-tags: "- pose-estimation
+  - 006-cnn-basics
+tags:
+  - pose-estimation
   - keypoint-detection
   - top-down
   - bottom-up
@@ -21,9 +28,14 @@ tags: "- pose-estimation
   - hrnet
   - openpose
   - alphapose
-  - mmpose"
-relatedTools: ["ultralytics-yolo", "numpy", "matplotlib"]
-relatedNodes: ["cv-detection", "cv-segmentation"]
+  - mmpose
+relatedTools:
+  - "ultralytics-yolo"
+  - "numpy"
+  - "matplotlib"
+relatedNodes:
+  - "cv-detection"
+  - "cv-segmentation"
 ---
 
 ## 为什么你要学它

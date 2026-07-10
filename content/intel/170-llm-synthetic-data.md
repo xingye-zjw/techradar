@@ -4,17 +4,48 @@ category: llm
 difficulty: advanced
 duration: 2周
 summary: 解决高质量标注数据稀缺、评测集泄漏两大行业痛点。覆盖从教师模型蒸馏、进化指令、自我对弈三类合成数据生成范式，到 MinHash + N-gram 去重、前缀匹配防泄漏、交叉验证三层防线的完整工程实践。
-keywords: [合成数据, 数据去污染, 标签泄漏, 蒸馏, 进化指令, 数据去重, 评测集隔离]
+keywords:
+  - 合成数据
+  - 数据去污染
+  - 标签泄漏
+  - 蒸馏
+  - 进化指令
+  - 数据去重
+  - 评测集隔离
 takeaways:
   - 搞懂教师模型 + 多样 prompt + 过滤规则的合成数据三要素流水线
   - 理解进化指令（Evol-Instruct）如何从简单种子自动生成复杂指令数据
   - 能画出合成数据生成 → 去重 → 去污染 → 质量过滤 → 防泄漏五层质检流程图
   - 能跑通 HuggingFace Datasets + MinHashLSH 在亿级语料上的精确去重
   - 实现基于前缀 N-gram 的评测集泄漏检测脚本，自动扫描训练集风险样本
-tags: [llm, 合成数据, 数据去污染, 标签泄漏, 数据质量, 蒸馏, HuggingFace]
-relatedTerms: [fine-tuning, rlhf, entropy, kl-divergence, matrix, algorithm, data-structure]
-relatedTools: [huggingface-transformers, datasets, jupyter, pandas, langchain, ollama]
-relatedNodes: [llm-finetune, llm-eval, llm-inference, llm-agent]
+tags:
+  - llm
+  - 合成数据
+  - 数据去污染
+  - 标签泄漏
+  - 数据质量
+  - 蒸馏
+  - HuggingFace
+relatedTerms:
+  - fine-tuning
+  - rlhf
+  - entropy
+  - kl-divergence
+  - matrix
+  - algorithm
+  - data-structure
+relatedTools:
+  - huggingface-transformers
+  - datasets
+  - jupyter
+  - pandas
+  - langchain
+  - ollama
+relatedNodes:
+  - llm-finetune
+  - llm-eval
+  - llm-inference
+  - llm-agent
 ---
 
 ## 为什么你要学它

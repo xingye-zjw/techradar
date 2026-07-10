@@ -4,24 +4,36 @@ category: computer-vision
 difficulty: intermediate
 duration: 2-3周
 summary: 从点云表示到深度学习处理，掌握3D视觉核心技术栈，涵盖PointNet、ICP配准、NeRF重建等关键算法。
-takeaways: "- 理解点云、体素、网格、多视图四种3D表示方法的优缺点与适用场景
+takeaways:
+  - 理解点云、体素、网格、多视图四种3D表示方法的优缺点与适用场景
   - 掌握PointNet/PointNet++核心思想，明白最大池化如何解决点云无序性问题
   - 能使用Open3D完成点云读取、可视化、ICP配准等基础操作
-  - 了解RANSAC平面拟合、3D目标检测（PointPillars）、NeRF神经辐射场等核心算法原理"
-relatedIntel: "- 002-yolo
+  - 了解RANSAC平面拟合、3D目标检测（PointPillars）、NeRF神经辐射场等核心算法原理
+relatedIntel:
+  - 002-yolo
   - 004-resnet
-  - 006-cnn-basics"
-tags: "- point cloud
+  - 006-cnn-basics
+tags:
+  - point cloud
   - 3d vision
   - pointnet
   - icp
   - ransac
   - nerf
   - open3d
-  - 3d detection"
-relatedTerms: ["yolo", "resnet", "transformer", "cnn"]
-relatedTools: ["numpy", "ultralytics-yolo", "matplotlib"]
-relatedNodes: ["cv-segmentation", "cv-detection"]
+  - 3d detection
+relatedTerms:
+  - "yolo"
+  - "resnet"
+  - "transformer"
+  - "cnn"
+relatedTools:
+  - "numpy"
+  - "ultralytics-yolo"
+  - "matplotlib"
+relatedNodes:
+  - "cv-segmentation"
+  - "cv-detection"
 ---
 
 ## 为什么你要学它

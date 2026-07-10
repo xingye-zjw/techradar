@@ -4,21 +4,33 @@ category: embedded
 difficulty: intermediate
 duration: 2-3周
 summary: 理解硬件抽象层的设计原理。掌握STM32 HAL库、寄存器操作、外设配置等核心技能。
-takeaways: "- 理解HAL库的设计思想
+takeaways:
+  - 理解HAL库的设计思想
   - 掌握GPIO、UART、SPI、I2C配置
   - 理解寄存器级别的操作
-  - 能编写跨平台的驱动代码"
-relatedIntel: "- 052-embedded-c
+  - 能编写跨平台的驱动代码
+relatedIntel:
+  - 052-embedded-c
   - 053-embedded-rtos
-  - 054-elec-circuit"
-relatedNodes: ["embedded-hal", "electrical-safety"]
-tags: "- hal
+  - 054-elec-circuit
+relatedNodes:
+  - "embedded-hal"
+  - "electrical-safety"
+tags:
+  - hal
   - 硬件抽象层
   - STM32 HAL
   - 寄存器操作
-  - 外设驱动"
-relatedTerms: ["data-structure", "rtos", "algorithm", "complexity"]
-relatedTools: ["huggingface-transformers", "ultralytics-yolo", "pytorch"]
+  - 外设驱动
+relatedTerms:
+  - "data-structure"
+  - "rtos"
+  - "algorithm"
+  - "complexity"
+relatedTools:
+  - "huggingface-transformers"
+  - "ultralytics-yolo"
+  - "pytorch"
 ---
 
 ## 为什么你要学它

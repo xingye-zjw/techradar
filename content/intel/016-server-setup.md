@@ -4,23 +4,35 @@ category: devops
 difficulty: intermediate
 duration: 1-2周
 summary: 从零搭起一台能跑 PyTorch 的 GPU 服务器：驱动、CUDA、Conda、SSH 与远程训练全都能自己搞定
-takeaways: "- 会安装 NVIDIA 驱动 + CUDA Toolkit，并能验证与 PyTorch 匹配
+takeaways:
+  - 会安装 NVIDIA 驱动 + CUDA Toolkit，并能验证与 PyTorch 匹配
   - 能用 Conda 为每个项目创建独立 Python 环境
   - 会配置 SSH 公私钥登录和基本安全加固
-  - 会用 tmux 让训练在后台长期跑，断网也不中断"
-relatedIntel: "- 007-docker
+  - 会用 tmux 让训练在后台长期跑，断网也不中断
+relatedIntel:
+  - 007-docker
   - 008-git
-  - 009-linux"
-relatedNodes: ["devops-kubernetes", "electrical-safety"]
-tags: "- ubuntu
+  - 009-linux
+relatedNodes:
+  - "devops-kubernetes"
+  - "electrical-safety"
+tags:
+  - ubuntu
   - server setup
   - nvidia
   - cuda
   - conda
   - ssh
-  - tmux"
-relatedTerms: ["linux", "docker", "kubernetes", "git"]
-relatedTools: ["kubernetes", "mlflow", "docker"]
+  - tmux
+relatedTerms:
+  - "linux"
+  - "docker"
+  - "kubernetes"
+  - "git"
+relatedTools:
+  - "kubernetes"
+  - "mlflow"
+  - "docker"
 ---
 
 ## 为什么你要学它

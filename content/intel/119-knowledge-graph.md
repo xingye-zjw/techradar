@@ -4,24 +4,36 @@ category: nlp
 difficulty: intermediate
 duration: 2-3周
 summary: 用结构化方式表示现实世界中的实体、关系和属性，是智能问答、推荐系统、语义搜索的核心基础设施。
-takeaways: "- 理解知识图谱的基本构成：实体、关系、三元组 (h, r, t)，以及图结构 G=(E, R, F)
+takeaways:
+  - '理解知识图谱的基本构成：实体、关系、三元组 (h, r, t)，以及图结构 G=(E, R, F)'
   - 掌握知识表示学习核心思想：TransE 及其改进模型 TransH、TransR 的原理与区别
   - 了解知识抽取全流程：命名实体识别（NER）、关系抽取、实体链接
   - 能用 PyKEEN 在标准数据集上训练 TransE 模型，完成链接预测任务
-  - 理解知识推理的两类方法：基于规则的推理和基于表示学习的推理"
-relatedIntel: "- 064-nlp-rnn
-  - 115-tts-speech-synthesis"
-relatedNodes: ["nlp-rnn", "cv-detection"]
-tags: "- knowledge graph
+  - 理解知识推理的两类方法：基于规则的推理和基于表示学习的推理
+relatedIntel:
+  - 064-nlp-rnn
+  - 115-tts-speech-synthesis
+relatedNodes:
+  - "nlp-rnn"
+  - "cv-detection"
+tags:
+  - knowledge graph
   - 知识图谱
   - 知识表示
   - transe
   - 实体识别
   - 关系抽取
   - 知识推理
-  - 知识融合"
-relatedTerms: ["self-attention", "rag", "transformer", "chain-of-thought"]
-relatedTools: ["langchain", "numpy", "huggingface-transformers"]
+  - 知识融合
+relatedTerms:
+  - "self-attention"
+  - "rag"
+  - "transformer"
+  - "chain-of-thought"
+relatedTools:
+  - "langchain"
+  - "numpy"
+  - "huggingface-transformers"
 ---
 
 ## 为什么你要学它

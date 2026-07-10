@@ -4,21 +4,33 @@ category: nlp
 difficulty: intermediate
 duration: 1-2周
 summary: RNN 是处理序列数据的基石，通过隐藏状态在时间步之间传递信息。理解它能帮你搞懂为什么需要 LSTM/GRU，以及它们如何解决梯度消失问题。
-takeaways: "- 理解 Vanilla RNN 的前向传播和 BPTT 原理，搞清楚 hidden state 是什么
+takeaways:
+  - 理解 Vanilla RNN 的前向传播和 BPTT 原理，搞清楚 hidden state 是什么
   - 能画 Vanilla RNN、LSTM、GRU 的结构图，说出每个门的作用
   - 明白为什么 vanilla RNN 有梯度消失问题，以及 LSTM/GRU 是如何用门控机制解决的
-  - 用 PyTorch 实现一个能处理文本分类或语言建模的 RNN 模型"
-relatedIntel: "- 115-tts-speech-synthesis
-  - 119-knowledge-graph"
-relatedNodes: ["cv-detection", "nlp-rnn"]
-tags: "- rnn
+  - 用 PyTorch 实现一个能处理文本分类或语言建模的 RNN 模型
+relatedIntel:
+  - 115-tts-speech-synthesis
+  - 119-knowledge-graph
+relatedNodes:
+  - "cv-detection"
+  - "nlp-rnn"
+tags:
+  - rnn
   - lstm
   - gru
   - sequence-modeling
   - backpropagation-through-time
-  - vanishing-gradient"
-relatedTerms: ["rag", "chain-of-thought", "transformer", "self-attention"]
-relatedTools: ["huggingface-transformers", "numpy", "langchain"]
+  - vanishing-gradient
+relatedTerms:
+  - "rag"
+  - "chain-of-thought"
+  - "transformer"
+  - "self-attention"
+relatedTools:
+  - "huggingface-transformers"
+  - "numpy"
+  - "langchain"
 ---
 
 ## 为什么你要学它

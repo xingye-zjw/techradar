@@ -4,7 +4,8 @@ category: cs
 difficulty: intermediate
 duration: 30分钟
 summary: 涵盖 4 个常见踩坑：REST API 请求超时/失败、WebSocket 断线重连失败、HTTP keep-alive 导致连接复用问题、内网穿透后服务无法访问，每个均附快速修复与排查步骤。
-takeaways: "- 掌握「网络编程踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施"
+takeaways:
+  - 掌握「网络编程踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施
 relatedIntel:
   - 075-cs-network
 tags:

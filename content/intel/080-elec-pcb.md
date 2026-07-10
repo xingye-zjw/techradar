@@ -4,22 +4,34 @@ category: embedded
 difficulty: intermediate
 duration: 3-4周
 summary: 理解PCB设计的核心原理。掌握原理图绘制、PCB布局布线、信号完整性等关键技能。
-takeaways: "- 理解PCB设计流程
+takeaways:
+  - 理解PCB设计流程
   - 掌握原理图绘制方法
   - 理解PCB布局布线规则
-  - 掌握信号完整性和EMI处理"
-relatedIntel: "- 052-embedded-c
+  - 掌握信号完整性和EMI处理
+relatedIntel:
+  - 052-embedded-c
   - 053-embedded-rtos
-  - 054-elec-circuit"
-relatedNodes: ["elec-pcb", "electrical-safety"]
-tags: "- PCB设计
+  - 054-elec-circuit
+relatedNodes:
+  - "elec-pcb"
+  - "electrical-safety"
+tags:
+  - PCB设计
   - 电路板
   - 布线
   - emi
   - Altium Designer
-  - 信号完整性"
-relatedTerms: ["data-structure", "rtos", "algorithm", "complexity"]
-relatedTools: ["huggingface-transformers", "ultralytics-yolo", "pytorch"]
+  - 信号完整性
+relatedTerms:
+  - "data-structure"
+  - "rtos"
+  - "algorithm"
+  - "complexity"
+relatedTools:
+  - "huggingface-transformers"
+  - "ultralytics-yolo"
+  - "pytorch"
 ---
 
 ## 为什么你要学它

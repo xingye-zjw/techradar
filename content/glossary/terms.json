@@ -188,7 +188,7 @@
     "definition": "RLHF（Reinforcement Learning from Human Feedback）是让大语言模型对齐人类意图的核心技术，包含三阶段：SFT（有监督微调，用人工标注数据教会模型「好回答长什么样」）→ Reward Model（训练一个模型学习「哪个回答更好」，输入是 (prompt, response)，输出是标量 reward）→ PPO 微调（用 Reward Model 的 reward 信号，通过强化学习进一步微调 SFT 模型）。InstructGPT 和 ChatGPT 是 RLHF 的代表性应用，PPO 中的 KL 散度惩罚项（β·KL(π_RL||π_SFT)）是为了防止模型在最大化 reward 时偏离 SFT 太远。",
     "category": "llm",
     "relatedTerms": ["transformer"],
-    "relatedIntel": ["015-rlhf", "027-rlhf-alignment"]
+    "relatedIntel": ["044-rlhf", "027-rlhf-alignment"]
   },
   {
     "term": "批量推理",

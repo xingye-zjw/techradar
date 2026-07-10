@@ -4,17 +4,50 @@ category: embedded
 difficulty: advanced
 duration: 2周
 summary: 建立边缘 AI 选型的"统一度量衡"，让你在 10 款 MCU/AI 芯片、5 套推理引擎、3 档量化精度之间做决策时有据可依。覆盖 MLPerf Tiny 官方标准评测、自研 AI-Runner 延迟/功耗/内存三维探针、ONNX Runtime Cross-Compile 跨平台性能评估全套方法。
-keywords: [边缘AI基准, MLPerf Tiny, AI-Runner, ONNX Runtime, 性能评估, 功耗测试, 推理延迟]
+keywords:
+  - 边缘AI基准
+  - MLPerf Tiny
+  - AI-Runner
+  - ONNX Runtime
+  - 性能评估
+  - 功耗测试
+  - 推理延迟
 takeaways:
   - 搞懂 MLPerf Tiny 的四大任务（KWS / VWW / AD / IC）评测流程与合规要求
   - 理解延迟(P50/P99)、峰值内存(RSS/堆)、功耗(mWh/推理)三维评估指标的工程意义
   - 能画出 STM32 vs ESP32 vs NXP vs Kendryte K210 同模型对比基准的测试架构图
   - 能跑通 ONNX Runtime for MCU 在 Cortex-M7 上的端到端基准（含精度验证）
   - 实现基于 AI-Runner 框架的自动化基准套件，输出 CSV/JSON 可视化报告
-tags: [embedded, 边缘AI基准, MLPerf Tiny, ONNX Runtime, 性能评估, 功耗测试, AI芯片选型]
-relatedTerms: [onnx, rtos, cnn, resnet, matrix, operating-system, circuit, complexity, algorithm]
-relatedTools: [onnx-runtime, stm32cubemx, gcc, esp-idf, freertos, onnxruntime-genai]
-relatedNodes: [embedded-rtos, embedded-hal, embedded-hal, embedded-rtos]
+tags:
+  - embedded
+  - 边缘AI基准
+  - MLPerf Tiny
+  - ONNX Runtime
+  - 性能评估
+  - 功耗测试
+  - AI芯片选型
+relatedTerms:
+  - onnx
+  - rtos
+  - cnn
+  - resnet
+  - matrix
+  - operating-system
+  - circuit
+  - complexity
+  - algorithm
+relatedTools:
+  - onnx-runtime
+  - stm32cubemx
+  - gcc
+  - esp-idf
+  - freertos
+  - onnxruntime-genai
+relatedNodes:
+  - embedded-rtos
+  - embedded-hal
+  - embedded-hal
+  - embedded-rtos
 ---
 
 ## 为什么你要学它

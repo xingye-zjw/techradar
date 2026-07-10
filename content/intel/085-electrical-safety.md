@@ -4,21 +4,33 @@ category: embedded
 difficulty: beginner
 duration: 1-2周
 summary: 理解电气安全的核心规范。掌握接地保护、漏电保护、安全操作等关键知识。
-takeaways: "- 理解电气安全的基本原则
+takeaways:
+  - 理解电气安全的基本原则
   - 掌握接地和接零保护
   - 理解漏电保护器原理
-  - 掌握安全操作规范"
-relatedIntel: "- 052-embedded-c
+  - 掌握安全操作规范
+relatedIntel:
+  - 052-embedded-c
   - 053-embedded-rtos
-  - 054-elec-circuit"
-tags: "- 电气安全
+  - 054-elec-circuit
+tags:
+  - 电气安全
   - 接地
   - 漏电保护
   - 安全规范
-  - 防护措施"
-relatedTerms: ["data-structure", "rtos", "algorithm", "complexity"]
-relatedTools: ["pytorch", "ultralytics-yolo", "huggingface-transformers"]
-relatedNodes: ["roadmap-capstone", "electrical-safety"]
+  - 防护措施
+relatedTerms:
+  - "data-structure"
+  - "rtos"
+  - "algorithm"
+  - "complexity"
+relatedTools:
+  - "pytorch"
+  - "ultralytics-yolo"
+  - "huggingface-transformers"
+relatedNodes:
+  - "roadmap-capstone"
+  - "electrical-safety"
 ---
 
 ## 为什么你要学它

@@ -4,17 +4,46 @@ category: llm
 difficulty: intermediate
 duration: 2周
 summary: 掌握从模型下载、量化到本地推理服务的完整私有化链路，解决企业数据不出域的合规需求。覆盖 Ollama 一键部署、llama.cpp 底层优化、OpenAI 兼容 API 搭建三大核心能力。
-keywords: [本地部署, Ollama, llama.cpp, 私有化, 量化, LLM推理]
+keywords:
+  - 本地部署
+  - Ollama
+  - llama.cpp
+  - 私有化
+  - 量化
+  - LLM推理
 takeaways:
   - 搞懂 Ollama 模型仓库结构与 Modelfile 自定义打包机制
   - 理解 llama.cpp GGUF 格式与 4-bit/8-bit 量化的精度-速度权衡
   - 能画出 Ollama + 反向代理 + 向量数据库的本地私有化架构图
   - 能跑通 Ollama 服务并通过 LangChain 接入实现私有 RAG 问答
   - 实现基于 llama.cpp 的 CPU 离线推理，支持无 GPU 环境运行
-tags: [llm, ollama, llama.cpp, 私有化部署, 量化, 本地推理]
-relatedTerms: [onnx, vllm, kv-cache, lora, docker, fine-tuning, rag]
-relatedTools: [ollama, onnx-runtime, vllm, lm-studio, onnxruntime-genai, langchain]
-relatedNodes: [llm-inference, llm-rag, llm-finetune, llm-agent]
+tags:
+  - llm
+  - ollama
+  - llama.cpp
+  - 私有化部署
+  - 量化
+  - 本地推理
+relatedTerms:
+  - onnx
+  - vllm
+  - kv-cache
+  - lora
+  - docker
+  - fine-tuning
+  - rag
+relatedTools:
+  - ollama
+  - onnx-runtime
+  - vllm
+  - lm-studio
+  - onnxruntime-genai
+  - langchain
+relatedNodes:
+  - llm-inference
+  - llm-rag
+  - llm-finetune
+  - llm-agent
 ---
 
 ## 为什么你要学它

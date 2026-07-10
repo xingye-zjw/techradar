@@ -4,26 +4,38 @@ category: machine-learning
 difficulty: intermediate
 duration: 2-3周
 summary: 互联网产品的核心驱动力。从协同过滤到深度学习推荐，掌握排序、召回、多目标优化的完整技术栈。
-takeaways: "- 理解推荐系统的两阶段范式：召回（粗筛）+ 排序（精排）
+takeaways:
+  - 理解推荐系统的两阶段范式：召回（粗筛）+ 排序（精排）
   - 能从零实现协同过滤和矩阵分解（SVD/ALS），在 MovieLens 上跑出结果
-  - 搞懂 Wide&Deep、DeepFM、DIN 等经典深度推荐模型的设计思想
+  - '搞懂 Wide&Deep、DeepFM、DIN 等经典深度推荐模型的设计思想'
   - 掌握冷启动、探索与利用（EE）、多目标优化等工业界核心问题
-  - 能用 Precision@k、Recall@k、NDCG、MRR 等指标评估推荐效果"
-relatedIntel: "- 112-rl-basics
+  - '能用 Precision@k、Recall@k、NDCG、MRR 等指标评估推荐效果'
+relatedIntel:
+  - 112-rl-basics
   - 118-anomaly-detection
-  - 122-federated-learning"
-tags: "- recommender systems
+  - 122-federated-learning
+tags:
+  - recommender systems
   - collaborative filtering
   - matrix factorization
   - als
-  - Wide&Deep
+  - 'Wide&Deep'
   - deepfm
   - din
   - 多目标推荐
-  - 冷启动"
-relatedTerms: ["matrix", "tensor", "gradient-descent", "convex-optimization"]
-relatedTools: ["numpy", "pandas", "scikit-learn"]
-relatedNodes: ["math-linear-algebra", "llm-inference"]
+  - 冷启动
+relatedTerms:
+  - "matrix"
+  - "tensor"
+  - "gradient-descent"
+  - "convex-optimization"
+relatedTools:
+  - "numpy"
+  - "pandas"
+  - "scikit-learn"
+relatedNodes:
+  - "math-linear-algebra"
+  - "llm-inference"
 ---
 
 ## 为什么你要学它

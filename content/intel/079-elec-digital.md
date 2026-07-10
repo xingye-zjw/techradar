@@ -4,21 +4,33 @@ category: embedded
 difficulty: beginner
 duration: 2-3周
 summary: 理解数字电路的设计原理。掌握逻辑门、组合逻辑、时序逻辑等核心概念。
-takeaways: "- 理解二进制数制和编码
+takeaways:
+  - 理解二进制数制和编码
   - 掌握逻辑门和布尔代数
   - 理解组合逻辑电路设计
-  - 掌握时序逻辑电路设计"
-relatedTerms: ["data-structure", "rtos", "circuit", "algorithm"]
-relatedIntel: "- 052-embedded-c
+  - 掌握时序逻辑电路设计
+relatedTerms:
+  - "data-structure"
+  - "rtos"
+  - "circuit"
+  - "algorithm"
+relatedIntel:
+  - 052-embedded-c
   - 053-embedded-rtos
-  - 054-elec-circuit"
-tags: "- 数字电路
+  - 054-elec-circuit
+tags:
+  - 数字电路
   - 逻辑门
   - 组合逻辑
   - 时序逻辑
-  - fpga"
-relatedTools: ["huggingface-transformers", "ultralytics-yolo", "pytorch"]
-relatedNodes: ["roadmap-capstone", "electrical-safety"]
+  - fpga
+relatedTools:
+  - "huggingface-transformers"
+  - "ultralytics-yolo"
+  - "pytorch"
+relatedNodes:
+  - "roadmap-capstone"
+  - "electrical-safety"
 ---
 
 ## 为什么你要学它

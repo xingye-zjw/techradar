@@ -4,22 +4,34 @@ category: devops
 difficulty: intermediate
 duration: 1周
 summary: 把 PyTorch 模型导出为跨平台的 ONNX 格式，用 ONNXRuntime 加速推理，或进一步转为 TensorRT
-takeaways: "- 能把 PyTorch 模型导出为 ONNX 并用 onnxsim 简化
+takeaways:
+  - 能把 PyTorch 模型导出为 ONNX 并用 onnxsim 简化
   - 能用 ONNXRuntime GPU 版做推理加速
   - 能处理动态 shape 输入和多输入/输出模型
-  - 能做基本的精度验证（PyTorch vs ONNX 输出误差 < 1e-3）"
-relatedTerms: ["onnx", "linux", "docker", "git"]
-relatedIntel: "- 007-docker
+  - 能做基本的精度验证（PyTorch vs ONNX 输出误差 < 1e-3）
+relatedTerms:
+  - "onnx"
+  - "linux"
+  - "docker"
+  - "git"
+relatedIntel:
+  - 007-docker
   - 008-git
-  - 009-linux"
-relatedNodes: ["devops-kubernetes", "electrical-safety"]
-tags: "- onnx
+  - 009-linux
+relatedNodes:
+  - "devops-kubernetes"
+  - "electrical-safety"
+tags:
+  - onnx
   - onnxruntime
   - model export
   - inference optimization
   - tensorrt
-  - quantization"
-relatedTools: ["kubernetes", "mlflow", "docker"]
+  - quantization
+relatedTools:
+  - "kubernetes"
+  - "mlflow"
+  - "docker"
 ---
 
 ## 为什么你要学它

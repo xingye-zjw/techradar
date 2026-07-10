@@ -4,25 +4,37 @@ category: machine-learning
 difficulty: intermediate
 duration: 2-3周
 summary: 让智能体通过与环境交互来学习最优决策的机器学习范式。掌握 MDP、Q-Learning、策略梯度、DQN、PPO 等核心算法，是进入机器人、游戏 AI、自动驾驶等领域的基础。
-takeaways: "- 理解马尔可夫决策过程（MDP）的数学定义：状态、动作、转移概率、奖励、折扣因子
+takeaways:
+  - 理解马尔可夫决策过程（MDP）的数学定义：状态、动作、转移概率、奖励、折扣因子
   - 掌握 Q-Learning 与 Sarsa 的区别：off-policy vs on-policy，能手写更新公式
   - 理解策略梯度方法（REINFORCE）的核心思想：用采样轨迹估计梯度并更新策略
   - 掌握 DQN 的两大创新：经验回放（Experience Replay）与目标网络（Target Network）
-  - 理解 PPO 的剪切目标函数，能用 Stable-Baselines3 在 Gym 环境中训练智能体"
-relatedIntel: "- 116-recommender-systems
+  - 理解 PPO 的剪切目标函数，能用 Stable-Baselines3 在 Gym 环境中训练智能体
+relatedIntel:
+  - 116-recommender-systems
   - 118-anomaly-detection
-  - 122-federated-learning"
-tags: "- reinforcement learning
+  - 122-federated-learning
+tags:
+  - reinforcement learning
   - mdp
   - q-learning
   - sarsa
   - policy gradient
   - dqn
   - ppo
-  - gym"
-relatedTerms: ["matrix", "tensor", "gradient-descent", "convex-optimization"]
-relatedTools: ["numpy", "pandas", "scikit-learn"]
-relatedNodes: ["math-linear-algebra", "llm-inference"]
+  - gym
+relatedTerms:
+  - "matrix"
+  - "tensor"
+  - "gradient-descent"
+  - "convex-optimization"
+relatedTools:
+  - "numpy"
+  - "pandas"
+  - "scikit-learn"
+relatedNodes:
+  - "math-linear-algebra"
+  - "llm-inference"
 ---
 
 ## 为什么你要学它

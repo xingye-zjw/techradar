@@ -4,22 +4,34 @@ category: llm
 difficulty: intermediate
 duration: 1-2周
 summary: LLM Agent 是能自主规划、调用工具并迭代完成任务的大模型应用范式，是构建智能助手和自动化工作流的核心。
-takeaways: "- 理解 Agent 的核心组件：规划、记忆、工具调用、行动
+takeaways:
+  - 理解 Agent 的核心组件：规划、记忆、工具调用、行动
   - 掌握 ReAct、Plan-and-Solve 等常见 Agent 推理模式
   - 学会用 LangChain / LangGraph 搭建可调用工具的 Agent
-  - 了解 Agent 的边界、安全风险和评估方法"
-relatedIntel: "- 031-agentic-ai
+  - 了解 Agent 的边界、安全风险和评估方法
+relatedIntel:
+  - 031-agentic-ai
   - 020-prompt-engineering
-  - 005-rag"
-tags: "- agent
+  - 005-rag
+tags:
+  - agent
   - llm
   - tool-use
   - react
   - langchain
-  - planning"
-relatedTerms: ["rag", "lora", "transformer", "chain-of-thought"]
-relatedTools: ["huggingface-transformers", "langchain", "pytorch"]
-relatedNodes: ["llm-inference", "llm-prompt-engineering"]
+  - planning
+relatedTerms:
+  - "rag"
+  - "lora"
+  - "transformer"
+  - "chain-of-thought"
+relatedTools:
+  - "huggingface-transformers"
+  - "langchain"
+  - "pytorch"
+relatedNodes:
+  - "llm-inference"
+  - "llm-prompt-engineering"
 ---
 
 ## 为什么你要学它

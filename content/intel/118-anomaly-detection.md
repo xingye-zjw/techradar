@@ -4,15 +4,18 @@ category: machine-learning
 difficulty: intermediate
 duration: 1-2周
 summary: 从数据中识别\"不正常\"的样本，广泛应用于欺诈检测、工业质检、运维监控、医疗诊断等场景。
-takeaways: "- 理解异常检测的三种类型：点异常、上下文异常、集体异常
+takeaways:
+  - 理解异常检测的三种类型：点异常、上下文异常、集体异常
   - 掌握经典统计方法（3σ、IQR、Grubbs检验）和基于树/密度的算法（孤立森林、LOF）
   - 了解深度学习方法（Autoencoder、VAE、GAN）在异常检测中的应用
   - 能用 sklearn 和 PyOD 在真实数据集上跑通异常检测全流程
-  - 明白类别不平衡问题对评估指标的影响，正确选择 Precision/Recall/F1/ROC-AUC/PR-AUC"
-relatedIntel: "- 112-rl-basics
+  - 明白类别不平衡问题对评估指标的影响，正确选择 Precision/Recall/F1/ROC-AUC/PR-AUC
+relatedIntel:
+  - 112-rl-basics
   - 116-recommender-systems
-  - 122-federated-learning"
-tags: "- anomaly detection
+  - 122-federated-learning
+tags:
+  - anomaly detection
   - outlier detection
   - isolation forest
   - lof
@@ -20,10 +23,19 @@ tags: "- anomaly detection
   - autoencoder
   - vae
   - gan
-  - 离群点检测"
-relatedTerms: ["matrix", "tensor", "gradient-descent", "convex-optimization"]
-relatedTools: ["numpy", "pandas", "scikit-learn"]
-relatedNodes: ["math-linear-algebra", "llm-inference"]
+  - 离群点检测
+relatedTerms:
+  - "matrix"
+  - "tensor"
+  - "gradient-descent"
+  - "convex-optimization"
+relatedTools:
+  - "numpy"
+  - "pandas"
+  - "scikit-learn"
+relatedNodes:
+  - "math-linear-algebra"
+  - "llm-inference"
 ---
 
 ## 为什么你要学它

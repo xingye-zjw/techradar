@@ -4,17 +4,47 @@ category: llm
 difficulty: advanced
 duration: 2周
 summary: 系统掌握三大主流长上下文扩展技术的数学原理、工程实现与适用场景。涵盖 RoPE 频率外推（YaRN）、注意力 sink（StreamingLLM）、分块递归推理（InfLLM）三条路线，配合 vLLM / onnxruntime-genai 落地实践。
-keywords: [长上下文, RoPE, YaRN, StreamingLLM, InfLLM, 1M token, 注意力外推]
+keywords:
+  - 长上下文
+  - RoPE
+  - YaRN
+  - StreamingLLM
+  - InfLLM
+  - 1M token
+  - 注意力外推
 takeaways:
   - 搞懂 RoPE 位置编码的频率外推问题，为什么原生 4K 模型在 8K 会崩
   - 理解 YaRN 的旋转角温度缩放与动态 NTK 的数学直觉
   - 能画出 StreamingLLM 的 attention sink 缓存结构与 token 淘汰流程图
   - 能跑通 vLLM 部署 128K 上下文模型，配置 PagedAttention 长序列参数
   - 实现基于 InfLLM 思路的分块递归摘要 + 检索混合长文档问答
-tags: [llm, 长上下文, RoPE, YaRN, StreamingLLM, InfLLM, 外推]
-relatedTerms: [transformer, self-attention, kv-cache, matrix, vllm, onnx, tensor]
-relatedTools: [vllm, onnxruntime-genai, transformers-agent, onnx-runtime, ollama]
-relatedNodes: [llm-inference, llm-rag, llm-eval, llm-agent]
+tags:
+  - llm
+  - 长上下文
+  - RoPE
+  - YaRN
+  - StreamingLLM
+  - InfLLM
+  - 外推
+relatedTerms:
+  - transformer
+  - self-attention
+  - kv-cache
+  - matrix
+  - vllm
+  - onnx
+  - tensor
+relatedTools:
+  - vllm
+  - onnxruntime-genai
+  - transformers-agent
+  - onnx-runtime
+  - ollama
+relatedNodes:
+  - llm-inference
+  - llm-rag
+  - llm-eval
+  - llm-agent
 ---
 
 ## 为什么你要学它

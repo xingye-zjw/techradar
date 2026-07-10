@@ -4,8 +4,10 @@ category: deep-learning
 difficulty: intermediate
 duration: 30分钟
 summary: 聚焦单点问题：PyTorch DataLoader 多进程卡死，涵盖 Windows spawn 启动方式、num_workers=0、if __name__=='__main__' 保护、CUDA 不支持 fork 等排查与修复方案。
-takeaways: "- 快速识别「多进程 DataLoader (num_workers > 0) 卡死」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑"
-relatedIntel: "- 011-pytorch - 092-pitfall-python"
+takeaways:
+  - '快速识别「多进程 DataLoader (num_workers > 0) 卡死」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑'
+relatedIntel:
+  - 011-pytorch - 092-pitfall-python
 tags:
   - 深度学习
   - DL

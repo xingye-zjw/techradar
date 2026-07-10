@@ -4,8 +4,10 @@ category: embedded
 difficulty: intermediate
 duration: 30分钟
 summary: 聚焦单点问题：C 语言指针越界访问导致段错误，涵盖根因（指针算术错误、数组越界、野指针）、Valgrind/-fsanitize=address 检测、strncpy/snprintf 安全函数、MPU 限制访问范围等排查与修复方案。
-takeaways: "- 快速识别「C语言指针越界访问导致段错误」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑"
-relatedIntel: "- 052-embedded-c - 097-pitfall-embedded"
+takeaways:
+  - 快速识别「C语言指针越界访问导致段错误」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑
+relatedIntel:
+  - 052-embedded-c - 097-pitfall-embedded
 tags:
   - 嵌入式
   - MCU

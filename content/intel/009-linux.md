@@ -4,28 +4,37 @@ category: devops
 difficulty: beginner
 duration: 2-3周
 summary: 深度学习训练几乎都在 Linux 服务器上进行，不会 Linux 就没法跑大规模模型、没法做远程开发与部署
-takeaways: "- 掌握 Linux 目录结构与高频命令（ls/cd/pwd/mkdir/cp/rm/find/grep）
+takeaways:
+  - 掌握 Linux 目录结构与高频命令（ls/cd/pwd/mkdir/cp/rm/find/grep）
   - 会用 top/nvidia-smi/kill 管理进程与资源，能定位训练卡死问题
   - 配置 SSH 免密登录与密钥认证，能安全远程管理多台服务器
-  - 理解文件权限机制，用 chmod/chown 管理文件访问"
-relatedIntel: "- 007-docker
+  - 理解文件权限机制，用 chmod/chown 管理文件访问
+relatedIntel:
+  - 007-docker
   - 008-git
-  - 012-streamlit"
-relatedNodes: [
-    "- linux-basic
-    - electrical-safety",
-    "devops-kubernetes",
-  ]
-tags: "- linux
+  - 012-streamlit
+relatedNodes:
+  - linux-basic
+  - electrical-safety
+  - devops-kubernetes
+tags:
+  - linux
   - bash
   - shell
   - terminal
   - ssh
   - nvidia
   - permissions
-  - process"
-relatedTerms: ["linux", "docker", "kubernetes", "git"]
-relatedTools: ["kubernetes", "mlflow", "docker"]
+  - process
+relatedTerms:
+  - "linux"
+  - "docker"
+  - "kubernetes"
+  - "git"
+relatedTools:
+  - "kubernetes"
+  - "mlflow"
+  - "docker"
 ---
 
 ## 为什么你要学它

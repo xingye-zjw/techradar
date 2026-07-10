@@ -4,8 +4,10 @@ category: devops
 difficulty: intermediate
 duration: 30分钟
 summary: 聚焦单点问题：Python 环境依赖冲突导致 import 失败，涵盖 pip/conda 混用风险、虚拟环境隔离、pip-compile 锁定版本、LD_LIBRARY_PATH 检查等排查与修复方案。
-takeaways: "- 快速识别「Python 环境依赖冲突导致 import 失败」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑"
-relatedIntel: "- 092-pitfall-python - 093-pitfall-docker"
+takeaways:
+  - 快速识别「Python 环境依赖冲突导致 import 失败」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑
+relatedIntel:
+  - 092-pitfall-python - 093-pitfall-docker
 tags:
   - DevOps
   - 部署

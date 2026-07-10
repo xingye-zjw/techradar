@@ -9,18 +9,29 @@ takeaways:
   - 掌握 Mask R-CNN 的两阶段框架：先检测再分割，理解 RoI Align 为什么比 RoI Pooling 更精确
   - 能在 COCO 数据集上跑通 Mask R-CNN/YOLACT 推理，理解端到端实例分割的工程权衡
   - 区分实例分割与全景分割的应用场景，知道什么时候选什么任务"
-relatedTerms: ["cnn", "yolo", "instance-segmentation", "resnet"]
-relatedIntel: "- 002-yolo
+relatedTerms:
+  - "cnn"
+  - "yolo"
+  - "instance-segmentation"
+  - "resnet"
+relatedIntel:
+  - 002-yolo
   - 004-resnet
-  - 006-cnn-basics"
-tags: "- instance-segmentation
+  - 006-cnn-basics
+tags:
+  - instance-segmentation
   - mask-rcnn
   - semantic-vs-instance
   - panoptic-segmentation
   - yolact
-  - panoptic-segformer"
-relatedTools: ["ultralytics-yolo", "numpy", "matplotlib"]
-relatedNodes: ["cv-detection", "cv-segmentation"]
+  - panoptic-segformer
+relatedTools:
+  - "ultralytics-yolo"
+  - "numpy"
+  - "matplotlib"
+relatedNodes:
+  - "cv-detection"
+  - "cv-segmentation"
 ---
 
 ## 为什么你要学它

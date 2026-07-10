@@ -4,22 +4,34 @@ category: embedded
 difficulty: beginner
 duration: 2-3周
 summary: 理解PLC在工业自动化中的应用。掌握梯形图编程、I/O配置、通信协议等核心技能。
-takeaways: "- 理解PLC的工作原理
+takeaways:
+  - 理解PLC的工作原理
   - 掌握梯形图编程方法
   - 理解I/O模块配置
-  - 了解工业通信协议"
-relatedIntel: "- 052-embedded-c
+  - 了解工业通信协议
+relatedIntel:
+  - 052-embedded-c
   - 053-embedded-rtos
-  - 054-elec-circuit"
-tags: "- plc
+  - 054-elec-circuit
+tags:
+  - plc
   - 可编程控制器
   - 梯形图
   - 工业自动化
   - 西门子
-  - IEC 61131-3"
-relatedTerms: ["data-structure", "rtos", "algorithm", "complexity"]
-relatedTools: ["pytorch", "ultralytics-yolo", "huggingface-transformers"]
-relatedNodes: ["roadmap-capstone", "electrical-safety"]
+  - IEC 61131-3
+relatedTerms:
+  - "data-structure"
+  - "rtos"
+  - "algorithm"
+  - "complexity"
+relatedTools:
+  - "pytorch"
+  - "ultralytics-yolo"
+  - "huggingface-transformers"
+relatedNodes:
+  - "roadmap-capstone"
+  - "electrical-safety"
 ---
 
 ## 为什么你要学它

@@ -4,22 +4,34 @@ category: llm
 difficulty: beginner
 duration: 1周
 summary: 检索增强生成（RAG）让大模型能基于私有知识库回答问题，是构建企业知识库、客服机器人最落地的 LLM 方案。
-takeaways: "- 理解 RAG 的核心流程：文档加载、分块、向量化、检索、生成
+takeaways:
+  - 理解 RAG 的核心流程：文档加载、分块、向量化、检索、生成
   - 掌握向量数据库与 Embedding 模型在 RAG 中的作用
   - 学会用 LangChain / LlamaIndex 搭建最小可用 RAG 系统
-  - 了解 RAG 常见失败模式：检索不准、上下文截断、幻觉"
-relatedIntel: "- 005-rag
+  - 了解 RAG 常见失败模式：检索不准、上下文截断、幻觉
+relatedIntel:
+  - 005-rag
   - 035-advanced-rag
-  - 042-vector-database"
-tags: "- rag
+  - 042-vector-database
+tags:
+  - rag
   - retrieval-augmented-generation
   - vector-database
   - embedding
   - langchain
-  - llm"
-relatedTerms: ["rag", "lora", "transformer", "chain-of-thought"]
-relatedTools: ["huggingface-transformers", "langchain", "pytorch"]
-relatedNodes: ["llm-inference", "llm-prompt-engineering"]
+  - llm
+relatedTerms:
+  - "rag"
+  - "lora"
+  - "transformer"
+  - "chain-of-thought"
+relatedTools:
+  - "huggingface-transformers"
+  - "langchain"
+  - "pytorch"
+relatedNodes:
+  - "llm-inference"
+  - "llm-prompt-engineering"
 ---
 
 ## 为什么你要学它

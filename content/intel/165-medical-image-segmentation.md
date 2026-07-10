@@ -26,9 +26,21 @@ tags:
   - 3d-segmentation
   - unet
   - ct-mri
-relatedTerms: [cnn, resnet, instance-segmentation, fine-tuning, lora]
-relatedTools: [segment-anything, pytorch, opencv, numpy, jupyter]
-relatedNodes: [cv-segmentation, cv-detection]
+relatedTerms:
+  - cnn
+  - resnet
+  - instance-segmentation
+  - fine-tuning
+  - lora
+relatedTools:
+  - segment-anything
+  - pytorch
+  - opencv
+  - numpy
+  - jupyter
+relatedNodes:
+  - cv-segmentation
+  - cv-detection
 ---
 
 ## 为什么你要学它

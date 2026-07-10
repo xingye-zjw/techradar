@@ -26,9 +26,20 @@ tags:
   - prompt-segmentation
   - mask-propagation
   - meta-ai
-relatedTerms: [instance-segmentation, transformer, self-attention, resnet, onnx]
-relatedTools: [segment-anything, pytorch, opencv, huggingface-transformers]
-relatedNodes: [cv-segmentation, cv-detection]
+relatedTerms:
+  - instance-segmentation
+  - transformer
+  - self-attention
+  - resnet
+  - onnx
+relatedTools:
+  - segment-anything
+  - pytorch
+  - opencv
+  - huggingface-transformers
+relatedNodes:
+  - cv-segmentation
+  - cv-detection
 ---
 
 ## 为什么你要学它

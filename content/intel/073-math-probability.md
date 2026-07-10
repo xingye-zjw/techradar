@@ -4,21 +4,33 @@ category: math
 difficulty: beginner
 duration: 2-3周
 summary: 机器学习模型的理论基础。理解概率分布、贝叶斯定理、假设检验等核心概念。
-takeaways: "- 掌握常见概率分布及其应用场景
+takeaways:
+  - 掌握常见概率分布及其应用场景
   - 理解贝叶斯定理及其在机器学习中的应用
   - 学会假设检验和置信区间
-  - 能用Python进行统计分析"
-relatedIntel: "- 024-information-theory
+  - 能用Python进行统计分析
+relatedIntel:
+  - 024-information-theory
   - 025-convex-optimization
-  - 072-math-linear-algebra"
-tags: "- 概率论
+  - 072-math-linear-algebra
+tags:
+  - 概率论
   - 统计
   - 贝叶斯
   - 概率分布
-  - 假设检验"
-relatedTerms: ["tensor", "matrix", "entropy", "convex-optimization"]
-relatedTools: ["pandas", "numpy", "jupyter"]
-relatedNodes: ["llm-inference", "math-linear-algebra"]
+  - 假设检验
+relatedTerms:
+  - "tensor"
+  - "matrix"
+  - "entropy"
+  - "convex-optimization"
+relatedTools:
+  - "pandas"
+  - "numpy"
+  - "jupyter"
+relatedNodes:
+  - "llm-inference"
+  - "math-linear-algebra"
 ---
 
 ## 为什么你要学它

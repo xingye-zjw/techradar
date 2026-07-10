@@ -4,8 +4,10 @@ category: deep-learning
 difficulty: intermediate
 duration: 30分钟
 summary: 聚焦单点问题：训练 Loss NaN 与梯度爆炸，涵盖学习率调整、梯度裁剪（clip_grad_norm_）、AdamW+warmup、数据 NaN 检查等排查与修复方案。
-takeaways: "- 快速识别「Loss NaN / 梯度爆炸」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑"
-relatedIntel: "- 090-pitfall-dl-training - 017-metrics"
+takeaways:
+  - 快速识别「Loss NaN / 梯度爆炸」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑
+relatedIntel:
+  - 090-pitfall-dl-training - 017-metrics
 tags:
   - 深度学习
   - DL

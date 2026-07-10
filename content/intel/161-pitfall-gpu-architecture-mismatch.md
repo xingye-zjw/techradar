@@ -4,8 +4,10 @@ category: deep-learning
 difficulty: intermediate
 duration: 30分钟
 summary: 聚焦单点问题：训练用 GPU 与推理用 GPU 架构不一致导致模型不可用，涵盖 Ampere/Ada/Hopper 架构差异、CUDA Compute Capability、ONNX 跨架构验证、torch.jit 导出等排查与修复方案。
-takeaways: "- 快速识别「训练用 GPU 卡与推理用卡架构不一致」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑"
-relatedIntel: "- 034-cuda-programming - 011-pytorch"
+takeaways:
+  - 快速识别「训练用 GPU 卡与推理用卡架构不一致」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑
+relatedIntel:
+  - 034-cuda-programming - 011-pytorch
 tags:
   - 深度学习
   - DL

@@ -4,8 +4,10 @@ category: deep-learning
 difficulty: intermediate
 duration: 30分钟
 summary: 聚焦单点问题：CUDA 隐式同步导致推理速度异常慢，涵盖 .item()/.cpu()/.numpy() 触发同步、循环外统一转换、torch.cuda.synchronize 性能分析、批量推理等排查与修复方案。
-takeaways: "- 快速识别「CUDA 隐式同步导致推理速度异常慢」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑"
-relatedIntel: "- 034-cuda-programming - 019-vllm-inference"
+takeaways:
+  - 快速识别「CUDA 隐式同步导致推理速度异常慢」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑
+relatedIntel:
+  - 034-cuda-programming - 019-vllm-inference
 tags:
   - 深度学习
   - DL

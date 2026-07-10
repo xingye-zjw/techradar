@@ -4,26 +4,34 @@ category: llm
 difficulty: advanced
 duration: 1-2周
 summary: 文本和图像不再是两个世界——多模态大模型让 LLM「看懂」图片，实现图文混合推理
-takeaways: "- 理解 CLIP 的图像-文本对齐原理（对比学习）
+takeaways:
+  - 理解 CLIP 的图像-文本对齐原理（对比学习）
   - 理解 LLaVA / GPT-4V 的架构：Vision Encoder + Projector + LLM
   - 能用 LLaVA 或类似模型做图文混合推理
-  - 能解释为什么多模态模型需要「对齐训练」"
-relatedIntel: "- 003-lora-qlora
+  - 能解释为什么多模态模型需要「对齐训练」
+relatedIntel:
+  - 003-lora-qlora
   - 005-rag
-  - 015-rlhf"
-relatedNodes: [
-    "llm-inference",
-    "- llm-finetune
-    - llm-inference",
-  ]
-tags: "- multimodal
+  - 044-rlhf
+relatedNodes:
+  - llm-inference
+  - llm-finetune
+tags:
+  - multimodal
   - clip
   - vision encoder
   - gpt-4v
   - llava
-  - image understanding"
-relatedTerms: ["rag", "lora", "transformer", "chain-of-thought"]
-relatedTools: ["huggingface-transformers", "langchain", "pytorch"]
+  - image understanding
+relatedTerms:
+  - "rag"
+  - "lora"
+  - "transformer"
+  - "chain-of-thought"
+relatedTools:
+  - "huggingface-transformers"
+  - "langchain"
+  - "pytorch"
 ---
 
 ## 为什么你要学它

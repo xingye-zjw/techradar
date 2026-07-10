@@ -4,22 +4,34 @@ category: deep-learning
 difficulty: intermediate
 duration: 1-2周
 summary: 处理图结构数据的深度学习方法，在社交网络、分子预测、推荐系统等领域广泛应用。
-takeaways: "- 理解图的数学表示 G=(V,E) 和邻接矩阵 A，能在脑海中建立图结构的直觉
+takeaways:
+  - '理解图的数学表示 G=(V,E) 和邻接矩阵 A，能在脑海中建立图结构的直觉'
   - 掌握 GCN 的核心公式 H^(l+1) = σ(D^(-1/2)ÂD^(-1/2)H^(l)W^(l))，理解对称归一化的意义
   - 搞懂消息传递范式：每个节点聚合邻居信息→更新自身表示，这是所有 GNN 的通用框架
-  - 能用 PyTorch Geometric 实现节点分类、链路预测、图分类三类典型任务"
-relatedTools: ["pytorch", "huggingface-transformers", "pytorch-geometric"]
-relatedIntel: "- 001-transformer
-  - 011-pytorch"
-tags: "- gnn
+  - 能用 PyTorch Geometric 实现节点分类、链路预测、图分类三类典型任务
+relatedTools:
+  - "pytorch"
+  - "huggingface-transformers"
+  - "pytorch-geometric"
+relatedIntel:
+  - 001-transformer
+  - 011-pytorch
+tags:
+  - gnn
   - graph neural network
   - gcn
   - gat
   - graphsage
   - message passing
-  - pytorch geometric"
-relatedTerms: ["tensor", "gradient-descent", "transformer", "cnn"]
-relatedNodes: ["cv-segmentation", "llm-inference"]
+  - pytorch geometric
+relatedTerms:
+  - "tensor"
+  - "gradient-descent"
+  - "transformer"
+  - "cnn"
+relatedNodes:
+  - "cv-segmentation"
+  - "llm-inference"
 ---
 
 ## 为什么你要学它

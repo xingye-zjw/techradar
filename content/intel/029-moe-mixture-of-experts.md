@@ -4,26 +4,34 @@ category: llm
 difficulty: advanced
 duration: 1周
 summary: 不是把模型做大，而是把模型「拆开」——每次只激活一小部分专家，参数量翻倍但推理成本几乎不变
-takeaways: "- 理解 MoE 的核心：稀疏激活（Sparse Activation）+ 专家路由（Expert Routing）
+takeaways:
+  - 理解 MoE 的核心：稀疏激活（Sparse Activation）+ 专家路由（Expert Routing）
   - 能解释为什么 MoE 模型参数量大但推理快
   - 理解 DeepSeek / Mixtral 等 MoE LLM 的架构设计
-  - 能在 PyTorch 中实现一个简单的 MoE Layer"
-relatedIntel: "- 003-lora-qlora
+  - 能在 PyTorch 中实现一个简单的 MoE Layer
+relatedIntel:
+  - 003-lora-qlora
   - 005-rag
-  - 015-rlhf"
-relatedNodes: [
-    "llm-inference",
-    "- llm-finetune
-    - llm-inference",
-  ]
-tags: "- mixture of experts
+  - 044-rlhf
+relatedNodes:
+  - llm-inference
+  - llm-finetune
+tags:
+  - mixture of experts
   - moe
   - sparse activation
   - expert routing
   - deepseek
-  - mixtral"
-relatedTerms: ["rag", "lora", "transformer", "chain-of-thought"]
-relatedTools: ["huggingface-transformers", "langchain", "pytorch"]
+  - mixtral
+relatedTerms:
+  - "rag"
+  - "lora"
+  - "transformer"
+  - "chain-of-thought"
+relatedTools:
+  - "huggingface-transformers"
+  - "langchain"
+  - "pytorch"
 ---
 
 ## 为什么你要学它

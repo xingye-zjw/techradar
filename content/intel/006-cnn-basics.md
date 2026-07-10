@@ -4,14 +4,17 @@ category: computer-vision
 difficulty: beginner
 duration: 1-2周
 summary: 从原始像素中自动提取层次化视觉特征，是 ResNet、ViT 等所有现代视觉模型的共同祖先
-takeaways: "- 理解卷积、池化、padding、stride 的直觉与输出尺寸公式
+takeaways:
+  - 理解卷积、池化、padding、stride 的直觉与输出尺寸公式
   - 理解感受野与层次化特征提取（边缘 → 纹理 → 物体 → 场景）
   - 读懂 LeNet → AlexNet → VGG → GoogLeNet 的演进脉络
-  - 能用 PyTorch 手写一个两层 CNN，在 MNIST 上训练到 99%+ 准确率"
-relatedIntel: "- 002-yolo
+  - '能用 PyTorch 手写一个两层 CNN，在 MNIST 上训练到 99%+ 准确率'
+relatedIntel:
+  - 002-yolo
   - 004-resnet
-  - 060-cv-instance-segmentation"
-tags: "- cnn
+  - 060-cv-instance-segmentation
+tags:
+  - cnn
   - convolution
   - pooling
   - feature map
@@ -19,10 +22,19 @@ tags: "- cnn
   - alexnet
   - vgg
   - receptive field
-  - batch normalization"
-relatedTerms: ["cnn", "yolo", "transformer", "resnet"]
-relatedTools: ["ultralytics-yolo", "numpy", "matplotlib"]
-relatedNodes: ["cv-detection", "cv-segmentation"]
+  - batch normalization
+relatedTerms:
+  - "cnn"
+  - "yolo"
+  - "transformer"
+  - "resnet"
+relatedTools:
+  - "ultralytics-yolo"
+  - "numpy"
+  - "matplotlib"
+relatedNodes:
+  - "cv-detection"
+  - "cv-segmentation"
 ---
 
 ## 为什么你要学它

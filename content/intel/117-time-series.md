@@ -4,24 +4,36 @@ category: data-processing
 difficulty: intermediate
 duration: 2-3周
 summary: 从经典统计到深度学习，系统掌握时间序列分解、预测、异常检测的核心方法与实战技能。
-takeaways: "- 理解时间序列三大组成：趋势、季节性、残差，能用 STL 分解做可视化分析
+takeaways:
+  - 理解时间序列三大组成：趋势、季节性、残差，能用 STL 分解做可视化分析
   - 掌握 ARIMA/SARIMA 原理，能通过 ADF 检验和平稳性分析选择合适的参数
   - 能用 Prophet 快速落地业务预测，理解其可解释性和节假日处理机制
   - 掌握 LSTM/TCN/TFT 等深度学习时序方法，知道不同场景下该选什么模型
-  - 理解多步预测策略（递归/直接/多输出）的 trade-off，会用 MAE/RMSE/MAPE/SMAPE 评估模型"
-relatedIntel: "- 010-numpy-pandas
+  - 理解多步预测策略（递归/直接/多输出）的 trade-off，会用 MAE/RMSE/MAPE/SMAPE 评估模型
+relatedIntel:
+  - 010-numpy-pandas
   - 013-huggingface-datasets
-  - 023-data-pipeline-etl"
-tags: "- time series
+  - 023-data-pipeline-etl
+tags:
+  - time series
   - arima
   - prophet
   - lstm
   - tcn
   - tft
-  - anomaly detection"
-relatedTerms: ["matrix", "tensor", "entropy", "transformer"]
-relatedTools: ["numpy", "jupyter", "pandas"]
-relatedNodes: ["nlp-rnn", "math-linear-algebra"]
+  - anomaly detection
+relatedTerms:
+  - "matrix"
+  - "tensor"
+  - "entropy"
+  - "transformer"
+relatedTools:
+  - "numpy"
+  - "jupyter"
+  - "pandas"
+relatedNodes:
+  - "nlp-rnn"
+  - "math-linear-algebra"
 ---
 
 ## 为什么你要学它

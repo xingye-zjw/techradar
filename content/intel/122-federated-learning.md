@@ -4,14 +4,17 @@ category: machine-learning
 difficulty: intermediate
 duration: 2-3周
 summary: 数据不出本地、模型共享的分布式机器学习范式。解决数据孤岛与隐私保护的核心技术，金融、医疗、IoT 等场景刚需。
-takeaways: '- 理解"数据不动模型动"的核心思想，分清横向/纵向/联邦迁移三种联邦学习的适用场景
+takeaways:
+  - '理解"数据不动模型动"的核心思想，分清横向/纵向/联邦迁移三种联邦学习的适用场景'
   - 掌握 FedAvg 算法流程：客户端本地训练→上传参数→服务器聚合→下发更新
   - 明白通信效率优化（客户端采样、模型压缩、增量更新）和隐私保护（DP、HE、MPC）的技术思路
-  - 用 Flower 框架跑通一个完整的联邦图像分类实验，感受 Non-IID 数据对模型性能的影响'
-relatedIntel: "- 112-rl-basics
+  - 用 Flower 框架跑通一个完整的联邦图像分类实验，感受 Non-IID 数据对模型性能的影响
+relatedIntel:
+  - 112-rl-basics
   - 116-recommender-systems
-  - 118-anomaly-detection"
-tags: "- federated learning
+  - 118-anomaly-detection
+tags:
+  - federated learning
   - fedavg
   - 隐私计算
   - 差分隐私
@@ -19,10 +22,19 @@ tags: "- federated learning
   - non-iid
   - flower
   - fedml
-  - fate"
-relatedTerms: ["matrix", "tensor", "gradient-descent", "convex-optimization"]
-relatedTools: ["numpy", "pandas", "scikit-learn"]
-relatedNodes: ["math-linear-algebra", "llm-inference"]
+  - fate
+relatedTerms:
+  - "matrix"
+  - "tensor"
+  - "gradient-descent"
+  - "convex-optimization"
+relatedTools:
+  - "numpy"
+  - "pandas"
+  - "scikit-learn"
+relatedNodes:
+  - "math-linear-algebra"
+  - "llm-inference"
 ---
 
 ## 为什么你要学它

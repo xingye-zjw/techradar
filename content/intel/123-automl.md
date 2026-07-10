@@ -4,24 +4,36 @@ category: machine-learning
 difficulty: intermediate
 duration: 1-2周
 summary: 用自动化方法替代人工调参和模型选择，让机器学习从\"手艺活\"变成\"流水线\"。掌握AutoML能让你用1/10的时间得到更好的模型。
-takeaways: "- 理解AutoML的完整 pipeline：数据预处理 → 特征工程 → 模型选择 → 超参优化 → 架构搜索
+takeaways:
+  - 理解AutoML的完整 pipeline：数据预处理 → 特征工程 → 模型选择 → 超参优化 → 架构搜索
   - 搞懂贝叶斯优化为什么比网格/随机搜索高效，能说清采集函数(EI/PI/UCB)的作用
   - 掌握NAS三种主流范式：强化学习(ENAS)、可微分(DARTS)、进化算法的核心思想
-  - 能用AutoGluon和Optuna在真实数据集上跑通端到端的AutoML流程"
-relatedIntel: "- 112-rl-basics
+  - 能用AutoGluon和Optuna在真实数据集上跑通端到端的AutoML流程
+relatedIntel:
+  - 112-rl-basics
   - 116-recommender-systems
-  - 118-anomaly-detection"
-tags: "- automl
+  - 118-anomaly-detection
+tags:
+  - automl
   - 超参数优化
   - 神经架构搜索
   - nas
   - 贝叶斯优化
   - autogluon
   - optuna
-  - 特征工程"
-relatedTerms: ["matrix", "tensor", "gradient-descent", "convex-optimization"]
-relatedTools: ["numpy", "pandas", "scikit-learn"]
-relatedNodes: ["math-linear-algebra", "llm-inference"]
+  - 特征工程
+relatedTerms:
+  - "matrix"
+  - "tensor"
+  - "gradient-descent"
+  - "convex-optimization"
+relatedTools:
+  - "numpy"
+  - "pandas"
+  - "scikit-learn"
+relatedNodes:
+  - "math-linear-algebra"
+  - "llm-inference"
 ---
 
 ## 为什么你要学它

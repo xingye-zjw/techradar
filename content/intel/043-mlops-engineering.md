@@ -4,21 +4,33 @@ category: data-processing
 difficulty: intermediate
 duration: 1-2周
 summary: 训练只是 MLOps 的 10%——那 90% 是版本管理、监控、自动重训练、模型部署的完整工程化体系
-takeaways: "- 理解 MLOps 的完整生命周期：数据 → 特征工程 → 训练 → 评估 → 部署
+takeaways:
+  - 理解 MLOps 的完整生命周期：数据 → 特征工程 → 训练 → 评估 → 部署
   - 能用 MLflow 或 WandB 管理实验和模型版本
   - 理解 Feature Store 的设计理念和实践
-  - 能设计一个支持 CI/CD 的自动化训练 Pipeline"
-relatedIntel: "- 010-numpy-pandas
+  - 能设计一个支持 CI/CD 的自动化训练 Pipeline
+relatedIntel:
+  - 010-numpy-pandas
   - 013-huggingface-datasets
-  - 023-data-pipeline-etl"
-tags: "- mlops
+  - 023-data-pipeline-etl
+tags:
+  - mlops
   - experiment tracking
   - model registry
   - feature store
-  - continuous training"
-relatedTerms: ["matrix", "entropy", "tensor", "transformer"]
-relatedTools: ["jupyter", "numpy", "pandas"]
-relatedNodes: ["nlp-rnn", "math-linear-algebra"]
+  - continuous training
+relatedTerms:
+  - "matrix"
+  - "entropy"
+  - "tensor"
+  - "transformer"
+relatedTools:
+  - "jupyter"
+  - "numpy"
+  - "pandas"
+relatedNodes:
+  - "nlp-rnn"
+  - "math-linear-algebra"
 ---
 
 ## 为什么你要学它

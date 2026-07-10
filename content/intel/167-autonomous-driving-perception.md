@@ -26,9 +26,21 @@ tags:
   - multi-task-perception
   - sensor-fusion
   - 3d-object-detection
-relatedTerms: [transformer, self-attention, resnet, instance-segmentation, cnn]
-relatedTools: [opencv, pytorch, numpy, matplotlib, ultralytics-yolo]
-relatedNodes: [cv-detection, cv-segmentation]
+relatedTerms:
+  - transformer
+  - self-attention
+  - resnet
+  - instance-segmentation
+  - cnn
+relatedTools:
+  - opencv
+  - pytorch
+  - numpy
+  - matplotlib
+  - ultralytics-yolo
+relatedNodes:
+  - cv-detection
+  - cv-segmentation
 ---
 
 ## 为什么你要学它

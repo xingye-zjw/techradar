@@ -4,26 +4,34 @@ category: llm
 difficulty: intermediate
 duration: 1周
 summary: Naive RAG 的天花板在哪里？Advanced RAG 如何通过 Query 改写、重排序、知识图谱突破它
-takeaways: "- 理解 Naive RAG 的核心局限（chunking / embedding / retrieval 三环节各有坑）
+takeaways:
+  - 理解 Naive RAG 的核心局限（chunking / embedding / retrieval 三环节各有坑）
   - 能实现 Query 改写（HyDE）和上下文扩展
   - 能用 Cross-Encoder Reranker 提升 Top-k 准确率
-  - 理解 Knowledge Graph RAG 的架构思路"
-relatedIntel: "- 003-lora-qlora
+  - 理解 Knowledge Graph RAG 的架构思路
+relatedIntel:
+  - 003-lora-qlora
   - 005-rag
-  - 015-rlhf"
-relatedNodes: [
-    "llm-inference",
-    "- llm-finetune
-    - llm-inference",
-  ]
-tags: "- rag
+  - 044-rlhf
+relatedNodes:
+  - llm-inference
+  - llm-finetune
+tags:
+  - rag
   - retrieval
   - reranker
   - hyde
   - contextual chunking
-  - knowledge graph rag"
-relatedTerms: ["rag", "lora", "transformer", "chain-of-thought"]
-relatedTools: ["huggingface-transformers", "langchain", "pytorch"]
+  - knowledge graph rag
+relatedTerms:
+  - "rag"
+  - "lora"
+  - "transformer"
+  - "chain-of-thought"
+relatedTools:
+  - "huggingface-transformers"
+  - "langchain"
+  - "pytorch"
 ---
 
 ## 为什么你要学它

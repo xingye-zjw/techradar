@@ -4,24 +4,36 @@ category: devops
 difficulty: intermediate
 duration: 1周
 summary: 分类 / 检测 / 生成任务该用什么指标打分，才能不被一个看起来漂亮的数字骗到
-takeaways: "- 会选分类任务中合适的指标：Accuracy / Precision / Recall / F1 / AUC-ROC
-  - 会解释 IoU 和 mAP@0.5 / mAP@0.5:0.95 的区别，并手写 IoU 代码
+takeaways:
+  - 会选分类任务中合适的指标：Accuracy / Precision / Recall / F1 / AUC-ROC
+  - '会解释 IoU 和 mAP@0.5 / mAP@0.5:0.95 的区别，并手写 IoU 代码'
   - 会用 sklearn 计算混淆矩阵、P/R/F1、AUC-ROC
-  - 知道 BLEU / ROUGE / Perplexity 的直觉，并能在生成任务里算一遍"
-relatedIntel: "- 007-docker
+  - 知道 BLEU / ROUGE / Perplexity 的直觉，并能在生成任务里算一遍
+relatedIntel:
+  - 007-docker
   - 008-git
-  - 009-linux"
-relatedNodes: ["devops-kubernetes", "electrical-safety"]
-tags: "- map
+  - 009-linux
+relatedNodes:
+  - "devops-kubernetes"
+  - "electrical-safety"
+tags:
+  - map
   - iou
   - f1 score
   - precision
   - recall
   - auc
   - bleu
-  - perplexity"
-relatedTerms: ["linux", "docker", "kubernetes", "git"]
-relatedTools: ["kubernetes", "mlflow", "docker"]
+  - perplexity
+relatedTerms:
+  - "linux"
+  - "docker"
+  - "kubernetes"
+  - "git"
+relatedTools:
+  - "kubernetes"
+  - "mlflow"
+  - "docker"
 ---
 
 ## 为什么你要学它

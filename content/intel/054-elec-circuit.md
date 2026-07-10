@@ -4,23 +4,35 @@ category: embedded
 difficulty: beginner
 duration: 3周
 summary: 从电路基本定律到模拟电子技术核心器件，掌握看懂原理图、设计电路、分析信号的能力
-takeaways: "- 理解电路基本定律和分析方法
+takeaways:
+  - 理解电路基本定律和分析方法
   - 掌握常用电子器件特性
   - 能看懂和设计基础电路
-  - 理解运放、二极管、晶体管的应用"
-relatedTerms: ["data-structure", "rtos", "circuit", "algorithm"]
-relatedIntel: "- 052-embedded-c
+  - 理解运放、二极管、晶体管的应用
+relatedTerms:
+  - "data-structure"
+  - "rtos"
+  - "circuit"
+  - "algorithm"
+relatedIntel:
+  - 052-embedded-c
   - 053-embedded-rtos
-  - 055-elec-signals"
-relatedNodes: ["elec-circuit", "electrical-safety"]
-tags: "- circuit
+  - 055-elec-signals
+relatedNodes:
+  - "elec-circuit"
+  - "electrical-safety"
+tags:
+  - circuit
   - analog
   - op-amp
   - transistor
   - diode
   - mosfet
-  - power-supply"
-relatedTools: ["huggingface-transformers", "ultralytics-yolo", "pytorch"]
+  - power-supply
+relatedTools:
+  - "huggingface-transformers"
+  - "ultralytics-yolo"
+  - "pytorch"
 ---
 
 ## 为什么你要学它

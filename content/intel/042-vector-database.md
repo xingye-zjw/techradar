@@ -4,27 +4,35 @@ category: devops
 difficulty: intermediate
 duration: 1周
 summary: RAG 的核心是向量检索——向量数据库让「语义相似」变成可查询的索引
-takeaways: "- 理解向量数据库的核心操作：插入 / 查询 / 删除
+takeaways:
+  - 理解向量数据库的核心操作：插入 / 查询 / 删除
   - 理解 ANN（近似最近邻）算法的原理和 trade-off
   - 能用 ChromaDB / Milvus / FAISS 构建向量索引
-  - 能选择合适的索引类型（HNSW / IVF）"
-relatedTools: [
-    "- faiss
-    - chromadb",
-    "mlflow",
-    "docker",
-  ]
-relatedIntel: "- 007-docker
+  - 能选择合适的索引类型（HNSW / IVF）
+relatedTools:
+  - faiss
+  - chromadb
+  - mlflow
+  - docker
+relatedIntel:
+  - 007-docker
   - 008-git
-  - 009-linux"
-relatedNodes: ["devops-kubernetes", "electrical-safety"]
-tags: "- vector database
+  - 009-linux
+relatedNodes:
+  - "devops-kubernetes"
+  - "electrical-safety"
+tags:
+  - vector database
   - embedding
   - similarity search
   - chromadb
   - milvus
-  - faiss"
-relatedTerms: ["linux", "docker", "kubernetes", "git"]
+  - faiss
+relatedTerms:
+  - "linux"
+  - "docker"
+  - "kubernetes"
+  - "git"
 ---
 
 ## 为什么你要学它

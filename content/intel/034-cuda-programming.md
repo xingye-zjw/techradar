@@ -4,22 +4,34 @@ category: devops
 difficulty: advanced
 duration: 1-2周
 summary: 深度学习框架帮你封装了一切，但你真的了解 GPU 是怎么工作的吗——理解 CUDA 编程才能真正优化 GPU 利用率
-takeaways: "- 理解 CUDA 的编程模型：Grid / Block / Thread
+takeaways:
+  - 理解 CUDA 的编程模型：Grid / Block / Thread
   - 能写一个简单的 CUDA Kernel 并用 nvcc 编译
   - 理解 GPU 内存层级：Global / Shared / Register
-  - 能用 nvprof / Nsight 定位 GPU 程序瓶颈"
-relatedIntel: "- 007-docker
+  - 能用 nvprof / Nsight 定位 GPU 程序瓶颈
+relatedIntel:
+  - 007-docker
   - 008-git
-  - 009-linux"
-relatedNodes: ["devops-kubernetes", "electrical-safety"]
-tags: "- cuda
+  - 009-linux
+relatedNodes:
+  - "devops-kubernetes"
+  - "electrical-safety"
+tags:
+  - cuda
   - gpu programming
   - kernel
   - thread
   - memory coalescing
-  - shared memory"
-relatedTerms: ["linux", "docker", "kubernetes", "git"]
-relatedTools: ["kubernetes", "mlflow", "docker"]
+  - shared memory
+relatedTerms:
+  - "linux"
+  - "docker"
+  - "kubernetes"
+  - "git"
+relatedTools:
+  - "kubernetes"
+  - "mlflow"
+  - "docker"
 ---
 
 ## 为什么你要学它

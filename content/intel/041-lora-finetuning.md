@@ -4,26 +4,34 @@ category: llm
 difficulty: intermediate
 duration: 1周
 summary: 全量微调太贵？LoRA 用 0.1% 的参数达到 95% 的效果——微调技术的性价比革命
-takeaways: "- 理解全量微调（Full Fine-tuning）的成本和局限
+takeaways:
+  - 理解全量微调（Full Fine-tuning）的成本和局限
   - 理解 LoRA 的数学原理：低秩分解
   - 能用 PEFT 库实现 LoRA 微调
-  - 理解 QLoRA（4-bit + LoRA）的显存优化"
-relatedIntel: "- 003-lora-qlora
+  - 理解 QLoRA（4-bit + LoRA）的显存优化
+relatedIntel:
+  - 003-lora-qlora
   - 005-rag
-  - 015-rlhf"
-relatedNodes: [
-    "llm-inference",
-    "- llm-finetune
-    - llm-inference",
-  ]
-tags: "- fine-tuning
+  - 044-rlhf
+relatedNodes:
+  - llm-inference
+  - llm-finetune
+tags:
+  - fine-tuning
   - sft
   - lora
   - qlora
   - peft
-  - adapter"
-relatedTerms: ["rag", "lora", "transformer", "chain-of-thought"]
-relatedTools: ["huggingface-transformers", "langchain", "pytorch"]
+  - adapter
+relatedTerms:
+  - "rag"
+  - "lora"
+  - "transformer"
+  - "chain-of-thought"
+relatedTools:
+  - "huggingface-transformers"
+  - "langchain"
+  - "pytorch"
 ---
 
 ## 为什么你要学它

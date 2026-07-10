@@ -4,8 +4,10 @@ category: devops
 difficulty: intermediate
 duration: 30分钟
 summary: 聚焦单点问题：CUDA 与 PyTorch 版本不匹配导致算子不可用或运行时崩溃，涵盖 nvidia-smi 驱动版本核对、pytorch.org 官方安装命令、cuDNN 兼容性、conda 环境隔离等排查与修复方案。
-takeaways: "- 快速识别「CUDA 版本与 PyTorch 不匹配」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑"
-relatedIntel: "- 011-pytorch - 034-cuda-programming"
+takeaways:
+  - 快速识别「CUDA 版本与 PyTorch 不匹配」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑
+relatedIntel:
+  - 011-pytorch - 034-cuda-programming
 tags:
   - DevOps
   - 部署

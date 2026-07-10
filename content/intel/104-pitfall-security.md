@@ -4,8 +4,10 @@ category: llm
 difficulty: advanced
 duration: 30分钟
 summary: 涵盖 4 个常见踩坑：Prompt 注入攻击导致系统 prompt 泄露、RAG 系统检索到恶意文档导致生成有害内容、模型 API 密钥泄露导致被恶意调用、对抗样本攻击导致模型误分类，每个均附快速修复与排查步骤。
-takeaways: "- 掌握「AI 安全踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施"
-relatedIntel: "- 038-llm-security - 020-prompt-engineering"
+takeaways:
+  - 掌握「AI 安全踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施
+relatedIntel:
+  - 038-llm-security - 020-prompt-engineering
 tags:
   - 大模型
   - LLM

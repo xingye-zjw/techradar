@@ -4,8 +4,10 @@ category: embedded
 difficulty: intermediate
 duration: 30分钟
 summary: 聚焦单点问题：PID 参数整定不当导致系统振荡，涵盖 Z-N 整定法、积分抗饱和、微分先行、奈奎斯特准则等排查与修复方案。
-takeaways: "- 快速识别「PID参数整定不当导致系统振荡」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑"
-relatedIntel: "- 057-ctrl-pid - 110-pitfall-control"
+takeaways:
+  - 快速识别「PID参数整定不当导致系统振荡」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑
+relatedIntel:
+  - 057-ctrl-pid - 110-pitfall-control
 tags:
   - 嵌入式
   - MCU

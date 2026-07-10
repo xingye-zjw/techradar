@@ -4,8 +4,10 @@ category: devops
 difficulty: intermediate
 duration: 30分钟
 summary: 聚焦单点问题：SSH 连接远程服务器频繁掉线，涵盖 ServerAliveInterval/ServerAliveCountMax 保活、tmux/screen 会话保持、nohup/systemd 后台运行等排查与修复方案。
-takeaways: "- 快速识别「SSH 连接远程服务器频繁掉线」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑"
-relatedIntel: "- 009-linux - 016-server-setup"
+takeaways:
+  - 快速识别「SSH 连接远程服务器频繁掉线」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑
+relatedIntel:
+  - 009-linux - 016-server-setup
 tags:
   - DevOps
   - 部署

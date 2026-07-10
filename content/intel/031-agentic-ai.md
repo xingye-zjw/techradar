@@ -4,26 +4,34 @@ category: llm
 difficulty: advanced
 duration: 1-2周
 summary: Chatbot 只能「说话」，Agent 能「做事」——规划、执行、反思、协作，让 LLM 从对话者变成工作者
-takeaways: "- 理解 Agent 的核心循环：规划 → 执行 → 观察 → 反思
+takeaways:
+  - 理解 Agent 的核心循环：规划 → 执行 → 观察 → 反思
   - 能设计单 Agent 的工具调用和反思机制
   - 理解 Multi-Agent 系统的协作模式
-  - 能用 LangChain / AutoGen 等框架构建 Agent 应用"
-relatedIntel: "- 003-lora-qlora
+  - 能用 LangChain / AutoGen 等框架构建 Agent 应用
+relatedIntel:
+  - 003-lora-qlora
   - 005-rag
-  - 015-rlhf"
-relatedNodes: [
-    "llm-inference",
-    "- llm-finetune
-    - llm-inference",
-  ]
-tags: "- agent
+  - 044-rlhf
+relatedNodes:
+  - llm-inference
+  - llm-finetune
+tags:
+  - agent
   - agentic ai
   - tool use
   - planning
   - reflection
-  - multi-agent"
-relatedTerms: ["rag", "lora", "transformer", "chain-of-thought"]
-relatedTools: ["huggingface-transformers", "langchain", "pytorch"]
+  - multi-agent
+relatedTerms:
+  - "rag"
+  - "lora"
+  - "transformer"
+  - "chain-of-thought"
+relatedTools:
+  - "huggingface-transformers"
+  - "langchain"
+  - "pytorch"
 ---
 
 ## 为什么你要学它

@@ -4,8 +4,10 @@ category: deep-learning
 difficulty: intermediate
 duration: 30分钟
 summary: 聚焦单点问题：GPU 显存不足（CUDA out of memory）导致训练/推理崩溃，涵盖降低 batch_size、AMP 自动混合精度、梯度检查点、4-bit 量化、多卡并行等排查与修复方案。
-takeaways: "- 快速识别「显存不足 (CUDA out of memory)」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑"
-relatedIntel: "- 090-pitfall-dl-training - 034-cuda-programming"
+takeaways:
+  - 快速识别「显存不足 (CUDA out of memory)」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑
+relatedIntel:
+  - 090-pitfall-dl-training - 034-cuda-programming
 tags:
   - 深度学习
   - DL

@@ -4,27 +4,35 @@ category: llm
 difficulty: intermediate
 duration: 1周
 summary: 不是调模型参数，而是调问题表述——用更好的 Prompt 让同一个模型产生质的飞跃
-takeaways: "- 掌握结构化 Prompt 的核心组件：角色/任务/上下文/输出格式
+takeaways:
+  - 掌握结构化 Prompt 的核心组件：角色/任务/上下文/输出格式
   - 能用 Chain-of-Thought 显著提升复杂推理任务准确率
   - 能用 Function Calling 让 LLM 调用外部工具
-  - 能设计一个基本的 ReAct Agent"
-relatedIntel: "- 003-lora-qlora
+  - 能设计一个基本的 ReAct Agent
+relatedIntel:
+  - 003-lora-qlora
   - 005-rag
-  - 015-rlhf"
-relatedNodes: [
-    "- llm-finetune
-    - llm-inference
-    - llm-prompt-engineering",
-    "llm-inference",
-  ]
-tags: "- prompt engineering
+  - 044-rlhf
+relatedNodes:
+  - llm-finetune
+  - llm-inference
+  - llm-prompt-engineering
+tags:
+  - prompt engineering
   - chain-of-thought
   - function calling
   - react agent
   - structured output
-  - agentic"
-relatedTerms: ["rag", "lora", "transformer", "chain-of-thought"]
-relatedTools: ["huggingface-transformers", "langchain", "pytorch"]
+  - agentic
+relatedTerms:
+  - "rag"
+  - "lora"
+  - "transformer"
+  - "chain-of-thought"
+relatedTools:
+  - "huggingface-transformers"
+  - "langchain"
+  - "pytorch"
 ---
 
 ## 为什么你要学它

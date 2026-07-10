@@ -4,14 +4,17 @@ category: embedded
 difficulty: intermediate
 duration: 3-4周
 summary: 理解数字信号处理的核心原理。掌握FFT、数字滤波器设计、采样定理等关键技能。
-takeaways: "- 理解采样定理和量化
+takeaways:
+  - 理解采样定理和量化
   - 掌握DFT和FFT算法
   - 理解IIR和FIR滤波器设计
-  - 能用Python实现信号处理"
-relatedIntel: "- 052-embedded-c
+  - 能用Python实现信号处理
+relatedIntel:
+  - 052-embedded-c
   - 053-embedded-rtos
-  - 054-elec-circuit"
-tags: "- dsp
+  - 054-elec-circuit
+tags:
+  - dsp
   - 数字信号处理
   - fft
   - 数字滤波器
@@ -20,10 +23,19 @@ tags: "- dsp
   - iir
   - fir
   - 多采样率
-  - 量化"
-relatedTerms: ["data-structure", "rtos", "algorithm", "complexity"]
-relatedTools: ["huggingface-transformers", "ultralytics-yolo", "pytorch"]
-relatedNodes: ["roadmap-capstone", "electrical-safety"]
+  - 量化
+relatedTerms:
+  - "data-structure"
+  - "rtos"
+  - "algorithm"
+  - "complexity"
+relatedTools:
+  - "huggingface-transformers"
+  - "ultralytics-yolo"
+  - "pytorch"
+relatedNodes:
+  - "roadmap-capstone"
+  - "electrical-safety"
 ---
 
 ## 为什么你要学它

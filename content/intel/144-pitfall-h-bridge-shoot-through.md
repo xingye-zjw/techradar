@@ -4,8 +4,10 @@ category: embedded
 difficulty: intermediate
 duration: 30分钟
 summary: 聚焦单点问题：H 桥直通短路导致 MOSFET 损坏，涵盖死区时间设置（1-5μs）、IR2104 栅极驱动、关断延迟分析等排查与修复方案。
-takeaways: "- 快速识别「H桥驱动电机时的直通短路」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑"
-relatedIntel: "- 059-elec-motor - 111-pitfall-circuit"
+takeaways:
+  - 快速识别「H桥驱动电机时的直通短路」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑
+relatedIntel:
+  - 059-elec-motor - 111-pitfall-circuit
 tags:
   - 嵌入式
   - MCU

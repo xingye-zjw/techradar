@@ -4,23 +4,35 @@ category: embedded
 difficulty: advanced
 duration: 3周
 summary: 掌握直流电机和交流电机的控制原理，理解FOC矢量控制和电力电子变换技术
-takeaways: "- 理解电机工作原理
+takeaways:
+  - 理解电机工作原理
   - 掌握FOC矢量控制
   - 理解电力电子变换技术
-  - 能设计电机驱动系统"
-relatedIntel: "- 052-embedded-c
+  - 能设计电机驱动系统
+relatedIntel:
+  - 052-embedded-c
   - 053-embedded-rtos
-  - 054-elec-circuit"
-relatedNodes: ["elec-motor", "electrical-safety"]
-tags: "- motor
+  - 054-elec-circuit
+relatedNodes:
+  - "elec-motor"
+  - "electrical-safety"
+tags:
+  - motor
   - foc
   - inverter
   - pwm
   - pmsm
   - bldc
-  - power-electronics"
-relatedTerms: ["data-structure", "rtos", "algorithm", "complexity"]
-relatedTools: ["huggingface-transformers", "ultralytics-yolo", "pytorch"]
+  - power-electronics
+relatedTerms:
+  - "data-structure"
+  - "rtos"
+  - "algorithm"
+  - "complexity"
+relatedTools:
+  - "huggingface-transformers"
+  - "ultralytics-yolo"
+  - "pytorch"
 ---
 
 ## 为什么你要学它

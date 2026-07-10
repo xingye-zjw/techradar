@@ -4,23 +4,35 @@ category: embedded
 difficulty: intermediate
 duration: 3周
 summary: 掌握信号分析与系统响应的核心概念，理解傅里叶变换、拉普拉斯变换在信号处理中的应用
-takeaways: "- 理解信号分类与性质
+takeaways:
+  - 理解信号分类与性质
   - 掌握傅里叶分析方法
   - 理解系统频率响应特性
-  - 能设计数字滤波器"
-relatedIntel: "- 052-embedded-c
+  - 能设计数字滤波器
+relatedIntel:
+  - 052-embedded-c
   - 053-embedded-rtos
-  - 054-elec-circuit"
-relatedNodes: ["elec-signals", "electrical-safety"]
-tags: "- signal
+  - 054-elec-circuit
+relatedNodes:
+  - "elec-signals"
+  - "electrical-safety"
+tags:
+  - signal
   - fourier
   - laplace
   - filter
   - sampling
   - z-transform
-  - dsp"
-relatedTerms: ["data-structure", "rtos", "algorithm", "complexity"]
-relatedTools: ["huggingface-transformers", "ultralytics-yolo", "pytorch"]
+  - dsp
+relatedTerms:
+  - "data-structure"
+  - "rtos"
+  - "algorithm"
+  - "complexity"
+relatedTools:
+  - "huggingface-transformers"
+  - "ultralytics-yolo"
+  - "pytorch"
 ---
 
 ## 为什么你要学它

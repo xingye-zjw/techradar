@@ -4,8 +4,10 @@ category: best-practices
 difficulty: beginner
 duration: 30分钟
 summary: 涵盖 4 个常见踩坑：简历堆砌技术栈但没有深度、刷题但不会做变形题、项目经历讲不清楚、谈薪资时报价过低/过高，每个均附快速修复与排查步骤。
-takeaways: "- 掌握「技术面试踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施"
-relatedIntel: "- 050-cs-algo - 134-pitfall-project-mgmt"
+takeaways:
+  - 掌握「技术面试踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施
+relatedIntel:
+  - 050-cs-algo - 134-pitfall-project-mgmt
 tags:
   - 最佳实践
   - 规范

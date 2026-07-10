@@ -4,23 +4,35 @@ category: data-processing
 difficulty: intermediate
 duration: 1-2周
 summary: 训练数据决定模型上限——用工程化手段把脏数据挡在门外，让数据管道可持续运转
-takeaways: "- 能用 Scrapy / requests + BeautifulSoup 从多源采集数据
+takeaways:
+  - 能用 Scrapy / requests + BeautifulSoup 从多源采集数据
   - 能用 Great Expectations 定义数据契约并生成质量报告
   - 能用 DVC 管理数据集版本，实现数据可复现
-  - 能用 Airflow 编排定时 ETL 任务，构建自动化数据 Pipeline"
-relatedIntel: "- 010-numpy-pandas
+  - 能用 Airflow 编排定时 ETL 任务，构建自动化数据 Pipeline
+relatedIntel:
+  - 010-numpy-pandas
   - 013-huggingface-datasets
-  - 040-data-annotation"
-relatedNodes: ["nlp-rnn", "project-data-pipeline"]
-tags: "- etl
+  - 040-data-annotation
+relatedNodes:
+  - "nlp-rnn"
+  - "project-data-pipeline"
+tags:
+  - etl
   - data pipeline
   - dvc
   - airflow
   - web scraping
   - data quality
-  - great expectations"
-relatedTerms: ["matrix", "entropy", "tensor", "transformer"]
-relatedTools: ["jupyter", "numpy", "pandas"]
+  - great expectations
+relatedTerms:
+  - "matrix"
+  - "entropy"
+  - "tensor"
+  - "transformer"
+relatedTools:
+  - "jupyter"
+  - "numpy"
+  - "pandas"
 ---
 
 ## 为什么你要学它

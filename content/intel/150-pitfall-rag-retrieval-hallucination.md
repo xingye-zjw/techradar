@@ -4,8 +4,10 @@ category: llm
 difficulty: intermediate
 duration: 30分钟
 summary: 聚焦单点问题：RAG 检索到了相关文档但回答仍幻觉严重，涵盖 BGE-M3 embedding、bge-reranker 重排、chunk 切分策略、HyDE 查询扩展等排查与修复方案。
-takeaways: "- 快速识别「RAG 检索到了但回答不对 / 幻觉严重」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑"
-relatedIntel: "- 005-rag - 035-advanced-rag - 096-pitfall-rag"
+takeaways:
+  - 快速识别「RAG 检索到了但回答不对 / 幻觉严重」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑
+relatedIntel:
+  - 005-rag - 035-advanced-rag - 096-pitfall-rag
 tags:
   - 大模型
   - LLM

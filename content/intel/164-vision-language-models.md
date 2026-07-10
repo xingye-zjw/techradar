@@ -26,9 +26,20 @@ tags:
   - llava
   - gpt-4v
   - visual-instruction-tuning
-relatedTerms: [transformer, self-attention, fine-tuning, lora, function-calling]
-relatedTools: [huggingface-transformers, pytorch, opencv, jupyter]
-relatedNodes: [llm-fundamentals, cv-segmentation]
+relatedTerms:
+  - transformer
+  - self-attention
+  - fine-tuning
+  - lora
+  - function-calling
+relatedTools:
+  - huggingface-transformers
+  - pytorch
+  - opencv
+  - jupyter
+relatedNodes:
+  - llm-fundamentals
+  - cv-segmentation
 ---
 
 ## 为什么你要学它

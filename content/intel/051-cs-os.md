@@ -4,23 +4,35 @@ category: cs
 difficulty: intermediate
 duration: 3周
 summary: 理解操作系统如何管理硬件资源：进程线程、内存管理、文件系统、IO调度，为系统级编程和性能优化打下基础
-takeaways: "- 理解进程与线程的区别，掌握多线程编程
+takeaways:
+  - 理解进程与线程的区别，掌握多线程编程
   - 掌握内存管理基本原理，理解虚拟内存和页表
   - 理解文件系统与IO模型，掌握异步IO
-  - 能分析系统性能瓶颈，优化资源使用"
-relatedTerms: ["data-structure", "operating-system", "algorithm", "complexity"]
-relatedIntel: "- 050-cs-algo
+  - 能分析系统性能瓶颈，优化资源使用
+relatedTerms:
+  - "data-structure"
+  - "operating-system"
+  - "algorithm"
+  - "complexity"
+relatedIntel:
+  - 050-cs-algo
   - 075-cs-network
-  - 076-cs-database"
-relatedNodes: ["cs-os", "math-linear-algebra"]
-tags: "- operating-system
+  - 076-cs-database
+relatedNodes:
+  - "cs-os"
+  - "math-linear-algebra"
+tags:
+  - operating-system
   - process
   - thread
   - memory-management
   - filesystem
   - scheduling
-  - synchronization"
-relatedTools: ["huggingface-transformers", "ultralytics-yolo", "pytorch"]
+  - synchronization
+relatedTools:
+  - "huggingface-transformers"
+  - "ultralytics-yolo"
+  - "pytorch"
 ---
 
 ## 为什么你要学它

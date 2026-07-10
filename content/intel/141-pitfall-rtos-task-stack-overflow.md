@@ -4,8 +4,10 @@ category: embedded
 difficulty: intermediate
 duration: 30分钟
 summary: 聚焦单点问题：FreeRTOS 任务栈溢出导致 HardFault，涵盖 uxTaskGetStackHighWaterMark 监控、configCHECK_FOR_STACK_OVERFLOW 检测、栈大小配置、避免大局部变量等排查与修复方案。
-takeaways: "- 快速识别「RTOS任务栈溢出」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑"
-relatedIntel: "- 053-embedded-rtos - 097-pitfall-embedded"
+takeaways:
+  - 快速识别「RTOS任务栈溢出」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑
+relatedIntel:
+  - 053-embedded-rtos - 097-pitfall-embedded
 tags:
   - 嵌入式
   - MCU

@@ -4,26 +4,34 @@ category: llm
 difficulty: advanced
 duration: 3-4周
 summary: 仅训练大模型极小一部分参数就能让它适配你的领域任务，4-bit 量化把 7B 模型微调显存压缩到 6GB 级
-takeaways: "- 理解低秩分解（Low-Rank Decomposition）在权重更新中的直觉
+takeaways:
+  - 理解低秩分解（Low-Rank Decomposition）在权重更新中的直觉
   - 知道为什么通常只在 Q/V 投影矩阵上插入 LoRA adapter
   - 理解 NF4 量化与双量化的原理，以及 paged optimizer 的作用
-  - 能用 LLaMA Factory / PEFT 跑一次 7B 级模型的 LoRA 微调"
-relatedIntel: "- 005-rag
-  - 015-rlhf
-  - 020-prompt-engineering"
-relatedNodes: [
-    "llm-inference",
-    "- llm-finetune
-    - llm-inference",
-  ]
-tags: "- lora
+  - 能用 LLaMA Factory / PEFT 跑一次 7B 级模型的 LoRA 微调
+relatedIntel:
+  - 005-rag
+  - 044-rlhf
+  - 020-prompt-engineering
+relatedNodes:
+  - llm-inference
+  - llm-finetune
+tags:
+  - lora
   - qlora
   - fine-tuning
   - peft
   - large language model
-  - llm factory"
-relatedTerms: ["rag", "lora", "transformer", "chain-of-thought"]
-relatedTools: ["huggingface-transformers", "langchain", "pytorch"]
+  - llm factory
+relatedTerms:
+  - "rag"
+  - "lora"
+  - "transformer"
+  - "chain-of-thought"
+relatedTools:
+  - "huggingface-transformers"
+  - "langchain"
+  - "pytorch"
 ---
 
 ## 为什么你要学它

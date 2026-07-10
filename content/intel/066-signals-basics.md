@@ -4,23 +4,35 @@ category: embedded
 difficulty: beginner
 duration: 2-3周
 summary: 电子、控制、通信的共同基础。理解信号怎么被系统处理、怎么在频域里分析，是所有硬件和通信工程师的必备内功。
-takeaways: '- 搞懂连续信号与离散信号的区别，以及为什么要引入采样
-  - 理解 LTI 系统为什么"卷积走天下"——任何 LTI 系统的输出都是输入与冲激响应的卷积
+takeaways:
+  - 搞懂连续信号与离散信号的区别，以及为什么要引入采样
+  - '理解 LTI 系统为什么"卷积走天下"——任何 LTI 系统的输出都是输入与冲激响应的卷积'
   - 能说出傅里叶、拉普拉斯、Z 变换各自的应用场景和区别
-  - 用 Python scipy/numpy 完整实现一个信号-filter-频谱分析的流程'
-relatedIntel: "- 052-embedded-c
+  - 用 Python scipy/numpy 完整实现一个信号-filter-频谱分析的流程
+relatedIntel:
+  - 052-embedded-c
   - 053-embedded-rtos
-  - 054-elec-circuit"
-relatedNodes: ["elec-signals", "electrical-safety"]
-tags: "- signal
+  - 054-elec-circuit
+relatedNodes:
+  - "elec-signals"
+  - "electrical-safety"
+tags:
+  - signal
   - system
   - linear-time-invariant
   - laplace-transform
   - z-transform
   - frequency-domain
-  - convolution"
-relatedTerms: ["data-structure", "rtos", "algorithm", "complexity"]
-relatedTools: ["huggingface-transformers", "ultralytics-yolo", "pytorch"]
+  - convolution
+relatedTerms:
+  - "data-structure"
+  - "rtos"
+  - "algorithm"
+  - "complexity"
+relatedTools:
+  - "huggingface-transformers"
+  - "ultralytics-yolo"
+  - "pytorch"
 ---
 
 ## 为什么你要学它

@@ -830,12 +830,12 @@
     "category": "computer-vision"
   },
   {
-    "id": "intel-015-rlhf",
+    "id": "intel-044-rlhf",
     "title": "RLHF 与大模型对齐",
     "content": "用人类偏好数据把\"只会预测下一个 token\"的模型拉回正轨，让它输出有用、无害、符合指令的答案",
     "type": "intel",
     "typeLabel": "情报",
-    "url": "/intel/015-rlhf",
+    "url": "/intel/044-rlhf",
     "tags": [],
     "category": "llm"
   },
@@ -900,22 +900,22 @@
     "category": "devops"
   },
   {
-    "id": "intel-021-rag-intro",
+    "id": "intel-045-rag-intro",
     "title": "RAG 入门",
     "content": "检索增强生成（RAG）让大模型能基于私有知识库回答问题，是构建企业知识库、客服机器人最落地的 LLM 方案。",
     "type": "intel",
     "typeLabel": "情报",
-    "url": "/intel/021-rag-intro",
+    "url": "/intel/045-rag-intro",
     "tags": [],
     "category": "llm"
   },
   {
-    "id": "intel-022-agent-intro",
+    "id": "intel-046-agent-intro",
     "title": "Agent 入门",
     "content": "LLM Agent 是能自主规划、调用工具并迭代完成任务的大模型应用范式，是构建智能助手和自动化工作流的核心。",
     "type": "intel",
     "typeLabel": "情报",
-    "url": "/intel/022-agent-intro",
+    "url": "/intel/046-agent-intro",
     "tags": [],
     "category": "llm"
   },

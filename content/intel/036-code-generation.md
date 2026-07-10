@@ -4,25 +4,33 @@ category: llm
 difficulty: intermediate
 duration: 1周
 summary: 从 GitHub Copilot 到 Devin——AI 代码生成正在重新定义软件开发
-takeaways: "- 理解 Code LLM 的训练方式和当前能力边界
+takeaways:
+  - 理解 Code LLM 的训练方式和当前能力边界
   - 能用 Code LLM 自动生成单元测试和代码补全
   - 能用 Code Interpreter（沙盒 Python）做数据分析
-  - 能设计 Code Review Agent 自动审查代码质量"
-relatedIntel: "- 003-lora-qlora
+  - 能设计 Code Review Agent 自动审查代码质量
+relatedIntel:
+  - 003-lora-qlora
   - 005-rag
-  - 015-rlhf"
-relatedNodes: [
-    "llm-inference",
-    "- llm-finetune
-    - llm-inference",
-  ]
-tags: "- code generation
+  - 044-rlhf
+relatedNodes:
+  - llm-inference
+  - llm-finetune
+tags:
+  - code generation
   - copilot
   - code interpreter
   - unit test generation
-  - code review"
-relatedTerms: ["rag", "lora", "transformer", "chain-of-thought"]
-relatedTools: ["huggingface-transformers", "langchain", "pytorch"]
+  - code review
+relatedTerms:
+  - "rag"
+  - "lora"
+  - "transformer"
+  - "chain-of-thought"
+relatedTools:
+  - "huggingface-transformers"
+  - "langchain"
+  - "pytorch"
 ---
 
 ## 为什么你要学它

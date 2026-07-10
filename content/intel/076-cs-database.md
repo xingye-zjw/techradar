@@ -4,22 +4,34 @@ category: cs
 difficulty: beginner
 duration: 2-3周
 summary: 理解数据库的设计原理和优化方法。掌握SQL查询、索引优化、事务处理等核心技能。
-takeaways: "- 理解关系型数据库的设计原理
+takeaways:
+  - 理解关系型数据库的设计原理
   - 掌握SQL查询优化技巧
   - 理解索引原理和优化方法
-  - 掌握事务的ACID特性"
-relatedIntel: "- 050-cs-algo
+  - 掌握事务的ACID特性
+relatedIntel:
+  - 050-cs-algo
   - 051-cs-os
-  - 075-cs-network"
-tags: "- 数据库
+  - 075-cs-network
+tags:
+  - 数据库
   - sql
   - 索引
   - 事务
   - mysql
-  - postgresql"
-relatedTerms: ["data-structure", "algorithm", "transformer", "complexity"]
-relatedTools: ["huggingface-transformers", "ultralytics-yolo", "pytorch"]
-relatedNodes: ["roadmap-capstone", "math-linear-algebra"]
+  - postgresql
+relatedTerms:
+  - "data-structure"
+  - "algorithm"
+  - "transformer"
+  - "complexity"
+relatedTools:
+  - "huggingface-transformers"
+  - "ultralytics-yolo"
+  - "pytorch"
+relatedNodes:
+  - "roadmap-capstone"
+  - "math-linear-algebra"
 ---
 
 ## 为什么你要学它

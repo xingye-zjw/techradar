@@ -4,8 +4,10 @@ category: nlp
 difficulty: intermediate
 duration: 30分钟
 summary: 涵盖 4 个常见踩坑：Tokenizer 处理中文分词错误、文本分类标签不平衡导致模型偏向多数类、RNN/LSTM 梯度消失导致长序列信息丢失、文本数据泄露导致评估指标虚高，每个均附快速修复与排查步骤。
-takeaways: "- 掌握「NLP 踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施"
-relatedIntel: "- 064-nlp-rnn - 001-transformer"
+takeaways:
+  - 掌握「NLP 踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施
+relatedIntel:
+  - 064-nlp-rnn - 001-transformer
 tags:
   - NLP
   - 文本

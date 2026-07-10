@@ -4,25 +4,33 @@ category: llm
 difficulty: intermediate
 duration: 1周
 summary: LLM 能回答问题，也能泄露数据、被注入恶意指令、被逆向提取模型——安全是应用落地的第一道防线
-takeaways: "- 理解 Prompt Injection 的攻击方式和防御策略
+takeaways:
+  - 理解 Prompt Injection 的攻击方式和防御策略
   - 理解数据泄露风险（训练数据记忆 / 上下文泄露）
   - 能用 PII 检测和脱敏工具保护敏感信息
-  - 理解模型提取攻击和防御（API 调用限制）"
-relatedIntel: "- 003-lora-qlora
+  - 理解模型提取攻击和防御（API 调用限制）
+relatedIntel:
+  - 003-lora-qlora
   - 005-rag
-  - 015-rlhf"
-relatedNodes: [
-    "llm-inference",
-    "- llm-finetune
-    - llm-inference",
-  ]
-tags: "- llm security
+  - 044-rlhf
+relatedNodes:
+  - llm-inference
+  - llm-finetune
+tags:
+  - llm security
   - prompt injection
   - data leakage
   - pii protection
-  - model extraction"
-relatedTerms: ["rag", "lora", "transformer", "chain-of-thought"]
-relatedTools: ["huggingface-transformers", "langchain", "pytorch"]
+  - model extraction
+relatedTerms:
+  - "rag"
+  - "lora"
+  - "transformer"
+  - "chain-of-thought"
+relatedTools:
+  - "huggingface-transformers"
+  - "langchain"
+  - "pytorch"
 ---
 
 ## 为什么你要学它

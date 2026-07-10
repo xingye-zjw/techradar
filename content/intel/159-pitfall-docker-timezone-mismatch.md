@@ -4,8 +4,10 @@ category: devops
 difficulty: intermediate
 duration: 30分钟
 summary: 聚焦单点问题：Docker 容器时间与宿主机不一致（差 8 小时），涵盖 -e TZ=Asia/Shanghai 环境变量、-v /etc/localtime 挂载、Dockerfile 时区设置、cron 定时任务等排查与修复方案。
-takeaways: "- 快速识别「Docker 容器时间与宿主机不一致」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑"
-relatedIntel: "- 007-docker - 093-pitfall-docker"
+takeaways:
+  - 快速识别「Docker 容器时间与宿主机不一致」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑
+relatedIntel:
+  - 007-docker - 093-pitfall-docker
 tags:
   - DevOps
   - 部署

@@ -4,8 +4,10 @@ category: llm
 difficulty: intermediate
 duration: 30分钟
 summary: 涵盖 4 个常见踩坑：RAG 检索到了但回答不对 / 幻觉严重、大模型 Prompt 转义字符错误导致 JSON 输出截断、LLM 输出不稳定 / 重复复读、LLM API 调用超时 / 频率限制，每个均附快速修复与排查步骤。
-takeaways: "- 掌握「LLM 应用开发踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施"
-relatedIntel: "- 020-prompt-engineering - 005-rag - 031-agentic-ai"
+takeaways:
+  - 掌握「LLM 应用开发踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施
+relatedIntel:
+  - 020-prompt-engineering - 005-rag - 031-agentic-ai
 tags:
   - 大模型
   - LLM

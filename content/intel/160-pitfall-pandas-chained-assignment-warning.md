@@ -4,8 +4,10 @@ category: data-processing
 difficulty: intermediate
 duration: 30分钟
 summary: 聚焦单点问题：pandas 链式赋值触发 SettingWithCopyWarning 且值未正确设置，涵盖 df.loc 单步赋值、df.copy() 显式复制、避免视图副本歧义等排查与修复方案。
-takeaways: "- 快速识别「pandas inplace=True 链式赋值警告」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑"
-relatedIntel: "- 010-numpy-pandas - 094-pitfall-data-engineering"
+takeaways:
+  - 快速识别「pandas inplace=True 链式赋值警告」的典型症状 - 理解该问题的根因分析和标准排查步骤 - 学会分步排查和解决问题的标准化流程 - 了解预防措施，避免下次踩同样的坑
+relatedIntel:
+  - 010-numpy-pandas - 094-pitfall-data-engineering
 tags:
   - 数据
   - 处理

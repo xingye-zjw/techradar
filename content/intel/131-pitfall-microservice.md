@@ -4,8 +4,10 @@ category: devops
 difficulty: advanced
 duration: 30分钟
 summary: 涵盖 4 个常见踩坑：分布式事务一致性问题、服务间依赖混乱导致级联失败、分布式追踪缺失导致问题定位难、API版本不兼容导致线上故障，每个均附快速修复与排查步骤。
-takeaways: "- 掌握「微服务架构踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施"
-relatedIntel: "- 021-kubernetes - 043-mlops-engineering"
+takeaways:
+  - 掌握「微服务架构踩坑合集」中各问题的快速识别方法 - 理解每个踩坑的根因分析和排查步骤 - 学会标准化的修复流程和预防措施
+relatedIntel:
+  - 021-kubernetes - 043-mlops-engineering
 tags:
   - DevOps
   - 部署
