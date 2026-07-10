@@ -232,9 +232,12 @@ export function saveNodeProgress(
     status,
     autoCompleted,
     startedAt:
-      (nodeProgress.startedAt ?? existing.startedAt ?? completedDays.length > 0)
-        ? now()
-        : undefined,
+      // FIX HIGH: previous ternary `(A ?? B ?? bool) ? now() : undefined`
+      //  always hit `now()` when user had any startedAt already (truthy) → overwrite original.
+      //  Semantics: startedAt is immutable once set (first ever value wins).
+      nodeProgress.startedAt ??
+      existing.startedAt ??
+      (completedDays.length > 0 ? now() : undefined),
     lastVisitedAt: nodeProgress.lastVisitedAt ?? existing.lastVisitedAt ?? now(),
     completedAt:
       status === "completed"
@@ -309,6 +312,9 @@ export function exportProgressAsJSON(): string {
  */
 export function importProgressFromJSON(text: string): LearningProgressSanitized {
   try {
+    if (text.length > 500000) {
+      throw new Error("导入文件过大，上限 500KB");
+    }
     const obj = JSON.parse(text);
     const p =
       obj && typeof obj === "object" && "progress" in obj

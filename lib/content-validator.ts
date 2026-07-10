@@ -146,12 +146,8 @@ export function validatePitfall(data: ValidatorInput): string[] {
   const obj = isRecord(data) ? data : {};
   const errors = [...base.errors];
 
-  if (typeof obj.description !== "string" || !obj.description.trim()) {
-    errors.push("踩坑缺少 description 字段");
-  }
-  if (typeof obj.root_cause !== "string" || !obj.root_cause.trim()) {
-    errors.push("踩坑缺少 root_cause 字段");
-  }
+  // FIX HIGH: previous schema mismatched actual pitfall MD template.
+  //  Real fields (from content/pitfall/*.md frontmatter): title/category/symptoms[]/solution[]/quickFix/tags
   if (!isNonEmptyStringArray(obj.symptoms)) {
     errors.push("踩坑缺少 symptoms 字段");
   }
