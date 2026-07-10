@@ -13,8 +13,7 @@ import { describe, it, expect } from "vitest";
 import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { INTEL_LINKS, TOOL_IDS } = require("../../lib/constants.ts");
+import { INTEL_LINKS, TOOL_IDS } from "@/lib/constants";
 
 // ---------- 本冲刺声明的增量清单 ----------
 const NEW_INTEL_SLUGS_20 = [

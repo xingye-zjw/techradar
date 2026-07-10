@@ -1,7 +1,7 @@
 /**
  * P0-5.1 安全加固测试
  */
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -68,5 +68,35 @@ describe("public/_headers CSP/安全头存在", () => {
     expect(txt).toContain("X-Content-Type-Options: nosniff");
     expect(txt).toContain("Referrer-Policy");
     expect(txt).toContain("Permissions-Policy");
+  });
+});
+
+describe("S-02 进度导入加固", () => {
+  it("1MB 伪造字符串导入被拒绝（包含'过大'消息）", async () => {
+    const storage = await import("@/lib/storage");
+    const bigStr = "a".repeat(1_000_000);
+    expect(() => storage.importProgressFromJSON(bigStr)).toThrow(/过大/);
+  });
+
+  it("嵌套 12 层的节点对象导入被宽容降级（不抛错，返回默认值，无崩溃）", async () => {
+    const security = await import("@/lib/security");
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    try {
+      const deeplyNested: any = { nodes: {} };
+      let cursor: any = deeplyNested.nodes;
+      for (let i = 0; i < 12; i++) {
+        cursor["layer" + i] = {};
+        cursor = cursor["layer" + i];
+      }
+      cursor.completedDays = [1, 2, 3];
+      expect(() => {
+        const result = security.validateProgressData(deeplyNested);
+        expect(result).toBeDefined();
+        expect(result.nodes).toBeDefined();
+      }).not.toThrow();
+      expect(warnSpy).toHaveBeenCalled();
+    } finally {
+      warnSpy.mockRestore();
+    }
   });
 });
