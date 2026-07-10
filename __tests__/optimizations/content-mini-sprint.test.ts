@@ -220,15 +220,15 @@ const REMAINING_INTEL_7 = [
 ];
 
 const NEW_PITFALL_9 = [
-  "174-pitfall-data-poisoning",
-  "175-pitfall-prompt-injection-defense",
-  "176-pitfall-tensorRT-fp16-overflow",
-  "177-pitfall-hallucination-grounding",
-  "178-pitfall-data-leakage",
-  "179-pitfall-class-imbalance",
-  "180-pitfall-i2c-lockup",
-  "181-pitfall-battery-life",
-  "182-pitfall-gpio-noise",
+  "190-pitfall-data-poisoning",
+  "191-pitfall-prompt-injection-defense",
+  "192-pitfall-tensorRT-fp16-overflow",
+  "193-pitfall-hallucination-grounding",
+  "194-pitfall-data-leakage",
+  "195-pitfall-class-imbalance",
+  "196-pitfall-i2c-lockup",
+  "197-pitfall-battery-life",
+  "198-pitfall-gpio-noise",
 ];
 
 // Day 1 5 篇 + Day 2 7 篇 = 12 篇新 Intel
@@ -270,7 +270,9 @@ const NEW_TOOLS_10 = [
 describe("[DAY2-T1-REMAINING] 剩余 16 篇（Intel 7 + Pitfall 9）内容+质量达标", () => {
   const files: string[] = [
     ...REMAINING_INTEL_7.map((s) => path.join(INTEL_DIR, `${s}.md`)),
-    ...NEW_PITFALL_9.map((s) => path.join(PITFALL_DIR, `${s}.md`)),
+    // 原 content/pitfall/ 下 9 篇孤儿 pitfall 已于审查中迁移至 content/intel/（统一通过 getAllIntelCards 加载）
+    // 编号从 174-182 改为 190-198，避免与 S-CONTENT sprint 同号 pitfall 冲突
+    ...NEW_PITFALL_9.map((s) => path.join(INTEL_DIR, `${s}.md`)),
   ];
 
   it("16 文件全部落盘（fs 可见）", () => {

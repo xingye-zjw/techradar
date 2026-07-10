@@ -26,8 +26,7 @@ import { TRACK_COLORS, getSwimlaneLabelColor } from "@/lib/constants";
 import { useKeyboardShortcuts } from "@/lib/use-keyboard-shortcuts";
 import { ShortcutsPanel } from "@/components/ShortcutsPanel";
 import { ProgressSettings } from "@/components/ProgressSettings";
-
-const STORAGE_KEY = "techradar-roadmap-progress";
+import { getProgress, saveNodeCompletedSet } from "@/lib/storage";
 
 type RoadmapFlowNode = Node<{
   name: string;
@@ -103,8 +102,14 @@ export function RoadmapGraph({ initialNodes }: RoadmapGraphProps) {
   const loadProgress = useCallback((): Record<string, NodeStatus> => {
     if (typeof window === "undefined") return {};
     try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      return saved ? JSON.parse(saved) : {};
+      const progress = getProgress();
+      const result: Record<string, NodeStatus> = {};
+      for (const [nodeId, node] of Object.entries(progress.nodes)) {
+        if (node.status === "completed") {
+          result[nodeId] = "completed";
+        }
+      }
+      return result;
     } catch {
       return {};
     }
@@ -383,11 +388,7 @@ export function RoadmapGraph({ initialNodes }: RoadmapGraphProps) {
   }, [selectedPath, completedNodes, setNodes, setEdges, startTransition]);
 
   const saveProgress = useCallback((completed: Set<string>) => {
-    const progress: Record<string, NodeStatus> = {};
-    completed.forEach((id) => {
-      progress[id] = "completed";
-    });
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+    saveNodeCompletedSet(completed);
   }, []);
 
   const onNodeClick: NodeMouseHandler = useCallback(

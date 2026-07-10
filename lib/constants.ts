@@ -2,19 +2,10 @@
 
 // ============ 路线图 Track 颜色定义 ============
 
-export type TrackId =
-  | "cv"
-  | "nlp"
-  | "llm"
-  | "devops"
-  | "math"
-  | "project"
-  | "cs"
-  | "embedded"
-  | "electronics"
-  | "signals"
-  | "control"
-  | "electrical";
+import type { TrackId } from "@/lib/content-types";
+import { ROADMAP_TRACKS } from "@/lib/content-types";
+
+export type { TrackId };
 
 export interface TrackColors {
   text: string; // 文本颜色类 e.g. "text-sky-400"
@@ -150,6 +141,16 @@ export function getSwimlaneLabelColor(track: TrackId): string {
   return border.replace(/[\d.]+\)$/, "0.8)");
 }
 
+// Track 显示顺序（从 ROADMAP_TRACKS 派生，保持与权威定义一致）
+export const TRACK_ORDER: readonly TrackId[] = ROADMAP_TRACKS.map(
+  (t) => t.id,
+) as readonly TrackId[];
+
+// Track 显示名称（从 ROADMAP_TRACKS 派生，保持与权威定义一致）
+export const TRACK_LABELS: Record<TrackId, string> = Object.fromEntries(
+  ROADMAP_TRACKS.map((t) => [t.id, t.name]),
+) as Record<TrackId, string>;
+
 // ============ 情报链接映射 ============
 
 export const INTEL_LINKS: Record<string, string> = {
@@ -168,7 +169,7 @@ export const INTEL_LINKS: Record<string, string> = {
   "013-huggingface-datasets": "HuggingFace Datasets",
   "014-onnx": "ONNX 部署",
   "015-cv-tricks": "CV 训练调优技巧",
-  "015-rlhf": "RLHF 对齐",
+  "044-rlhf": "RLHF 对齐",
   "016-server-setup": "服务器配置",
   "017-metrics": "评估指标",
   "018-mlflow": "MLflow 实验管理",
@@ -245,8 +246,8 @@ export const INTEL_LINKS: Record<string, string> = {
   "121-object-tracking": "目标跟踪",
   "122-federated-learning": "联邦学习",
   "123-automl": "AutoML",
-  "021-rag-intro": "RAG 入门",
-  "022-agent-intro": "Agent 入门",
+  "045-rag-intro": "RAG 入门",
+  "046-agent-intro": "Agent 入门",
   "097-pitfall-embedded": "嵌入式开发踩坑",
   "098-pitfall-hardware": "硬件设计踩坑",
   "107-pitfall-db": "数据库踩坑",
@@ -284,80 +285,89 @@ export const INTEL_LINKS: Record<string, string> = {
   "180-pitfall-edge-ai-power-throttle": "边缘端温度过高触发 NPU/GPU 节流导致推理时延抖动",
   "181-pitfall-haystack-pipeline-serialization": "Haystack Pipeline 序列化后节点顺序错乱",
   "182-pitfall-lancedb-index-corruption": "LanceDB 断电写入导致 IVF_PQ 索引损坏无法查询",
-};
+  "190-pitfall-data-poisoning": "训练数据投毒导致模型行为异常",
+  "191-pitfall-prompt-injection-defense": "Prompt 注入防御失效导致系统被越权调用",
+  "192-pitfall-tensorRT-fp16-overflow": "TensorRT FP16 精度溢出导致推理结果全 NaN",
+  "193-pitfall-hallucination-grounding": "LLM 幻觉严重且缺乏事实 Grounding",
+  "194-pitfall-data-leakage": "特征工程数据泄露导致测试指标虚高",
+  "195-pitfall-class-imbalance": "训练数据类别不均衡导致模型偏向多数类",
+  "196-pitfall-i2c-lockup": "I2C 总线死锁导致从设备无响应",
+  "197-pitfall-battery-life": "嵌入式设备电池寿命短于预期 50%",
+  "198-pitfall-gpio-noise": "GPIO 输入噪声导致按键误触发/计数错误",
 
-// ============ 工具链接映射 ============
-
-export const TOOL_LINKS: Record<string, string> = {
-  airflow: "Apache Airflow",
-  "altium-designer": "Altium Designer",
-  "autocad-electrical": "AutoCAD Electrical",
-  chromadb: "ChromaDB",
-  codesys: "Codesys",
-  dask: "Dask",
-  docker: "Docker",
-  dvc: "DVC (Data Version Control)",
-  "esp-idf": "ESP-IDF",
-  faiss: "FAISS",
-  fastapi: "FastAPI",
-  freertos: "FreeRTOS",
-  gcc: "GCC",
-  git: "Git",
-  gradio: "Gradio",
-  grafana: "Grafana",
-  "huggingface-transformers": "Hugging Face Transformers",
-  jupyter: "Jupyter Notebook",
-  kicad: "KiCad",
-  kubeflow: "Kubeflow",
-  kubernetes: "Kubernetes",
-  "label-studio": "Label Studio",
-  langchain: "LangChain",
-  lightgbm: "LightGBM",
-  ltspice: "LTspice",
-  matlab: "MATLAB",
-  matplotlib: "Matplotlib",
-  mlflow: "MLflow",
-  mysql: "MySQL",
-  numpy: "NumPy",
-  "onnx-runtime": "ONNX Runtime",
-  opencv: "OpenCV",
-  pandas: "pandas",
-  pgvector: "pgvector + PostgreSQL",
-  plotly: "Plotly",
-  polars: "Polars",
-  postman: "Postman",
-  prometheus: "Prometheus",
-  pytorch: "PyTorch",
-  "pytorch-geometric": "PyTorch Geometric",
-  "pytorch-lightning": "PyTorch Lightning",
-  redis: "Redis",
-  ros2: "ROS2",
-  "scikit-learn": "scikit-learn",
-  "segment-anything": "Segment Anything",
-  spacy: "spaCy",
-  "stable-baselines3": "Stable Baselines3",
-  stm32cubemx: "STM32CubeMX",
-  streamlit: "Streamlit",
-  tensorflow: "TensorFlow",
-  "tia-portal": "TIA Portal",
-  "transformers-agent": "Transformers Agent",
-  "triton-inference-server": "Triton Inference Server",
-  "ultralytics-yolo": "Ultralytics YOLO",
-  vllm: "vLLM",
-  vscode: "VS Code",
-  "weights-and-biases": "Weights & Biases",
-  whisper: "Whisper",
-  wireshark: "Wireshark",
-  xgboost: "XGBoost",
+  "090-pitfall-dl-training": "深度学习训练常见踩坑合集",
+  "091-pitfall-gpu-cuda": "GPU 与 CUDA 环境踩坑合集",
+  "092-pitfall-python": "Python 开发常见踩坑合集",
+  "093-pitfall-docker": "Docker 容器化踩坑合集",
+  "094-pitfall-data-engineering": "数据工程踩坑合集",
+  "095-pitfall-llm-app": "LLM 应用开发踩坑合集",
+  "096-pitfall-rag": "RAG 系统踩坑合集",
+  "099-pitfall-ops": "运维与服务器踩坑合集",
+  "100-pitfall-cv": "计算机视觉踩坑合集",
+  "101-pitfall-nlp": "NLP 踩坑合集",
+  "102-pitfall-metrics": "模型评估指标踩坑合集",
+  "103-pitfall-deployment": "模型部署踩坑合集",
+  "104-pitfall-security": "AI 安全踩坑合集",
+  "105-pitfall-git": "Git 版本控制踩坑合集",
+  "106-pitfall-k8s": "Kubernetes 踩坑合集",
+  "109-pitfall-rtos": "RTOS 实时操作系统踩坑合集",
+  "124-pitfall-rl": "强化学习踩坑合集",
+  "125-pitfall-gnn": "图神经网络踩坑合集",
+  "126-pitfall-recsys": "推荐系统踩坑合集",
+  "127-pitfall-speech": "语音处理踩坑合集",
+  "128-pitfall-time-series": "时间序列踩坑合集",
+  "129-pitfall-3d-cv": "3D 视觉踩坑合集",
+  "130-pitfall-automl": "AutoML 踩坑合集",
+  "131-pitfall-microservice": "微服务架构踩坑合集",
+  "132-pitfall-frontend": "前端开发踩坑合集",
+  "134-pitfall-project-mgmt": "项目管理踩坑合集",
+  "135-pitfall-interview": "技术面试踩坑合集",
+  "141-pitfall-rtos-task-stack-overflow": "RTOS任务栈溢出",
+  "145-pitfall-cuda-pytorch-version-mismatch": "CUDA 版本与 PyTorch 不匹配",
+  "146-pitfall-cuda-out-of-memory": "显存不足 (CUDA out of memory)",
+  "147-pitfall-loss-nan-gradient-explosion": "Loss NaN / 梯度爆炸",
+  "148-pitfall-onnx-export-dynamic-shape": "ONNX 导出失败 / 动态 shape",
+  "149-pitfall-multiprocess-dataloader-hang": "多进程 DataLoader (num_workers > 0) 卡死",
+  "150-pitfall-rag-retrieval-hallucination": "RAG 检索到了但回答不对 / 幻觉严重",
+  "151-pitfall-ssh-connection-drop": "SSH 连接远程服务器频繁掉线",
+  "152-pitfall-docker-gpu-not-available": "Docker 容器中无法使用 GPU (nvidia-smi 报错)",
+  "153-pitfall-slow-convergence": "模型训练收敛慢 / 几乎不收敛",
+  "154-pitfall-git-merge-conflict-code-loss": "Git 合并冲突处理不当导致代码丢失",
+  "155-pitfall-python-dependency-conflict": "Python 环境依赖冲突导致 import 失败",
+  "156-pitfall-ssh-firewall-blocked": "SSH 端口被防火墙拦截 / 服务器无法访问",
+  "157-pitfall-poor-data-labeling": "数据标注质量差导致模型无法收敛",
+  "158-pitfall-cuda-implicit-sync-slow-inference": "CUDA 隐式同步导致推理速度异常慢",
+  "159-pitfall-docker-timezone-mismatch": "Docker 容器时间与宿主机不一致",
+  "160-pitfall-pandas-chained-assignment-warning": "pandas inplace=True 链式赋值警告",
+  "161-pitfall-gpu-architecture-mismatch": "训练用 GPU 卡与推理用卡架构不一致",
+  "162-pitfall-llm-prompt-escape-json-truncation": "大模型 Prompt 转义字符错误导致 JSON 输出截断",
+  "183-gitops-argo-cd": "GitOps 与 Argo CD 云原生持续部署",
+  "184-agent-tracing-eval": "Agent 评估追踪与可观测性实战",
+  "185-probability-distributions": "概率论与常见分布机器学习实战",
+  "186-linear-algebra-ml": "线性代数与机器学习核心运算",
+  "187-llm-eval-ragas": "LLM 评估框架 Ragas 与 Promptfoo 实战",
+  "188-reranker-multilingual": "多语种 Reranker 与 BGE-Reranker/Cohere 实战",
+  "189-speech-asr-tts": "Whisper + Coqui TTS 语音端到端实践",
 };
 
 // ============ 术语分类颜色 ============
+// 键值严格与 content-types.ts 中的 ContentCategory 联合类型保持一致（共 13 类）
+// 采用「Tailwind 前景色 / 淡色背景 / 边框色」三元组，语义色与领域对齐
 
 export const CATEGORY_COLORS: Record<string, string> = {
-  "ai-ml": "text-cyan-400 bg-cyan-400/10 border-cyan-400/30",
-  engineering: "text-amber-400 bg-amber-400/10 border-amber-400/30",
-  math: "text-emerald-400 bg-emerald-400/10 border-emerald-400/30",
-  project: "text-pink-400 bg-pink-400/10 border-pink-400/30",
+  "deep-learning": "text-sky-400 bg-sky-400/10 border-sky-400/30", // 蓝 — 深度学习 / 基础模型
+  "machine-learning": "text-cyan-400 bg-cyan-400/10 border-cyan-400/30", // 青 — 机器学习 / 经典算法
+  llm: "text-violet-400 bg-violet-400/10 border-violet-400/30", // 紫 — 大语言模型 / Agent / RAG
+  "computer-vision": "text-rose-400 bg-rose-400/10 border-rose-400/30", // 玫红 — CV / 图像 / 视频
+  nlp: "text-fuchsia-400 bg-fuchsia-400/10 border-fuchsia-400/30", // 品红 — NLP / 文本 / 语义
+  math: "text-emerald-400 bg-emerald-400/10 border-emerald-400/30", // 绿 — 数学 / 统计 / 代数
+  devops: "text-orange-400 bg-orange-400/10 border-orange-400/30", // 橙 — 运维 / 部署 / MLOps
+  embedded: "text-amber-400 bg-amber-400/10 border-amber-400/30", // 琥珀 — 嵌入式 / 硬件 / 驱动
+  "data-processing": "text-teal-400 bg-teal-400/10 border-teal-400/30", // 青绿 — 数据处理 / ETL / 流水线
+  cs: "text-slate-300 bg-slate-500/20 border-slate-400/40", // 石板灰 — 计算机基础 / OS / 网络
+  speech: "text-pink-400 bg-pink-400/10 border-pink-400/30", // 粉 — 语音 / ASR / TTS
+  "best-practices": "text-lime-400 bg-lime-400/10 border-lime-400/30", // 柠绿 — 最佳实践 / 方法论
+  uncategorized: "text-neutral-400 bg-neutral-800 border-neutral-700", // 中性灰 — 兜底 / 未分类
 };
 
 // ============ 路线图节点名称映射 ============
@@ -521,3 +531,8 @@ export const TOOL_IDS: Record<string, string> = {
   haystack: "Haystack（deepset 出品，生产级 RAG Pipeline 框架）",
   unstructured: "Unstructured（非结构化 PDF/HTML/DOCX 统一提取工具）",
 };
+
+// ============ 工具显示名（与 TOOL_IDS 完全等价，保留作为向后兼容的别名）============
+// 历史上 TOOL_LINKS 与 TOOL_IDS 内容高度重复，现已合并为单一数据源：
+// 新增 / 修改工具名称时仅需更新 TOOL_IDS 即可，TOOL_LINKS 自动同步。
+export const TOOL_LINKS: Record<string, string> = TOOL_IDS;

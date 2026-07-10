@@ -177,10 +177,42 @@ export function getLearningProgressSchema(): ReturnType<typeof _buildLearningPro
 export type LearningProgressSanitized = z.infer<ReturnType<typeof getLearningProgressSchema>>;
 export type NodeProgressSanitized = z.infer<ReturnType<typeof getNodeProgressSchema>>;
 
+/* ---------- JSON 深度检测 ---------- */
+
+export function checkObjectDepth(obj: unknown, max: number = 10): boolean {
+  if (obj === null || typeof obj !== "object") {
+    return true;
+  }
+  const seen = new WeakSet();
+  function dfs(o: unknown, depth: number): boolean {
+    if (depth > max) return false;
+    if (o === null || typeof o !== "object") return true;
+    if (seen.has(o as object)) return true;
+    seen.add(o as object);
+    if (Array.isArray(o)) {
+      for (const item of o) {
+        if (!dfs(item, depth + 1)) return false;
+      }
+    } else {
+      for (const v of Object.values(o as Record<string, unknown>)) {
+        if (!dfs(v, depth + 1)) return false;
+      }
+    }
+    return true;
+  }
+  return dfs(obj, 0);
+}
+
 /* ---------- 验证入口 ---------- */
 
 export function validateProgressData(input: unknown): LearningProgressSanitized {
   const Schema = getLearningProgressSchema();
+  if (!checkObjectDepth(input, 10)) {
+    if (typeof console !== "undefined" && typeof console.warn === "function") {
+      console.warn("[security] progress data schema violation: object depth exceeds max 10");
+    }
+    return Schema.parse({});
+  }
   if (!input || typeof input !== "object") {
     return Schema.parse({});
   }
@@ -211,14 +243,23 @@ export function validateProgressData(input: unknown): LearningProgressSanitized 
    ========================================================= */
 
 const DANGEROUS_ATTR_RE = /^on/i;
+const EXTRA_DANGEROUS_ATTRS: ReadonlySet<string> = new Set([
+  "ping",
+  "autofocus",
+  "xlink:href",
+  "form",
+  "fscommand",
+  "lowsrc",
+  "dynsrc",
+  "seeksegmenttime",
+]);
 
 export function isDangerousHtmlAttribute(name: string): boolean {
-  // onXXX 事件处理器一律剥除
   if (DANGEROUS_ATTR_RE.test(name)) return true;
   const n = name.toLowerCase();
-  // javascript: URI 相关
+  if (EXTRA_DANGEROUS_ATTRS.has(n)) return true;
   if (n === "href" || n === "src" || n === "srcdoc" || n === "action" || n === "formaction") {
-    return false; // 这些属性的 sanitize 交给上层（sanitizeUrl）做
+    return false;
   }
   return false;
 }

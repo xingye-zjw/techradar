@@ -16,7 +16,7 @@
  */
 
 import { validateProgressData, SCHEMA_VERSION } from "./security";
-import type { LearningProgressSanitized, NodeProgressSanitized } from "./security";
+import type { LearningProgressSanitized, NodeProgressSanitized, ProgressStatus } from "./security";
 import { z } from "zod";
 
 export { SCHEMA_VERSION };
@@ -73,11 +73,109 @@ const LEGACY_SPLINTER_KEYS: readonly string[] = [
 /**
  * 彻底清理所有已知的分裂 key（支持逐节点前缀模式）。
  * 注：前缀匹配时会遍历整个 localStorage，将 key.startsWith(prefix) 的项一并删除。
+ *
+ * 对于 "techradar-roadmap-progress" 特殊处理：先迁移到统一存储（tr-progress → nodes.*），
+ * 确认写入成功后再删除；迁移失败（格式不合法）才直接删。
  */
 export function clearAllSplinterKeys(): void {
   if (!isClient()) return;
   const prefixes = LEGACY_SPLINTER_KEYS.filter((k) => k.endsWith("_"));
   const exactKeys = LEGACY_SPLINTER_KEYS.filter((k) => !k.endsWith("_"));
+
+  // ==== 迁移：techradar-roadmap-progress → 统一存储 (tr-progress: nodes.*) ====
+  const SPLINTER_ROADMAP_KEY = "techradar-roadmap-progress";
+  // 防止递归调用标志（clearAllSplinterKeys → getProgress → clearAllSplinterKeys...）
+  const _inClearAllSplinterKeys =
+    (globalThis as { __tr_clearSplinter?: boolean }).__tr_clearSplinter ?? false;
+  // reset-progress 模式：此时用户要求清空所有进度，绝对不能把 splinter 数据迁回统一 key
+  const _inResetProgress =
+    (globalThis as { __tr_resetInProgress?: boolean }).__tr_resetInProgress ?? false;
+  if (_inClearAllSplinterKeys || _inResetProgress) {
+    // 递归进入 / reset 模式：跳过迁移逻辑，只执行 key 删除
+  } else {
+    try {
+      (globalThis as { __tr_clearSplinter?: boolean }).__tr_clearSplinter = true;
+      const raw = localStorage.getItem(SPLINTER_ROADMAP_KEY);
+      if (raw !== null && raw.length > 0) {
+        let migratedCount = 0;
+        let migrateOk = false;
+        try {
+          const parsed = JSON.parse(raw);
+          // 合法格式：{ nodeId: {status?, completedDays?} } 或 { nodeId: "completed" } (旧格式)
+          if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+            // 直接读底层统一 key，不触发 getProgress（防递归）
+            let all: LearningProgressSanitized;
+            try {
+              const unifiedRaw = localStorage.getItem(STORAGE_KEYS.PROGRESS);
+              all = unifiedRaw ? validateProgressData(JSON.parse(unifiedRaw)) : emptyProgress();
+            } catch {
+              all = emptyProgress();
+            }
+            for (const [nodeId, val] of Object.entries(parsed as Record<string, unknown>)) {
+              if (!nodeId || typeof nodeId !== "string") continue;
+              let status: ProgressStatus | undefined;
+              let completedDays: number[] = [];
+              if (typeof val === "string") {
+                status = (val as ProgressStatus) ?? undefined;
+              } else if (val && typeof val === "object" && !Array.isArray(val)) {
+                const rec = val as Record<string, unknown>;
+                if (typeof rec.status === "string") status = rec.status as ProgressStatus;
+                if (
+                  Array.isArray(rec.completedDays) &&
+                  rec.completedDays.every((d) => typeof d === "number")
+                ) {
+                  completedDays = rec.completedDays as number[];
+                }
+              }
+              const validStatus: ProgressStatus[] = ["not-started", "in-progress", "completed"];
+              if (status && !validStatus.includes(status)) status = undefined;
+
+              if (status || completedDays.length > 0) {
+                const existing = all.nodes[nodeId] ?? { completedDays: [] };
+                const mergedDays = Array.from(
+                  new Set([...(existing.completedDays ?? []), ...completedDays]),
+                ).sort((a, b) => a - b);
+                all.nodes[nodeId] = {
+                  ...existing,
+                  completedDays: mergedDays,
+                  status:
+                    status ??
+                    existing.status ??
+                    (mergedDays.length > 0 ? "in-progress" : "not-started"),
+                  completedAt:
+                    status === "completed" ? (existing.completedAt ?? now()) : existing.completedAt,
+                } as NodeProgressSanitized;
+                migratedCount++;
+              }
+            }
+            if (migratedCount > 0 || Object.keys(parsed as Record<string, unknown>).length === 0) {
+              all.updatedAt = now();
+              const sanitized = validateProgressData(all);
+              localStorage.setItem(STORAGE_KEYS.PROGRESS, JSON.stringify(sanitized));
+              migrateOk = true;
+              console.info(
+                `[storage migrate] splinter '${SPLINTER_ROADMAP_KEY}' → unified, ${migratedCount} nodes`,
+              );
+            }
+          }
+        } catch {
+          migrateOk = false;
+        }
+        if (!migrateOk) {
+          try {
+            localStorage.removeItem(SPLINTER_ROADMAP_KEY);
+          } catch {
+            /* ignore */
+          }
+        }
+      }
+    } catch {
+      /* ignore */
+    } finally {
+      (globalThis as { __tr_clearSplinter?: boolean }).__tr_clearSplinter = false;
+    }
+  }
+
   for (const k of exactKeys) {
     try {
       localStorage.removeItem(k);
@@ -197,6 +295,14 @@ export function getNodeProgress(nodeSlug: string): NodeProgressSanitized {
 }
 
 /**
+ * 便捷读取某个节点的 status（默认 "not-started"）。
+ * 适用于不需要 completedDays 等细粒度信息的调用方（如 RoadmapGraph、测试断言）。
+ */
+export function getNodeStatus(nodeSlug: string): ProgressStatus {
+  return getNodeProgress(nodeSlug).status ?? "not-started";
+}
+
+/**
  * 单个节点保存（最常用的写入 API）
  *
  * @param totalDays 可选参数：该节点总任务数（用于自动推导 completed 状态）。
@@ -251,6 +357,42 @@ export function saveNodeProgress(
 }
 
 /**
+ * 批量写入 RoadmapGraph 的完成节点集合（与旧版 Record<nodeId, "completed"> 格式适配）。
+ * - 在 completed Set 中的节点 → status="completed"
+ * - 不在 Set 中但之前是 completed 的节点 → 根据 completedDays 回退到 in-progress / not-started
+ * - 保留各节点已有的 completedDays、startedAt 等历史数据（不丢失打卡记录）
+ */
+export function saveNodeCompletedSet(completedNodeIds: Set<string>): LearningProgressSanitized {
+  const all = getProgress();
+  for (const nodeId of Object.keys(all.nodes)) {
+    const existing = all.nodes[nodeId];
+    const wasCompleted = existing.status === "completed";
+    const nowCompleted = completedNodeIds.has(nodeId);
+    if (wasCompleted && !nowCompleted) {
+      existing.status = (existing.completedDays?.length ?? 0) > 0 ? "in-progress" : "not-started";
+      existing.completedAt = undefined;
+      existing.autoCompleted = undefined;
+    } else if (nowCompleted && !wasCompleted) {
+      existing.status = "completed";
+      existing.completedAt = existing.completedAt ?? now();
+    }
+  }
+  // 处理 Set 中有但 nodes 里还没初始化记录的节点
+  Array.from(completedNodeIds).forEach((nodeId) => {
+    if (!all.nodes[nodeId]) {
+      all.nodes[nodeId] = {
+        completedDays: [],
+        status: "completed",
+        completedAt: now(),
+      } as NodeProgressSanitized;
+    }
+  });
+  all.updatedAt = now();
+  saveProgress(all);
+  return all;
+}
+
+/**
  * 切换某个节点的某个日期打卡状态
  * @returns 该节点最新的已打卡天数列表（排序去重后）
  */
@@ -282,10 +424,16 @@ export function toggleDay(nodeSlug: string, day: number): number[] {
  */
 export function resetProgress(): void {
   if (!isClient()) return;
-  localStorage.removeItem(STORAGE_KEYS.PROGRESS);
-  localStorage.removeItem(STORAGE_KEYS.OLD_RAW_PROGRESS);
-  localStorage.removeItem(STORAGE_KEYS.OLD_PROGRESS);
-  clearAllSplinterKeys();
+  try {
+    (globalThis as { __tr_resetInProgress?: boolean }).__tr_resetInProgress = true;
+    localStorage.removeItem(STORAGE_KEYS.PROGRESS);
+    localStorage.removeItem(STORAGE_KEYS.OLD_RAW_PROGRESS);
+    localStorage.removeItem(STORAGE_KEYS.OLD_PROGRESS);
+    clearAllSplinterKeys();
+  } finally {
+    (globalThis as { __tr_resetInProgress?: boolean }).__tr_resetInProgress = false;
+    delete (globalThis as { __tr_resetInProgress?: boolean }).__tr_resetInProgress;
+  }
   dispatchStorageEvent("tr-progress-updated");
 }
 

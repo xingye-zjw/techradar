@@ -1,7 +1,16 @@
 "use client";
 
+/*
+ * 不使用 Math.random() 进行推荐列表 shuffle 的原因：
+ * 1. SSR 与 CSR 各执行一次 Math.random() 会得到不同结果，触发 React hydration mismatch
+ *    导致控制台警告和潜在的客户端水合后 UI 闪烁。
+ * 2. 确定性排序保证：同一日期 + 同一 slug 的两次渲染输出完全一致。
+ *    每天推荐内容不同（基于 YYYY-MM-DD 的 hash），但同一页面刷新稳定。
+ */
+
 import Link from "next/link";
 import { useState, useMemo, useRef, useEffect, useCallback } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import type { UnifiedSearchItem } from "@/lib/search";
 import { createFuse, highlightText, MODULE_CONFIG } from "@/lib/search-helpers";
 
@@ -12,17 +21,90 @@ interface SearchPageClientProps {
 const POPULAR_TAGS = ["LLM", "Transformer", "CNN", "YOLO", "RAG", "Docker"];
 
 export function SearchPageClient({ items }: SearchPageClientProps) {
-  const [query, setQuery] = useState("");
-  const [activeType, setActiveType] = useState<string>("all");
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const validTypes = useMemo(() => ["all", ...Object.keys(MODULE_CONFIG)], []);
+
+  const initialQuery = searchParams.get("q") ?? "";
+  const initialTypeFromUrl = searchParams.get("type");
+  const initialType =
+    initialTypeFromUrl && validTypes.includes(initialTypeFromUrl) ? initialTypeFromUrl : "all";
+
+  const [query, setQuery] = useState(initialQuery);
+  const [activeType, setActiveType] = useState<string>(initialType);
   const [highlightIndex, setHighlightIndex] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
   const listItemRefs = useRef<HTMLAnchorElement[]>([]);
 
-  // 精选情报推荐：从已加载的搜索条目里 type==="intel" 随机 3 条
+  const syncUrl = useCallback(
+    (nextQuery: string, nextType: string) => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+      debounceTimerRef.current = setTimeout(() => {
+        const params = new URLSearchParams();
+        if (nextQuery.trim()) params.set("q", nextQuery.trim());
+        if (nextType !== "all") params.set("type", nextType);
+        const queryString = params.toString();
+        const nextUrl = queryString ? `?${queryString}` : "/search";
+        router.replace(nextUrl, { scroll: false });
+      }, 300);
+    },
+    [router],
+  );
+
+  useEffect(() => {
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    const urlQ = searchParams.get("q") ?? "";
+    const urlType = searchParams.get("type");
+    const resolvedType = urlType && validTypes.includes(urlType) ? urlType : "all";
+    if (urlQ !== query) {
+      setQuery(urlQ);
+    }
+    if (resolvedType !== activeType) {
+      setActiveType(resolvedType);
+    }
+  }, [searchParams, validTypes, query, activeType]);
+
+  // 精选情报推荐：从已加载的搜索条目里 type==="intel" 确定性 3 条
+  // 基于日期种子的 mulberry32 PRNG，保证 SSR/CSR 一致性 + 每日轮换
   const recommendedIntels = useMemo(() => {
     const intels = items.filter((i) => i.type === "intel");
-    const shuffled = [...intels].sort(() => Math.random() - 0.5);
-    return shuffled.slice(0, 3);
+    if (intels.length <= 3) return intels;
+
+    const dateStr = new Date().toISOString().slice(0, 10);
+    let seed = 0;
+    for (let i = 0; i < dateStr.length; i++) {
+      seed = (seed * 31 + dateStr.charCodeAt(i)) >>> 0;
+    }
+    if (seed === 0) seed = 0xdeadbeef;
+
+    function mulberry32(s: number) {
+      return function () {
+        s = (s + 0x6d2b79f5) >>> 0;
+        let t = s;
+        t = Math.imul(t ^ (t >>> 15), t | 1);
+        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
+    }
+
+    const rand = mulberry32(seed);
+    const arr = [...intels];
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(rand() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr.slice(0, 3);
   }, [items]);
 
   // 聚焦输入框
@@ -99,10 +181,11 @@ export function SearchPageClient({ items }: SearchPageClientProps) {
         setHighlightIndex((prev) => prev - 1);
       } else if (e.key === "Escape") {
         setQuery("");
+        syncUrl("", activeType);
         setHighlightIndex(-1);
       }
     },
-    [results.length, highlightIndex],
+    [results.length, highlightIndex, activeType, syncUrl],
   );
 
   // 滚动高亮项到可视区
@@ -118,21 +201,22 @@ export function SearchPageClient({ items }: SearchPageClientProps) {
   }, [results.length]);
 
   // 输入框变化回调（供标签点击时调用）
-  const onInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setQuery(e.target.value);
-  }, []);
+  const onInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setQuery(e.target.value);
+      syncUrl(e.target.value, activeType);
+    },
+    [activeType, syncUrl],
+  );
 
   // 热门标签点击：设置 query 并立即触发搜索
   const handleTagClick = useCallback(
     (tag: string) => {
       setQuery(tag);
-      const syntheticEvent = {
-        target: { value: tag },
-      } as React.ChangeEvent<HTMLInputElement>;
-      onInputChange(syntheticEvent);
+      syncUrl(tag, activeType);
       inputRef.current?.focus();
     },
-    [onInputChange],
+    [activeType, syncUrl],
   );
 
   return (
@@ -173,7 +257,10 @@ export function SearchPageClient({ items }: SearchPageClientProps) {
           />
           {query && (
             <button
-              onClick={() => setQuery("")}
+              onClick={() => {
+                setQuery("");
+                syncUrl("", activeType);
+              }}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-neutral-300 font-mono text-xs"
             >
               ESC
@@ -187,7 +274,10 @@ export function SearchPageClient({ items }: SearchPageClientProps) {
         {/* 模块类型筛选 */}
         <div className="flex flex-wrap gap-2 mb-6 pb-6 border-b border-neutral-800">
           <button
-            onClick={() => setActiveType("all")}
+            onClick={() => {
+              setActiveType("all");
+              syncUrl(query, "all");
+            }}
             className={`font-mono text-xs px-3 py-1 rounded-sm border transition-colors ${
               activeType === "all"
                 ? "bg-green-400/15 text-green-400 border-green-400/40"
@@ -201,7 +291,10 @@ export function SearchPageClient({ items }: SearchPageClientProps) {
             .map(([key, config]) => (
               <button
                 key={key}
-                onClick={() => setActiveType(key)}
+                onClick={() => {
+                  setActiveType(key);
+                  syncUrl(query, key);
+                }}
                 className={`font-mono text-xs px-3 py-1 rounded-sm border transition-colors ${
                   activeType === key
                     ? `${config.bgColor} ${config.color} ${config.borderColor} border`
@@ -227,6 +320,7 @@ export function SearchPageClient({ items }: SearchPageClientProps) {
               onClick={() => {
                 setQuery("");
                 setActiveType("all");
+                syncUrl("", "all");
               }}
               className="font-mono text-[11px] text-cyan-400 hover:text-cyan-300 transition-colors"
             >

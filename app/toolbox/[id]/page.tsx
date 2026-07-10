@@ -18,7 +18,7 @@ const INTEL_MAP: Record<string, { title: string; slug: string }> = {
   "012-streamlit": { title: "Streamlit", slug: "012-streamlit" },
   "013-huggingface-datasets": { title: "HuggingFace Datasets", slug: "013-huggingface-datasets" },
   "014-onnx": { title: "ONNX 部署", slug: "014-onnx" },
-  "015-rlhf": { title: "RLHF 对齐", slug: "015-rlhf" },
+  "044-rlhf": { title: "RLHF 对齐", slug: "044-rlhf" },
   "016-server-setup": { title: "服务器配置", slug: "016-server-setup" },
   "017-metrics": { title: "评估指标", slug: "017-metrics" },
   "018-mlflow": { title: "MLflow 实验管理", slug: "018-mlflow" },
