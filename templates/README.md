@@ -4,13 +4,11 @@
 
 ```
 templates/
-├── intel/                    # 情报模板
+├── intel/                    # 情报模板（含 Pitfall 类情报）
 │   └── template.md
 ├── glossary/                 # 术语模板
 │   ├── terms.json.template
 │   └── term-detail.md
-├── pitfall/                  # 踩坑模板
-│   └── pitfalls.json.template
 ├── toolbox/                  # 工具箱模板
 │   └── tools.json.template
 └── README.md                 # 本文件
@@ -18,12 +16,13 @@ templates/
 
 ## 使用方法
 
-### 1. 添加新情报
+### 1. 添加新情报 / 踩坑记录
 
-1. 复制 `templates/intel/template.md` 到 `content/intel/`
-2. 文件命名格式：`{序号}-{技术名称}.md`（如 `043-rag.md`）
-3. 按照模板填写 frontmatter 和正文内容
-4. 确保 category 使用正确的 slug（见下方分类列表）
+1. **统一使用 intel 模板**：自 `v0.1` 起 Pitfall 踩坑内容已合并到 `content/intel/`，不再使用独立 JSON 存储。
+2. **普通情报**：复制 `templates/intel/template.md` 到 `content/intel/`，命名为 `{001~999 三位序号}-{技术名称}.md`（示例：`043-rag.md`）。
+3. **踩坑类情报**：命名使用 `{序号}-pitfall-{主题}.md` 前缀（示例：`154-pitfall-git-merge-conflict-code-loss.md`），并在 frontmatter 的 `category` 字段填入合适的 Pitfall 子类（见下方 `Pitfall 分类`）。
+4. 按照 `templates/intel/template.md` 的 frontmatter + 正文结构填写，必填字段：`title` / `slug` / `summary` / `category` / `difficulty` / `tags` / `takeaways`。
+5. 确保 `category` 使用 `lib/content-types.ts` 中 `ContentCategory` 枚举内的合法 slug。
 
 ### 2. 添加新术语
 
@@ -31,12 +30,7 @@ templates/
 2. 参考 `templates/glossary/terms.json.template` 格式
 3. 可选：创建 `content/glossary/terms/{slug}.md` 添加详细释义
 
-### 3. 添加踩坑记录
-
-1. 在 `content/pitfall/pitfalls.json` 中添加新条目
-2. 参考 `templates/pitfall/pitfalls.json.template` 格式
-
-### 4. 添加工具推荐
+### 3. 添加工具推荐
 
 1. 在 `content/toolbox/tools.json` 的 `tools` 数组中添加新条目
 2. 参考 `templates/toolbox/tools.json.template` 格式
@@ -98,14 +92,33 @@ templates/
 
 ### 踩坑分类 (Pitfall Category)
 
-| 分类 | 说明 |
-|------|------|
-| `环境配置` | 环境安装和配置问题 |
-| `训练` | 模型训练相关问题 |
-| `部署` | 模型部署相关问题 |
-| `数据处理` | 数据预处理问题 |
-| `开发协作` | 开发协作问题 |
-| `LLM` | 大语言模型相关问题 |
+> **说明**：自 `v0.1` Pitfall 合并到 Intel 后，`category` 字段直接使用 `lib/content-types.ts` 中 `ContentCategory` 枚举的 **pitfall-* 英文 slug**（示例：`pitfall-dl-training`、`pitfall-hardware`）。下表是中文含义对照，用于选题时的参考：
+
+| ContentCategory slug | 中文含义 |
+|----------------------|----------|
+| `pitfall-dl-training` | 训练 |
+| `pitfall-gpu-cuda` | 环境配置（GPU/CUDA） |
+| `pitfall-python` | 开发协作（Python/依赖） |
+| `pitfall-docker` | 环境配置（Docker） |
+| `pitfall-data-engineering` | 数据处理 |
+| `pitfall-llm-app` | LLM |
+| `pitfall-rag` | LLM（RAG 专题） |
+| `pitfall-embedded` | 环境配置（嵌入式） |
+| `pitfall-hardware` | 环境配置（硬件/驱动） |
+| `pitfall-ops` | 部署（运维/服务器） |
+| `pitfall-cv` | 训练（CV 专题） |
+| `pitfall-nlp` | 训练（NLP 专题） |
+| `pitfall-metrics` | 训练（指标/评估） |
+| `pitfall-deployment` | 部署（模型上线） |
+| `pitfall-security` | 开发协作（安全/权限） |
+| `pitfall-git` | 开发协作（Git） |
+| `pitfall-k8s` | 部署（K8s/容器） |
+| `pitfall-db` | 数据处理（数据库） |
+| `pitfall-network` | 部署（网络/通信） |
+| `pitfall-rtos` | 环境配置（RTOS） |
+| `pitfall-control` | 训练（控制/自动化专题） |
+| `pitfall-circuit` | 环境配置（电路/硬件） |
+| 其它 pitfall-* slug | 参考上方分类语义（如 `pitfall-rl` / `pitfall-gnn` / `pitfall-recsys` / `pitfall-speech` / `pitfall-time-series` / `pitfall-3d-cv` / `pitfall-automl` / `pitfall-microservice` / `pitfall-frontend` / `pitfall-algorithm` / `pitfall-project-mgmt` / `pitfall-interview`） |
 
 ### 难度等级 (Difficulty)
 
